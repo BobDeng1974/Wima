@@ -24,8 +24,21 @@
 #
 #	****** END LICENSE BLOCK ******
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
-project(Waimo)
+project(waimo C)
 
-add_subdirectory("src")
+# Necessary to suppress a useless warning with QtCreator.
+set(ignoreMe "${QT_QMAKE_EXECUTABLE}")
+
+set("WM_INCLUDE_DIR" "include")
+set("WM_SRC_DIR" "src")
+
+add_subdirectory("${WM_INCLUDE_DIR}")
+add_subdirectory("${WM_SRC_DIR}")
+
+# Must use Clang as the compiler.
+if (NOT WIN32)
+	set(CMAKE_C_COMPILER /usr/bin/clang)
+	set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+endif()
