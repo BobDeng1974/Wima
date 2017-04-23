@@ -23,6 +23,19 @@ Waimo is Free and Open Source Software (FOSS). It is licensed under a modified
 used by [Pixar Animation Studios](https://www.pixar.com/) for use on the
 [OpenSubdiv](http://graphics.pixar.com/opensubdiv/docs/intro.html) project.
 
+Status
+------
+
+Waimo is not even in Alpha stage yet; the first prototype has not yet been
+completed. This software is nowhere near ready for use.
+
+However, it is being developed alongside [Yera](https://github.com/ProjectLFyre/Yera).
+
+Language
+--------
+
+Waimo is written in pure ANSI C11.
+
 Git Workflow
 ------------
 
