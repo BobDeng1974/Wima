@@ -1,5 +1,5 @@
 Tests
 =====
 
-This directory contains all of the tests for Waimo.
+This directory contains all of the tests for Wima.
 

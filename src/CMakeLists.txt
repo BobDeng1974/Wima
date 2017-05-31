@@ -30,8 +30,8 @@ set("WM_Main"
 	"WM_main.c"
 )
 
-set(WM_SHARED_LIB "waimo_sh")
-set(WM_STATIC_LIB "waimo_st")
+set(WM_SHARED_LIB "wima_sh")
+set(WM_STATIC_LIB "wima_st")
 
 add_library("${WM_SHARED_LIB}" SHARED "${WM_Main}")
 add_library("${WM_STATIC_LIB}" STATIC "${WM_Main}")

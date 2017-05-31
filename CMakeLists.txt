@@ -26,7 +26,7 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-project(waimo C)
+project(wima C)
 
 # Necessary to suppress a useless warning with QtCreator.
 set(ignoreMe "${QT_QMAKE_EXECUTABLE}")
