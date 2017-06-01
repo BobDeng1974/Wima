@@ -34,11 +34,17 @@ set(ignoreMe "${QT_QMAKE_EXECUTABLE}")
 set("WM_INCLUDE_DIR" "include")
 set("WM_SRC_DIR" "src")
 
-add_subdirectory("${WM_INCLUDE_DIR}")
-add_subdirectory("${WM_SRC_DIR}")
+include("${WM_INCLUDE_DIR}/CMakeLists.txt")
+include("${WM_SRC_DIR}/CMakeLists.txt")
 
-# Must use Clang as the compiler.
-if (NOT WIN32)
-	set(CMAKE_C_COMPILER /usr/bin/clang)
-	set(CMAKE_CXX_COMPILER /usr/bin/clang++)
-endif()
+install(FILES "${WM_MAIN_INC}" DESTINATION "include/${PROJECT_NAME}")
+
+set(WM_SHARED_LIB "wima_sh")
+set(WM_STATIC_LIB "wima_st")
+
+add_library("${WM_SHARED_LIB}" SHARED "${WM_MAIN}" "${WM_MAIN_INC}")
+add_library("${WM_STATIC_LIB}" STATIC "${WM_MAIN}" "${WM_MAIN_INC}")
+
+# Install library
+install(TARGETS "${WM_SHARED_LIB}" LIBRARY DESTINATION lib/${PROJECT_NAME})
+install(TARGETS "${WM_STATIC_LIB}" ARCHIVE DESTINATION lib/${PROJECT_NAME})

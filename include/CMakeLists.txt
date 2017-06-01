@@ -26,10 +26,8 @@
 
 include_directories("${WM_INCLUDE_DIR}")
 
-set("WM_HEADERS"
+set("WM_MAIN_INC"
 
 	# Add headers here.
-	"WM_main.h"
+	"include/WM_main.h"
 )
-
-install(FILES "${WM_HEADERS}" DESTINATION "include/${PROJECT_NAME}")

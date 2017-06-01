@@ -24,18 +24,8 @@
 #
 #	****** END LICENSE BLOCK ******
 
-set("WM_Main"
+set("WM_MAIN"
 
 	# Put all source files here.
-	"WM_main.c"
+	"src/WM_main.c"
 )
-
-set(WM_SHARED_LIB "wima_sh")
-set(WM_STATIC_LIB "wima_st")
-
-add_library("${WM_SHARED_LIB}" SHARED "${WM_Main}")
-add_library("${WM_STATIC_LIB}" STATIC "${WM_Main}")
-
-# Install library
-install(TARGETS "${WM_SHARED_LIB}" LIBRARY DESTINATION lib/${PROJECT_NAME})
-install(TARGETS "${WM_STATIC_LIB}" ARCHIVE DESTINATION lib/${PROJECT_NAME})
