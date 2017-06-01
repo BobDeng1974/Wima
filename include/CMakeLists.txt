@@ -31,3 +31,11 @@ set("WM_MAIN_INC"
 	# Add headers here.
 	"include/WM_main.h"
 )
+
+# Install the header files.
+install(
+	DIRECTORY "${WM_INCLUDE_DIR}"
+	DESTINATION "include/${PROJECT_NAME}"
+	FILES_MATCHING
+	PATTERN *.h
+)

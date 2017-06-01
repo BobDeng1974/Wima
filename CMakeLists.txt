@@ -36,20 +36,3 @@ set("WM_SRC_DIR" "src")
 
 include("${WM_INCLUDE_DIR}/CMakeLists.txt")
 include("${WM_SRC_DIR}/CMakeLists.txt")
-
-install(
-	DIRECTORY "${WM_INCLUDE_DIR}"
-	DESTINATION "include/${PROJECT_NAME}"
-	FILES_MATCHING
-	PATTERN *.h
-)
-
-set(WM_SHARED_LIB "wima_sh")
-set(WM_STATIC_LIB "wima_st")
-
-add_library("${WM_SHARED_LIB}" SHARED "${WM_MAIN}" "${WM_MAIN_INC}")
-add_library("${WM_STATIC_LIB}" STATIC "${WM_MAIN}" "${WM_MAIN_INC}")
-
-# Install library
-install(TARGETS "${WM_SHARED_LIB}" LIBRARY DESTINATION lib/${PROJECT_NAME})
-install(TARGETS "${WM_STATIC_LIB}" ARCHIVE DESTINATION lib/${PROJECT_NAME})
