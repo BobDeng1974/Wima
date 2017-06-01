@@ -34,3 +34,4 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+int WM_main();
