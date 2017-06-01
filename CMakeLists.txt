@@ -37,7 +37,12 @@ set("WM_SRC_DIR" "src")
 include("${WM_INCLUDE_DIR}/CMakeLists.txt")
 include("${WM_SRC_DIR}/CMakeLists.txt")
 
-install(FILES "${WM_MAIN_INC}" DESTINATION "include/${PROJECT_NAME}")
+install(
+	DIRECTORY "${WM_INCLUDE_DIR}"
+	DESTINATION "include/${PROJECT_NAME}"
+	FILES_MATCHING
+	PATTERN *.h
+)
 
 set(WM_SHARED_LIB "wima_sh")
 set(WM_STATIC_LIB "wima_st")
