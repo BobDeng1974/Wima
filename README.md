@@ -41,15 +41,18 @@ Wima is written in pure ANSI C11.
 Git Workflow
 ------------
 
-Wima (and all other Project LFyre software) uses the git workflow described in
-[this post](http://endoflineblog.com/gitflow-considered-harmful) and in the
-[follow-up post](http://endoflineblog.com/follow-up-to-gitflow-considered-harmful).
-
-Developers who want to contribute to Wima are encouraged to read both posts
+Wima uses the git workflow described in
+[this post](http://endoflineblog.com/oneflow-a-git-branching-model-and-workflow).
+Developers who want to contribute to Wima are encouraged to read that post
 carefully.
 
-For Wima, the "eternal" branch is `develop` and the "release tag" branch (which
-always points to the commit tagged with the last release) is `master`.
+For feature branches, it uses "`rebase` + `merge --no--ff`" (option 3). It also
+uses the `develop`/`master` split. (Main development is on `develop`, and
+`master` just points to the lastest tagged release to make it easy for users to
+get the latest release.
+
+Wima includes scripts and a `.gitconfig` that helps manage the workflow. New
+contributors should familiarize themselves with them.
 
 Commit Messages
 ---------------
