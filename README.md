@@ -30,9 +30,8 @@ Status
 ------
 
 Wima is not even in Alpha stage yet; the first prototype has not yet been
-completed. This software is nowhere near ready for use.
-
-However, it is being developed alongside [Yera](https://github.com/ProjectLFyre/Yera).
+completed. This software is nowhere near ready for use. However, it is being
+developed alongside [Yera](https://github.com/ProjectLFyre/Yera).
 
 Language
 --------
