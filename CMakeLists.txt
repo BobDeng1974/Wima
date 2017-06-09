@@ -31,8 +31,8 @@ project(wima C)
 # Necessary to suppress a useless warning with QtCreator.
 set(ignoreMe "${QT_QMAKE_EXECUTABLE}")
 
-set("WM_INCLUDE_DIR" "include")
-set("WM_SRC_DIR" "src")
+set("WIMA_INCLUDE_DIR" "include")
+set("WIMA_SRC_DIR" "src")
 
-include("${WM_INCLUDE_DIR}/CMakeLists.txt")
-include("${WM_SRC_DIR}/CMakeLists.txt")
+include("${WIMA_INCLUDE_DIR}/CMakeLists.txt")
+include("${WIMA_SRC_DIR}/CMakeLists.txt")

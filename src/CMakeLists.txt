@@ -24,18 +24,20 @@
 #
 #	****** END LICENSE BLOCK ******
 
-set("WM_MAIN"
+set("WIMA_SRC"
 
 	# Put all source files here.
-	"src/WM_main.c"
+	"src/wima.c"
 )
 
-set(WM_SHARED_LIB "wima_sh")
-set(WM_STATIC_LIB "wima_st")
+if(NOT WIN32)
+	set(WIMA_SHARED_LIB "wima.so")
+endif()
+set(WIMA_STATIC_LIB "wima.a")
 
-add_library("${WM_SHARED_LIB}" SHARED "${WM_MAIN}" "${WM_MAIN_INC}")
-add_library("${WM_STATIC_LIB}" STATIC "${WM_MAIN}" "${WM_MAIN_INC}")
+add_library("${WIMA_SHARED_LIB}" SHARED "${WIMA_SRC}" "${WIMA_SRC_INC}")
+add_library("${WIMA_STATIC_LIB}" STATIC "${WIMA_SRC}" "${WIMA_SRC_INC}")
 
 # Install library
-install(TARGETS "${WM_SHARED_LIB}" LIBRARY DESTINATION lib/${PROJECT_NAME})
-install(TARGETS "${WM_STATIC_LIB}" ARCHIVE DESTINATION lib/${PROJECT_NAME})
+install(TARGETS "${WIMA_SHARED_LIB}" LIBRARY DESTINATION lib/${PROJECT_NAME})
+install(TARGETS "${WIMA_STATIC_LIB}" ARCHIVE DESTINATION lib/${PROJECT_NAME})
