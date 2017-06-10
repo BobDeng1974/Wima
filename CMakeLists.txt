@@ -34,5 +34,7 @@ set(ignoreMe "${QT_QMAKE_EXECUTABLE}")
 set("WIMA_INCLUDE_DIR" "include")
 set("WIMA_SRC_DIR" "src")
 
-include("${WIMA_INCLUDE_DIR}/CMakeLists.txt")
-include("${WIMA_SRC_DIR}/CMakeLists.txt")
+include_directories("${WIMA_INCLUDE_DIR}")
+add_subdirectory("${WIMA_INCLUDE_DIR}")
+
+add_subdirectory("${WIMA_SRC_DIR}")

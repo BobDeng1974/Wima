@@ -27,17 +27,17 @@
 set("WIMA_SRC"
 
 	# Put all source files here.
-	"src/wima.c"
+	"wima.c"
 )
 
+# Do the shared library on platforms other than Windows.
 if(NOT WIN32)
 	set(WIMA_SHARED_LIB "wima.so")
+	add_library("${WIMA_SHARED_LIB}" SHARED "${WIMA_SRC}")
+	install(TARGETS "${WIMA_SHARED_LIB}" LIBRARY DESTINATION lib/${PROJECT_NAME})
 endif()
+
+# Static library.
 set(WIMA_STATIC_LIB "wima.a")
-
-add_library("${WIMA_SHARED_LIB}" SHARED "${WIMA_SRC}" "${WIMA_SRC_INC}")
-add_library("${WIMA_STATIC_LIB}" STATIC "${WIMA_SRC}" "${WIMA_SRC_INC}")
-
-# Install library
-install(TARGETS "${WIMA_SHARED_LIB}" LIBRARY DESTINATION lib/${PROJECT_NAME})
+add_library("${WIMA_STATIC_LIB}" STATIC "${WIMA_SRC}")
 install(TARGETS "${WIMA_STATIC_LIB}" ARCHIVE DESTINATION lib/${PROJECT_NAME})
