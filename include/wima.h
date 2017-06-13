@@ -34,4 +34,4 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-int WM_main();
+int wm_main();

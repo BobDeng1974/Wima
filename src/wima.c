@@ -34,7 +34,9 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-int WM_main() {
+#include <wima.h>
+
+int wm_main() {
 
 	return 0;
 }
