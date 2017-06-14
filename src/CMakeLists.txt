@@ -32,12 +32,14 @@ set("WIMA_SRC"
 
 # Do the shared library on platforms other than Windows.
 if(NOT WIN32)
-	set(WIMA_SHARED_LIB "wima.so")
+	set(WIMA_SHARED_LIB "${PROJECT_NAME}_shared")
 	add_library("${WIMA_SHARED_LIB}" SHARED "${WIMA_SRC}")
+	set_target_properties("${WIMA_SHARED_LIB}" PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
 	install(TARGETS "${WIMA_SHARED_LIB}" LIBRARY DESTINATION lib/${PROJECT_NAME})
 endif()
 
 # Static library.
-set(WIMA_STATIC_LIB "wima.a")
+set(WIMA_STATIC_LIB "${PROJECT_NAME}_static")
 add_library("${WIMA_STATIC_LIB}" STATIC "${WIMA_SRC}")
+set_target_properties("${WIMA_STATIC_LIB}" PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
 install(TARGETS "${WIMA_STATIC_LIB}" ARCHIVE DESTINATION lib/${PROJECT_NAME})
