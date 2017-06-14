@@ -34,4 +34,9 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#ifndef WIMA_H
+#define WIMA_H
+
 int wm_main();
+
+#endif // WIMA_H
