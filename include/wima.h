@@ -37,6 +37,15 @@
 #ifndef WIMA_H
 #define WIMA_H
 
+/* For C++ compatibility */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int wm_main();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // WIMA_H
