@@ -8,5 +8,5 @@ Contents
 
 Files:
 
-	WM_main.c	Contains the event loop for Wima.
+	wima.c	Contains initialization functions and the event loop for Wima.
 
