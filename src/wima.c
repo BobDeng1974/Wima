@@ -36,7 +36,7 @@
 
 #include <wima.h>
 
-int wm_main() {
+int wima_main() {
 
 	return 0;
 }

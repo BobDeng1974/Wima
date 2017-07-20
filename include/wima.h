@@ -42,7 +42,7 @@
 extern "C" {
 #endif
 
-int wm_main();
+int wima_main();
 
 #ifdef __cplusplus
 }
