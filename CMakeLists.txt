@@ -38,3 +38,4 @@ include_directories("${WIMA_INCLUDE_DIR}")
 add_subdirectory("${WIMA_INCLUDE_DIR}")
 
 add_subdirectory("${WIMA_SRC_DIR}")
+

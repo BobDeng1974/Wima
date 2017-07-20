@@ -8,5 +8,5 @@ Contents
 
 Files:
 
-	WM_main.h	Header file containing Wima's main functions.
+	wima.h  Header file containing Wima's main functions.
 

@@ -35,3 +35,4 @@ install(
 	FILES "${WIMA_INC}"
 	DESTINATION "include/${PROJECT_NAME}"
 )
+
