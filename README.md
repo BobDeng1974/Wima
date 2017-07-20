@@ -76,15 +76,15 @@ Contents
 
 Files:
 
-	CMakeLists.txt	CMake is the build system used for Wima. This is the root
-					config file.
-	LICENSE.md		A Markdown version of Pixar's modified Apache 2.0 license.
-	NOTICE.md		The NOTICE file required by the Apache License.
+	CMakeLists.txt  CMake is the build system used for Wima. This is the root
+	                config file.
+	LICENSE.md      A Markdown version of Pixar's modified Apache 2.0 license.
+	NOTICE.md       The NOTICE file required by the Apache License.
 
 Folders:
 
-	docs		Contains all of the documentation for Wima (currently empty).
-	include		Contains all of the header files for Wima.
-	src			All of Wima's source code.
-	tests		Tests for Wima.
+	docs        Contains all of the documentation for Wima (currently empty).
+	include     Contains all of the public header files for Wima.
+	src         All of Wima's source code.
+	tests       Tests for Wima.
 
