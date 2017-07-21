@@ -1,5 +1,4 @@
-Notice
-======
+# Notice
 
 Copyright 2017 Project LFyre.
 

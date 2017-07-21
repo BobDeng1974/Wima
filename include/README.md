@@ -1,10 +1,8 @@
-Include
-=======
+# Include
 
 This folder contains all of the header files for Wima.
 
-Contents
---------
+## Contents
 
 Files:
 

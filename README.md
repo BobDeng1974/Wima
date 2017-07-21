@@ -1,5 +1,4 @@
-Wima
-====
+# Wima
 
 Wima (pronounced "WEE-muh") is a minimal, non-modal GUI framework built on top
 of [GLFW](http://www.glfw.org/).
@@ -26,20 +25,17 @@ Wima is Free and Open Source Software (FOSS). It is licensed under a modified
 used by [Pixar Animation Studios](https://www.pixar.com/) for use on the
 [OpenSubdiv](http://graphics.pixar.com/opensubdiv/docs/intro.html) project.
 
-Status
-------
+## Status
 
 Wima is not even in Alpha stage yet; the first prototype has not yet been
 completed. This software is nowhere near ready for use. However, it is being
 developed alongside [Yera](https://github.com/ProjectLFyre/Yera).
 
-Language
---------
+## Language
 
 Wima is written in pure ANSI C11.
 
-Git Workflow
-------------
+## Git Workflow
 
 Wima uses the git workflow described in
 [this post](http://endoflineblog.com/oneflow-a-git-branching-model-and-workflow).
@@ -54,25 +50,21 @@ get the latest release.)
 Wima includes scripts and a `.gitconfig` that helps manage the workflow. New
 contributors should familiarize themselves with them.
 
-Commit Messages
----------------
+## Commit Messages
 
 Projects under Project LFyre, including Wima, use the commit message guidelines
 laid out in [this blog post](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
 
-Semantic Versioning
--------------------
+## Semantic Versioning
 
 Wima uses [semantic versioning](http://semver.org/).
 
-Contents Listing
-----------------
+## Contents Listing
 
 Every folder contains a README file which lists the purposes for the files and
 folders in that directory.
 
-Contents
---------
+## Contents
 
 Files:
 
