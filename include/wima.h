@@ -29,7 +29,7 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	<Put description here>
+ *	This is the main public header file for Wima.
  *
  *	******** END FILE DESCRIPTION ********
  */

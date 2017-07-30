@@ -29,7 +29,7 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	<Put description here>
+ *	The is the main source file for Wima.
  *
  *	******** END FILE DESCRIPTION ********
  */
