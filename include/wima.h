@@ -42,7 +42,22 @@
 extern "C" {
 #endif
 
-int wima_main();
+typedef enum wima_status_codes {
+	WIMA_SUCCESS	= 0,
+	WIMA_INIT_ERR	= 128,
+	WIMA_WINDOW_ERR	= 129,
+} WimaStatus;
+
+/**
+ * This is a pointer to all of the global information that Wima
+ * needs. I do not want to expose the information publicly, so
+ * this has been typedefed into a void pointer.
+ */
+typedef void* WGlobal;
+
+WimaStatus wima_init(WGlobal* wglobal, const char* title);
+WimaStatus wima_main(WGlobal wglobal);
+void wima_exit(WGlobal wglobal);
 
 #ifdef __cplusplus
 }

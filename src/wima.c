@@ -34,9 +34,108 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <jemalloc/jemalloc.h>
+
+#include <GLFW/glfw3.h>
+
 #include <wima.h>
 
-int wima_main() {
+#include "global.h"
 
-	return 0;
+static void wima_error_callback(int error, const char* desc) {
+	fprintf(stderr, "Error[%d]: %s\n", error, desc);
+}
+
+static void wima_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+		glfwSetWindowShouldClose(window, GLFW_TRUE);
+	}
+}
+
+WimaStatus wima_init(WGlobal* wglobal, const char* title) {
+
+	WimaG* wg = malloc(sizeof(WimaG));
+
+	wg->wins = dvec_create(0, sizeof(GLFWwindow*));
+	if (!(wg->wins.array)) {
+		wima_exit(wg);
+		return WIMA_INIT_ERR;
+	}
+
+	glfwSetErrorCallback(wima_error_callback);
+
+	if (!glfwInit()) {
+		wima_exit(wg);
+		return WIMA_INIT_ERR;
+	}
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+
+	GLFWwindow* win = glfwCreateWindow(640, 480, title, NULL, NULL);
+
+	if (!win) {
+		glfwTerminate();
+		free(wg);
+		return WIMA_WINDOW_ERR;
+	}
+
+	glfwSetKeyCallback(win, wima_key_callback);
+
+	glfwMakeContextCurrent(win);
+
+	if (dvec_push(&wg->wins, (uint8_t*) &win)) {
+		wima_exit(wg);
+		return WIMA_INIT_ERR;
+	}
+
+	*wglobal = wg;
+
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_main(WGlobal wglobal) {
+
+	WimaG* wg = (WimaG*) wglobal;
+
+	GLFWwindow* win = glfwGetCurrentContext();
+
+	while (!glfwWindowShouldClose(win)) {
+
+		/* Render here */
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		/* Swap front and back buffers */
+		glfwSwapBuffers(win);
+
+		/* Poll for and process events */
+		glfwPollEvents();
+
+		win = glfwGetCurrentContext();
+	}
+
+	return WIMA_SUCCESS;
+}
+
+void wima_exit(WGlobal wglobal) {
+
+	WimaG* wg = (WimaG*) wglobal;
+
+	if (wg->wins.array) {
+
+		GLFWwindow** wins = (GLFWwindow**) wg->wins.array;
+
+		for (off_t i = wg->wins.len; i >= 0; --i) {
+			glfwDestroyWindow(wins[i]);
+			dvec_pop(&wg->wins);
+		}
+
+		dvec_free(&wg->wins);
+	}
+
+	free(wg);
 }
