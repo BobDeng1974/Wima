@@ -36,12 +36,27 @@
 
 #include <wima.h>
 
+WimaStatus mouseCoordsDraw(int width, int height) {
+	return WIMA_SUCCESS;
+}
+
 int main() {
 
 	WGlobal wg;
 
 	WimaStatus status = wima_init(&wg, "Test Wima App");
 	if (status != WIMA_SUCCESS) {
+		return status;
+	}
+
+	WimaAreaHandle wah;
+	status = wima_addScreenArea(wg, &wah, "Mouse Coordinates", mouseCoordsDraw);
+	if (status) {
+		return status;
+	}
+
+	status = wima_createScreen(wg, wah);
+	if (status) {
 		return status;
 	}
 
