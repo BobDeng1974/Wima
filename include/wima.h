@@ -42,11 +42,33 @@
 extern "C" {
 #endif
 
+#include <stddef.h>
+
+#include <dyna/vector.h>
+#include <dyna/string.h>
+
+/**
+ * The possible status codes that Wima can return after
+ * every operation.
+ */
 typedef enum wima_status_codes {
+
 	WIMA_SUCCESS	= 0,
-	WIMA_INIT_ERR	= 128,
-	WIMA_WINDOW_ERR	= 129,
+	WIMA_INVALID_STATE	= 128,
+	WIMA_INIT_ERR		= 129,
+	WIMA_SCREEN_ERR		= 130,
+	WIMA_AREA_ERR		= 131
+
 } WimaStatus;
+
+typedef struct wima_area_type {
+
+	WimaStatus (*draw)(int, int);
+	const char* name;
+
+} WimaAreaType;
+
+typedef size_t WimaAreaHandle;
 
 /**
  * This is a pointer to all of the global information that Wima
@@ -55,7 +77,10 @@ typedef enum wima_status_codes {
  */
 typedef void* WGlobal;
 
-WimaStatus wima_init(WGlobal* wglobal, const char* title);
+WimaStatus wima_init(WGlobal* wglobal, const char* name);
+WimaStatus wima_addScreenArea(WGlobal wglobal, WimaAreaHandle* wah,
+                              const char* name, WimaStatus (*draw)(int, int));
+WimaStatus wima_createScreen(WGlobal wg, WimaAreaHandle wah);
 WimaStatus wima_main(WGlobal wglobal);
 void wima_exit(WGlobal wglobal);
 

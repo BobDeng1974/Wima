@@ -37,11 +37,29 @@
 #include <GLFW/glfw3.h>
 
 #include <dyna/vector.h>
+#include <dyna/tree.h>
 
 #include <wima.h>
 
+typedef struct wima_screen_area {
+
+	WimaStatus (*draw)(int, int);
+	const char* name;
+	float split;
+
+} WimaArea;
+
+typedef struct wima_window {
+
+	GLFWwindow* window;
+	DynaTree areas;
+
+} WimaWin;
+
 typedef struct wima_globals {
 
-	dvec wins;
+	DynaVector windows;
+	DynaString name;
+	DynaVector types;
 
 } WimaG;

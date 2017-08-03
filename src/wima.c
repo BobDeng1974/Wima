@@ -41,6 +41,9 @@
 
 #include <GLFW/glfw3.h>
 
+#include <dyna/dyna.h>
+#include <dyna/vector.h>
+
 #include <wima.h>
 
 #include "global.h"
@@ -55,12 +58,24 @@ static void wima_key_callback(GLFWwindow* window, int key, int scancode, int act
 	}
 }
 
-WimaStatus wima_init(WGlobal* wglobal, const char* title) {
+WimaStatus wima_init(WGlobal* wglobal, const char* name) {
 
 	WimaG* wg = malloc(sizeof(WimaG));
 
-	wg->wins = dvec_create(0, sizeof(GLFWwindow*));
-	if (!(wg->wins.array)) {
+	DynaStatus status = dstr_create(&(wg->name), name);
+	if (status) {
+		wima_exit(wg);
+		return WIMA_INIT_ERR;
+	}
+
+	status = dvec_create(&(wg->windows), 0, sizeof(WimaWin));
+	if (status) {
+		wima_exit(wg);
+		return WIMA_INIT_ERR;
+	}
+
+	status = dvec_create(&(wg->types), 0, sizeof(WimaAreaType));
+	if (status) {
 		wima_exit(wg);
 		return WIMA_INIT_ERR;
 	}
@@ -72,28 +87,77 @@ WimaStatus wima_init(WGlobal* wglobal, const char* title) {
 		return WIMA_INIT_ERR;
 	}
 
+	*wglobal = wg;
+
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_addScreenArea(WGlobal wglobal, WimaAreaHandle* wah,
+                              const char* name, WimaStatus (*draw)(int, int))
+{
+	WimaG* wg = (WimaG*) wglobal;
+
+	WimaAreaType wat;
+	wat.draw = draw;
+	wat.name = name;
+
+	size_t idx = dvec_len(wg->types);
+
+	DynaStatus status = dvec_push(wg->types, (uint8_t*) &wat);
+	if (status) {
+		return WIMA_AREA_ERR;
+	}
+
+	*wah = idx;
+
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_createScreen(WGlobal wglobal, WimaAreaHandle wah) {
+
+	WimaG* wg = (WimaG*) wglobal;
+
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
-	GLFWwindow* win = glfwCreateWindow(640, 480, title, NULL, NULL);
+	GLFWwindow* win = glfwCreateWindow(640, 480, dstr_str(wg->name), NULL, NULL);
 
 	if (!win) {
 		glfwTerminate();
 		free(wg);
-		return WIMA_WINDOW_ERR;
+		return WIMA_SCREEN_ERR;
 	}
 
 	glfwSetKeyCallback(win, wima_key_callback);
 
 	glfwMakeContextCurrent(win);
 
-	if (dvec_push(&wg->wins, (uint8_t*) &win)) {
+	WimaWin wwin;
+	wwin.window = win;
+	wwin.areas = NULL;
+
+	if (dtree_create(&(wwin.areas), 0, sizeof(WimaArea))) {
 		wima_exit(wg);
-		return WIMA_INIT_ERR;
+		return WIMA_SCREEN_ERR;
 	}
 
-	*wglobal = wg;
+	WimaAreaType* types = (WimaAreaType*) dvec_data(wg->types);
+
+	WimaArea area;
+	area.split = -1.0f;
+	area.draw = types[wah].draw;
+	area.name = types[wah].name;
+
+	if (dtree_add(wwin.areas, dtree_root(), (uint8_t*) &area)) {
+		wima_exit(wg);
+		return WIMA_SCREEN_ERR;
+	}
+
+	if (dvec_push(wg->windows, (uint8_t*) &wwin)) {
+		wima_exit(wg);
+		return WIMA_SCREEN_ERR;
+	}
 
 	return WIMA_SUCCESS;
 }
@@ -103,6 +167,9 @@ WimaStatus wima_main(WGlobal wglobal) {
 	WimaG* wg = (WimaG*) wglobal;
 
 	GLFWwindow* win = glfwGetCurrentContext();
+	if (!win) {
+		return WIMA_INVALID_STATE;
+	}
 
 	while (!glfwWindowShouldClose(win)) {
 
@@ -113,7 +180,7 @@ WimaStatus wima_main(WGlobal wglobal) {
 		glfwSwapBuffers(win);
 
 		/* Poll for and process events */
-		glfwPollEvents();
+		glfwWaitEvents();
 
 		win = glfwGetCurrentContext();
 	}
@@ -125,16 +192,35 @@ void wima_exit(WGlobal wglobal) {
 
 	WimaG* wg = (WimaG*) wglobal;
 
-	if (wg->wins.array) {
+	if (!wg) {
+		return;
+	}
 
-		GLFWwindow** wins = (GLFWwindow**) wg->wins.array;
+	if (wg->name) {
+		dstr_free(wg->name);
+	}
 
-		for (off_t i = wg->wins.len; i >= 0; --i) {
-			glfwDestroyWindow(wins[i]);
-			dvec_pop(&wg->wins);
+	if (wg->types) {
+		dvec_free(wg->types);
+	}
+
+	if (wg->windows) {
+
+		size_t len = dvec_len(wg->windows);
+		WimaWin* wins = (WimaWin*) dvec_data(wg->windows);
+
+		for (int i = 0; i < len; ++i) {
+
+			if (wins[i].areas) {
+				dtree_free(wins[i].areas);
+			}
+
+			if (wins[i].window) {
+				glfwDestroyWindow(wins[i].window);
+			}
 		}
 
-		dvec_free(&wg->wins);
+		dvec_free(wg->windows);
 	}
 
 	free(wg);
