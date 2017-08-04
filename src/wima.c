@@ -92,28 +92,41 @@ WimaStatus wima_init(WGlobal* wglobal, const char* name) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_addScreenArea(WGlobal wglobal, WimaAreaHandle* wah,
-                              const char* name, WimaStatus (*draw)(int, int))
+WimaStatus wima_addScreenArea(WGlobal wglobal,
+                              WimaTypeHandle* wth,
+                              const char* name,
+                              draw_proc draw,
+                              mouse_event_proc mevent,
+                              key_event_proc kevent,
+                              scroll_event_proc sevent)
 {
 	WimaG* wg = (WimaG*) wglobal;
 
 	WimaAreaType wat;
-	wat.draw = draw;
-	wat.name = name;
 
-	size_t idx = dvec_len(wg->types);
-
-	DynaStatus status = dvec_push(wg->types, (uint8_t*) &wat);
+	DynaStatus status = dstr_create(&(wat.name), name);
 	if (status) {
 		return WIMA_AREA_ERR;
 	}
 
-	*wah = idx;
+	wat.draw = draw;
+	wat.mevent = mevent;
+	wat.kevent = kevent;
+	wat.sevent = sevent;
+
+	size_t idx = dvec_len(wg->types);
+
+	status = dvec_push(wg->types, (uint8_t*) &wat);
+	if (status) {
+		return WIMA_AREA_ERR;
+	}
+
+	*wth = idx;
 
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_createScreen(WGlobal wglobal, WimaAreaHandle wah) {
+WimaStatus wima_createScreen(WGlobal wglobal, WimaScreenArea* wsa, WimaTypeHandle wth) {
 
 	WimaG* wg = (WimaG*) wglobal;
 
@@ -142,14 +155,16 @@ WimaStatus wima_createScreen(WGlobal wglobal, WimaAreaHandle wah) {
 		return WIMA_SCREEN_ERR;
 	}
 
-	WimaAreaType* types = (WimaAreaType*) dvec_data(wg->types);
+	size_t screenIdx = dvec_len(wg->windows);
+	size_t areaIdx = dtree_root();
 
 	WimaArea area;
 	area.split = -1.0f;
-	area.draw = types[wah].draw;
-	area.name = types[wah].name;
+	area.area.type = wth;
+	area.area.screen = screenIdx;
+	area.area.area = areaIdx;
 
-	if (dtree_add(wwin.areas, dtree_root(), (uint8_t*) &area)) {
+	if (dtree_add(wwin.areas, areaIdx, (uint8_t*) &area)) {
 		wima_exit(wg);
 		return WIMA_SCREEN_ERR;
 	}
@@ -158,6 +173,10 @@ WimaStatus wima_createScreen(WGlobal wglobal, WimaAreaHandle wah) {
 		wima_exit(wg);
 		return WIMA_SCREEN_ERR;
 	}
+
+	wsa->area = area.area.area;
+	wsa->screen = area.area.screen;
+	wsa->type = area.area.type;
 
 	return WIMA_SUCCESS;
 }

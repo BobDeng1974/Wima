@@ -41,10 +41,19 @@
 
 #include <wima.h>
 
-typedef struct wima_screen_area {
+typedef struct wima_area_type {
 
+	DynaString name;
 	WimaStatus (*draw)(int, int);
-	const char* name;
+	mouse_event_proc mevent;
+	key_event_proc kevent;
+	scroll_event_proc sevent;
+
+} WimaAreaType;
+
+typedef struct wima_area {
+
+	WimaScreenArea area;
 	float split;
 
 } WimaArea;
@@ -58,8 +67,8 @@ typedef struct wima_window {
 
 typedef struct wima_globals {
 
-	DynaVector windows;
 	DynaString name;
+	DynaVector windows;
 	DynaVector types;
 
 } WimaG;
