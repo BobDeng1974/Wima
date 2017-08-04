@@ -40,6 +40,18 @@ WimaStatus mouseCoordsDraw(int width, int height) {
 	return WIMA_SUCCESS;
 }
 
+WimaStatus mouseCoordsMevent(WimaScreenArea area, WimaMouseBtn mbtn, WimaMods mods, WimaEvent e) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus mouseCoordsKevent(WimaScreenArea area, WimaKey key, WimaMods mods, WimaEvent e) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus mouseCoordsSevent(WimaScreenArea area, double xoffset, double yoffset) {
+	return WIMA_SUCCESS;
+}
+
 int main() {
 
 	WGlobal wg;
@@ -49,13 +61,17 @@ int main() {
 		return status;
 	}
 
-	WimaAreaHandle wah;
-	status = wima_addScreenArea(wg, &wah, "Mouse Coordinates", mouseCoordsDraw);
+	WimaTypeHandle wth;
+	status = wima_addScreenArea(wg, &wth, "Mouse Coordinates",
+	                            mouseCoordsDraw, mouseCoordsMevent,
+	                            mouseCoordsKevent, mouseCoordsSevent);
 	if (status) {
 		return status;
 	}
 
-	status = wima_createScreen(wg, wah);
+	WimaScreenArea area;
+
+	status = wima_createScreen(wg, &area, wth);
 	if (status) {
 		return status;
 	}
