@@ -61,7 +61,7 @@ typedef struct wima_area {
 typedef struct wima_window {
 
 	GLFWwindow* window;
-	DynaTree areas;
+	WimaScreenHandle screen;
 
 } WimaWin;
 
@@ -69,6 +69,7 @@ typedef struct wima_globals {
 
 	DynaString name;
 	DynaVector windows;
-	DynaVector types;
+	DynaVector screenTypes;
+	DynaVector areaTypes;
 
 } WimaG;

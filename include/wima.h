@@ -55,9 +55,14 @@ extern "C" {
 typedef void* WGlobal;
 
 /**
- * A handle to a screen area type.
+ * A handle to either a screen or an area type.
  */
 typedef size_t WimaTypeHandle;
+
+/**
+ * A handle to a window.
+ */
+typedef size_t WimaWindowHandle;
 
 /**
  * A handle to a screen.
@@ -75,6 +80,7 @@ typedef size_t WimaAreaHandle;
 typedef struct wima_screen_area {
 
 	WimaTypeHandle type;
+	WimaWindowHandle window;
 	WimaScreenHandle screen;
 	WimaAreaHandle area;
 
