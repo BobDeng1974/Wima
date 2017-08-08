@@ -64,9 +64,13 @@ WimaStatus mouseCoordsSevent(WimaWindowHandle wwh, double xoffset, double yoffse
 	return WIMA_SUCCESS;
 }
 
+void mouseCoordsError(WimaStatus status) {
+
+}
+
 int main() {
 
-	WimaStatus status = wima_init("Test Wima App");
+	WimaStatus status = wima_init("Test Wima App", mouseCoordsError);
 	if (status != WIMA_SUCCESS) {
 		return status;
 	}
