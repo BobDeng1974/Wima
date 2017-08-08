@@ -195,5 +195,38 @@ void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
 }
 
 void wima_callback_error(int error, const char* desc) {
+
 	fprintf(stderr, "Error[%d]: %s\n", error, desc);
+
+	WimaStatus status = WIMA_SUCCESS;
+
+	switch (error) {
+		case GLFW_NOT_INITIALIZED:
+			status = WIMA_INIT_ERR;
+			break;
+		case GLFW_NO_CURRENT_CONTEXT:
+			status = WIMA_CONTEXT_ERR;
+			break;
+		case GLFW_INVALID_ENUM:
+			status = WIMA_INVALID_ENUM;
+			break;
+		case GLFW_INVALID_VALUE:
+			status = WIMA_INVALID_PARAM;
+			break;
+		case GLFW_OUT_OF_MEMORY:
+			status = WIMA_OUT_OF_MEM;
+			break;
+		case GLFW_API_UNAVAILABLE:
+		case GLFW_VERSION_UNAVAILABLE:
+			status = WIMA_INIT_ERR;
+			break;
+		case GLFW_PLATFORM_ERROR:
+			status = WIMA_PLATFORM_ERR;
+			break;
+		case GLFW_FORMAT_UNAVAILABLE:
+			status = WIMA_INVALID_CLIP;
+			break;
+	}
+
+	wg.error(status);
 }

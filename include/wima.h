@@ -92,12 +92,20 @@ typedef struct wima_screen {
 typedef enum wima_status_codes {
 
 	WIMA_SUCCESS		= 0,	/** Success. */
-	WIMA_INVALID_STATE	= 128,	/** Returned when Wima is in an invalid
+	WIMA_OUT_OF_MEM		= 128,	/** Returned when Wima fails to allocate memory. */
+	WIMA_PLATFORM_ERR	= 129,	/** Returned when the platform returns
+									an unknown error. */
+	WIMA_INVALID_STATE	= 130,	/** Returned when Wima is in an invalid
 									state for the operation.*/
-	WIMA_INIT_ERR		= 129,	/** Returned when Wima fails to initialize. */
-	WIMA_WINDOW_ERR		= 130,	/** Returned when Wima fails to create a window. */
-	WIMA_SCREEN_ERR		= 131,	/** Returned when Wima fails to start a screen. */
-	WIMA_AREA_ERR		= 132	/** Returned when Wima fails to start an area. */
+	WIMA_CONTEXT_ERR	= 131,	/** Returned when OpenGL does not have a context. */
+	WIMA_INIT_ERR		= 132,	/** Returned when Wima fails to initialize. */
+	WIMA_WINDOW_ERR		= 133,	/** Returned when Wima fails to create a window. */
+	WIMA_SCREEN_ERR		= 134,	/** Returned when Wima fails to start a screen. */
+	WIMA_AREA_ERR		= 135,	/** Returned when Wima fails to start an area. */
+	WIMA_INVALID_ENUM	= 136,	/** Returned when Wima gets an invalid enum value. */
+	WIMA_INVALID_PARAM	= 137,	/** Returned when Wima gets an invalid parameter. */
+	WIMA_INVALID_CLIP	= 138,	/** Returned when the clipboard contents
+									were invalid. */
 
 } WimaStatus;
 
@@ -287,6 +295,9 @@ typedef WimaStatus (*mouse_event_proc)(WimaWindowHandle, WimaMouseBtn, WimaActio
 typedef WimaStatus (*mouse_pos_proc)(WimaWindowHandle, int, int);
 typedef WimaStatus (*mouse_enter_proc)(WimaWindowHandle, bool);
 typedef WimaStatus (*scroll_event_proc)(WimaWindowHandle, double, double);
+typedef WimaStatus (*char_proc)(WimaWindowHandle, uint32_t);
+typedef WimaStatus (*char_mod_proc)(WimaWindowHandle, uint32_t, WimaMods);
+typedef WimaStatus (*file_drop_proc)(WimaWindowHandle, int, const char**);
 
 WimaStatus wima_init(const char* name, error_proc error);
 WimaStatus wima_addArea(WimaTypeHandle* wth,     const char* name,
