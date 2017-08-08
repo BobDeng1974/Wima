@@ -50,7 +50,13 @@
 
 WimaG wg;
 
-WimaStatus wima_init(const char* name) {
+WimaStatus wima_init(const char* name, error_proc error) {
+
+	if (!error) {
+		return WIMA_INIT_ERR;
+	}
+
+	wg.error = error;
 
 	wg.areaTypes = NULL;
 	wg.name = NULL;

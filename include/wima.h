@@ -280,6 +280,7 @@ typedef enum wima_action {
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
+typedef void (*error_proc)(WimaStatus);
 typedef WimaStatus (*draw_proc)(int, int);
 typedef WimaStatus (*key_event_proc)(WimaWindowHandle, WimaKey, WimaMods, WimaAction);
 typedef WimaStatus (*mouse_event_proc)(WimaWindowHandle, WimaMouseBtn, WimaMods, WimaAction);
@@ -287,7 +288,7 @@ typedef WimaStatus (*mouse_move_proc)(WimaWindowHandle, int, int);
 typedef WimaStatus (*mouse_enter_proc)(WimaWindowHandle, bool);
 typedef WimaStatus (*scroll_event_proc)(WimaWindowHandle, double, double);
 
-WimaStatus wima_init(const char* name);
+WimaStatus wima_init(const char* name, error_proc error);
 WimaStatus wima_addArea(WimaTypeHandle* wth,     const char* name,
                         draw_proc draw,          key_event_proc kevent,
                         mouse_event_proc mevent, mouse_move_proc mmove,

@@ -88,6 +88,8 @@ typedef struct wima_globals {
 
 	DynaString name;
 
+	error_proc error;
+
 	DynaVector windows;
 
 	// TODO: For when I implement screens.
