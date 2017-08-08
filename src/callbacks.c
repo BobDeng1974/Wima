@@ -34,6 +34,7 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <stdbool.h>
 #include <stdlib.h>
 
 #include <GLFW/glfw3.h>
@@ -61,6 +62,21 @@ void wima_callback_mouseMove(GLFWwindow* window, double x, double y) {
 
 void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
+	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+
+	WimaWin* wwin = (WimaWin*) dvec_data(wg.windows);
+
+	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
+
+	WimaStatus status = types[wwin[wwh].area].mouse_enter(wwh, entered ? true : false);
+
+	if (status) {
+		wg.error(status);
+	}
 }
 
 void wima_callback_mouseScroll(GLFWwindow* window, double xoffset, double yoffset) {
