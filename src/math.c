@@ -34,6 +34,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <stdbool.h>
+
 int wima_math_coordToPixel(int npixels, double coord, bool y) {
 
 	// TODO: I did not put much time into this.
