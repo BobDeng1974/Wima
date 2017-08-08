@@ -41,3 +41,6 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered);
 void wima_callback_mouseScroll(GLFWwindow* window, double xoffset, double yoffset);
 void wima_callback_windowResize(GLFWwindow* window, int width, int height);
 void wima_callback_error(int error, const char* desc);
+void wima_callback_char(GLFWwindow* window, unsigned int code);
+void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods);
+void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]);

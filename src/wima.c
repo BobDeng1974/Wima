@@ -152,6 +152,11 @@ WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHa
 	glfwSetCursorEnterCallback(win,wima_callback_mouseEnter);
 	glfwSetScrollCallback(win, wima_callback_mouseScroll);
 
+	glfwSetCharCallback(win, wima_callback_char);
+	glfwSetCharModsCallback(win, wima_callback_charMod);
+
+	glfwSetDropCallback(win, wima_callback_fileDrop);
+
 	glfwSetFramebufferSizeCallback(win, wima_callback_windowResize);
 
 	glfwMakeContextCurrent(win);
