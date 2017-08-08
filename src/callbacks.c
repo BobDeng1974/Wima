@@ -52,7 +52,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	}
 }
 
-void wima_callback_mouseBtn(GLFWwindow* window, int btn, int mods, int action) {
+void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	if (!wg.name) {
 		exit(WIMA_INVALID_STATE);
