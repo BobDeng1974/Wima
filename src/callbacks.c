@@ -68,8 +68,6 @@ void wima_callback_mouseScroll(GLFWwindow* window, double xoffset, double yoffse
 
 void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
 
-	fprintf(stdout, "Got here!\n");
-
 	if (!wg.name) {
 		exit(WIMA_INVALID_STATE);
 	}
