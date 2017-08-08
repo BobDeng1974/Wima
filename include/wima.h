@@ -269,21 +269,21 @@ typedef enum wima_modifier_keys {
 
 } WimaMods;
 
-typedef enum wima_event {
+typedef enum wima_action {
 
 	WIMA_RELEASE	= 0,
 	WIMA_PRESS		= 1,
 	WIMA_REPEAT		= 2
 
-} WimaEvent;
+} WimaAction;
 
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
 typedef WimaStatus (*draw_proc)(int, int);
-typedef WimaStatus (*key_event_proc)(WimaWindowHandle, WimaKey, WimaMods, WimaEvent);
-typedef WimaStatus (*mouse_event_proc)(WimaWindowHandle, WimaMouseBtn, WimaMods, WimaEvent);
-typedef WimaStatus (*mouse_move_proc)(WimaWindowHandle, double, double);
+typedef WimaStatus (*key_event_proc)(WimaWindowHandle, WimaKey, WimaMods, WimaAction);
+typedef WimaStatus (*mouse_event_proc)(WimaWindowHandle, WimaMouseBtn, WimaMods, WimaAction);
+typedef WimaStatus (*mouse_move_proc)(WimaWindowHandle, int, int);
 typedef WimaStatus (*mouse_enter_proc)(WimaWindowHandle, bool);
 typedef WimaStatus (*scroll_event_proc)(WimaWindowHandle, double, double);
 
