@@ -56,7 +56,7 @@ WimaStatus mouseCoordsMevent(WimaWindowHandle wwh, WimaMouseBtn mbtn, WimaAction
 }
 
 WimaStatus mouseCoordsMmove(WimaWindowHandle wwh, int x, int y) {
-	fprintf(stdout, "{\n    x: %4d\n    y: %4d }\n", x, y);
+	fprintf(stdout, "{ x: %4d; y: %4d }\n", x, y);
 	return WIMA_SUCCESS;
 }
 
