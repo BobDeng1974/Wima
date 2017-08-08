@@ -43,7 +43,10 @@ WimaStatus mouseCoordsDraw(int width, int height) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsKevent(WimaWindowHandle wwh, WimaKey key, WimaAction e, WimaMods mods) {
+WimaStatus mouseCoordsKevent(WimaWindowHandle wwh,
+                             WimaKey key, int scancode,
+                             WimaAction e, WimaMods mods)
+{
 	return WIMA_SUCCESS;
 }
 
