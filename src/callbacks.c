@@ -104,6 +104,23 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 void wima_callback_mouseScroll(GLFWwindow* window, double xoffset, double yoffset) {
 
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
+	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+
+	WimaWin* wwin = (WimaWin*) dvec_data(wg.windows);
+
+	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
+
+	scroll_event_proc scroll_event = types[wwin[wwh].area].scroll_event;
+
+	WimaStatus status = scroll_event(wwh, xoffset, yoffset);
+
+	if (status) {
+		wg.error(status);
+	}
 }
 
 void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
