@@ -83,7 +83,11 @@ void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
 
 	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
 
-	types[wwin[wwh].area].draw(width, height);
+	WimaStatus status = types[wwin[wwh].area].draw(width, height);
+
+	if (status) {
+		wg.error(status);
+	}
 }
 
 void wima_callback_error(int error, const char* desc) {
