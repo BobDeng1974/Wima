@@ -282,8 +282,8 @@ typedef enum wima_action {
  */
 typedef void (*error_proc)(WimaStatus);
 typedef WimaStatus (*draw_proc)(int, int);
-typedef WimaStatus (*key_event_proc)(WimaWindowHandle, WimaKey, WimaMods, WimaAction);
-typedef WimaStatus (*mouse_event_proc)(WimaWindowHandle, WimaMouseBtn, WimaMods, WimaAction);
+typedef WimaStatus (*key_event_proc)(WimaWindowHandle, WimaKey, int, WimaAction, WimaMods);
+typedef WimaStatus (*mouse_event_proc)(WimaWindowHandle, WimaMouseBtn, WimaAction, WimaMods);
 typedef WimaStatus (*mouse_move_proc)(WimaWindowHandle, int, int);
 typedef WimaStatus (*mouse_enter_proc)(WimaWindowHandle, bool);
 typedef WimaStatus (*scroll_event_proc)(WimaWindowHandle, double, double);

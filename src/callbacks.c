@@ -70,7 +70,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	mouse_event_proc mouse_event = types[wwin[wwh].area].mouse_event;
 
-	WimaStatus status = mouse_event(wwh, wbtn, wmods, wact);
+	WimaStatus status = mouse_event(wwh, wbtn, wact, wmods);
 
 	if (status) {
 		wg.error(status);
