@@ -45,11 +45,11 @@ typedef struct wima_area_type {
 
 	DynaString name;
 	draw_proc draw;
-	key_event_proc kevent;
-	mouse_event_proc mevent;
-	mouse_move_proc mmove;
-	mouse_enter_proc menter;
-	scroll_event_proc sevent;
+	key_event_proc key_event;
+	mouse_event_proc mouse_event;
+	mouse_move_proc mouse_move;
+	mouse_enter_proc mouse_enter;
+	scroll_event_proc scroll_event;
 
 } WimaAreaType;
 

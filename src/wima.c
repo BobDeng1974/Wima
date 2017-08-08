@@ -97,11 +97,11 @@ WimaStatus wima_addArea(WimaTypeHandle* wth,     const char* name,
 	}
 
 	wat.draw = draw;
-	wat.kevent = kevent;
-	wat.mevent = mevent;
-	wat.mmove = mmove;
-	wat.menter = menter;
-	wat.sevent = sevent;
+	wat.key_event = kevent;
+	wat.mouse_event = mevent;
+	wat.mouse_move = mmove;
+	wat.mouse_enter = menter;
+	wat.scroll_event = sevent;
 
 	size_t idx = dvec_len(wg.areaTypes);
 
