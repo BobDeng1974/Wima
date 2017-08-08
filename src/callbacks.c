@@ -96,7 +96,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	}
 }
 
-void wima_callback_mouseMove(GLFWwindow* window, double x, double y) {
+void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 }
 

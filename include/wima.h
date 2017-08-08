@@ -284,14 +284,14 @@ typedef void (*error_proc)(WimaStatus);
 typedef WimaStatus (*draw_proc)(int, int);
 typedef WimaStatus (*key_event_proc)(WimaWindowHandle, WimaKey, int, WimaAction, WimaMods);
 typedef WimaStatus (*mouse_event_proc)(WimaWindowHandle, WimaMouseBtn, WimaAction, WimaMods);
-typedef WimaStatus (*mouse_move_proc)(WimaWindowHandle, int, int);
+typedef WimaStatus (*mouse_pos_proc)(WimaWindowHandle, int, int);
 typedef WimaStatus (*mouse_enter_proc)(WimaWindowHandle, bool);
 typedef WimaStatus (*scroll_event_proc)(WimaWindowHandle, double, double);
 
 WimaStatus wima_init(const char* name, error_proc error);
 WimaStatus wima_addArea(WimaTypeHandle* wth,     const char* name,
                         draw_proc draw,          key_event_proc kevent,
-                        mouse_event_proc mevent, mouse_move_proc mmove,
+                        mouse_event_proc mevent, mouse_pos_proc mpos,
                         mouse_enter_proc menter, scroll_event_proc sevent);
 WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wth);
 WimaStatus wima_main();

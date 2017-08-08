@@ -93,7 +93,7 @@ WimaStatus wima_init(const char* name, error_proc error) {
 
 WimaStatus wima_addArea(WimaTypeHandle* wth,     const char* name,
                         draw_proc draw,          key_event_proc kevent,
-                        mouse_event_proc mevent, mouse_move_proc mmove,
+                        mouse_event_proc mevent, mouse_pos_proc mpos,
                         mouse_enter_proc menter, scroll_event_proc sevent)
 {
 	WimaAreaType wat;
@@ -106,7 +106,7 @@ WimaStatus wima_addArea(WimaTypeHandle* wth,     const char* name,
 	wat.draw = draw;
 	wat.key_event = kevent;
 	wat.mouse_event = mevent;
-	wat.mouse_move = mmove;
+	wat.mouse_move = mpos;
 	wat.mouse_enter = menter;
 	wat.scroll_event = sevent;
 
@@ -148,7 +148,7 @@ WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHa
 
 	glfwSetKeyCallback(win, wima_callback_key);
 	glfwSetMouseButtonCallback(win, wima_callback_mouseBtn);
-	glfwSetCursorPosCallback(win, wima_callback_mouseMove);
+	glfwSetCursorPosCallback(win, wima_callback_mousePos);
 	glfwSetCursorEnterCallback(win,wima_callback_mouseEnter);
 	glfwSetScrollCallback(win, wima_callback_mouseScroll);
 
