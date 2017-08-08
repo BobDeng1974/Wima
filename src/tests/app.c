@@ -34,51 +34,62 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <stdbool.h>
+
 #include <wima.h>
 
 WimaStatus mouseCoordsDraw(int width, int height) {
+	fprintf(stdout, "Draw: { width: %4d; height: %4d }\n", width, height);
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsMevent(WimaScreenArea area, WimaMouseBtn mbtn, WimaMods mods, WimaEvent e) {
+WimaStatus mouseCoordsKevent(WimaWindowHandle wwh, WimaKey key, WimaMods mods, WimaAction e) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsKevent(WimaScreenArea area, WimaKey key, WimaMods mods, WimaEvent e) {
+WimaStatus mouseCoordsMevent(WimaWindowHandle wwh, WimaMouseBtn mbtn, WimaMods mods, WimaAction e) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsSevent(WimaScreenArea area, double xoffset, double yoffset) {
+WimaStatus mouseCoordsMmove(WimaWindowHandle wwh, int x, int y) {
+	fprintf(stdout, "{\n    x: %4d\n    y: %4d }\n", x, y);
+	return WIMA_SUCCESS;
+}
+
+WimaStatus mouseCoordsMenter(WimaWindowHandle wwh, bool entered) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus mouseCoordsSevent(WimaWindowHandle wwh, double xoffset, double yoffset) {
 	return WIMA_SUCCESS;
 }
 
 int main() {
 
-	WGlobal wg;
-
-	WimaStatus status = wima_init(&wg, "Test Wima App");
+	WimaStatus status = wima_init("Test Wima App");
 	if (status != WIMA_SUCCESS) {
 		return status;
 	}
 
 	WimaTypeHandle wth;
-	status = wima_addScreenArea(wg, &wth, "Mouse Coordinates",
-	                            mouseCoordsDraw, mouseCoordsMevent,
-	                            mouseCoordsKevent, mouseCoordsSevent);
+	status = wima_addArea(&wth,              "Mouse Coordinates",
+	                      mouseCoordsDraw,   mouseCoordsKevent,
+	                      mouseCoordsMevent, mouseCoordsMmove,
+	                      mouseCoordsMenter, mouseCoordsSevent);
 	if (status) {
 		return status;
 	}
 
-	WimaScreenArea area;
+	WimaWindowHandle wwh;
 
-	status = wima_createScreen(wg, &area, wth);
+	status = wima_createWindow(&wwh, "Mouse Coordinates", wth);
 	if (status) {
 		return status;
 	}
 
-	status = wima_main(wg);
+	status = wima_main();
 
-	wima_exit(wg);
+	wima_exit();
 
 	return status;
 }
