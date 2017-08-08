@@ -28,6 +28,7 @@ set("WIMA_SRC"
 
 	# Put all source files here.
 	"global.h"
+	"callbacks.h"
 	"wima.c"
 	"callbacks.c"
 )

@@ -47,6 +47,7 @@
 #include <wima.h>
 
 #include "global.h"
+#include "callbacks.h"
 
 WimaG wg;
 
