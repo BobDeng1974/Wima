@@ -72,7 +72,9 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
 
-	WimaStatus status = types[wwin[wwh].area].mouse_enter(wwh, entered ? true : false);
+	mouse_enter_proc mouse_enter = types[wwin[wwh].area].mouse_enter;
+
+	WimaStatus status = mouse_enter(wwh, entered ? true : false);
 
 	if (status) {
 		wg.error(status);
