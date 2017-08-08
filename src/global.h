@@ -96,3 +96,5 @@ typedef struct wima_globals {
 	DynaVector areaTypes;
 
 } WimaG;
+
+#define GLFW_AREA_HANDLE(win) (WimaAreaHandle) glfwGetWindowUserPointer(win)
