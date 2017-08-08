@@ -109,11 +109,11 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
 
-	int xnum = wwin[wwh].width;
-	int ynum = wwin[wwh].height;
-
-	int xint = wima_math_coordToPixel(xnum, x, false);
-	int yint = wima_math_coordToPixel(ynum, y, true);
+	// Just cast because apparently, glfw does the hard work
+	// in converting them to pixels; it just gives them back
+	// in floating point numbers, for whatever reason.
+	int xint = (int) x;
+	int yint = (int) y;
 
 	mouse_pos_proc mouse_pos = types[wwin[wwh].area].mouse_pos;
 
