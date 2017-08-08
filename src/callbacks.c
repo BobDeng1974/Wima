@@ -74,14 +74,16 @@ void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
 
 	glViewport(0, 0, width, height);
 
-	WimaAreaHandle wah = GLFW_AREA_HANDLE(window);
+	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
 
 	WimaWin* wwin = (WimaWin*) dvec_data(wg.windows);
-	wwin[wah].width = width;
-	wwin[wah].height = height;
+
+	wwin[wwh].width = width;
+	wwin[wwh].height = height;
 
 	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
-	types[wwin[wah].area].draw(width, height);
+
+	types[wwin[wwh].area].draw(width, height);
 }
 
 void wima_callback_error(int error, const char* desc) {

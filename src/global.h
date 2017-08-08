@@ -97,7 +97,7 @@ typedef struct wima_globals {
 
 } WimaG;
 
-#define GLFW_AREA_HANDLE(win) (WimaAreaHandle) glfwGetWindowUserPointer(win)
+#define GLFW_WINDOW_HANDLE(win) (WimaWindowHandle) glfwGetWindowUserPointer(win)
 
 void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods);
 void wima_callback_mouseBtn(GLFWwindow* window, int btn, int mods, int action);
