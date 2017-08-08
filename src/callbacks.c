@@ -53,6 +53,10 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 	}
 
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
 	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
 
 	WimaWin* wwin = (WimaWin*) dvec_data(wg.windows);
