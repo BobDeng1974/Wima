@@ -34,15 +34,20 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-int wima_math_coordToPixel(int npixels, double coord) {
+int wima_math_coordToPixel(int npixels, double coord, bool y) {
 
 	// TODO: I did not put much time into this.
 	// It is just a simple implementation and
 	// should be really worked later on.
 
+	double normal = coord;
+	if (y) {
+		normal = -normal;
+	}
+
 	int num = (npixels & 1 ? npixels : npixels - 1);
 
-	double normal = coord += 1.0;
+	normal += 1.0;
 
 	return (int) (num * normal);
 }
