@@ -44,32 +44,55 @@
 typedef struct wima_area_type {
 
 	DynaString name;
-	WimaStatus (*draw)(int, int);
-	mouse_event_proc mevent;
+	draw_proc draw;
 	key_event_proc kevent;
+	mouse_event_proc mevent;
+	mouse_move_proc mmove;
+	mouse_enter_proc menter;
 	scroll_event_proc sevent;
 
 } WimaAreaType;
 
+/*
+ * This may be used when screens are implemented.
 typedef struct wima_area {
 
-	WimaScreenArea area;
+	WimaTypeHandle type;
 	float split;
 
 } WimaArea;
+*/
 
 typedef struct wima_window {
 
 	GLFWwindow* window;
-	WimaScreenHandle screen;
+	DynaString name;
+
+	// TODO: For when I implement screens. Also remove the area handle.
+	// Or do I even need to? Can a window just have a tree of areas,
+	// and screens just implement defaults? Maybe still have screens
+	// since they will still be trees internally. But this will be
+	// figured out later. Oh also, when switching, use the above
+	// WimaArea definition instead of a handle because it will handle
+	// splits, and just the handle won't.
+	//WimaScreenHandle screen;
+
+	WimaTypeHandle area;
+
+	int width;
+	int height;
 
 } WimaWin;
 
 typedef struct wima_globals {
 
 	DynaString name;
+
 	DynaVector windows;
-	DynaVector screenTypes;
+
+	// TODO: For when I implement screens.
+	//DynaVector screenTypes;
+
 	DynaVector areaTypes;
 
 } WimaG;

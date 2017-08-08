@@ -42,49 +42,48 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
 #include <stddef.h>
 
 #include <dyna/vector.h>
 #include <dyna/string.h>
 
 /**
- * This is a pointer to all of the global information that Wima
- * needs. I do not want to expose the information publicly, so
- * this has been typedefed into a void pointer.
- */
-typedef void* WGlobal;
-
-/**
  * A handle to either a screen or an area type.
  */
-typedef size_t WimaTypeHandle;
+typedef uint32_t WimaTypeHandle;
 
 /**
  * A handle to a window.
  */
-typedef size_t WimaWindowHandle;
+typedef uint32_t WimaWindowHandle;
 
 /**
  * A handle to a screen.
+ * TODO: For when I implement screens.
  */
-typedef size_t WimaScreenHandle;
+//typedef uint32_t WimaScreenHandle;
 
 /**
  * A handle to a screen area.
  */
-typedef size_t WimaAreaHandle;
+typedef uint32_t WimaAreaHandle;
 
 /**
  * A screen area. We need both the screen and the area within the screen.
  */
-typedef struct wima_screen_area {
+typedef struct wima_screen {
 
 	WimaTypeHandle type;
+
 	WimaWindowHandle window;
-	WimaScreenHandle screen;
+
+	// TODO: For when I implement screens.
+	//WimaScreenHandle screen;
+
 	WimaAreaHandle area;
 
-} WimaScreenArea;
+} WimaScreen;
 
 /**
  * The possible status codes that Wima can return after
@@ -96,8 +95,9 @@ typedef enum wima_status_codes {
 	WIMA_INVALID_STATE	= 128,	/** Returned when Wima is in an invalid
 									state for the operation.*/
 	WIMA_INIT_ERR		= 129,	/** Returned when Wima fails to initialize. */
-	WIMA_SCREEN_ERR		= 130,	/** Returned when Wima fails to start a screen. */
-	WIMA_AREA_ERR		= 131	/** Returned when Wima fails to start an area. */
+	WIMA_WINDOW_ERR		= 130,	/** Returned when Wima fails to create a window. */
+	WIMA_SCREEN_ERR		= 131,	/** Returned when Wima fails to start a screen. */
+	WIMA_AREA_ERR		= 132	/** Returned when Wima fails to start an area. */
 
 } WimaStatus;
 
@@ -281,21 +281,20 @@ typedef enum wima_event {
  *These typedefs are here to make the following procedures shorter to write.
  */
 typedef WimaStatus (*draw_proc)(int, int);
-typedef WimaStatus (*mouse_event_proc)(WimaScreenArea, WimaMouseBtn, WimaMods, WimaEvent);
-typedef WimaStatus (*key_event_proc)(WimaScreenArea, WimaKey, WimaMods, WimaEvent);
-typedef WimaStatus (*scroll_event_proc)(WimaScreenArea, double, double);
+typedef WimaStatus (*key_event_proc)(WimaWindowHandle, WimaKey, WimaMods, WimaEvent);
+typedef WimaStatus (*mouse_event_proc)(WimaWindowHandle, WimaMouseBtn, WimaMods, WimaEvent);
+typedef WimaStatus (*mouse_move_proc)(WimaWindowHandle, double, double);
+typedef WimaStatus (*mouse_enter_proc)(WimaWindowHandle, bool);
+typedef WimaStatus (*scroll_event_proc)(WimaWindowHandle, double, double);
 
-WimaStatus wima_init(WGlobal* wglobal, const char* name);
-WimaStatus wima_addScreenArea(WGlobal wglobal,
-                              WimaTypeHandle* wth,
-                              const char* name,
-                              draw_proc draw,
-                              mouse_event_proc mouseEvent,
-                              key_event_proc keyEvent,
-                              scroll_event_proc scrollEvent);
-WimaStatus wima_createScreen(WGlobal wg, WimaScreenArea* wsa, WimaTypeHandle wth);
-WimaStatus wima_main(WGlobal wglobal);
-void wima_exit(WGlobal wglobal);
+WimaStatus wima_init(const char* name);
+WimaStatus wima_addArea(WimaTypeHandle* wth,     const char* name,
+                        draw_proc draw,          key_event_proc kevent,
+                        mouse_event_proc mevent, mouse_move_proc mmove,
+                        mouse_enter_proc menter, scroll_event_proc sevent);
+WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wth);
+WimaStatus wima_main();
+void wima_exit();
 
 #ifdef __cplusplus
 }
