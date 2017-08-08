@@ -29,6 +29,7 @@ set("WIMA_SRC"
 	# Put all source files here.
 	"global.h"
 	"wima.c"
+	"callbacks.c"
 )
 
 find_package(X11 REQUIRED)
