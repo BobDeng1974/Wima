@@ -74,12 +74,12 @@ WimaStatus wima_init(const char* name) {
 		return WIMA_INIT_ERR;
 	}
 
-	glfwSetErrorCallback(wima_error_callback);
-
 	if (!glfwInit()) {
 		wima_exit();
 		return WIMA_INIT_ERR;
 	}
+
+	glfwSetErrorCallback(wima_callback_error);
 
 	return WIMA_SUCCESS;
 }
@@ -139,13 +139,13 @@ WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHa
 	// Set the user pointer to the handle.
 	glfwSetWindowUserPointer(win, (void*) (long) windowIdx);
 
-	glfwSetKeyCallback(win, wima_key_callback);
-	glfwSetMouseButtonCallback(win, wima_mouseBtn_callback);
-	glfwSetCursorPosCallback(win, wima_mouseMove_callback);
-	glfwSetCursorEnterCallback(win, wima_mouseEnter_callback);
-	glfwSetScrollCallback(win, wima_mouseScroll_callback);
+	glfwSetKeyCallback(win, wima_callback_key);
+	glfwSetMouseButtonCallback(win, wima_callback_mouseBtn);
+	glfwSetCursorPosCallback(win, wima_callback_mouseMove);
+	glfwSetCursorEnterCallback(win,wima_callback_mouseEnter);
+	glfwSetScrollCallback(win, wima_callback_mouseScroll);
 
-	glfwSetFramebufferSizeCallback(win, wima_windowResize_callback);
+	glfwSetFramebufferSizeCallback(win, wima_callback_windowResize);
 
 	glfwMakeContextCurrent(win);
 

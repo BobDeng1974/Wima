@@ -44,29 +44,29 @@
 
 extern WimaG wg;
 
-void wima_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 	}
 }
 
-void wima_mouseBtn_callback(GLFWwindow* window, int btn, int mods, int action) {
+void wima_callback_mouseBtn(GLFWwindow* window, int btn, int mods, int action) {
 
 }
 
-void wima_mouseMove_callback(GLFWwindow* window, double x, double y) {
+void wima_callback_mouseMove(GLFWwindow* window, double x, double y) {
 
 }
 
-void wima_mouseEnter_callback(GLFWwindow* window, int entered) {
+void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 }
 
-void wima_mouseScroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+void wima_callback_mouseScroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 }
 
-void wima_windowResize_callback(GLFWwindow* window, int width, int height) {
+void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
 
 	fprintf(stdout, "Got here!\n");
 
@@ -86,6 +86,6 @@ void wima_windowResize_callback(GLFWwindow* window, int width, int height) {
 	types[wwin[wah].area].draw(width, height);
 }
 
-void wima_error_callback(int error, const char* desc) {
+void wima_callback_error(int error, const char* desc) {
 	fprintf(stderr, "Error[%d]: %s\n", error, desc);
 }
