@@ -47,7 +47,7 @@ typedef struct wima_area_type {
 	draw_proc draw;
 	key_event_proc key_event;
 	mouse_event_proc mouse_event;
-	mouse_pos_proc mouse_move;
+	mouse_pos_proc mouse_pos;
 	mouse_enter_proc mouse_enter;
 	scroll_event_proc scroll_event;
 

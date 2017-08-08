@@ -106,7 +106,7 @@ WimaStatus wima_addArea(WimaTypeHandle* wth,     const char* name,
 	wat.draw = draw;
 	wat.key_event = kevent;
 	wat.mouse_event = mevent;
-	wat.mouse_move = mpos;
+	wat.mouse_pos = mpos;
 	wat.mouse_enter = menter;
 	wat.scroll_event = sevent;
 
