@@ -50,6 +50,24 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 	}
+
+	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+
+	WimaWin* wwin = (WimaWin*) dvec_data(wg.windows);
+
+	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
+
+	WimaKey wkey = (WimaKey) key;
+	WimaMods wmods = (WimaMods) mods;
+	WimaAction wact = (WimaAction) action;
+
+	key_event_proc key_event = types[wwin[wwh].area].key_event;
+
+	WimaStatus status = key_event(wwh, wkey, scancode, wact, wmods);
+
+	if (status) {
+		wg.error(status);
+	}
 }
 
 void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
