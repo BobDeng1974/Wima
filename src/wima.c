@@ -146,6 +146,8 @@ WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHa
 	// Set the user pointer to the handle.
 	glfwSetWindowUserPointer(win, (void*) (long) windowIdx);
 
+	glfwSetFramebufferSizeCallback(win, wima_callback_windowResize);
+
 	glfwSetKeyCallback(win, wima_callback_key);
 	glfwSetMouseButtonCallback(win, wima_callback_mouseBtn);
 	glfwSetCursorPosCallback(win, wima_callback_mousePos);
@@ -156,8 +158,6 @@ WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHa
 	glfwSetCharModsCallback(win, wima_callback_charMod);
 
 	glfwSetDropCallback(win, wima_callback_fileDrop);
-
-	glfwSetFramebufferSizeCallback(win, wima_callback_windowResize);
 
 	glfwMakeContextCurrent(win);
 
