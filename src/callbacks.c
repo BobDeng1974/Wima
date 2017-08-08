@@ -43,6 +43,7 @@
 
 #include "global.h"
 #include "callbacks.h"
+#include "math.h"
 
 extern WimaG wg;
 
@@ -98,6 +99,29 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
+	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+
+	WimaWin* wwin = (WimaWin*) dvec_data(wg.windows);
+
+	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
+
+	int xnum = wwin[wwh].width;
+	int ynum = wwin[wwh].height;
+
+	int xint = wima_math_coordToPixel(xnum, x, false);
+	int yint = wima_math_coordToPixel(ynum, y, true);
+
+	mouse_pos_proc mouse_pos = types[wwin[wwh].area].mouse_pos;
+
+	WimaStatus status = mouse_pos(wwh, xint, yint);
+
+	if (status) {
+		wg.error(status);
+	}
 }
 
 void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
