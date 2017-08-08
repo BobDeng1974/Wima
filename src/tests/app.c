@@ -68,7 +68,7 @@ WimaStatus mouseCoordsSevent(WimaWindowHandle wwh, double xoffset, double yoffse
 }
 
 void mouseCoordsError(WimaStatus status) {
-
+	exit(status);
 }
 
 int main() {
