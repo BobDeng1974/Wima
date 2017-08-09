@@ -63,11 +63,15 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
 
+	key_event_proc key_event = types[wwin[wwh].area].key_event;
+
+	if (!key_event) {
+		return;
+	}
+
 	WimaKey wkey = (WimaKey) key;
 	WimaMods wmods = (WimaMods) mods;
 	WimaAction wact = (WimaAction) action;
-
-	key_event_proc key_event = types[wwin[wwh].area].key_event;
 
 	WimaStatus status = key_event(wwh, wkey, scancode, wact, wmods);
 
@@ -88,11 +92,15 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
 
+	mouse_event_proc mouse_event = types[wwin[wwh].area].mouse_event;
+
+	if (!mouse_event) {
+		return;
+	}
+
 	WimaMouseBtn wbtn = (WimaMouseBtn) btn;
 	WimaMods wmods = (WimaMods) mods;
 	WimaAction wact = (WimaAction) action;
-
-	mouse_event_proc mouse_event = types[wwin[wwh].area].mouse_event;
 
 	WimaStatus status = mouse_event(wwh, wbtn, wact, wmods);
 
@@ -113,13 +121,17 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
 
+	mouse_pos_proc mouse_pos = types[wwin[wwh].area].mouse_pos;
+
+	if (!mouse_pos) {
+		return;
+	}
+
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
 	// in floating point numbers, for whatever reason.
 	int xint = (int) x;
 	int yint = (int) y;
-
-	mouse_pos_proc mouse_pos = types[wwin[wwh].area].mouse_pos;
 
 	WimaStatus status = mouse_pos(wwh, xint, yint);
 
@@ -142,6 +154,10 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 	mouse_enter_proc mouse_enter = types[wwin[wwh].area].mouse_enter;
 
+	if (!mouse_enter) {
+		return;
+	}
+
 	WimaStatus status = mouse_enter(wwh, entered ? true : false);
 
 	if (status) {
@@ -163,6 +179,10 @@ void wima_callback_mouseScroll(GLFWwindow* window, double xoffset, double yoffse
 
 	scroll_event_proc scroll_event = types[wwin[wwh].area].scroll_event;
 
+	if (!scroll_event) {
+		return;
+	}
+
 	WimaStatus status = scroll_event(wwh, xoffset, yoffset);
 
 	if (status) {
@@ -182,12 +202,18 @@ void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
 
 	WimaWin* wwin = (WimaWin*) dvec_data(wg.windows);
 
+	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
+
+	draw_proc draw = types[wwin[wwh].area].draw;
+
+	if (!draw) {
+		return;
+	}
+
 	wwin[wwh].width = width;
 	wwin[wwh].height = height;
 
-	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
-
-	WimaStatus status = types[wwin[wwh].area].draw(width, height);
+	WimaStatus status = draw(width, height);
 
 	if (status) {
 		wg.error(status);
