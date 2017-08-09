@@ -68,6 +68,18 @@ WimaStatus mouseCoordsSevent(WimaWindowHandle wwh, double xoffset, double yoffse
 	return WIMA_SUCCESS;
 }
 
+WimaStatus mouseCoordsChar(WimaWindowHandle wwh, uint32_t code) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus mouseCoordsCharMod(WimaWindowHandle wwh, uint32_t code, WimaMods mods) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus mouseCoordsFileDrop(WimaWindowHandle wwh, int filec, const char* filev[]) {
+	return WIMA_SUCCESS;
+}
+
 void mouseCoordsError(WimaStatus status, const char* desc) {
 	fprintf(stderr, "Wima returned the following error:\n    Error[%d]: %s\n", status, desc);
 	exit(status);
@@ -84,7 +96,9 @@ int main() {
 	status = wima_addArea(&wth,              "Mouse Coordinates",
 	                      mouseCoordsDraw,   mouseCoordsKevent,
 	                      mouseCoordsMevent, mouseCoordsMpos,
-	                      mouseCoordsMenter, mouseCoordsSevent);
+	                      mouseCoordsMenter, mouseCoordsSevent,
+	                      mouseCoordsChar,   mouseCoordsCharMod,
+	                      mouseCoordsFileDrop);
 	if (status) {
 		return status;
 	}
