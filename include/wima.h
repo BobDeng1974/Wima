@@ -270,6 +270,8 @@ typedef enum wima_key {
 
 typedef enum wima_modifier_keys {
 
+	WIMA_MOD_NONE		= 0,
+
 	WIMA_MOD_SHIFT		= 1 << 0,
 	WIMA_MOD_CONTROL	= 1 << 1,
 	WIMA_MOD_ALT		= 1 << 2,
