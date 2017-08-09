@@ -68,7 +68,8 @@ WimaStatus mouseCoordsSevent(WimaWindowHandle wwh, double xoffset, double yoffse
 	return WIMA_SUCCESS;
 }
 
-void mouseCoordsError(WimaStatus status) {
+void mouseCoordsError(WimaStatus status, const char* desc) {
+	fprintf(stderr, "Wima returned the following error:\n    Error[%d]: %s\n", status, desc);
 	exit(status);
 }
 
