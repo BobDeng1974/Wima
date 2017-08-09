@@ -55,7 +55,7 @@ WimaStatus mouseCoordsMevent(WimaWindowHandle wwh, WimaMouseBtn mbtn, WimaAction
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsMmove(WimaWindowHandle wwh, int x, int y) {
+WimaStatus mouseCoordsMpos(WimaWindowHandle wwh, int x, int y) {
 	fprintf(stdout, "{ x: %4d; y: %4d }\n", x, y);
 	return WIMA_SUCCESS;
 }
@@ -83,7 +83,7 @@ int main() {
 	WimaTypeHandle wth;
 	status = wima_addArea(&wth,              "Mouse Coordinates",
 	                      mouseCoordsDraw,   mouseCoordsKevent,
-	                      mouseCoordsMevent, mouseCoordsMmove,
+	                      mouseCoordsMevent, mouseCoordsMpos,
 	                      mouseCoordsMenter, mouseCoordsSevent);
 	if (status) {
 		return status;
