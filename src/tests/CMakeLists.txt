@@ -24,22 +24,4 @@
 #
 #	****** END LICENSE BLOCK ******
 
-cmake_minimum_required(VERSION 3.0)
-
-project(wima C)
-
-# Necessary to suppress a useless warning with QtCreator.
-set(ignoreMe "${QT_QMAKE_EXECUTABLE}")
-
-enable_testing()
-
-set("WIMA_INCLUDE_DIR" "include")
-set("WIMA_SRC_DIR" "src")
-
-add_subdirectory("cmake")
-
-include_directories("${WIMA_INCLUDE_DIR}")
-add_subdirectory("${WIMA_INCLUDE_DIR}")
-
-add_subdirectory("${WIMA_SRC_DIR}")
-
+create_test(app)

@@ -24,18 +24,15 @@
 #
 #	****** END LICENSE BLOCK ******
 
-include_directories("${WM_INCLUDE_DIR}")
-
-set("WM_MAIN_INC"
+set("WIMA_INC"
 
 	# Add headers here.
-	"include/WM_main.h"
+	"wima.h"
 )
 
 # Install the header files.
 install(
-	DIRECTORY "${WM_INCLUDE_DIR}"
+	FILES "${WIMA_INC}"
 	DESTINATION "include/${PROJECT_NAME}"
-	FILES_MATCHING
-	PATTERN *.h
 )
+

@@ -1,12 +1,10 @@
-Include
-=======
+# Include
 
 This folder contains all of the header files for Wima.
 
-Contents
---------
+## Contents
 
 Files:
 
-	WM_main.h	Header file containing Wima's main functions.
+	wima.h  Public header file containing function declarations for Wima.
 

@@ -24,18 +24,72 @@
 #
 #	****** END LICENSE BLOCK ******
 
-set("WM_MAIN"
+set("WIMA_SRC"
 
 	# Put all source files here.
-	"src/WM_main.c"
+	"global.h"
+	"callbacks.h"
+	"wima.c"
+	"callbacks.c"
 )
 
-set(WM_SHARED_LIB "wima_sh")
-set(WM_STATIC_LIB "wima_st")
+find_package(X11 REQUIRED)
+find_package(OpenGL REQUIRED)
 
-add_library("${WM_SHARED_LIB}" SHARED "${WM_MAIN}" "${WM_MAIN_INC}")
-add_library("${WM_STATIC_LIB}" STATIC "${WM_MAIN}" "${WM_MAIN_INC}")
+find_library(RT_LIB rt PATHS "/usr/lib" "/usr/local/lib")
+find_library(MATH_LIB m PATHS "/usr/lib" "/usr/local/lib")
+find_library(DL_LIB dl "/usr/lib" "/usr/local/lib")
+find_library(PTHREAD_LIB pthread PATHS "/usr/lib" "/usr/local/lib")
+find_library(JEMALLOC_LIB jemalloc PATHS "/usr/lib" "/usr/local/lib")
+find_library(GLFW_LIB glfw3 PATHS "/usr/lib" "/usr/local/lib")
+find_library(DYNA_LIB dyna PATHS "/usr/lib" "/usr/local/lib")
 
-# Install library
-install(TARGETS "${WM_SHARED_LIB}" LIBRARY DESTINATION lib/${PROJECT_NAME})
-install(TARGETS "${WM_STATIC_LIB}" ARCHIVE DESTINATION lib/${PROJECT_NAME})
+include_directories("${OPENGL_INCLUDE_DIR}" "${X11_INCLUDE_DIR}")
+
+# Do the shared library on platforms other than Windows.
+if(NOT WIN32)
+	set(WIMA_SHARED_LIB "${PROJECT_NAME}_shared")
+	add_library("${WIMA_SHARED_LIB}" SHARED "${WIMA_SRC}")
+	set_target_properties("${WIMA_SHARED_LIB}" PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
+	target_link_libraries(
+		"${WIMA_SHARED_LIB}"
+		"${DYNA_LIB}"
+		"${GLFW_LIB}"
+		"${JEMALLOC_LIB}"
+		"${DL_LIB}"
+		"${OPENGL_gl_LIBRARY}"
+		"${X11_X11_LIB}"
+		"${X11_Xi_LIB}"
+		"${X11_Xrandr_LIB}"
+		"${X11_Xxf86vm_LIB}"
+		"${X11_Xinerama_LIB}"
+		"${X11_Xcursor_LIB}"
+		"${RT_LIB}"
+		"${MATH_LIB}"
+		"${PTHREAD_LIB}")
+	install(TARGETS "${WIMA_SHARED_LIB}" LIBRARY DESTINATION lib/${PROJECT_NAME})
+endif()
+
+# Static library.
+set(WIMA_STATIC_LIB "${PROJECT_NAME}_static")
+add_library("${WIMA_STATIC_LIB}" STATIC "${WIMA_SRC}")
+set_target_properties("${WIMA_STATIC_LIB}" PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
+target_link_libraries(
+	"${WIMA_STATIC_LIB}"
+	"${DYNA_LIB}"
+	"${GLFW_LIB}"
+	"${JEMALLOC_LIB}"
+	"${DL_LIB}"
+	"${OPENGL_gl_LIBRARY}"
+	"${X11_X11_LIB}"
+	"${X11_Xi_LIB}"
+	"${X11_Xrandr_LIB}"
+	"${X11_Xxf86vm_LIB}"
+	"${X11_Xinerama_LIB}"
+	"${X11_Xcursor_LIB}"
+	"${RT_LIB}"
+	"${MATH_LIB}"
+	"${PTHREAD_LIB}")
+install(TARGETS "${WIMA_STATIC_LIB}" ARCHIVE DESTINATION lib/${PROJECT_NAME})
+
+add_subdirectory(tests)
