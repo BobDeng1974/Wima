@@ -288,7 +288,7 @@ typedef enum wima_action {
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
-typedef void (*error_proc)(WimaStatus);
+typedef void (*error_proc)(WimaStatus, const char*);
 typedef WimaStatus (*draw_proc)(int, int);
 typedef WimaStatus (*key_event_proc)(WimaWindowHandle, WimaKey, int, WimaAction, WimaMods);
 typedef WimaStatus (*mouse_event_proc)(WimaWindowHandle, WimaMouseBtn, WimaAction, WimaMods);
