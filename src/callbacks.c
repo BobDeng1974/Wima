@@ -47,6 +47,19 @@
 
 extern WimaG wg;
 
+const char* descs[] = { "Allocation failed",
+                        "Platform returned an unknown error",
+                        "Wima is in an invalid state",
+                        "Wima does not have an OpenGL context",
+                        "Wima could not be initialized",
+                        "Wima could not create a window",
+                        "Wima could not create the requested screen",
+                        "Wima could not create the requested area",
+                        "Wima was given an invalid enum value",
+                        "Wima was given an invalid parameter",
+                        "Clipboard contents were invalid"
+};
+
 void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -76,7 +89,8 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	WimaStatus status = key_event(wwh, wkey, scancode, wact, wmods);
 
 	if (status) {
-		wg.error(status);
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
 	}
 }
 
@@ -105,7 +119,8 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	WimaStatus status = mouse_event(wwh, wbtn, wact, wmods);
 
 	if (status) {
-		wg.error(status);
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
 	}
 }
 
@@ -136,7 +151,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	WimaStatus status = mouse_pos(wwh, xint, yint);
 
 	if (status) {
-		wg.error(status);
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
 	}
 }
 
@@ -161,7 +177,8 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 	WimaStatus status = mouse_enter(wwh, entered ? true : false);
 
 	if (status) {
-		wg.error(status);
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
 	}
 }
 
@@ -186,7 +203,8 @@ void wima_callback_mouseScroll(GLFWwindow* window, double xoffset, double yoffse
 	WimaStatus status = scroll_event(wwh, xoffset, yoffset);
 
 	if (status) {
-		wg.error(status);
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
 	}
 }
 
@@ -216,7 +234,8 @@ void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
 	WimaStatus status = draw(width, height);
 
 	if (status) {
-		wg.error(status);
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
 	}
 }
 
@@ -266,5 +285,5 @@ void wima_callback_error(int error, const char* desc) {
 			break;
 	}
 
-	wg.error(status);
+	wg.error(status, desc);
 }
