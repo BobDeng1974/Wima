@@ -40,7 +40,7 @@
 #include <wima.h>
 
 WimaStatus mouseCoordsDraw(int width, int height) {
-	fprintf(stdout, "Draw: { width: %4d; height: %4d }\n", width, height);
+	printf("Draw: { width: %4d; height: %4d }\n", width, height);
 	return WIMA_SUCCESS;
 }
 
@@ -56,7 +56,7 @@ WimaStatus mouseCoordsMevent(WimaWindowHandle wwh, WimaMouseBtn mbtn, WimaAction
 }
 
 WimaStatus mouseCoordsMpos(WimaWindowHandle wwh, int x, int y) {
-	fprintf(stdout, "{ x: %4d; y: %4d }\n", x, y);
+	printf("Pos: { x: %4d; y: %4d }\n", x, y);
 	return WIMA_SUCCESS;
 }
 
