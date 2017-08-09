@@ -303,7 +303,9 @@ WimaStatus wima_init(const char* name, error_proc error);
 WimaStatus wima_addArea(WimaTypeHandle* wth,     const char* name,
                         draw_proc draw,          key_event_proc kevent,
                         mouse_event_proc mevent, mouse_pos_proc mpos,
-                        mouse_enter_proc menter, scroll_event_proc sevent);
+                        mouse_enter_proc menter, scroll_event_proc sevent,
+                        char_proc cevent,        char_mod_proc cmod,
+                        file_drop_proc fdrop);
 WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wth);
 WimaStatus wima_main();
 void wima_exit();
