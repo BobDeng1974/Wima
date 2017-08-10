@@ -145,7 +145,7 @@ WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHa
 
 	if (!win) {
 		wima_exit();
-		return WIMA_SCREEN_ERR;
+		return WIMA_WINDOW_ERR;
 	}
 
 	// Set the user pointer to the handle.
@@ -171,7 +171,7 @@ WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHa
 
 	if (dvec_push(wg.windows, (uint8_t*) &wwin)) {
 		wima_exit();
-		return WIMA_SCREEN_ERR;
+		return WIMA_WINDOW_ERR;
 	}
 
 	*wwh = windowIdx;
