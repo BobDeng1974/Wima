@@ -65,9 +65,10 @@ typedef uint32_t WimaWindowHandle;
 typedef uint32_t WimaWorkspaceHandle;
 
 /**
- * This is used to help the user build a workspace.
+ * These are used to help the user build a workspace.
  */
 typedef DynaTree WimaWorkspaceType;
+typedef size_t WimaWorkspaceNode;
 
 /**
  * A handle to a workspace area.
@@ -297,7 +298,7 @@ WimaStatus wima_addAreaType(WimaTypeHandle* wth,   const char* name,
                             CharFunc cevent,       CharModFunc cmod,
                             FileDropFunc fdrop);
 
-WimaStatus wima_addWorkspaceType(WimaTypeHandle* wth, WimaWorkspaceType* type, const char* name);
+WimaStatus wima_addWorkspaceType(WimaTypeHandle* wth, WimaWorkspaceNode* root, const char* name);
 
 WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wth);
 

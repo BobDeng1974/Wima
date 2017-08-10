@@ -127,7 +127,7 @@ WimaStatus wima_addAreaType(WimaTypeHandle* wth,   const char* name,
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_addWorkspaceType(WimaTypeHandle* wth, WimaWorkspaceType* type, const char* name) {
+WimaStatus wima_addWorkspaceType(WimaTypeHandle* wth, WimaWorkspaceNode* root, const char* name) {
 	return WIMA_SUCCESS;
 }
 
