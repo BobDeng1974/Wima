@@ -46,36 +46,9 @@ find_library(DYNA_LIB dyna PATHS "/usr/lib" "/usr/local/lib")
 
 include_directories("${OPENGL_INCLUDE_DIR}" "${X11_INCLUDE_DIR}")
 
-# Do the shared library on platforms other than Windows.
-if(NOT WIN32)
-	set(WIMA_SHARED_LIB "${PROJECT_NAME}_shared")
-	add_library("${WIMA_SHARED_LIB}" SHARED "${WIMA_SRC}")
-	set_target_properties("${WIMA_SHARED_LIB}" PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
-	target_link_libraries(
-		"${WIMA_SHARED_LIB}"
-		"${DYNA_LIB}"
-		"${GLFW_LIB}"
-		"${JEMALLOC_LIB}"
-		"${DL_LIB}"
-		"${OPENGL_gl_LIBRARY}"
-		"${X11_X11_LIB}"
-		"${X11_Xi_LIB}"
-		"${X11_Xrandr_LIB}"
-		"${X11_Xxf86vm_LIB}"
-		"${X11_Xinerama_LIB}"
-		"${X11_Xcursor_LIB}"
-		"${RT_LIB}"
-		"${MATH_LIB}"
-		"${PTHREAD_LIB}")
-	install(TARGETS "${WIMA_SHARED_LIB}" LIBRARY DESTINATION lib/${PROJECT_NAME})
-endif()
+create_library(wima "${WIMA_SRC}"
 
-# Static library.
-set(WIMA_STATIC_LIB "${PROJECT_NAME}_static")
-add_library("${WIMA_STATIC_LIB}" STATIC "${WIMA_SRC}")
-set_target_properties("${WIMA_STATIC_LIB}" PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
-target_link_libraries(
-	"${WIMA_STATIC_LIB}"
+	# Put the needed libraries here.
 	"${DYNA_LIB}"
 	"${GLFW_LIB}"
 	"${JEMALLOC_LIB}"
@@ -89,7 +62,7 @@ target_link_libraries(
 	"${X11_Xcursor_LIB}"
 	"${RT_LIB}"
 	"${MATH_LIB}"
-	"${PTHREAD_LIB}")
-install(TARGETS "${WIMA_STATIC_LIB}" ARCHIVE DESTINATION lib/${PROJECT_NAME})
+	"${PTHREAD_LIB}"
+)
 
 add_subdirectory(tests)

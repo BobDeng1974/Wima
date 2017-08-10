@@ -24,5 +24,22 @@
 #
 #	****** END LICENSE BLOCK ******
 
-include("functions.cmake")
-include("macros.cmake")
+function (create_library name src)
+
+	# Do the shared library on platforms other than Windows.
+	if(NOT WIN32)
+		set(SHARED_NAME "${name}_shared")
+		add_library("${SHARED_NAME}" SHARED "${src}")
+		set_target_properties("${SHARED_NAME}" PROPERTIES OUTPUT_NAME "${name}")
+		target_link_libraries("${SHARED_NAME}" "${ARGN}")
+		install(TARGETS "${SHARED_NAME}" LIBRARY DESTINATION lib/${name})
+	endif()
+
+	# Static library.
+	set(STATIC_NAME "${name}_static")
+	add_library("${STATIC_NAME}" STATIC "${src}")
+	set_target_properties("${STATIC_NAME}" PROPERTIES OUTPUT_NAME "${name}")
+	target_link_libraries("${STATIC_NAME}" "${ARGN}")
+	install(TARGETS "${STATIC_NAME}" ARCHIVE DESTINATION lib/${name})
+
+endfunction (create_library)

@@ -26,6 +26,6 @@
 
 macro (create_test target)
 	add_executable("${target}" "${target}.c")
-	target_link_libraries("${target}" ${WIMA_STATIC_LIB})
+	target_link_libraries("${target}" "wima_static")
 	add_test (NAME ${target} COMMAND $<TARGET_FILE:${target}>)
 endmacro (create_test)
