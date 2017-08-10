@@ -53,12 +53,6 @@ WimaG wg;
 
 WimaStatus wima_init(const char* name, error_proc error) {
 
-	// WimaArea and WimaAreaParent must be the same size.
-	if (sizeof(WimaArea) != sizeof(WimaAreaParent)) {
-		return WIMA_INIT_ERR;
-		exit(WIMA_INIT_ERR);
-	}
-
 	if (!error) {
 		return WIMA_INIT_ERR;
 	}

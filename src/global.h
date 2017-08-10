@@ -68,31 +68,32 @@ typedef enum wima_area_node_type {
 
 } WimaAreaNodeType;
 
-/**
- * A parent for a tree of WimaAreas that a screen has.
- * ***THIS MUST BE THE SAME SIZE AS A WimaArea!!!***
- */
-typedef struct wima_area_parent {
+#define WIMA_AREA_CHILDREN (1 << 0)
+#define WIMA_AREA_VERTICAL (1 << 1)
 
-	WimaAreaNodeType nodeType;
+typedef struct wima_area_node {
 
-	float split;
-	uint32_t flags;
+	WimaAreaNodeType type;
 
-} WimaAreaParent;
+	union {
 
-/**
- * A WimaArea that knows how to draw itself.
- * ***THIS MUST BE THE SAME SIZE AS A WimaAreaParent!!!***
- */
-typedef struct wima_area {
+		struct wima_area {
 
-	WimaAreaNodeType nodeType;
+			WimaScreenHandle screen;
+			WimaTypeHandle type;
 
-	WimaScreenHandle screen;
-	WimaTypeHandle type;
+		} area;
 
-} WimaArea;
+		struct wima_area_parent {
+
+			float split;
+			uint32_t flags;
+
+		} parent;
+
+	} node;
+
+} WimaAreaNode;
 
 /**
  * A screen area. We need both the screen and the area within the screen.
