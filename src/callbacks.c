@@ -76,7 +76,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
 
-	key_event_proc key_event = types[wwin[wwh].area].key_event;
+	KeyEventFunc key_event = types[wwin[wwh].area].key_event;
 
 	if (!key_event) {
 		return;
@@ -106,7 +106,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
 
-	mouse_event_proc mouse_event = types[wwin[wwh].area].mouse_event;
+	MouseEventFunc mouse_event = types[wwin[wwh].area].mouse_event;
 
 	if (!mouse_event) {
 		return;
@@ -136,7 +136,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
 
-	mouse_pos_proc mouse_pos = types[wwin[wwh].area].mouse_pos;
+	MousePosFunc mouse_pos = types[wwin[wwh].area].mouse_pos;
 
 	if (!mouse_pos) {
 		return;
@@ -168,7 +168,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
 
-	mouse_enter_proc mouse_enter = types[wwin[wwh].area].mouse_enter;
+	MouseEnterFunc mouse_enter = types[wwin[wwh].area].mouse_enter;
 
 	if (!mouse_enter) {
 		return;
@@ -194,7 +194,7 @@ void wima_callback_mouseScroll(GLFWwindow* window, double xoffset, double yoffse
 
 	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
 
-	scroll_event_proc scroll_event = types[wwin[wwh].area].scroll_event;
+	ScrollEventFunc scroll_event = types[wwin[wwh].area].scroll_event;
 
 	if (!scroll_event) {
 		return;
@@ -222,7 +222,7 @@ void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
 
 	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
 
-	draw_proc draw = types[wwin[wwh].area].draw;
+	DrawFunc draw = types[wwin[wwh].area].draw;
 
 	if (!draw) {
 		return;

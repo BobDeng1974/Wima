@@ -51,7 +51,7 @@
 
 WimaG wg;
 
-WimaStatus wima_init(const char* name, error_proc error) {
+WimaStatus wima_init(const char* name, ErrorFunc error) {
 
 	if (!error) {
 		return WIMA_INIT_ERR;
@@ -91,12 +91,12 @@ WimaStatus wima_init(const char* name, error_proc error) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_addAreaType(WimaTypeHandle* wth,     const char* name,
-                            draw_proc draw,          key_event_proc kevent,
-                            mouse_event_proc mevent, mouse_pos_proc mpos,
-                            mouse_enter_proc menter, scroll_event_proc sevent,
-                            char_proc cevent,        char_mod_proc cmod,
-                            file_drop_proc fdrop)
+WimaStatus wima_addAreaType(WimaTypeHandle* wth,   const char* name,
+                            DrawFunc draw,         KeyEventFunc kevent,
+                            MouseEventFunc mevent, MousePosFunc mpos,
+                            MouseEnterFunc menter, ScrollEventFunc sevent,
+                            CharFunc cevent,       CharModFunc cmod,
+                            FileDropFunc fdrop)
 {
 	WimaAreaType wat;
 

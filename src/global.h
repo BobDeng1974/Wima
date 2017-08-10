@@ -45,19 +45,19 @@ typedef struct wima_area_type {
 
 	DynaString name;
 
-	draw_proc draw;
+	DrawFunc draw;
 
-	key_event_proc key_event;
+	KeyEventFunc key_event;
 
-	mouse_event_proc mouse_event;
-	mouse_pos_proc mouse_pos;
-	mouse_enter_proc mouse_enter;
-	scroll_event_proc scroll_event;
+	MouseEventFunc mouse_event;
+	MousePosFunc mouse_pos;
+	MouseEnterFunc mouse_enter;
+	ScrollEventFunc scroll_event;
 
-	char_proc char_event;
-	char_mod_proc char_mod;
+	CharFunc char_event;
+	CharModFunc char_mod;
 
-	file_drop_proc file_drop;
+	FileDropFunc file_drop;
 
 } WimaAreaType;
 
@@ -126,7 +126,7 @@ typedef struct wima_globals {
 
 	DynaString name;
 
-	error_proc error;
+	ErrorFunc error;
 
 	DynaVector windows;
 

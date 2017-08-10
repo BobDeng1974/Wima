@@ -273,24 +273,24 @@ typedef enum wima_action {
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
-typedef void (*error_proc)(WimaStatus, const char*);
-typedef WimaStatus (*draw_proc)(int, int);
-typedef WimaStatus (*key_event_proc)(WimaWindowHandle, WimaKey, int, WimaAction, WimaMods);
-typedef WimaStatus (*mouse_event_proc)(WimaWindowHandle, WimaMouseBtn, WimaAction, WimaMods);
-typedef WimaStatus (*mouse_pos_proc)(WimaWindowHandle, int, int);
-typedef WimaStatus (*mouse_enter_proc)(WimaWindowHandle, bool);
-typedef WimaStatus (*scroll_event_proc)(WimaWindowHandle, double, double);
-typedef WimaStatus (*char_proc)(WimaWindowHandle, uint32_t);
-typedef WimaStatus (*char_mod_proc)(WimaWindowHandle, uint32_t, WimaMods);
-typedef WimaStatus (*file_drop_proc)(WimaWindowHandle, int, const char**);
+typedef void (*ErrorFunc)(WimaStatus, const char*);
+typedef WimaStatus (*DrawFunc)(int, int);
+typedef WimaStatus (*KeyEventFunc)(WimaWindowHandle, WimaKey, int, WimaAction, WimaMods);
+typedef WimaStatus (*MouseEventFunc)(WimaWindowHandle, WimaMouseBtn, WimaAction, WimaMods);
+typedef WimaStatus (*MousePosFunc)(WimaWindowHandle, int, int);
+typedef WimaStatus (*MouseEnterFunc)(WimaWindowHandle, bool);
+typedef WimaStatus (*ScrollEventFunc)(WimaWindowHandle, double, double);
+typedef WimaStatus (*CharFunc)(WimaWindowHandle, uint32_t);
+typedef WimaStatus (*CharModFunc)(WimaWindowHandle, uint32_t, WimaMods);
+typedef WimaStatus (*FileDropFunc)(WimaWindowHandle, int, const char**);
 
-WimaStatus wima_init(const char* name, error_proc error);
-WimaStatus wima_addAreaType(WimaTypeHandle* wth,     const char* name,
-                            draw_proc draw,          key_event_proc kevent,
-                            mouse_event_proc mevent, mouse_pos_proc mpos,
-                            mouse_enter_proc menter, scroll_event_proc sevent,
-                            char_proc cevent,        char_mod_proc cmod,
-                            file_drop_proc fdrop);
+WimaStatus wima_init(const char* name, ErrorFunc error);
+WimaStatus wima_addAreaType(WimaTypeHandle* wth,   const char* name,
+                            DrawFunc draw,         KeyEventFunc kevent,
+                            MouseEventFunc mevent, MousePosFunc mpos,
+                            MouseEnterFunc menter, ScrollEventFunc sevent,
+                            CharFunc cevent,       CharModFunc cmod,
+                            FileDropFunc fdrop);
 WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wth);
 WimaStatus wima_main();
 void wima_exit();
