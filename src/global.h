@@ -71,6 +71,9 @@ typedef enum wima_area_node_type {
 #define WIMA_AREA_CHILDREN (1 << 0)
 #define WIMA_AREA_VERTICAL (1 << 1)
 
+#define WIMA_HAS_CHILDREN(p) ((p.flags) & (WIMA_AREA_CHILDREN))
+#define WIMA_IS_VERTICAL(p)  ((p.flags) & (WIMA_AREA_VERTICAL))
+
 typedef struct wima_area_node {
 
 	WimaAreaNodeType type;
