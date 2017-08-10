@@ -127,6 +127,14 @@ WimaStatus wima_addAreaType(WimaTypeHandle* wth,   const char* name,
 	return WIMA_SUCCESS;
 }
 
+WimaStatus wima_addWorkspaceType(WimaTypeHandle* wth, WimaWorkspaceType* type, const char* name) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_createWorkspace(WimeTypeHandle type) {
+	return WIMA_SUCCESS;
+}
+
 WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wth) {
 
 	WimaWin wwin;
