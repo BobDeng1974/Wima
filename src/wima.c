@@ -131,7 +131,7 @@ WimaStatus wima_addWorkspaceType(WimaTypeHandle* wth, WimaWorkspaceType* type, c
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_createWorkspace(WimeTypeHandle type) {
+WimaStatus wima_createWorkspace(WimaTypeHandle type) {
 	return WIMA_SUCCESS;
 }
 
