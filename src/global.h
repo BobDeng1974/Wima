@@ -83,13 +83,17 @@ typedef struct wima_area_node {
 		struct wima_area {
 
 			WimaTypeHandle type;
+			int width;
+			int height;
 
 		} area;
 
 		struct wima_area_parent {
 
 			float split;
-			uint32_t flags;
+			int width;
+			int height;
+			uint8_t flags;
 
 		} parent;
 
@@ -101,6 +105,8 @@ typedef struct wima_area_node {
  * A workspace, which can be broken down into areas.
  */
 typedef struct wima_workspace {
+
+	DynaString name;
 
 	// This is put first because it's bigger than the other two.
 	DynaTree areas;
