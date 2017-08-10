@@ -61,15 +61,53 @@ typedef struct wima_area_type {
 
 } WimaAreaType;
 
-/*
- * This may be used when screens are implemented.
+typedef enum wima_area_node_type {
+
+	PARENT = 1,
+	LEAD = 2
+
+} WimaAreaNodeType;
+
+/**
+ * A parent for a tree of WimaAreas that a screen has.
+ * ***THIS MUST BE THE SAME SIZE AS A WimaArea!!!***
+ */
+typedef struct wima_area_parent {
+
+	WimaAreaNodeType nodeType;
+
+	float split;
+	uint32_t flags;
+
+} WimaAreaParent;
+
+/**
+ * A WimaArea that knows how to draw itself.
+ * ***THIS MUST BE THE SAME SIZE AS A WimaAreaParent!!!***
+ */
 typedef struct wima_area {
 
+	WimaAreaNodeType nodeType;
+
+	WimaScreenHandle screen;
 	WimaTypeHandle type;
-	float split;
 
 } WimaArea;
-*/
+
+/**
+ * A screen area. We need both the screen and the area within the screen.
+ */
+typedef struct wima_screen {
+
+	// This is put first because it's bigger than the other two.
+	DynaTree areas;
+
+	WimaWindowHandle window;
+
+	// TODO: For when I implement screens.
+	WimaScreenHandle screen;
+
+} WimaScreen;
 
 typedef struct wima_window {
 
@@ -100,9 +138,7 @@ typedef struct wima_globals {
 
 	DynaVector windows;
 
-	// TODO: For when I implement screens.
-	//DynaVector screenTypes;
-
+	DynaVector screenTypes;
 	DynaVector areaTypes;
 
 } WimaG;

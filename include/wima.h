@@ -60,30 +60,13 @@ typedef uint32_t WimaWindowHandle;
 
 /**
  * A handle to a screen.
- * TODO: For when I implement screens.
  */
-//typedef uint32_t WimaScreenHandle;
+typedef uint32_t WimaScreenHandle;
 
 /**
  * A handle to a screen area.
  */
 typedef uint32_t WimaAreaHandle;
-
-/**
- * A screen area. We need both the screen and the area within the screen.
- */
-typedef struct wima_screen {
-
-	WimaTypeHandle type;
-
-	WimaWindowHandle window;
-
-	// TODO: For when I implement screens.
-	//WimaScreenHandle screen;
-
-	WimaAreaHandle area;
-
-} WimaScreen;
 
 /**
  * The possible status codes that Wima can return after
