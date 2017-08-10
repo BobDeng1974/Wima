@@ -47,6 +47,7 @@ extern "C" {
 
 #include <dyna/vector.h>
 #include <dyna/string.h>
+#include <dyna/tree.h>
 
 /**
  * A handle to either a workspace or an area type.
@@ -62,6 +63,11 @@ typedef uint32_t WimaWindowHandle;
  * A handle to a workspace.
  */
 typedef uint32_t WimaWorkspaceHandle;
+
+/**
+ * This is used to help the user build a workspace.
+ */
+typedef DynaTree WimaWorkspaceType;
 
 /**
  * A handle to a workspace area.
@@ -291,6 +297,7 @@ WimaStatus wima_addAreaType(WimaTypeHandle* wth,   const char* name,
                             MouseEnterFunc menter, ScrollEventFunc sevent,
                             CharFunc cevent,       CharModFunc cmod,
                             FileDropFunc fdrop);
+WimaStatus wima_addWorkspaceType(WimaTypeHandle* wth, WimaWorkspaceType* type, const char* name);
 WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wth);
 WimaStatus wima_main();
 void wima_exit();
