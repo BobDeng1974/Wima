@@ -65,12 +65,6 @@ typedef uint32_t WimaWindowHandle;
 typedef uint32_t WimaWorkspaceHandle;
 
 /**
- * These are used to help the user build a workspace.
- */
-typedef DynaTree WimaWorkspaceType;
-typedef size_t WimaWorkspaceNode;
-
-/**
  * A handle to a workspace area.
  */
 typedef uint32_t WimaAreaHandle;
