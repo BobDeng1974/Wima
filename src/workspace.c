@@ -34,19 +34,19 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <stdbool.h>
+
 #include <wima.h>
 
 WimaStatus wima_workspace_register(WimaTypeHandle* wth, DynaNode* root, const char* name) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_addNode(WimaTypeHandle workspace, DynaNode node,
-                                  float split,              bool vertical)
-{
+WimaStatus wima_workspace_addNode(WimaTypeHandle wksp, DynaNode node, float split, bool vertical) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_addArea(WimaTypeHandle workspace, DynaNode node, WimaTypeHandle area) {
+WimaStatus wima_workspace_addArea(WimaTypeHandle wksp, DynaNode node, WimaTypeHandle area) {
 	return WIMA_SUCCESS;
 }
 
