@@ -29,30 +29,17 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	This header file contains information about Wima's globals.
+ *	Source file for Wima's workspace functions.
  *
  *	******** END FILE DESCRIPTION ********
  */
 
-#ifndef WIMA_GLOBAL_H
-#define WIMA_GLOBAL_H
-
-#include <dyna/vector.h>
-#include <dyna/string.h>
-
 #include <wima.h>
 
-typedef struct wima_globals {
+WimaStatus wima_addWorkspaceType(WimaTypeHandle* wth, WimaWorkspaceNode* root, const char* name) {
+	return WIMA_SUCCESS;
+}
 
-	DynaString name;
-
-	ErrorFunc error;
-
-	DynaVector windows;
-
-	DynaVector workspaceTypes;
-	DynaVector areaTypes;
-
-} WimaG;
-
-#endif // WIMA_GLOBAL_H
+WimaStatus wima_createWorkspace(WimaTypeHandle type) {
+	return WIMA_SUCCESS;
+}

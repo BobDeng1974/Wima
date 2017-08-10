@@ -46,8 +46,10 @@
 
 #include <wima.h>
 
-#include "global.h"
 #include "callbacks.h"
+#include "area.h"
+#include "window.h"
+#include "global.h"
 
 WimaG wg;
 
@@ -87,102 +89,6 @@ WimaStatus wima_init(const char* name, ErrorFunc error) {
 	}
 
 	glfwSetErrorCallback(wima_callback_error);
-
-	return WIMA_SUCCESS;
-}
-
-WimaStatus wima_addAreaType(WimaTypeHandle* wth,   const char* name,
-                            DrawFunc draw,         KeyEventFunc kevent,
-                            MouseEventFunc mevent, MousePosFunc mpos,
-                            MouseEnterFunc menter, ScrollEventFunc sevent,
-                            CharFunc cevent,       CharModFunc cmod,
-                            FileDropFunc fdrop)
-{
-	WimaAreaType wat;
-
-	DynaStatus status = dstr_create(&(wat.name), name);
-	if (status) {
-		return WIMA_AREA_ERR;
-	}
-
-	wat.draw = draw;
-	wat.key_event = kevent;
-	wat.mouse_event = mevent;
-	wat.mouse_pos = mpos;
-	wat.mouse_enter = menter;
-	wat.scroll_event = sevent;
-	wat.char_event = cevent;
-	wat.char_mod = cmod;
-	wat.file_drop = fdrop;
-
-	size_t idx = dvec_len(wg.areaTypes);
-
-	status = dvec_push(wg.areaTypes, (uint8_t*) &wat);
-	if (status) {
-		return WIMA_AREA_ERR;
-	}
-
-	*wth = idx;
-
-	return WIMA_SUCCESS;
-}
-
-WimaStatus wima_addWorkspaceType(WimaTypeHandle* wth, WimaWorkspaceNode* root, const char* name) {
-	return WIMA_SUCCESS;
-}
-
-WimaStatus wima_createWorkspace(WimaTypeHandle type) {
-	return WIMA_SUCCESS;
-}
-
-WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wth) {
-
-	WimaWin wwin;
-
-	if (dstr_create(&(wwin.name), name)) {
-		return WIMA_WINDOW_ERR;
-	}
-
-	size_t windowIdx = dvec_len(wg.windows);
-
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
-
-	GLFWwindow* win = glfwCreateWindow(640, 480, dstr_str(wg.name), NULL, NULL);
-
-	if (!win) {
-		wima_exit();
-		return WIMA_WINDOW_ERR;
-	}
-
-	// Set the user pointer to the handle.
-	glfwSetWindowUserPointer(win, (void*) (long) windowIdx);
-
-	glfwSetFramebufferSizeCallback(win, wima_callback_windowResize);
-
-	glfwSetKeyCallback(win, wima_callback_key);
-	glfwSetMouseButtonCallback(win, wima_callback_mouseBtn);
-	glfwSetCursorPosCallback(win, wima_callback_mousePos);
-	glfwSetCursorEnterCallback(win,wima_callback_mouseEnter);
-	glfwSetScrollCallback(win, wima_callback_mouseScroll);
-
-	glfwSetCharCallback(win, wima_callback_char);
-	glfwSetCharModsCallback(win, wima_callback_charMod);
-
-	glfwSetDropCallback(win, wima_callback_fileDrop);
-
-	glfwMakeContextCurrent(win);
-
-	wwin.window = win;
-	wwin.area = wth;
-
-	if (dvec_push(wg.windows, (uint8_t*) &wwin)) {
-		wima_exit();
-		return WIMA_WINDOW_ERR;
-	}
-
-	*wwh = windowIdx;
 
 	return WIMA_SUCCESS;
 }

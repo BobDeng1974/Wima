@@ -29,30 +29,75 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	This header file contains information about Wima's globals.
+ *	Non-public header file for Wima's area functions and data structures.
  *
  *	******** END FILE DESCRIPTION ********
  */
 
-#ifndef WIMA_GLOBAL_H
-#define WIMA_GLOBAL_H
-
-#include <dyna/vector.h>
-#include <dyna/string.h>
+#ifndef WIMA_AREA_H
+#define WIMA_AREA_H
 
 #include <wima.h>
 
-typedef struct wima_globals {
+typedef struct wima_area_type {
 
 	DynaString name;
 
-	ErrorFunc error;
+	DrawFunc draw;
 
-	DynaVector windows;
+	KeyEventFunc key_event;
 
-	DynaVector workspaceTypes;
-	DynaVector areaTypes;
+	MouseEventFunc mouse_event;
+	MousePosFunc mouse_pos;
+	MouseEnterFunc mouse_enter;
+	ScrollEventFunc scroll_event;
 
-} WimaG;
+	CharFunc char_event;
+	CharModFunc char_mod;
 
-#endif // WIMA_GLOBAL_H
+	FileDropFunc file_drop;
+
+} WimaAreaType;
+
+
+typedef enum wima_area_node_type {
+
+	PARENT = 1,
+	LEAD = 2
+
+} WimaAreaNodeType;
+
+#define WIMA_AREA_CHILDREN (1 << 0)
+#define WIMA_AREA_VERTICAL (1 << 1)
+
+#define WIMA_HAS_CHILDREN(p) ((p.flags) & (WIMA_AREA_CHILDREN))
+#define WIMA_IS_VERTICAL(p)  ((p.flags) & (WIMA_AREA_VERTICAL))
+
+typedef struct wima_area_node {
+
+	WimaAreaNodeType type;
+
+	union {
+
+		struct wima_area {
+
+			WimaTypeHandle type;
+			int width;
+			int height;
+
+		} area;
+
+		struct wima_area_parent {
+
+			float split;
+			int width;
+			int height;
+			uint8_t flags;
+
+		} parent;
+
+	} node;
+
+} WimaAreaNode;
+
+#endif // WIMA_AREA_H
