@@ -39,6 +39,42 @@
 
 #include <wima.h>
 
+void printAction(WimaAction act) {
+
+	switch (act) {
+		case WIMA_RELEASE:
+			printf("Release\n");
+			break;
+		case WIMA_PRESS:
+			printf("Press\n");
+			break;
+		case WIMA_REPEAT:
+			printf("Repeat\n");
+			break;
+	}
+}
+
+void printMods(WimaMods mods) {
+
+	if (mods & WIMA_MOD_SHIFT) {
+		printf("|Shift");
+	}
+	if (mods & WIMA_MOD_CONTROL) {
+		printf("|Ctrl");
+	}
+	if (mods & WIMA_MOD_ALT) {
+		printf("|Alt");
+	}
+	if (mods & WIMA_MOD_SUPER) {
+		printf("|Super");
+	}
+
+	if (mods) {
+		fputc('|', stdout);
+	}
+	fputc('\n', stdout);
+}
+
 WimaStatus mouseCoordsDraw(int width, int height) {
 	printf("Draw: { width: %4d; height: %4d }\n", width, height);
 	return WIMA_SUCCESS;
@@ -46,12 +82,47 @@ WimaStatus mouseCoordsDraw(int width, int height) {
 
 WimaStatus mouseCoordsKevent(WimaWindowHandle wwh,
                              WimaKey key, int scancode,
-                             WimaAction e, WimaMods mods)
+                             WimaAction act, WimaMods mods)
 {
+	printf("Key Event:\n    Key: %d\n", key);
+
+	printf("    Scancode: %d\n", scancode);
+
+	printf("    Type: ");
+	printAction(act);
+
+	printf("    Mods: ");
+	printMods(mods);
+
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsMevent(WimaWindowHandle wwh, WimaMouseBtn mbtn, WimaAction e, WimaMods mods) {
+WimaStatus mouseCoordsMevent(WimaWindowHandle wwh, WimaMouseBtn mbtn, WimaAction act, WimaMods mods) {
+
+	printf("Mouse Button Event:\n");
+	printf("    Button: ");
+
+	switch (mbtn) {
+		case WIMA_MOUSE_LEFT:
+			printf("Left\n");
+			break;
+		case WIMA_MOUSE_RIGHT:
+			printf("Right\n");
+			break;
+		case WIMA_MOUSE_MIDDLE:
+			printf("Middle\n");
+			break;
+		default:
+			printf("Other\n");
+			break;
+	}
+
+	printf("    Type: ");
+	printAction(act);
+
+	printf("    Mods: ");
+	printMods(mods);
+
 	return WIMA_SUCCESS;
 }
 
@@ -61,22 +132,46 @@ WimaStatus mouseCoordsMpos(WimaWindowHandle wwh, int x, int y) {
 }
 
 WimaStatus mouseCoordsMenter(WimaWindowHandle wwh, bool entered) {
+
+	if (entered) {
+		printf("Mouse Enter\n");
+	}
+	else {
+		printf("Mouse Exit\n");
+	}
+
 	return WIMA_SUCCESS;
 }
 
 WimaStatus mouseCoordsSevent(WimaWindowHandle wwh, double xoffset, double yoffset) {
+
+	printf("Scroll: { x: %lf; y: %lf }\n", xoffset, yoffset);
+
 	return WIMA_SUCCESS;
 }
 
 WimaStatus mouseCoordsChar(WimaWindowHandle wwh, uint32_t code) {
+
+	printf("Char: %lc\n", code);
+
 	return WIMA_SUCCESS;
 }
 
 WimaStatus mouseCoordsCharMod(WimaWindowHandle wwh, uint32_t code, WimaMods mods) {
+
+	printf("Char: %lc; Mods: ", code);
+	printMods(mods);
+
 	return WIMA_SUCCESS;
 }
 
 WimaStatus mouseCoordsFileDrop(WimaWindowHandle wwh, int filec, const char* filev[]) {
+
+	printf("Dropped Files:\n");
+	for (int i = 0; i < filec; ++i) {
+		printf("    %s\n", filev[i]);
+	}
+
 	return WIMA_SUCCESS;
 }
 
