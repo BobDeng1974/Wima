@@ -285,16 +285,19 @@ typedef WimaStatus (*CharFunc)(WimaWindowHandle, uint32_t);
 typedef WimaStatus (*CharModFunc)(WimaWindowHandle, uint32_t, WimaMods);
 typedef WimaStatus (*FileDropFunc)(WimaWindowHandle, int, const char**);
 
-WimaStatus wima_addAreaType(WimaTypeHandle* wth,   const char* name,
+WimaStatus wima_area_register(WimaTypeHandle* wth,   const char* name,
                             DrawFunc draw,         KeyEventFunc kevent,
                             MouseEventFunc mevent, MousePosFunc mpos,
                             MouseEnterFunc menter, ScrollEventFunc sevent,
                             CharFunc cevent,       CharModFunc cmod,
                             FileDropFunc fdrop);
 
-WimaStatus wima_addWorkspaceType(WimaTypeHandle* wth, WimaWorkspaceNode* root, const char* name);
+WimaStatus wima_workspace_register(WimaTypeHandle* wth, DynaNode* root, const char* name);
+WimaStatus wima_workspace_addNode(WimaTypeHandle workspace, DynaNode node, float split, bool vertical);
+WimaStatus wima_workspace_addArea(WimaTypeHandle workspace, DynaNode node, WimaTypeHandle area);
+WimaStatus wima_workspace_create(WimaTypeHandle type);
 
-WimaStatus wima_createWindow(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wth);
+WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wth);
 
 WimaStatus wima_init(const char* name, ErrorFunc error);
 WimaStatus wima_main();

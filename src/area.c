@@ -41,7 +41,7 @@
 
 extern WimaG wg;
 
-WimaStatus wima_addAreaType(WimaTypeHandle* wth,   const char* name,
+WimaStatus wima_area_register(WimaTypeHandle* wth,   const char* name,
                             DrawFunc draw,         KeyEventFunc kevent,
                             MouseEventFunc mevent, MousePosFunc mpos,
                             MouseEnterFunc menter, ScrollEventFunc sevent,

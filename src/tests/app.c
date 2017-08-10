@@ -188,7 +188,7 @@ int main() {
 	}
 
 	WimaTypeHandle wth;
-	status = wima_addAreaType(&wth,              "Mouse Coordinates",
+	status = wima_area_register(&wth,              "Mouse Coordinates",
 	                          mouseCoordsDraw,   mouseCoordsKevent,
 	                          mouseCoordsMevent, mouseCoordsMpos,
 	                          mouseCoordsMenter, mouseCoordsSevent,
@@ -200,7 +200,7 @@ int main() {
 
 	WimaWindowHandle wwh;
 
-	status = wima_createWindow(&wwh, "Mouse Coordinates", wth);
+	status = wima_window_create(&wwh, "Mouse Coordinates", wth);
 	if (status) {
 		return status;
 	}
