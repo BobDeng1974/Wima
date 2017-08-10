@@ -46,7 +46,9 @@ WimaStatus wima_workspace_addNode(WimaTypeHandle workspace, DynaNode node,
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_addArea(WimaTypeHandle workspace, DynaNode node, WimaTypeHandle area);
+WimaStatus wima_workspace_addArea(WimaTypeHandle workspace, DynaNode node, WimaTypeHandle area) {
+	return WIMA_SUCCESS;
+}
 
 WimaStatus wima_workspace_create(WimaTypeHandle type) {
 	return WIMA_SUCCESS;
