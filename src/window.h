@@ -29,30 +29,30 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	This header file contains information about Wima's globals.
+ *	Non-public header file for Wima's window functions and data structures.
  *
  *	******** END FILE DESCRIPTION ********
  */
 
-#ifndef WIMA_GLOBAL_H
-#define WIMA_GLOBAL_H
+#ifndef WIMA_WINDOW_H
+#define WIMA_WINDOW_H
 
-#include <dyna/vector.h>
-#include <dyna/string.h>
+#include <GLFW/glfw3.h>
 
-#include <wima.h>
+#include "workspace.h"
 
-typedef struct wima_globals {
+typedef struct wima_window {
 
+	GLFWwindow* window;
 	DynaString name;
 
-	ErrorFunc error;
+	WimaWorkspace workspace;
 
-	DynaVector windows;
+	int width;
+	int height;
 
-	DynaVector workspaceTypes;
-	DynaVector areaTypes;
+} WimaWin;
 
-} WimaG;
+#define GLFW_WINDOW_HANDLE(win) (WimaWindowHandle) glfwGetWindowUserPointer(win)
 
-#endif // WIMA_GLOBAL_H
+#endif // WIMA_WINDOW_H

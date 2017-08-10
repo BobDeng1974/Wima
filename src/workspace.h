@@ -29,30 +29,29 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	This header file contains information about Wima's globals.
+ *	Non-public header file for Wima's workspace functions and data structures.
  *
  *	******** END FILE DESCRIPTION ********
  */
 
-#ifndef WIMA_GLOBAL_H
-#define WIMA_GLOBAL_H
-
-#include <dyna/vector.h>
-#include <dyna/string.h>
+#ifndef WIMA_WORKSPACE_H
+#define WIMA_WORKSPACE_H
 
 #include <wima.h>
 
-typedef struct wima_globals {
+/**
+ * A workspace, which can be broken down into areas.
+ */
+typedef struct wima_workspace {
 
 	DynaString name;
 
-	ErrorFunc error;
+	// This is put first because it's bigger than the other two.
+	DynaTree areas;
 
-	DynaVector windows;
+	WimaWindowHandle window;
+	WimaTypeHandle type;
 
-	DynaVector workspaceTypes;
-	DynaVector areaTypes;
+} WimaWorkspace;
 
-} WimaG;
-
-#endif // WIMA_GLOBAL_H
+#endif // WIMA_WORKSPACE_H

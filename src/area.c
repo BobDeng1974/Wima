@@ -29,30 +29,50 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	This header file contains information about Wima's globals.
+ *	Source file for Wima's area functions (areas of a window).
  *
  *	******** END FILE DESCRIPTION ********
  */
 
-#ifndef WIMA_GLOBAL_H
-#define WIMA_GLOBAL_H
-
-#include <dyna/vector.h>
-#include <dyna/string.h>
-
 #include <wima.h>
 
-typedef struct wima_globals {
+#include "area.h"
+#include "global.h"
 
-	DynaString name;
+extern WimaG wg;
 
-	ErrorFunc error;
+WimaStatus wima_addAreaType(WimaTypeHandle* wth,   const char* name,
+                            DrawFunc draw,         KeyEventFunc kevent,
+                            MouseEventFunc mevent, MousePosFunc mpos,
+                            MouseEnterFunc menter, ScrollEventFunc sevent,
+                            CharFunc cevent,       CharModFunc cmod,
+                            FileDropFunc fdrop)
+{
+	WimaAreaType wat;
 
-	DynaVector windows;
+	DynaStatus status = dstr_create(&(wat.name), name);
+	if (status) {
+		return WIMA_AREA_ERR;
+	}
 
-	DynaVector workspaceTypes;
-	DynaVector areaTypes;
+	wat.draw = draw;
+	wat.key_event = kevent;
+	wat.mouse_event = mevent;
+	wat.mouse_pos = mpos;
+	wat.mouse_enter = menter;
+	wat.scroll_event = sevent;
+	wat.char_event = cevent;
+	wat.char_mod = cmod;
+	wat.file_drop = fdrop;
 
-} WimaG;
+	size_t idx = dvec_len(wg.areaTypes);
 
-#endif // WIMA_GLOBAL_H
+	status = dvec_push(wg.areaTypes, (uint8_t*) &wat);
+	if (status) {
+		return WIMA_AREA_ERR;
+	}
+
+	*wth = idx;
+
+	return WIMA_SUCCESS;
+}
