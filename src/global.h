@@ -82,7 +82,6 @@ typedef struct wima_area_node {
 
 		struct wima_area {
 
-			WimaScreenHandle screen;
 			WimaTypeHandle type;
 
 		} area;
@@ -99,35 +98,24 @@ typedef struct wima_area_node {
 } WimaAreaNode;
 
 /**
- * A screen area. We need both the screen and the area within the screen.
+ * A workspace, which can be broken down into areas.
  */
-typedef struct wima_screen {
+typedef struct wima_workspace {
 
 	// This is put first because it's bigger than the other two.
 	DynaTree areas;
 
 	WimaWindowHandle window;
+	WimaTypeHandle type;
 
-	// TODO: For when I implement screens.
-	WimaScreenHandle screen;
-
-} WimaScreen;
+} WimaWorkspace;
 
 typedef struct wima_window {
 
 	GLFWwindow* window;
 	DynaString name;
 
-	// TODO: For when I implement screens. Also remove the area handle.
-	// Or do I even need to? Can a window just have a tree of areas,
-	// and screens just implement defaults? Maybe still have screens
-	// since they will still be trees internally. But this will be
-	// figured out later. Oh also, when switching, use the above
-	// WimaArea definition instead of a handle because it will handle
-	// splits, and just the handle won't.
-	//WimaScreenHandle screen;
-
-	WimaTypeHandle area;
+	WimaWorkspace workspace;
 
 	int width;
 	int height;
@@ -142,7 +130,7 @@ typedef struct wima_globals {
 
 	DynaVector windows;
 
-	DynaVector screenTypes;
+	DynaVector workspaceTypes;
 	DynaVector areaTypes;
 
 } WimaG;
