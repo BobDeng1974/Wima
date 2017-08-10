@@ -188,12 +188,12 @@ int main() {
 	}
 
 	WimaTypeHandle wth;
-	status = wima_addArea(&wth,              "Mouse Coordinates",
-	                      mouseCoordsDraw,   mouseCoordsKevent,
-	                      mouseCoordsMevent, mouseCoordsMpos,
-	                      mouseCoordsMenter, mouseCoordsSevent,
-	                      mouseCoordsChar,   mouseCoordsCharMod,
-	                      mouseCoordsFileDrop);
+	status = wima_addAreaType(&wth,              "Mouse Coordinates",
+	                          mouseCoordsDraw,   mouseCoordsKevent,
+	                          mouseCoordsMevent, mouseCoordsMpos,
+	                          mouseCoordsMenter, mouseCoordsSevent,
+	                          mouseCoordsChar,   mouseCoordsCharMod,
+	                          mouseCoordsFileDrop);
 	if (status) {
 		return status;
 	}
