@@ -36,6 +36,9 @@
 
 #include <GLFW/glfw3.h>
 
+#include <dyna/dyna.h>
+#include <dyna/tree.h>
+
 #include <wima.h>
 
 #include "callbacks.h"
@@ -74,7 +77,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeH
 	glfwSetMouseButtonCallback(win, wima_callback_mouseBtn);
 	glfwSetCursorPosCallback(win, wima_callback_mousePos);
 	glfwSetCursorEnterCallback(win,wima_callback_mouseEnter);
-	glfwSetScrollCallback(win, wima_callback_mouseScroll);
+	glfwSetScrollCallback(win, wima_callback_scroll);
 
 	glfwSetCharCallback(win, wima_callback_char);
 	glfwSetCharModsCallback(win, wima_callback_charMod);
