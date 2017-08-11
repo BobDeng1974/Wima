@@ -27,12 +27,6 @@
 set("WIMA_SRC"
 
 	# Put all source files here.
-	"callbacks.h"
-	"area.h"
-	"workspace.h"
-	"window.h"
-	"global.h"
-
 	"wima.c"
 	"callbacks.c"
 	"window.c"
