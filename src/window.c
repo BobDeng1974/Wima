@@ -97,7 +97,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeH
 	}
 
 	if (dvec_push(wg.windows, (uint8_t*) &wwin)) {
-		wima_exit();
 		return WIMA_WINDOW_ERR;
 	}
 
