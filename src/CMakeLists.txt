@@ -49,7 +49,7 @@ include_directories("${OPENGL_INCLUDE_DIR}" "${X11_INCLUDE_DIR}")
 
 add_subdirectory(layout)
 
-create_library(wima "${WIMA_SRC}"
+create_library(wima "${WIMA_SRC}" "YES"
 
 	# Put the needed libraries here.
 	"${DYNA_LIB}"
