@@ -297,7 +297,7 @@ WimaStatus wima_workspace_addNode(WimaTypeHandle wksp, DynaNode node, float spli
 WimaStatus wima_workspace_addArea(WimaTypeHandle wksp, DynaNode node, WimaTypeHandle area);
 WimaStatus wima_workspace_create(WimaTypeHandle type);
 
-WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wth);
+WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wksp);
 
 WimaStatus wima_init(const char* name, ErrorFunc error);
 WimaStatus wima_main();
