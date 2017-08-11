@@ -43,6 +43,7 @@
 
 #include "callbacks.h"
 #include "area.h"
+#include "workspace.h"
 #include "window.h"
 #include "global.h"
 
@@ -183,7 +184,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 	}
 }
 
-void wima_callback_mouseScroll(GLFWwindow* window, double xoffset, double yoffset) {
+void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 	if (!wg.name) {
 		exit(WIMA_INVALID_STATE);

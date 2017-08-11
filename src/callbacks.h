@@ -38,7 +38,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods);
 void wima_callback_mousePos(GLFWwindow* window, double x, double y);
 void wima_callback_mouseEnter(GLFWwindow* window, int entered);
-void wima_callback_mouseScroll(GLFWwindow* window, double xoffset, double yoffset);
+void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset);
 void wima_callback_windowResize(GLFWwindow* window, int width, int height);
 void wima_callback_error(int error, const char* desc);
 void wima_callback_char(GLFWwindow* window, unsigned int code);
