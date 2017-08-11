@@ -44,7 +44,7 @@
 
 extern WimaG wg;
 
-WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wth) {
+WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wksp) {
 
 	WimaWin wwin;
 
