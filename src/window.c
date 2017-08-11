@@ -84,7 +84,17 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeH
 	glfwMakeContextCurrent(win);
 
 	wwin.window = win;
-	wwin.area = wth;
+
+	WimaWkspType* wksps = (WimaWkspType*) dvec_data(wg.wkspTypes);
+	DynaTree areas = wksps[wksp].areas;
+
+	if (dtree_create(&wwin.wksp.areas, dtree_nodes(areas), sizeof(WimaWksp))) {
+		return WIMA_WINDOW_ERR;
+	}
+
+	if (dtree_copy(wwin.wksp.areas, wksps[wksp].areas)) {
+		return WIMA_WINDOW_ERR;
+	}
 
 	if (dvec_push(wg.windows, (uint8_t*) &wwin)) {
 		wima_exit();
