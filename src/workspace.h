@@ -39,19 +39,25 @@
 
 #include <wima.h>
 
+typedef struct wima_wksp_type {
+
+	DynaString name;
+	DynaTree areas;
+
+} WimaWkspType;
+
 /**
  * A workspace, which can be broken down into areas.
  */
-typedef struct wima_workspace {
+typedef struct wima_wksp {
 
 	DynaString name;
 
-	// This is put first because it's bigger than the other two.
+	// This is put first because it's bigger.
 	DynaTree areas;
 
 	WimaWindowHandle window;
-	WimaTypeHandle type;
 
-} WimaWorkspace;
+} WimaWksp;
 
 #endif // WIMA_WORKSPACE_H
