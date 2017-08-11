@@ -26,4 +26,4 @@
 
 set(WIMA_LIB wima_static)
 
-create_test(app "${WIMA_LIB}")
+create_test(app "${WIMA_LIB}" "${DYNA_LIB}")
