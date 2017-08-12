@@ -288,9 +288,8 @@ typedef WimaStatus (*FileDropFunc)(WimaWindowHandle, int, const char**);
 WimaStatus wima_area_register(WimaTypeHandle* wth,   const char* name,
                             DrawFunc draw,         KeyEventFunc kevent,
                             MouseEventFunc mevent, MousePosFunc mpos,
-                            MouseEnterFunc menter, ScrollEventFunc sevent,
-                            CharFunc cevent,       CharModFunc cmod,
-                            FileDropFunc fdrop);
+                            ScrollEventFunc sevent, CharFunc cevent,
+                            CharModFunc cmod, FileDropFunc fdrop);
 
 WimaStatus wima_workspace_register(WimaTypeHandle* wth, const char* name);
 WimaStatus wima_workspace_addNode(WimaTypeHandle wksp, DynaNode node, float split, bool vertical);

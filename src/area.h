@@ -49,7 +49,6 @@ typedef struct wima_area_type {
 
 	MouseEventFunc mouse_event;
 	MousePosFunc mouse_pos;
-	MouseEnterFunc mouse_enter;
 	ScrollEventFunc scroll_event;
 
 	CharFunc char_event;

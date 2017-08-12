@@ -42,11 +42,10 @@
 extern WimaG wg;
 
 WimaStatus wima_area_register(WimaTypeHandle* wth,   const char* name,
-                            DrawFunc draw,         KeyEventFunc kevent,
-                            MouseEventFunc mevent, MousePosFunc mpos,
-                            MouseEnterFunc menter, ScrollEventFunc sevent,
-                            CharFunc cevent,       CharModFunc cmod,
-                            FileDropFunc fdrop)
+                              DrawFunc draw,          KeyEventFunc kevent,
+                              MouseEventFunc mevent,  MousePosFunc mpos,
+                              ScrollEventFunc sevent, CharFunc cevent,
+                              CharModFunc cmod,       FileDropFunc fdrop)
 {
 	WimaAreaType wat;
 
@@ -59,7 +58,6 @@ WimaStatus wima_area_register(WimaTypeHandle* wth,   const char* name,
 	wat.key_event = kevent;
 	wat.mouse_event = mevent;
 	wat.mouse_pos = mpos;
-	wat.mouse_enter = menter;
 	wat.scroll_event = sevent;
 	wat.char_event = cevent;
 	wat.char_mod = cmod;
