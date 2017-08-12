@@ -289,11 +289,11 @@ WimaStatus wima_area_register(WimaTypeHandle* area,   const char* name,
 void* wima_area_getUserPointer(WimaTypeHandle area);
 WimaStatus wima_area_setUserPointer(WimaTypeHandle area, void* ptr);
 
-WimaStatus wima_workspace_register(WimaTypeHandle* wth, const char* name);
+WimaStatus wima_workspace_register(WimaTypeHandle* wksp, const char* name);
 WimaStatus wima_workspace_addNode(WimaTypeHandle wksp, DynaNode node, float split, bool vertical);
 WimaStatus wima_workspace_addArea(WimaTypeHandle wksp, DynaNode node, WimaTypeHandle area);
 
-WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wksp);
+WimaStatus wima_window_create(WimaWindowHandle* win, const char* name, WimaTypeHandle wksp);
 
 WimaStatus wima_init(const char* name, ErrorFunc error, MouseEnterFunc enter);
 WimaStatus wima_main();

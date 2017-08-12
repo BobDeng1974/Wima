@@ -44,7 +44,7 @@
 
 extern WimaG wg;
 
-WimaStatus wima_workspace_register(WimaTypeHandle* wth, const char* name) {
+WimaStatus wima_workspace_register(WimaTypeHandle* wksp, const char* name) {
 
 	WimaWkspType wksp;
 
@@ -65,7 +65,7 @@ WimaStatus wima_workspace_register(WimaTypeHandle* wth, const char* name) {
 		return WIMA_WORKSPACE_ERR;
 	}
 
-	*wth = len;
+	*wksp = len;
 
 	return WIMA_SUCCESS;
 }
