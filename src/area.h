@@ -99,4 +99,7 @@ typedef struct wima_area_node {
 
 } WimaAreaNode;
 
+float wima_area_split(float split);
+bool wima_area_vertical(float split);
+
 #endif // WIMA_AREA_H

@@ -106,3 +106,16 @@ WimaStatus wima_area_setUserPointer(WimaTypeHandle area, void* ptr) {
 
 	return WIMA_SUCCESS;
 }
+
+inline float wima_area_split(float split) {
+
+	int32_t* i = (int32_t*) &split;
+	*i &= ~(INT32_MIN);
+
+	return split;
+}
+
+inline bool wima_area_vertical(float split) {
+	int32_t* i = (int32_t*) &split;
+	return *i & INT32_MIN;
+}
