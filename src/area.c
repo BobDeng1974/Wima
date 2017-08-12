@@ -107,7 +107,9 @@ WimaStatus wima_area_setUserPointer(WimaTypeHandle area, void* ptr) {
 	return WIMA_SUCCESS;
 }
 
-inline float wima_area_split(float split) {
+inline float wima_area_split(WimaAreaNode* node) {
+
+	float split = node->node.parent.split;
 
 	int32_t* i = (int32_t*) &split;
 	*i &= ~(INT32_MIN);
@@ -115,7 +117,10 @@ inline float wima_area_split(float split) {
 	return split;
 }
 
-inline bool wima_area_vertical(float split) {
+inline bool wima_area_vertical(WimaAreaNode* node) {
+
+	float split = node->node.parent.split;
+
 	int32_t* i = (int32_t*) &split;
 	return *i & INT32_MIN;
 }
