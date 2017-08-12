@@ -158,28 +158,6 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	}
 }
 
-void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
-
-	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
-	}
-
-	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
-
-	MouseEnterFunc mouse_enter = wg.enter;
-
-	if (!mouse_enter) {
-		return;
-	}
-
-	WimaStatus status = mouse_enter(wwh, entered ? true : false);
-
-	if (status) {
-		int idx = ((int) status) - 128;
-		wg.error(status, descs[idx]);
-	}
-}
-
 void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 	if (!wg.name) {
@@ -253,6 +231,28 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
 void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) {
 
+}
+
+void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
+
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
+	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+
+	MouseEnterFunc mouse_enter = wg.enter;
+
+	if (!mouse_enter) {
+		return;
+	}
+
+	WimaStatus status = mouse_enter(wwh, entered ? true : false);
+
+	if (status) {
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
+	}
 }
 
 void wima_callback_error(int error, const char* desc) {
