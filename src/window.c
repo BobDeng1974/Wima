@@ -112,6 +112,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeH
 	}
 
 	*wwh = windowIdx;
+	wwin.wksp.window = windowIdx;
 
 	return WIMA_SUCCESS;
 }
