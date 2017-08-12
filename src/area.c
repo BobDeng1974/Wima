@@ -77,6 +77,20 @@ WimaStatus wima_area_register(WimaTypeHandle* area,   const char* name,
 	return WIMA_SUCCESS;
 }
 
+void* wima_area_getUserPointer(WimaTypeHandle area) {
+
+	if (area >= dvec_len(wg.areaTypes)) {
+		return NULL;
+	}
+
+	WimaAreaType* areas = (WimaAreaType*) dvec_data(wg.areaTypes);
+	if (!areas) {
+		return NULL;
+	}
+
+	return areas[area].user;
+}
+
 WimaStatus wima_area_setUserPointer(WimaTypeHandle area, void* ptr) {
 
 	if (area >= dvec_len(wg.areaTypes)) {
