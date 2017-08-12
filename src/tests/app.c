@@ -143,9 +143,9 @@ WimaStatus mouseCoordsMenter(WimaWindowHandle wwh, bool entered) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsSevent(WimaWindowHandle wwh, double xoffset, double yoffset) {
+WimaStatus mouseCoordsSevent(WimaWindowHandle wwh, int xoffset, int yoffset) {
 
-	printf("Scroll: { x: %lf; y: %lf }\n", xoffset, yoffset);
+	printf("Scroll: { x: %4d; y: %4d }\n", xoffset, yoffset);
 
 	return WIMA_SUCCESS;
 }

@@ -202,7 +202,13 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 		return;
 	}
 
-	WimaStatus status = scroll_event(wwh, xoffset, yoffset);
+	// Just cast because apparently, glfw does the hard work
+	// in converting them to pixels; it just gives them back
+	// in floating point numbers, for whatever reason.
+	int xint = (int) xoffset;
+	int yint = (int) yoffset;
+
+	WimaStatus status = scroll_event(wwh, xint, yint);
 
 	if (status) {
 		int idx = ((int) status) - 128;

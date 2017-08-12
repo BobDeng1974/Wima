@@ -280,7 +280,7 @@ typedef WimaStatus (*KeyEventFunc)(WimaWindowHandle, WimaKey, int, WimaAction, W
 typedef WimaStatus (*MouseEventFunc)(WimaWindowHandle, WimaMouseBtn, WimaAction, WimaMods);
 typedef WimaStatus (*MousePosFunc)(WimaWindowHandle, int, int);
 typedef WimaStatus (*MouseEnterFunc)(WimaWindowHandle, bool);
-typedef WimaStatus (*ScrollEventFunc)(WimaWindowHandle, double, double);
+typedef WimaStatus (*ScrollEventFunc)(WimaWindowHandle, int, int);
 typedef WimaStatus (*CharFunc)(WimaWindowHandle, uint32_t);
 typedef WimaStatus (*CharModFunc)(WimaWindowHandle, uint32_t, WimaMods);
 typedef WimaStatus (*FileDropFunc)(WimaWindowHandle, int, const char**);
