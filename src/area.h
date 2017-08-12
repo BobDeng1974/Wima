@@ -43,6 +43,8 @@ typedef struct wima_area_type {
 
 	DynaString name;
 
+	void* user;
+
 	DrawFunc draw;
 
 	KeyEventFunc key_event;

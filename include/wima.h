@@ -291,6 +291,7 @@ WimaStatus wima_area_register(WimaTypeHandle* area,   const char* name,
                             MouseEventFunc mevent, MousePosFunc mpos,
                             ScrollEventFunc sevent, CharFunc cevent,
                             CharModFunc cmod, FileDropFunc fdrop);
+WimaStatus wima_area_setUserPointer(WimaTypeHandle area, void* ptr);
 
 WimaStatus wima_workspace_register(WimaTypeHandle* wth, const char* name);
 WimaStatus wima_workspace_addNode(WimaTypeHandle wksp, DynaNode node, float split, bool vertical);

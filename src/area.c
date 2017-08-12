@@ -54,6 +54,8 @@ WimaStatus wima_area_register(WimaTypeHandle* area,   const char* name,
 		return WIMA_AREA_ERR;
 	}
 
+	wat.user = NULL;
+
 	wat.draw = draw;
 	wat.key_event = kevent;
 	wat.mouse_event = mevent;
@@ -71,6 +73,22 @@ WimaStatus wima_area_register(WimaTypeHandle* area,   const char* name,
 	}
 
 	*area = idx;
+
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_area_setUserPointer(WimaTypeHandle area, void* ptr) {
+
+	if (area >= dvec_len(wg.areaTypes)) {
+		return WIMA_INVALID_PARAM;
+	}
+
+	WimaAreaType* areas = (WimaAreaType*) dvec_data(wg.areaTypes);
+	if (!areas) {
+		return WIMA_INVALID_STATE;
+	}
+
+	areas[area].user = ptr;
 
 	return WIMA_SUCCESS;
 }
