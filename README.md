@@ -43,9 +43,9 @@ Developers who want to contribute to Wima are encouraged to read that post
 carefully.
 
 For feature branches, it uses "`rebase` + `merge --no--ff`" (option 3). It also
-uses the `develop`/`master` split. (Main development is on `develop`, and
-`master` just points to the lastest tagged release to make it easy for users to
-get the latest release.)
+uses a `master`/`release` split. (Main development is on `master`, and `release`
+just points to the latest tagged release to make it easy for users to get the
+latest release.)
 
 Wima includes scripts and a `.gitconfig` that helps manage the workflow. New
 contributors should familiarize themselves with them.
