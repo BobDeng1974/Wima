@@ -77,7 +77,3 @@ WimaStatus wima_workspace_addNode(WimaTypeHandle wksp, DynaNode node, float spli
 WimaStatus wima_workspace_addArea(WimaTypeHandle wksp, DynaNode node, WimaTypeHandle area) {
 	return WIMA_SUCCESS;
 }
-
-WimaStatus wima_workspace_create(WimaTypeHandle type) {
-	return WIMA_SUCCESS;
-}
