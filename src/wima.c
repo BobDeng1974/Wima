@@ -53,13 +53,14 @@
 
 WimaG wg;
 
-WimaStatus wima_init(const char* name, ErrorFunc error) {
+WimaStatus wima_init(const char* name, ErrorFunc error, MouseEnterFunc enter) {
 
 	if (!error) {
 		return WIMA_INIT_ERR;
 	}
 
 	wg.error = error;
+	wg.enter = enter;
 
 	wg.areaTypes = NULL;
 	wg.wkspTypes = NULL;

@@ -298,7 +298,7 @@ WimaStatus wima_workspace_addArea(WimaTypeHandle wksp, DynaNode node, WimaTypeHa
 
 WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wksp);
 
-WimaStatus wima_init(const char* name, ErrorFunc error);
+WimaStatus wima_init(const char* name, ErrorFunc error, MouseEnterFunc enter);
 WimaStatus wima_main();
 void wima_exit();
 
