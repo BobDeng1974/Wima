@@ -60,6 +60,7 @@ typedef struct wima_wksp {
 
 } WimaWksp;
 
+WimaStatus wima_workspace_draw(WimaWorkspaceHandle wwh, int width, int height);
 WimaStatus wima_workspace_key(WimaWorkspaceHandle wwh, WimaKey key, int scancode,
                               WimaAction act,          WimaMods mods);
 WimaStatus wima_workspace_mouseBtn(WimaWorkspaceHandle wwh, WimaMouseBtn btn,
