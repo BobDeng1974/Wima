@@ -292,10 +292,9 @@ WimaStatus wima_area_register(WimaTypeHandle* wth,   const char* name,
                             CharFunc cevent,       CharModFunc cmod,
                             FileDropFunc fdrop);
 
-WimaStatus wima_workspace_register(WimaTypeHandle* wth, DynaNode* root, const char* name);
+WimaStatus wima_workspace_register(WimaTypeHandle* wth, const char* name);
 WimaStatus wima_workspace_addNode(WimaTypeHandle wksp, DynaNode node, float split, bool vertical);
 WimaStatus wima_workspace_addArea(WimaTypeHandle wksp, DynaNode node, WimaTypeHandle area);
-WimaStatus wima_workspace_create(WimaTypeHandle type);
 
 WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wksp);
 
