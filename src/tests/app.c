@@ -75,8 +75,8 @@ void printMods(WimaMods mods) {
 	fputc('\n', stdout);
 }
 
-WimaStatus mouseCoordsDraw(int width, int height) {
-	printf("Draw: { width: %4d; height: %4d }\n", width, height);
+WimaStatus mouseCoordsDraw(WimaWindowHandle wwh, int width, int height) {
+	printf("Draw: { handle: %du, width: %4d; height: %4d }\n", wwh, width, height);
 	return WIMA_SUCCESS;
 }
 
