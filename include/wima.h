@@ -65,11 +65,6 @@ typedef uint32_t WimaWindowHandle;
 typedef uint32_t WimaWorkspaceHandle;
 
 /**
- * A handle to a workspace area.
- */
-typedef uint32_t WimaAreaHandle;
-
-/**
  * The possible status codes that Wima can return after
  * every operation.
  */
@@ -275,14 +270,14 @@ typedef enum wima_action {
  *These typedefs are here to make the following procedures shorter to write.
  */
 typedef void (*ErrorFunc)(WimaStatus, const char*);
-typedef WimaStatus (*DrawFunc)(WimaAreaHandle, int, int);
-typedef WimaStatus (*KeyEventFunc)(WimaAreaHandle, WimaKey, int, WimaAction, WimaMods);
-typedef WimaStatus (*MouseEventFunc)(WimaAreaHandle, WimaMouseBtn, WimaAction, WimaMods);
-typedef WimaStatus (*MousePosFunc)(WimaAreaHandle, int, int);
-typedef WimaStatus (*ScrollEventFunc)(WimaAreaHandle, int, int);
-typedef WimaStatus (*CharFunc)(WimaAreaHandle, uint32_t);
-typedef WimaStatus (*CharModFunc)(WimaAreaHandle, uint32_t, WimaMods);
-typedef WimaStatus (*FileDropFunc)(WimaAreaHandle, int, const char**);
+typedef WimaStatus (*DrawFunc)(WimaTypeHandle, int, int);
+typedef WimaStatus (*KeyEventFunc)(WimaTypeHandle, WimaKey, int, WimaAction, WimaMods);
+typedef WimaStatus (*MouseEventFunc)(WimaTypeHandle, WimaMouseBtn, WimaAction, WimaMods);
+typedef WimaStatus (*MousePosFunc)(WimaTypeHandle, int, int);
+typedef WimaStatus (*ScrollEventFunc)(WimaTypeHandle, int, int);
+typedef WimaStatus (*CharFunc)(WimaTypeHandle, uint32_t);
+typedef WimaStatus (*CharModFunc)(WimaTypeHandle, uint32_t, WimaMods);
+typedef WimaStatus (*FileDropFunc)(WimaTypeHandle, int, const char**);
 
 typedef WimaStatus (*MouseEnterFunc)(WimaWindowHandle, bool);
 
