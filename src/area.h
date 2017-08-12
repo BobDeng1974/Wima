@@ -93,7 +93,6 @@ typedef struct wima_area_node {
 			float split;
 			int width;
 			int height;
-			uint8_t flags;
 
 		} parent;
 
