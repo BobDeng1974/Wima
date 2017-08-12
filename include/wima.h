@@ -275,14 +275,14 @@ typedef enum wima_action {
  *These typedefs are here to make the following procedures shorter to write.
  */
 typedef void (*ErrorFunc)(WimaStatus, const char*);
-typedef WimaStatus (*DrawFunc)(int, int);
-typedef WimaStatus (*KeyEventFunc)(WimaWindowHandle, WimaKey, int, WimaAction, WimaMods);
-typedef WimaStatus (*MouseEventFunc)(WimaWindowHandle, WimaMouseBtn, WimaAction, WimaMods);
-typedef WimaStatus (*MousePosFunc)(WimaWindowHandle, int, int);
-typedef WimaStatus (*ScrollEventFunc)(WimaWindowHandle, int, int);
-typedef WimaStatus (*CharFunc)(WimaWindowHandle, uint32_t);
-typedef WimaStatus (*CharModFunc)(WimaWindowHandle, uint32_t, WimaMods);
-typedef WimaStatus (*FileDropFunc)(WimaWindowHandle, int, const char**);
+typedef WimaStatus (*DrawFunc)(WimaAreaHandle, int, int);
+typedef WimaStatus (*KeyEventFunc)(WimaAreaHandle, WimaKey, int, WimaAction, WimaMods);
+typedef WimaStatus (*MouseEventFunc)(WimaAreaHandle, WimaMouseBtn, WimaAction, WimaMods);
+typedef WimaStatus (*MousePosFunc)(WimaAreaHandle, int, int);
+typedef WimaStatus (*ScrollEventFunc)(WimaAreaHandle, int, int);
+typedef WimaStatus (*CharFunc)(WimaAreaHandle, uint32_t);
+typedef WimaStatus (*CharModFunc)(WimaAreaHandle, uint32_t, WimaMods);
+typedef WimaStatus (*FileDropFunc)(WimaAreaHandle, int, const char**);
 
 WimaStatus wima_area_register(WimaTypeHandle* wth,   const char* name,
                             DrawFunc draw,         KeyEventFunc kevent,
