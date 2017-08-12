@@ -103,7 +103,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeH
 		return WIMA_WINDOW_ERR;
 	}
 
-	if (dtree_copy(wwin.wksp.areas, wksps[wksp].areas)) {
+	if (dtree_copy(wwin.wksp.areas, areas)) {
 		return WIMA_WINDOW_ERR;
 	}
 
