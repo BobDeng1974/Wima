@@ -60,12 +60,12 @@ typedef struct wima_wksp {
 
 } WimaWksp;
 
-WimaStatus wima_workspace_draw(WimaWorkspaceHandle wwh, int width, int height);
-WimaStatus wima_workspace_key(WimaWorkspaceHandle wwh, WimaKey key, int scancode,
+WimaStatus wima_workspace_draw(WimaWorkspaceHandle wksp, int width, int height);
+WimaStatus wima_workspace_key(WimaWorkspaceHandle wksp, WimaKey key, int scancode,
                               WimaAction act,          WimaMods mods);
-WimaStatus wima_workspace_mouseBtn(WimaWorkspaceHandle wwh, WimaMouseBtn btn,
+WimaStatus wima_workspace_mouseBtn(WimaWorkspaceHandle wksp, WimaMouseBtn btn,
                                    WimaAction act,          WimaMods mods);
-WimaStatus wima_workspace_mousePos(WimaWorkspaceHandle wwh, int x, int y);
-WimaStatus wima_workspace_scroll(WimaWorkspaceHandle wwh, int xoffset, int yoffset);
+WimaStatus wima_workspace_mousePos(WimaWorkspaceHandle wksp, int x, int y);
+WimaStatus wima_workspace_scroll(WimaWorkspaceHandle wksp, int xoffset, int yoffset);
 
 #endif // WIMA_WORKSPACE_H
