@@ -78,39 +78,39 @@ WimaStatus wima_workspace_addArea(WimaTypeHandle wksp, DynaNode node, WimaTypeHa
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_draw(WimaWorkspaceHandle wksp, int width, int height) {
+WimaStatus wima_workspace_draw(WimaWksp* wksp, int width, int height) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_key(WimaWorkspaceHandle wksp, WimaKey key, int scancode,
+WimaStatus wima_workspace_key(WimaWksp* wksp, WimaKey key, int scancode,
                               WimaAction act,           WimaMods mods)
 {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_mouseBtn(WimaWorkspaceHandle wksp, WimaMouseBtn btn,
+WimaStatus wima_workspace_mouseBtn(WimaWksp* wksp, WimaMouseBtn btn,
                                    WimaAction act,          WimaMods mods)
 {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_mousePos(WimaWorkspaceHandle wksp, int x, int y) {
+WimaStatus wima_workspace_mousePos(WimaWksp* wksp, int x, int y) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_scroll(WimaWorkspaceHandle wksp, int xoffset, int yoffset) {
+WimaStatus wima_workspace_scroll(WimaWksp* wksp, int xoffset, int yoffset) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_char(WimaWorkspaceHandle wksp, uint32_t code) {
+WimaStatus wima_workspace_char(WimaWksp* wksp, uint32_t code) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_charMod(WimaWorkspaceHandle wksp, uint32_t code, WimaMods mods) {
+WimaStatus wima_workspace_charMod(WimaWksp* wksp, uint32_t code, WimaMods mods) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_fileDrop(WimaWorkspaceHandle wksp, int filec, const char* filev[]) {
+WimaStatus wima_workspace_fileDrop(WimaWksp* wksp, int filec, const char* filev[]) {
 	return WIMA_SUCCESS;
 }
 
