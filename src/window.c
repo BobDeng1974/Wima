@@ -49,6 +49,13 @@ extern WimaG wg;
 
 WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wksp) {
 
+	size_t areaTypesLen = dvec_len(wg.areaTypes);
+	size_t wkspTypesLen = dvec_len(wg.wkspTypes);
+
+	if (areaTypesLen == 0 || wkspTypesLen == 0) {
+		return WIMA_INVALID_STATE;
+	}
+
 	WimaWin wwin;
 
 	if (dstr_create(&(wwin.name), name)) {

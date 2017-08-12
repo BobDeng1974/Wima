@@ -62,6 +62,7 @@ WimaStatus wima_init(const char* name, ErrorFunc error) {
 	wg.error = error;
 
 	wg.areaTypes = NULL;
+	wg.wkspTypes = NULL;
 	wg.name = NULL;
 	wg.windows = NULL;
 
@@ -71,13 +72,19 @@ WimaStatus wima_init(const char* name, ErrorFunc error) {
 		return WIMA_INIT_ERR;
 	}
 
-	status = dvec_create(&(wg.windows), 0, sizeof(WimaWin));
+	status = dvec_create(&wg.windows, 0, sizeof(WimaWin));
 	if (status) {
 		wima_exit();
 		return WIMA_INIT_ERR;
 	}
 
-	status = dvec_create(&(wg.areaTypes), 0, sizeof(WimaAreaType));
+	status = dvec_create(&wg.areaTypes, 0, sizeof(WimaAreaType));
+	if (status) {
+		wima_exit();
+		return WIMA_INIT_ERR;
+	}
+
+	status = dvec_create(&wg.wkspTypes, 0, sizeof(WimaWkspType));
 	if (status) {
 		wima_exit();
 		return WIMA_INIT_ERR;
