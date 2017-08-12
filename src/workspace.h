@@ -71,4 +71,6 @@ WimaStatus wima_workspace_char(WimaWorkspaceHandle wksp, uint32_t code);
 WimaStatus wima_workspace_charMod(WimaWorkspaceHandle wksp, uint32_t code, WimaMods mods);
 WimaStatus wima_workspace_fileDrop(WimaWorkspaceHandle wksp, int filec, const char* filev[]);
 
+bool wima_workspace_nodeValid(WimaWkspType* wksp, DynaNode n);
+
 #endif // WIMA_WORKSPACE_H
