@@ -65,6 +65,6 @@ WimaStatus wima_workspace_key(WimaWorkspaceHandle wwh, WimaKey key, int scancode
 WimaStatus wima_workspace_mouseBtn(WimaWorkspaceHandle wwh, WimaMouseBtn btn,
                                    WimaAction act,          WimaMods mods);
 WimaStatus wima_workspace_mousePos(WimaWorkspaceHandle wwh, int x, int y);
-WimaStatus wima_workspace_scroll(WimaWorkspaceHandle wwh, double xoffset, double yoffset);
+WimaStatus wima_workspace_scroll(WimaWorkspaceHandle wwh, int xoffset, int yoffset);
 
 #endif // WIMA_WORKSPACE_H
