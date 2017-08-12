@@ -187,8 +187,8 @@ int main() {
 		return status;
 	}
 
-	WimaTypeHandle wth;
-	status = wima_area_register(&wth,              "Mouse Coordinates",
+	WimaTypeHandle area;
+	status = wima_area_register(&area,              "Mouse Coordinates",
 	                          mouseCoordsDraw,   mouseCoordsKevent,
 	                          mouseCoordsMevent, mouseCoordsMpos,
 	                          mouseCoordsMenter, mouseCoordsSevent,
@@ -198,9 +198,22 @@ int main() {
 		return status;
 	}
 
+	WimaTypeHandle wksp;
+	status = wima_workspace_register(&wksp, "Default");
+	if (status) {
+		return status;
+	}
+
+	DynaNode root = dtree_root();
+
+	status = wima_workspace_addArea(wksp, root, area);
+	if (status) {
+		return status;
+	}
+
 	WimaWindowHandle wwh;
 
-	status = wima_window_create(&wwh, "Mouse Coordinates", wth);
+	status = wima_window_create(&wwh, "Mouse Coordinates", wksp);
 	if (status) {
 		return status;
 	}
