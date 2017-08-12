@@ -182,18 +182,17 @@ void mouseCoordsError(WimaStatus status, const char* desc) {
 
 int main() {
 
-	WimaStatus status = wima_init("Test Wima App", mouseCoordsError);
+	WimaStatus status = wima_init("Test Wima App", mouseCoordsError, mouseCoordsMenter);
 	if (status != WIMA_SUCCESS) {
 		return status;
 	}
 
 	WimaTypeHandle area;
-	status = wima_area_register(&area,              "Mouse Coordinates",
-	                          mouseCoordsDraw,   mouseCoordsKevent,
-	                          mouseCoordsMevent, mouseCoordsMpos,
-	                          mouseCoordsMenter, mouseCoordsSevent,
-	                          mouseCoordsChar,   mouseCoordsCharMod,
-	                          mouseCoordsFileDrop);
+	status = wima_area_register(&area,            "Mouse Coordinates",
+	                          mouseCoordsDraw,    mouseCoordsKevent,
+	                          mouseCoordsMevent,  mouseCoordsMpos,
+	                          mouseCoordsSevent,  mouseCoordsChar,
+	                          mouseCoordsCharMod, mouseCoordsFileDrop);
 	if (status) {
 		return status;
 	}
