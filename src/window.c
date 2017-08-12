@@ -42,6 +42,7 @@
 #include <wima.h>
 
 #include "callbacks.h"
+#include "area.h"
 #include "window.h"
 #include "global.h"
 
@@ -98,7 +99,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeH
 	WimaWkspType* wksps = (WimaWkspType*) dvec_data(wg.wkspTypes);
 	DynaTree areas = wksps[wksp].areas;
 
-	if (dtree_create(&wwin.wksp.areas, dtree_nodes(areas), sizeof(WimaWksp))) {
+	if (dtree_create(&wwin.wksp.areas, dtree_nodes(areas), sizeof(WimaAreaNode))) {
 		return WIMA_WINDOW_ERR;
 	}
 

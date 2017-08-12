@@ -38,7 +38,35 @@
 
 #include <wima.h>
 
-WimaStatus wima_workspace_register(WimaTypeHandle* wth, DynaNode* root, const char* name) {
+#include "area.h"
+#include "workspace.h"
+#include "global.h"
+
+extern WimaG wg;
+
+WimaStatus wima_workspace_register(WimaTypeHandle* wth, const char* name) {
+
+	WimaWkspType wksp;
+
+	DynaStatus status = dstr_create(&wksp.name, name);
+	if (status) {
+		return WIMA_WORKSPACE_ERR;
+	}
+
+	status = dtree_create(&wksp.areas, 0, sizeof(WimaAreaNode));
+	if (status) {
+		return WIMA_WORKSPACE_ERR;
+	}
+
+	size_t len = dvec_len(wg.wkspTypes);
+
+	status = dvec_push(wg.wkspTypes, (uint8_t*) &wksp);
+	if (status) {
+		return WIMA_WORKSPACE_ERR;
+	}
+
+	*wth = len;
+
 	return WIMA_SUCCESS;
 }
 
