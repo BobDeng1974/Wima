@@ -1,0 +1,6 @@
+[merge]
+	ff = false
+[pull]
+	rebase = true
+[push]
+	recurseSubmodules = true
