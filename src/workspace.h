@@ -67,5 +67,8 @@ WimaStatus wima_workspace_mouseBtn(WimaWorkspaceHandle wksp, WimaMouseBtn btn,
                                    WimaAction act,          WimaMods mods);
 WimaStatus wima_workspace_mousePos(WimaWorkspaceHandle wksp, int x, int y);
 WimaStatus wima_workspace_scroll(WimaWorkspaceHandle wksp, int xoffset, int yoffset);
+WimaStatus wima_workspace_char(WimaWorkspaceHandle wksp, uint32_t code);
+WimaStatus wima_workspace_charMod(WimaWorkspaceHandle wksp, uint32_t code, WimaMods mods);
+WimaStatus wima_workspace_fileDrop(WimaWorkspaceHandle wksp, int filec, const char* filev[]);
 
 #endif // WIMA_WORKSPACE_H
