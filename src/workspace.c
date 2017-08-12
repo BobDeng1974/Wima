@@ -77,3 +77,39 @@ WimaStatus wima_workspace_addNode(WimaTypeHandle wksp, DynaNode node, float spli
 WimaStatus wima_workspace_addArea(WimaTypeHandle wksp, DynaNode node, WimaTypeHandle area) {
 	return WIMA_SUCCESS;
 }
+
+WimaStatus wima_workspace_draw(WimaWorkspaceHandle wksp, int width, int height) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_workspace_key(WimaWorkspaceHandle wksp, WimaKey key, int scancode,
+                              WimaAction act,           WimaMods mods)
+{
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_workspace_mouseBtn(WimaWorkspaceHandle wksp, WimaMouseBtn btn,
+                                   WimaAction act,          WimaMods mods)
+{
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_workspace_mousePos(WimaWorkspaceHandle wksp, int x, int y) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_workspace_scroll(WimaWorkspaceHandle wksp, int xoffset, int yoffset) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_workspace_char(WimaWorkspaceHandle wksp, uint32_t code) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_workspace_charMod(WimaWorkspaceHandle wksp, uint32_t code, WimaMods mods) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_workspace_fileDrop(WimaWorkspaceHandle wksp, int filec, const char* filev[]) {
+	return WIMA_SUCCESS;
+}
