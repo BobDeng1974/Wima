@@ -190,37 +190,6 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 	}
 }
 
-void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
-
-	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
-	}
-
-	glViewport(0, 0, width, height);
-
-	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
-
-	WimaWin* wwin = (WimaWin*) dvec_data(wg.windows);
-
-	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
-
-	DrawFunc draw = types[wwin[wwh].area].draw;
-
-	if (!draw) {
-		return;
-	}
-
-	wwin[wwh].width = width;
-	wwin[wwh].height = height;
-
-	WimaStatus status = draw(width, height);
-
-	if (status) {
-		int idx = ((int) status) - 128;
-		wg.error(status, descs[idx]);
-	}
-}
-
 void wima_callback_char(GLFWwindow* window, unsigned int code) {
 
 }
@@ -248,6 +217,37 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 	}
 
 	WimaStatus status = mouse_enter(wwh, entered ? true : false);
+
+	if (status) {
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
+	}
+}
+
+void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
+
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
+	glViewport(0, 0, width, height);
+
+	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+
+	WimaWin* wwin = (WimaWin*) dvec_data(wg.windows);
+
+	WimaAreaType* types = (WimaAreaType*) dvec_data(wg.areaTypes);
+
+	DrawFunc draw = types[wwin[wwh].area].draw;
+
+	if (!draw) {
+		return;
+	}
+
+	wwin[wwh].width = width;
+	wwin[wwh].height = height;
+
+	WimaStatus status = draw(width, height);
 
 	if (status) {
 		int idx = ((int) status) - 128;
