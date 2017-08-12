@@ -63,8 +63,8 @@ typedef struct wima_area_type {
 
 typedef enum wima_area_node_type {
 
-	PARENT = 1,
-	LEAD = 2
+	WIMA_AREA_PARENT = 1,
+	WIMA_AREA_LEAF = 2
 
 } WimaAreaNodeType;
 

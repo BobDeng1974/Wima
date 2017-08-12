@@ -44,6 +44,15 @@
 
 extern WimaG wg;
 
+bool wima_workspace_nodeValid(WimaWkspType* wksp, DynaNode n) {
+
+	DynaNode p = dtree_parent(n);
+
+	return n == dtree_root() ||
+	       (dtree_exists(wksp->areas, p) &&
+	       ((WimaAreaNode*) dtree_node(wksp->areas, p))->type == WIMA_AREA_PARENT);
+}
+
 WimaStatus wima_workspace_register(WimaTypeHandle* wth, const char* name) {
 
 	WimaWkspType wksp;
