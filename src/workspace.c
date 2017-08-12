@@ -75,6 +75,24 @@ WimaStatus wima_workspace_addNode(WimaTypeHandle wksp, DynaNode node, float spli
 }
 
 WimaStatus wima_workspace_addArea(WimaTypeHandle wksp, DynaNode node, WimaTypeHandle area) {
+
+	WimaWkspType* types = (WimaWkspType*) dvec_data(wg.wkspTypes);
+	if (!types) {
+		return WIMA_INVALID_STATE;
+	}
+
+	if (!wima_workspace_nodeValid(types + wksp, node)) {
+		return WIMA_INVALID_PARAM;
+	}
+
+	WimaAreaNode wan;
+	wan.type = WIMA_AREA_LEAF;
+	wan.node.area.type = area;
+	wan.node.area.width = -1;
+	wan.node.area.height = -1;
+
+	dtree_add(types[wksp].areas, node, (uint8_t*) &wan);
+
 	return WIMA_SUCCESS;
 }
 
