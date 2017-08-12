@@ -286,7 +286,7 @@ typedef WimaStatus (*FileDropFunc)(WimaAreaHandle, int, const char**);
 
 typedef WimaStatus (*MouseEnterFunc)(WimaWindowHandle, bool);
 
-WimaStatus wima_area_register(WimaTypeHandle* wth,   const char* name,
+WimaStatus wima_area_register(WimaTypeHandle* area,   const char* name,
                             DrawFunc draw,         KeyEventFunc kevent,
                             MouseEventFunc mevent, MousePosFunc mpos,
                             ScrollEventFunc sevent, CharFunc cevent,

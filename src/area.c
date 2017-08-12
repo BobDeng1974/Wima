@@ -41,7 +41,7 @@
 
 extern WimaG wg;
 
-WimaStatus wima_area_register(WimaTypeHandle* wth,   const char* name,
+WimaStatus wima_area_register(WimaTypeHandle* area,   const char* name,
                               DrawFunc draw,          KeyEventFunc kevent,
                               MouseEventFunc mevent,  MousePosFunc mpos,
                               ScrollEventFunc sevent, CharFunc cevent,
@@ -70,7 +70,7 @@ WimaStatus wima_area_register(WimaTypeHandle* wth,   const char* name,
 		return WIMA_AREA_ERR;
 	}
 
-	*wth = idx;
+	*area = idx;
 
 	return WIMA_SUCCESS;
 }
