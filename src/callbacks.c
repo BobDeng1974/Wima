@@ -204,6 +204,8 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 
 void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
+	// TODO: Make a mouse enter draw all areas in the window.
+
 	if (!wg.name) {
 		exit(WIMA_INVALID_STATE);
 	}

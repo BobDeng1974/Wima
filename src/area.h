@@ -39,6 +39,9 @@
 
 #include <wima.h>
 
+// TODO: Make each live area have its own user pointer,
+// as well as all windows.
+
 typedef struct wima_area_type {
 
 	DynaString name;
