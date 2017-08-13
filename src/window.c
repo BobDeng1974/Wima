@@ -116,3 +116,30 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeH
 
 	return WIMA_SUCCESS;
 }
+void* wima_window_getUserPointer(WimaWindowHandle win) {
+
+	if (win >= dvec_len(wg.windows)) {
+		return NULL;
+	}
+
+	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
+
+	return wins[win].user;
+}
+
+WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user) {
+
+	if (!wg.windows) {
+		return WIMA_INVALID_STATE;
+	}
+
+	if (win >= dvec_len(wg.windows)) {
+		return WIMA_INVALID_PARAM;
+	}
+
+	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
+
+	wins[win].user = user;
+
+	return WIMA_SUCCESS;
+}

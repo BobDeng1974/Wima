@@ -46,6 +46,8 @@ typedef struct wima_window {
 	GLFWwindow* window;
 	DynaString name;
 
+	void* user;
+
 	WimaWksp wksp;
 
 	int width;
