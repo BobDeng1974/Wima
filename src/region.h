@@ -34,6 +34,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <wima.h>
+
 typedef struct wima_region {
 
 	DynaString name;
