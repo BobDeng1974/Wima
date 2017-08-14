@@ -39,9 +39,6 @@
 
 #include <wima.h>
 
-// TODO: Make each live area have its own user pointer,
-// as well as all windows.
-
 typedef enum wima_area_node_type {
 
 	WIMA_AREA_PARENT = 1,
