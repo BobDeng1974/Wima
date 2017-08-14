@@ -71,8 +71,9 @@ WimaStatus wima_workspace_register(WimaWorkspaceHandle* wth, const char* name) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_addNode(WimaRegionHandle wksp, DynaNode node, float split, bool vertical) {
-
+WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wksp, DynaNode node,
+                                  float split,              bool vertical)
+{
 	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
 	if (!wksps) {
 		return WIMA_INVALID_STATE;
@@ -97,8 +98,9 @@ WimaStatus wima_workspace_addNode(WimaRegionHandle wksp, DynaNode node, float sp
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_addArea(WimaRegionHandle wksp, DynaNode node, WimaRegionHandle area) {
-
+WimaStatus wima_workspace_addArea(WimaWorkspaceHandle wksp, DynaNode node,
+                                  WimaRegionHandle reg)
+{
 	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
 	if (!wksps) {
 		return WIMA_INVALID_STATE;
@@ -110,9 +112,9 @@ WimaStatus wima_workspace_addArea(WimaRegionHandle wksp, DynaNode node, WimaRegi
 
 	WimaAreaNode wan;
 	wan.type = WIMA_AREA_LEAF;
-	wan.node.area.type = area;
 	wan.node.area.width = -1;
 	wan.node.area.height = -1;
+	wan.node.area.type = reg;
 
 	DynaStatus = dtree_add(wksps[wksp].regions, node, (uint8_t*) &wan);
 	if (status) {

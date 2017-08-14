@@ -312,8 +312,8 @@ void* wima_region_getUserPointer(WimaRegionHandle reg);
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 
 WimaStatus wima_workspace_register(WimaWorkspaceHandle* type, const char* name);
-WimaStatus wima_workspace_addNode(WimaRegionHandle wksp, DynaNode node, float split, bool vertical);
-WimaStatus wima_workspace_addArea(WimaRegionHandle wksp, DynaNode node, WimaRegionHandle area);
+WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wksp, DynaNode node, float split, bool vertical);
+WimaStatus wima_workspace_addArea(WimaWorkspaceHandle wksp, DynaNode node, WimaRegionHandle area);
 
 WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaRegionHandle wksp);
 
