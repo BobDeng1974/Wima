@@ -34,6 +34,7 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <math.h>
 #include <stdbool.h>
 
 #include <wima.h>
@@ -71,6 +72,28 @@ WimaStatus wima_workspace_register(WimaWorkspaceHandle* wth, const char* name) {
 }
 
 WimaStatus wima_workspace_addNode(WimaRegionHandle wksp, DynaNode node, float split, bool vertical) {
+
+	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
+	if (!wksps) {
+		return WIMA_INVALID_STATE;
+	}
+
+	if (!wima_workspace_nodeValid(wksps + wksp, node)) {
+		return WIMA_INVALID_PARAM;
+	}
+
+	WimaAreaNode wan;
+	wan.type = WIMA_AREA_PARENT;
+	wan.node.parent.width = -1;
+	wan.node.parent.height = -1;
+	wan.node.parent.split = fabs(split);
+	wan.node.parent.vertical = vertical;
+
+	DynaStatus = dtree_add(wksps[wksp].regions, node, (uint8_t*) &wan);
+	if (status) {
+		return WIMA_WORKSPACE_ERR;
+	}
+
 	return WIMA_SUCCESS;
 }
 
