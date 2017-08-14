@@ -45,7 +45,7 @@
 typedef struct wima_wksp {
 
 	DynaString name;
-	DynaTree areas;
+	DynaTree regions;
 
 } WimaWksp;
 

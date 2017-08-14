@@ -97,13 +97,13 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaRegio
 	wwin.window = win;
 
 	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
-	DynaTree areas = wksps[wksp].areas;
+	DynaTree areas = wksps[wksp].regions;
 
-	if (dtree_create(&wwin.wksp.areas, dtree_nodes(areas), sizeof(WimaAreaNode))) {
+	if (dtree_create(&wwin.wksp.regions, dtree_nodes(areas), sizeof(WimaAreaNode))) {
 		return WIMA_WINDOW_ERR;
 	}
 
-	if (dtree_copy(wwin.wksp.areas, areas)) {
+	if (dtree_copy(wwin.wksp.regions, areas)) {
 		return WIMA_WINDOW_ERR;
 	}
 
