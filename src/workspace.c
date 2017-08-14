@@ -44,9 +44,9 @@
 
 extern WimaG wg;
 
-WimaStatus wima_workspace_register(WimaTypeHandle* wth, const char* name) {
+WimaStatus wima_workspace_register(WimaWorkspaceHandle* wth, const char* name) {
 
-	WimaWkspType wksp;
+	WimaWksp wksp;
 
 	DynaStatus status = dstr_create(&wksp.name, name);
 	if (status) {
@@ -58,9 +58,9 @@ WimaStatus wima_workspace_register(WimaTypeHandle* wth, const char* name) {
 		return WIMA_WORKSPACE_ERR;
 	}
 
-	size_t len = dvec_len(wg.wkspTypes);
+	size_t len = dvec_len(wg.workspaces);
 
-	status = dvec_push(wg.wkspTypes, (uint8_t*) &wksp);
+	status = dvec_push(wg.workspaces, (uint8_t*) &wksp);
 	if (status) {
 		return WIMA_WORKSPACE_ERR;
 	}
@@ -70,13 +70,13 @@ WimaStatus wima_workspace_register(WimaTypeHandle* wth, const char* name) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_addNode(WimaTypeHandle wksp, DynaNode node, float split, bool vertical) {
+WimaStatus wima_workspace_addNode(WimaRegionHandle wksp, DynaNode node, float split, bool vertical) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_addArea(WimaTypeHandle wksp, DynaNode node, WimaTypeHandle area) {
+WimaStatus wima_workspace_addArea(WimaRegionHandle wksp, DynaNode node, WimaRegionHandle area) {
 
-	WimaWkspType* wksps = (WimaWkspType*) dvec_data(wg.wkspTypes);
+	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
 	if (!wksps) {
 		return WIMA_INVALID_STATE;
 	}
@@ -132,7 +132,7 @@ WimaStatus wima_workspace_fileDrop(WimaWksp* wksp, int filec, const char* filev[
 	return WIMA_SUCCESS;
 }
 
-bool wima_workspace_nodeValid(WimaWkspType* wksp, DynaNode n) {
+bool wima_workspace_nodeValid(WimaWksp* wksp, DynaNode n) {
 
 	DynaNode p = dtree_parent(n);
 
