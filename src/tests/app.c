@@ -75,12 +75,12 @@ void printMods(WimaMods mods) {
 	fputc('\n', stdout);
 }
 
-WimaStatus mouseCoordsDraw(WimaWindowHandle wwh, int width, int height) {
-	printf("Draw: { handle: %du, width: %4d; height: %4d }\n", wwh, width, height);
+WimaStatus mouseCoordsDraw(WimaAreaHandle wah, int width, int height) {
+	printf("Draw: { handle: %du, width: %4d; height: %4d }\n", wah.node, width, height);
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsKevent(WimaWindowHandle wwh,
+WimaStatus mouseCoordsKevent(WimaAreaHandle wah,
                              WimaKey key, int scancode,
                              WimaAction act, WimaMods mods)
 {
@@ -97,7 +97,7 @@ WimaStatus mouseCoordsKevent(WimaWindowHandle wwh,
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsMevent(WimaWindowHandle wwh, WimaMouseBtn mbtn, WimaAction act, WimaMods mods) {
+WimaStatus mouseCoordsMevent(WimaAreaHandle wah, WimaMouseBtn mbtn, WimaAction act, WimaMods mods) {
 
 	printf("Mouse Button Event:\n");
 	printf("    Button: ");
@@ -126,8 +126,40 @@ WimaStatus mouseCoordsMevent(WimaWindowHandle wwh, WimaMouseBtn mbtn, WimaAction
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsMpos(WimaWindowHandle wwh, int x, int y) {
+WimaStatus mouseCoordsMpos(WimaAreaHandle wah, int x, int y) {
 	printf("Pos: { x: %4d; y: %4d }\n", x, y);
+	return WIMA_SUCCESS;
+}
+
+WimaStatus mouseCoordsSevent(WimaAreaHandle wah, int xoffset, int yoffset) {
+
+	printf("Scroll: { x: %4d; y: %4d }\n", xoffset, yoffset);
+
+	return WIMA_SUCCESS;
+}
+
+WimaStatus mouseCoordsChar(WimaAreaHandle wah, uint32_t code) {
+
+	printf("Char: %lc\n", code);
+
+	return WIMA_SUCCESS;
+}
+
+WimaStatus mouseCoordsCharMod(WimaAreaHandle wah, uint32_t code, WimaMods mods) {
+
+	printf("Char: %lc; Mods: ", code);
+	printMods(mods);
+
+	return WIMA_SUCCESS;
+}
+
+WimaStatus mouseCoordsFileDrop(WimaAreaHandle wah, int filec, const char* filev[]) {
+
+	printf("Dropped Files:\n");
+	for (int i = 0; i < filec; ++i) {
+		printf("    %s\n", filev[i]);
+	}
+
 	return WIMA_SUCCESS;
 }
 
@@ -138,38 +170,6 @@ WimaStatus mouseCoordsMenter(WimaWindowHandle wwh, bool entered) {
 	}
 	else {
 		printf("Mouse Exit\n");
-	}
-
-	return WIMA_SUCCESS;
-}
-
-WimaStatus mouseCoordsSevent(WimaWindowHandle wwh, int xoffset, int yoffset) {
-
-	printf("Scroll: { x: %4d; y: %4d }\n", xoffset, yoffset);
-
-	return WIMA_SUCCESS;
-}
-
-WimaStatus mouseCoordsChar(WimaWindowHandle wwh, uint32_t code) {
-
-	printf("Char: %lc\n", code);
-
-	return WIMA_SUCCESS;
-}
-
-WimaStatus mouseCoordsCharMod(WimaWindowHandle wwh, uint32_t code, WimaMods mods) {
-
-	printf("Char: %lc; Mods: ", code);
-	printMods(mods);
-
-	return WIMA_SUCCESS;
-}
-
-WimaStatus mouseCoordsFileDrop(WimaWindowHandle wwh, int filec, const char* filev[]) {
-
-	printf("Dropped Files:\n");
-	for (int i = 0; i < filec; ++i) {
-		printf("    %s\n", filev[i]);
 	}
 
 	return WIMA_SUCCESS;
@@ -187,17 +187,17 @@ int main() {
 		return status;
 	}
 
-	WimaTypeHandle area;
-	status = wima_area_register(&area,            "Mouse Coordinates",
-	                          mouseCoordsDraw,    mouseCoordsKevent,
-	                          mouseCoordsMevent,  mouseCoordsMpos,
-	                          mouseCoordsSevent,  mouseCoordsChar,
-	                          mouseCoordsCharMod, mouseCoordsFileDrop);
+	WimaRegionHandle region;
+	status = wima_region_register(&region,            "Mouse Coordinates",
+	                              mouseCoordsDraw,    mouseCoordsKevent,
+	                              mouseCoordsMevent,  mouseCoordsMpos,
+	                              mouseCoordsSevent,  mouseCoordsChar,
+	                              mouseCoordsCharMod, mouseCoordsFileDrop);
 	if (status) {
 		return status;
 	}
 
-	WimaTypeHandle wksp;
+	WimaRegionHandle wksp;
 	status = wima_workspace_register(&wksp, "Default");
 	if (status) {
 		return status;
@@ -205,7 +205,7 @@ int main() {
 
 	DynaNode root = dtree_root();
 
-	status = wima_workspace_addArea(wksp, root, area);
+	status = wima_workspace_addArea(wksp, root, region);
 	if (status) {
 		return status;
 	}
