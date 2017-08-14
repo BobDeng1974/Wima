@@ -51,6 +51,7 @@ typedef enum wima_area_node_type {
 typedef struct wima_area_node {
 
 	WimaAreaNodeType type;
+	WimaWindowHandle window;
 
 	union {
 
@@ -82,7 +83,7 @@ typedef struct wima_area_node {
 
 } WimaAreaNode;
 
-WimaStatus wima_area_node_setUserPtr(WimaWindowHandle win, DynaTree areas, DynaNode node);
+WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode node);
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
 
 DynaTree wima_area_areas(WimaWindowHandle win);

@@ -43,7 +43,7 @@
 
 extern WimaG wg;
 
-WimaStatus wima_area_node_setUserPtr(WimaWindowHandle win, DynaTree areas, DynaNode node) {
+WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode node) {
 
 	// Make sure this is clear.
 	WimaStatus status = WIMA_SUCCESS;
@@ -51,17 +51,20 @@ WimaStatus wima_area_node_setUserPtr(WimaWindowHandle win, DynaTree areas, DynaN
 	// Get the particular area that we care about.
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
+	// Set the window handle.
+	area->window = win;
+
 	// We do something different depending on what type of node it is.
 	if (area->type == WIMA_AREA_PARENT) {
 
 		// Set the left child user pointer and check for error.
-		status = wima_area_node_setUserPtr(win, areas, dtree_left(node));
+		status = wima_area_node_setData(win, areas, dtree_left(node));
 		if (status) {
 			return status;
 		}
 
 		// Set the right child user pointer and check for error.
-		status = wima_area_node_setUserPtr(win, areas, dtree_right(node));
+		status = wima_area_node_setData(win, areas, dtree_right(node));
 		if (status) {
 			return status;
 		}

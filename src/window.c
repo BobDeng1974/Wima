@@ -111,7 +111,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 		return WIMA_WINDOW_ERR;
 	}
 
-	WimaStatus status = wima_area_node_setUserPtr(windowIdx, wwin.areas, root);
+	WimaStatus status = wima_area_node_setData(windowIdx, wwin.areas, root);
 	if (status) {
 		return status;
 	}
