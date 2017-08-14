@@ -48,7 +48,7 @@
 
 extern WimaG wg;
 
-WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaRegionHandle wksp) {
+WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaWorkspaceHandle wksp) {
 
 	size_t areaTypesLen = dvec_len(wg.regions);
 	size_t wkspTypesLen = dvec_len(wg.workspaces);
