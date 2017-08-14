@@ -152,14 +152,50 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 void wima_callback_char(GLFWwindow* window, unsigned int code) {
 
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
+	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+
+	WimaStatus status = wima_area_char(wwh, code);
+
+	if (status) {
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
+	}
 }
 
 void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
+	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+
+	WimaStatus status = wima_area_charMod(wwh, code, (WimaMods) mods);
+
+	if (status) {
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
+	}
 }
 
 void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) {
 
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
+	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+
+	WimaStatus status = wima_area_fileDrop(wwh, filec, filev);
+
+	if (status) {
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
+	}
 }
 
 void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
