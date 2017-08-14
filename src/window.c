@@ -48,10 +48,10 @@
 
 extern WimaG wg;
 
-WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wksp) {
+WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaRegionHandle wksp) {
 
-	size_t areaTypesLen = dvec_len(wg.areaTypes);
-	size_t wkspTypesLen = dvec_len(wg.wkspTypes);
+	size_t areaTypesLen = dvec_len(wg.regions);
+	size_t wkspTypesLen = dvec_len(wg.workspaces);
 
 	if (areaTypesLen == 0 || wkspTypesLen == 0) {
 		return WIMA_INVALID_STATE;
@@ -96,7 +96,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeH
 
 	wwin.window = win;
 
-	WimaWkspType* wksps = (WimaWkspType*) dvec_data(wg.wkspTypes);
+	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
 	DynaTree areas = wksps[wksp].areas;
 
 	if (dtree_create(&wwin.wksp.areas, dtree_nodes(areas), sizeof(WimaAreaNode))) {
@@ -112,7 +112,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeH
 	}
 
 	*wwh = windowIdx;
-	wwin.wksp.window = windowIdx;
 
 	return WIMA_SUCCESS;
 }

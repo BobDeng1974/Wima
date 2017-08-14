@@ -47,6 +47,7 @@
 #include <wima.h>
 
 #include "callbacks.h"
+#include "region.h"
 #include "area.h"
 #include "window.h"
 #include "global.h"
@@ -62,8 +63,8 @@ WimaStatus wima_init(const char* name, ErrorFunc error, MouseEnterFunc enter) {
 	wg.error = error;
 	wg.enter = enter;
 
-	wg.areaTypes = NULL;
-	wg.wkspTypes = NULL;
+	wg.regions = NULL;
+	wg.workspaces = NULL;
 	wg.name = NULL;
 	wg.windows = NULL;
 
@@ -79,13 +80,13 @@ WimaStatus wima_init(const char* name, ErrorFunc error, MouseEnterFunc enter) {
 		return WIMA_INIT_ERR;
 	}
 
-	status = dvec_create(&wg.areaTypes, 0, sizeof(WimaAreaType));
+	status = dvec_create(&wg.regions, 0, sizeof(WimaRegion));
 	if (status) {
 		wima_exit();
 		return WIMA_INIT_ERR;
 	}
 
-	status = dvec_create(&wg.wkspTypes, 0, sizeof(WimaWkspType));
+	status = dvec_create(&wg.workspaces, 0, sizeof(WimaWksp));
 	if (status) {
 		wima_exit();
 		return WIMA_INIT_ERR;
@@ -131,8 +132,8 @@ void wima_exit() {
 		dstr_free(wg.name);
 	}
 
-	if (wg.areaTypes) {
-		dvec_free(wg.areaTypes);
+	if (wg.regions) {
+		dvec_free(wg.regions);
 	}
 
 	if (wg.windows) {
