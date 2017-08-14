@@ -44,17 +44,22 @@ extern WimaG wg;
 
 WimaStatus wima_area_node_setUserPtr(WimaWindowHandle win, DynaTree areas, DynaNode node) {
 
+	// Make sure this is clear.
 	WimaStatus status = WIMA_SUCCESS;
 
+	// Get the particular area that we care about.
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
+	// We do something different depending on what type of node it is.
 	if (area->type == WIMA_AREA_PARENT) {
 
+		// Set the left child user pointer and check for error.
 		status = wima_area_node_setUserPtr(win, areas, dtree_left(node));
 		if (status) {
 			return status;
 		}
 
+		// Set the right child user pointer and check for error.
 		status = wima_area_node_setUserPtr(win, areas, dtree_right(node));
 		if (status) {
 			return status;
@@ -62,13 +67,18 @@ WimaStatus wima_area_node_setUserPtr(WimaWindowHandle win, DynaTree areas, DynaN
 	}
 	else {
 
+		// Get the region handle.
 		WimaRegionHandle reg = area->node.area.type;
+
+		// Check that the region handle is valid.
 		if (reg >= dvec_len(wg.regions)) {
 			return WIMA_WINDOW_ERR;
 		}
 
+		// Get the list of regions.
 		WimaRegion* regs = (WimaRegion*) dvec_data(wg.regions);
 
+		// Get the particular user function setter.
 		UserPointerFunc user_ptr = regs[reg].userPtrFunc;
 
 		// If the user didn't specify one, don't call it.
@@ -76,12 +86,15 @@ WimaStatus wima_area_node_setUserPtr(WimaWindowHandle win, DynaTree areas, DynaN
 			return WIMA_SUCCESS;
 		}
 
+		// Set all of the area handle
+		// (to pass to the user function).
 		WimaAreaHandle wah;
 		wah.node = (WimaAreaNodeHandle) node;
 		wah.user = NULL;
 		wah.window = win;
 		wah.region = reg;
 
+		// Call the user function.
 		area->node.area.user = user_ptr(wah);
 	}
 
@@ -90,20 +103,33 @@ WimaStatus wima_area_node_setUserPtr(WimaWindowHandle win, DynaTree areas, DynaN
 
 bool wima_area_node_valid(DynaTree regions, DynaNode node) {
 
+	// Make sure this is clear.
 	bool result = true;
 
+	// Get the particular area we care about.
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(regions, node);
 
+	// We do something different depending on what type of node it is.
 	if (area->type == WIMA_AREA_PARENT) {
 
+		// Make sure a parent has both left and right children.
+		// A parent ***MUST*** have both children because otherwise
+		// You may as well just set an area.
 		result = dtree_hasLeft(regions, node) && dtree_hasRight(regions, node);
 
+		// If we're good so far...
 		if (result) {
+
+			// Make sure the children nodes are valid.
 			result = wima_area_node_valid(regions, dtree_left(node)) &&
 			         wima_area_node_valid(regions, dtree_right(node));
 		}
 	}
 	else {
+
+		// Make sure the node does ***NOT*** have children.
+		// Actual areas should never have children because
+		// that kind of defeats the purpose.
 		result = !(dtree_hasLeft(regions, node) || dtree_hasRight(regions, node));
 	}
 
