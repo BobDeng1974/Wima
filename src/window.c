@@ -100,7 +100,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaWorks
 
 	DynaNode root = dtree_root();
 
-	if (!wima_window_node_valid(regs, root)) {
+	if (!wima_area_node_valid(regs, root)) {
 		return WIMA_WINDOW_ERR;
 	}
 
@@ -112,7 +112,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaWorks
 		return WIMA_WINDOW_ERR;
 	}
 
-	WimaStatus status = wima_window_node_setUserPtr(windowIdx, wwin.areas, root);
+	WimaStatus status = wima_area_node_setUserPtr(windowIdx, wwin.areas, root);
 	if (status) {
 		return status;
 	}
@@ -151,72 +151,4 @@ WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user) {
 	wins[win].user = user;
 
 	return WIMA_SUCCESS;
-}
-
-WimaStatus wima_window_node_setUserPtr(WimaWindowHandle win, DynaTree areas, DynaNode node) {
-
-	WimaStatus status = WIMA_SUCCESS;
-
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
-
-	if (area->type == WIMA_AREA_PARENT) {
-
-		status = wima_window_node_setUserPtr(win, areas, dtree_left(node));
-		if (status) {
-			return status;
-		}
-
-		status = wima_window_node_setUserPtr(win, areas, dtree_right(node));
-		if (status) {
-			return status;
-		}
-	}
-	else {
-
-		WimaRegionHandle reg = area->node.area.type;
-		if (reg >= dvec_len(wg.regions)) {
-			return WIMA_WINDOW_ERR;
-		}
-
-		WimaRegion* regs = (WimaRegion*) dvec_data(wg.regions);
-
-		UserPointerFunc user_ptr = regs[reg].userPtrFunc;
-
-		// If the user didn't specify one, don't call it.
-		if (!user_ptr) {
-			return WIMA_SUCCESS;
-		}
-
-		WimaAreaHandle wah;
-		wah.node = (WimaAreaNodeHandle) node;
-		wah.user = NULL;
-		wah.window = win;
-		wah.region = reg;
-
-		area->node.area.user = user_ptr(wah);
-	}
-
-	return status;
-}
-
-bool wima_window_node_valid(DynaTree regions, DynaNode node) {
-
-	bool result = true;
-
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(regions, node);
-
-	if (area->type == WIMA_AREA_PARENT) {
-
-		result = dtree_hasLeft(regions, node) && dtree_hasRight(regions, node);
-
-		if (result) {
-			result = wima_window_node_valid(regions, dtree_left(node)) &&
-			         wima_window_node_valid(regions, dtree_right(node));
-		}
-	}
-	else {
-		result = !(dtree_hasLeft(regions, node) || dtree_hasRight(regions, node));
-	}
-
-	return result;
 }

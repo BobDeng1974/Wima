@@ -36,10 +36,79 @@
 
 #include <wima.h>
 
+#include "region.h"
 #include "area.h"
 #include "global.h"
 
 extern WimaG wg;
+
+WimaStatus wima_area_node_setUserPtr(WimaWindowHandle win, DynaTree areas, DynaNode node) {
+
+	WimaStatus status = WIMA_SUCCESS;
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		status = wima_area_node_setUserPtr(win, areas, dtree_left(node));
+		if (status) {
+			return status;
+		}
+
+		status = wima_area_node_setUserPtr(win, areas, dtree_right(node));
+		if (status) {
+			return status;
+		}
+	}
+	else {
+
+		WimaRegionHandle reg = area->node.area.type;
+		if (reg >= dvec_len(wg.regions)) {
+			return WIMA_WINDOW_ERR;
+		}
+
+		WimaRegion* regs = (WimaRegion*) dvec_data(wg.regions);
+
+		UserPointerFunc user_ptr = regs[reg].userPtrFunc;
+
+		// If the user didn't specify one, don't call it.
+		if (!user_ptr) {
+			return WIMA_SUCCESS;
+		}
+
+		WimaAreaHandle wah;
+		wah.node = (WimaAreaNodeHandle) node;
+		wah.user = NULL;
+		wah.window = win;
+		wah.region = reg;
+
+		area->node.area.user = user_ptr(wah);
+	}
+
+	return status;
+}
+
+bool wima_area_node_valid(DynaTree regions, DynaNode node) {
+
+	bool result = true;
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(regions, node);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		result = dtree_hasLeft(regions, node) && dtree_hasRight(regions, node);
+
+		if (result) {
+			result = wima_area_node_valid(regions, dtree_left(node)) &&
+			         wima_area_node_valid(regions, dtree_right(node));
+		}
+	}
+	else {
+		result = !(dtree_hasLeft(regions, node) || dtree_hasRight(regions, node));
+	}
+
+	return result;
+}
 
 WimaStatus wima_area_draw(WimaWindowHandle win, int width, int height) {
 	return WIMA_SUCCESS;
