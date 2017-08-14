@@ -163,6 +163,10 @@ WimaStatus mouseCoordsFileDrop(WimaAreaHandle wah, int filec, const char* filev[
 	return WIMA_SUCCESS;
 }
 
+void* mouseCoordsUserPtr(WimaAreaHandle wah) {
+	return NULL;
+}
+
 WimaStatus mouseCoordsMenter(WimaWindowHandle wwh, bool entered) {
 
 	if (entered) {
@@ -195,10 +199,11 @@ int main() {
 
 	WimaRegionHandle region;
 	status = wima_region_register(&region,            "Mouse Coordinates",
-	                              mouseCoordsDraw,    mouseCoordsKevent,
-	                              mouseCoordsMevent,  mouseCoordsMpos,
-	                              mouseCoordsSevent,  mouseCoordsChar,
-	                              mouseCoordsCharMod, mouseCoordsFileDrop);
+	                              mouseCoordsUserPtr, mouseCoordsDraw,
+	                              mouseCoordsKevent,  mouseCoordsMevent,
+	                              mouseCoordsMpos,    mouseCoordsSevent,
+	                              mouseCoordsChar,    mouseCoordsCharMod,
+	                              mouseCoordsFileDrop);
 	if (status) {
 		return status;
 	}
