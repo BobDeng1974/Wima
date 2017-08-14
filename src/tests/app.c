@@ -39,6 +39,10 @@
 
 #include <wima.h>
 
+/**
+ * Prints a WimaAction to stdout.
+ * @param act	The WimaAction to print.
+ */
 void printAction(WimaAction act) {
 
 	switch (act) {
@@ -54,6 +58,10 @@ void printAction(WimaAction act) {
 	}
 }
 
+/**
+ * Prints a WimaMods to stdout.
+ * @param mods	The WimaMods to print.
+ */
 void printMods(WimaMods mods) {
 
 	if (mods & WIMA_MOD_SHIFT) {
@@ -191,12 +199,14 @@ void mouseCoordsError(WimaStatus status, const char* desc) {
 
 int main() {
 
+	// Initialize Wima and check for success.
 	WimaStatus status = wima_init("Test Wima App",   mouseCoordsError,
 	                              mouseCoordsMenter, mouseCoordsResize);
 	if (status != WIMA_SUCCESS) {
 		return status;
 	}
 
+	// Register a region.
 	WimaRegionHandle region;
 	status = wima_region_register(&region,            "Mouse Coordinates",
 	                              mouseCoordsUserPtr, mouseCoordsDraw,
@@ -208,14 +218,17 @@ int main() {
 		return status;
 	}
 
+	// Register a workspace.
 	WimaWorkspaceHandle wksp;
 	status = wima_workspace_register(&wksp, "Default");
 	if (status) {
 		return status;
 	}
 
+	// Cache this.
 	DynaNode root = dtree_root();
 
+	// Add the region to the workspace.
 	status = wima_workspace_addRegion(wksp, root, region);
 	if (status) {
 		return status;
@@ -223,13 +236,16 @@ int main() {
 
 	WimaWindowHandle wwh;
 
+	// Create the window and check for error.
 	status = wima_window_create(&wwh, wksp);
 	if (status) {
 		return status;
 	}
 
+	// Run the app.
 	status = wima_main();
 
+	// Cleanup.
 	wima_exit();
 
 	return status;
