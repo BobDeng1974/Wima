@@ -38,6 +38,7 @@
 
 #include "region.h"
 #include "area.h"
+#include "window.h"
 #include "global.h"
 
 extern WimaG wg;
@@ -136,34 +137,75 @@ bool wima_area_node_valid(DynaTree regions, DynaNode node) {
 	return result;
 }
 
+DynaTree wima_area_areas(WimaWindowHandle win) {
+	WimaWin* windows = (WimaWin*) dvec_data(wg.windows);
+	return windows[win].areas;
+}
+
 WimaStatus wima_area_draw(WimaWindowHandle win, int width, int height) {
-	return WIMA_SUCCESS;
+	return wima_area_node_draw(wima_area_areas(win), dtree_root(), width, height);
 }
 
 WimaStatus wima_area_key(WimaWindowHandle win, WimaKey key, int scancode, WimaAction act, WimaMods mods) {
-	return WIMA_SUCCESS;
+	return wima_area_node_key(wima_area_areas(win), dtree_root(), key, scancode, act, mods);
 }
 
 WimaStatus wima_area_mouseBtn(WimaWindowHandle win, WimaMouseBtn btn, WimaAction act, WimaMods mods) {
-	return WIMA_SUCCESS;
+	return wima_area_node_mouseBtn(wima_area_areas(win), dtree_root(), btn, act, mods);
 }
 
 WimaStatus wima_area_mousePos(WimaWindowHandle win, int x, int y) {
-	return WIMA_SUCCESS;
+	return wima_area_node_mousePos(wima_area_areas(win), dtree_root(), x, y);
 }
 
 WimaStatus wima_area_scroll(WimaWindowHandle win, int xoffset, int yoffset) {
-	return WIMA_SUCCESS;
+	return wima_area_node_scroll(wima_area_areas(win), dtree_root(), xoffset, yoffset);
 }
 
 WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code) {
-	return WIMA_SUCCESS;
+	return wima_area_node_char(wima_area_areas(win), dtree_root(), code);
 }
 
 WimaStatus wima_area_charMod(WimaWindowHandle win, unsigned int code, WimaMods mods) {
-	return WIMA_SUCCESS;
+	return wima_area_node_charMod(wima_area_areas(win), dtree_root(), code, mods);
 }
 
 WimaStatus wima_area_fileDrop(WimaWindowHandle win, int filec, const char* filev[]) {
+	return wima_area_node_fileDrop(wima_area_areas(win), dtree_root(), filec, filev);
+}
+
+WimaStatus wima_area_node_draw(DynaTree areas, DynaNode area, int width, int height) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_area_node_key(DynaTree areas, DynaNode area,  WimaKey key,
+                              int scancode,   WimaAction act, WimaMods mods)
+{
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode area, WimaMouseBtn btn,
+                                   WimaAction act, WimaMods mods)
+{
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode area, int x, int y) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode area, int xoffset, int yoffset) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_area_node_char(DynaTree areas, DynaNode area, unsigned int code) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_area_node_charMod(DynaTree areas, DynaNode area, unsigned int code, WimaMods mods) {
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_area_node_fileDrop(DynaTree areas, DynaNode area, int filec, const char* filev[]) {
 	return WIMA_SUCCESS;
 }

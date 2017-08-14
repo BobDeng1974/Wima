@@ -85,6 +85,8 @@ typedef struct wima_area_node {
 WimaStatus wima_area_node_setUserPtr(WimaWindowHandle win, DynaTree areas, DynaNode node);
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
 
+DynaTree wima_area_areas(WimaWindowHandle win, DynaNode node);
+
 WimaStatus wima_area_draw(WimaWindowHandle win, int width, int height);
 WimaStatus wima_area_key(WimaWindowHandle win, WimaKey key, int scancode, WimaAction act, WimaMods mods);
 WimaStatus wima_area_mouseBtn(WimaWindowHandle win, WimaMouseBtn btn, WimaAction act, WimaMods mods);
@@ -93,5 +95,16 @@ WimaStatus wima_area_scroll(WimaWindowHandle win, int xoffset, int yoffset);
 WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code);
 WimaStatus wima_area_charMod(WimaWindowHandle win, unsigned int code, WimaMods mods);
 WimaStatus wima_area_fileDrop(WimaWindowHandle win, int filec, const char* filev[]);
+
+WimaStatus wima_area_node_draw(DynaTree areas, DynaNode area, int width, int height);
+WimaStatus wima_area_node_key(DynaTree areas, DynaNode area,  WimaKey key,
+                              int scancode,   WimaAction act, WimaMods mods);
+WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode area, WimaMouseBtn btn,
+                                   WimaAction act, WimaMods mods);
+WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode area, int x, int y);
+WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode area, int xoffset, int yoffset);
+WimaStatus wima_area_node_char(DynaTree areas, DynaNode area, unsigned int code);
+WimaStatus wima_area_node_charMod(DynaTree areas, DynaNode area, unsigned int code, WimaMods mods);
+WimaStatus wima_area_node_fileDrop(DynaTree areas, DynaNode area, int filec, const char* filev[]);
 
 #endif // WIMA_AREA_H
