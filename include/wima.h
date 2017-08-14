@@ -100,7 +100,7 @@ typedef enum wima_status_codes {
 	WIMA_CONTEXT_ERR	= 131,	/** Returned when OpenGL does not have a context. */
 	WIMA_INIT_ERR		= 132,	/** Returned when Wima fails to initialize. */
 	WIMA_WINDOW_ERR		= 133,	/** Returned when Wima fails to create a window. */
-	WIMA_WORKSPACE_ERR	= 134,	/** Returned when Wima fails to start a workspace. */
+	WIMA_WORKSPACE_ERR	= 134,	/** Returned when Wima fails to create a workspace. */
 	WIMA_AREA_ERR		= 135,	/** Returned when Wima fails to start an area. */
 	WIMA_INVALID_ENUM	= 136,	/** Returned when Wima gets an invalid enum value. */
 	WIMA_INVALID_PARAM	= 137,	/** Returned when Wima gets an invalid parameter. */
