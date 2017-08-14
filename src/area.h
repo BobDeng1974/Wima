@@ -46,7 +46,7 @@ typedef enum wima_area_node_type {
 
 } WimaAreaNodeType;
 
-#define WIMA_IS_VERTICAL(p)  ((p.split < 0))
+#define WIMA_IS_VERTICAL(p) ((p.split < 0))
 
 typedef struct wima_area_node {
 
