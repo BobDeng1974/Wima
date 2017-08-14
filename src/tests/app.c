@@ -223,7 +223,7 @@ int main() {
 
 	WimaWindowHandle wwh;
 
-	status = wima_window_create(&wwh, "Mouse Coordinates", wksp);
+	status = wima_window_create(&wwh, wksp);
 	if (status) {
 		return status;
 	}
