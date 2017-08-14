@@ -41,71 +41,35 @@
 
 extern WimaG wg;
 
-WimaStatus wima_area_register(WimaTypeHandle* area,   const char* name,
-                              DrawFunc draw,          KeyEventFunc kevent,
-                              MouseEventFunc mevent,  MousePosFunc mpos,
-                              ScrollEventFunc sevent, CharFunc cevent,
-                              CharModFunc cmod,       FileDropFunc fdrop)
-{
-	WimaAreaType wat;
-
-	DynaStatus status = dstr_create(&(wat.name), name);
-	if (status) {
-		return WIMA_AREA_ERR;
-	}
-
-	wat.user = NULL;
-
-	wat.draw = draw;
-	wat.key_event = kevent;
-	wat.mouse_event = mevent;
-	wat.mouse_pos = mpos;
-	wat.scroll_event = sevent;
-	wat.char_event = cevent;
-	wat.char_mod = cmod;
-	wat.file_drop = fdrop;
-
-	size_t idx = dvec_len(wg.areaTypes);
-
-	status = dvec_push(wg.areaTypes, (uint8_t*) &wat);
-	if (status) {
-		return WIMA_AREA_ERR;
-	}
-
-	*area = idx;
-
+WimaStatus wima_area_draw(WimaWindowHandle win, int width, int height) {
 	return WIMA_SUCCESS;
 }
 
-void* wima_area_getUserPointer(WimaTypeHandle area) {
-
-	if (wg.windows == NULL) {
-		return NULL;
-	}
-
-	if (area >= dvec_len(wg.areaTypes)) {
-		return NULL;
-	}
-
-	WimaAreaType* areas = (WimaAreaType*) dvec_data(wg.areaTypes);
-
-	return areas[area].user;
+WimaStatus wima_area_key(WimaWindowHandle win, WimaKey key, int scancode, WimaAction act, WimaMods mods) {
+	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_area_setUserPointer(WimaTypeHandle area, void* ptr) {
+WimaStatus wima_area_mouseBtn(WimaWindowHandle win, WimaMouseBtn btn, WimaAction act, WimaMods mods) {
+	return WIMA_SUCCESS;
+}
 
-	if (!wg.windows) {
-		return WIMA_INVALID_STATE;
-	}
+WimaStatus wima_area_mousePos(WimaWindowHandle win, int x, int y) {
+	return WIMA_SUCCESS;
+}
 
-	if (area >= dvec_len(wg.areaTypes)) {
-		return WIMA_INVALID_PARAM;
-	}
+WimaStatus wima_area_scroll(WimaWindowHandle win, int xoffset, int yoffset) {
+	return WIMA_SUCCESS;
+}
 
-	WimaAreaType* areas = (WimaAreaType*) dvec_data(wg.areaTypes);
+WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code) {
+	return WIMA_SUCCESS;
+}
 
-	areas[area].user = ptr;
+WimaStatus wima_area_charMod(WimaWindowHandle win, unsigned int code, WimaMods mods) {
+	return WIMA_SUCCESS;
+}
 
+WimaStatus wima_area_fileDrop(WimaWindowHandle win, bool entered) {
 	return WIMA_SUCCESS;
 }
 

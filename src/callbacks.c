@@ -74,15 +74,11 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
 
-	WimaWin* wwin = ((WimaWin*) dvec_data(wg.windows)) + wwh;
-
-	WimaWksp* wksp = &wwin->wksp;
-
 	WimaKey wkey = (WimaKey) key;
 	WimaMods wmods = (WimaMods) mods;
 	WimaAction wact = (WimaAction) action;
 
-	WimaStatus status = wima_workspace_key(wksp, wkey, scancode, wact, wmods);
+	WimaStatus status = wima_area_key(wwh, wkey, scancode, wact, wmods);
 
 	if (status) {
 		int idx = ((int) status) - 128;
@@ -98,15 +94,11 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
 
-	WimaWin* wwin = ((WimaWin*) dvec_data(wg.windows)) + wwh;
-
-	WimaWksp* wksp = &wwin->wksp;
-
 	WimaMouseBtn wbtn = (WimaMouseBtn) btn;
 	WimaMods wmods = (WimaMods) mods;
 	WimaAction wact = (WimaAction) action;
 
-	WimaStatus status = wima_workspace_mouseBtn(wksp, wbtn, wact, wmods);
+	WimaStatus status = wima_area_mouseBtn(wwh, wbtn, wact, wmods);
 
 	if (status) {
 		int idx = ((int) status) - 128;
@@ -122,17 +114,13 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
 
-	WimaWin* wwin = ((WimaWin*) dvec_data(wg.windows)) + wwh;
-
-	WimaWksp* wksp = &wwin->wksp;
-
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
 	// in floating point numbers, for whatever reason.
 	int xint = (int) x;
 	int yint = (int) y;
 
-	WimaStatus status = wima_workspace_mousePos(wksp, xint, yint);
+	WimaStatus status = wima_area_mousePos(wwh, xint, yint);
 
 	if (status) {
 		int idx = ((int) status) - 128;
@@ -148,17 +136,13 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
 
-	WimaWin* wwin = ((WimaWin*) dvec_data(wg.windows)) + wwh;
-
-	WimaWksp* wksp = &wwin->wksp;
-
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
 	// in floating point numbers, for whatever reason.
 	int xint = (int) xoffset;
 	int yint = (int) yoffset;
 
-	WimaStatus status = wima_workspace_scroll(wksp, xint, yint);
+	WimaStatus status = wima_area_scroll(wwh, xint, yint);
 
 	if (status) {
 		int idx = ((int) status) - 128;
@@ -212,14 +196,12 @@ void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
 
 	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
 
-	WimaWin* wwin = ((WimaWin*) dvec_data(wg.windows)) + wwh;
-
-	WimaWksp* wksp = &wwin->wksp;
+	WimaWin* wwin = (WimaWin*) dvec_data(wg.windows);
 
 	wwin[wwh].width = width;
 	wwin[wwh].height = height;
 
-	WimaStatus status = wima_workspace_draw(wksp, width, height);
+	WimaStatus status = wima_area_draw(wwh, width, height);
 
 	if (status) {
 		int idx = ((int) status) - 128;

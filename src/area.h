@@ -77,6 +77,15 @@ typedef struct wima_area_node {
 
 } WimaAreaNode;
 
+WimaStatus wima_area_draw(WimaWindowHandle win, int width, int height);
+WimaStatus wima_area_key(WimaWindowHandle win, WimaKey key, int scancode, WimaAction act, WimaMods mods);
+WimaStatus wima_area_mouseBtn(WimaWindowHandle win, WimaMouseBtn btn, WimaAction act, WimaMods mods);
+WimaStatus wima_area_mousePos(WimaWindowHandle win, int x, int y);
+WimaStatus wima_area_scroll(WimaWindowHandle win, int xoffset, int yoffset);
+WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code);
+WimaStatus wima_area_charMod(WimaWindowHandle win, unsigned int code, WimaMods mods);
+WimaStatus wima_area_fileDrop(WimaWindowHandle win, bool entered);
+
 float wima_area_split(WimaAreaNode* node);
 bool wima_area_vertical(WimaAreaNode* node);
 
