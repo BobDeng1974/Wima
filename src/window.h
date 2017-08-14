@@ -57,7 +57,7 @@ typedef struct wima_window {
 
 } WimaWin;
 
-WimaStatus wima_window_node_userPtr(WimaWindowHandle win, DynaTree areas, DynaNode node);
+WimaStatus wima_window_node_setUserPtr(WimaWindowHandle win, DynaTree areas, DynaNode node);
 bool wima_window_node_valid(DynaTree regions, DynaNode node);
 
 #define GLFW_WINDOW_HANDLE(win) (WimaWindowHandle) glfwGetWindowUserPointer(win)

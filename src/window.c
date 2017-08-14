@@ -112,7 +112,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaWorks
 		return WIMA_WINDOW_ERR;
 	}
 
-	WimaStatus status = wima_window_node_userPtr(windowIdx, wwin.areas, root);
+	WimaStatus status = wima_window_node_setUserPtr(windowIdx, wwin.areas, root);
 	if (status) {
 		return status;
 	}
@@ -153,7 +153,7 @@ WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_window_node_userPtr(WimaWindowHandle win, DynaTree areas, DynaNode node) {
+WimaStatus wima_window_node_setUserPtr(WimaWindowHandle win, DynaTree areas, DynaNode node) {
 
 	WimaStatus status = WIMA_SUCCESS;
 
@@ -161,12 +161,12 @@ WimaStatus wima_window_node_userPtr(WimaWindowHandle win, DynaTree areas, DynaNo
 
 	if (area->type == WIMA_AREA_PARENT) {
 
-		status = wima_window_node_userPtr(win, areas, dtree_left(node));
+		status = wima_window_node_setUserPtr(win, areas, dtree_left(node));
 		if (status) {
 			return status;
 		}
 
-		status = wima_window_node_userPtr(win, areas, dtree_right(node));
+		status = wima_window_node_setUserPtr(win, areas, dtree_right(node));
 		if (status) {
 			return status;
 		}
