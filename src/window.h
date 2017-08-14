@@ -37,6 +37,8 @@
 #ifndef WIMA_WINDOW_H
 #define WIMA_WINDOW_H
 
+#include <stdbool.h>
+
 #include <GLFW/glfw3.h>
 
 #include "workspace.h"
@@ -54,6 +56,9 @@ typedef struct wima_window {
 	int height;
 
 } WimaWin;
+
+WimaStatus wima_window_node_userPtr(WimaWindowHandle win, DynaTree areas, DynaNode node);
+bool wima_window_node_valid(DynaTree regions, DynaNode node);
 
 #define GLFW_WINDOW_HANDLE(win) (WimaWindowHandle) glfwGetWindowUserPointer(win)
 
