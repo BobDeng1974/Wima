@@ -98,7 +98,7 @@ WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wksp, DynaNode node,
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_addArea(WimaWorkspaceHandle wksp, DynaNode node,
+WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wksp, DynaNode node,
                                   WimaRegionHandle reg)
 {
 	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
