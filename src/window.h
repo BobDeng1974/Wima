@@ -48,7 +48,7 @@ typedef struct wima_window {
 
 	void* user;
 
-	WimaWksp wksp;
+	DynaTree areas;
 
 	int width;
 	int height;
