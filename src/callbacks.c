@@ -201,7 +201,18 @@ void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
 	wwin[wwh].width = width;
 	wwin[wwh].height = height;
 
-	WimaStatus status = wima_area_draw(wwh, width, height);
+	WimaStatus status = WIMA_SUCCESS;
+
+	if (wg.resize) {
+		status = wg.resize(wwh, width, height);
+
+		if (status) {
+			int idx = ((int) status) - 128;
+			wg.error(status, descs[idx]);
+		}
+	}
+
+	status = wima_area_draw(wwh, width, height);
 
 	if (status) {
 		int idx = ((int) status) - 128;

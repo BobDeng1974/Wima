@@ -301,6 +301,7 @@ typedef WimaStatus (*FileDropFunc)(WimaAreaHandle, int, const char**);
 
 typedef void (*ErrorFunc)(WimaStatus, const char*);
 typedef WimaStatus (*MouseEnterFunc)(WimaWindowHandle, bool);
+typedef WimaStatus (*WindowResizeFunc)(WimaWindowHandle, int, int);
 
 WimaStatus wima_region_register(WimaRegionHandle* wrh,  const char* name,
                                 DrawFunc draw,          KeyEventFunc kevent,
@@ -316,7 +317,8 @@ WimaStatus wima_workspace_addArea(WimaRegionHandle wksp, DynaNode node, WimaRegi
 
 WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaRegionHandle wksp);
 
-WimaStatus wima_init(const char* name, ErrorFunc error, MouseEnterFunc enter);
+WimaStatus wima_init(const char* name,     ErrorFunc error,
+                     MouseEnterFunc enter, WindowResizeFunc resize);
 WimaStatus wima_main();
 void wima_exit();
 
