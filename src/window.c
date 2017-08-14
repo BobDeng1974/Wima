@@ -117,6 +117,11 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaWorks
 		return status;
 	}
 
+	DynaStatus dstatus = dstr_create(&wwin.name, dstr_str(wksps[wksp].name));
+	if (dstatus) {
+		return WIMA_WINDOW_ERR;
+	}
+
 	if (dvec_push(wg.windows, (uint8_t*) &wwin)) {
 		return WIMA_WINDOW_ERR;
 	}
