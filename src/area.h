@@ -85,7 +85,7 @@ typedef struct wima_area_node {
 WimaStatus wima_area_node_setUserPtr(WimaWindowHandle win, DynaTree areas, DynaNode node);
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
 
-DynaTree wima_area_areas(WimaWindowHandle win, DynaNode node);
+DynaTree wima_area_areas(WimaWindowHandle win);
 
 WimaStatus wima_area_draw(WimaWindowHandle win, int width, int height);
 WimaStatus wima_area_key(WimaWindowHandle win, WimaKey key, int scancode, WimaAction act, WimaMods mods);
