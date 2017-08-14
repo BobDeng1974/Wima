@@ -72,21 +72,3 @@ WimaStatus wima_area_charMod(WimaWindowHandle win, unsigned int code, WimaMods m
 WimaStatus wima_area_fileDrop(WimaWindowHandle win, bool entered) {
 	return WIMA_SUCCESS;
 }
-
-inline float wima_area_split(WimaAreaNode* node) {
-
-	float split = node->node.parent.split;
-
-	int32_t* i = (int32_t*) &split;
-	*i &= ~(INT32_MIN);
-
-	return split;
-}
-
-inline bool wima_area_vertical(WimaAreaNode* node) {
-
-	float split = node->node.parent.split;
-
-	int32_t* i = (int32_t*) &split;
-	return *i & INT32_MIN;
-}
