@@ -216,7 +216,7 @@ int main() {
 
 	DynaNode root = dtree_root();
 
-	status = wima_workspace_addArea(wksp, root, region);
+	status = wima_workspace_addRegion(wksp, root, region);
 	if (status) {
 		return status;
 	}
