@@ -49,7 +49,7 @@
 
 extern WimaG wg;
 
-WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaWorkspaceHandle wksp) {
+WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 
 	size_t areaTypesLen = dvec_len(wg.regions);
 	size_t wkspTypesLen = dvec_len(wg.workspaces);
@@ -60,7 +60,10 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaWorks
 
 	WimaWin wwin;
 
-	if (dstr_create(&(wwin.name), name)) {
+	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
+	DynaTree regs = wksps[wksp].regions;
+
+	if (dstr_create(&wwin.name, dstr_str(wksps[wksp].name))) {
 		return WIMA_WINDOW_ERR;
 	}
 
@@ -70,7 +73,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaWorks
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
-	GLFWwindow* win = glfwCreateWindow(640, 480, dstr_str(wg.name), NULL, NULL);
+	GLFWwindow* win = glfwCreateWindow(640, 480, dstr_str(wwin.name), NULL, NULL);
 
 	if (!win) {
 		wima_exit();
@@ -95,9 +98,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaWorks
 
 	wwin.window = win;
 
-	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
-	DynaTree regs = wksps[wksp].regions;
-
 	DynaNode root = dtree_root();
 
 	if (!wima_area_node_valid(regs, root)) {
@@ -115,11 +115,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaWorks
 	WimaStatus status = wima_area_node_setUserPtr(windowIdx, wwin.areas, root);
 	if (status) {
 		return status;
-	}
-
-	DynaStatus dstatus = dstr_create(&wwin.name, dstr_str(wksps[wksp].name));
-	if (dstatus) {
-		return WIMA_WINDOW_ERR;
 	}
 
 	if (dvec_push(wg.windows, (uint8_t*) &wwin)) {
