@@ -50,19 +50,40 @@ extern "C" {
 #include <dyna/tree.h>
 
 /**
- * A handle to either a workspace or an area type.
+ * A handle to a region (area template) type.
  */
-typedef uint32_t WimaTypeHandle;
+typedef uint16_t WimaRegionHandle;
 
 /**
  * A handle to a window.
  */
-typedef uint32_t WimaWindowHandle;
+typedef uint16_t WimaWindowHandle;
 
 /**
- * A handle to a workspace.
+ * A handle to a workspace (window template) type.
  */
-typedef uint32_t WimaWorkspaceHandle;
+typedef uint16_t WimaWorkspaceHandle;
+
+/**
+ * A handle to a node. This is to make the node size
+ * smaller than the 64 bits that Dyna uses. I am pretty
+ * sure that nothing will go over the limit, so I feel
+ * comfortable doing this.
+ */
+typedef uint32_t WimaAreaNodeHandle;
+
+/**
+ * A handle to a live area.
+ */
+typedef struct wima_area_handle {
+
+	// Put this first because it's bigger.
+	WimaAreaNodeHandle node;
+
+	WimaWindowHandle window;
+	WimaRegionHandle region;
+
+} WimaAreaHandle;
 
 /**
  * The possible status codes that Wima can return after
@@ -270,30 +291,30 @@ typedef enum wima_action {
  *These typedefs are here to make the following procedures shorter to write.
  */
 typedef void (*ErrorFunc)(WimaStatus, const char*);
-typedef WimaStatus (*DrawFunc)(WimaTypeHandle, int, int);
-typedef WimaStatus (*KeyEventFunc)(WimaTypeHandle, WimaKey, int, WimaAction, WimaMods);
-typedef WimaStatus (*MouseEventFunc)(WimaTypeHandle, WimaMouseBtn, WimaAction, WimaMods);
-typedef WimaStatus (*MousePosFunc)(WimaTypeHandle, int, int);
-typedef WimaStatus (*ScrollEventFunc)(WimaTypeHandle, int, int);
-typedef WimaStatus (*CharFunc)(WimaTypeHandle, uint32_t);
-typedef WimaStatus (*CharModFunc)(WimaTypeHandle, uint32_t, WimaMods);
-typedef WimaStatus (*FileDropFunc)(WimaTypeHandle, int, const char**);
+typedef WimaStatus (*DrawFunc)(WimaAreaHandle, int, int);
+typedef WimaStatus (*KeyEventFunc)(WimaAreaHandle, WimaKey, int, WimaAction, WimaMods);
+typedef WimaStatus (*MouseEventFunc)(WimaAreaHandle, WimaMouseBtn, WimaAction, WimaMods);
+typedef WimaStatus (*MousePosFunc)(WimaAreaHandle, int, int);
+typedef WimaStatus (*ScrollEventFunc)(WimaAreaHandle, int, int);
+typedef WimaStatus (*CharFunc)(WimaAreaHandle, uint32_t);
+typedef WimaStatus (*CharModFunc)(WimaAreaHandle, uint32_t, WimaMods);
+typedef WimaStatus (*FileDropFunc)(WimaAreaHandle, int, const char**);
 
 typedef WimaStatus (*MouseEnterFunc)(WimaWindowHandle, bool);
 
-WimaStatus wima_area_register(WimaTypeHandle* area,   const char* name,
-                            DrawFunc draw,         KeyEventFunc kevent,
-                            MouseEventFunc mevent, MousePosFunc mpos,
-                            ScrollEventFunc sevent, CharFunc cevent,
-                            CharModFunc cmod, FileDropFunc fdrop);
-void* wima_area_getUserPointer(WimaTypeHandle area);
-WimaStatus wima_area_setUserPointer(WimaTypeHandle area, void* ptr);
+WimaStatus wima_region_register(WimaRegionHandle* wrh,  const char* name,
+                                DrawFunc draw,          KeyEventFunc kevent,
+                                MouseEventFunc mevent,  MousePosFunc mpos,
+                                ScrollEventFunc sevent, CharFunc cevent,
+                                CharModFunc cmod,       FileDropFunc fdrop);
+void* wima_region_getUserPointer(WimaRegionHandle reg);
+WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 
-WimaStatus wima_workspace_register(WimaTypeHandle* type, const char* name);
-WimaStatus wima_workspace_addNode(WimaTypeHandle wksp, DynaNode node, float split, bool vertical);
-WimaStatus wima_workspace_addArea(WimaTypeHandle wksp, DynaNode node, WimaTypeHandle area);
+WimaStatus wima_workspace_register(WimaWorkspaceHandle* type, const char* name);
+WimaStatus wima_workspace_addNode(WimaRegionHandle wksp, DynaNode node, float split, bool vertical);
+WimaStatus wima_workspace_addArea(WimaRegionHandle wksp, DynaNode node, WimaRegionHandle area);
 
-WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaTypeHandle wksp);
+WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaRegionHandle wksp);
 
 WimaStatus wima_init(const char* name, ErrorFunc error, MouseEnterFunc enter);
 WimaStatus wima_main();
