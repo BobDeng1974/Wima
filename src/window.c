@@ -79,17 +79,15 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, const char* name, WimaWorks
 	// Set the user pointer to the handle.
 	glfwSetWindowUserPointer(win, (void*) (long) windowIdx);
 
+	// Set all of the callbacks.
 	glfwSetFramebufferSizeCallback(win, wima_callback_windowResize);
-
 	glfwSetKeyCallback(win, wima_callback_key);
 	glfwSetMouseButtonCallback(win, wima_callback_mouseBtn);
 	glfwSetCursorPosCallback(win, wima_callback_mousePos);
 	glfwSetCursorEnterCallback(win,wima_callback_mouseEnter);
 	glfwSetScrollCallback(win, wima_callback_scroll);
-
 	glfwSetCharCallback(win, wima_callback_char);
 	glfwSetCharModsCallback(win, wima_callback_charMod);
-
 	glfwSetDropCallback(win, wima_callback_fileDrop);
 
 	glfwMakeContextCurrent(win);
