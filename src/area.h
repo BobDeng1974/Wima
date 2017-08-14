@@ -59,6 +59,8 @@ typedef struct wima_area_node {
 
 		struct wima_area {
 
+			void* user;
+
 			// These are bigger, so put them first.
 			int width;
 			int height;
@@ -69,11 +71,11 @@ typedef struct wima_area_node {
 
 		struct wima_area_parent {
 
+			float split;
+
 			// These are bigger, so put them first.
 			int width;
 			int height;
-
-			float split;
 
 			bool vertical;
 
