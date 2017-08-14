@@ -29,9 +29,10 @@ set("WIMA_SRC"
 	# Put all source files here.
 	"wima.c"
 	"callbacks.c"
-	"window.c"
-	"workspace.c"
+	"region.c"
 	"area.c"
+	"workspace.c"
+	"window.c"
 )
 
 find_package(X11 REQUIRED)
