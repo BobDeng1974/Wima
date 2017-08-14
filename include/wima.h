@@ -73,9 +73,12 @@ typedef uint16_t WimaWorkspaceHandle;
 typedef uint32_t WimaAreaNodeHandle;
 
 /**
- * A handle to a live area.
+ * A handle to a area.
  */
 typedef struct wima_area_handle {
+
+	// User data. They may need this every time.
+	void* user;
 
 	// Put this first because it's bigger.
 	WimaAreaNodeHandle node;
@@ -290,6 +293,7 @@ typedef enum wima_action {
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
+typedef void* (*UserPointerFunc)(WimaAreaHandle);
 typedef WimaStatus (*DrawFunc)(WimaAreaHandle, int, int);
 typedef WimaStatus (*KeyEventFunc)(WimaAreaHandle, WimaKey, int, WimaAction, WimaMods);
 typedef WimaStatus (*MouseEventFunc)(WimaAreaHandle, WimaMouseBtn, WimaAction, WimaMods);
@@ -303,11 +307,12 @@ typedef void (*ErrorFunc)(WimaStatus, const char*);
 typedef WimaStatus (*MouseEnterFunc)(WimaWindowHandle, bool);
 typedef WimaStatus (*WindowResizeFunc)(WimaWindowHandle, int, int);
 
-WimaStatus wima_region_register(WimaRegionHandle* wrh,  const char* name,
-                                DrawFunc draw,          KeyEventFunc kevent,
-                                MouseEventFunc mevent,  MousePosFunc mpos,
-                                ScrollEventFunc sevent, CharFunc cevent,
-                                CharModFunc cmod,       FileDropFunc fdrop);
+WimaStatus wima_region_register(WimaRegionHandle* wrh,   const char* name,
+                                UserPointerFunc userPtr, DrawFunc draw,
+                                KeyEventFunc kevent,     MouseEventFunc mevent,
+                                MousePosFunc mpos,       ScrollEventFunc sevent,
+                                CharFunc cevent,         CharModFunc cmod,
+                                FileDropFunc fdrop);
 void* wima_region_getUserPointer(WimaRegionHandle reg);
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 

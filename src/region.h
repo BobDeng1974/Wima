@@ -42,6 +42,8 @@ typedef struct wima_region {
 
 	void* user;
 
+	UserPointerFunc userPtrFunc;
+
 	DrawFunc draw;
 
 	KeyEventFunc key_event;
