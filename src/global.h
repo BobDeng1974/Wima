@@ -51,8 +51,8 @@ typedef struct wima_globals {
 
 	DynaVector windows;
 
-	DynaVector wkspTypes;
-	DynaVector areaTypes;
+	DynaVector workspaces;
+	DynaVector regions;
 
 } WimaG;
 
