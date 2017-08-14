@@ -76,7 +76,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 	GLFWwindow* win = glfwCreateWindow(640, 480, dstr_str(wwin.name), NULL, NULL);
 
 	if (!win) {
-		wima_exit();
 		return WIMA_WINDOW_ERR;
 	}
 
