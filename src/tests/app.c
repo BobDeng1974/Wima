@@ -76,7 +76,7 @@ void printMods(WimaMods mods) {
 }
 
 WimaStatus mouseCoordsDraw(WimaAreaHandle wah, int width, int height) {
-	printf("Draw: { handle: %du, width: %4d; height: %4d }\n", wah.node, width, height);
+	printf("Draw: { handle: %10u, width: %4d; height: %4d }\n", wah.node, width, height);
 	return WIMA_SUCCESS;
 }
 
@@ -175,6 +175,11 @@ WimaStatus mouseCoordsMenter(WimaWindowHandle wwh, bool entered) {
 	return WIMA_SUCCESS;
 }
 
+WimaStatus mouseCoordsResize(WimaWindowHandle wwh, int width, int height) {
+	printf("Resize: { handle: %u; width: %4d; height: %4d }\n", wwh, width, height);
+	return WIMA_SUCCESS;
+}
+
 void mouseCoordsError(WimaStatus status, const char* desc) {
 	fprintf(stderr, "Wima returned the following error:\n    Error[%d]: %s\n", status, desc);
 	exit(status);
@@ -182,7 +187,8 @@ void mouseCoordsError(WimaStatus status, const char* desc) {
 
 int main() {
 
-	WimaStatus status = wima_init("Test Wima App", mouseCoordsError, mouseCoordsMenter);
+	WimaStatus status = wima_init("Test Wima App",   mouseCoordsError,
+	                              mouseCoordsMenter, mouseCoordsResize);
 	if (status != WIMA_SUCCESS) {
 		return status;
 	}
