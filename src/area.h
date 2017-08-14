@@ -42,28 +42,6 @@
 // TODO: Make each live area have its own user pointer,
 // as well as all windows.
 
-typedef struct wima_area_type {
-
-	DynaString name;
-
-	void* user;
-
-	DrawFunc draw;
-
-	KeyEventFunc key_event;
-
-	MouseEventFunc mouse_event;
-	MousePosFunc mouse_pos;
-	ScrollEventFunc scroll_event;
-
-	CharFunc char_event;
-	CharModFunc char_mod;
-
-	FileDropFunc file_drop;
-
-} WimaAreaType;
-
-
 typedef enum wima_area_node_type {
 
 	WIMA_AREA_PARENT = 1,
@@ -81,7 +59,7 @@ typedef struct wima_area_node {
 
 		struct wima_area {
 
-			WimaTypeHandle type;
+			WimaRegionHandle type;
 			int width;
 			int height;
 
