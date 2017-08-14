@@ -96,42 +96,6 @@ WimaStatus wima_workspace_addArea(WimaRegionHandle wksp, DynaNode node, WimaRegi
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_draw(WimaWksp* wksp, int width, int height) {
-	return WIMA_SUCCESS;
-}
-
-WimaStatus wima_workspace_key(WimaWksp* wksp, WimaKey key, int scancode,
-                              WimaAction act,           WimaMods mods)
-{
-	return WIMA_SUCCESS;
-}
-
-WimaStatus wima_workspace_mouseBtn(WimaWksp* wksp, WimaMouseBtn btn,
-                                   WimaAction act,          WimaMods mods)
-{
-	return WIMA_SUCCESS;
-}
-
-WimaStatus wima_workspace_mousePos(WimaWksp* wksp, int x, int y) {
-	return WIMA_SUCCESS;
-}
-
-WimaStatus wima_workspace_scroll(WimaWksp* wksp, int xoffset, int yoffset) {
-	return WIMA_SUCCESS;
-}
-
-WimaStatus wima_workspace_char(WimaWksp* wksp, uint32_t code) {
-	return WIMA_SUCCESS;
-}
-
-WimaStatus wima_workspace_charMod(WimaWksp* wksp, uint32_t code, WimaMods mods) {
-	return WIMA_SUCCESS;
-}
-
-WimaStatus wima_workspace_fileDrop(WimaWksp* wksp, int filec, const char* filev[]) {
-	return WIMA_SUCCESS;
-}
-
 bool wima_workspace_nodeValid(WimaWksp* wksp, DynaNode n) {
 
 	DynaNode p = dtree_parent(n);
