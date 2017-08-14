@@ -208,7 +208,7 @@ int main() {
 		return status;
 	}
 
-	WimaRegionHandle wksp;
+	WimaWorkspaceHandle wksp;
 	status = wima_workspace_register(&wksp, "Default");
 	if (status) {
 		return status;
