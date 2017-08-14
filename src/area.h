@@ -87,6 +87,7 @@ WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
 
 DynaTree wima_area_areas(WimaWindowHandle win);
+WimaAreaHandle wima_area_handle(WimaAreaNode* area, DynaNode node);
 
 WimaStatus wima_area_draw(WimaWindowHandle win, int width, int height);
 WimaStatus wima_area_key(WimaWindowHandle win, WimaKey key, int scancode, WimaAction act, WimaMods mods);

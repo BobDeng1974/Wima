@@ -145,6 +145,18 @@ DynaTree wima_area_areas(WimaWindowHandle win) {
 	return windows[win].areas;
 }
 
+inline WimaAreaHandle wima_area_handle(WimaAreaNode* area, DynaNode node) {
+
+	WimaAreaHandle wah;
+
+	wah.user = area->node.area.user;
+	wah.node = (WimaAreaNodeHandle) node;
+	wah.window = area->window;
+	wah.region = area->node.area.type;
+
+	return wah;
+}
+
 WimaStatus wima_area_draw(WimaWindowHandle win, int width, int height) {
 	return wima_area_node_draw(wima_area_areas(win), dtree_root(), width, height);
 }
