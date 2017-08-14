@@ -92,6 +92,6 @@ WimaStatus wima_area_mousePos(WimaWindowHandle win, int x, int y);
 WimaStatus wima_area_scroll(WimaWindowHandle win, int xoffset, int yoffset);
 WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code);
 WimaStatus wima_area_charMod(WimaWindowHandle win, unsigned int code, WimaMods mods);
-WimaStatus wima_area_fileDrop(WimaWindowHandle win, bool entered);
+WimaStatus wima_area_fileDrop(WimaWindowHandle win, int filec, const char* filev[]);
 
 #endif // WIMA_AREA_H

@@ -164,6 +164,6 @@ WimaStatus wima_area_charMod(WimaWindowHandle win, unsigned int code, WimaMods m
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_area_fileDrop(WimaWindowHandle win, bool entered) {
+WimaStatus wima_area_fileDrop(WimaWindowHandle win, int filec, const char* filev[]) {
 	return WIMA_SUCCESS;
 }
