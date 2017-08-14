@@ -222,5 +222,25 @@ WimaStatus wima_area_node_charMod(DynaTree areas, DynaNode node, unsigned int co
 }
 
 WimaStatus wima_area_node_fileDrop(DynaTree areas, DynaNode node, int filec, const char* filev[]) {
-	return WIMA_SUCCESS;
+
+	WimaStatus status;
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		// TODO: Put code to ensure it goes to the right one.
+	}
+	else {
+
+		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
+
+		FileDropFunc file_drop = regions[area->node.area.type].file_drop;
+
+		if (file_drop) {
+			status = file_drop(wima_area_handle(area, node), filec, filev);
+		}
+	}
+
+	return status;
 }
