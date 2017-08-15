@@ -196,29 +196,147 @@ WimaStatus wima_area_node_draw(DynaTree areas, DynaNode node, int width, int hei
 WimaStatus wima_area_node_key(DynaTree areas, DynaNode node,  WimaKey key,
                               int scancode,   WimaAction act, WimaMods mods)
 {
-	return WIMA_SUCCESS;
+	WimaStatus status;
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		// TODO: Put code to ensure it goes to the right one.
+	}
+	else {
+
+		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
+
+		KeyEventFunc key_event = regions[area->node.area.type].key_event;
+
+		if (key_event) {
+			status = key_event(wima_area_handle(area, node), key, scancode, act, mods);
+		}
+	}
+
+	return status;
 }
 
 WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtn btn,
                                    WimaAction act, WimaMods mods)
 {
-	return WIMA_SUCCESS;
+	WimaStatus status;
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		// TODO: Put code to ensure it goes to the right one.
+	}
+	else {
+
+		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
+
+		MouseEventFunc mouse_event = regions[area->node.area.type].mouse_event;
+
+		if (mouse_event) {
+			status = mouse_event(wima_area_handle(area, node), btn, act, mods);
+		}
+	}
+
+	return status;
 }
 
 WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, int x, int y) {
-	return WIMA_SUCCESS;
+
+	WimaStatus status;
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		// TODO: Put code to ensure it goes to the right one.
+	}
+	else {
+
+		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
+
+		MousePosFunc mouse_pos = regions[area->node.area.type].mouse_pos;
+
+		if (mouse_pos) {
+			status = mouse_pos(wima_area_handle(area, node), x, y);
+		}
+	}
+
+	return status;
 }
 
 WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int yoffset) {
-	return WIMA_SUCCESS;
+
+	WimaStatus status;
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		// TODO: Put code to ensure it goes to the right one.
+	}
+	else {
+
+		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
+
+		ScrollEventFunc scroll_event = regions[area->node.area.type].scroll_event;
+
+		if (scroll_event) {
+			status = scroll_event(wima_area_handle(area, node), xoffset, yoffset);
+		}
+	}
+
+	return status;
 }
 
 WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code) {
-	return WIMA_SUCCESS;
+
+	WimaStatus status;
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		// TODO: Put code to ensure it goes to the right one.
+	}
+	else {
+
+		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
+
+		CharFunc char_event = regions[area->node.area.type].char_event;
+
+		if (char_event) {
+			status = char_event(wima_area_handle(area, node), code);
+		}
+	}
+
+	return status;
 }
 
 WimaStatus wima_area_node_charMod(DynaTree areas, DynaNode node, unsigned int code, WimaMods mods) {
-	return WIMA_SUCCESS;
+
+	WimaStatus status;
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		// TODO: Put code to ensure it goes to the right one.
+	}
+	else {
+
+		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
+
+		CharModFunc char_mod = regions[area->node.area.type].char_mod;
+
+		if (char_mod) {
+			status = char_mod(wima_area_handle(area, node), code, mods);
+		}
+	}
+
+	return status;
 }
 
 WimaStatus wima_area_node_fileDrop(DynaTree areas, DynaNode node, int filec, const char* filev[]) {
