@@ -298,6 +298,7 @@ typedef WimaStatus (*AreaDrawFunc)(WimaAreaHandle, int, int);
 typedef WimaStatus (*AreaKeyEventFunc)(WimaAreaHandle, WimaKey, int, WimaAction, WimaMods);
 typedef WimaStatus (*AreaMouseEventFunc)(WimaAreaHandle, WimaMouseBtn, WimaAction, WimaMods);
 typedef WimaStatus (*AreaMousePosFunc)(WimaAreaHandle, int, int);
+typedef WimaStatus (*AreaMouseEnterFunc)(WimaAreaHandle, bool);
 typedef WimaStatus (*AreaScrollEventFunc)(WimaAreaHandle, int, int);
 typedef WimaStatus (*AreaCharFunc)(WimaAreaHandle, uint32_t);
 typedef WimaStatus (*AreaCharModFunc)(WimaAreaHandle, uint32_t, WimaMods);
@@ -310,9 +311,9 @@ typedef WimaStatus (*WindowResizeFunc)(WimaWindowHandle, int, int);
 WimaStatus wima_region_register(WimaRegionHandle* wrh,       const char* name,
                                 AreaUserPointerFunc userPtr, AreaDrawFunc draw,
                                 AreaKeyEventFunc kevent,     AreaMouseEventFunc mevent,
-                                AreaMousePosFunc mpos,       AreaScrollEventFunc sevent,
-                                AreaCharFunc cevent,         AreaCharModFunc cmod,
-                                AreaFileDropFunc fdrop);
+                                AreaMousePosFunc mpos,       AreaMouseEnterFunc menter,
+                                AreaScrollEventFunc sevent,  AreaCharFunc cevent,
+                                AreaCharModFunc cmod,        AreaFileDropFunc fdrop);
 void* wima_region_getUserPointer(WimaRegionHandle reg);
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 

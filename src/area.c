@@ -173,6 +173,10 @@ WimaStatus wima_area_mousePos(WimaWindowHandle win, int x, int y) {
 	return wima_area_node_mousePos(wima_area_areas(win), dtree_root(), x, y);
 }
 
+WimaStatus wima_area_mouseEnter(WimaWindowHandle win, bool entered) {
+	return wima_area_node_mouseEnter(wima_area_areas(win), dtree_root(), entered);
+}
+
 WimaStatus wima_area_scroll(WimaWindowHandle win, int xoffset, int yoffset) {
 	return wima_area_node_scroll(wima_area_areas(win), dtree_root(), xoffset, yoffset);
 }
@@ -263,6 +267,32 @@ WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, int x, int y) 
 
 		if (mouse_pos) {
 			status = mouse_pos(wima_area_handle(area, node), x, y);
+		}
+	}
+
+	return status;
+}
+
+WimaStatus wima_area_node_mouseEnter(DynaTree areas, DynaNode node, bool entered) {
+
+	WimaStatus status;
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		// TODO: Write code to do mouse enter and exit.
+
+		// TODO: Put code to ensure it goes to the right one.
+	}
+	else {
+
+		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
+
+		AreaMouseEnterFunc mouse_enter = regions[area->node.area.type].mouse_enter;
+
+		if (mouse_enter) {
+			status = mouse_enter(wima_area_handle(area, node), entered);
 		}
 	}
 

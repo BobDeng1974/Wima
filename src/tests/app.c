@@ -139,6 +139,18 @@ WimaStatus mouseCoordsMpos(WimaAreaHandle wah, int x, int y) {
 	return WIMA_SUCCESS;
 }
 
+WimaStatus mouseCoordsMenterArea(WimaAreaHandle wah, bool entered) {
+
+	if (entered) {
+		printf("Mouse Enter Area\n");
+	}
+	else {
+		printf("Mouse Exit Area\n");
+	}
+
+	return WIMA_SUCCESS;
+}
+
 WimaStatus mouseCoordsSevent(WimaAreaHandle wah, int xoffset, int yoffset) {
 
 	printf("Scroll: { x: %4d; y: %4d }\n", xoffset, yoffset);
@@ -211,9 +223,9 @@ int main() {
 	status = wima_region_register(&region,            "Mouse Coordinates",
 	                              mouseCoordsUserPtr, mouseCoordsDraw,
 	                              mouseCoordsKevent,  mouseCoordsMevent,
-	                              mouseCoordsMpos,    mouseCoordsSevent,
-	                              mouseCoordsChar,    mouseCoordsCharMod,
-	                              mouseCoordsFileDrop);
+	                              mouseCoordsMpos,    mouseCoordsMenterArea,
+	                              mouseCoordsSevent,  mouseCoordsChar,
+	                              mouseCoordsCharMod, mouseCoordsFileDrop);
 	if (status) {
 		return status;
 	}

@@ -93,6 +93,7 @@ WimaStatus wima_area_draw(WimaWindowHandle win, int width, int height);
 WimaStatus wima_area_key(WimaWindowHandle win, WimaKey key, int scancode, WimaAction act, WimaMods mods);
 WimaStatus wima_area_mouseBtn(WimaWindowHandle win, WimaMouseBtn btn, WimaAction act, WimaMods mods);
 WimaStatus wima_area_mousePos(WimaWindowHandle win, int x, int y);
+WimaStatus wima_area_mouseEnter(WimaWindowHandle win, bool entered);
 WimaStatus wima_area_scroll(WimaWindowHandle win, int xoffset, int yoffset);
 WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code);
 WimaStatus wima_area_charMod(WimaWindowHandle win, unsigned int code, WimaMods mods);
@@ -104,6 +105,7 @@ WimaStatus wima_area_node_key(DynaTree areas, DynaNode node,  WimaKey key,
 WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtn btn,
                                    WimaAction act, WimaMods mods);
 WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, int x, int y);
+WimaStatus wima_area_node_mouseEnter(DynaTree areas, DynaNode node, bool entered);
 WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int yoffset);
 WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code);
 WimaStatus wima_area_node_charMod(DynaTree areas, DynaNode node, unsigned int code, WimaMods mods);

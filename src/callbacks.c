@@ -214,7 +214,16 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 		return;
 	}
 
-	WimaStatus status = mouse_enter(wwh, entered ? true : false);
+	bool bentered = entered ? true : false;
+
+	WimaStatus status = mouse_enter(wwh, bentered);
+
+	if (status) {
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
+	}
+
+	status = wima_area_mouseEnter(wwh, bentered);
 
 	if (status) {
 		int idx = ((int) status) - 128;
