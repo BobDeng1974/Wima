@@ -208,7 +208,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
 
-	MouseEnterFunc mouse_enter = wg.enter;
+	WindowMouseEnterFunc mouse_enter = wg.enter;
 
 	if (!mouse_enter) {
 		return;

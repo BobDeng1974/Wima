@@ -293,26 +293,26 @@ typedef enum wima_action {
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
-typedef void* (*UserPointerFunc)(WimaAreaHandle);
-typedef WimaStatus (*DrawFunc)(WimaAreaHandle, int, int);
-typedef WimaStatus (*KeyEventFunc)(WimaAreaHandle, WimaKey, int, WimaAction, WimaMods);
-typedef WimaStatus (*MouseEventFunc)(WimaAreaHandle, WimaMouseBtn, WimaAction, WimaMods);
-typedef WimaStatus (*MousePosFunc)(WimaAreaHandle, int, int);
-typedef WimaStatus (*ScrollEventFunc)(WimaAreaHandle, int, int);
-typedef WimaStatus (*CharFunc)(WimaAreaHandle, uint32_t);
-typedef WimaStatus (*CharModFunc)(WimaAreaHandle, uint32_t, WimaMods);
-typedef WimaStatus (*FileDropFunc)(WimaAreaHandle, int, const char**);
+typedef void* (*AreaUserPointerFunc)(WimaAreaHandle);
+typedef WimaStatus (*AreaDrawFunc)(WimaAreaHandle, int, int);
+typedef WimaStatus (*AreaKeyEventFunc)(WimaAreaHandle, WimaKey, int, WimaAction, WimaMods);
+typedef WimaStatus (*AreaMouseEventFunc)(WimaAreaHandle, WimaMouseBtn, WimaAction, WimaMods);
+typedef WimaStatus (*AreaMousePosFunc)(WimaAreaHandle, int, int);
+typedef WimaStatus (*AreaScrollEventFunc)(WimaAreaHandle, int, int);
+typedef WimaStatus (*AreaCharFunc)(WimaAreaHandle, uint32_t);
+typedef WimaStatus (*AreaCharModFunc)(WimaAreaHandle, uint32_t, WimaMods);
+typedef WimaStatus (*AreaFileDropFunc)(WimaAreaHandle, int, const char**);
 
 typedef void (*ErrorFunc)(WimaStatus, const char*);
-typedef WimaStatus (*MouseEnterFunc)(WimaWindowHandle, bool);
+typedef WimaStatus (*WindowMouseEnterFunc)(WimaWindowHandle, bool);
 typedef WimaStatus (*WindowResizeFunc)(WimaWindowHandle, int, int);
 
-WimaStatus wima_region_register(WimaRegionHandle* wrh,   const char* name,
-                                UserPointerFunc userPtr, DrawFunc draw,
-                                KeyEventFunc kevent,     MouseEventFunc mevent,
-                                MousePosFunc mpos,       ScrollEventFunc sevent,
-                                CharFunc cevent,         CharModFunc cmod,
-                                FileDropFunc fdrop);
+WimaStatus wima_region_register(WimaRegionHandle* wrh,       const char* name,
+                                AreaUserPointerFunc userPtr, AreaDrawFunc draw,
+                                AreaKeyEventFunc kevent,     AreaMouseEventFunc mevent,
+                                AreaMousePosFunc mpos,       AreaScrollEventFunc sevent,
+                                AreaCharFunc cevent,         AreaCharModFunc cmod,
+                                AreaFileDropFunc fdrop);
 void* wima_region_getUserPointer(WimaRegionHandle reg);
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 
@@ -322,8 +322,8 @@ WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wksp, DynaNode node, Wim
 
 WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp);
 
-WimaStatus wima_init(const char* name,     ErrorFunc error,
-                     MouseEnterFunc enter, WindowResizeFunc resize);
+WimaStatus wima_init(const char* name,           ErrorFunc error,
+                     WindowMouseEnterFunc enter, WindowResizeFunc resize);
 WimaStatus wima_main();
 void wima_exit();
 

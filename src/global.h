@@ -47,7 +47,7 @@ typedef struct wima_globals {
 	DynaString name;
 
 	ErrorFunc error;
-	MouseEnterFunc enter;
+	WindowMouseEnterFunc enter;
 	WindowResizeFunc resize;
 
 	DynaVector windows;

@@ -83,7 +83,7 @@ WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode
 		WimaRegion* regs = (WimaRegion*) dvec_data(wg.regions);
 
 		// Get the particular user function setter.
-		UserPointerFunc user_ptr = regs[reg].userPtrFunc;
+		AreaUserPointerFunc user_ptr = regs[reg].userPtrFunc;
 
 		// If the user didn't specify one, don't call it.
 		if (!user_ptr) {
@@ -208,7 +208,7 @@ WimaStatus wima_area_node_key(DynaTree areas, DynaNode node,  WimaKey key,
 
 		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
 
-		KeyEventFunc key_event = regions[area->node.area.type].key_event;
+		AreaKeyEventFunc key_event = regions[area->node.area.type].key_event;
 
 		if (key_event) {
 			status = key_event(wima_area_handle(area, node), key, scancode, act, mods);
@@ -233,7 +233,7 @@ WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtn b
 
 		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
 
-		MouseEventFunc mouse_event = regions[area->node.area.type].mouse_event;
+		AreaMouseEventFunc mouse_event = regions[area->node.area.type].mouse_event;
 
 		if (mouse_event) {
 			status = mouse_event(wima_area_handle(area, node), btn, act, mods);
@@ -259,7 +259,7 @@ WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, int x, int y) 
 
 		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
 
-		MousePosFunc mouse_pos = regions[area->node.area.type].mouse_pos;
+		AreaMousePosFunc mouse_pos = regions[area->node.area.type].mouse_pos;
 
 		if (mouse_pos) {
 			status = mouse_pos(wima_area_handle(area, node), x, y);
@@ -283,7 +283,7 @@ WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int
 
 		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
 
-		ScrollEventFunc scroll_event = regions[area->node.area.type].scroll_event;
+		AreaScrollEventFunc scroll_event = regions[area->node.area.type].scroll_event;
 
 		if (scroll_event) {
 			status = scroll_event(wima_area_handle(area, node), xoffset, yoffset);
@@ -307,7 +307,7 @@ WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code)
 
 		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
 
-		CharFunc char_event = regions[area->node.area.type].char_event;
+		AreaCharFunc char_event = regions[area->node.area.type].char_event;
 
 		if (char_event) {
 			status = char_event(wima_area_handle(area, node), code);
@@ -331,7 +331,7 @@ WimaStatus wima_area_node_charMod(DynaTree areas, DynaNode node, unsigned int co
 
 		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
 
-		CharModFunc char_mod = regions[area->node.area.type].char_mod;
+		AreaCharModFunc char_mod = regions[area->node.area.type].char_mod;
 
 		if (char_mod) {
 			status = char_mod(wima_area_handle(area, node), code, mods);
@@ -355,7 +355,7 @@ WimaStatus wima_area_node_fileDrop(DynaTree areas, DynaNode node, int filec, con
 
 		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
 
-		FileDropFunc file_drop = regions[area->node.area.type].file_drop;
+		AreaFileDropFunc file_drop = regions[area->node.area.type].file_drop;
 
 		if (file_drop) {
 			status = file_drop(wima_area_handle(area, node), filec, filev);
