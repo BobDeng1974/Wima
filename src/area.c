@@ -251,6 +251,8 @@ WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, int x, int y) 
 
 	if (area->type == WIMA_AREA_PARENT) {
 
+		// TODO: Write code to do mouse enter and exit.
+
 		// TODO: Put code to ensure it goes to the right one.
 	}
 	else {
