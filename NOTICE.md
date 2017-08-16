@@ -61,8 +61,8 @@ following copyright:
 
 > Copyright &copy; 2013 Mikko Mononen (<memon@inside.org>).
 
-The modifications to NanoVG were not written by Project LFyre, so they are
-subject to the following copyright:
+The [modifications to NanoVG](https://github.com/MikeWW/nanovg) were not written
+by Project LFyre, so they are subject to the following copyright:
 
 > Copyright &copy; 2016 Michael Wynne (<https://github.com/MikeWW>).
 
