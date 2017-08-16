@@ -52,38 +52,6 @@ licensed under the following license:
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 > THE SOFTWARE.
 
-## NanoVG
-
-Wima uses a modified version of [NanoVG](https://github.com/memononen/nanovg)
-(contained in the [`src/nanovg`](src/nanovg) directory), a library for drawing
-vector graphics with OpenGL. The original code for NanoVG is subject to the
-following copyright:
-
-> Copyright &copy; 2013 Mikko Mononen (<memon@inside.org>).
-
-The [modifications to NanoVG](https://github.com/MikeWW/nanovg) were not written
-by Project LFyre, so they are subject to the following copyright:
-
-> Copyright &copy; 2016 Michael Wynne (<https://github.com/MikeWW>).
-
-Both the original code and modifications are under the following license:
-
-> This software is provided 'as-is', without any express or implied
-> warranty.  In no event will the authors be held liable for any damages
-> arising from the use of this software.
-
-> Permission is granted to anyone to use this software for any purpose,
-> including commercial applications, and to alter it and redistribute it
-> freely, subject to the following restrictions:
-
-> 1. The origin of this software must not be misrepresented; you must not
-> claim that you wrote the original software. If you use this software
-> in a product, an acknowledgment in the product documentation would be
-> appreciated but is not required.
-> 2. Altered source versions must be plainly marked as such, and must not be
-> misrepresented as being the original software.
-> 3. This notice may not be removed or altered from any source distribution.
-
 ## Fonts
 
 Fonts are &copy; Bitstream (see below). DejaVu changes are in public domain.
