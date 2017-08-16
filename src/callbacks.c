@@ -72,7 +72,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 		exit(WIMA_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	WimaKey wkey = (WimaKey) key;
 	WimaMods wmods = (WimaMods) mods;
@@ -92,7 +92,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		exit(WIMA_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	WimaMouseBtn wbtn = (WimaMouseBtn) btn;
 	WimaMods wmods = (WimaMods) mods;
@@ -112,7 +112,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 		exit(WIMA_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
@@ -134,7 +134,7 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 		exit(WIMA_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
@@ -156,7 +156,7 @@ void wima_callback_char(GLFWwindow* window, unsigned int code) {
 		exit(WIMA_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	WimaStatus status = wima_area_char(wwh, code);
 
@@ -172,7 +172,7 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 		exit(WIMA_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	WimaStatus status = wima_area_charMod(wwh, code, (WimaMods) mods);
 
@@ -188,7 +188,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 		exit(WIMA_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	WimaStatus status = wima_area_fileDrop(wwh, filec, filev);
 
@@ -206,7 +206,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 		exit(WIMA_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	WindowMouseEnterFunc mouse_enter = wg.enter;
 
@@ -239,7 +239,7 @@ void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
 
 	glViewport(0, 0, width, height);
 
-	WimaWindowHandle wwh = GLFW_WINDOW_HANDLE(window);
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	WimaWin* wwin = (WimaWin*) dvec_data(wg.windows);
 
