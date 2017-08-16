@@ -93,8 +93,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 	glfwSetCharModsCallback(win, wima_callback_charMod);
 	glfwSetDropCallback(win, wima_callback_fileDrop);
 
-	glfwMakeContextCurrent(win);
-
 	wwin.window = win;
 
 	DynaNode root = dtree_root();
@@ -121,6 +119,8 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 	}
 
 	*wwh = windowIdx;
+
+	glfwMakeContextCurrent(win);
 
 	return WIMA_SUCCESS;
 }
