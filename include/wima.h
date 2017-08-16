@@ -318,6 +318,8 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh,       const char* name,
 void* wima_region_getUserPointer(WimaRegionHandle reg);
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 
+WimaStatus wima_areas_free(DynaTree areas);
+
 WimaStatus wima_workspace_register(WimaWorkspaceHandle* type, const char* name);
 WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wksp, DynaNode node, float split, bool vertical);
 WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wksp, DynaNode node, WimaRegionHandle reg);

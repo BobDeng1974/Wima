@@ -43,6 +43,17 @@
 
 extern WimaG wg;
 
+WimaStatus wima_areas_free(DynaTree areas) {
+
+	DynaNode root = dtree_root();
+
+	WimaStatus status = wima_area_node_freeUserPointer(areas, root);
+
+	dtree_free(areas);
+
+	return status;
+}
+
 WimaStatus wima_area_node_freeUserPointer(DynaTree areas, DynaNode node) {
 
 	// Make sure this is clear.
