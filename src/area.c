@@ -43,6 +43,63 @@
 
 extern WimaG wg;
 
+WimaStatus wima_area_node_freeUserPointer(DynaTree areas, DynaNode node) {
+
+	// Make sure this is clear.
+	WimaStatus status = WIMA_SUCCESS;
+
+	// Get the particular area that we care about.
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	// We do something different depending on what type of node it is.
+	if (area->type == WIMA_AREA_PARENT) {
+
+		// Set the left child user pointer and check for error.
+		status = wima_area_node_freeUserPointer(areas, dtree_left(node));
+		if (status) {
+			return status;
+		}
+
+		// Set the right child user pointer and check for error.
+		status = wima_area_node_freeUserPointer(areas, dtree_right(node));
+		if (status) {
+			return status;
+		}
+	}
+	else {
+
+		// If the user didn't allocate anything, just return.
+		void* user = area->node.area.user;
+		if (!user) {
+			return WIMA_SUCCESS;
+		}
+
+		// Get the region handle.
+		WimaRegionHandle reg = area->node.area.type;
+
+		// Check that the region handle is valid.
+		if (reg >= dvec_len(wg.regions)) {
+			return WIMA_WINDOW_ERR;
+		}
+
+		// Get the list of regions.
+		WimaRegion* regs = (WimaRegion*) dvec_data(wg.regions);
+
+		// Get the particular user function setter.
+		AreaUserPointerFreeFunc user_ptr_free = regs[reg].userPtrFreeFunc;
+
+		// If the user didn't specify one, don't call it.
+		if (!user_ptr_free) {
+			return WIMA_SUCCESS;
+		}
+
+		// Call the user function.
+		user_ptr_free(user);
+	}
+
+
+}
+
 WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode node) {
 
 	// Make sure this is clear.
@@ -138,11 +195,6 @@ bool wima_area_node_valid(DynaTree regions, DynaNode node) {
 	}
 
 	return result;
-}
-
-DynaTree wima_area_areas(WimaWindowHandle win) {
-	WimaWin* windows = (WimaWin*) dvec_data(wg.windows);
-	return windows[win].areas;
 }
 
 inline WimaAreaHandle wima_area_handle(WimaAreaNode* area, DynaNode node) {

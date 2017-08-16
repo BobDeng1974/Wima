@@ -294,6 +294,7 @@ typedef enum wima_action {
  *These typedefs are here to make the following procedures shorter to write.
  */
 typedef void* (*AreaUserPointerFunc)(WimaAreaHandle);
+typedef void (*AreaUserPointerFreeFunc)(void*);
 typedef WimaStatus (*AreaDrawFunc)(WimaAreaHandle, int, int);
 typedef WimaStatus (*AreaKeyEventFunc)(WimaAreaHandle, WimaKey, int, WimaAction, WimaMods);
 typedef WimaStatus (*AreaMouseEventFunc)(WimaAreaHandle, WimaMouseBtn, WimaAction, WimaMods);
