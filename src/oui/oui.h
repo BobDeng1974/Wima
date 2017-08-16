@@ -1,25 +1,25 @@
 /*
-OUI - A minimal semi-immediate GUI handling & layouting library
+ * OUI - A minimal semi-immediate GUI handling & layouting library
 
-Copyright (c) 2014 Leonard Ritter <leonard.ritter@duangle.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+ * Copyright (c) 2014 Leonard Ritter <leonard.ritter@duangle.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 
 #ifndef WIMA_OUI_H_
@@ -57,188 +57,188 @@ A basic setup for OUI usage in C looks like this:
 
 // a header for each widget
 typedef struct Data {
-    int type;
-    UIhandler handler;
+	int type;
+	UIhandler handler;
 } Data;
 
 /// global event dispatch
 void ui_handler(int item, UIevent event) {
-    Data *data = (Data *)uiGetHandle(item);
-    if (data && data->handler) {
-        data->handler(item, event);
-    }
+	Data *data = (Data *)uiGetHandle(item);
+	if (data && data->handler) {
+		data->handler(item, event);
+	}
 }
 
 void app_main(...) {
-    UIcontext *context = uiCreateContext(4096, 1<<20);
-    uiMakeCurrent(context);
-    uiSetHandler(ui_handler);
+	UIcontext *context = uiCreateContext(4096, 1<<20);
+	uiMakeCurrent(context);
+	uiSetHandler(ui_handler);
 
-    while (app_running()) {
-        // update position of mouse cursor; the ui can also be updated
-        // from received events.
-        uiSetCursor(app_get_mouse_x(), app_get_mouse_y());
+	while (app_running()) {
+		// update position of mouse cursor; the ui can also be updated
+		// from received events.
+		uiSetCursor(app_get_mouse_x(), app_get_mouse_y());
 
-        // update button state
-        for (int i = 0; i < 3; ++i)
-            uiSetButton(i, app_get_button_state(i));
+		// update button state
+		for (int i = 0; i < 3; ++i)
+			uiSetButton(i, app_get_button_state(i));
 
-        // you can also send keys and scroll events; see example.cpp for more
+		// you can also send keys and scroll events; see example.cpp for more
 
-        // --------------
-        // this section does not have to be regenerated on frame; a good
-        // policy is to invalidate it on events, as this usually alters
-        // structure and layout.
+		// --------------
+		// this section does not have to be regenerated on frame; a good
+		// policy is to invalidate it on events, as this usually alters
+		// structure and layout.
 
-        // begin new UI declarations
-        uiBeginLayout();
+		// begin new UI declarations
+		uiBeginLayout();
 
-        // - UI setup code goes here -
-        app_setup_ui();
+		// - UI setup code goes here -
+		app_setup_ui();
 
-        // layout UI
-        uiEndLayout();
+		// layout UI
+		uiEndLayout();
 
-        // --------------
+		// --------------
 
-        // draw UI, starting with the first item, index 0
-        app_draw_ui(render_context,0);
+		// draw UI, starting with the first item, index 0
+		app_draw_ui(render_context,0);
 
-        // update states and fire handlers
-        uiProcess(get_time_ms());
-    }
+		// update states and fire handlers
+		uiProcess(get_time_ms());
+	}
 
-    uiDestroyContext(context);
+	uiDestroyContext(context);
 }
 
 Here's an example setup for a checkbox control:
 ===============================================
 
 typedef struct CheckBoxData {
-    Data head;
-    const char *label;
-    bool *checked;
+	Data head;
+	const char *label;
+	bool *checked;
 } CheckBoxData;
 
 // called when the item is clicked (see checkbox())
 void app_checkbox_handler(int item, UIevent event) {
-    // retrieve custom data (see checkbox())
-    CheckBoxData *data = (CheckBoxData *)uiGetHandle(item);
+	// retrieve custom data (see checkbox())
+	CheckBoxData *data = (CheckBoxData *)uiGetHandle(item);
 
-    switch(event) {
-    default: break;
-    case UI_BUTTON0_DOWN: {
-        // toggle value
-        *data->checked = !(*data->checked);
-    } break;
-    }
+	switch(event) {
+	default: break;
+	case UI_BUTTON0_DOWN: {
+		// toggle value
+		*data->checked = !(*data->checked);
+	} break;
+	}
 }
 
 // creates a checkbox control for a pointer to a boolean
 int checkbox(const char *label, bool *checked) {
 
-    // create new ui item
-    int item = uiItem();
+	// create new ui item
+	int item = uiItem();
 
-    // set minimum size of wiget; horizontal size is dynamic, vertical is fixed
-    uiSetSize(item, 0, APP_WIDGET_HEIGHT);
+	// set minimum size of wiget; horizontal size is dynamic, vertical is fixed
+	uiSetSize(item, 0, APP_WIDGET_HEIGHT);
 
-    // store some custom data with the checkbox that we use for rendering
-    // and value changes.
-    CheckBoxData *data = (CheckBoxData *)uiAllocHandle(item, sizeof(CheckBoxData));
+	// store some custom data with the checkbox that we use for rendering
+	// and value changes.
+	CheckBoxData *data = (CheckBoxData *)uiAllocHandle(item, sizeof(CheckBoxData));
 
-    // assign a custom typeid to the data so the renderer knows how to
-    // render this control, and our event handler
-    data->head.type = APP_WIDGET_CHECKBOX;
-    data->head.handler = app_checkbox_handler;
-    data->label = label;
-    data->checked = checked;
+	// assign a custom typeid to the data so the renderer knows how to
+	// render this control, and our event handler
+	data->head.type = APP_WIDGET_CHECKBOX;
+	data->head.handler = app_checkbox_handler;
+	data->label = label;
+	data->checked = checked;
 
-    // set to fire as soon as the left button is
-    // pressed; UI_BUTTON0_HOT_UP is also a popular alternative.
-    uiSetEvents(item, UI_BUTTON0_DOWN);
+	// set to fire as soon as the left button is
+	// pressed; UI_BUTTON0_HOT_UP is also a popular alternative.
+	uiSetEvents(item, UI_BUTTON0_DOWN);
 
-    return item;
+	return item;
 }
 
 A simple recursive drawing routine can look like this:
 ======================================================
 
 void app_draw_ui(AppRenderContext *ctx, int item) {
-    // retrieve custom data and cast it to Data; we assume the first member
-    // of every widget data item to be a Data field.
-    Data *head = (Data *)uiGetHandle(item);
+	// retrieve custom data and cast it to Data; we assume the first member
+	// of every widget data item to be a Data field.
+	Data *head = (Data *)uiGetHandle(item);
 
-    // if a handle is set, this is a specialized widget
-    if (head) {
-        // get the widgets absolute rectangle
-        UIrect rect = uiGetRect(item);
+	// if a handle is set, this is a specialized widget
+	if (head) {
+		// get the widgets absolute rectangle
+		UIrect rect = uiGetRect(item);
 
-        switch(head->type) {
-            default: break;
-            case APP_WIDGET_LABEL: {
-                // ...
-            } break;
-            case APP_WIDGET_BUTTON: {
-                // ...
-            } break;
-            case APP_WIDGET_CHECKBOX: {
-                // cast to the full data type
-                CheckBoxData *data = (CheckBoxData*)head;
+		switch(head->type) {
+			default: break;
+			case APP_WIDGET_LABEL: {
+				// ...
+			} break;
+			case APP_WIDGET_BUTTON: {
+				// ...
+			} break;
+			case APP_WIDGET_CHECKBOX: {
+				// cast to the full data type
+				CheckBoxData *data = (CheckBoxData*)head;
 
-                // get the widgets current state
-                int state = uiGetState(item);
+				// get the widgets current state
+				int state = uiGetState(item);
 
-                // if the value is set, the state is always active
-                if (*data->checked)
-                    state = UI_ACTIVE;
+				// if the value is set, the state is always active
+				if (*data->checked)
+					state = UI_ACTIVE;
 
-                // draw the checkbox
-                app_draw_checkbox(ctx, rect, state, data->label);
-            } break;
-        }
-    }
+				// draw the checkbox
+				app_draw_checkbox(ctx, rect, state, data->label);
+			} break;
+		}
+	}
 
-    // iterate through all children and draw
-    int kid = uiFirstChild(item);
-    while (kid != -1) {
-        app_draw_ui(ctx, kid);
-        kid = uiNextSibling(kid);
-    }
+	// iterate through all children and draw
+	int kid = uiFirstChild(item);
+	while (kid != -1) {
+		app_draw_ui(ctx, kid);
+		kid = uiNextSibling(kid);
+	}
 }
 
 Layouting items works like this:
 ================================
 
 void layout_window(int w, int h) {
-    // create root item; the first item always has index 0
-    int parent = uiItem();
-    // assign fixed size
-    uiSetSize(parent, w, h);
+	// create root item; the first item always has index 0
+	int parent = uiItem();
+	// assign fixed size
+	uiSetSize(parent, w, h);
 
-    // create column box and use as new parent
-    parent = uiInsert(parent, uiItem());
-    // configure as column
-    uiSetBox(parent, UI_COLUMN);
-    // span horizontally, attach to top
-    uiSetLayout(parent, UI_HFILL | UI_TOP);
+	// create column box and use as new parent
+	parent = uiInsert(parent, uiItem());
+	// configure as column
+	uiSetBox(parent, UI_COLUMN);
+	// span horizontally, attach to top
+	uiSetLayout(parent, UI_HFILL | UI_TOP);
 
-    // add a label - we're assuming custom control functions to exist
-    int item = uiInsert(parent, label("Hello World"));
-    // set a fixed height for the label
-    uiSetSize(item, 0, APP_WIDGET_HEIGHT);
-    // span the label horizontally
-    uiSetLayout(item, UI_HFILL);
+	// add a label - we're assuming custom control functions to exist
+	int item = uiInsert(parent, label("Hello World"));
+	// set a fixed height for the label
+	uiSetSize(item, 0, APP_WIDGET_HEIGHT);
+	// span the label horizontally
+	uiSetLayout(item, UI_HFILL);
 
-    static bool checked = false;
+	static bool checked = false;
 
-    // add a checkbox to the same parent as item; this is faster than
-    // calling uiInsert on the same parent repeatedly.
-    item = uiAppend(item, checkbox("Checked:", &checked));
-    // set a fixed height for the checkbox
-    uiSetSize(item, 0, APP_WIDGET_HEIGHT);
-    // span the checkbox in the same way as the label
-    uiSetLayout(item, UI_HFILL);
+	// add a checkbox to the same parent as item; this is faster than
+	// calling uiInsert on the same parent repeatedly.
+	item = uiAppend(item, checkbox("Checked:", &checked));
+	// set a fixed height for the checkbox
+	uiSetSize(item, 0, APP_WIDGET_HEIGHT);
+	// span the checkbox in the same way as the label
+	uiSetLayout(item, UI_HFILL);
 }
 
 
@@ -261,14 +261,14 @@ void layout_window(int w, int h) {
 // limits
 
 enum {
-    // maximum size in bytes of a single data buffer passed to uiAllocData().
-    UI_MAX_DATASIZE = 4096,
-    // maximum depth of nested containers
-    UI_MAX_DEPTH = 64,
-    // maximum number of buffered input events
-    UI_MAX_INPUT_EVENTS = 64,
-    // consecutive click threshold in ms
-    UI_CLICK_THRESHOLD = 250,
+	// maximum size in bytes of a single data buffer passed to uiAllocData().
+	UI_MAX_DATASIZE = 4096,
+	// maximum depth of nested containers
+	UI_MAX_DEPTH = 64,
+	// maximum number of buffered input events
+	UI_MAX_INPUT_EVENTS = 64,
+	// consecutive click threshold in ms
+	UI_CLICK_THRESHOLD = 250,
 };
 
 typedef unsigned int UIuint;
@@ -279,134 +279,134 @@ typedef struct UIcontext UIcontext;
 // item states as returned by uiGetState()
 
 typedef enum UIitemState {
-    // the item is inactive
-    UI_COLD = 0,
-    // the item is inactive, but the cursor is hovering over this item
-    UI_HOT = 1,
-    // the item is toggled, activated, focused (depends on item kind)
-    UI_ACTIVE = 2,
-    // the item is unresponsive
-    UI_FROZEN = 3,
+	// the item is inactive
+	UI_COLD = 0,
+	// the item is inactive, but the cursor is hovering over this item
+	UI_HOT = 1,
+	// the item is toggled, activated, focused (depends on item kind)
+	UI_ACTIVE = 2,
+	// the item is unresponsive
+	UI_FROZEN = 3,
 } UIitemState;
 
 // container flags to pass to uiSetBox()
 typedef enum UIboxFlags {
-    // flex-direction (bit 0+1)
+	// flex-direction (bit 0+1)
 
-    // left to right
-    UI_ROW = 0x002,
-    // top to bottom
-    UI_COLUMN = 0x003,
+	// left to right
+	UI_ROW = 0x002,
+	// top to bottom
+	UI_COLUMN = 0x003,
 
-    // model (bit 1)
+	// model (bit 1)
 
-    // free layout
-    UI_LAYOUT = 0x000,
-    // flex model
-    UI_FLEX = 0x002,
+	// free layout
+	UI_LAYOUT = 0x000,
+	// flex model
+	UI_FLEX = 0x002,
 
-    // flex-wrap (bit 2)
+	// flex-wrap (bit 2)
 
-    // single-line
-    UI_NOWRAP = 0x000,
-    // multi-line, wrap left to right
-    UI_WRAP = 0x004,
+	// single-line
+	UI_NOWRAP = 0x000,
+	// multi-line, wrap left to right
+	UI_WRAP = 0x004,
 
 
-    // justify-content (start, end, center, space-between)
-    // at start of row/column
-    UI_START = 0x008,
-    // at center of row/column
-    UI_MIDDLE = 0x000,
-    // at end of row/column
-    UI_END = 0x010,
-    // insert spacing to stretch across whole row/column
-    UI_JUSTIFY = 0x018,
+	// justify-content (start, end, center, space-between)
+	// at start of row/column
+	UI_START = 0x008,
+	// at center of row/column
+	UI_MIDDLE = 0x000,
+	// at end of row/column
+	UI_END = 0x010,
+	// insert spacing to stretch across whole row/column
+	UI_JUSTIFY = 0x018,
 
-    // align-items
-    // can be implemented by putting a flex container in a layout container,
-    // then using UI_TOP, UI_DOWN, UI_VFILL, UI_VCENTER, etc.
-    // FILL is equivalent to stretch/grow
+	// align-items
+	// can be implemented by putting a flex container in a layout container,
+	// then using UI_TOP, UI_DOWN, UI_VFILL, UI_VCENTER, etc.
+	// FILL is equivalent to stretch/grow
 
-    // align-content (start, end, center, stretch)
-    // can be implemented by putting a flex container in a layout container,
-    // then using UI_TOP, UI_DOWN, UI_VFILL, UI_VCENTER, etc.
-    // FILL is equivalent to stretch; space-between is not supported.
+	// align-content (start, end, center, stretch)
+	// can be implemented by putting a flex container in a layout container,
+	// then using UI_TOP, UI_DOWN, UI_VFILL, UI_VCENTER, etc.
+	// FILL is equivalent to stretch; space-between is not supported.
 } UIboxFlags;
 
 // child layout flags to pass to uiSetLayout()
 typedef enum UIlayoutFlags {
-    // attachments (bit 5-8)
-    // fully valid when parent uses UI_LAYOUT model
-    // partially valid when in UI_FLEX model
+	// attachments (bit 5-8)
+	// fully valid when parent uses UI_LAYOUT model
+	// partially valid when in UI_FLEX model
 
-    // anchor to left item or left side of parent
-    UI_LEFT = 0x020,
-    // anchor to top item or top side of parent
-    UI_TOP = 0x040,
-    // anchor to right item or right side of parent
-    UI_RIGHT = 0x080,
-    // anchor to bottom item or bottom side of parent
-    UI_DOWN = 0x100,
-    // anchor to both left and right item or parent borders
-    UI_HFILL = 0x0a0,
-    // anchor to both top and bottom item or parent borders
-    UI_VFILL = 0x140,
-    // center horizontally, with left margin as offset
-    UI_HCENTER = 0x000,
-    // center vertically, with top margin as offset
-    UI_VCENTER = 0x000,
-    // center in both directions, with left/top margin as offset
-    UI_CENTER = 0x000,
-    // anchor to all four directions
-    UI_FILL = 0x1e0,
-    // when wrapping, put this element on a new line
-    // wrapping layout code auto-inserts UI_BREAK flags,
-    // drawing routines can read them with uiGetLayout()
-    UI_BREAK = 0x200
+	// anchor to left item or left side of parent
+	UI_LEFT = 0x020,
+	// anchor to top item or top side of parent
+	UI_TOP = 0x040,
+	// anchor to right item or right side of parent
+	UI_RIGHT = 0x080,
+	// anchor to bottom item or bottom side of parent
+	UI_DOWN = 0x100,
+	// anchor to both left and right item or parent borders
+	UI_HFILL = 0x0a0,
+	// anchor to both top and bottom item or parent borders
+	UI_VFILL = 0x140,
+	// center horizontally, with left margin as offset
+	UI_HCENTER = 0x000,
+	// center vertically, with top margin as offset
+	UI_VCENTER = 0x000,
+	// center in both directions, with left/top margin as offset
+	UI_CENTER = 0x000,
+	// anchor to all four directions
+	UI_FILL = 0x1e0,
+	// when wrapping, put this element on a new line
+	// wrapping layout code auto-inserts UI_BREAK flags,
+	// drawing routines can read them with uiGetLayout()
+	UI_BREAK = 0x200
 } UIlayoutFlags;
 
 // event flags
 typedef enum UIevent {
-    // on button 0 down
-    UI_BUTTON0_DOWN = 0x0400,
-    // on button 0 up
-    // when this event has a handler, uiGetState() will return UI_ACTIVE as
-    // long as button 0 is down.
-    UI_BUTTON0_UP = 0x0800,
-    // on button 0 up while item is hovered
-    // when this event has a handler, uiGetState() will return UI_ACTIVE
-    // when the cursor is hovering the items rectangle; this is the
-    // behavior expected for buttons.
-    UI_BUTTON0_HOT_UP = 0x1000,
-    // item is being captured (button 0 constantly pressed);
-    // when this event has a handler, uiGetState() will return UI_ACTIVE as
-    // long as button 0 is down.
-    UI_BUTTON0_CAPTURE = 0x2000,
-    // on button 2 down (right mouse button, usually triggers context menu)
-    UI_BUTTON2_DOWN = 0x4000,
-    // item has received a scrollwheel event
-    // the accumulated wheel offset can be queried with uiGetScroll()
-    UI_SCROLL = 0x8000,
-    // item is focused and has received a key-down event
-    // the respective key can be queried using uiGetKey() and uiGetModifier()
-    UI_KEY_DOWN = 0x10000,
-    // item is focused and has received a key-up event
-    // the respective key can be queried using uiGetKey() and uiGetModifier()
-    UI_KEY_UP = 0x20000,
-    // item is focused and has received a character event
-    // the respective character can be queried using uiGetKey()
-    UI_CHAR = 0x40000,
+	// on button 0 down
+	UI_BUTTON0_DOWN = 0x0400,
+	// on button 0 up
+	// when this event has a handler, uiGetState() will return UI_ACTIVE as
+	// long as button 0 is down.
+	UI_BUTTON0_UP = 0x0800,
+	// on button 0 up while item is hovered
+	// when this event has a handler, uiGetState() will return UI_ACTIVE
+	// when the cursor is hovering the items rectangle; this is the
+	// behavior expected for buttons.
+	UI_BUTTON0_HOT_UP = 0x1000,
+	// item is being captured (button 0 constantly pressed);
+	// when this event has a handler, uiGetState() will return UI_ACTIVE as
+	// long as button 0 is down.
+	UI_BUTTON0_CAPTURE = 0x2000,
+	// on button 2 down (right mouse button, usually triggers context menu)
+	UI_BUTTON2_DOWN = 0x4000,
+	// item has received a scrollwheel event
+	// the accumulated wheel offset can be queried with uiGetScroll()
+	UI_SCROLL = 0x8000,
+	// item is focused and has received a key-down event
+	// the respective key can be queried using uiGetKey() and uiGetModifier()
+	UI_KEY_DOWN = 0x10000,
+	// item is focused and has received a key-up event
+	// the respective key can be queried using uiGetKey() and uiGetModifier()
+	UI_KEY_UP = 0x20000,
+	// item is focused and has received a character event
+	// the respective character can be queried using uiGetKey()
+	UI_CHAR = 0x40000,
 } UIevent;
 
 enum {
-    // these bits, starting at bit 24, can be safely assigned by the
-    // application, e.g. as item types, other event types, drop targets, etc.
-    // they can be set and queried using uiSetFlags() and uiGetFlags()
-    UI_USERMASK = 0xff000000,
+	// these bits, starting at bit 24, can be safely assigned by the
+	// application, e.g. as item types, other event types, drop targets, etc.
+	// they can be set and queried using uiSetFlags() and uiGetFlags()
+	UI_USERMASK = 0xff000000,
 
-    // a special mask passed to uiFindItem()
-    UI_ANY = 0xffffffff,
+	// a special mask passed to uiFindItem()
+	UI_ANY = 0xffffffff,
 };
 
 // handler callback; event is one of UI_EVENT_*
@@ -415,24 +415,24 @@ typedef void (*UIhandler)(int item, UIevent event);
 // for cursor positions, mainly
 typedef struct UIvec2 {
 #if OUI_USE_UNION_VECTORS || defined(OUI_IMPLEMENTATION)
-    union {
-        int v[2];
-        struct { int x, y; };
-    };
+		union {
+			int v[2];
+		struct { int x, y; };
+	};
 #else
-    int x, y;
+		int x, y;
 #endif
 } UIvec2;
 
 // layout rectangle
 typedef struct UIrect {
 #if OUI_USE_UNION_VECTORS || defined(OUI_IMPLEMENTATION)
-    union {
-        int v[4];
-        struct { int x, y, w, h; };
-    };
+		union {
+			int v[4];
+		struct { int x, y, w, h; };
+	};
 #else
-    int x, y, w, h;
+		int x, y, w, h;
 #endif
 } UIrect;
 
