@@ -15,15 +15,18 @@ Creative Commons Attribution-ShareAlike 4.0 International License</a>.
 
 ## License
 
-License copyright &copy; 2013 Pixar.
+License copyright &copy; 2013 [Pixar Animation Studios](https://www.pixar.com/).
 
 ## Blendish and OUI
 
-Wima uses a modified version of Blendish (contained in the src/bnd directory), a
-Blender 2.5 UI-based theming library for NanoVG. Wima also uses a modified
-version of OUI (contained in the src/oui directory), otherwise known as OpenUI.
-OUI is pronounced like the French word for "yes."" The original code for
-Blendish and OUI is subject to the following copyright:
+For generating themes, Wima uses a modified version of
+[Blendish](https://bitbucket.org/duangle/oui-blendish/src) (contained in the
+[`src/bnd`](src/bnd) directory), a Blender 2.5 UI-based theming library for
+[NanoVG](https://github.com/memononen/nanovg). Wima also uses a modified version
+of [OUI](https://bitbucket.org/duangle/oui-blendish/src) (contained in the
+[`src/oui`](src/oui) directory), otherwise known as OpenUI, for layout. OUI is
+pronounced like the French word for "yes." The original code for Blendish and
+OUI is subject to the following copyright:
 
 > Copyright &copy; 2014 Leonard Ritter (<leonard.ritter@duangle.com>).
 
@@ -51,9 +54,10 @@ licensed under the following license:
 
 ## NanoVG
 
-Wima uses a modified version of NanoVG (contained in the src/nanovg directory),
-a library for drawing vector graphics with OpenGL. The original code for NanoVG
-is subject to the following copyright:
+Wima uses a modified version of [NanoVG](https://github.com/memononen/nanovg)
+(contained in the [`src/nanovg`](src/nanovg) directory), a library for drawing
+vector graphics with OpenGL. The original code for NanoVG is subject to the
+following copyright:
 
 > Copyright &copy; 2013 Mikko Mononen (<memon@inside.org>).
 
