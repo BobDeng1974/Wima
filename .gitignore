@@ -29,3 +29,7 @@
 
 # QT Creator files
 *.user
+
+# Image files
+- *.svg
+- *.png
