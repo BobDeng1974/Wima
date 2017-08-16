@@ -45,6 +45,7 @@ find_library(PTHREAD_LIB pthread PATHS "/usr/lib" "/usr/local/lib")
 find_library(JEMALLOC_LIB jemalloc PATHS "/usr/lib" "/usr/local/lib")
 find_library(GLFW_LIB glfw3 PATHS "/usr/lib" "/usr/local/lib")
 find_library(DYNA_LIB dyna PATHS "/usr/lib" "/usr/local/lib")
+find_library(NANOVG_LIB nanovg PATHS "/usr/lib" "/usr/local/lib")
 
 include_directories("${OPENGL_INCLUDE_DIR}" "${X11_INCLUDE_DIR}")
 

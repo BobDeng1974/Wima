@@ -24,6 +24,7 @@
 
 #include <assert.h>
 #include <stddef.h>
+#include <string.h>
 
 #include <jemalloc/jemalloc.h>
 
@@ -307,7 +308,7 @@ int uiGetLastButton(int button) {
 	return (ui_context->last_buttons & (1ull<<button))?1:0;
 }
 
-int uiGetButton(int button) {
+int uiGetButton(unsigned int button) {
 	assert(ui_context);
 	return (ui_context->buttons & (1ull<<button))?1:0;
 }

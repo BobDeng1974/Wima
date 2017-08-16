@@ -35,4 +35,5 @@ create_library("${WIMA_BND_LIB}" "${WIMA_BND_SRC}" NO
 
 	# Add libraries here.
 	"${WIMA_OUI_LIB}"
+	"${NANOVG_LIB}"
 	"${JEMALLOC_LIB}")

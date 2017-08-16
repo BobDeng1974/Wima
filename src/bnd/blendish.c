@@ -25,6 +25,10 @@
 
 #include <math.h>
 
+#include <nanovg/nanovg.h>
+
+#include "blendish.h"
+
 #ifdef _MSC_VER
     #pragma warning (disable: 4996) // Switch off security warnings
     #pragma warning (disable: 4100) // Switch off unreferenced formal parameter warnings
@@ -844,7 +848,7 @@ float bndLabelHeight(NVGcontext *ctx, int iconid, const char *label, float width
 		nvgFontSize(ctx, BND_LABEL_FONT_SIZE);
 		float bounds[4];
 		nvgTextBoxBounds(ctx, 1, 1, width, label, NULL, bounds);
-		int bh = int(bounds[3] - bounds[1]) + BND_TEXT_PAD_DOWN;
+		int bh = (int) (bounds[3] - bounds[1]) + BND_TEXT_PAD_DOWN;
 		if (bh > h)
 			h = bh;
 	}
