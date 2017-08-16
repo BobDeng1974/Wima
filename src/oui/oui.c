@@ -23,6 +23,9 @@
  */
 
 #include <assert.h>
+#include <stddef.h>
+
+#include <jemalloc/jemalloc.h>
 
 #include "oui.h"
 

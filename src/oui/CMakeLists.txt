@@ -31,4 +31,8 @@ set(WIMA_OUI_SRC
 
 set(WIMA_OUI_LIB "wima_oui")
 
-create_library("${WIMA_OUI_LIB}" "${WIMA_OUI_SRC}" NO)
+create_library("${WIMA_OUI_LIB}" "${WIMA_OUI_SRC}" NO
+
+	# Add libraries here.
+	"${JEMALLOC_LIB}"
+)
