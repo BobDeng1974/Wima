@@ -70,26 +70,26 @@ WimaStatus wima_init(const char* name,           ErrorFunc error,
 	wg.name = NULL;
 	wg.windows = NULL;
 
-	DynaStatus status = dstr_create(&(wg.name), name);
-	if (status) {
+	DynaStatus dstatus = dstr_create(&(wg.name), name);
+	if (dstatus) {
 		wima_exit();
 		return WIMA_INIT_ERR;
 	}
 
-	status = dvec_create(&wg.windows, 0, sizeof(WimaWin));
-	if (status) {
+	dstatus = dvec_create(&wg.windows, 0, sizeof(WimaWin));
+	if (dstatus) {
 		wima_exit();
 		return WIMA_INIT_ERR;
 	}
 
-	status = dvec_create(&wg.regions, 0, sizeof(WimaRegion));
-	if (status) {
+	dstatus = dvec_create(&wg.regions, 0, sizeof(WimaRegion));
+	if (dstatus) {
 		wima_exit();
 		return WIMA_INIT_ERR;
 	}
 
-	status = dvec_create(&wg.workspaces, 0, sizeof(WimaWksp));
-	if (status) {
+	dstatus = dvec_create(&wg.workspaces, 0, sizeof(WimaWksp));
+	if (dstatus) {
 		wima_exit();
 		return WIMA_INIT_ERR;
 	}
