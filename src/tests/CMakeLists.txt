@@ -24,6 +24,6 @@
 #
 #	****** END LICENSE BLOCK ******
 
-set(WIMA_LIB wima_static)
+set(WIMA_LIB "${PROJECT_NAME}")
 
 create_test(app "${WIMA_LIB}" "${DYNA_LIB}")
