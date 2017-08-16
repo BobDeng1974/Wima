@@ -16,3 +16,35 @@ Creative Commons Attribution-ShareAlike 4.0 International License</a>.
 ## License
 
 License copyright &copy; 2013 Pixar.
+
+## Blendish and OUI
+
+Wima uses a modified version of Blendish (contained in the src/bnd directory), a
+Blender 2.5 UI-based theming library for NanoVG. Wima also uses a modified
+version of OUI (contained in the src/oui directory), otherwise known as OpenUI.
+OUI is pronounced like the French word for "yes."" The original code for
+Blendish and OUI is subject to the following copyright:
+
+> Copyright &copy; 2014 Leonard Ritter (<leonard.ritter@duangle.com>).
+
+Modifications to Blendish and OUI are licensed under a
+[modified Apache License 2.0](LICENSE.md). The original Blendish/OUI code is
+licensed under the following license:
+
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+> of this software and associated documentation files (the "Software"), to deal
+> in the Software without restriction, including without limitation the rights
+> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+> copies of the Software, and to permit persons to whom the Software is
+> furnished to do so, subject to the following conditions:
+
+> The above copyright notice and this permission notice shall be included in
+> all copies or substantial portions of the Software.
+
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+> THE SOFTWARE.
