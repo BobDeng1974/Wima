@@ -197,6 +197,11 @@ bool wima_area_node_valid(DynaTree regions, DynaNode node) {
 	return result;
 }
 
+DynaTree wima_area_areas(WimaWindowHandle win) {
+	WimaWin* windows = (WimaWin*) dvec_data(wg.windows);
+	return windows[win].areas;
+}
+
 inline WimaAreaHandle wima_area_handle(WimaAreaNode* area, DynaNode node) {
 
 	WimaAreaHandle wah;
