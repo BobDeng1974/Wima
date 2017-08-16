@@ -323,6 +323,13 @@ WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wksp, DynaNode node, float
 WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wksp, DynaNode node, WimaRegionHandle reg);
 
 WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp);
+WimaStatus wima_window_close(WimaWindowHandle wwh);
+WimaStatus wima_window_title(WimaWindowHandle wwh, const char* title);
+void* wima_window_getUserPointer(WimaWindowHandle win);
+WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user);
+DynaTree wima_window_areas(WimaWindowHandle wwh);
+WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle wksp);
+WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas);
 
 WimaStatus wima_init(const char* name,           ErrorFunc error,
                      WindowMouseEnterFunc enter, WindowResizeFunc resize);

@@ -51,21 +51,9 @@ extern WimaG wg;
 
 WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 
-	size_t regionsTypesLen = dvec_len(wg.regions);
-	size_t wkspTypesLen = dvec_len(wg.workspaces);
-
-	if (regionsTypesLen == 0 || wkspTypesLen == 0) {
-		return WIMA_INVALID_STATE;
-	}
-
 	WimaWin wwin;
 
-	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
-	DynaTree regs = wksps[wksp].regions;
-
-	if (dstr_create(&wwin.name, dstr_str(wksps[wksp].name))) {
-		return WIMA_WINDOW_ERR;
-	}
+	wwin.areas = NULL;
 
 	size_t windowIdx = dvec_len(wg.windows);
 
@@ -73,7 +61,15 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
-	GLFWwindow* win = glfwCreateWindow(640, 480, dstr_str(wwin.name), NULL, NULL);
+	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
+
+	const char* name = dstr_str(wksps[wksp].name);
+
+	if (dstr_create(&wwin.name, name)) {
+		return WIMA_WINDOW_ERR;
+	}
+
+	GLFWwindow* win = glfwCreateWindow(640, 480, name, NULL, NULL);
 
 	if (!win) {
 		return WIMA_WINDOW_ERR;
@@ -95,27 +91,14 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 
 	wwin.window = win;
 
-	DynaNode root = dtree_root();
-
-	if (!wima_area_node_valid(regs, root)) {
-		return WIMA_WINDOW_ERR;
-	}
-
-	if (dtree_create(&wwin.areas, dtree_nodes(regs), sizeof(WimaAreaNode))) {
-		return WIMA_WINDOW_ERR;
-	}
-
-	if (dtree_copy(wwin.areas, regs)) {
-		return WIMA_WINDOW_ERR;
-	}
-
-	WimaStatus status = wima_area_node_setData(windowIdx, wwin.areas, root);
-	if (status) {
-		return status;
-	}
-
 	if (dvec_push(wg.windows, (uint8_t*) &wwin)) {
 		return WIMA_WINDOW_ERR;
+	}
+
+	// TODO: Error checking.
+	WimaStatus status = wima_window_areas_replace(windowIdx, wksp);
+	if (status) {
+		return status;
 	}
 
 	*wwh = windowIdx;
@@ -124,6 +107,17 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 
 	return WIMA_SUCCESS;
 }
+
+WimaStatus wima_window_close(WimaWindowHandle wwh) {
+	glfwSetWindowShouldClose(GLFW_WINDOW_POINTER(wwh), 1);
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_window_title(WimaWindowHandle wwh, const char* title) {
+	glfwSetWindowTitle(GLFW_WINDOW_POINTER(wwh), title);
+	return WIMA_SUCCESS;
+}
+
 void* wima_window_getUserPointer(WimaWindowHandle win) {
 
 	if (win >= dvec_len(wg.windows)) {
@@ -148,6 +142,81 @@ WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user) {
 	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
 
 	wins[win].user = user;
+
+	return WIMA_SUCCESS;
+}
+
+DynaTree wima_window_areas(WimaWindowHandle wwh) {
+
+	DynaTree areas;
+
+	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
+	DynaTree winareas = wins[wwh].areas;
+
+	int nodes = dtree_nodes(winareas);
+
+	DynaStatus dstatus = dtree_create(&areas, nodes, sizeof(WimaAreaNode));
+	if (dstatus) {
+		return NULL;
+	}
+
+	dstatus = dtree_copy(areas, winareas);
+	if (dstatus) {
+		dtree_free(areas);
+		return NULL;
+	}
+
+	return areas;
+}
+
+WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle wksp) {
+
+	size_t regionsTypesLen = dvec_len(wg.regions);
+	size_t wkspTypesLen = dvec_len(wg.workspaces);
+
+	if (regionsTypesLen == 0 || wkspTypesLen == 0) {
+		return WIMA_INVALID_STATE;
+	}
+
+	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
+	DynaTree regs = wksps[wksp].regions;
+
+	DynaNode root = dtree_root();
+
+	if (!wima_area_node_valid(regs, root)) {
+		return WIMA_WINDOW_ERR;
+	}
+
+	WimaWin* windows = (WimaWin*) dvec_data(wg.windows);
+
+	if (!windows[wwh].areas) {
+		if (dtree_create(&windows[wwh].areas, dtree_nodes(regs), sizeof(WimaAreaNode))) {
+			return WIMA_WINDOW_ERR;
+		}
+	}
+
+	if (dtree_copy(windows[wwh].areas, regs)) {
+		return WIMA_WINDOW_ERR;
+	}
+
+	WimaStatus status = wima_area_node_setData(wwh, windows[wwh].areas, root);
+
+	return status;
+}
+
+WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas) {
+
+	WimaWin* windows = (WimaWin*) dvec_data(wg.windows);
+
+	if (!windows[wwh].areas) {
+		if (dtree_create(&windows[wwh].areas, dtree_nodes(areas), sizeof(WimaAreaNode))) {
+			return WIMA_WINDOW_ERR;
+		}
+	}
+
+	if (dtree_copy(windows[wwh].areas, areas)) {
+		return WIMA_WINDOW_ERR;
+	}
 
 	return WIMA_SUCCESS;
 }
