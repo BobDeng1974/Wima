@@ -29,4 +29,6 @@ set(WIMA_OUI_SRC
 	#Put source files here.
 	"oui.c")
 
-create_library(oui "${WIMA_OUI_SRC}" NO)
+set(WIMA_OUI_LIB "wima_oui")
+
+create_library("${WIMA_OUI_LIB}" "${WIMA_OUI_SRC}" NO)
