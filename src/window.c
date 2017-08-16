@@ -51,10 +51,10 @@ extern WimaG wg;
 
 WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 
-	size_t areaTypesLen = dvec_len(wg.regions);
+	size_t regionsTypesLen = dvec_len(wg.regions);
 	size_t wkspTypesLen = dvec_len(wg.workspaces);
 
-	if (areaTypesLen == 0 || wkspTypesLen == 0) {
+	if (regionsTypesLen == 0 || wkspTypesLen == 0) {
 		return WIMA_INVALID_STATE;
 	}
 
