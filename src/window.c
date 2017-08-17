@@ -76,16 +76,18 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 	}
 
 	// Set all of the callbacks.
-	glfwSetFramebufferSizeCallback(win, wima_callback_framebufferSize);
-	glfwSetWindowSizeCallback(win, wima_callback_windowSize);
-	glfwSetKeyCallback(win, wima_callback_key);
 	glfwSetMouseButtonCallback(win, wima_callback_mouseBtn);
 	glfwSetCursorPosCallback(win, wima_callback_mousePos);
-	glfwSetCursorEnterCallback(win,wima_callback_mouseEnter);
 	glfwSetScrollCallback(win, wima_callback_scroll);
 	glfwSetCharCallback(win, wima_callback_char);
 	glfwSetCharModsCallback(win, wima_callback_charMod);
 	glfwSetDropCallback(win, wima_callback_fileDrop);
+	glfwSetCursorEnterCallback(win,wima_callback_mouseEnter);
+	glfwSetWindowPosCallback(win, wima_callback_windowPos);
+	glfwSetFramebufferSizeCallback(win, wima_callback_framebufferSize);
+	glfwSetWindowSizeCallback(win, wima_callback_windowSize);
+	glfwSetKeyCallback(win, wima_callback_key);
+	glfwSetWindowCloseCallback(win, wima_callback_windowClose);
 
 	wwin.window = win;
 	WimaWindowHandle idx;
