@@ -122,6 +122,7 @@ WimaStatus wima_main() {
 		return WIMA_SUCCESS;
 	}
 
+	// Main event loop.
 	while (true) {
 
 		// Get the window handle.
