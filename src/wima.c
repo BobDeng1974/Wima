@@ -55,7 +55,7 @@ WimaG wg;
 WimaStatus wima_init(const char* name,           ErrorFunc error,
                      WindowMouseEnterFunc enter, WindowPosFunc pos,
                      FramebufferSizeFunc fbsize, WindowSizeFunc winsize,
-                     WindowKeyFunc key,          WindowCloseFunc close)
+                     WindowCloseFunc close)
 {
 	if (!error) {
 		return WIMA_INIT_ERR;
@@ -66,7 +66,6 @@ WimaStatus wima_init(const char* name,           ErrorFunc error,
 	wg.pos = pos;
 	wg.fb_size = fbsize;
 	wg.win_size = winsize;
-	wg.key = key;
 	wg.close = close;
 
 	wg.regions = NULL;

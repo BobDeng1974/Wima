@@ -47,6 +47,7 @@ typedef struct wima_region {
 
 	AreaDrawFunc draw;
 
+	AreaKeyFunc key_event;
 	AreaMouseEventFunc mouse_event;
 	AreaMousePosFunc mouse_pos;
 	AreaMouseEnterFunc mouse_enter;

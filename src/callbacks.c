@@ -61,6 +61,30 @@ const char* descs[] = { "Allocation failed",
                         "Clipboard contents were invalid"
 };
 
+void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
+
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+		glfwSetWindowShouldClose(window, GLFW_TRUE);
+	}
+
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+
+	WimaKey wkey = (WimaKey) key;
+	WimaMods wmods = (WimaMods) mods;
+	WimaAction wact = (WimaAction) action;
+
+	WimaStatus status = wima_area_key(wwh, wkey, scancode, wact, wmods);
+
+	if (status) {
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
+	}
+}
+
 void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	if (!wg.name) {
@@ -281,33 +305,6 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
 	if (wg.win_size) {
 		status = wg.win_size(wwh, width, height);
-
-		if (status) {
-			int idx = ((int) status) - 128;
-			wg.error(status, descs[idx]);
-		}
-	}
-}
-
-void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
-
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, GLFW_TRUE);
-	}
-
-	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
-	}
-
-	if (wg.key) {
-
-		WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
-
-		WimaKey wkey = (WimaKey) key;
-		WimaMods wmods = (WimaMods) mods;
-		WimaAction wact = (WimaAction) action;
-
-		WimaStatus status = wg.key(wwh, wkey, scancode, wact, wmods);
 
 		if (status) {
 			int idx = ((int) status) - 128;

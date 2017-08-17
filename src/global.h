@@ -51,7 +51,6 @@ typedef struct wima_globals {
 	WindowPosFunc pos;
 	FramebufferSizeFunc fb_size;
 	WindowSizeFunc win_size;
-	WindowKeyFunc key;
 	WindowCloseFunc close;
 
 	DynaVector windows;
