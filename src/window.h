@@ -58,6 +58,5 @@ typedef struct wima_window {
 } WimaWin;
 
 #define WIMA_WINDOW_HANDLE(win) (WimaWindowHandle) (long) glfwGetWindowUserPointer(win)
-#define GLFW_WINDOW_POINTER(win) (((WimaWin*) dvec_data(wg.windows))[(win)].window)
 
 #endif // WIMA_WINDOW_H

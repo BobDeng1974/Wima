@@ -109,13 +109,18 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 	return WIMA_SUCCESS;
 }
 
+GLFWwindow* wima_window_glfw(WimaWindowHandle win) {
+	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
+	return wins[win].window;
+}
+
 WimaStatus wima_window_close(WimaWindowHandle wwh) {
-	glfwSetWindowShouldClose(GLFW_WINDOW_POINTER(wwh), 1);
+	glfwSetWindowShouldClose(wima_window_glfw(wwh), 1);
 	return WIMA_SUCCESS;
 }
 
 WimaStatus wima_window_title(WimaWindowHandle wwh, const char* title) {
-	glfwSetWindowTitle(GLFW_WINDOW_POINTER(wwh), title);
+	glfwSetWindowTitle(wima_window_glfw(wwh), title);
 	return WIMA_SUCCESS;
 }
 

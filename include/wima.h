@@ -45,6 +45,8 @@ extern "C" {
 #include <stdbool.h>
 #include <stddef.h>
 
+#include <GLFW/glfw3.h>
+
 #include <dyna/vector.h>
 #include <dyna/string.h>
 #include <dyna/tree.h>
@@ -326,6 +328,7 @@ WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wksp, DynaNode node, float
 WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wksp, DynaNode node, WimaRegionHandle reg);
 
 WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp);
+GLFWwindow* wima_window_glfw(WimaWindowHandle win);
 WimaStatus wima_window_close(WimaWindowHandle wwh);
 WimaStatus wima_window_title(WimaWindowHandle wwh, const char* title);
 void* wima_window_getUserPointer(WimaWindowHandle win);
