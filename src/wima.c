@@ -115,6 +115,8 @@ WimaStatus wima_main() {
 		return WIMA_INVALID_STATE;
 	}
 
+	gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
+
 	while (!glfwWindowShouldClose(win)) {
 
 		/* Render here */
