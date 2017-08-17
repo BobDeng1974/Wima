@@ -153,16 +153,15 @@ void wima_exit() {
 
 		for (int i = 0; i < len; ++i) {
 
-			if (wins[i].name) {
-				dstr_free(wins[i].name);
-			}
-
 			if (wins[i].window) {
 				glfwDestroyWindow(wins[i].window);
+				wima_window_free(i);
 			}
 		}
 
 		dvec_free(wg.windows);
+		dvec_free(wg.workspaces);
+		dvec_free(wg.regions);
 	}
 
 	glfwTerminate();
