@@ -102,6 +102,10 @@ WimaStatus mouseCoordsKevent(WimaAreaHandle wah,
 	printf("    Mods: ");
 	printMods(mods);
 
+	if (key == WIMA_KEY_ESCAPE && act == WIMA_PRESS) {
+		wima_window_close(wah.window);
+	}
+
 	return WIMA_SUCCESS;
 }
 
