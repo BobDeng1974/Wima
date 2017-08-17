@@ -116,7 +116,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 		}
 	}
 
-	// TODO: Error checking.
 	WimaStatus status = wima_window_areas_replace(idx, wksp);
 	if (status) {
 		return status;
