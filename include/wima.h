@@ -99,7 +99,7 @@ typedef struct wima_area_handle {
 typedef enum wima_status_codes {
 
 	WIMA_SUCCESS		= 0,	/** Success. */
-	WIMA_OUT_OF_MEM		= 128,	/** Returned when Wima fails to allocate memory. */
+	WIMA_MALLOC_ERR		= 128,	/** Returned when Wima fails to allocate memory. */
 	WIMA_PLATFORM_ERR	= 129,	/** Returned when the platform returns
 									an unknown error. */
 	WIMA_INVALID_STATE	= 130,	/** Returned when Wima is in an invalid

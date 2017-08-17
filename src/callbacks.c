@@ -344,7 +344,7 @@ void wima_callback_error(int error, const char* desc) {
 			status = WIMA_INVALID_PARAM;
 			break;
 		case GLFW_OUT_OF_MEMORY:
-			status = WIMA_OUT_OF_MEM;
+			status = WIMA_MALLOC_ERR;
 			break;
 		case GLFW_API_UNAVAILABLE:
 		case GLFW_VERSION_UNAVAILABLE:
