@@ -248,8 +248,8 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
 	WimaWin* wwin = (WimaWin*) dvec_data(wg.windows);
 
-	wwin[wwh].width = width;
-	wwin[wwh].height = height;
+	wwin[wwh].fbwidth = width;
+	wwin[wwh].fbheight = height;
 
 	WimaStatus status = WIMA_SUCCESS;
 

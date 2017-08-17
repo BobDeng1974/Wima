@@ -52,6 +52,9 @@ typedef struct wima_window {
 
 	DynaTree areas;
 
+	int fbwidth;
+	int fbheight;
+
 	int width;
 	int height;
 
