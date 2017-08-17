@@ -53,6 +53,10 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name
 {
 	WimaRegion reg;
 
+	if (!draw) {
+		return WIMA_AREA_ERR;
+	}
+
 	DynaStatus status = dstr_create(&(reg.name), name);
 	if (status) {
 		return WIMA_AREA_ERR;
