@@ -234,7 +234,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 	}
 }
 
-void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
+void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
 	if (!wg.name) {
 		exit(WIMA_INVALID_STATE);
@@ -251,8 +251,8 @@ void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
 
 	WimaStatus status = WIMA_SUCCESS;
 
-	if (wg.resize) {
-		status = wg.resize(wwh, width, height);
+	if (wg.fb_size) {
+		status = wg.fb_size(wwh, width, height);
 
 		if (status) {
 			int idx = ((int) status) - 128;
@@ -265,6 +265,33 @@ void wima_callback_windowResize(GLFWwindow* window, int width, int height) {
 	if (status) {
 		int idx = ((int) status) - 128;
 		wg.error(status, descs[idx]);
+	}
+}
+
+void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
+
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
+	glViewport(0, 0, width, height);
+
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+
+	WimaWin* wwin = (WimaWin*) dvec_data(wg.windows);
+
+	wwin[wwh].width = width;
+	wwin[wwh].height = height;
+
+	WimaStatus status = WIMA_SUCCESS;
+
+	if (wg.win_size) {
+		status = wg.win_size(wwh, width, height);
+
+		if (status) {
+			int idx = ((int) status) - 128;
+			wg.error(status, descs[idx]);
+		}
 	}
 }
 

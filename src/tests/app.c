@@ -218,7 +218,7 @@ int main() {
 	// Initialize Wima and check for success.
 	WimaStatus status = wima_init("Test Wima App",   mouseCoordsError,
 	                              mouseCoordsMenter, mouseCoordsResize,
-	                              mouseCoordsKevent);
+	                              NULL,              mouseCoordsKevent);
 	if (status != WIMA_SUCCESS) {
 		return status;
 	}

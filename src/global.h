@@ -48,7 +48,8 @@ typedef struct wima_globals {
 
 	ErrorFunc error;
 	WindowMouseEnterFunc enter;
-	WindowResizeFunc resize;
+	FramebufferSizeFunc fb_size;
+	WindowSizeFunc win_size;
 	WindowKeyFunc key;
 
 	DynaVector windows;

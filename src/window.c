@@ -79,7 +79,8 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 	glfwSetWindowUserPointer(win, (void*) (long) windowIdx);
 
 	// Set all of the callbacks.
-	glfwSetFramebufferSizeCallback(win, wima_callback_windowResize);
+	glfwSetFramebufferSizeCallback(win, wima_callback_framebufferSize);
+	glfwSetWindowSizeCallback(win, wima_callback_windowSize);
 	glfwSetKeyCallback(win, wima_callback_key);
 	glfwSetMouseButtonCallback(win, wima_callback_mouseBtn);
 	glfwSetCursorPosCallback(win, wima_callback_mousePos);
