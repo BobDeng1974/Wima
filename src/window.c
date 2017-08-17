@@ -34,6 +34,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <string.h>
+
 #include <GLFW/glfw3.h>
 
 #include <dyna/dyna.h>
@@ -55,8 +57,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 
 	wwin.areas = NULL;
 
-	size_t windowIdx = dvec_len(wg.windows);
-
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
@@ -75,9 +75,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 		return WIMA_WINDOW_ERR;
 	}
 
-	// Set the user pointer to the handle.
-	glfwSetWindowUserPointer(win, (void*) (long) windowIdx);
-
 	// Set all of the callbacks.
 	glfwSetFramebufferSizeCallback(win, wima_callback_framebufferSize);
 	glfwSetWindowSizeCallback(win, wima_callback_windowSize);
@@ -91,18 +88,45 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 	glfwSetDropCallback(win, wima_callback_fileDrop);
 
 	wwin.window = win;
+	WimaWindowHandle idx;
 
-	if (dvec_push(wg.windows, (uint8_t*) &wwin)) {
-		return WIMA_WINDOW_ERR;
+	bool done = false;
+	size_t len = dvec_len(wg.windows);
+	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
+
+	for (int i = 0; i < len; ++i) {
+
+		if (!wins[i].window) {
+
+			done = true;
+
+			memmove(&wins[i].window, &wwin, sizeof(WimaWin));
+
+			idx = i;
+
+			break;
+		}
+	}
+
+	if (!done) {
+
+		idx = len;
+
+		if (dvec_push(wg.windows, (uint8_t*) &wwin)) {
+			return WIMA_WINDOW_ERR;
+		}
 	}
 
 	// TODO: Error checking.
-	WimaStatus status = wima_window_areas_replace(windowIdx, wksp);
+	WimaStatus status = wima_window_areas_replace(idx, wksp);
 	if (status) {
 		return status;
 	}
 
-	*wwh = windowIdx;
+	*wwh = idx;
+
+	// Set the user pointer to the handle.
+	glfwSetWindowUserPointer(win, (void*) (long) idx);
 
 	glfwMakeContextCurrent(win);
 

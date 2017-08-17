@@ -36,6 +36,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <GLFW/glfw3.h>
 
@@ -336,7 +337,14 @@ void wima_callback_windowClose(GLFWwindow* window) {
 	if (close(wwh)) {
 		glfwSetWindowShouldClose(window, 1);
 		wima_window_free(wwh);
-		dvec_popAt(wg.windows, wwh);
+
+		if (wwh == dvec_len(wg.windows) - 1) {
+			dvec_pop(wg.windows);
+		}
+		else {
+			WimaWin* win = ((WimaWin*) dvec_data(wg.windows)) + wwh;
+			memset(win, 0, sizeof(WimaWin));
+		}
 	}
 	else {
 		glfwSetWindowShouldClose(window, 0);
