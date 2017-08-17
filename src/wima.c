@@ -39,8 +39,6 @@
 
 #include <jemalloc/jemalloc.h>
 
-#include <GLFW/glfw3.h>
-
 #include <dyna/dyna.h>
 #include <dyna/vector.h>
 

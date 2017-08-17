@@ -24,52 +24,9 @@
 #
 #	****** END LICENSE BLOCK ******
 
-set("WIMA_SRC"
+set(WIMA_GLAD_SRC "glad.c")
 
-	# Put all source files here.
-	"callbacks.c"
-	"region.c"
-	"area.c"
-	"workspace.c"
-	"window.c"
-	"wima.c"
-)
+set(WIMA_GLAD_LIB wima_glad PARENT_SCOPE)
+set(WIMA_GLAD_LIB wima_glad)
 
-find_package(X11 REQUIRED)
-
-find_library(RT_LIB rt PATHS "/usr/lib" "/usr/local/lib")
-find_library(MATH_LIB m PATHS "/usr/lib" "/usr/local/lib")
-find_library(DL_LIB dl "/usr/lib" "/usr/local/lib")
-find_library(PTHREAD_LIB pthread PATHS "/usr/lib" "/usr/local/lib")
-find_library(JEMALLOC_LIB jemalloc PATHS "/usr/lib" "/usr/local/lib")
-find_library(GLFW_LIB glfw3 PATHS "/usr/lib" "/usr/local/lib")
-find_library(DYNA_LIB dyna PATHS "/usr/lib" "/usr/local/lib")
-find_library(NANOVG_LIB nanovg PATHS "/usr/lib" "/usr/local/lib")
-
-include_directories("${X11_INCLUDE_DIR}")
-
-add_subdirectory(glad)
-
-add_subdirectory(oui)
-add_subdirectory(bnd)
-
-create_library("${PROJECT_NAME}" "${WIMA_SRC}" "YES"
-
-	# Put the needed libraries here.
-	"${DYNA_LIB}"
-	"${GLFW_LIB}"
-	"${WIMA_GLAD_LIB}"
-	"${JEMALLOC_LIB}"
-	"${DL_LIB}"
-	"${X11_X11_LIB}"
-	"${X11_Xi_LIB}"
-	"${X11_Xrandr_LIB}"
-	"${X11_Xxf86vm_LIB}"
-	"${X11_Xinerama_LIB}"
-	"${X11_Xcursor_LIB}"
-	"${RT_LIB}"
-	"${MATH_LIB}"
-	"${PTHREAD_LIB}"
-)
-
-add_subdirectory(tests)
+create_library("${WIMA_GLAD_LIB}" "${WIMA_GLAD_SRC}" NO)

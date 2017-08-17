@@ -36,8 +36,6 @@
 
 #include <string.h>
 
-#include <GLFW/glfw3.h>
-
 #include <dyna/dyna.h>
 #include <dyna/tree.h>
 

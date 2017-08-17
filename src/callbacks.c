@@ -38,8 +38,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <GLFW/glfw3.h>
-
 #include <wima.h>
 
 #include "callbacks.h"
