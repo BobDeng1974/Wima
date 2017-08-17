@@ -85,6 +85,7 @@ void printMods(WimaMods mods) {
 
 WimaStatus mouseCoordsDraw(WimaAreaHandle wah, int width, int height) {
 	printf("Draw: { handle: %10u, width: %4d; height: %4d }\n", wah.node, width, height);
+	glClear(GL_COLOR_BUFFER_BIT);
 	return WIMA_SUCCESS;
 }
 

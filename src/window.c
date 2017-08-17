@@ -36,6 +36,8 @@
 
 #include <string.h>
 
+#include <jemalloc/jemalloc.h>
+
 #include <dyna/dyna.h>
 #include <dyna/tree.h>
 
@@ -135,7 +137,9 @@ GLFWwindow* wima_window_glfw(WimaWindowHandle win) {
 }
 
 WimaStatus wima_window_close(WimaWindowHandle wwh) {
-	glfwSetWindowShouldClose(wima_window_glfw(wwh), 1);
+	if (!wg.close || wg.close(wwh)) {
+		glfwSetWindowShouldClose(wima_window_glfw(wwh), 1);
+	}
 	return WIMA_SUCCESS;
 }
 
@@ -245,6 +249,157 @@ WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas) {
 	}
 
 	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_window_draw(WimaWindowHandle win) {
+	WimaWin* windows = (WimaWin*) dvec_data(wg.windows);
+	return wima_area_draw(win, windows[win].width, windows[win].height);
+}
+
+static WimaStatus wima_window_processEvent(WimaWindowHandle win, WimaEvent* event) {
+
+	WimaStatus status;
+
+	switch (event->type) {
+
+		case WIMA_EVENT_NONE:
+			status = WIMA_SUCCESS;
+			break;
+
+		case WIMA_EVENT_KEY:
+		{
+			WimaKeyInfo* info = &event->event.key;
+			status = wima_area_key(win, info->key, info->scancode, info->action, info->mods);
+			break;
+		}
+
+		case WIMA_EVENT_MOUSE_BTN:
+		{
+			WimaMouseBtnInfo* info = &event->event.mouse_btn;
+			status = wima_area_mouseBtn(win, info->button, info->action, info->mods);
+			break;
+		}
+
+		case WIMA_EVENT_MOUSE_POS:
+		{
+			WimaPosInfo* info = &event->event.pos;
+			// TODO: Check for entering an area.
+			status = wima_area_mousePos(win, info->x, info->y);
+			break;
+		}
+
+		case WIMA_EVENT_SCROLL:
+		{
+			WimaMouseScrollInfo* info = &event->event.mouse_scroll;
+			status = wima_area_scroll(win, info->xoffset, info->yoffset);
+			break;
+		}
+
+		case WIMA_EVENT_CHAR:
+		{
+			WimaCharInfo* info = &event->event.char_event;
+			status = wima_area_char(win, info->code, info->mods);
+			break;
+		}
+
+		case WIMA_EVENT_FILE_DROP:
+		{
+			DynaVector files = event->event.file_drop;
+			size_t len = dvec_len(files);
+			DynaString* strings = (DynaString*) dvec_data(files);
+
+			const char** names = malloc(len * sizeof(char*));
+			for (int i = 0; i < len; ++i) {
+
+				DynaString s = strings[i];
+				names[i] = dstr_str(s);
+			}
+
+			status = wima_area_fileDrop(win, len, names);
+
+			for (int i = 0; i < len; ++i) {
+				dstr_free(strings[i]);
+			}
+
+			dvec_free(files);
+
+			break;
+		}
+
+		case WIMA_EVENT_WIN_POS:
+		{
+			if (!wg.pos) {
+				status = WIMA_SUCCESS;
+			}
+			else {
+				WimaPosInfo* info = &event->event.pos;
+				status = wg.pos(win, info->x, info->y);
+			}
+
+			break;
+		}
+
+		case WIMA_EVENT_FB_SIZE:
+		{
+			if (!wg.fb_size) {
+				status = WIMA_SUCCESS;
+			}
+			else {
+				WimaSizeInfo* info = &event->event.size;
+				status = wg.fb_size(win, info->width, info->height);
+			}
+			break;
+		}
+
+		case WIMA_EVENT_WIN_SIZE:
+		{
+			if (!wg.win_size) {
+				status = WIMA_SUCCESS;
+			}
+			else {
+				WimaSizeInfo* info = &event->event.size;
+				status = wg.win_size(win, info->width, info->height);
+			}
+			break;
+		}
+
+		case WIMA_EVENT_WIN_ENTER:
+		{
+			if (!wg.enter) {
+				status = WIMA_SUCCESS;
+			}
+			else {
+				status = wg.enter(win, event->event.mouse_enter);
+			}
+			break;
+		}
+	}
+
+	return status;
+}
+
+WimaStatus wima_window_processEvents(WimaWindowHandle win) {
+
+	WimaStatus status = WIMA_SUCCESS;
+
+	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
+
+	WimaEvent* events = wins[win].events;
+	int numEvents = wins[win].numEvents;
+
+	for (int i = 0; i < numEvents; ++i) {
+
+		status = wima_window_processEvent(win, events + i);
+
+		if (status) {
+			wins[win].numEvents = 0;
+			return status;
+		}
+	}
+
+	wins[win].numEvents = 0;
+
+	return status;
 }
 
 WimaStatus wima_window_free(WimaWindowHandle win) {

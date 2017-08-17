@@ -118,18 +118,33 @@ WimaStatus wima_main() {
 		return WIMA_INIT_ERR;
 	}
 
-	while (!glfwWindowShouldClose(win)) {
+	if (glfwWindowShouldClose(win)) {
+		return WIMA_SUCCESS;
+	}
 
-		/* Render here */
-		glClear(GL_COLOR_BUFFER_BIT);
+	while (true) {
 
-		/* Swap front and back buffers */
+		// Get the window handle.
+		WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(win);
+
+		// Render here.
+		wima_window_draw(wwh);
+
+		// Swap front and back buffers.
 		glfwSwapBuffers(win);
 
-		/* Poll for and process events */
+		// Poll for events.
 		glfwWaitEvents();
-
 		win = glfwGetCurrentContext();
+
+		// Break if we should close.
+		if (glfwWindowShouldClose(win)) {
+			break;
+		}
+
+		// Process events.
+		wwh = WIMA_WINDOW_HANDLE(win);
+		wima_window_processEvents(wwh);
 	}
 
 	return WIMA_SUCCESS;
