@@ -30,6 +30,7 @@ project(wima C)
 
 # Necessary to suppress a useless warning with QtCreator.
 set(ignoreMe "${QT_QMAKE_EXECUTABLE}")
+set(ignoreMe "${CMAKE_CXX_COMPILER}")
 
 enable_testing()
 
