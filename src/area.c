@@ -108,7 +108,7 @@ WimaStatus wima_area_node_freeUserPointer(DynaTree areas, DynaNode node) {
 		free_user_ptr(user);
 	}
 
-
+	return WIMA_SUCCESS;
 }
 
 WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode node) {
