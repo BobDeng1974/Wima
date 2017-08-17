@@ -323,14 +323,8 @@ void wima_callback_windowClose(GLFWwindow* window) {
 
 	WindowCloseFunc close = wg.close;
 
-	if (!close) {
-		wima_window_free(wwh);
-		dvec_popAt(wg.windows, wwh);
-		return;
-	}
+	if (!close || close(wwh)) {
 
-	if (close(wwh)) {
-		glfwSetWindowShouldClose(window, 1);
 		wima_window_free(wwh);
 
 		if (wwh == dvec_len(wg.windows) - 1) {

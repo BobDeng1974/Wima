@@ -136,7 +136,7 @@ GLFWwindow* wima_window_glfw(WimaWindowHandle win) {
 
 WimaStatus wima_window_close(WimaWindowHandle wwh) {
 	glfwSetWindowShouldClose(wima_window_glfw(wwh), 1);
-	return wima_window_free(wwh);
+	return WIMA_SUCCESS;
 }
 
 WimaStatus wima_window_title(WimaWindowHandle wwh, const char* title) {
