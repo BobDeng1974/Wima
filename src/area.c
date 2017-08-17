@@ -258,6 +258,25 @@ WimaStatus wima_area_fileDrop(WimaWindowHandle win, int filec, const char* filev
 }
 
 WimaStatus wima_area_node_draw(DynaTree areas, DynaNode node, int width, int height) {
+
+	WimaStatus status;
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		// TODO: Put code to ensure it goes to the right one.
+	}
+	else {
+
+		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
+
+		AreaDrawFunc draw = regions[area->node.area.type].draw;
+
+		// The draw function is guaranteed to be non-null.
+		status = draw(wima_area_handle(area, node), width, height);
+	}
+
 	return WIMA_SUCCESS;
 }
 
