@@ -97,15 +97,15 @@ WimaStatus wima_area_node_freeUserPointer(DynaTree areas, DynaNode node) {
 		WimaRegion* regs = (WimaRegion*) dvec_data(wg.regions);
 
 		// Get the particular user function setter.
-		AreaUserPointerFreeFunc user_ptr_free = regs[reg].userPtrFreeFunc;
+		AreaFreeUserPointerFunc free_user_ptr = regs[reg].free_ptr;
 
 		// If the user didn't specify one, don't call it.
-		if (!user_ptr_free) {
+		if (!free_user_ptr) {
 			return WIMA_SUCCESS;
 		}
 
 		// Call the user function.
-		user_ptr_free(user);
+		free_user_ptr(user);
 	}
 
 
@@ -151,10 +151,10 @@ WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode
 		WimaRegion* regs = (WimaRegion*) dvec_data(wg.regions);
 
 		// Get the particular user function setter.
-		AreaUserPointerFunc user_ptr = regs[reg].userPtrFunc;
+		AreaGetUserPointerFunc get_user_ptr = regs[reg].get_ptr;
 
 		// If the user didn't specify one, don't call it.
-		if (!user_ptr) {
+		if (!get_user_ptr) {
 			return WIMA_SUCCESS;
 		}
 
@@ -167,7 +167,7 @@ WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode
 		wah.region = reg;
 
 		// Call the user function.
-		area->node.area.user = user_ptr(wah);
+		area->node.area.user = get_user_ptr(wah);
 	}
 
 	return status;

@@ -293,8 +293,8 @@ typedef enum wima_action {
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
-typedef void* (*AreaUserPointerFunc)(WimaAreaHandle);
-typedef void (*AreaUserPointerFreeFunc)(void*);
+typedef void* (*AreaGetUserPointerFunc)(WimaAreaHandle);
+typedef void (*AreaFreeUserPointerFunc)(void*);
 typedef WimaStatus (*AreaDrawFunc)(WimaAreaHandle, int, int);
 typedef WimaStatus (*AreaMouseEventFunc)(WimaAreaHandle, WimaMouseBtn, WimaAction, WimaMods);
 typedef WimaStatus (*AreaMousePosFunc)(WimaAreaHandle, int, int);
@@ -309,12 +309,12 @@ typedef WimaStatus (*WindowMouseEnterFunc)(WimaWindowHandle, bool);
 typedef WimaStatus (*WindowResizeFunc)(WimaWindowHandle, int, int);
 typedef WimaStatus (*WindowKeyFunc)(WimaWindowHandle, WimaKey, int, WimaAction, WimaMods);
 
-WimaStatus wima_region_register(WimaRegionHandle* wrh,       const char* name,
-                                AreaUserPointerFunc userPtr, AreaUserPointerFreeFunc userFree,
-                                AreaDrawFunc draw,           AreaMouseEventFunc mevent,
-                                AreaMousePosFunc mpos,       AreaMouseEnterFunc menter,
-                                AreaScrollEventFunc sevent,  AreaCharFunc cevent,
-                                AreaCharModFunc cmod,        AreaFileDropFunc fdrop);
+WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name,
+                                AreaGetUserPointerFunc userPtr, AreaFreeUserPointerFunc userFree,
+                                AreaDrawFunc draw,              AreaMouseEventFunc mevent,
+                                AreaMousePosFunc mpos,          AreaMouseEnterFunc menter,
+                                AreaScrollEventFunc sevent,     AreaCharFunc cevent,
+                                AreaCharModFunc cmod,           AreaFileDropFunc fdrop);
 void* wima_region_getUserPointer(WimaRegionHandle reg);
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 
