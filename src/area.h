@@ -92,7 +92,6 @@ DynaTree wima_area_areas(WimaWindowHandle win);
 WimaAreaHandle wima_area_handle(WimaAreaNode* area, DynaNode node);
 
 WimaStatus wima_area_draw(WimaWindowHandle win, int width, int height);
-WimaStatus wima_area_key(WimaWindowHandle win, WimaKey key, int scancode, WimaAction act, WimaMods mods);
 WimaStatus wima_area_mouseBtn(WimaWindowHandle win, WimaMouseBtn btn, WimaAction act, WimaMods mods);
 WimaStatus wima_area_mousePos(WimaWindowHandle win, int x, int y);
 WimaStatus wima_area_mouseEnter(WimaWindowHandle win, bool entered);

@@ -44,12 +44,12 @@
 
 extern WimaG wg;
 
-WimaStatus wima_region_register(WimaRegionHandle* wrh,   const char* name,
-                                AreaUserPointerFunc userPtr, AreaDrawFunc draw,
-                                AreaKeyEventFunc kevent,     AreaMouseEventFunc mevent,
-                                AreaMousePosFunc mpos, AreaMouseEnterFunc menter,       AreaScrollEventFunc sevent,
-                                AreaCharFunc cevent,         AreaCharModFunc cmod,
-                                AreaFileDropFunc fdrop)
+WimaStatus wima_region_register(WimaRegionHandle* wrh,       const char* name,
+                                AreaUserPointerFunc userPtr, AreaUserPointerFreeFunc userFree,
+                                AreaDrawFunc draw,           AreaMouseEventFunc mevent,
+                                AreaMousePosFunc mpos,       AreaMouseEnterFunc menter,
+                                AreaScrollEventFunc sevent,  AreaCharFunc cevent,
+                                AreaCharModFunc cmod,        AreaFileDropFunc fdrop)
 {
 	WimaRegion reg;
 
@@ -61,8 +61,8 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh,   const char* name,
 	reg.user = NULL;
 
 	reg.userPtrFunc = userPtr;
+	reg.userPtrFreeFunc = userFree;
 	reg.draw = draw;
-	reg.key_event = kevent;
 	reg.mouse_event = mevent;
 	reg.mouse_pos = mpos;
 	reg.mouse_enter = menter;

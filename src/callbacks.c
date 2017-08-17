@@ -72,17 +72,20 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 		exit(WIMA_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	if (wg.key) {
 
-	WimaKey wkey = (WimaKey) key;
-	WimaMods wmods = (WimaMods) mods;
-	WimaAction wact = (WimaAction) action;
+		WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
-	WimaStatus status = wima_area_key(wwh, wkey, scancode, wact, wmods);
+		WimaKey wkey = (WimaKey) key;
+		WimaMods wmods = (WimaMods) mods;
+		WimaAction wact = (WimaAction) action;
 
-	if (status) {
-		int idx = ((int) status) - 128;
-		wg.error(status, descs[idx]);
+		WimaStatus status = wg.key(wwh, wkey, scancode, wact, wmods);
+
+		if (status) {
+			int idx = ((int) status) - 128;
+			wg.error(status, descs[idx]);
+		}
 	}
 }
 

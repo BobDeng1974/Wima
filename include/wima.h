@@ -296,7 +296,6 @@ typedef enum wima_action {
 typedef void* (*AreaUserPointerFunc)(WimaAreaHandle);
 typedef void (*AreaUserPointerFreeFunc)(void*);
 typedef WimaStatus (*AreaDrawFunc)(WimaAreaHandle, int, int);
-typedef WimaStatus (*AreaKeyEventFunc)(WimaAreaHandle, WimaKey, int, WimaAction, WimaMods);
 typedef WimaStatus (*AreaMouseEventFunc)(WimaAreaHandle, WimaMouseBtn, WimaAction, WimaMods);
 typedef WimaStatus (*AreaMousePosFunc)(WimaAreaHandle, int, int);
 typedef WimaStatus (*AreaMouseEnterFunc)(WimaAreaHandle, bool);
@@ -308,10 +307,11 @@ typedef WimaStatus (*AreaFileDropFunc)(WimaAreaHandle, int, const char**);
 typedef void (*ErrorFunc)(WimaStatus, const char*);
 typedef WimaStatus (*WindowMouseEnterFunc)(WimaWindowHandle, bool);
 typedef WimaStatus (*WindowResizeFunc)(WimaWindowHandle, int, int);
+typedef WimaStatus (*WindowKeyFunc)(WimaWindowHandle, WimaKey, int, WimaAction, WimaMods);
 
 WimaStatus wima_region_register(WimaRegionHandle* wrh,       const char* name,
-                                AreaUserPointerFunc userPtr, AreaDrawFunc draw,
-                                AreaKeyEventFunc kevent,     AreaMouseEventFunc mevent,
+                                AreaUserPointerFunc userPtr, AreaUserPointerFreeFunc userFree,
+                                AreaDrawFunc draw,           AreaMouseEventFunc mevent,
                                 AreaMousePosFunc mpos,       AreaMouseEnterFunc menter,
                                 AreaScrollEventFunc sevent,  AreaCharFunc cevent,
                                 AreaCharModFunc cmod,        AreaFileDropFunc fdrop);
@@ -334,7 +334,8 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas);
 
 WimaStatus wima_init(const char* name,           ErrorFunc error,
-                     WindowMouseEnterFunc enter, WindowResizeFunc resize);
+                     WindowMouseEnterFunc enter, WindowResizeFunc resize,
+                     WindowKeyFunc key);
 WimaStatus wima_main();
 void wima_exit();
 

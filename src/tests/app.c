@@ -88,7 +88,7 @@ WimaStatus mouseCoordsDraw(WimaAreaHandle wah, int width, int height) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsKevent(WimaAreaHandle wah,
+WimaStatus mouseCoordsKevent(WimaWindowHandle wwh,
                              WimaKey key, int scancode,
                              WimaAction act, WimaMods mods)
 {
@@ -187,6 +187,10 @@ void* mouseCoordsUserPtr(WimaAreaHandle wah) {
 	return NULL;
 }
 
+void mouseCoordsUserPtrFree(void* ptr) {
+	return;
+}
+
 WimaStatus mouseCoordsMenter(WimaWindowHandle wwh, bool entered) {
 
 	if (entered) {
@@ -213,7 +217,8 @@ int main() {
 
 	// Initialize Wima and check for success.
 	WimaStatus status = wima_init("Test Wima App",   mouseCoordsError,
-	                              mouseCoordsMenter, mouseCoordsResize);
+	                              mouseCoordsMenter, mouseCoordsResize,
+	                              mouseCoordsKevent);
 	if (status != WIMA_SUCCESS) {
 		return status;
 	}
@@ -221,8 +226,8 @@ int main() {
 	// Register a region.
 	WimaRegionHandle region;
 	status = wima_region_register(&region,            "Mouse Coordinates",
-	                              mouseCoordsUserPtr, mouseCoordsDraw,
-	                              mouseCoordsKevent,  mouseCoordsMevent,
+	                              mouseCoordsUserPtr, mouseCoordsUserPtrFree,
+	                              mouseCoordsDraw,    mouseCoordsMevent,
 	                              mouseCoordsMpos,    mouseCoordsMenterArea,
 	                              mouseCoordsSevent,  mouseCoordsChar,
 	                              mouseCoordsCharMod, mouseCoordsFileDrop);
