@@ -249,12 +249,8 @@ WimaStatus wima_area_scroll(WimaWindowHandle win, int xoffset, int yoffset) {
 	return wima_area_node_scroll(wima_area_areas(win), dtree_root(), xoffset, yoffset);
 }
 
-WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code) {
-	return wima_area_node_char(wima_area_areas(win), dtree_root(), code);
-}
-
-WimaStatus wima_area_charMod(WimaWindowHandle win, unsigned int code, WimaMods mods) {
-	return wima_area_node_charMod(wima_area_areas(win), dtree_root(), code, mods);
+WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code, WimaMods mods) {
+	return wima_area_node_char(wima_area_areas(win), dtree_root(), code, mods);
 }
 
 WimaStatus wima_area_fileDrop(WimaWindowHandle win, int filec, const char* filev[]) {
@@ -391,7 +387,7 @@ WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int
 	return status;
 }
 
-WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code) {
+WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code, WimaMods mods) {
 
 	WimaStatus status;
 
@@ -408,31 +404,7 @@ WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code)
 		AreaCharFunc char_event = regions[area->node.area.type].char_event;
 
 		if (char_event) {
-			status = char_event(wima_area_handle(area, node), code);
-		}
-	}
-
-	return status;
-}
-
-WimaStatus wima_area_node_charMod(DynaTree areas, DynaNode node, unsigned int code, WimaMods mods) {
-
-	WimaStatus status;
-
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
-
-	if (area->type == WIMA_AREA_PARENT) {
-
-		// TODO: Put code to ensure it goes to the right one.
-	}
-	else {
-
-		WimaRegion* regions = (WimaRegion*) dvec_data(wg.regions);
-
-		AreaCharModFunc char_mod = regions[area->node.area.type].char_mod;
-
-		if (char_mod) {
-			status = char_mod(wima_area_handle(area, node), code, mods);
+			status = char_event(wima_area_handle(area, node), code, mods);
 		}
 	}
 

@@ -158,14 +158,7 @@ WimaStatus mouseCoordsSevent(WimaAreaHandle wah, int xoffset, int yoffset) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsChar(WimaAreaHandle wah, uint32_t code) {
-
-	printf("Char: %lc\n", code);
-
-	return WIMA_SUCCESS;
-}
-
-WimaStatus mouseCoordsCharMod(WimaAreaHandle wah, uint32_t code, WimaMods mods) {
+WimaStatus mouseCoordsChar(WimaAreaHandle wah, uint32_t code, WimaMods mods) {
 
 	printf("Char: %lc; Mods: ", code);
 	printMods(mods);
@@ -236,8 +229,7 @@ int main() {
 	                              mouseCoordsDraw,       mouseCoordsKevent,
 	                              mouseCoordsMevent,     mouseCoordsMpos,
 	                              mouseCoordsMenterArea, mouseCoordsSevent,
-	                              mouseCoordsChar,       mouseCoordsCharMod,
-	                              mouseCoordsFileDrop);
+	                              mouseCoordsChar,       mouseCoordsFileDrop);
 	if (status) {
 		return status;
 	}

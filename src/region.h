@@ -54,7 +54,6 @@ typedef struct wima_region {
 	AreaScrollEventFunc scroll_event;
 
 	AreaCharFunc char_event;
-	AreaCharModFunc char_mod;
 
 	AreaFileDropFunc file_drop;
 

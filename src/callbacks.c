@@ -150,19 +150,7 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 }
 
 void wima_callback_char(GLFWwindow* window, unsigned int code) {
-
-	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
-	}
-
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
-
-	WimaStatus status = wima_area_char(wwh, code);
-
-	if (status) {
-		int idx = ((int) status) - 128;
-		wg.error(status, descs[idx]);
-	}
+	wima_callback_charMod(window, code, WIMA_MOD_NONE);
 }
 
 void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
@@ -173,7 +161,7 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
-	WimaStatus status = wima_area_charMod(wwh, code, (WimaMods) mods);
+	WimaStatus status = wima_area_char(wwh, code, (WimaMods) mods);
 
 	if (status) {
 		int idx = ((int) status) - 128;

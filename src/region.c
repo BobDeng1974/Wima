@@ -49,8 +49,7 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name
                                 AreaDrawFunc draw,              AreaKeyFunc key,
                                 AreaMouseEventFunc mevent,      AreaMousePosFunc mpos,
                                 AreaMouseEnterFunc menter,      AreaScrollEventFunc sevent,
-                                AreaCharFunc cevent,            AreaCharModFunc cmod,
-                                AreaFileDropFunc fdrop)
+                                AreaCharFunc cevent,            AreaFileDropFunc fdrop)
 {
 	WimaRegion reg;
 
@@ -70,7 +69,6 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name
 	reg.mouse_enter = menter;
 	reg.scroll_event = sevent;
 	reg.char_event = cevent;
-	reg.char_mod = cmod;
 	reg.file_drop = fdrop;
 
 	size_t idx = dvec_len(wg.regions);
