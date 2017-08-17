@@ -57,6 +57,8 @@ typedef struct wima_window {
 
 } WimaWin;
 
+WimaStatus wima_window_free(WimaWindowHandle win);
+
 #define WIMA_WINDOW_HANDLE(win) (WimaWindowHandle) (long) glfwGetWindowUserPointer(win)
 
 #endif // WIMA_WINDOW_H

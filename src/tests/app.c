@@ -208,6 +208,11 @@ WimaStatus mouseCoordsResize(WimaWindowHandle wwh, int width, int height) {
 	return WIMA_SUCCESS;
 }
 
+bool mouseCoordsClose(WimaWindowHandle wwh) {
+	printf("Closing Window[%u]\n", wwh);
+	return true;
+}
+
 void mouseCoordsError(WimaStatus status, const char* desc) {
 	fprintf(stderr, "Wima returned the following error:\n    Error[%d]: %s\n", status, desc);
 	exit(status);
@@ -217,8 +222,9 @@ int main() {
 
 	// Initialize Wima and check for success.
 	WimaStatus status = wima_init("Test Wima App",   mouseCoordsError,
-	                              mouseCoordsMenter, mouseCoordsResize,
-	                              NULL,              mouseCoordsKevent);
+	                              mouseCoordsMenter, NULL,
+	                              mouseCoordsResize, NULL,
+	                              mouseCoordsKevent, mouseCoordsClose);
 	if (status != WIMA_SUCCESS) {
 		return status;
 	}

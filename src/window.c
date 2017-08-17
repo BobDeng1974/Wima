@@ -116,7 +116,7 @@ GLFWwindow* wima_window_glfw(WimaWindowHandle win) {
 
 WimaStatus wima_window_close(WimaWindowHandle wwh) {
 	glfwSetWindowShouldClose(wima_window_glfw(wwh), 1);
-	return WIMA_SUCCESS;
+	return wima_window_free(wwh);
 }
 
 WimaStatus wima_window_title(WimaWindowHandle wwh, const char* title) {
@@ -225,4 +225,13 @@ WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas) {
 	}
 
 	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_window_free(WimaWindowHandle win) {
+
+	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
+
+	dstr_free(wins[win].name);
+
+	return wima_areas_free(wins[win].areas);
 }

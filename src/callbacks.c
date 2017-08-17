@@ -62,33 +62,6 @@ const char* descs[] = { "Allocation failed",
                         "Clipboard contents were invalid"
 };
 
-void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
-
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, GLFW_TRUE);
-	}
-
-	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
-	}
-
-	if (wg.key) {
-
-		WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
-
-		WimaKey wkey = (WimaKey) key;
-		WimaMods wmods = (WimaMods) mods;
-		WimaAction wact = (WimaAction) action;
-
-		WimaStatus status = wg.key(wwh, wkey, scancode, wact, wmods);
-
-		if (status) {
-			int idx = ((int) status) - 128;
-			wg.error(status, descs[idx]);
-		}
-	}
-}
-
 void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	if (!wg.name) {
@@ -234,6 +207,28 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 	}
 }
 
+void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
+
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+
+	WindowPosFunc pos = wg.pos;
+
+	if (!pos) {
+		return;
+	}
+
+	WimaStatus status = pos(wwh, xpos, ypos);
+
+	if (status) {
+		int idx = ((int) status) - 128;
+		wg.error(status, descs[idx]);
+	}
+}
+
 void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
 	if (!wg.name) {
@@ -292,6 +287,59 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 			int idx = ((int) status) - 128;
 			wg.error(status, descs[idx]);
 		}
+	}
+}
+
+void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
+
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+		glfwSetWindowShouldClose(window, GLFW_TRUE);
+	}
+
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
+	if (wg.key) {
+
+		WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+
+		WimaKey wkey = (WimaKey) key;
+		WimaMods wmods = (WimaMods) mods;
+		WimaAction wact = (WimaAction) action;
+
+		WimaStatus status = wg.key(wwh, wkey, scancode, wact, wmods);
+
+		if (status) {
+			int idx = ((int) status) - 128;
+			wg.error(status, descs[idx]);
+		}
+	}
+}
+
+void wima_callback_windowClose(GLFWwindow* window) {
+
+	if (!wg.name) {
+		exit(WIMA_INVALID_STATE);
+	}
+
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+
+	WindowCloseFunc close = wg.close;
+
+	if (!close) {
+		wima_window_free(wwh);
+		dvec_popAt(wg.windows, wwh);
+		return;
+	}
+
+	if (close(wwh)) {
+		glfwSetWindowShouldClose(window, 1);
+		wima_window_free(wwh);
+		dvec_popAt(wg.windows, wwh);
+	}
+	else {
+		glfwSetWindowShouldClose(window, 0);
 	}
 }
 
