@@ -101,11 +101,8 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 		if (!wins[i].window) {
 
 			done = true;
-
 			memmove(&wins[i].window, &wwin, sizeof(WimaWin));
-
 			idx = i;
-
 			break;
 		}
 	}
