@@ -8,5 +8,5 @@ cd "$dir"
 mkdir "$build"
 cd "$build"
 
-cmake -GNinja -DCMAKE_C_COMPILER=clang ".."
+cmake -GNinja ".."
 ninja
