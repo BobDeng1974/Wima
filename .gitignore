@@ -33,3 +33,4 @@
 # Image files
 *.svg
 *.png
+build/
