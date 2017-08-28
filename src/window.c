@@ -56,6 +56,12 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	WimaWin wwin;
 
 	wwin.areas = NULL;
+	wwin.numEvents = 0;
+	wwin.user = NULL;
+	wwin.fbwidth = 0;
+	wwin.fbheight = 0;
+	wwin.width = 0;
+	wwin.height = 0;
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
