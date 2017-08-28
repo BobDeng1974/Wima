@@ -151,7 +151,16 @@ WimaStatus wima_window_close(WimaWindowHandle wwh) {
 }
 
 WimaStatus wima_window_title(WimaWindowHandle wwh, const char* title) {
+
 	glfwSetWindowTitle(wima_window_glfw(wwh), title);
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+
+	dstr_free(win->name);
+	if (dstr_create(&win->name, title)) {
+		return WIMA_WINDOW_ERR;
+	}
+
 	return WIMA_SUCCESS;
 }
 
