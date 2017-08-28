@@ -125,6 +125,15 @@ WimaStatus wima_main() {
 	// Main event loop.
 	while (true) {
 
+		// Get the window handle.
+		WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(win);
+
+		// Render here.
+		wima_window_draw(wwh);
+
+		// Swap front and back buffers.
+		glfwSwapBuffers(win);
+
 		// Poll for events.
 		glfwWaitEvents();
 		win = glfwGetCurrentContext();
@@ -135,19 +144,13 @@ WimaStatus wima_main() {
 		}
 
 		// Get the window handle.
-		WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(win);
+		wwh = WIMA_WINDOW_HANDLE(win);
 
 		// Process events and check for error.
 		WimaStatus status = wima_window_processEvents(wwh);
 		if (status) {
 			wg.error(status, "Wima encountered an error processing events.");
 		}
-
-		// Render here.
-		wima_window_draw(wwh);
-
-		// Swap front and back buffers.
-		glfwSwapBuffers(win);
 	}
 
 	return WIMA_SUCCESS;
