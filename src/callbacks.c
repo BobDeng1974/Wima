@@ -76,14 +76,13 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 	WimaWin* wwin = (WimaWin*) dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		printf("Data null\n");
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->numEvents;
 
 	// If we've already reached our max.
-	if (numEvents == WIMA_MAX_EVENTS) {
+	if (numEvents >= WIMA_MAX_EVENTS) {
 
 		// Drop the event.
 		return;
@@ -114,14 +113,13 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	WimaWin* wwin = (WimaWin*) dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		printf("Data null\n");
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->numEvents;
 
 	// If we've already reached our max.
-	if (numEvents == WIMA_MAX_EVENTS) {
+	if (numEvents >= WIMA_MAX_EVENTS) {
 
 		// Drop the event.
 		return;
@@ -153,14 +151,13 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 	WimaWin* wwin = (WimaWin*) dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		printf("Data null\n");
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->numEvents;
 
 	// If we've already reached our max.
-	if (numEvents == WIMA_MAX_EVENTS) {
+	if (numEvents >= WIMA_MAX_EVENTS) {
 
 		// Drop the event.
 		return;
@@ -191,14 +188,13 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 	WimaWin* wwin = (WimaWin*) dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		printf("Data null\n");
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->numEvents;
 
 	// If we've already reached our max.
-	if (numEvents == WIMA_MAX_EVENTS) {
+	if (numEvents >= WIMA_MAX_EVENTS) {
 
 		// Drop the event.
 		return;
@@ -227,14 +223,13 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
 	WimaWin* wwin = (WimaWin*) dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		printf("Data null\n");
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->numEvents;
 
 	// If we've already reached our max.
-	if (numEvents == WIMA_MAX_EVENTS) {
+	if (numEvents >= WIMA_MAX_EVENTS) {
 
 		// Drop the event.
 		return;
@@ -261,14 +256,13 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 
 	WimaWin* wwin = (WimaWin*) dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		printf("Data null\n");
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->numEvents;
 
 	// If we've already reached our max.
-	if (numEvents == WIMA_MAX_EVENTS) {
+	if (numEvents >= WIMA_MAX_EVENTS) {
 
 		// Drop the event.
 		return;
@@ -320,14 +314,13 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 	WimaWin* wwin = (WimaWin*) dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		printf("Data null\n");
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->numEvents;
 
 	// If we've already reached our max.
-	if (numEvents == WIMA_MAX_EVENTS) {
+	if (numEvents >= WIMA_MAX_EVENTS) {
 
 		// Drop the event.
 		return;
@@ -351,14 +344,13 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 
 	WimaWin* wwin = (WimaWin*) dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		printf("Data null\n");
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->numEvents;
 
 	// If we've already reached our max.
-	if (numEvents == WIMA_MAX_EVENTS) {
+	if (numEvents >= WIMA_MAX_EVENTS) {
 
 		// Drop the event.
 		return;
@@ -385,17 +377,16 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
 	WimaWin* wwin = (WimaWin*) dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		printf("Data null\n");
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
-	wwin[wwh].fbwidth = width;
-	wwin[wwh].fbheight = height;
+	wwin->fbwidth = width;
+	wwin->fbheight = height;
 
 	int numEvents = wwin->numEvents;
 
 	// If we've already reached our max.
-	if (numEvents == WIMA_MAX_EVENTS) {
+	if (numEvents >= WIMA_MAX_EVENTS) {
 
 		// Drop the event.
 		return;
@@ -422,7 +413,6 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
 	WimaWin* wwin = (WimaWin*) dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		printf("Data null\n");
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
@@ -432,7 +422,7 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 	int numEvents = wwin->numEvents;
 
 	// If we've already reached our max.
-	if (numEvents == WIMA_MAX_EVENTS) {
+	if (numEvents >= WIMA_MAX_EVENTS) {
 
 		// Drop the event.
 		return;
@@ -474,7 +464,6 @@ void wima_callback_windowClose(GLFWwindow* window) {
 
 			WimaWin* wwin = (WimaWin*) dvec_get(wg.windows, wwh);
 			if (!wwin) {
-				printf("Data null\n");
 				wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 			}
 
