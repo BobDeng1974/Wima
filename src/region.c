@@ -97,9 +97,9 @@ void* wima_region_getUserPointer(WimaRegionHandle reg) {
 		return NULL;
 	}
 
-	WimaRegion* regs = (WimaRegion*) dvec_data(wg.regions);
+	WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
 
-	return regs[reg].user;
+	return region->user;
 }
 
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr) {
@@ -112,9 +112,9 @@ WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr) {
 		return WIMA_INVALID_PARAM;
 	}
 
-	WimaRegion* regs = (WimaRegion*) dvec_data(wg.regions);
+	WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
 
-	regs[reg].user = ptr;
+	region->user = ptr;
 
 	return WIMA_SUCCESS;
 }

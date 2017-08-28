@@ -49,6 +49,6 @@ typedef struct wima_wksp {
 
 } WimaWksp;
 
-bool wima_workspace_nodeValid(WimaWksp* wksp, DynaNode n);
+bool wima_workspace_nodeValid(WimaWorkspaceHandle wwh, DynaNode n);
 
 #endif // WIMA_WORKSPACE_H

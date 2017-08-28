@@ -51,7 +51,7 @@
 
 extern WimaG wg;
 
-WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
+WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) {
 
 	WimaWin wwin;
 
@@ -61,9 +61,9 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
-	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
+	WimaWksp* wksp = (WimaWksp*) dvec_get(wg.workspaces, wksph);
 
-	const char* name = dstr_str(wksps[wksp].name);
+	const char* name = dstr_str(wksp->name);
 
 	if (dstr_create(&wwin.name, name)) {
 		return WIMA_WINDOW_ERR;
@@ -94,14 +94,15 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 
 	bool done = false;
 	size_t len = dvec_len(wg.windows);
-	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
 
 	for (int i = 0; i < len; ++i) {
 
-		if (!wins[i].window) {
+		WimaWin* winptr = (WimaWin*) dvec_get(wg.windows, i);
+
+		if (!winptr->window) {
 
 			done = true;
-			memmove(&wins[i].window, &wwin, sizeof(WimaWin));
+			memmove(&winptr->window, &wwin, sizeof(WimaWin));
 			idx = i;
 			break;
 		}
@@ -116,7 +117,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 		}
 	}
 
-	WimaStatus status = wima_window_areas_replace(idx, wksp);
+	WimaStatus status = wima_window_areas_replace(idx, wksph);
 	if (status) {
 		return status;
 	}
@@ -131,9 +132,9 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksp) {
 	return WIMA_SUCCESS;
 }
 
-GLFWwindow* wima_window_glfw(WimaWindowHandle win) {
-	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
-	return wins[win].window;
+GLFWwindow* wima_window_glfw(WimaWindowHandle wwh) {
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	return win->window;
 }
 
 WimaStatus wima_window_close(WimaWindowHandle wwh) {
@@ -148,30 +149,30 @@ WimaStatus wima_window_title(WimaWindowHandle wwh, const char* title) {
 	return WIMA_SUCCESS;
 }
 
-void* wima_window_getUserPointer(WimaWindowHandle win) {
+void* wima_window_getUserPointer(WimaWindowHandle wwh) {
 
-	if (win >= dvec_len(wg.windows)) {
+	if (wwh >= dvec_len(wg.windows)) {
 		return NULL;
 	}
 
-	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 
-	return wins[win].user;
+	return win->user;
 }
 
-WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user) {
+WimaStatus wima_window_setUserPointer(WimaWindowHandle wwh, void* user) {
 
 	if (!wg.windows) {
 		return WIMA_INVALID_STATE;
 	}
 
-	if (win >= dvec_len(wg.windows)) {
+	if (wwh >= dvec_len(wg.windows)) {
 		return WIMA_INVALID_PARAM;
 	}
 
-	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 
-	wins[win].user = user;
+	win->user = user;
 
 	return WIMA_SUCCESS;
 }
@@ -180,8 +181,8 @@ DynaTree wima_window_areas(WimaWindowHandle wwh) {
 
 	DynaTree areas;
 
-	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
-	DynaTree winareas = wins[wwh].areas;
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	DynaTree winareas = win->areas;
 
 	int nodes = dtree_nodes(winareas);
 
@@ -199,7 +200,7 @@ DynaTree wima_window_areas(WimaWindowHandle wwh) {
 	return areas;
 }
 
-WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle wksp) {
+WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle wksph) {
 
 	size_t regionsTypesLen = dvec_len(wg.regions);
 	size_t wkspTypesLen = dvec_len(wg.workspaces);
@@ -208,8 +209,8 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 		return WIMA_INVALID_STATE;
 	}
 
-	WimaWksp* wksps = (WimaWksp*) dvec_data(wg.workspaces);
-	DynaTree regs = wksps[wksp].regions;
+	WimaWksp* wksp = (WimaWksp*) dvec_get(wg.workspaces, wksph);
+	DynaTree regs = wksp->regions;
 
 	DynaNode root = dtree_root();
 
@@ -217,43 +218,43 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 		return WIMA_WINDOW_ERR;
 	}
 
-	WimaWin* windows = (WimaWin*) dvec_data(wg.windows);
+	WimaWin* window = (WimaWin*) dvec_get(wg.windows, wwh);
 
-	if (!windows[wwh].areas) {
-		if (dtree_create(&windows[wwh].areas, dtree_nodes(regs), sizeof(WimaAreaNode))) {
+	if (!window->areas) {
+		if (dtree_create(&window[wwh].areas, dtree_nodes(regs), sizeof(WimaAreaNode))) {
 			return WIMA_WINDOW_ERR;
 		}
 	}
 
-	if (dtree_copy(windows[wwh].areas, regs)) {
+	if (dtree_copy(window[wwh].areas, regs)) {
 		return WIMA_WINDOW_ERR;
 	}
 
-	WimaStatus status = wima_area_node_setData(wwh, windows[wwh].areas, root);
+	WimaStatus status = wima_area_node_setData(wwh, window[wwh].areas, root);
 
 	return status;
 }
 
 WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas) {
 
-	WimaWin* windows = (WimaWin*) dvec_data(wg.windows);
+	WimaWin* window = (WimaWin*) dvec_get(wg.windows, wwh);
 
-	if (!windows[wwh].areas) {
-		if (dtree_create(&windows[wwh].areas, dtree_nodes(areas), sizeof(WimaAreaNode))) {
+	if (!window->areas) {
+		if (dtree_create(&window->areas, dtree_nodes(areas), sizeof(WimaAreaNode))) {
 			return WIMA_WINDOW_ERR;
 		}
 	}
 
-	if (dtree_copy(windows[wwh].areas, areas)) {
+	if (dtree_copy(window->areas, areas)) {
 		return WIMA_WINDOW_ERR;
 	}
 
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_window_draw(WimaWindowHandle win) {
-	WimaWin* windows = (WimaWin*) dvec_data(wg.windows);
-	return wima_area_draw(win, windows[win].width, windows[win].height);
+WimaStatus wima_window_draw(WimaWindowHandle wwh) {
+	WimaWin* window = (WimaWin*) dvec_get(wg.windows, wwh);
+	return wima_area_draw(wwh, window->width, window->height);
 }
 
 static WimaStatus wima_window_processEvent(WimaWindowHandle win, WimaEvent* event) {
@@ -306,19 +307,21 @@ static WimaStatus wima_window_processEvent(WimaWindowHandle win, WimaEvent* even
 		{
 			DynaVector files = event->event.file_drop;
 			size_t len = dvec_len(files);
-			DynaString* strings = (DynaString*) dvec_data(files);
 
 			const char** names = malloc(len * sizeof(char*));
+
 			for (int i = 0; i < len; ++i) {
 
-				DynaString s = strings[i];
-				names[i] = dstr_str(s);
+				DynaString* s = (DynaString*) dvec_get(files, i);
+
+				names[i] = dstr_str(*s);
 			}
 
 			status = wima_area_fileDrop(win, len, names);
 
 			for (int i = 0; i < len; ++i) {
-				dstr_free(strings[i]);
+				DynaString* s = (DynaString*) dvec_get(files, i);
+				dstr_free(*s);
 			}
 
 			dvec_free(files);
@@ -378,35 +381,35 @@ static WimaStatus wima_window_processEvent(WimaWindowHandle win, WimaEvent* even
 	return status;
 }
 
-WimaStatus wima_window_processEvents(WimaWindowHandle win) {
+WimaStatus wima_window_processEvents(WimaWindowHandle wwh) {
 
 	WimaStatus status = WIMA_SUCCESS;
 
-	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 
-	WimaEvent* events = wins[win].events;
-	int numEvents = wins[win].numEvents;
+	WimaEvent* events = win->events;
+	int numEvents = win->numEvents;
 
 	for (int i = 0; i < numEvents; ++i) {
 
-		status = wima_window_processEvent(win, events + i);
+		status = wima_window_processEvent(wwh, events + i);
 
 		if (status) {
-			wins[win].numEvents = 0;
+			win->numEvents = 0;
 			return status;
 		}
 	}
 
-	wins[win].numEvents = 0;
+	win->numEvents = 0;
 
 	return status;
 }
 
-WimaStatus wima_window_free(WimaWindowHandle win) {
+WimaStatus wima_window_free(WimaWindowHandle wwh) {
 
-	WimaWin* wins = (WimaWin*) dvec_data(wg.windows);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 
-	dstr_free(wins[win].name);
+	dstr_free(win->name);
 
-	return wima_areas_free(wins[win].areas);
+	return wima_areas_free(win->areas);
 }
