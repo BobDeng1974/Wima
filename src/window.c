@@ -135,6 +135,11 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 
 	glfwMakeContextCurrent(win);
 
+	if (!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+		glfwTerminate();
+		return -1;
+	}
+
 	return WIMA_SUCCESS;
 }
 
