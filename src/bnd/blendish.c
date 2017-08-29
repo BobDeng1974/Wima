@@ -27,13 +27,20 @@
 
 #include <nanovg.h>
 
+#include "../global.h"
+
+#include "theme.h"
 #include "blendish.h"
 
+extern WimaG wg;
+extern WimaTheme wima_initial_theme;
+
 #ifdef _MSC_VER
-    #pragma warning (disable: 4996) // Switch off security warnings
-    #pragma warning (disable: 4100) // Switch off unreferenced formal parameter warnings
-    #pragma warning (disable: 4244)
-    #pragma warning (disable: 4305)
+
+#pragma warning (disable: 4996) // Switch off security warnings
+#pragma warning (disable: 4100) // Switch off unreferenced formal parameter warnings
+#pragma warning (disable: 4244)
+#pragma warning (disable: 4305)
 
 #include <float.h>
 
@@ -58,104 +65,13 @@ static double bnd_fmax ( double a, double b )
 }
 
 #else
-    #define bnd_fminf(a, b) fminf(a, b)
-    #define bnd_fmaxf(a, b) fmaxf(a, b)
-    #define bnd_fmin(a, b) fmin(a, b)
-    #define bnd_fmax(a, b) fmax(a, b)
+
+#define bnd_fminf(a, b) fminf(a, b)
+#define bnd_fmaxf(a, b) fmaxf(a, b)
+#define bnd_fmin(a, b) fmin(a, b)
+#define bnd_fmax(a, b) fmax(a, b)
+
 #endif
-
-////////////////////////////////////////////////////////////////////////////////
-
-// default text size
-#define BND_LABEL_FONT_SIZE 13
-
-// default text padding in inner box
-#define BND_PAD_LEFT 8
-#define BND_PAD_RIGHT 8
-
-// label: value separator string
-#define BND_LABEL_SEPARATOR ": "
-
-// alpha intensity of transparent items (0xa4)
-#define BND_TRANSPARENT_ALPHA 0.643
-
-// shade intensity of beveled panels
-#define BND_BEVEL_SHADE 30
-// shade intensity of beveled insets
-#define BND_INSET_BEVEL_SHADE 30
-// shade intensity of hovered inner boxes
-#define BND_HOVER_SHADE 15
-// shade intensity of splitter bevels
-#define BND_SPLITTER_SHADE 100
-
-// width of icon sheet
-#define BND_ICON_SHEET_WIDTH 602
-// height of icon sheet
-#define BND_ICON_SHEET_HEIGHT 640
-// gridsize of icon sheet in both dimensions
-#define BND_ICON_SHEET_GRID 21
-// offset of first icon tile relative to left border
-#define BND_ICON_SHEET_OFFSET_X 5
-// offset of first icon tile relative to top border
-#define BND_ICON_SHEET_OFFSET_Y 10
-// resolution of single icon
-#define BND_ICON_SHEET_RES 16
-
-// size of number field arrow
-#define BND_NUMBER_ARROW_SIZE 4
-
-// default text color
-#define BND_COLOR_TEXT {{{ 0,0,0,1 }}}
-// default highlighted text color
-#define BND_COLOR_TEXT_SELECTED {{{ 1,1,1,1 }}}
-
-// radius of tool button
-#define BND_TOOL_RADIUS 4
-
-// radius of option button
-#define BND_OPTION_RADIUS 4
-// width of option button checkbox
-#define BND_OPTION_WIDTH 14
-// height of option button checkbox
-#define BND_OPTION_HEIGHT 15
-
-// radius of text field
-#define BND_TEXT_RADIUS 4
-
-// radius of number button
-#define BND_NUMBER_RADIUS 10
-
-// radius of menu popup
-#define BND_MENU_RADIUS 3
-// feather of menu popup shadow
-#define BND_SHADOW_FEATHER 12
-// alpha of menu popup shadow
-#define BND_SHADOW_ALPHA 0.5
-
-// radius of scrollbar
-#define BND_SCROLLBAR_RADIUS 7
-// shade intensity of active scrollbar
-#define BND_SCROLLBAR_ACTIVE_SHADE 15
-
-// max glyphs for position testing
-#define BND_MAX_GLYPHS 1024
-
-// max rows for position testing
-#define BND_MAX_ROWS 32
-
-// text distance from bottom
-#define BND_TEXT_PAD_DOWN 7
-
-// stroke width of wire outline
-#define BND_NODE_WIRE_OUTLINE_WIDTH 4
-// stroke width of wire
-#define BND_NODE_WIRE_WIDTH 2
-// radius of node box
-#define BND_NODE_RADIUS 8
-// feather of node title text
-#define BND_NODE_TITLE_FEATHER 1
-// size of node title arrow
-#define BND_NODE_ARROW_SIZE 9
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -165,162 +81,12 @@ float bnd_clamp(float v, float mn, float mx) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// the initial theme
-static BNDtheme bnd_theme = {
-    // backgroundColor
-    {{{ 0.447, 0.447, 0.447, 1.0 }}},
-    // regularTheme
-    {
-        {{{ 0.098,0.098,0.098,1 }}}, // color_outline
-        {{{ 0.098,0.098,0.098,1 }}}, // color_item
-        {{{ 0.6,0.6,0.6,1 }}}, // color_inner
-        {{{ 0.392,0.392,0.392,1 }}}, // color_inner_selected
-        BND_COLOR_TEXT, // color_text
-        BND_COLOR_TEXT_SELECTED, // color_text_selected
-        0, // shade_top
-        0, // shade_down
-    },
-    // toolTheme
-    {
-        {{{ 0.098,0.098,0.098,1 }}}, // color_outline
-        {{{ 0.098,0.098,0.098,1 }}}, // color_item
-        {{{ 0.6,0.6,0.6,1 }}}, // color_inner
-        {{{ 0.392,0.392,0.392,1 }}}, // color_inner_selected
-        BND_COLOR_TEXT, // color_text
-        BND_COLOR_TEXT_SELECTED, // color_text_selected
-        15, // shade_top
-        -15, // shade_down
-    },
-    // radioTheme
-    {
-        {{{ 0,0,0,1 }}}, // color_outline
-        {{{ 1,1,1,1 }}}, // color_item
-        {{{ 0.275,0.275,0.275,1 }}}, // color_inner
-        {{{ 0.337,0.502,0.761,1 }}}, // color_inner_selected
-        BND_COLOR_TEXT_SELECTED, // color_text
-        BND_COLOR_TEXT, // color_text_selected
-        15, // shade_top
-        -15, // shade_down
-    },
-    // textFieldTheme
-    {
-        {{{ 0.098,0.098,0.098,1 }}}, // color_outline
-        {{{ 0.353, 0.353, 0.353,1 }}}, // color_item
-        {{{ 0.6, 0.6, 0.6,1 }}}, // color_inner
-        {{{ 0.6, 0.6, 0.6,1 }}}, // color_inner_selected
-        BND_COLOR_TEXT, // color_text
-        BND_COLOR_TEXT_SELECTED, // color_text_selected
-        0, // shade_top
-        25, // shade_down
-    },
-    // optionTheme
-    {
-        {{{ 0,0,0,1 }}}, // color_outline
-        {{{ 1,1,1,1 }}}, // color_item
-        {{{ 0.275,0.275,0.275,1 }}}, // color_inner
-        {{{ 0.275,0.275,0.275,1 }}}, // color_inner_selected
-        BND_COLOR_TEXT, // color_text
-        BND_COLOR_TEXT_SELECTED, // color_text_selected
-        15, // shade_top
-        -15, // shade_down
-    },
-    // choiceTheme
-    {
-        {{{ 0,0,0,1 }}}, // color_outline
-        {{{ 1,1,1,1 }}}, // color_item
-        {{{ 0.275,0.275,0.275,1 }}}, // color_inner
-        {{{ 0.275,0.275,0.275,1 }}}, // color_inner_selected
-        BND_COLOR_TEXT_SELECTED, // color_text
-        {{{ 0.8,0.8,0.8,1 }}}, // color_text_selected
-        15, // shade_top
-        -15, // shade_down
-    },
-    // numberFieldTheme
-    {
-        {{{ 0.098,0.098,0.098,1 }}}, // color_outline
-        {{{ 0.353, 0.353, 0.353,1 }}}, // color_item
-        {{{ 0.706, 0.706, 0.706,1 }}}, // color_inner
-        {{{ 0.6, 0.6, 0.6,1 }}}, // color_inner_selected
-        BND_COLOR_TEXT, // color_text
-        BND_COLOR_TEXT_SELECTED, // color_text_selected
-        -20, // shade_top
-        0, // shade_down
-    },
-    // sliderTheme
-    {
-        {{{ 0.098,0.098,0.098,1 }}}, // color_outline
-        {{{ 0.502,0.502,0.502,1 }}}, // color_item
-        {{{ 0.706, 0.706, 0.706,1 }}}, // color_inner
-        {{{ 0.6, 0.6, 0.6,1 }}}, // color_inner_selected
-        BND_COLOR_TEXT, // color_text
-        BND_COLOR_TEXT_SELECTED, // color_text_selected
-        -20, // shade_top
-        0, // shade_down
-    },
-    // scrollBarTheme
-    {
-        {{{ 0.196,0.196,0.196,1 }}}, // color_outline
-        {{{ 0.502,0.502,0.502,1 }}}, // color_item
-        {{{ 0.314, 0.314, 0.314,0.706 }}}, // color_inner
-        {{{ 0.392, 0.392, 0.392,0.706 }}}, // color_inner_selected
-        BND_COLOR_TEXT, // color_text
-        BND_COLOR_TEXT_SELECTED, // color_text_selected
-        5, // shade_top
-        -5, // shade_down
-    },
-    // tooltipTheme
-    {
-        {{{ 0,0,0,1 }}}, // color_outline
-        {{{ 0.392,0.392,0.392,1 }}}, // color_item
-        {{{ 0.098, 0.098, 0.098, 0.902 }}}, // color_inner
-        {{{ 0.176, 0.176, 0.176, 0.902 }}}, // color_inner_selected
-        {{{ 0.627, 0.627, 0.627, 1 }}}, // color_text
-        BND_COLOR_TEXT_SELECTED, // color_text_selected
-        0, // shade_top
-        0, // shade_down
-    },
-    // menuTheme
-    {
-        {{{ 0,0,0,1 }}}, // color_outline
-        {{{ 0.392,0.392,0.392,1 }}}, // color_item
-        {{{ 0.098, 0.098, 0.098, 0.902 }}}, // color_inner
-        {{{ 0.176, 0.176, 0.176, 0.902 }}}, // color_inner_selected
-        {{{ 0.627, 0.627, 0.627, 1 }}}, // color_text
-        BND_COLOR_TEXT_SELECTED, // color_text_selected
-        0, // shade_top
-        0, // shade_down
-    },
-    // menuItemTheme
-    {
-        {{{ 0,0,0,1 }}}, // color_outline
-        {{{ 0.675,0.675,0.675,0.502 }}}, // color_item
-        {{{ 0,0,0,0 }}}, // color_inner
-        {{{ 0.337,0.502,0.761,1 }}}, // color_inner_selected
-        BND_COLOR_TEXT_SELECTED, // color_text
-        BND_COLOR_TEXT, // color_text_selected
-        38, // shade_top
-        0, // shade_down
-    },
-    // nodeTheme
-    {
-        {{{ 0.945,0.345,0,1 }}}, // nodeSelectedColor
-        {{{ 0,0,0,1 }}}, // wiresColor
-        {{{ 0.498,0.439,0.439,1 }}}, // textSelectedColor
-        {{{ 1,0.667,0.251,1 }}}, // activeNodeColor
-        {{{ 1,1,1,1 }}}, // wireSelectColor
-        {{{ 0.608,0.608,0.608,0.627 }}}, // nodeBackdropColor
-        5, // noodleCurving
-    },
-};
-
-////////////////////////////////////////////////////////////////////////////////
-
-void bndSetTheme(BNDtheme theme) {
-	bnd_theme = theme;
+void bndSetTheme(WimaTheme theme) {
+	wg.theme = theme;
 }
 
-const BNDtheme *bndGetTheme() {
-	return &bnd_theme;
+const WimaTheme wima_bnd_theme() {
+	return wg.theme;
 }
 
 // the handle to the image containing the icon sheet
@@ -342,7 +108,7 @@ void bndSetFont(int font) {
 void bndLabel(NVGcontext *ctx,
     float x, float y, float w, float h, int iconid, const char *label) {
 	bndIconLabelValue(ctx,x,y,w,h,iconid,
-	    bnd_theme.regularTheme.textColor, BND_LEFT,
+	    wg.theme.regularTheme.textColor, BND_LEFT,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
@@ -354,12 +120,12 @@ void bndToolButton(NVGcontext *ctx,
 
 	bndSelectCorners(cr, BND_TOOL_RADIUS, flags);
 	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
-	bndInnerColors(&shade_top, &shade_down, &bnd_theme.toolTheme, state, 1);
+	bndInnerColors(&shade_top, &shade_down, &wg.theme.toolTheme, state, 1);
 	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    bndTransparent(bnd_theme.toolTheme.outlineColor));
+	    bndTransparent(wg.theme.toolTheme.outlineColor));
 	bndIconLabelValue(ctx,x,y,w,h,iconid,
-	    bndTextColor(&bnd_theme.toolTheme, state), BND_CENTER,
+	    bndTextColor(&wg.theme.toolTheme, state), BND_CENTER,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
@@ -371,12 +137,12 @@ void bndRadioButton(NVGcontext *ctx,
 
 	bndSelectCorners(cr, BND_OPTION_RADIUS, flags);
 	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
-	bndInnerColors(&shade_top, &shade_down, &bnd_theme.radioTheme, state, 1);
+	bndInnerColors(&shade_top, &shade_down, &wg.theme.radioTheme, state, 1);
 	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    bndTransparent(bnd_theme.radioTheme.outlineColor));
+	    bndTransparent(wg.theme.radioTheme.outlineColor));
 	bndIconLabelValue(ctx,x,y,w,h,iconid,
-	    bndTextColor(&bnd_theme.radioTheme, state), BND_CENTER,
+	    bndTextColor(&wg.theme.radioTheme, state), BND_CENTER,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
@@ -394,16 +160,16 @@ void bndTextField(NVGcontext *ctx,
 
 	bndSelectCorners(cr, BND_TEXT_RADIUS, flags);
 	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
-	bndInnerColors(&shade_top, &shade_down, &bnd_theme.textFieldTheme, state, 0);
+	bndInnerColors(&shade_top, &shade_down, &wg.theme.textFieldTheme, state, 0);
 	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    bndTransparent(bnd_theme.textFieldTheme.outlineColor));
+	    bndTransparent(wg.theme.textFieldTheme.outlineColor));
 	if (state != BND_ACTIVE) {
 		cend = -1;
 	}
 	bndIconLabelCaret(ctx,x,y,w,h,iconid,
-	    bndTextColor(&bnd_theme.textFieldTheme, state), BND_LABEL_FONT_SIZE,
-	    text, bnd_theme.textFieldTheme.itemColor, cbegin, cend);
+	    bndTextColor(&wg.theme.textFieldTheme, state), BND_LABEL_FONT_SIZE,
+	    text, wg.theme.textFieldTheme.itemColor, cbegin, cend);
 }
 
 void bndOptionButton(NVGcontext *ctx,
@@ -418,7 +184,7 @@ void bndOptionButton(NVGcontext *ctx,
 	bndBevelInset(ctx,ox,oy,
 	    BND_OPTION_WIDTH,BND_OPTION_HEIGHT,
 	    BND_OPTION_RADIUS,BND_OPTION_RADIUS);
-	bndInnerColors(&shade_top, &shade_down, &bnd_theme.optionTheme, state, 1);
+	bndInnerColors(&shade_top, &shade_down, &wg.theme.optionTheme, state, 1);
 	bndInnerBox(ctx,ox,oy,
 	    BND_OPTION_WIDTH,BND_OPTION_HEIGHT,
 	    BND_OPTION_RADIUS,BND_OPTION_RADIUS,BND_OPTION_RADIUS,BND_OPTION_RADIUS,
@@ -426,12 +192,12 @@ void bndOptionButton(NVGcontext *ctx,
 	bndOutlineBox(ctx,ox,oy,
 	    BND_OPTION_WIDTH,BND_OPTION_HEIGHT,
 	    BND_OPTION_RADIUS,BND_OPTION_RADIUS,BND_OPTION_RADIUS,BND_OPTION_RADIUS,
-	    bndTransparent(bnd_theme.optionTheme.outlineColor));
+	    bndTransparent(wg.theme.optionTheme.outlineColor));
 	if (state == BND_ACTIVE) {
-		bndCheck(ctx,ox,oy, bndTransparent(bnd_theme.optionTheme.itemColor));
+		bndCheck(ctx,ox,oy, bndTransparent(wg.theme.optionTheme.itemColor));
 	}
 	bndIconLabelValue(ctx,x+12,y,w-12,h,-1,
-	    bndTextColor(&bnd_theme.optionTheme, state), BND_LEFT,
+	    bndTextColor(&wg.theme.optionTheme, state), BND_LEFT,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
@@ -443,15 +209,15 @@ void bndChoiceButton(NVGcontext *ctx,
 
 	bndSelectCorners(cr, BND_OPTION_RADIUS, flags);
 	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
-	bndInnerColors(&shade_top, &shade_down, &bnd_theme.choiceTheme, state, 1);
+	bndInnerColors(&shade_top, &shade_down, &wg.theme.choiceTheme, state, 1);
 	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    bndTransparent(bnd_theme.choiceTheme.outlineColor));
+	    bndTransparent(wg.theme.choiceTheme.outlineColor));
 	bndIconLabelValue(ctx,x,y,w,h,iconid,
-	    bndTextColor(&bnd_theme.choiceTheme, state), BND_LEFT,
+	    bndTextColor(&wg.theme.choiceTheme, state), BND_LEFT,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 	bndUpDownArrow(ctx,x+w-10,y+10,5,
-	    bndTransparent(bnd_theme.choiceTheme.itemColor));
+	    bndTransparent(wg.theme.choiceTheme.itemColor));
 }
 
 void bndColorButton(NVGcontext *ctx,
@@ -461,7 +227,7 @@ void bndColorButton(NVGcontext *ctx,
 	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
 	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], color, color);
 	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    bndTransparent(bnd_theme.toolTheme.outlineColor));
+	    bndTransparent(wg.theme.toolTheme.outlineColor));
 }
 
 void bndNumberField(NVGcontext *ctx,
@@ -472,17 +238,17 @@ void bndNumberField(NVGcontext *ctx,
 
 	bndSelectCorners(cr, BND_NUMBER_RADIUS, flags);
 	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
-	bndInnerColors(&shade_top, &shade_down, &bnd_theme.numberFieldTheme, state, 0);
+	bndInnerColors(&shade_top, &shade_down, &wg.theme.numberFieldTheme, state, 0);
 	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    bndTransparent(bnd_theme.numberFieldTheme.outlineColor));
+	    bndTransparent(wg.theme.numberFieldTheme.outlineColor));
 	bndIconLabelValue(ctx,x,y,w,h,-1,
-	    bndTextColor(&bnd_theme.numberFieldTheme, state), BND_CENTER,
+	    bndTextColor(&wg.theme.numberFieldTheme, state), BND_CENTER,
 	    BND_LABEL_FONT_SIZE, label, value);
 	bndArrow(ctx,x+8,y+10,-BND_NUMBER_ARROW_SIZE,
-	    bndTransparent(bnd_theme.numberFieldTheme.itemColor));
+	    bndTransparent(wg.theme.numberFieldTheme.itemColor));
 	bndArrow(ctx,x+w-8,y+10,BND_NUMBER_ARROW_SIZE,
-	    bndTransparent(bnd_theme.numberFieldTheme.itemColor));
+	    bndTransparent(wg.theme.numberFieldTheme.itemColor));
 }
 
 void bndSlider(NVGcontext *ctx,
@@ -493,28 +259,28 @@ void bndSlider(NVGcontext *ctx,
 
 	bndSelectCorners(cr, BND_NUMBER_RADIUS, flags);
 	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
-	bndInnerColors(&shade_top, &shade_down, &bnd_theme.sliderTheme, state, 0);
+	bndInnerColors(&shade_top, &shade_down, &wg.theme.sliderTheme, state, 0);
 	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 
 	if (state == BND_ACTIVE) {
 		shade_top = bndOffsetColor(
-		    bnd_theme.sliderTheme.itemColor, bnd_theme.sliderTheme.shadeTop);
+		    wg.theme.sliderTheme.itemColor, wg.theme.sliderTheme.shadeTop);
 		shade_down = bndOffsetColor(
-		    bnd_theme.sliderTheme.itemColor, bnd_theme.sliderTheme.shadeDown);
+		    wg.theme.sliderTheme.itemColor, wg.theme.sliderTheme.shadeDown);
 	} else {
 		shade_top = bndOffsetColor(
-		    bnd_theme.sliderTheme.itemColor, bnd_theme.sliderTheme.shadeDown);
+		    wg.theme.sliderTheme.itemColor, wg.theme.sliderTheme.shadeDown);
 		shade_down = bndOffsetColor(
-		    bnd_theme.sliderTheme.itemColor, bnd_theme.sliderTheme.shadeTop);
+		    wg.theme.sliderTheme.itemColor, wg.theme.sliderTheme.shadeTop);
 	}
 	nvgScissor(ctx,x,y,8+(w-8)*bnd_clamp(progress,0,1),h);
 	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	nvgResetScissor(ctx);
 
 	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    bndTransparent(bnd_theme.sliderTheme.outlineColor));
+	    bndTransparent(wg.theme.sliderTheme.outlineColor));
 	bndIconLabelValue(ctx,x,y,w,h,-1,
-	    bndTextColor(&bnd_theme.sliderTheme, state), BND_CENTER,
+	    bndTextColor(&wg.theme.sliderTheme, state), BND_CENTER,
 	    BND_LABEL_FONT_SIZE, label, value);
 }
 
@@ -528,16 +294,16 @@ void bndScrollBar(NVGcontext *ctx,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    bndOffsetColor(
-	        bnd_theme.scrollBarTheme.innerColor, 3*bnd_theme.scrollBarTheme.shadeDown),
+	        wg.theme.scrollBarTheme.innerColor, 3*wg.theme.scrollBarTheme.shadeDown),
 	    bndOffsetColor(
-	        bnd_theme.scrollBarTheme.innerColor, 3*bnd_theme.scrollBarTheme.shadeTop));
+	        wg.theme.scrollBarTheme.innerColor, 3*wg.theme.scrollBarTheme.shadeTop));
 	bndOutlineBox(ctx,x,y,w,h,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
-	    bndTransparent(bnd_theme.scrollBarTheme.outlineColor));
+	    bndTransparent(wg.theme.scrollBarTheme.outlineColor));
 
 	NVGcolor itemColor = bndOffsetColor(
-	    bnd_theme.scrollBarTheme.itemColor,
+	    wg.theme.scrollBarTheme.itemColor,
 	    (state == BND_ACTIVE)?BND_SCROLLBAR_ACTIVE_SHADE:0);
 
 	bndScrollHandleRect(&x,&y,&w,&h,offset,size);
@@ -546,13 +312,13 @@ void bndScrollBar(NVGcontext *ctx,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    bndOffsetColor(
-	        itemColor, 3*bnd_theme.scrollBarTheme.shadeTop),
+	        itemColor, 3*wg.theme.scrollBarTheme.shadeTop),
 	    bndOffsetColor(
-	        itemColor, 3*bnd_theme.scrollBarTheme.shadeDown));
+	        itemColor, 3*wg.theme.scrollBarTheme.shadeDown));
 	bndOutlineBox(ctx,x,y,w,h,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
-	    bndTransparent(bnd_theme.scrollBarTheme.outlineColor));
+	    bndTransparent(wg.theme.scrollBarTheme.outlineColor));
 }
 
 void bndMenuBackground(NVGcontext *ctx,
@@ -561,11 +327,11 @@ void bndMenuBackground(NVGcontext *ctx,
 	NVGcolor shade_top, shade_down;
 
 	bndSelectCorners(cr, BND_MENU_RADIUS, flags);
-	bndInnerColors(&shade_top, &shade_down, &bnd_theme.menuTheme,
+	bndInnerColors(&shade_top, &shade_down, &wg.theme.menuTheme,
 	    BND_DEFAULT, 0);
 	bndInnerBox(ctx,x,y,w,h+1,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	bndOutlineBox(ctx,x,y,w,h+1,cr[0],cr[1],cr[2],cr[3],
-	    bndTransparent(bnd_theme.menuTheme.outlineColor));
+	    bndTransparent(wg.theme.menuTheme.outlineColor));
 	bndDropShadow(ctx,x,y,w,h,BND_MENU_RADIUS,
 	    BND_SHADOW_FEATHER,BND_SHADOW_ALPHA);
 }
@@ -573,14 +339,14 @@ void bndMenuBackground(NVGcontext *ctx,
 void bndTooltipBackground(NVGcontext *ctx, float x, float y, float w, float h) {
 	NVGcolor shade_top, shade_down;
 
-	bndInnerColors(&shade_top, &shade_down, &bnd_theme.tooltipTheme,
+	bndInnerColors(&shade_top, &shade_down, &wg.theme.tooltipTheme,
 	    BND_DEFAULT, 0);
 	bndInnerBox(ctx,x,y,w,h+1,
 	    BND_MENU_RADIUS,BND_MENU_RADIUS,BND_MENU_RADIUS,BND_MENU_RADIUS,
 	    shade_top, shade_down);
 	bndOutlineBox(ctx,x,y,w,h+1,
 	    BND_MENU_RADIUS,BND_MENU_RADIUS,BND_MENU_RADIUS,BND_MENU_RADIUS,
-	    bndTransparent(bnd_theme.tooltipTheme.outlineColor));
+	    bndTransparent(wg.theme.tooltipTheme.outlineColor));
 	bndDropShadow(ctx,x,y,w,h,BND_MENU_RADIUS,
 	    BND_SHADOW_FEATHER,BND_SHADOW_ALPHA);
 }
@@ -588,7 +354,7 @@ void bndTooltipBackground(NVGcontext *ctx, float x, float y, float w, float h) {
 void bndMenuLabel(NVGcontext *ctx,
     float x, float y, float w, float h, int iconid, const char *label) {
 	bndIconLabelValue(ctx,x,y,w,h,iconid,
-	    bnd_theme.menuTheme.textColor, BND_LEFT,
+	    wg.theme.menuTheme.textColor, BND_LEFT,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
@@ -597,14 +363,14 @@ void bndMenuItem(NVGcontext *ctx,
     int iconid, const char *label) {
 	if (state != BND_DEFAULT) {
 		bndInnerBox(ctx,x,y,w,h,0,0,0,0,
-		    bndOffsetColor(bnd_theme.menuItemTheme.innerSelectedColor,
-		        bnd_theme.menuItemTheme.shadeTop),
-		    bndOffsetColor(bnd_theme.menuItemTheme.innerSelectedColor,
-		        bnd_theme.menuItemTheme.shadeDown));
+		    bndOffsetColor(wg.theme.menuItemTheme.innerSelectedColor,
+		        wg.theme.menuItemTheme.shadeTop),
+		    bndOffsetColor(wg.theme.menuItemTheme.innerSelectedColor,
+		        wg.theme.menuItemTheme.shadeDown));
 		state = BND_ACTIVE;
 	}
 	bndIconLabelValue(ctx,x,y,w,h,iconid,
-	    bndTextColor(&bnd_theme.menuItemTheme, state), BND_LEFT,
+	    bndTextColor(&wg.theme.menuItemTheme, state), BND_LEFT,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
@@ -612,7 +378,7 @@ void bndNodePort(NVGcontext *ctx, float x, float y, BNDwidgetState state,
     NVGcolor color) {
 	nvgBeginPath(ctx);
 	nvgCircle(ctx, x, y, BND_NODE_PORT_RADIUS);
-	nvgStrokeColor(ctx,bnd_theme.nodeTheme.wiresColor);
+	nvgStrokeColor(ctx,wg.theme.nodeTheme.wiresColor);
 	nvgStrokeWidth(ctx,1.0f);
 	nvgStroke(ctx);
 	nvgFillColor(ctx,(state != BND_DEFAULT)?
@@ -623,7 +389,7 @@ void bndNodePort(NVGcontext *ctx, float x, float y, BNDwidgetState state,
 void bndColoredNodeWire(NVGcontext *ctx, float x0, float y0, float x1, float y1,
     NVGcolor color0, NVGcolor color1) {
 	float length = bnd_fmaxf(fabsf(x1 - x0),fabsf(y1 - y0));
-	float delta = length*(float)bnd_theme.nodeTheme.noodleCurving/10.0f;
+	float delta = length*(float)wg.theme.nodeTheme.noodleCurving/10.0f;
 
 	nvgBeginPath(ctx);
 	nvgMoveTo(ctx, x0, y0);
@@ -631,7 +397,7 @@ void bndColoredNodeWire(NVGcontext *ctx, float x0, float y0, float x1, float y1,
 	    x0 + delta, y0,
 	    x1 - delta, y1,
 	    x1, y1);
-	NVGcolor colorw = bnd_theme.nodeTheme.wiresColor;
+	NVGcolor colorw = wg.theme.nodeTheme.wiresColor;
 	colorw.a = (color0.a<color1.a)?color0.a:color1.a;
 	nvgStrokeColor(ctx, colorw);
 	nvgStrokeWidth(ctx, BND_NODE_WIRE_OUTLINE_WIDTH);
@@ -647,8 +413,8 @@ void bndColoredNodeWire(NVGcontext *ctx, float x0, float y0, float x1, float y1,
 void bndNodeWire(NVGcontext *ctx, float x0, float y0, float x1, float y1,
     BNDwidgetState state0, BNDwidgetState state1) {
 	bndColoredNodeWire(ctx, x0, y0, x1, y1,
-	    bndNodeWireColor(&bnd_theme.nodeTheme, state0),
-	    bndNodeWireColor(&bnd_theme.nodeTheme, state1));
+	    bndNodeWireColor(&wg.theme.nodeTheme, state0),
+	    bndNodeWireColor(&wg.theme.nodeTheme, state1));
 }
 
 void bndNodeBackground(NVGcontext *ctx, float x, float y, float w, float h,
@@ -659,12 +425,12 @@ void bndNodeBackground(NVGcontext *ctx, float x, float y, float w, float h,
 	    bndTransparent(titleColor));
 	bndInnerBox(ctx,x,y+BND_NODE_TITLE_HEIGHT-1,w,h+2-BND_NODE_TITLE_HEIGHT,
 	    0,0,BND_NODE_RADIUS,BND_NODE_RADIUS,
-	    bndTransparent(bnd_theme.nodeTheme.nodeBackdropColor),
-	    bndTransparent(bnd_theme.nodeTheme.nodeBackdropColor));
+	    bndTransparent(wg.theme.nodeTheme.nodeBackdropColor),
+	    bndTransparent(wg.theme.nodeTheme.nodeBackdropColor));
 	bndNodeIconLabel(ctx,
 	    x+BND_NODE_ARROW_AREA_WIDTH,y,
 	    w-BND_NODE_ARROW_AREA_WIDTH-BND_NODE_MARGIN_SIDE,BND_NODE_TITLE_HEIGHT,
-	    iconid, bnd_theme.regularTheme.textColor,
+	    iconid, wg.theme.regularTheme.textColor,
 	    bndOffsetColor(titleColor, BND_BEVEL_SHADE),
 	    BND_LEFT, BND_LABEL_FONT_SIZE, label);
 	NVGcolor arrowColor;
@@ -673,15 +439,15 @@ void bndNodeBackground(NVGcontext *ctx, float x, float y, float w, float h,
 		default:
 		case BND_DEFAULT: {
 			borderColor = nvgRGBf(0,0,0);
-		arrowColor = bndOffsetColor(titleColor, -BND_BEVEL_SHADE);
+			arrowColor = bndOffsetColor(titleColor, -BND_BEVEL_SHADE);
 		} break;
 		case BND_HOVER: {
-			borderColor = bnd_theme.nodeTheme.nodeSelectedColor;
-		arrowColor = bnd_theme.nodeTheme.nodeSelectedColor;
+			borderColor = wg.theme.nodeTheme.nodeSelectedColor;
+			arrowColor = wg.theme.nodeTheme.nodeSelectedColor;
 		} break;
 		case BND_ACTIVE: {
-			borderColor = bnd_theme.nodeTheme.activeNodeColor;
-		arrowColor = bnd_theme.nodeTheme.nodeSelectedColor;
+			borderColor = wg.theme.nodeTheme.activeNodeColor;
+			arrowColor = wg.theme.nodeTheme.nodeSelectedColor;
 		} break;
 	}
 	bndOutlineBox(ctx,x,y,w,h+1,
@@ -698,10 +464,10 @@ void bndNodeBackground(NVGcontext *ctx, float x, float y, float w, float h,
 
 void bndSplitterWidgets(NVGcontext *ctx, float x, float y, float w, float h) {
 	NVGcolor insetLight = bndTransparent(
-	    bndOffsetColor(bnd_theme.backgroundColor, BND_SPLITTER_SHADE));
+	    bndOffsetColor(wg.theme.backgroundColor, BND_SPLITTER_SHADE));
 	NVGcolor insetDark = bndTransparent(
-	    bndOffsetColor(bnd_theme.backgroundColor, -BND_SPLITTER_SHADE));
-	NVGcolor inset = bndTransparent(bnd_theme.backgroundColor);
+	    bndOffsetColor(wg.theme.backgroundColor, -BND_SPLITTER_SHADE));
+	NVGcolor inset = bndTransparent(wg.theme.backgroundColor);
 
 	float x2 = x+w;
 	float y2 = y+h;
@@ -896,7 +662,7 @@ void bndBevel(NVGcontext *ctx, float x, float y, float w, float h) {
 	nvgLineTo(ctx, x+w, y+h);
 	nvgLineTo(ctx, x+w, y);
 	nvgStrokeColor(ctx, bndTransparent(
-	    bndOffsetColor(bnd_theme.backgroundColor, -BND_BEVEL_SHADE)));
+	    bndOffsetColor(wg.theme.backgroundColor, -BND_BEVEL_SHADE)));
 	nvgStroke(ctx);
 
 	nvgBeginPath(ctx);
@@ -904,7 +670,7 @@ void bndBevel(NVGcontext *ctx, float x, float y, float w, float h) {
 	nvgLineTo(ctx, x, y);
 	nvgLineTo(ctx, x+w, y);
 	nvgStrokeColor(ctx, bndTransparent(
-	    bndOffsetColor(bnd_theme.backgroundColor, BND_BEVEL_SHADE)));
+	    bndOffsetColor(wg.theme.backgroundColor, BND_BEVEL_SHADE)));
 	nvgStroke(ctx);
 }
 
@@ -922,7 +688,7 @@ void bndBevelInset(NVGcontext *ctx, float x, float y, float w, float h,
 	nvgArcTo(ctx, x+w,y+h, x,y+h, cr2);
 	nvgArcTo(ctx, x,y+h, x,y, cr3);
 
-	NVGcolor bevelColor = bndOffsetColor(bnd_theme.backgroundColor,
+	NVGcolor bevelColor = bndOffsetColor(wg.theme.backgroundColor,
 	    BND_INSET_BEVEL_SHADE);
 
 	nvgStrokeWidth(ctx, 1);
@@ -938,7 +704,7 @@ void bndBevelInset(NVGcontext *ctx, float x, float y, float w, float h,
 void bndBackground(NVGcontext *ctx, float x, float y, float w, float h) {
 	nvgBeginPath(ctx);
 	nvgRect(ctx, x, y, w, h);
-	nvgFillColor(ctx, bnd_theme.backgroundColor);
+	nvgFillColor(ctx, wg.theme.backgroundColor);
 	nvgFill(ctx);
 }
 
@@ -1019,7 +785,7 @@ void bndSelectCorners(float *radiuses, float r, int flags) {
 
 void bndInnerColors(
     NVGcolor *shade_top, NVGcolor *shade_down,
-    const BNDwidgetTheme *theme, BNDwidgetState state, int flipActive) {
+    const WimaWidgetTheme* theme, BNDwidgetState state, int flipActive) {
 
 	switch(state) {
 		default:
@@ -1041,7 +807,7 @@ void bndInnerColors(
 	}
 }
 
-NVGcolor bndTextColor(const BNDwidgetTheme *theme, BNDwidgetState state) {
+NVGcolor bndTextColor(const WimaWidgetTheme* theme, BNDwidgetState state) {
 	return (state == BND_ACTIVE)?theme->textSelectedColor:theme->textColor;
 }
 
@@ -1299,7 +1065,7 @@ void bndScrollHandleRect(float *x, float *y, float *w, float *h,
 	}
 }
 
-NVGcolor bndNodeWireColor(const BNDnodeTheme *theme, BNDwidgetState state) {
+NVGcolor bndNodeWireColor(const WimaNodeTheme *theme, BNDwidgetState state) {
 	switch(state) {
 		default:
 		case BND_DEFAULT: return nvgRGBf(0.5f,0.5f,0.5f);

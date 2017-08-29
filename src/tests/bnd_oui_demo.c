@@ -42,6 +42,8 @@
 #include "../bnd/blendish.h"
 #include "../oui/oui.h"
 
+extern WimaTheme wima_initial_theme;
+
 ////////////////////////////////////////////////////////////////////////////////
 
 typedef enum {
@@ -272,11 +274,7 @@ void drawUI(NVGcontext *vg, int item, int corners) {
 					}
 					nvgStrokeWidth(vg,2);
 					nvgBeginPath(vg);
-                    #if 0
-					nvgRect(vg,rect.x,rect.y,rect.w,rect.h);
-                    #else
 					nvgRoundedRect(vg,rect.x,rect.y,rect.w,rect.h,3);
-                    #endif
 					nvgFill(vg);
 					nvgStroke(vg);
 
@@ -1256,6 +1254,7 @@ int main()
 	}
 
 	init(_vg);
+	bndSetTheme(wima_initial_theme);
 
 	printf("sizeof(UIitem)=%lu\n", sizeof(UIitem));
 

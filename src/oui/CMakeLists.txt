@@ -24,6 +24,9 @@
 #
 #	****** END LICENSE BLOCK ******
 
+# We need to include NanoVG's headers.
+include_directories(../../lib/nanovg/src)
+
 set(WIMA_OUI_SRC
 
 	#Put source files here.

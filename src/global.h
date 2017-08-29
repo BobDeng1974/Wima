@@ -42,6 +42,8 @@
 
 #include <wima.h>
 
+#include "bnd/blendish.h"
+
 typedef struct wima_globals {
 
 	DynaString name;
@@ -57,6 +59,8 @@ typedef struct wima_globals {
 
 	DynaVector workspaces;
 	DynaVector regions;
+
+	WimaTheme theme;
 
 } WimaG;
 

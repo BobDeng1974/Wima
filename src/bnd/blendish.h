@@ -25,6 +25,8 @@
 #ifndef BLENDISH_H
 #define BLENDISH_H
 
+#include <nanovg.h>
+
 #ifndef NANOVG_H
 #error "nanovg.h must be included first."
 #endif
@@ -32,6 +34,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include "theme.h"
 
 /*
 
@@ -75,13 +79,7 @@ before including blendish.h, otherwise the file will be in header-only mode.
 
 */
 
-// you can override this from the outside to pick
-// the export level you need
-#ifndef BND_EXPORT
-#define BND_EXPORT
-#endif
-
-// if that typedef is provided elsewhere, you may define
+// If thise typedef is provided elsewhere, you may define
 // BLENDISH_NO_NVG_TYPEDEFS before including the header.
 #ifndef BLENDISH_NO_NVG_TYPEDEFS
 typedef struct NVGcontext NVGcontext;
@@ -89,82 +87,93 @@ typedef struct NVGcolor NVGcolor;
 typedef struct NVGglyphPosition NVGglyphPosition;
 #endif
 
-// describes the theme used to draw a single widget or widget box;
-// these values correspond to the same values that can be retrieved from
-// the Theme panel in the Blender preferences
-typedef struct BNDwidgetTheme {
-		// color of widget box outline
-		NVGcolor outlineColor;
-	// color of widget item (meaning changes depending on class)
-	NVGcolor itemColor;
-	// fill color of widget box
-	NVGcolor innerColor;
-	// fill color of widget box when active
-	NVGcolor innerSelectedColor;
-	// color of text label
-	NVGcolor textColor;
-	// color of text label when active
-	NVGcolor textSelectedColor;
-	// delta modifier for upper part of gradient (-100 to 100)
-	int shadeTop;
-	// delta modifier for lower part of gradient (-100 to 100)
-	int shadeDown;
-} BNDwidgetTheme;
+// Default text size.
+#define BND_LABEL_FONT_SIZE 13
 
-// describes the theme used to draw nodes
-typedef struct BNDnodeTheme {
-		// inner color of selected node (and downarrow)
-		NVGcolor nodeSelectedColor;
-	// outline of wires
-	NVGcolor wiresColor;
-	// color of text label when active
-	NVGcolor textSelectedColor;
+// Default text padding in inner box.
+#define BND_PAD_LEFT 8
+#define BND_PAD_RIGHT 8
 
-	// inner color of active node (and dragged wire)
-	NVGcolor activeNodeColor;
-	// color of selected wire
-	NVGcolor wireSelectColor;
-	// color of background of node
-	NVGcolor nodeBackdropColor;
+// Label: value separator string.
+#define BND_LABEL_SEPARATOR ": "
 
-	// how much a noodle curves (0 to 10)
-	int noodleCurving;
-} BNDnodeTheme;
+// Alpha intensity of transparent items (0xa4).
+#define BND_TRANSPARENT_ALPHA 0.643
 
-// describes the theme used to draw widgets
-typedef struct BNDtheme {
-		// the background color of panels and windows
-		NVGcolor backgroundColor;
-	// theme for labels
-	BNDwidgetTheme regularTheme;
-	// theme for tool buttons
-	BNDwidgetTheme toolTheme;
-	// theme for radio buttons
-	BNDwidgetTheme radioTheme;
-	// theme for text fields
-	BNDwidgetTheme textFieldTheme;
-	// theme for option buttons (checkboxes)
-	BNDwidgetTheme optionTheme;
-	// theme for choice buttons (comboboxes)
-	// Blender calls them "menu buttons"
-	BNDwidgetTheme choiceTheme;
-	// theme for number fields
-	BNDwidgetTheme numberFieldTheme;
-	// theme for slider controls
-	BNDwidgetTheme sliderTheme;
-	// theme for scrollbars
-	BNDwidgetTheme scrollBarTheme;
-	// theme for tooltips
-	BNDwidgetTheme tooltipTheme;
-	// theme for menu backgrounds
-	BNDwidgetTheme menuTheme;
-	// theme for menu items
-	BNDwidgetTheme menuItemTheme;
-	// theme for nodes
-	BNDnodeTheme nodeTheme;
-} BNDtheme;
+// Shade intensity of beveled panels.
+#define BND_BEVEL_SHADE 30
+// Shade intensity of beveled insets.
+#define BND_INSET_BEVEL_SHADE 30
+// Shade intensity of hovered inner boxes.
+#define BND_HOVER_SHADE 15
+// Shade intensity of splitter bevels.
+#define BND_SPLITTER_SHADE 100
 
-// how text on a control is aligned
+// Width of icon sheet.
+#define BND_ICON_SHEET_WIDTH 602
+// Height of icon sheet.
+#define BND_ICON_SHEET_HEIGHT 640
+// Gridsize of icon sheet in both dimensions.
+#define BND_ICON_SHEET_GRID 21
+// Offset of first icon tile relative to left border.
+#define BND_ICON_SHEET_OFFSET_X 5
+// Offset of first icon tile relative to top border.
+#define BND_ICON_SHEET_OFFSET_Y 10
+// Resolution of single icon.
+#define BND_ICON_SHEET_RES 16
+
+// Size of number field arrow.
+#define BND_NUMBER_ARROW_SIZE 4
+
+// Radius of tool button.
+#define BND_TOOL_RADIUS 4
+
+// Radius of option button.
+#define BND_OPTION_RADIUS 4
+// Width of option button checkbox.
+#define BND_OPTION_WIDTH 14
+// Height of option button checkbox.
+#define BND_OPTION_HEIGHT 15
+
+// Radius of text field.
+#define BND_TEXT_RADIUS 4
+
+// Radius of number button.
+#define BND_NUMBER_RADIUS 10
+
+// Radius of menu popup.
+#define BND_MENU_RADIUS 3
+// Feather of menu popup shadow.
+#define BND_SHADOW_FEATHER 12
+// Alpha of menu popup shadow.
+#define BND_SHADOW_ALPHA 0.5
+
+// Radius of scrollbar.
+#define BND_SCROLLBAR_RADIUS 7
+// Shade intensity of active scrollbar.
+#define BND_SCROLLBAR_ACTIVE_SHADE 15
+
+// Max glyphs for position testing.
+#define BND_MAX_GLYPHS 1024
+
+// Max rows for position testing.
+#define BND_MAX_ROWS 32
+
+// Text distance from bottom.
+#define BND_TEXT_PAD_DOWN 7
+
+// Stroke width of wire outline.
+#define BND_NODE_WIRE_OUTLINE_WIDTH 4
+// Stroke width of wire.
+#define BND_NODE_WIRE_WIDTH 2
+// Radius of node box.
+#define BND_NODE_RADIUS 8
+// Feather of node title text.
+#define BND_NODE_TITLE_FEATHER 1
+// Size of node title arrow.
+#define BND_NODE_ARROW_SIZE 9
+
+// How text on a control is aligned.
 typedef enum BNDtextAlignment {
 	BND_LEFT = 0,
 	BND_CENTER,
@@ -751,23 +760,23 @@ typedef enum BNDicon {
 
 // set the current theme all widgets will be drawn with.
 // the default Blender 2.6 theme is set by default.
-BND_EXPORT void bndSetTheme(BNDtheme theme);
+void bndSetTheme(WimaTheme theme);
 
 // Returns the currently set theme
-BND_EXPORT const BNDtheme *bndGetTheme();
+const WimaTheme wima_bnd_theme();
 
 // designates an image handle as returned by nvgCreateImage*() as the themes'
 // icon sheet. The icon sheet format must be compatible to Blender 2.6's icon
 // sheet; the order of icons does not matter.
 // A valid icon sheet is e.g. shown at
 // http://wiki.blender.org/index.php/Dev:2.5/Doc/How_to/Add_an_icon
-BND_EXPORT void bndSetIconImage(int image);
+void bndSetIconImage(int image);
 
 // designates an image handle as returned by nvgCreateFont*() as the themes'
 // UI font. Blender's original UI font Droid Sans is perfectly suited and
 // available here:
 // https://svn.blender.org/svnroot/bf-blender/trunk/blender/release/datafiles/fonts/
-BND_EXPORT void bndSetFont(int font);
+void bndSetFont(int font);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -779,7 +788,7 @@ BND_EXPORT void bndSetFont(int font);
 // if iconid >= 0, an icon will be added to the widget
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is BND_WIDGET_HEIGHT
-BND_EXPORT void bndLabel(NVGcontext *ctx,
+void bndLabel(NVGcontext *ctx,
     float x, float y, float w, float h, int iconid, const char *label);
 
 // Draw a tool button  with its lower left origin at (x,y) and size of (w,h),
@@ -788,7 +797,7 @@ BND_EXPORT void bndLabel(NVGcontext *ctx,
 // if iconid >= 0, an icon will be added to the widget
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is BND_WIDGET_HEIGHT
-BND_EXPORT void bndToolButton(NVGcontext *ctx,
+void bndToolButton(NVGcontext *ctx,
     float x, float y, float w, float h, int flags, BNDwidgetState state,
     int iconid, const char *label);
 
@@ -798,7 +807,7 @@ BND_EXPORT void bndToolButton(NVGcontext *ctx,
 // if iconid >= 0, an icon will be added to the widget
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is BND_WIDGET_HEIGHT
-BND_EXPORT void bndRadioButton(NVGcontext *ctx,
+void bndRadioButton(NVGcontext *ctx,
     float x, float y, float w, float h, int flags, BNDwidgetState state,
     int iconid, const char *label);
 
@@ -806,7 +815,7 @@ BND_EXPORT void bndRadioButton(NVGcontext *ctx,
 // Calculate the corresponding text position for given coordinates px/py
 // in a text field.
 // See bndTextField for more info.
-BND_EXPORT int bndTextFieldTextPosition(NVGcontext *ctx, float x, float y, float w, float h,
+int bndTextFieldTextPosition(NVGcontext *ctx, float x, float y, float w, float h,
     int iconid, const char *text, int px, int py);
 
 // Draw a text field with its lower left origin at (x,y) and size of (w,h),
@@ -818,7 +827,7 @@ BND_EXPORT int bndTextFieldTextPosition(NVGcontext *ctx, float x, float y, float
 // cend must be >= cbegin and <= strlen(text) and denotes the end of the caret
 // if cend < cbegin, then no caret will be drawn
 // widget looks best when height is BND_WIDGET_HEIGHT
-BND_EXPORT void bndTextField(NVGcontext *ctx,
+void bndTextField(NVGcontext *ctx,
     float x, float y, float w, float h, int flags, BNDwidgetState state,
     int iconid, const char *text, int cbegin, int cend);
 
@@ -827,7 +836,7 @@ BND_EXPORT void bndTextField(NVGcontext *ctx,
 // the widgets current UI state.
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is BND_WIDGET_HEIGHT
-BND_EXPORT void bndOptionButton(NVGcontext *ctx,
+void bndOptionButton(NVGcontext *ctx,
     float x, float y, float w, float h, BNDwidgetState state,
     const char *label);
 
@@ -837,7 +846,7 @@ BND_EXPORT void bndOptionButton(NVGcontext *ctx,
 // if iconid >= 0, an icon will be added to the widget
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is BND_WIDGET_HEIGHT
-BND_EXPORT void bndChoiceButton(NVGcontext *ctx,
+void bndChoiceButton(NVGcontext *ctx,
     float x, float y, float w, float h, int flags, BNDwidgetState state,
     int iconid, const char *label);
 
@@ -845,7 +854,7 @@ BND_EXPORT void bndChoiceButton(NVGcontext *ctx,
 // where flags is one or multiple flags from BNDcornerFlags and state denotes
 // the widgets current UI state.
 // widget looks best when height is BND_WIDGET_HEIGHT
-BND_EXPORT void bndColorButton(NVGcontext *ctx,
+void bndColorButton(NVGcontext *ctx,
     float x, float y, float w, float h, int flags, NVGcolor color);
 
 // Draw a number field with its lower left origin at (x,y) and size of (w,h),
@@ -855,7 +864,7 @@ BND_EXPORT void bndColorButton(NVGcontext *ctx,
 // if value is not NULL, a value will be added to the widget, along with
 // a ":" separator
 // widget looks best when height is BND_WIDGET_HEIGHT
-BND_EXPORT void bndNumberField(NVGcontext *ctx,
+void bndNumberField(NVGcontext *ctx,
     float x, float y, float w, float h, int flags, BNDwidgetState state,
     const char *label, const char *value);
 
@@ -867,7 +876,7 @@ BND_EXPORT void bndNumberField(NVGcontext *ctx,
 // if value is not NULL, a value will be added to the widget, along with
 // a ":" separator
 // widget looks best when height is BND_WIDGET_HEIGHT
-BND_EXPORT void bndSlider(NVGcontext *ctx,
+void bndSlider(NVGcontext *ctx,
     float x, float y, float w, float h, int flags, BNDwidgetState state,
     float progress, const char *label, const char *value);
 
@@ -877,20 +886,20 @@ BND_EXPORT void bndSlider(NVGcontext *ctx,
 // size is in the range 0..1 and controls the size of the scroll handle
 // horizontal widget looks best when height is BND_SCROLLBAR_HEIGHT,
 // vertical looks best when width is BND_SCROLLBAR_WIDTH
-BND_EXPORT void bndScrollBar(NVGcontext *ctx,
+void bndScrollBar(NVGcontext *ctx,
     float x, float y, float w, float h, BNDwidgetState state,
     float offset, float size);
 
 // Draw a menu background with its lower left origin at (x,y) and size of (w,h),
 // where flags is one or multiple flags from BNDcornerFlags.
-BND_EXPORT void bndMenuBackground(NVGcontext *ctx,
+void bndMenuBackground(NVGcontext *ctx,
     float x, float y, float w, float h, int flags);
 
 // Draw a menu label with its lower left origin at (x,y) and size of (w,h).
 // if iconid >= 0, an icon will be added to the widget
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is BND_WIDGET_HEIGHT
-BND_EXPORT void bndMenuLabel(NVGcontext *ctx,
+void bndMenuLabel(NVGcontext *ctx,
     float x, float y, float w, float h, int iconid, const char *label);
 
 // Draw a menu item with its lower left origin at (x,y) and size of (w,h),
@@ -898,15 +907,15 @@ BND_EXPORT void bndMenuLabel(NVGcontext *ctx,
 // if iconid >= 0, an icon will be added to the widget
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is BND_WIDGET_HEIGHT
-BND_EXPORT void bndMenuItem(NVGcontext *ctx,
+void bndMenuItem(NVGcontext *ctx,
     float x, float y, float w, float h, BNDwidgetState state,
     int iconid, const char *label);
 
 // Draw a tooltip background with its lower left origin at (x,y) and size of (w,h)
-BND_EXPORT void bndTooltipBackground(NVGcontext *ctx, float x, float y, float w, float h);
+void bndTooltipBackground(NVGcontext *ctx, float x, float y, float w, float h);
 
 // Draw a node port at the given position filled with the given color
-BND_EXPORT void bndNodePort(NVGcontext *ctx, float x, float y, BNDwidgetState state,
+void bndNodePort(NVGcontext *ctx, float x, float y, BNDwidgetState state,
     NVGcolor color);
 
 // Draw a node wire originating at (x0,y0) and floating to (x1,y1), with
@@ -914,28 +923,28 @@ BND_EXPORT void bndNodePort(NVGcontext *ctx, float x, float y, BNDwidgetState st
 // BND_DEFAULT: default wire color
 // BND_HOVER: selected wire color
 // BND_ACTIVE: dragged wire color
-BND_EXPORT void bndNodeWire(NVGcontext *ctx, float x0, float y0, float x1, float y1,
+void bndNodeWire(NVGcontext *ctx, float x0, float y0, float x1, float y1,
     BNDwidgetState state0, BNDwidgetState state1);
 
 // Draw a node wire originating at (x0,y0) and floating to (x1,y1), with
 // a colored gradient based on the two colors color0 and color1
-BND_EXPORT void bndColoredNodeWire(NVGcontext *ctx, float x0, float y0, float x1, float y1,
+void bndColoredNodeWire(NVGcontext *ctx, float x0, float y0, float x1, float y1,
     NVGcolor color0, NVGcolor color1);
 
 // Draw a node background with its upper left origin at (x,y) and size of (w,h)
 // where titleColor provides the base color for the title bar
-BND_EXPORT void bndNodeBackground(NVGcontext *ctx, float x, float y, float w, float h,
+void bndNodeBackground(NVGcontext *ctx, float x, float y, float w, float h,
     BNDwidgetState state, int iconid, const char *label, NVGcolor titleColor);
 
 // Draw a window with the upper right and lower left splitter widgets into
 // the rectangle at origin (x,y) and size (w, h)
-BND_EXPORT void bndSplitterWidgets(NVGcontext *ctx, float x, float y, float w, float h);
+void bndSplitterWidgets(NVGcontext *ctx, float x, float y, float w, float h);
 
 // Draw the join area overlay stencil into the rectangle
 // at origin (x,y) and size (w,h)
 // vertical is 0 or 1 and designates the arrow orientation,
 // mirror is 0 or 1 and flips the arrow side
-BND_EXPORT void bndJoinAreaOverlay(NVGcontext *ctx, float x, float y, float w, float h,
+void bndJoinAreaOverlay(NVGcontext *ctx, float x, float y, float w, float h,
     int vertical, int mirror);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -945,11 +954,11 @@ BND_EXPORT void bndJoinAreaOverlay(NVGcontext *ctx, float x, float y, float w, f
 // Use these functions to estimate sizes for widgets with your NVGcontext.
 
 // returns the ideal width for a label with given icon and text
-BND_EXPORT float bndLabelWidth(NVGcontext *ctx, int iconid, const char *label);
+float bndLabelWidth(NVGcontext *ctx, int iconid, const char *label);
 
 // returns the height for a label with given icon, text and width; this
 // function is primarily useful in conjunction with multiline labels and textboxes
-BND_EXPORT float bndLabelHeight(NVGcontext *ctx, int iconid, const char *label,
+float bndLabelHeight(NVGcontext *ctx, int iconid, const char *label,
     float width);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -960,31 +969,31 @@ BND_EXPORT float bndLabelHeight(NVGcontext *ctx, int iconid, const char *label,
 // new kinds of controls in a similar fashion.
 
 // make color transparent using the default alpha value
-BND_EXPORT NVGcolor bndTransparent(NVGcolor color);
+NVGcolor bndTransparent(NVGcolor color);
 
 // offset a color by a given integer delta in the range -100 to 100
-BND_EXPORT NVGcolor bndOffsetColor(NVGcolor color, int delta);
+NVGcolor bndOffsetColor(NVGcolor color, int delta);
 
 // assigns radius r to the four entries of array radiuses depending on whether
 // the corner is marked as sharp or not; see BNDcornerFlags for possible
 // flag values.
-BND_EXPORT void bndSelectCorners(float *radiuses, float r, int flags);
+void bndSelectCorners(float *radiuses, float r, int flags);
 
 // computes the upper and lower gradient colors for the inner box from a widget
 // theme and the widgets state. If flipActive is set and the state is
 // BND_ACTIVE, the upper and lower colors will be swapped.
-BND_EXPORT void bndInnerColors(NVGcolor *shade_top, NVGcolor *shade_down,
-    const BNDwidgetTheme *theme, BNDwidgetState state, int flipActive);
+void bndInnerColors(NVGcolor *shade_top, NVGcolor *shade_down,
+    const WimaWidgetTheme *theme, BNDwidgetState state, int flipActive);
 
 // computes the text color for a widget label from a widget theme and the
 // widgets state.
-BND_EXPORT NVGcolor bndTextColor(const BNDwidgetTheme *theme, BNDwidgetState state);
+NVGcolor bndTextColor(const WimaWidgetTheme *theme, BNDwidgetState state);
 
 // computes the bounds of the scrollbar handle from the scrollbar size
 // and the handles offset and size.
 // offset is in the range 0..1 and defines the position of the scroll handle
 // size is in the range 0..1 and defines the size of the scroll handle
-BND_EXPORT void bndScrollHandleRect(float *x, float *y, float *w, float *h,
+void bndScrollHandleRect(float *x, float *y, float *w, float *h,
     float offset, float size);
 
 // Add a rounded box path at position (x,y) with size (w,h) and a separate
@@ -992,43 +1001,43 @@ BND_EXPORT void bndScrollHandleRect(float *x, float *y, float *w, float *h,
 // cr1 = top right, cr2 = bottom right, cr3 = bottom left;
 // this is a low level drawing function: the path must be stroked or filled
 // to become visible.
-BND_EXPORT void bndRoundedBox(NVGcontext *ctx, float x, float y, float w, float h,
+void bndRoundedBox(NVGcontext *ctx, float x, float y, float w, float h,
     float cr0, float cr1, float cr2, float cr3);
 
 // Draw a flat panel without any decorations at position (x,y) with size (w,h)
 // and fills it with backgroundColor
-BND_EXPORT void bndBackground(NVGcontext *ctx, float x, float y, float w, float h);
+void bndBackground(NVGcontext *ctx, float x, float y, float w, float h);
 
 // Draw a beveled border at position (x,y) with size (w,h) shaded with
 // lighter and darker versions of backgroundColor
-BND_EXPORT void bndBevel(NVGcontext *ctx, float x, float y, float w, float h);
+void bndBevel(NVGcontext *ctx, float x, float y, float w, float h);
 
 // Draw a lower inset for a rounded box at position (x,y) with size (w,h)
 // that gives the impression the surface has been pushed in.
 // cr2 and cr3 contain the radiuses of the bottom right and bottom left
 // corners of the rounded box.
-BND_EXPORT void bndBevelInset(NVGcontext *ctx, float x, float y, float w, float h,
+void bndBevelInset(NVGcontext *ctx, float x, float y, float w, float h,
     float cr2, float cr3);
 
 // Draw an icon with (x,y) as its upper left coordinate; the iconid selects
 // the icon from the sheet; use the BND_ICONID macro to build icon IDs.
-BND_EXPORT void bndIcon(NVGcontext *ctx, float x, float y, int iconid);
+void bndIcon(NVGcontext *ctx, float x, float y, int iconid);
 
 // Draw a drop shadow around the rounded box at (x,y) with size (w,h) and
 // radius r, with feather as its maximum range in pixels.
 // No shadow will be painted inside the rounded box.
-BND_EXPORT void bndDropShadow(NVGcontext *ctx, float x, float y, float w, float h,
+void bndDropShadow(NVGcontext *ctx, float x, float y, float w, float h,
     float r, float feather, float alpha);
 
 // Draw the inner part of a widget box, with a gradient from shade_top to
 // shade_down. If h>w, the gradient will be horizontal instead of
 // vertical.
-BND_EXPORT void bndInnerBox(NVGcontext *ctx, float x, float y, float w, float h,
+void bndInnerBox(NVGcontext *ctx, float x, float y, float w, float h,
     float cr0, float cr1, float cr2, float cr3,
     NVGcolor shade_top, NVGcolor shade_down);
 
 // Draw the outline part of a widget box with the given color
-BND_EXPORT void bndOutlineBox(NVGcontext *ctx, float x, float y, float w, float h,
+void bndOutlineBox(NVGcontext *ctx, float x, float y, float w, float h,
     float cr0, float cr1, float cr2, float cr3, NVGcolor color);
 
 // Draw an optional icon specified by <iconid> and an optional label with
@@ -1039,7 +1048,7 @@ BND_EXPORT void bndOutlineBox(NVGcontext *ctx, float x, float y, float w, float 
 // and color.
 // if value is not NULL, label and value will be drawn with a ":" separator
 // inbetween.
-BND_EXPORT void bndIconLabelValue(NVGcontext *ctx, float x, float y, float w, float h,
+void bndIconLabelValue(NVGcontext *ctx, float x, float y, float w, float h,
     int iconid, NVGcolor color, int align, float fontsize, const char *label,
     const char *value);
 
@@ -1048,14 +1057,14 @@ BND_EXPORT void bndIconLabelValue(NVGcontext *ctx, float x, float y, float w, fl
 // if iconid is >= 0, an icon will be drawn
 // if label is not NULL, it will be drawn with the specified alignment, fontsize
 // and color.
-BND_EXPORT void bndNodeIconLabel(NVGcontext *ctx, float x, float y, float w, float h,
+void bndNodeIconLabel(NVGcontext *ctx, float x, float y, float w, float h,
     int iconid, NVGcolor color, NVGcolor shadowColor, int align,
     float fontsize, const char *label);
 
 // Calculate the corresponding text position for given coordinates px/py
 // in an iconLabel.
 // See bndIconLabelCaret for more info.
-BND_EXPORT int bndIconLabelTextPosition(NVGcontext *ctx, float x, float y, float w, float h,
+int bndIconLabelTextPosition(NVGcontext *ctx, float x, float y, float w, float h,
     int iconid, float fontsize, const char *label, int px, int py);
 
 // Draw an optional icon specified by <iconid>, an optional label and
@@ -1067,31 +1076,31 @@ BND_EXPORT int bndIconLabelTextPosition(NVGcontext *ctx, float x, float y, float
 // cbegin must be >= 0 and <= strlen(text) and denotes the beginning of the caret
 // cend must be >= cbegin and <= strlen(text) and denotes the end of the caret
 // if cend < cbegin, then no caret will be drawn
-BND_EXPORT void bndIconLabelCaret(NVGcontext *ctx, float x, float y, float w, float h,
+void bndIconLabelCaret(NVGcontext *ctx, float x, float y, float w, float h,
     int iconid, NVGcolor color, float fontsize, const char *label,
     NVGcolor caretcolor, int cbegin, int cend);
 
 // Draw a checkmark for an option box with the given upper left coordinates
 // (ox,oy) with the specified color.
-BND_EXPORT void bndCheck(NVGcontext *ctx, float ox, float oy, NVGcolor color);
+void bndCheck(NVGcontext *ctx, float ox, float oy, NVGcolor color);
 
 // Draw a horizontal arrow for a number field with its center at (x,y) and
 // size s; if s is negative, the arrow points to the left.
-BND_EXPORT void bndArrow(NVGcontext *ctx, float x, float y, float s, NVGcolor color);
+void bndArrow(NVGcontext *ctx, float x, float y, float s, NVGcolor color);
 
 // Draw an up/down arrow for a choice box with its center at (x,y) and size s
-BND_EXPORT void bndUpDownArrow(NVGcontext *ctx, float x, float y, float s, NVGcolor color);
+void bndUpDownArrow(NVGcontext *ctx, float x, float y, float s, NVGcolor color);
 
 // Draw a node down-arrow with its tip at (x,y) and size s
-BND_EXPORT void bndNodeArrowDown(NVGcontext *ctx, float x, float y, float s, NVGcolor color);
+void bndNodeArrowDown(NVGcontext *ctx, float x, float y, float s, NVGcolor color);
 
 // return the color of a node wire based on state
 // BND_HOVER indicates selected state,
 // BND_ACTIVE indicates dragged state
-BND_EXPORT NVGcolor bndNodeWireColor(const BNDnodeTheme *theme, BNDwidgetState state);
+NVGcolor bndNodeWireColor(const WimaNodeTheme *theme, BNDwidgetState state);
 
 #ifdef __cplusplus
-};
+}
 #endif
 
 #endif // BLENDISH_H

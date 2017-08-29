@@ -50,7 +50,8 @@
 #include "window.h"
 #include "global.h"
 
-WimaG wg;
+extern WimaG wg;
+extern const WimaTheme wima_initial_theme;
 
 WimaStatus wima_init(const char* name,           ErrorFunc error,
                      WindowMouseEnterFunc enter, WindowPosFunc pos,
@@ -72,6 +73,9 @@ WimaStatus wima_init(const char* name,           ErrorFunc error,
 	wg.workspaces = NULL;
 	wg.name = NULL;
 	wg.windows = NULL;
+
+	// Set the initial theme.
+	wg.theme = wima_initial_theme;
 
 	DynaStatus dstatus = dstr_create(&(wg.name), name);
 	if (dstatus) {

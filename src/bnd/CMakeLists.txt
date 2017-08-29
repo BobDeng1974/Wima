@@ -24,14 +24,16 @@
 #
 #	****** END LICENSE BLOCK ******
 
+# We use the nanovg includes, so we need this.
+include_directories("../../lib/nanovg/src")
+
+set(WIMA_GLOBAL "${PROJECT_NAME}_global")
+
 set(WIMA_BND_SRC
 
 	#Put source files here.
 	"blendish.c"
 )
-
-# We use the nanovg includes, so we need this.
-include_directories("../../lib/nanovg/src")
 
 set(WIMA_OUI_PIC "wima_oui_pic")
 
@@ -56,6 +58,7 @@ create_all_libraries(
 
 	# Add libraries here.
 	"${WIMA_OUI_PIC}"
+	"${WIMA_GLOBAL}"
 	"${NANOVG_PIC}"
 	"${JEMALLOC_PIC}"
 )

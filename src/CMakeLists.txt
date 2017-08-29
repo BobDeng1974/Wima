@@ -24,7 +24,24 @@
 #
 #	****** END LICENSE BLOCK ******
 
-set("WIMA_SRC"
+# We use the nanovg includes, so we need this.
+include_directories("../lib/nanovg/src")
+
+set(WIMA_GLOBAL_SRC
+
+	# Add files here.
+	"global.c"
+)
+
+set(WIMA_GLOBAL "${PROJECT_NAME}_global")
+set(WIMA_GLOBAL_PIC "${WIMA_GLOBAL}_pic")
+create_pic_library("${WIMA_GLOBAL}" "${WIMA_GLOBAL_PIC}" "${WIMA_GLOBAL_SRC}" YES
+
+	# Add libraries here.
+	"${DYNA_LIB}"
+)
+
+set(WIMA_SRC
 
 	# Put all source files here.
 	"callbacks.c"
@@ -51,6 +68,7 @@ create_all_libraries(
 	# Put the needed libraries here.
 	"${WIMA_BND_PIC}"
 	"${WIMA_OUI_PIC}"
+	"${WIMA_GLOBAL}"
 	"${NANOVG_PIC}"
 	"${DYNA_LIB}"
 	"${GLFW_LIB}"
