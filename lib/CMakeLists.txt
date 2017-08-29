@@ -24,6 +24,23 @@
 #
 #	****** END LICENSE BLOCK ******
 
-set(WIMA_LIB "${PROJECT_NAME}")
+include_directories(nanovg/src)
 
-create_test(app "${WIMA_SHARED}" "${DYNA_LIB}")
+set(NANOVG "nanovg")
+
+set(NANOVG_SHARED "${NANOVG}_shared")
+set(NANOVG_STATIC "${NANOVG}_static")
+set(NANOVG_PIC "${NANOVG}_pic")
+
+add_definitions(-DNANOVG_GL3_IMPLEMENTATION)
+
+set(NANOVG_SRC_DIR "nanovg/src")
+
+set(NANOVG_SRC
+
+	# Add source files here.
+	"${NANOVG_SRC_DIR}/nanovg.c"
+	"${NANOVG_SRC_DIR}/nanovg_pick.c"
+)
+
+create_all_libraries("${NANOVG_SHARED}" "${NANOVG_STATIC}" "${NANOVG_PIC}" "${NANOVG}" "${NANOVG_SRC}" NO)

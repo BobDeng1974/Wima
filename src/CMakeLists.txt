@@ -41,10 +41,9 @@ find_library(RT_LIB rt PATHS "/usr/lib" "/usr/local/lib")
 find_library(MATH_LIB m PATHS "/usr/lib" "/usr/local/lib")
 find_library(DL_LIB dl "/usr/lib" "/usr/local/lib")
 find_library(PTHREAD_LIB pthread PATHS "/usr/lib" "/usr/local/lib")
-find_library(JEMALLOC_LIB jemalloc PATHS "/usr/lib" "/usr/local/lib")
-find_library(GLFW_LIB glfw3 PATHS "/usr/lib" "/usr/local/lib")
-find_library(DYNA_LIB dyna PATHS "/usr/lib" "/usr/local/lib")
-find_library(NANOVG_LIB nanovg PATHS "/usr/lib" "/usr/local/lib")
+find_library(JEMALLOC_LIB NAMES libjemalloc_pic.a jemalloc PATHS "/usr/lib" "/usr/local/lib")
+find_library(GLFW_LIB glfw PATHS "/usr/lib" "/usr/local/lib")
+find_library(DYNA_LIB NAMES libdyna_pic.a dyna PATHS "/usr/lib" "/usr/local/lib")
 
 include_directories("${X11_INCLUDE_DIR}")
 
@@ -53,12 +52,18 @@ add_subdirectory(glad)
 add_subdirectory(oui)
 add_subdirectory(bnd)
 
-create_library("${PROJECT_NAME}" "${WIMA_SRC}" "YES"
+set(WIMA_SHARED "${PROJECT_NAME}_shared")
+set(WIMA_STATIC "${PROJECT_NAME}_static")
+set(WIMA_PIC "${PROJECT_NAME}_pic")
+
+create_all_libraries(
+	"${WIMA_SHARED}" "${WIMA_STATIC}" "${WIMA_PIC}"
+	"${PROJECT_NAME}" "${WIMA_SRC}" "YES"
 
 	# Put the needed libraries here.
 	"${DYNA_LIB}"
 	"${GLFW_LIB}"
-	"${WIMA_GLAD_LIB}"
+	"${WIMA_GLAD_PIC}"
 	"${JEMALLOC_LIB}"
 	"${DL_LIB}"
 	"${X11_X11_LIB}"

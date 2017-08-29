@@ -35,11 +35,14 @@ set(ignoreMe "${CMAKE_CXX_COMPILER}")
 enable_testing()
 
 set("WIMA_INCLUDE_DIR" "include")
+set("WIMA_LIB_DIR" "lib")
 set("WIMA_SRC_DIR" "src")
 
 add_subdirectory("cmake")
 
 include_directories("${WIMA_INCLUDE_DIR}")
 add_subdirectory("${WIMA_INCLUDE_DIR}")
+
+add_subdirectory("${WIMA_LIB_DIR}")
 
 add_subdirectory("${WIMA_SRC_DIR}")
