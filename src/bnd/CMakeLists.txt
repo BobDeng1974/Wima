@@ -27,13 +27,33 @@
 set(WIMA_BND_SRC
 
 	#Put source files here.
-	"blendish.c")
+	"blendish.c"
+)
 
-set(WIMA_BND_LIB wima_bnd)
+# We use the nanovg includes, so we need this.
+include_directories("../../lib/nanovg/src")
 
-create_library("${WIMA_BND_LIB}" "${WIMA_BND_SRC}" NO
+set(WIMA_BND wima_bnd)
+
+set(WIMA_BND_SHARED "${WIMA_BND}_shared")
+set(WIMA_BND_SHARED "${WIMA_BND_SHARED}" PARENT_SCOPE)
+set(WIMA_BND_STATIC "${WIMA_BND}_static")
+set(WIMA_BND_STATIC "${WIMA_BND_STATIC}" PARENT_SCOPE)
+set(WIMA_BND_PIC "${WIMA_BND}_pic")
+set(WIMA_BND_PIC "${WIMA_BND_PIC}" PARENT_SCOPE)
+
+create_all_libraries(
+
+	"${WIMA_BND_SHARED}"
+	"${WIMA_BND_STATIC}"
+	"${WIMA_BND_PIC}"
+
+	"${WIMA_BND_LIB}"
+	"${WIMA_BND_SRC}"
+	YES
 
 	# Add libraries here.
-	"${WIMA_OUI_LIB}"
-	"${NANOVG_LIB}"
-	"${JEMALLOC_LIB}")
+	"${WIMA_OUI_PIC}"
+	"${NANOVG_PIC}"
+	"${JEMALLOC_PIC}"
+)

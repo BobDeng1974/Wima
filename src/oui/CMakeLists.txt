@@ -27,13 +27,26 @@
 set(WIMA_OUI_SRC
 
 	#Put source files here.
-	"oui.c")
+	"oui.c"
+)
 
-set(WIMA_OUI_LIB "wima_oui")
+set(WIMA_OUI "wima_oui")
 
-create_library("${WIMA_OUI_LIB}" "${WIMA_OUI_SRC}" NO
+set(WIMA_OUI_SHARED "${WIMA_OUI}_shared")
+set(WIMA_OUI_STATIC "${WIMA_OUI}_static")
+set(WIMA_OUI_PIC "${WIMA_OUI}_pic")
+
+create_all_libraries(
+
+	"${WIMA_OUI_SHARED}"
+	"${WIMA_OUI_STATIC}"
+	"${WIMA_OUI_PIC}"
+
+	"${WIMA_OUI}"
+	"${WIMA_OUI_SRC}"
+	YES
 
 	# Add libraries here.
-	"${NANOVG_LIB}"
-	"${JEMALLOC_LIB}"
+	"${NANOVG_PIC}"
+	"${JEMALLOC_PIC}"
 )

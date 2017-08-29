@@ -25,7 +25,7 @@
 
 #include <math.h>
 
-#include <nanovg/nanovg.h>
+#include <nanovg.h>
 
 #include "blendish.h"
 

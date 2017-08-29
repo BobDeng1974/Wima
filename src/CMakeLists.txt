@@ -59,6 +59,9 @@ create_all_libraries(
 	"${PROJECT_NAME}" "${WIMA_SRC}" "YES"
 
 	# Put the needed libraries here.
+	"${WIMA_BND_PIC}"
+	"${WIMA_OUI_PIC}"
+	"${NANOVG_PIC}"
 	"${DYNA_LIB}"
 	"${GLFW_LIB}"
 	"${WIMA_GLAD_PIC}"
