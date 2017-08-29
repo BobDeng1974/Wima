@@ -130,8 +130,8 @@ void ui_handler(int item, UIevent event) {
 }
 
 void init(NVGcontext *vg) {
-	bndSetFont(nvgCreateFont(vg, "system", "../DejaVuSans.ttf"));
-	bndSetIconImage(nvgCreateImage(vg, "../blender_icons16.png", 0));
+	bndSetFont(nvgCreateFont(vg, "system", "../../res/DejaVuSans.ttf"));
+	bndSetIconImage(nvgCreateImage(vg, "../../res/blender_icons16.png", 0));
 }
 
 void testrect(NVGcontext *vg, UIrect rect) {
@@ -1242,15 +1242,11 @@ int main()
 	glfwSetScrollCallback(window, scrollevent);
 
 	glfwMakeContextCurrent(window);
-#ifdef NANOVG_GLEW
-	glewExperimental = GL_TRUE;
-	if(glewInit() != GLEW_OK) {
-		printf("Could not init glew.\n");
+
+	if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+		glfwTerminate();
 		return -1;
 	}
-	// GLEW generates GL error because it calls glGetString(GL_EXTENSIONS), we'll consume it here.
-	glGetError();
-#endif
 
 	//_vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 	_vg = nvgCreateGL3(NVG_ANTIALIAS);

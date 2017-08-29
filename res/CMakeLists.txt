@@ -24,38 +24,14 @@
 #
 #	****** END LICENSE BLOCK ******
 
-cmake_minimum_required(VERSION 3.0)
+# Install res files for tests.
+file(COPY
 
-project(wima C)
+	# Add files here.
+	"DejaVuSans.ttf"
+	"blender_icons16.png"
 
-# Necessary to suppress a useless warning with QtCreator.
-set(ignoreMe "${QT_QMAKE_EXECUTABLE}")
-set(ignoreMe "${CMAKE_CXX_COMPILER}")
+	DESTINATION "${CMAKE_CURRENT_BINARY_DIR}"
+)
 
-enable_testing()
-
-find_package(X11 REQUIRED)
-
-find_library(RT_LIB rt PATHS "/usr/lib" "/usr/local/lib")
-find_library(MATH_LIB m PATHS "/usr/lib" "/usr/local/lib")
-find_library(DL_LIB dl "/usr/lib" "/usr/local/lib")
-find_library(PTHREAD_LIB pthread PATHS "/usr/lib" "/usr/local/lib")
-find_library(JEMALLOC_LIB NAMES libjemalloc_pic.a jemalloc PATHS "/usr/lib" "/usr/local/lib")
-find_library(GLFW_LIB glfw PATHS "/usr/lib" "/usr/local/lib")
-find_library(DYNA_LIB NAMES libdyna_pic.a dyna PATHS "/usr/lib" "/usr/local/lib")
-
-set("WIMA_INCLUDE_DIR" "include")
-set("WIMA_LIB_DIR" "lib")
-set("WIMA_SRC_DIR" "src")
-set("WIMA_RES_DIR" "res")
-
-add_subdirectory("cmake")
-
-include_directories("${WIMA_INCLUDE_DIR}")
-add_subdirectory("${WIMA_INCLUDE_DIR}")
-
-add_subdirectory("${WIMA_LIB_DIR}")
-
-add_subdirectory("${WIMA_SRC_DIR}")
-
-add_subdirectory("${WIMA_RES_DIR}")
+install(DIRECTORY . DESTINATION res/)
