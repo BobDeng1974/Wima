@@ -33,6 +33,8 @@ set(WIMA_BND_SRC
 # We use the nanovg includes, so we need this.
 include_directories("../../lib/nanovg/src")
 
+set(WIMA_OUI_PIC "wima_oui_pic")
+
 set(WIMA_BND wima_bnd)
 
 set(WIMA_BND_SHARED "${WIMA_BND}_shared")
@@ -48,7 +50,7 @@ create_all_libraries(
 	"${WIMA_BND_STATIC}"
 	"${WIMA_BND_PIC}"
 
-	"${WIMA_BND_LIB}"
+	"${WIMA_BND}"
 	"${WIMA_BND_SRC}"
 	YES
 

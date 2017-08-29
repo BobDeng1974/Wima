@@ -436,6 +436,96 @@ typedef struct UIrect {
 #endif
 } UIrect;
 
+typedef struct UIitem {
+		// data handle
+		void *handle;
+
+	// about 27 bits worth of flags
+	unsigned int flags;
+
+	// index of first kid
+	// if old item: index of equivalent new item
+	int firstkid;
+	// index of next sibling with same parent
+	int nextitem;
+
+	// margin offsets, interpretation depends on flags
+	// after layouting, the first two components are absolute coordinates
+	short margins[4];
+	// size
+	short size[2];
+} UIitem;
+
+typedef enum UIstate {
+	UI_STATE_IDLE = 0,
+	UI_STATE_CAPTURE,
+} UIstate;
+
+typedef enum UIstage {
+	UI_STAGE_LAYOUT = 0,
+	UI_STAGE_POST_LAYOUT,
+	UI_STAGE_PROCESS,
+} UIstage;
+
+typedef struct UIhandleEntry {
+		unsigned int key;
+	int item;
+} UIhandleEntry;
+
+typedef struct UIinputEvent {
+		unsigned int key;
+	unsigned int mod;
+	UIevent event;
+} UIinputEvent;
+
+struct UIcontext {
+		unsigned int item_capacity;
+	unsigned int buffer_capacity;
+
+	// handler
+	UIhandler handler;
+
+	// button state in this frame
+	unsigned long long buttons;
+	// button state in the previous frame
+	unsigned long long last_buttons;
+
+	// where the cursor was at the beginning of the active state
+	UIvec2 start_cursor;
+	// where the cursor was last frame
+	UIvec2 last_cursor;
+	// where the cursor is currently
+	UIvec2 cursor;
+	// accumulated scroll wheel offsets
+	UIvec2 scroll;
+
+	int active_item;
+	int focus_item;
+	int last_hot_item;
+	int last_click_item;
+	int hot_item;
+
+	UIstate state;
+	UIstage stage;
+	unsigned int active_key;
+	unsigned int active_modifier;
+	unsigned int active_button_modifier;
+	int last_timestamp;
+	int last_click_timestamp;
+	int clicks;
+
+	int count;
+	int last_count;
+	int eventcount;
+	unsigned int datasize;
+
+	UIitem *items;
+	unsigned char *data;
+	UIitem *last_items;
+	int *item_map;
+	UIinputEvent events[UI_MAX_INPUT_EVENTS];
+};
+
 // unless declared otherwise, all operations have the complexity O(1).
 
 // Context Management

@@ -43,4 +43,6 @@ create_all_libraries(
 	"${WIMA_GLAD}"
 	"${WIMA_GLAD_SRC}"
 	YES
+
+	"${DL_LIB}"
 )

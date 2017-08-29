@@ -25,8 +25,11 @@ For generating themes, Wima uses a modified version of
 [NanoVG](https://github.com/memononen/nanovg). Wima also uses a modified version
 of [OUI](https://bitbucket.org/duangle/oui-blendish/src) (contained in the
 [`src/oui`](src/oui) directory), otherwise known as OpenUI, for layout. OUI is
-pronounced like the French word for "yes." The original code for Blendish and
-OUI is subject to the following copyright:
+pronounced like the French word for "yes." The file
+[`src/tests/bnd_oui_demo.c`](src/tests/bnd_oui_demo.c) is also originally part
+of Blendish/OUI.
+
+The original code for Blendish and OUI is subject to the following copyright:
 
 > Copyright &copy; 2014 Leonard Ritter (<leonard.ritter@duangle.com>).
 

@@ -63,4 +63,5 @@ create_all_libraries(
 
 	# Add necessary libraries here.
 	"${WIMA_GLAD_PIC}"
+	"${MATH_LIB}"
 )

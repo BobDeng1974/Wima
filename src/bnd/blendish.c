@@ -34,11 +34,6 @@
     #pragma warning (disable: 4100) // Switch off unreferenced formal parameter warnings
     #pragma warning (disable: 4244)
     #pragma warning (disable: 4305)
-    #ifdef __cplusplus
-    #define BND_INLINE inline
-    #else
-    #define BND_INLINE
-    #endif
 
 #include <float.h>
 
@@ -63,7 +58,6 @@ static double bnd_fmax ( double a, double b )
 }
 
 #else
-    #define BND_INLINE inline
     #define bnd_fminf(a, b) fminf(a, b)
     #define bnd_fmaxf(a, b) fmaxf(a, b)
     #define bnd_fmin(a, b) fmin(a, b)
@@ -165,7 +159,7 @@ static double bnd_fmax ( double a, double b )
 
 ////////////////////////////////////////////////////////////////////////////////
 
-BND_INLINE float bnd_clamp(float v, float mn, float mx) {
+float bnd_clamp(float v, float mn, float mx) {
 	return (v > mx)?mx:(v < mn)?mn:v;
 }
 
@@ -1315,7 +1309,3 @@ NVGcolor bndNodeWireColor(const BNDnodeTheme *theme, BNDwidgetState state) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-
-#ifdef BND_INLINE
-#undef BND_INLINE
-#endif

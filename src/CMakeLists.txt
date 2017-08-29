@@ -35,16 +35,6 @@ set("WIMA_SRC"
 	"wima.c"
 )
 
-find_package(X11 REQUIRED)
-
-find_library(RT_LIB rt PATHS "/usr/lib" "/usr/local/lib")
-find_library(MATH_LIB m PATHS "/usr/lib" "/usr/local/lib")
-find_library(DL_LIB dl "/usr/lib" "/usr/local/lib")
-find_library(PTHREAD_LIB pthread PATHS "/usr/lib" "/usr/local/lib")
-find_library(JEMALLOC_LIB NAMES libjemalloc_pic.a jemalloc PATHS "/usr/lib" "/usr/local/lib")
-find_library(GLFW_LIB glfw PATHS "/usr/lib" "/usr/local/lib")
-find_library(DYNA_LIB NAMES libdyna_pic.a dyna PATHS "/usr/lib" "/usr/local/lib")
-
 include_directories("${X11_INCLUDE_DIR}")
 
 add_subdirectory(oui)

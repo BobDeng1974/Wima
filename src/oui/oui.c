@@ -35,14 +35,6 @@
     #pragma warning (disable: 4100) // Switch off unreferenced formal parameter warnings
     #pragma warning (disable: 4244)
     #pragma warning (disable: 4305)
-
-    #ifdef __cplusplus
-    #define UI_INLINE inline
-    #else
-    #define UI_INLINE
-    #endif
-#else
-    #define UI_INLINE inline
 #endif
 
 #define UI_MAX_KIND 16
@@ -95,109 +87,19 @@ enum {
 	    | UI_USERMASK,
 };
 
-typedef struct UIitem {
-		// data handle
-		void *handle;
-
-	// about 27 bits worth of flags
-	unsigned int flags;
-
-	// index of first kid
-	// if old item: index of equivalent new item
-	int firstkid;
-	// index of next sibling with same parent
-	int nextitem;
-
-	// margin offsets, interpretation depends on flags
-	// after layouting, the first two components are absolute coordinates
-	short margins[4];
-	// size
-	short size[2];
-} UIitem;
-
-typedef enum UIstate {
-	UI_STATE_IDLE = 0,
-	UI_STATE_CAPTURE,
-} UIstate;
-
-typedef enum UIstage {
-	UI_STAGE_LAYOUT = 0,
-	UI_STAGE_POST_LAYOUT,
-	UI_STAGE_PROCESS,
-} UIstage;
-
-typedef struct UIhandleEntry {
-		unsigned int key;
-	int item;
-} UIhandleEntry;
-
-typedef struct UIinputEvent {
-		unsigned int key;
-	unsigned int mod;
-	UIevent event;
-} UIinputEvent;
-
-struct UIcontext {
-		unsigned int item_capacity;
-	unsigned int buffer_capacity;
-
-	// handler
-	UIhandler handler;
-
-	// button state in this frame
-	unsigned long long buttons;
-	// button state in the previous frame
-	unsigned long long last_buttons;
-
-	// where the cursor was at the beginning of the active state
-	UIvec2 start_cursor;
-	// where the cursor was last frame
-	UIvec2 last_cursor;
-	// where the cursor is currently
-	UIvec2 cursor;
-	// accumulated scroll wheel offsets
-	UIvec2 scroll;
-
-	int active_item;
-	int focus_item;
-	int last_hot_item;
-	int last_click_item;
-	int hot_item;
-
-	UIstate state;
-	UIstage stage;
-	unsigned int active_key;
-	unsigned int active_modifier;
-	unsigned int active_button_modifier;
-	int last_timestamp;
-	int last_click_timestamp;
-	int clicks;
-
-	int count;
-	int last_count;
-	int eventcount;
-	unsigned int datasize;
-
-	UIitem *items;
-	unsigned char *data;
-	UIitem *last_items;
-	int *item_map;
-	UIinputEvent events[UI_MAX_INPUT_EVENTS];
-};
-
-UI_INLINE int ui_max(int a, int b) {
+int ui_max(int a, int b) {
 	return (a>b)?a:b;
 }
 
-UI_INLINE int ui_min(int a, int b) {
+int ui_min(int a, int b) {
 	return (a<b)?a:b;
 }
 
-UI_INLINE float ui_maxf(float a, float b) {
+float ui_maxf(float a, float b) {
 	return (a>b)?a:b;
 }
 
-UI_INLINE float ui_minf(float a, float b) {
+float ui_minf(float a, float b) {
 	return (a<b)?a:b;
 }
 
@@ -455,7 +357,7 @@ void uiNotifyItem(int item, UIevent event) {
 	}
 }
 
-UI_INLINE int uiLastChild(int item) {
+int uiLastChild(int item) {
 	item = uiFirstChild(item);
 	if (item < 0)
 		return -1;
@@ -581,7 +483,7 @@ short uiGetMarginDown(int item) {
 }
 
 // compute bounding box of all items super-imposed
-UI_INLINE void uiComputeImposedSize(UIitem *pitem, int dim) {
+void uiComputeImposedSize(UIitem *pitem, int dim) {
 	int wdim = dim+2;
 	// largest size is required size
 	short need_size = 0;
@@ -598,7 +500,7 @@ UI_INLINE void uiComputeImposedSize(UIitem *pitem, int dim) {
 }
 
 // compute bounding box of all items stacked
-UI_INLINE void uiComputeStackedSize(UIitem *pitem, int dim) {
+void uiComputeStackedSize(UIitem *pitem, int dim) {
 	int wdim = dim+2;
 	short need_size = 0;
 	int kid = pitem->firstkid;
@@ -612,7 +514,7 @@ UI_INLINE void uiComputeStackedSize(UIitem *pitem, int dim) {
 }
 
 // compute bounding box of all items stacked, repeating when breaking
-UI_INLINE void uiComputeWrappedStackedSize(UIitem *pitem, int dim) {
+void uiComputeWrappedStackedSize(UIitem *pitem, int dim) {
 	int wdim = dim+2;
 
 	short need_size = 0;
@@ -636,7 +538,7 @@ UI_INLINE void uiComputeWrappedStackedSize(UIitem *pitem, int dim) {
 }
 
 // compute bounding box of all items stacked + wrapped
-UI_INLINE void uiComputeWrappedSize(UIitem *pitem, int dim) {
+void uiComputeWrappedSize(UIitem *pitem, int dim) {
 	int wdim = dim+2;
 
 	short need_size = 0;
@@ -703,7 +605,7 @@ static void uiComputeSize(int item, int dim) {
 }
 
 // stack all items according to their alignment
-UI_INLINE void uiArrangeStacked(UIitem *pitem, int dim, bool wrap) {
+void uiArrangeStacked(UIitem *pitem, int dim, bool wrap) {
 	int wdim = dim+2;
 
 	short space = pitem->size[dim];
@@ -817,7 +719,7 @@ UI_INLINE void uiArrangeStacked(UIitem *pitem, int dim, bool wrap) {
 }
 
 // superimpose all items according to their alignment
-UI_INLINE void uiArrangeImposedRange(UIitem *pitem, int dim,      int start_kid,
+void uiArrangeImposedRange(UIitem *pitem, int dim,      int start_kid,
                                      int end_kid,   short offset, short space)
 {
 	int wdim = dim+2;
@@ -846,13 +748,13 @@ UI_INLINE void uiArrangeImposedRange(UIitem *pitem, int dim,      int start_kid,
 	}
 }
 
-UI_INLINE void uiArrangeImposed(UIitem *pitem, int dim) {
+void uiArrangeImposed(UIitem *pitem, int dim) {
 	uiArrangeImposedRange(pitem, dim, pitem->firstkid, -1, pitem->margins[dim], pitem->size[dim]);
 }
 
 // superimpose all items according to their alignment,
 // squeeze items that expand the available space
-UI_INLINE void uiArrangeImposedSqueezedRange(UIitem *pitem, int dim,      int start_kid,
+void uiArrangeImposedSqueezedRange(UIitem *pitem, int dim,      int start_kid,
                                              int end_kid,   short offset, short space)
 {
 	int wdim = dim+2;
@@ -886,12 +788,12 @@ UI_INLINE void uiArrangeImposedSqueezedRange(UIitem *pitem, int dim,      int st
 	}
 }
 
-UI_INLINE void uiArrangeImposedSqueezed(UIitem *pitem, int dim) {
+void uiArrangeImposedSqueezed(UIitem *pitem, int dim) {
 	uiArrangeImposedSqueezedRange(pitem, dim, pitem->firstkid, -1, pitem->margins[dim], pitem->size[dim]);
 }
 
 // superimpose all items according to their alignment
-UI_INLINE short uiArrangeWrappedImposedSqueezed(UIitem *pitem, int dim) {
+short uiArrangeWrappedImposedSqueezed(UIitem *pitem, int dim) {
 	int wdim = dim+2;
 
 	short offset = pitem->margins[dim];
@@ -963,7 +865,7 @@ static void uiArrange(int item, int dim) {
 	}
 }
 
-UI_INLINE bool uiCompareItems(UIitem *item1, UIitem *item2) {
+bool uiCompareItems(UIitem *item1, UIitem *item2) {
 	return ((item1->flags & UI_ITEM_COMPARE_MASK) == (item2->flags & UI_ITEM_COMPARE_MASK));
 
 }

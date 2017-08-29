@@ -24,6 +24,8 @@
 #
 #	****** END LICENSE BLOCK ******
 
-set(WIMA_LIB "${PROJECT_NAME}")
+# We need to include NanoVG's headers.
+include_directories(../../lib/nanovg/src)
 
-create_test(app "${WIMA_SHARED}" "${DYNA_LIB}")
+create_test(app "${WIMA_PIC}" "${DYNA_LIB}")
+create_test(bnd_oui_demo "${WIMA_OUI_PIC}" "${WIMA_BND_PIC}" "${GLFW_LIB}")
