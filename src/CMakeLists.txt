@@ -47,8 +47,6 @@ find_library(DYNA_LIB NAMES libdyna_pic.a dyna PATHS "/usr/lib" "/usr/local/lib"
 
 include_directories("${X11_INCLUDE_DIR}")
 
-add_subdirectory(glad)
-
 add_subdirectory(oui)
 add_subdirectory(bnd)
 

@@ -24,17 +24,27 @@
 #
 #	****** END LICENSE BLOCK ******
 
-include_directories(nanovg/src)
+add_subdirectory(glad)
+
+set(WIMA_GLAD "${WIMA_GLAD}" PARENT_SCOPE)
+set(WIMA_GLAD_SHARED "${WIMA_GLAD_SHARED}" PARENT_SCOPE)
+set(WIMA_GLAD_STATIC "${WIMA_GLAD_STATIC}" PARENT_SCOPE)
+set(WIMA_GLAD_PIC "${WIMA_GLAD_PIC}" PARENT_SCOPE)
 
 set(NANOVG "nanovg")
 
 set(NANOVG_SHARED "${NANOVG}_shared")
+set(NANOVG_SHARED "${NANOVG_SHARED}" PARENT_SCOPE)
 set(NANOVG_STATIC "${NANOVG}_static")
+set(NANOVG_STATIC "${NANOVG_STATIC}" PARENT_SCOPE)
 set(NANOVG_PIC "${NANOVG}_pic")
+set(NANOVG_PIC "${NANOVG_PIC}" PARENT_SCOPE)
 
 add_definitions(-DNANOVG_GL3_IMPLEMENTATION)
 
 set(NANOVG_SRC_DIR "nanovg/src")
+
+include_directories("${NANOVG_SRC_DIR}")
 
 set(NANOVG_SRC
 
@@ -43,4 +53,14 @@ set(NANOVG_SRC
 	"${NANOVG_SRC_DIR}/nanovg_pick.c"
 )
 
-create_all_libraries("${NANOVG_SHARED}" "${NANOVG_STATIC}" "${NANOVG_PIC}" "${NANOVG}" "${NANOVG_SRC}" NO)
+create_all_libraries(
+	"${NANOVG_SHARED}"
+	"${NANOVG_STATIC}"
+	"${NANOVG_PIC}"
+	"${NANOVG}"
+	"${NANOVG_SRC}"
+	YES
+
+	# Add necessary libraries here.
+	"${WIMA_GLAD_PIC}"
+)
