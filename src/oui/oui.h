@@ -353,7 +353,7 @@ typedef enum UIlayoutFlags {
 	UI_BREAK = 0x200
 } UIlayoutFlags;
 
-#if 0
+//#if 0
 // event flags
 typedef enum UIevent {
 	// on left mouse button down
@@ -386,7 +386,7 @@ typedef enum UIevent {
 	// the respective character can be queried using uiGetKey()
 	UI_CHAR = 0x40000,
 } UIevent;
-#endif
+//#endif
 
 enum {
 	// these bits, starting at bit 24, can be safely assigned by the
@@ -398,10 +398,10 @@ enum {
 	UI_ANY = 0xffffffff,
 };
 
-#if 0
+//#if 0
 // handler callback; event is one of UI_EVENT_*
 typedef void (*UIhandler)(int item, UIevent event);
-#endif
+//#endif
 
 // for cursor positions, mainly
 typedef struct UIvec2 {
