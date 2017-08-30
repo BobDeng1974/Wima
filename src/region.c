@@ -45,7 +45,7 @@
 extern WimaG wg;
 
 WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name,
-                                AreaGetUserPointerFunc userPtr, AreaFreeUserPointerFunc userFree,
+                                AreaGenUserPointerFunc userPtr, AreaFreeUserPointerFunc userFree,
                                 AreaDrawFunc draw,              AreaKeyFunc key,
                                 AreaMouseEventFunc mevent,      AreaMousePosFunc mpos,
                                 AreaMouseEnterFunc menter,      AreaScrollEventFunc sevent,

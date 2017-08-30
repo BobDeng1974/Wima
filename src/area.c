@@ -151,7 +151,7 @@ WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
 
 		// Get the particular user function setter.
-		AreaGetUserPointerFunc get_user_ptr = region->get_ptr;
+		AreaGenUserPointerFunc get_user_ptr = region->get_ptr;
 
 		// If the user didn't specify one, don't call it.
 		if (!get_user_ptr) {

@@ -54,6 +54,11 @@ extern "C" {
 #include <dyna/tree.h>
 
 /**
+ * A handle to an item.
+ */
+typedef int32_t WimaItemHandle;
+
+/**
  * A handle to a region (area template) type.
  */
 typedef uint16_t WimaRegionHandle;
@@ -297,7 +302,13 @@ typedef enum wima_action {
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
-typedef void* (*AreaGetUserPointerFunc)(WimaAreaHandle);
+typedef WimaStatus (*ItemKeyFunc)(WimaItemHandle, WimaKey, int, WimaAction, WimaMods);
+typedef WimaStatus (*ItemMouseEventFunc)(WimaItemHandle, WimaMouseBtn, WimaAction, WimaMods);
+typedef WimaStatus (*ItemMouseEnterFunc)(WimaItemHandle, bool);
+typedef WimaStatus (*ItemScrollFunc)(WimaItemHandle, int, int);
+typedef WimaStatus (*ItemCharEvent)(WimaItemHandle, uint32_t, WimaMods);
+
+typedef void* (*AreaGenUserPointerFunc)(WimaAreaHandle);
 typedef void (*AreaFreeUserPointerFunc)(void*);
 typedef WimaStatus (*AreaDrawFunc)(WimaAreaHandle, int, int);
 typedef WimaStatus (*AreaKeyFunc)(WimaAreaHandle, WimaKey, int, WimaAction, WimaMods);
@@ -316,7 +327,7 @@ typedef WimaStatus (*WindowMouseEnterFunc)(WimaWindowHandle, bool);
 typedef bool (*WindowCloseFunc)(WimaWindowHandle);
 
 WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name,
-                                AreaGetUserPointerFunc userPtr, AreaFreeUserPointerFunc userFree,
+                                AreaGenUserPointerFunc userPtr, AreaFreeUserPointerFunc userFree,
                                 AreaDrawFunc draw,              AreaKeyFunc key,
                                 AreaMouseEventFunc mevent,      AreaMousePosFunc mpos,
                                 AreaMouseEnterFunc menter,      AreaScrollEventFunc sevent,

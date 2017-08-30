@@ -44,6 +44,8 @@
 #include "event.h"
 #include "workspace.h"
 
+#include "oui/oui.h"
+
 typedef struct wima_window {
 
 	GLFWwindow* window;
@@ -53,14 +55,13 @@ typedef struct wima_window {
 
 	DynaTree areas;
 
+	WimaOuiContext ctx;
+
 	int fbwidth;
 	int fbheight;
 
 	int width;
 	int height;
-
-	int numEvents;
-	WimaEvent events[WIMA_MAX_EVENTS];
 
 } WimaWin;
 

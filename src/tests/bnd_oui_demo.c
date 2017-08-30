@@ -1207,7 +1207,7 @@ static void key(GLFWwindow* window, int key, int scancode, int action, int mods)
 int main()
 {
 	GLFWwindow* window;
-	UIcontext *uictx;
+	WimaOuiContext *uictx;
 
 	uictx = uiCreateContext(4096, 1<<20);
 	uiMakeCurrent(uictx);

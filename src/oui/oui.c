@@ -103,276 +103,296 @@ float ui_minf(float a, float b) {
 	return (a<b)?a:b;
 }
 
-static UIcontext *ui_context = NULL;
+void uiClear(WimaOuiContext* ctx) {
 
-void uiClear() {
-	ui_context->last_count = ui_context->count;
-	ui_context->count = 0;
-	ui_context->datasize = 0;
-	ui_context->hot_item = -1;
+	ctx->lastItemCount = ctx->itemCount;
+	ctx->itemCount = 0;
+	ctx->datasize = 0;
+	ctx->hot_item = -1;
+
 	// swap buffers
-	UIitem *items = ui_context->items;
-	ui_context->items = ui_context->last_items;
-	ui_context->last_items = items;
-	for (int i = 0; i < ui_context->last_count; ++i) {
-		ui_context->item_map[i] = -1;
+	UIitem *items = ctx->items;
+	ctx->items = ctx->last_items;
+	ctx->last_items = items;
+
+	for (int i = 0; i < ctx->lastItemCount; ++i) {
+		ctx->itemMap[i] = -1;
 	}
 }
 
-UIcontext *uiCreateContext(unsigned int item_capacity, unsigned int buffer_capacity) {
-	assert(item_capacity);
-	UIcontext *ctx = (UIcontext *)malloc(sizeof(UIcontext));
-	memset(ctx, 0, sizeof(UIcontext));
-	ctx->item_capacity = item_capacity;
-	ctx->buffer_capacity = buffer_capacity;
-	ctx->stage = UI_STAGE_PROCESS;
-	ctx->items = (UIitem *)malloc(sizeof(UIitem) * item_capacity);
-	ctx->last_items = (UIitem *)malloc(sizeof(UIitem) * item_capacity);
-	ctx->item_map = (int *)malloc(sizeof(int) * item_capacity);
-	if (buffer_capacity) {
-		ctx->data = (unsigned char *)malloc(buffer_capacity);
+void uiCreateContext(WimaOuiContext* ctx, unsigned int itemCap, unsigned int bufferCap) {
+
+	assert(itemCap);
+
+	memset(ctx, 0, sizeof(WimaOuiContext));
+
+	size_t size = nallocx(sizeof(UIitem) * itemCap, 0);
+
+	ctx->items = (UIitem *) mallocx(size, 0);
+	ctx->last_items = (UIitem *) mallocx(size, 0);
+	ctx->itemMap = (int *) mallocx(size, MALLOCX_ZERO);
+
+	itemCap = size / sizeof(UIitem);
+	ctx->itemCap = itemCap;
+
+	if (bufferCap) {
+		bufferCap = nallocx(bufferCap, 0);
+		ctx->data = (uint8_t*) mallocx(bufferCap, MALLOCX_ZERO);
+		ctx->bufferCap = bufferCap;
 	}
 
-	UIcontext *oldctx = ui_context;
-	uiMakeCurrent(ctx);
-	uiClear();
-	uiClearState();
-	uiMakeCurrent(oldctx);
+	ctx->stage = UI_STAGE_PROCESS;
+
+	uiClear(ctx);
+	uiClearState(ctx);
+}
+
+#if 0
+WimaOuiContext *uiGetContext() {
 	return ctx;
 }
+#endif
 
-void uiMakeCurrent(UIcontext *ctx) {
-	ui_context = ctx;
-}
+void uiSetButton(WimaOuiContext* ctx, unsigned int button, unsigned int mod, int enabled) {
 
-void uiDestroyContext(UIcontext *ctx) {
-	if (ui_context == ctx)
-		uiMakeCurrent(NULL);
-	free(ctx->items);
-	free(ctx->last_items);
-	free(ctx->item_map);
-	free(ctx->data);
-	free(ctx);
-}
-
-OUI_EXPORT UIcontext *uiGetContext() {
-	return ui_context;
-}
-
-void uiSetButton(unsigned int button, unsigned int mod, int enabled) {
-	assert(ui_context);
+	assert(ctx);
 	unsigned long long mask = 1ull<<button;
 	// set new bit
-	ui_context->buttons = (enabled)?
-	                      (ui_context->buttons | mask):
-	                      (ui_context->buttons & ~mask);
-	ui_context->active_button_modifier = mod;
+	ctx->buttons = (enabled)?
+	                      (ctx->buttons | mask):
+	                      (ctx->buttons & ~mask);
+	ctx->active_button_modifier = mod;
 }
 
-static void uiAddInputEvent(UIinputEvent event) {
-	assert(ui_context);
-	if (ui_context->eventcount == UI_MAX_INPUT_EVENTS) return;
-	ui_context->events[ui_context->eventcount++] = event;
+static void uiAddInputEvent(WimaOuiContext* ctx, WimaEvent event) {
+	assert(ctx);
+	if (ctx->eventCount == WIMA_MAX_EVENTS) return;
+	ctx->events[ctx->eventCount++] = event;
 }
 
-static void uiClearInputEvents() {
-	assert(ui_context);
-	ui_context->eventcount = 0;
-	ui_context->scroll.x = 0;
-	ui_context->scroll.y = 0;
+static void uiClearInputEvents(WimaOuiContext* ctx) {
+
+	assert(ctx);
+
+	ctx->eventCount = 0;
+	ctx->scroll.x = 0;
+	ctx->scroll.y = 0;
 }
 
-void uiSetKey(unsigned int key, unsigned int mod, int enabled) {
-	assert(ui_context);
-	UIinputEvent event = { key, mod, enabled?UI_KEY_DOWN:UI_KEY_UP };
-	uiAddInputEvent(event);
+void uiSetKey(WimaOuiContext* ctx, WimaKey key, int scancode, WimaAction act, WimaMods mods) {
+
+	assert(ctx);
+
+	WimaEvent event;
+	event.type = WIMA_EVENT_KEY;
+
+	event.event.key.key = key;
+	event.event.key.action = act;
+	event.event.key.mods = mods;
+	event.event.key.scancode = scancode;
+
+	uiAddInputEvent(ctx, event);
 }
 
-void uiSetChar(unsigned int value) {
-	assert(ui_context);
-	UIinputEvent event = { value, 0, UI_CHAR };
-	uiAddInputEvent(event);
+void uiSetChar(WimaOuiContext* ctx, uint32_t code, WimaMods mods) {
+
+	assert(ctx);
+
+	WimaEvent event;
+	event.type = WIMA_EVENT_CHAR;
+
+	event.event.char_event.code = code;
+	event.event.char_event.mods = mods;
+
+	uiAddInputEvent(ctx, event);
 }
 
-void uiSetScroll(int x, int y) {
-	assert(ui_context);
-	ui_context->scroll.x += x;
-	ui_context->scroll.y += y;
+void uiSetScroll(WimaOuiContext* ctx, int x, int y) {
+
+	assert(ctx);
+
+	ctx->scroll.x += x;
+	ctx->scroll.y += y;
 }
 
-UIvec2 uiGetScroll() {
-	assert(ui_context);
-	return ui_context->scroll;
+UIvec2 uiGetScroll(WimaOuiContext* ctx) {
+	assert(ctx);
+	return ctx->scroll;
 }
 
-int uiGetLastButton(int button) {
-	assert(ui_context);
-	return (ui_context->last_buttons & (1ull<<button))?1:0;
+int uiGetLastButton(WimaOuiContext* ctx, int button) {
+	assert(ctx);
+	return (ctx->last_buttons & (1ull << button)) ? 1 : 0;
 }
 
-int uiGetButton(unsigned int button) {
-	assert(ui_context);
-	return (ui_context->buttons & (1ull<<button))?1:0;
+int uiGetButton(WimaOuiContext*ctx, unsigned int button) {
+	assert(ctx);
+	return (ctx->buttons & (1ull << button)) ? 1 : 0;
 }
 
-int uiButtonPressed(int button) {
-	assert(ui_context);
-	return !uiGetLastButton(button) && uiGetButton(button);
+int uiButtonPressed(WimaOuiContext* ctx, int button) {
+	assert(ctx);
+	return !uiGetLastButton(ctx, button) && uiGetButton(ctx, button);
 }
 
-int uiButtonReleased(int button) {
-	assert(ui_context);
-	return uiGetLastButton(button) && !uiGetButton(button);
+int uiButtonReleased(WimaOuiContext* ctx, int button) {
+	assert(ctx);
+	return uiGetLastButton(ctx, button) && !uiGetButton(ctx, button);
 }
 
-void uiSetCursor(int x, int y) {
-	assert(ui_context);
-	ui_context->cursor.x = x;
-	ui_context->cursor.y = y;
+void uiSetCursor(WimaOuiContext* ctx, int x, int y) {
+	assert(ctx);
+	ctx->cursor.x = x;
+	ctx->cursor.y = y;
 }
 
-UIvec2 uiGetCursor() {
-	assert(ui_context);
-	return ui_context->cursor;
+UIvec2 uiGetCursor(WimaOuiContext* ctx) {
+	assert(ctx);
+	return ctx->cursor;
 }
 
-UIvec2 uiGetCursorStart() {
-	assert(ui_context);
-	return ui_context->start_cursor;
+UIvec2 uiGetCursorStart(WimaOuiContext* ctx) {
+	assert(ctx);
+	return ctx->start_cursor;
 }
 
-UIvec2 uiGetCursorDelta() {
-	assert(ui_context);
+UIvec2 uiGetCursorDelta(WimaOuiContext* ctx) {
+	assert(ctx);
 	UIvec2 result = {{{
-	        ui_context->cursor.x - ui_context->last_cursor.x,
-	        ui_context->cursor.y - ui_context->last_cursor.y
+	        ctx->cursor.x - ctx->last_cursor.x,
+	        ctx->cursor.y - ctx->last_cursor.y
 	}}};
 	return result;
 }
 
-UIvec2 uiGetCursorStartDelta() {
-	assert(ui_context);
+UIvec2 uiGetCursorStartDelta(WimaOuiContext* ctx) {
+	assert(ctx);
 	UIvec2 result = {{{
-	        ui_context->cursor.x - ui_context->start_cursor.x,
-	        ui_context->cursor.y - ui_context->start_cursor.y
+	        ctx->cursor.x - ctx->start_cursor.x,
+	        ctx->cursor.y - ctx->start_cursor.y
 	}}};
 	return result;
 }
 
-unsigned int uiGetKey() {
-	assert(ui_context);
-	return ui_context->active_key;
+unsigned int uiGetKey(WimaOuiContext* ctx) {
+	assert(ctx);
+	return ctx->active_key;
 }
 
-unsigned int uiGetModifier() {
-	assert(ui_context);
-	return ui_context->active_modifier;
+unsigned int uiGetModifier(WimaOuiContext* ctx) {
+	assert(ctx);
+	return ctx->active_modifier;
 }
 
-int uiGetItemCount() {
-	assert(ui_context);
-	return ui_context->count;
+int uiGetItemCount(WimaOuiContext* ctx) {
+	assert(ctx);
+	return ctx->itemCount;
 }
 
-int uiGetLastItemCount() {
-	assert(ui_context);
-	return ui_context->last_count;
+int uiGetLastItemCount(WimaOuiContext* ctx) {
+	assert(ctx);
+	return ctx->lastItemCount;
 }
 
-unsigned int uiGetAllocSize() {
-	assert(ui_context);
-	return ui_context->datasize;
+unsigned int uiGetAllocSize(WimaOuiContext* ctx) {
+	assert(ctx);
+	return ctx->datasize;
 }
 
-UIitem *uiItemPtr(int item) {
-	assert(ui_context && (item >= 0) && (item < ui_context->count));
-	return ui_context->items + item;
+UIitem *uiItemPtr(WimaOuiContext* ctx, int item) {
+	assert(ctx && (item >= 0) && (item < ctx->itemCount));
+	return ctx->items + item;
 }
 
-UIitem *uiLastItemPtr(int item) {
-	assert(ui_context && (item >= 0) && (item < ui_context->last_count));
-	return ui_context->last_items + item;
+UIitem *uiLastItemPtr(WimaOuiContext* ctx, int item) {
+	assert(ctx && (item >= 0) && (item < ctx->lastItemCount));
+	return ctx->last_items + item;
 }
 
-int uiGetHotItem() {
-	assert(ui_context);
-	return ui_context->hot_item;
+int uiGetHotItem(WimaOuiContext* ctx) {
+	assert(ctx);
+	return ctx->hot_item;
 }
 
-void uiFocus(int item) {
-	assert(ui_context && (item >= -1) && (item < ui_context->count));
-	assert(ui_context->stage != UI_STAGE_LAYOUT);
-	ui_context->focus_item = item;
+void uiFocus(WimaOuiContext* ctx, int item) {
+	assert(ctx && (item >= -1) && (item < ctx->itemCount));
+	assert(ctx->stage != UI_STAGE_LAYOUT);
+	ctx->focus_item = item;
 }
 
-static void uiValidateStateItems() {
-	assert(ui_context);
-	ui_context->last_hot_item = uiRecoverItem(ui_context->last_hot_item);
-	ui_context->active_item = uiRecoverItem(ui_context->active_item);
-	ui_context->focus_item = uiRecoverItem(ui_context->focus_item);
-	ui_context->last_click_item = uiRecoverItem(ui_context->last_click_item);
+static void uiValidateStateItems(WimaOuiContext* ctx) {
+	assert(ctx);
+	ctx->last_hot_item = uiRecoverItem(ctx, ctx->last_hot_item);
+	ctx->active_item = uiRecoverItem(ctx, ctx->active_item);
+	ctx->focus_item = uiRecoverItem(ctx, ctx->focus_item);
+	ctx->last_click_item = uiRecoverItem(ctx, ctx->last_click_item);
 }
 
-int uiGetFocusedItem() {
-	assert(ui_context);
-	return ui_context->focus_item;
+int uiGetFocusedItem(WimaOuiContext* ctx) {
+	assert(ctx);
+	return ctx->focus_item;
 }
 
 
-void uiBeginLayout() {
-	assert(ui_context);
-	assert(ui_context->stage == UI_STAGE_PROCESS); // must run uiEndLayout(), uiProcess() first
-	uiClear();
-	ui_context->stage = UI_STAGE_LAYOUT;
+void uiBeginLayout(WimaOuiContext* ctx) {
+
+	assert(ctx);
+
+	 // Must run uiEndLayout() and uiProcess() first.
+	assert(ctx->stage == UI_STAGE_PROCESS);
+	uiClear(ctx);
+	ctx->stage = UI_STAGE_LAYOUT;
 }
 
-void uiClearState() {
-	assert(ui_context);
-	ui_context->last_hot_item = -1;
-	ui_context->active_item = -1;
-	ui_context->focus_item = -1;
-	ui_context->last_click_item = -1;
+void uiClearState(WimaOuiContext* ctx) {
+	assert(ctx);
+	ctx->last_hot_item = -1;
+	ctx->active_item = -1;
+	ctx->focus_item = -1;
+	ctx->last_click_item = -1;
 }
 
-int uiItem() {
-	assert(ui_context);
-	assert(ui_context->stage == UI_STAGE_LAYOUT); // must run between uiBeginLayout() and uiEndLayout()
-	assert(ui_context->count < (int)ui_context->item_capacity);
-	int idx = ui_context->count++;
-	UIitem *item = uiItemPtr(idx);
+int uiItem(WimaOuiContext* ctx) {
+	assert(ctx);
+	assert(ctx->stage == UI_STAGE_LAYOUT); // must run between uiBeginLayout() and uiEndLayout()
+	assert(ctx->itemCount < (int)ctx->itemCap);
+	int idx = ctx->itemCount++;
+	UIitem *item = uiItemPtr(ctx, idx);
 	memset(item, 0, sizeof(UIitem));
 	item->firstkid = -1;
 	item->nextitem = -1;
 	return idx;
 }
 
-void uiNotifyItem(int item, UIevent event) {
-	assert(ui_context);
-	if (!ui_context->handler)
+#if 0
+void uiNotifyItem(WimaOuiContext* ctx, int item, WimaEvent event) {
+	assert(ctx);
+	if (!ctx->handler)
 		return;
 	assert((event & UI_ITEM_EVENT_MASK) == event);
-	UIitem *pitem = uiItemPtr(item);
+	UIitem *pitem = uiItemPtr(ctx, item);
 	if (pitem->flags & event) {
-		ui_context->handler(item, event);
+		ctx->handler(item, event);
 	}
 }
+#endif
 
-int uiLastChild(int item) {
-	item = uiFirstChild(item);
+int uiLastChild(WimaOuiContext* ctx, int item) {
+	item = uiFirstChild(ctx, item);
 	if (item < 0)
 		return -1;
 	while (true) {
-		int nextitem = uiNextSibling(item);
+		int nextitem = uiNextSibling(ctx, item);
 		if (nextitem < 0)
 			return item;
 		item = nextitem;
 	}
 }
 
-int uiAppend(int item, int sibling) {
+int uiAppend(WimaOuiContext* ctx, int item, int sibling) {
 	assert(sibling > 0);
-	UIitem *pitem = uiItemPtr(item);
-	UIitem *psibling = uiItemPtr(sibling);
+	UIitem *pitem = uiItemPtr(ctx, item);
+	UIitem *psibling = uiItemPtr(ctx, sibling);
 	assert(!(psibling->flags & UI_ITEM_INSERTED));
 	psibling->nextitem = pitem->nextitem;
 	psibling->flags |= UI_ITEM_INSERTED;
@@ -380,28 +400,28 @@ int uiAppend(int item, int sibling) {
 	return sibling;
 }
 
-int uiInsert(int item, int child) {
+int uiInsert(WimaOuiContext* ctx, int item, int child) {
 	assert(child > 0);
-	UIitem *pparent = uiItemPtr(item);
-	UIitem *pchild = uiItemPtr(child);
+	UIitem *pparent = uiItemPtr(ctx, item);
+	UIitem *pchild = uiItemPtr(ctx, child);
 	assert(!(pchild->flags & UI_ITEM_INSERTED));
 	if (pparent->firstkid < 0) {
 		pparent->firstkid = child;
 		pchild->flags |= UI_ITEM_INSERTED;
 	} else {
-		uiAppend(uiLastChild(item), child);
+		uiAppend(ctx, uiLastChild(ctx, item), child);
 	}
 	return child;
 }
 
-int uiInsertFront(int item, int child) {
-	return uiInsert(item, child);
+int uiInsertFront(WimaOuiContext* ctx, int item, int child) {
+	return uiInsert(ctx, item, child);
 }
 
-int uiInsertBack(int item, int child) {
+int uiInsertBack(WimaOuiContext* ctx, int item, int child) {
 	assert(child > 0);
-	UIitem *pparent = uiItemPtr(item);
-	UIitem *pchild = uiItemPtr(child);
+	UIitem *pparent = uiItemPtr(ctx, item);
+	UIitem *pchild = uiItemPtr(ctx, child);
 	assert(!(pchild->flags & UI_ITEM_INSERTED));
 	pchild->nextitem = pparent->firstkid;
 	pparent->firstkid = child;
@@ -409,16 +429,16 @@ int uiInsertBack(int item, int child) {
 	return child;
 }
 
-void uiSetFrozen(int item, int enable) {
-	UIitem *pitem = uiItemPtr(item);
+void uiSetFrozen(WimaOuiContext* ctx, int item, int enable) {
+	UIitem *pitem = uiItemPtr(ctx, item);
 	if (enable)
 		pitem->flags |= UI_ITEM_FROZEN;
 	else
 		pitem->flags &= ~UI_ITEM_FROZEN;
 }
 
-void uiSetSize(int item, int w, int h) {
-	UIitem *pitem = uiItemPtr(item);
+void uiSetSize(WimaOuiContext* ctx, int item, int w, int h) {
+	UIitem *pitem = uiItemPtr(ctx, item);
 	pitem->size[0] = w;
 	pitem->size[1] = h;
 	if (!w)
@@ -431,97 +451,97 @@ void uiSetSize(int item, int w, int h) {
 		pitem->flags |= UI_ITEM_VFIXED;
 }
 
-int uiGetWidth(int item) {
-	return uiItemPtr(item)->size[0];
+int uiGetWidth(WimaOuiContext* ctx, int item) {
+	return uiItemPtr(ctx, item)->size[0];
 }
 
-int uiGetHeight(int item) {
-	return uiItemPtr(item)->size[1];
+int uiGetHeight(WimaOuiContext* ctx, int item) {
+	return uiItemPtr(ctx, item)->size[1];
 }
 
-void uiSetLayout(int item, unsigned int flags) {
-	UIitem *pitem = uiItemPtr(item);
+void uiSetLayout(WimaOuiContext* ctx, int item, unsigned int flags) {
+	UIitem *pitem = uiItemPtr(ctx, item);
 	assert((flags & UI_ITEM_LAYOUT_MASK) == (unsigned int)flags);
 	pitem->flags &= ~UI_ITEM_LAYOUT_MASK;
 	pitem->flags |= flags & UI_ITEM_LAYOUT_MASK;
 }
 
-unsigned int uiGetLayout(int item) {
-	return uiItemPtr(item)->flags & UI_ITEM_LAYOUT_MASK;
+unsigned int uiGetLayout(WimaOuiContext* ctx, int item) {
+	return uiItemPtr(ctx, item)->flags & UI_ITEM_LAYOUT_MASK;
 }
 
-void uiSetBox(int item, unsigned int flags) {
-	UIitem *pitem = uiItemPtr(item);
+void uiSetBox(WimaOuiContext* ctx, int item, unsigned int flags) {
+	UIitem *pitem = uiItemPtr(ctx, item);
 	assert((flags & UI_ITEM_BOX_MASK) == (unsigned int)flags);
 	pitem->flags &= ~UI_ITEM_BOX_MASK;
 	pitem->flags |= flags & UI_ITEM_BOX_MASK;
 }
 
-unsigned int uiGetBox(int item) {
-	return uiItemPtr(item)->flags & UI_ITEM_BOX_MASK;
+unsigned int uiGetBox(WimaOuiContext* ctx, int item) {
+	return uiItemPtr(ctx, item)->flags & UI_ITEM_BOX_MASK;
 }
 
-void uiSetMargins(int item, short l, short t, short r, short b) {
-	UIitem *pitem = uiItemPtr(item);
+void uiSetMargins(WimaOuiContext* ctx, int item, short l, short t, short r, short b) {
+	UIitem *pitem = uiItemPtr(ctx, item);
 	pitem->margins[0] = l;
 	pitem->margins[1] = t;
 	pitem->margins[2] = r;
 	pitem->margins[3] = b;
 }
 
-short uiGetMarginLeft(int item) {
-	return uiItemPtr(item)->margins[0];
+short uiGetMarginLeft(WimaOuiContext* ctx, int item) {
+	return uiItemPtr(ctx, item)->margins[0];
 }
-short uiGetMarginTop(int item) {
-	return uiItemPtr(item)->margins[1];
+short uiGetMarginTop(WimaOuiContext* ctx, int item) {
+	return uiItemPtr(ctx, item)->margins[1];
 }
-short uiGetMarginRight(int item) {
-	return uiItemPtr(item)->margins[2];
+short uiGetMarginRight(WimaOuiContext* ctx, int item) {
+	return uiItemPtr(ctx, item)->margins[2];
 }
-short uiGetMarginDown(int item) {
-	return uiItemPtr(item)->margins[3];
+short uiGetMarginDown(WimaOuiContext* ctx, int item) {
+	return uiItemPtr(ctx, item)->margins[3];
 }
 
 // compute bounding box of all items super-imposed
-void uiComputeImposedSize(UIitem *pitem, int dim) {
+void uiComputeImposedSize(WimaOuiContext* ctx, UIitem *pitem, int dim) {
 	int wdim = dim+2;
 	// largest size is required size
 	short need_size = 0;
 	int kid = pitem->firstkid;
 	while (kid >= 0) {
-		UIitem *pkid = uiItemPtr(kid);
+		UIitem *pkid = uiItemPtr(ctx, kid);
 
 		// width = start margin + calculated width + end margin
 		int kidsize = pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
 		need_size = ui_max(need_size, kidsize);
-		kid = uiNextSibling(kid);
+		kid = uiNextSibling(ctx, kid);
 	}
 	pitem->size[dim] = need_size;
 }
 
 // compute bounding box of all items stacked
-void uiComputeStackedSize(UIitem *pitem, int dim) {
+void uiComputeStackedSize(WimaOuiContext* ctx, UIitem *pitem, int dim) {
 	int wdim = dim+2;
 	short need_size = 0;
 	int kid = pitem->firstkid;
 	while (kid >= 0) {
-		UIitem *pkid = uiItemPtr(kid);
+		UIitem *pkid = uiItemPtr(ctx, kid);
 		// width += start margin + calculated width + end margin
 		need_size += pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
-		kid = uiNextSibling(kid);
+		kid = uiNextSibling(ctx, kid);
 	}
 	pitem->size[dim] = need_size;
 }
 
 // compute bounding box of all items stacked, repeating when breaking
-void uiComputeWrappedStackedSize(UIitem *pitem, int dim) {
+void uiComputeWrappedStackedSize(WimaOuiContext* ctx, UIitem *pitem, int dim) {
 	int wdim = dim+2;
 
 	short need_size = 0;
 	short need_size2 = 0;
 	int kid = pitem->firstkid;
 	while (kid >= 0) {
-		UIitem *pkid = uiItemPtr(kid);
+		UIitem *pkid = uiItemPtr(ctx, kid);
 
 		// if next position moved back, we assume a new line
 		if (pkid->flags & UI_BREAK) {
@@ -532,20 +552,20 @@ void uiComputeWrappedStackedSize(UIitem *pitem, int dim) {
 
 		// width = start margin + calculated width + end margin
 		need_size += pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
-		kid = uiNextSibling(kid);
+		kid = uiNextSibling(ctx, kid);
 	}
 	pitem->size[dim] = ui_max(need_size2, need_size);
 }
 
 // compute bounding box of all items stacked + wrapped
-void uiComputeWrappedSize(UIitem *pitem, int dim) {
+void uiComputeWrappedSize(WimaOuiContext* ctx, UIitem *pitem, int dim) {
 	int wdim = dim+2;
 
 	short need_size = 0;
 	short need_size2 = 0;
 	int kid = pitem->firstkid;
 	while (kid >= 0) {
-		UIitem *pkid = uiItemPtr(kid);
+		UIitem *pkid = uiItemPtr(ctx, kid);
 
 		// if next position moved back, we assume a new line
 		if (pkid->flags & UI_BREAK) {
@@ -557,19 +577,19 @@ void uiComputeWrappedSize(UIitem *pitem, int dim) {
 		// width = start margin + calculated width + end margin
 		int kidsize = pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
 		need_size = ui_max(need_size, kidsize);
-		kid = uiNextSibling(kid);
+		kid = uiNextSibling(ctx, kid);
 	}
 	pitem->size[dim] = need_size2 + need_size;
 }
 
-static void uiComputeSize(int item, int dim) {
-	UIitem *pitem = uiItemPtr(item);
+static void uiComputeSize(WimaOuiContext* ctx, int item, int dim) {
+	UIitem *pitem = uiItemPtr(ctx, item);
 
 	// children expand the size
 	int kid = pitem->firstkid;
 	while (kid >= 0) {
-		uiComputeSize(kid, dim);
-		kid = uiNextSibling(kid);
+		uiComputeSize(ctx, kid, dim);
+		kid = uiNextSibling(ctx, kid);
 	}
 
 	if (pitem->size[dim])
@@ -578,34 +598,34 @@ static void uiComputeSize(int item, int dim) {
 		case UI_COLUMN|UI_WRAP: {
 			// flex model
 			if (dim) // direction
-			uiComputeStackedSize(pitem, 1);
+			uiComputeStackedSize(ctx, pitem, 1);
 		else
-			uiComputeImposedSize(pitem, 0);
+			uiComputeImposedSize(ctx, pitem, 0);
 		} break;
 		case UI_ROW|UI_WRAP: {
 			// flex model
 			if (!dim) // direction
-			uiComputeWrappedStackedSize(pitem, 0);
+			uiComputeWrappedStackedSize(ctx, pitem, 0);
 		else
-			uiComputeWrappedSize(pitem, 1);
+			uiComputeWrappedSize(ctx, pitem, 1);
 		} break;
 		case UI_COLUMN:
 		case UI_ROW: {
 			// flex model
 			if ((pitem->flags & 1) == (unsigned int)dim) // direction
-			uiComputeStackedSize(pitem, dim);
+			uiComputeStackedSize(ctx, pitem, dim);
 		else
-			uiComputeImposedSize(pitem, dim);
+			uiComputeImposedSize(ctx, pitem, dim);
 		} break;
 		default: {
 			// layout model
-			uiComputeImposedSize(pitem, dim);
+			uiComputeImposedSize(ctx, pitem, dim);
 		} break;
 	}
 }
 
 // stack all items according to their alignment
-void uiArrangeStacked(UIitem *pitem, int dim, bool wrap) {
+void uiArrangeStacked(WimaOuiContext* ctx, UIitem *pitem, int dim, bool wrap) {
 	int wdim = dim+2;
 
 	short space = pitem->size[dim];
@@ -624,7 +644,7 @@ void uiArrangeStacked(UIitem *pitem, int dim, bool wrap) {
 		int kid = start_kid;
 		int end_kid = -1;
 		while (kid >= 0) {
-			UIitem *pkid = uiItemPtr(kid);
+			UIitem *pkid = uiItemPtr(ctx, kid);
 			int flags = (pkid->flags & UI_ITEM_LAYOUT_MASK) >> dim;
 			int fflags = (pkid->flags & UI_ITEM_FIXED_MASK) >> dim;
 			short extend = used;
@@ -645,7 +665,7 @@ void uiArrangeStacked(UIitem *pitem, int dim, bool wrap) {
 				break;
 			} else {
 				used = extend;
-				kid = uiNextSibling(kid);
+				kid = uiNextSibling(ctx, kid);
 			}
 			total++;
 		}
@@ -688,7 +708,7 @@ void uiArrangeStacked(UIitem *pitem, int dim, bool wrap) {
 		kid = start_kid;
 		while (kid != end_kid) {
 			short ix0,ix1;
-			UIitem *pkid = uiItemPtr(kid);
+			UIitem *pkid = uiItemPtr(ctx, kid);
 			int flags = (pkid->flags & UI_ITEM_LAYOUT_MASK) >> dim;
 			int fflags = (pkid->flags & UI_ITEM_FIXED_MASK) >> dim;
 
@@ -710,7 +730,7 @@ void uiArrangeStacked(UIitem *pitem, int dim, bool wrap) {
 			pkid->size[dim] = ix1-ix0;
 			x = x1 + (float)pkid->margins[wdim];
 
-			kid = uiNextSibling(kid);
+			kid = uiNextSibling(ctx, kid);
 			extra_margin = spacer;
 		}
 
@@ -719,14 +739,14 @@ void uiArrangeStacked(UIitem *pitem, int dim, bool wrap) {
 }
 
 // superimpose all items according to their alignment
-void uiArrangeImposedRange(UIitem *pitem, int dim,      int start_kid,
+void uiArrangeImposedRange(WimaOuiContext* ctx, UIitem *pitem, int dim,      int start_kid,
                                      int end_kid,   short offset, short space)
 {
 	int wdim = dim+2;
 
 	int kid = start_kid;
 	while (kid != end_kid) {
-		UIitem *pkid = uiItemPtr(kid);
+		UIitem *pkid = uiItemPtr(ctx, kid);
 
 		int flags = (pkid->flags & UI_ITEM_LAYOUT_MASK) >> dim;
 
@@ -744,24 +764,24 @@ void uiArrangeImposedRange(UIitem *pitem, int dim,      int start_kid,
 		}
 		pkid->margins[dim] += offset;
 
-		kid = uiNextSibling(kid);
+		kid = uiNextSibling(ctx, kid);
 	}
 }
 
-void uiArrangeImposed(UIitem *pitem, int dim) {
-	uiArrangeImposedRange(pitem, dim, pitem->firstkid, -1, pitem->margins[dim], pitem->size[dim]);
+void uiArrangeImposed(WimaOuiContext* ctx, UIitem *pitem, int dim) {
+	uiArrangeImposedRange(ctx, pitem, dim, pitem->firstkid, -1, pitem->margins[dim], pitem->size[dim]);
 }
 
 // superimpose all items according to their alignment,
 // squeeze items that expand the available space
-void uiArrangeImposedSqueezedRange(UIitem *pitem, int dim,      int start_kid,
+void uiArrangeImposedSqueezedRange(WimaOuiContext* ctx, UIitem *pitem, int dim,      int start_kid,
                                              int end_kid,   short offset, short space)
 {
 	int wdim = dim+2;
 
 	int kid = start_kid;
 	while (kid != end_kid) {
-		UIitem *pkid = uiItemPtr(kid);
+		UIitem *pkid = uiItemPtr(ctx, kid);
 
 		int flags = (pkid->flags & UI_ITEM_LAYOUT_MASK) >> dim;
 
@@ -784,16 +804,16 @@ void uiArrangeImposedSqueezedRange(UIitem *pitem, int dim,      int start_kid,
 		}
 		pkid->margins[dim] += offset;
 
-		kid = uiNextSibling(kid);
+		kid = uiNextSibling(ctx, kid);
 	}
 }
 
-void uiArrangeImposedSqueezed(UIitem *pitem, int dim) {
-	uiArrangeImposedSqueezedRange(pitem, dim, pitem->firstkid, -1, pitem->margins[dim], pitem->size[dim]);
+void uiArrangeImposedSqueezed(WimaOuiContext* ctx, UIitem *pitem, int dim) {
+	uiArrangeImposedSqueezedRange(ctx, pitem, dim, pitem->firstkid, -1, pitem->margins[dim], pitem->size[dim]);
 }
 
 // superimpose all items according to their alignment
-short uiArrangeWrappedImposedSqueezed(UIitem *pitem, int dim) {
+short uiArrangeWrappedImposedSqueezed(WimaOuiContext* ctx, UIitem *pitem, int dim) {
 	int wdim = dim+2;
 
 	short offset = pitem->margins[dim];
@@ -802,10 +822,10 @@ short uiArrangeWrappedImposedSqueezed(UIitem *pitem, int dim) {
 	int kid = pitem->firstkid;
 	int start_kid = kid;
 	while (kid >= 0) {
-		UIitem *pkid = uiItemPtr(kid);
+		UIitem *pkid = uiItemPtr(ctx, kid);
 
 		if (pkid->flags & UI_BREAK) {
-			uiArrangeImposedSqueezedRange(pitem, dim, start_kid, kid, offset, need_size);
+			uiArrangeImposedSqueezedRange(ctx, pitem, dim, start_kid, kid, offset, need_size);
 			offset += need_size;
 			start_kid = kid;
 			// newline
@@ -815,53 +835,53 @@ short uiArrangeWrappedImposedSqueezed(UIitem *pitem, int dim) {
 		// width = start margin + calculated width + end margin
 		int kidsize = pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
 		need_size = ui_max(need_size, kidsize);
-		kid = uiNextSibling(kid);
+		kid = uiNextSibling(ctx, kid);
 	}
 
-	uiArrangeImposedSqueezedRange(pitem, dim, start_kid, -1, offset, need_size);
+	uiArrangeImposedSqueezedRange(ctx, pitem, dim, start_kid, -1, offset, need_size);
 	offset += need_size;
 	return offset;
 }
 
-static void uiArrange(int item, int dim) {
-	UIitem *pitem = uiItemPtr(item);
+static void uiArrange(WimaOuiContext* ctx, int item, int dim) {
+	UIitem *pitem = uiItemPtr(ctx, item);
 
 	switch(pitem->flags & UI_ITEM_BOX_MODEL_MASK) {
 		case UI_COLUMN|UI_WRAP: {
 			// flex model, wrapping
 			if (dim) { // direction
-			uiArrangeStacked(pitem, 1, true);
+			uiArrangeStacked(ctx, pitem, 1, true);
 			// this retroactive resize will not effect parent widths
-			short offset = uiArrangeWrappedImposedSqueezed(pitem, 0);
+			short offset = uiArrangeWrappedImposedSqueezed(ctx, pitem, 0);
 			pitem->size[0] = offset - pitem->margins[0];
 		}
 		} break;
 		case UI_ROW|UI_WRAP: {
 			// flex model, wrapping
 			if (!dim) { // direction
-			uiArrangeStacked(pitem, 0, true);
+			uiArrangeStacked(ctx, pitem, 0, true);
 		} else {
-			uiArrangeWrappedImposedSqueezed(pitem, 1);
+			uiArrangeWrappedImposedSqueezed(ctx, pitem, 1);
 		}
 		} break;
 		case UI_COLUMN:
 		case UI_ROW: {
 			// flex model
 			if ((pitem->flags & 1) == (unsigned int)dim) // direction
-			uiArrangeStacked(pitem, dim, false);
+			uiArrangeStacked(ctx, pitem, dim, false);
 		else
-			uiArrangeImposedSqueezed(pitem, dim);
+			uiArrangeImposedSqueezed(ctx, pitem, dim);
 		} break;
 		default: {
 			// layout model
-			uiArrangeImposed(pitem, dim);
+			uiArrangeImposed(ctx, pitem, dim);
 		} break;
 	}
 
-	int kid = uiFirstChild(item);
+	int kid = uiFirstChild(ctx, item);
 	while (kid >= 0) {
-		uiArrange(kid, dim);
-		kid = uiNextSibling(kid);
+		uiArrange(ctx, kid, dim);
+		kid = uiNextSibling(ctx, kid);
 	}
 }
 
@@ -870,13 +890,13 @@ bool uiCompareItems(UIitem *item1, UIitem *item2) {
 
 }
 
-static bool uiMapItems(int item1, int item2) {
-	UIitem *pitem1 = uiLastItemPtr(item1);
+static bool uiMapItems(WimaOuiContext* ctx, int item1, int item2) {
+	UIitem *pitem1 = uiLastItemPtr(ctx, item1);
 	if (item2 == -1) {
 		return false;
 	}
 
-	UIitem *pitem2 = uiItemPtr(item2);
+	UIitem *pitem2 = uiItemPtr(ctx, item2);
 	if (!uiCompareItems(pitem1, pitem2)) {
 		return false;
 	}
@@ -886,15 +906,15 @@ static bool uiMapItems(int item1, int item2) {
 	int kid1 = pitem1->firstkid;
 	int kid2 = pitem2->firstkid;
 	while (kid1 != -1) {
-		UIitem *pkid1 = uiLastItemPtr(kid1);
+		UIitem *pkid1 = uiLastItemPtr(ctx, kid1);
 		count++;
-		if (!uiMapItems(kid1, kid2)) {
+		if (!uiMapItems(ctx, kid1, kid2)) {
 			failed = count;
 			break;
 		}
 		kid1 = pkid1->nextitem;
 		if (kid2 != -1) {
-			kid2 = uiItemPtr(kid2)->nextitem;
+			kid2 = uiItemPtr(ctx, kid2)->nextitem;
 		}
 	}
 
@@ -902,51 +922,51 @@ static bool uiMapItems(int item1, int item2) {
 		return false;
 	}
 
-	ui_context->item_map[item1] = item2;
+	ctx->itemMap[item1] = item2;
 	return true;
 }
 
-int uiRecoverItem(int olditem) {
-	assert(ui_context);
-	assert((olditem >= -1) && (olditem < ui_context->last_count));
+int uiRecoverItem(WimaOuiContext* ctx, int olditem) {
+	assert(ctx);
+	assert((olditem >= -1) && (olditem < ctx->lastItemCount));
 	if (olditem == -1) return -1;
-	return ui_context->item_map[olditem];
+	return ctx->itemMap[olditem];
 }
 
-void uiRemapItem(int olditem, int newitem) {
-	assert(ui_context);
-	assert((olditem >= 0) && (olditem < ui_context->last_count));
-	assert((newitem >= -1) && (newitem < ui_context->count));
-	ui_context->item_map[olditem] = newitem;
+void uiRemapItem(WimaOuiContext* ctx, int olditem, int newitem) {
+	assert(ctx);
+	assert((olditem >= 0) && (olditem < ctx->lastItemCount));
+	assert((newitem >= -1) && (newitem < ctx->itemCount));
+	ctx->itemMap[olditem] = newitem;
 }
 
-void uiEndLayout() {
-	assert(ui_context);
-	assert(ui_context->stage == UI_STAGE_LAYOUT); // must run uiBeginLayout() first
+void uiEndLayout(WimaOuiContext* ctx) {
+	assert(ctx);
+	assert(ctx->stage == UI_STAGE_LAYOUT); // must run uiBeginLayout() first
 
-	if (ui_context->count) {
-		uiComputeSize(0,0);
-		uiArrange(0,0);
-		uiComputeSize(0,1);
-		uiArrange(0,1);
+	if (ctx->itemCount) {
+		uiComputeSize(ctx, 0,0);
+		uiArrange(ctx, 0,0);
+		uiComputeSize(ctx, 0,1);
+		uiArrange(ctx, 0,1);
 
-		if (ui_context->last_count) {
+		if (ctx->lastItemCount) {
 			// map old item id to new item id
-			uiMapItems(0,0);
+			uiMapItems(ctx, 0,0);
 		}
 	}
 
-	uiValidateStateItems();
-	if (ui_context->count) {
+	uiValidateStateItems(ctx);
+	if (ctx->itemCount) {
 		// drawing routines may require this to be set already
-		uiUpdateHotItem();
+		uiUpdateHotItem(ctx);
 	}
 
-	ui_context->stage = UI_STAGE_POST_LAYOUT;
+	ctx->stage = UI_STAGE_POST_LAYOUT;
 }
 
-UIrect uiGetRect(int item) {
-	UIitem *pitem = uiItemPtr(item);
+UIrect uiGetRect(WimaOuiContext* ctx, int item) {
+	UIitem *pitem = uiItemPtr(ctx, item);
 	UIrect rc = {{{
 	        pitem->margins[0], pitem->margins[1],
 	        pitem->size[0], pitem->size[1]
@@ -954,67 +974,62 @@ UIrect uiGetRect(int item) {
 	return rc;
 }
 
-int uiFirstChild(int item) {
-	return uiItemPtr(item)->firstkid;
+int uiFirstChild(WimaOuiContext* ctx, int item) {
+	return uiItemPtr(ctx, item)->firstkid;
 }
 
-int uiNextSibling(int item) {
-	return uiItemPtr(item)->nextitem;
+int uiNextSibling(WimaOuiContext* ctx, int item) {
+	return uiItemPtr(ctx, item)->nextitem;
 }
 
-void *uiAllocHandle(int item, unsigned int size) {
+void *uiAllocHandle(WimaOuiContext* ctx, int item, unsigned int size) {
+
+	// Make sure to align on a eight-byte boundary.
+	size = (size + 7) & (~7);
+
 	assert((size > 0) && (size < UI_MAX_DATASIZE));
-	UIitem *pitem = uiItemPtr(item);
+
+	UIitem *pitem = uiItemPtr(ctx, item);
 	assert(pitem->handle == NULL);
-	assert((ui_context->datasize+size) <= ui_context->buffer_capacity);
-	pitem->handle = ui_context->data + ui_context->datasize;
+	assert((ctx->datasize+size) <= ctx->bufferCap);
+	pitem->handle = ctx->data + ctx->datasize;
 	pitem->flags |= UI_ITEM_DATA;
-	ui_context->datasize += size;
+	ctx->datasize += size;
 	return pitem->handle;
 }
 
-void uiSetHandle(int item, void *handle) {
-	UIitem *pitem = uiItemPtr(item);
+void uiSetHandle(WimaOuiContext* ctx, int item, void *handle) {
+	UIitem *pitem = uiItemPtr(ctx, item);
 	assert(pitem->handle == NULL);
 	pitem->handle = handle;
 }
 
-void *uiGetHandle(int item) {
-	return uiItemPtr(item)->handle;
+void *uiGetHandle(WimaOuiContext* ctx, int item) {
+	return uiItemPtr(ctx, item)->handle;
 }
 
-void uiSetHandler(UIhandler handler) {
-	assert(ui_context);
-	ui_context->handler = handler;
-}
-
-UIhandler uiGetHandler() {
-	assert(ui_context);
-	return ui_context->handler;
-}
-
-void uiSetEvents(int item, unsigned int flags) {
-	UIitem *pitem = uiItemPtr(item);
+void uiSetEvents(WimaOuiContext* ctx, int item, unsigned int flags) {
+	UIitem *pitem = uiItemPtr(ctx, item);
 	pitem->flags &= ~UI_ITEM_EVENT_MASK;
 	pitem->flags |= flags & UI_ITEM_EVENT_MASK;
 }
 
-unsigned int uiGetEvents(int item) {
-	return uiItemPtr(item)->flags & UI_ITEM_EVENT_MASK;
+unsigned int uiGetEvents(WimaOuiContext* ctx, int item) {
+	return uiItemPtr(ctx, item)->flags & UI_ITEM_EVENT_MASK;
 }
 
-void uiSetFlags(int item, unsigned int flags) {
-	UIitem *pitem = uiItemPtr(item);
+void uiSetFlags(WimaOuiContext* ctx, int item, unsigned int flags) {
+	UIitem *pitem = uiItemPtr(ctx, item);
 	pitem->flags &= ~UI_USERMASK;
 	pitem->flags |= flags & UI_USERMASK;
 }
 
-unsigned int uiGetFlags(int item) {
-	return uiItemPtr(item)->flags & UI_USERMASK;
+unsigned int uiGetFlags(WimaOuiContext* ctx, int item) {
+	return uiItemPtr(ctx, item)->flags & UI_USERMASK;
 }
 
-int uiContains(int item, int x, int y) {
-	UIrect rect = uiGetRect(item);
+int uiContains(WimaOuiContext* ctx, int item, int x, int y) {
+	UIrect rect = uiGetRect(ctx, item);
 	x -= rect.x;
 	y -= rect.y;
 	if ((x>=0) && (y>=0)  && (x<rect.w) && (y<rect.h)) {
@@ -1023,18 +1038,18 @@ int uiContains(int item, int x, int y) {
 	return 0;
 }
 
-int uiFindItem(int item, int x, int y, unsigned int flags, unsigned int mask) {
-	UIitem *pitem = uiItemPtr(item);
+int uiFindItem(WimaOuiContext* ctx, int item, int x, int y, unsigned int flags, unsigned int mask) {
+	UIitem *pitem = uiItemPtr(ctx, item);
 	if (pitem->flags & UI_ITEM_FROZEN) return -1;
-	if (uiContains(item, x, y)) {
+	if (uiContains(ctx, item, x, y)) {
 		int best_hit = -1;
-		int kid = uiFirstChild(item);
+		int kid = uiFirstChild(ctx, item);
 		while (kid >= 0) {
-			int hit = uiFindItem(kid, x, y, flags, mask);
+			int hit = uiFindItem(ctx, kid, x, y, flags, mask);
 			if (hit >= 0) {
 				best_hit = hit;
 			}
-			kid = uiNextSibling(kid);
+			kid = uiNextSibling(ctx, kid);
 		}
 		if (best_hit >= 0) {
 			return best_hit;
@@ -1048,94 +1063,94 @@ int uiFindItem(int item, int x, int y, unsigned int flags, unsigned int mask) {
 	return -1;
 }
 
-void uiUpdateHotItem() {
-	assert(ui_context);
-	if (!ui_context->count) return;
-	ui_context->hot_item = uiFindItem(0,
-	        ui_context->cursor.x, ui_context->cursor.y,
+void uiUpdateHotItem(WimaOuiContext* ctx) {
+	assert(ctx);
+	if (!ctx->itemCount) return;
+	ctx->hot_item = uiFindItem(ctx, 0,
+	        ctx->cursor.x, ctx->cursor.y,
 	        UI_ANY_MOUSE_INPUT, UI_ANY);
 }
 
-int uiGetClicks() {
-	return ui_context->clicks;
+int uiGetClicks(WimaOuiContext* ctx) {
+	return ctx->clicks;
 }
 
-void uiProcess(int timestamp) {
-	assert(ui_context);
+void uiProcess(WimaOuiContext* ctx, int timestamp) {
+	assert(ctx);
 
-	assert(ui_context->stage != UI_STAGE_LAYOUT); // must run uiBeginLayout(), uiEndLayout() first
+	assert(ctx->stage != UI_STAGE_LAYOUT); // must run uiBeginLayout(), uiEndLayout() first
 
-	if (ui_context->stage == UI_STAGE_PROCESS) {
-		uiUpdateHotItem();
+	if (ctx->stage == UI_STAGE_PROCESS) {
+		uiUpdateHotItem(ctx);
 	}
-	ui_context->stage = UI_STAGE_PROCESS;
+	ctx->stage = UI_STAGE_PROCESS;
 
-	if (!ui_context->count) {
-		uiClearInputEvents();
+	if (!ctx->itemCount) {
+		uiClearInputEvents(ctx);
 		return;
 	}
 
-	int hot_item = ui_context->last_hot_item;
-	int active_item = ui_context->active_item;
-	int focus_item = ui_context->focus_item;
+	int hot_item = ctx->last_hot_item;
+	int active_item = ctx->active_item;
+	int focus_item = ctx->focus_item;
 
 	// send all keyboard events
 	if (focus_item >= 0) {
-		for (int i = 0; i < ui_context->eventcount; ++i) {
-			ui_context->active_key = ui_context->events[i].key;
-			ui_context->active_modifier = ui_context->events[i].mod;
-			uiNotifyItem(focus_item, ui_context->events[i].event);
+		for (int i = 0; i < ctx->eventCount; ++i) {
+			ctx->active_key = ctx->events[i].event.key.key;
+			ctx->active_modifier = ctx->events[i].event.key.mods;
+			uiNotifyItem(focus_item, ctx->events[i].event);
 		}
 	} else {
-		ui_context->focus_item = -1;
+		ctx->focus_item = -1;
 	}
-	if (ui_context->scroll.x || ui_context->scroll.y) {
-		int scroll_item = uiFindItem(0,
-		        ui_context->cursor.x, ui_context->cursor.y,
+	if (ctx->scroll.x || ctx->scroll.y) {
+		int scroll_item = uiFindItem(ctx, 0,
+		        ctx->cursor.x, ctx->cursor.y,
 		        UI_SCROLL, UI_ANY);
 		if (scroll_item >= 0) {
 			uiNotifyItem(scroll_item, UI_SCROLL);
 		}
 	}
 
-	uiClearInputEvents();
+	uiClearInputEvents(ctx);
 
-	int hot = ui_context->hot_item;
+	int hot = ctx->hot_item;
 
-	switch(ui_context->state) {
+	switch(ctx->state) {
 		default:
 		case UI_STATE_IDLE: {
-			ui_context->start_cursor = ui_context->cursor;
-		if (uiGetButton(0)) {
+			ctx->start_cursor = ctx->cursor;
+		if (uiGetButton(ctx, 0)) {
 			hot_item = -1;
 			active_item = hot;
 
 			if (active_item != focus_item) {
 				focus_item = -1;
-				ui_context->focus_item = -1;
+				ctx->focus_item = -1;
 			}
 
 			if (active_item >= 0) {
-				if (((timestamp - ui_context->last_click_timestamp) > UI_CLICK_THRESHOLD) ||
-				    (ui_context->last_click_item != active_item))
+				if (((timestamp - ctx->last_click_timestamp) > UI_CLICK_THRESHOLD) ||
+				    (ctx->last_click_item != active_item))
 				{
-					ui_context->clicks = 0;
+					ctx->clicks = 0;
 				}
-				ui_context->clicks++;
+				ctx->clicks++;
 
-				ui_context->last_click_timestamp = timestamp;
-				ui_context->last_click_item = active_item;
-				ui_context->active_modifier = ui_context->active_button_modifier;
+				ctx->last_click_timestamp = timestamp;
+				ctx->last_click_item = active_item;
+				ctx->active_modifier = ctx->active_button_modifier;
 				uiNotifyItem(active_item, UI_BUTTON0_DOWN);
 			}
-			ui_context->state = UI_STATE_CAPTURE;
-		} else if (uiGetButton(2) && !uiGetLastButton(2)) {
+			ctx->state = UI_STATE_CAPTURE;
+		} else if (uiGetButton(ctx, 2) && !uiGetLastButton(ctx, 2)) {
 			hot_item = -1;
-			hot = uiFindItem(0, ui_context->cursor.x,
-			                 ui_context->cursor.y,
+			hot = uiFindItem(ctx, 0, ctx->cursor.x,
+			                 ctx->cursor.y,
 			                 UI_BUTTON2_DOWN, UI_ANY);
 			if (hot >= 0) {
-				ui_context->active_modifier = ui_context->active_button_modifier;
+				ctx->active_modifier = ctx->active_button_modifier;
 				uiNotifyItem(hot, UI_BUTTON2_DOWN);
 			}
 		} else {
@@ -1143,19 +1158,19 @@ void uiProcess(int timestamp) {
 		}
 		} break;
 		case UI_STATE_CAPTURE: {
-			if (!uiGetButton(0)) {
+			if (!uiGetButton(ctx, 0)) {
 			if (active_item >= 0) {
-				ui_context->active_modifier = ui_context->active_button_modifier;
+				ctx->active_modifier = ctx->active_button_modifier;
 				uiNotifyItem(active_item, UI_BUTTON0_UP);
 				if (active_item == hot) {
 					uiNotifyItem(active_item, UI_BUTTON0_HOT_UP);
 				}
 			}
 			active_item = -1;
-			ui_context->state = UI_STATE_IDLE;
+			ctx->state = UI_STATE_IDLE;
 		} else {
 			if (active_item >= 0) {
-				ui_context->active_modifier = ui_context->active_button_modifier;
+				ctx->active_modifier = ctx->active_button_modifier;
 				uiNotifyItem(active_item, UI_BUTTON0_CAPTURE);
 			}
 			if (hot == active_item)
@@ -1166,41 +1181,41 @@ void uiProcess(int timestamp) {
 		} break;
 	}
 
-	ui_context->last_cursor = ui_context->cursor;
-	ui_context->last_hot_item = hot_item;
-	ui_context->active_item = active_item;
+	ctx->last_cursor = ctx->cursor;
+	ctx->last_hot_item = hot_item;
+	ctx->active_item = active_item;
 
-	ui_context->last_timestamp = timestamp;
-	ui_context->last_buttons = ui_context->buttons;
+	ctx->last_timestamp = timestamp;
+	ctx->last_buttons = ctx->buttons;
 }
 
-static int uiIsActive(int item) {
-	assert(ui_context);
-	return ui_context->active_item == item;
+static int uiIsActive(WimaOuiContext* ctx, int item) {
+	assert(ctx);
+	return ctx->active_item == item;
 }
 
-static int uiIsHot(int item) {
-	assert(ui_context);
-	return ui_context->last_hot_item == item;
+static int uiIsHot(WimaOuiContext* ctx, int item) {
+	assert(ctx);
+	return ctx->last_hot_item == item;
 }
 
-static int uiIsFocused(int item) {
-	assert(ui_context);
-	return ui_context->focus_item == item;
+static int uiIsFocused(WimaOuiContext* ctx, int item) {
+	assert(ctx);
+	return ctx->focus_item == item;
 }
 
-UIitemState uiGetState(int item) {
-	UIitem *pitem = uiItemPtr(item);
+UIitemState uiGetState(WimaOuiContext* ctx, int item) {
+	UIitem *pitem = uiItemPtr(ctx, item);
 	if (pitem->flags & UI_ITEM_FROZEN) return UI_FROZEN;
-	if (uiIsFocused(item)) {
+	if (uiIsFocused(ctx, item)) {
 		if (pitem->flags & (UI_KEY_DOWN|UI_CHAR|UI_KEY_UP)) return UI_ACTIVE;
 	}
-	if (uiIsActive(item)) {
+	if (uiIsActive(ctx, item)) {
 		if (pitem->flags & (UI_BUTTON0_CAPTURE|UI_BUTTON0_UP)) return UI_ACTIVE;
 		if ((pitem->flags & UI_BUTTON0_HOT_UP)
-		        && uiIsHot(item)) return UI_ACTIVE;
+		        && uiIsHot(ctx, item)) return UI_ACTIVE;
 		return UI_COLD;
-	} else if (uiIsHot(item)) {
+	} else if (uiIsHot(ctx, item)) {
 		return UI_HOT;
 	}
 	return UI_COLD;

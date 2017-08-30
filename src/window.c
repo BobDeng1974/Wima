@@ -431,5 +431,10 @@ WimaStatus wima_window_free(WimaWindowHandle wwh) {
 
 	dstr_free(win->name);
 
+	dallocx(win->ctx.items, 0);
+	dallocx(win->ctx.last_items, 0);
+	dallocx(win->ctx.itemMap, 0);
+	dallocx(win->ctx.data, 0);
+
 	return wima_areas_free(win->areas);
 }

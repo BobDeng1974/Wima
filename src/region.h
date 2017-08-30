@@ -42,7 +42,7 @@ typedef struct wima_region {
 
 	void* user;
 
-	AreaGetUserPointerFunc get_ptr;
+	AreaGenUserPointerFunc get_ptr;
 	AreaFreeUserPointerFunc free_ptr;
 
 	AreaDrawFunc draw;
