@@ -95,19 +95,19 @@ void wima_draw_toolBtn(WimaUI* ui, float x, float y, float w, float h, int flags
 	NVGcolor shade_top, shade_down;
 
 	wima_draw_corners_rounded(cr, BND_TOOL_RADIUS, flags);
-	wima_draw_inset(ui,x,y,w,h,cr[2],cr[3]);
+	wima_draw_inset(ui, x, y, w, h, cr[2], cr[3]);
 	wima_color_inner(&shade_top, &shade_down, &wg.theme.toolTheme, state, 1);
-	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
-	wima_draw_box_outline(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    wima_draw_color_transparent(wg.theme.toolTheme.outlineColor));
+	wima_draw_box_inner(ui, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
+	wima_draw_box_outline(ui, x, y, w, h, cr[0], cr[1], cr[2], cr[3],
+	    wima_color_transparent(wg.theme.toolTheme.outlineColor));
 	wima_draw_label_icon_value(ui,x,y,w,h,iconid,
-	    wima_draw_color_text(&wg.theme.toolTheme, state), BND_CENTER,
+	    wima_color_text(&wg.theme.toolTheme, state), BND_CENTER,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_draw_radioBtn(WimaUI* ui,
-    float x, float y, float w, float h, int flags, BNDwidgetState state,
-    int iconid, const char *label) {
+void wima_draw_radioBtn(WimaUI* ui, float x, float y, float w, float h, int flags,
+                        BNDwidgetState state, int iconid, const char *label)
+{
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
@@ -116,9 +116,9 @@ void wima_draw_radioBtn(WimaUI* ui,
 	wima_color_inner(&shade_top, &shade_down, &wg.theme.radioTheme, state, 1);
 	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	wima_draw_box_outline(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    wima_draw_color_transparent(wg.theme.radioTheme.outlineColor));
+	    wima_color_transparent(wg.theme.radioTheme.outlineColor));
 	wima_draw_label_icon_value(ui,x,y,w,h,iconid,
-	    wima_draw_color_text(&wg.theme.radioTheme, state), BND_CENTER,
+	    wima_color_text(&wg.theme.radioTheme, state), BND_CENTER,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
@@ -139,12 +139,12 @@ void wima_draw_textField(WimaUI* ui,
 	wima_color_inner(&shade_top, &shade_down, &wg.theme.textFieldTheme, state, 0);
 	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	wima_draw_box_outline(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    wima_draw_color_transparent(wg.theme.textFieldTheme.outlineColor));
+	    wima_color_transparent(wg.theme.textFieldTheme.outlineColor));
 	if (state != BND_ACTIVE) {
 		cend = -1;
 	}
 	wima_draw_label_caret(ui,x,y,w,h,iconid,
-	    wima_draw_color_text(&wg.theme.textFieldTheme, state), BND_LABEL_FONT_SIZE,
+	    wima_color_text(&wg.theme.textFieldTheme, state), BND_LABEL_FONT_SIZE,
 	    text, wg.theme.textFieldTheme.itemColor, cbegin, cend);
 }
 
@@ -168,12 +168,12 @@ void wima_draw_optionBtn(WimaUI* ui,
 	wima_draw_box_outline(ui,ox,oy,
 	    BND_OPTION_WIDTH,BND_OPTION_HEIGHT,
 	    BND_OPTION_RADIUS,BND_OPTION_RADIUS,BND_OPTION_RADIUS,BND_OPTION_RADIUS,
-	    wima_draw_color_transparent(wg.theme.optionTheme.outlineColor));
+	    wima_color_transparent(wg.theme.optionTheme.outlineColor));
 	if (state == BND_ACTIVE) {
-		wima_draw_check(ui,ox,oy, wima_draw_color_transparent(wg.theme.optionTheme.itemColor));
+		wima_draw_check(ui,ox,oy, wima_color_transparent(wg.theme.optionTheme.itemColor));
 	}
 	wima_draw_label_icon_value(ui,x+12,y,w-12,h,-1,
-	    wima_draw_color_text(&wg.theme.optionTheme, state), BND_LEFT,
+	    wima_color_text(&wg.theme.optionTheme, state), BND_LEFT,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
@@ -188,12 +188,12 @@ void wima_draw_choiceBtn(WimaUI* ui,
 	wima_color_inner(&shade_top, &shade_down, &wg.theme.choiceTheme, state, 1);
 	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	wima_draw_box_outline(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    wima_draw_color_transparent(wg.theme.choiceTheme.outlineColor));
+	    wima_color_transparent(wg.theme.choiceTheme.outlineColor));
 	wima_draw_label_icon_value(ui,x,y,w,h,iconid,
-	    wima_draw_color_text(&wg.theme.choiceTheme, state), BND_LEFT,
+	    wima_color_text(&wg.theme.choiceTheme, state), BND_LEFT,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 	wima_draw_arrow_upDown(ui,x+w-10,y+10,5,
-	    wima_draw_color_transparent(wg.theme.choiceTheme.itemColor));
+	    wima_color_transparent(wg.theme.choiceTheme.itemColor));
 }
 
 void wima_draw_colorBtn(WimaUI* ui,
@@ -203,7 +203,7 @@ void wima_draw_colorBtn(WimaUI* ui,
 	wima_draw_inset(ui,x,y,w,h,cr[2],cr[3]);
 	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], color, color);
 	wima_draw_box_outline(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    wima_draw_color_transparent(wg.theme.toolTheme.outlineColor));
+	    wima_color_transparent(wg.theme.toolTheme.outlineColor));
 }
 
 void wima_draw_numField(WimaUI* ui,
@@ -217,14 +217,14 @@ void wima_draw_numField(WimaUI* ui,
 	wima_color_inner(&shade_top, &shade_down, &wg.theme.numberFieldTheme, state, 0);
 	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	wima_draw_box_outline(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    wima_draw_color_transparent(wg.theme.numberFieldTheme.outlineColor));
+	    wima_color_transparent(wg.theme.numberFieldTheme.outlineColor));
 	wima_draw_label_icon_value(ui,x,y,w,h,-1,
-	    wima_draw_color_text(&wg.theme.numberFieldTheme, state), BND_CENTER,
+	    wima_color_text(&wg.theme.numberFieldTheme, state), BND_CENTER,
 	    BND_LABEL_FONT_SIZE, label, value);
 	wima_draw_arrow(ui,x+8,y+10,-BND_NUMBER_ARROW_SIZE,
-	    wima_draw_color_transparent(wg.theme.numberFieldTheme.itemColor));
+	    wima_color_transparent(wg.theme.numberFieldTheme.itemColor));
 	wima_draw_arrow(ui,x+w-8,y+10,BND_NUMBER_ARROW_SIZE,
-	    wima_draw_color_transparent(wg.theme.numberFieldTheme.itemColor));
+	    wima_color_transparent(wg.theme.numberFieldTheme.itemColor));
 }
 
 void wima_draw_slider(WimaUI* ui,
@@ -239,14 +239,14 @@ void wima_draw_slider(WimaUI* ui,
 	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 
 	if (state == BND_ACTIVE) {
-		shade_top = wima_draw_color_offset(
+		shade_top = wima_color_offset(
 		    wg.theme.sliderTheme.itemColor, wg.theme.sliderTheme.shadeTop);
-		shade_down = wima_draw_color_offset(
+		shade_down = wima_color_offset(
 		    wg.theme.sliderTheme.itemColor, wg.theme.sliderTheme.shadeDown);
 	} else {
-		shade_top = wima_draw_color_offset(
+		shade_top = wima_color_offset(
 		    wg.theme.sliderTheme.itemColor, wg.theme.sliderTheme.shadeDown);
-		shade_down = wima_draw_color_offset(
+		shade_down = wima_color_offset(
 		    wg.theme.sliderTheme.itemColor, wg.theme.sliderTheme.shadeTop);
 	}
 	nvgScissor(ui->nvg,x,y,8+(w-8)*bnd_clamp(progress,0,1),h);
@@ -254,9 +254,9 @@ void wima_draw_slider(WimaUI* ui,
 	nvgResetScissor(ui->nvg);
 
 	wima_draw_box_outline(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
-	    wima_draw_color_transparent(wg.theme.sliderTheme.outlineColor));
+	    wima_color_transparent(wg.theme.sliderTheme.outlineColor));
 	wima_draw_label_icon_value(ui,x,y,w,h,-1,
-	    wima_draw_color_text(&wg.theme.sliderTheme, state), BND_CENTER,
+	    wima_color_text(&wg.theme.sliderTheme, state), BND_CENTER,
 	    BND_LABEL_FONT_SIZE, label, value);
 }
 
@@ -269,16 +269,16 @@ void wima_draw_scrollbar(WimaUI* ui,
 	wima_draw_box_inner(ui,x,y,w,h,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
-	    wima_draw_color_offset(
+	    wima_color_offset(
 	        wg.theme.scrollBarTheme.innerColor, 3*wg.theme.scrollBarTheme.shadeDown),
-	    wima_draw_color_offset(
+	    wima_color_offset(
 	        wg.theme.scrollBarTheme.innerColor, 3*wg.theme.scrollBarTheme.shadeTop));
 	wima_draw_box_outline(ui,x,y,w,h,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
-	    wima_draw_color_transparent(wg.theme.scrollBarTheme.outlineColor));
+	    wima_color_transparent(wg.theme.scrollBarTheme.outlineColor));
 
-	NVGcolor itemColor = wima_draw_color_offset(
+	NVGcolor itemColor = wima_color_offset(
 	    wg.theme.scrollBarTheme.itemColor,
 	    (state == BND_ACTIVE)?BND_SCROLLBAR_ACTIVE_SHADE:0);
 
@@ -287,14 +287,14 @@ void wima_draw_scrollbar(WimaUI* ui,
 	wima_draw_box_inner(ui,x,y,w,h,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
-	    wima_draw_color_offset(
+	    wima_color_offset(
 	        itemColor, 3*wg.theme.scrollBarTheme.shadeTop),
-	    wima_draw_color_offset(
+	    wima_color_offset(
 	        itemColor, 3*wg.theme.scrollBarTheme.shadeDown));
 	wima_draw_box_outline(ui,x,y,w,h,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
-	    wima_draw_color_transparent(wg.theme.scrollBarTheme.outlineColor));
+	    wima_color_transparent(wg.theme.scrollBarTheme.outlineColor));
 }
 
 void wima_draw_menu_background(WimaUI* ui,
@@ -307,7 +307,7 @@ void wima_draw_menu_background(WimaUI* ui,
 	    BND_DEFAULT, 0);
 	wima_draw_box_inner(ui,x,y,w,h+1,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	wima_draw_box_outline(ui,x,y,w,h+1,cr[0],cr[1],cr[2],cr[3],
-	    wima_draw_color_transparent(wg.theme.menuTheme.outlineColor));
+	    wima_color_transparent(wg.theme.menuTheme.outlineColor));
 	wima_draw_dropShadow(ui,x,y,w,h,BND_MENU_RADIUS,
 	    BND_SHADOW_FEATHER,BND_SHADOW_ALPHA);
 }
@@ -322,7 +322,7 @@ void wima_draw_tooltip_background(WimaUI* ui, float x, float y, float w, float h
 	    shade_top, shade_down);
 	wima_draw_box_outline(ui,x,y,w,h+1,
 	    BND_MENU_RADIUS,BND_MENU_RADIUS,BND_MENU_RADIUS,BND_MENU_RADIUS,
-	    wima_draw_color_transparent(wg.theme.tooltipTheme.outlineColor));
+	    wima_color_transparent(wg.theme.tooltipTheme.outlineColor));
 	wima_draw_dropShadow(ui,x,y,w,h,BND_MENU_RADIUS,
 	    BND_SHADOW_FEATHER,BND_SHADOW_ALPHA);
 }
@@ -339,14 +339,14 @@ void wima_draw_menu_item(WimaUI* ui,
     int iconid, const char *label) {
 	if (state != BND_DEFAULT) {
 		wima_draw_box_inner(ui,x,y,w,h,0,0,0,0,
-		    wima_draw_color_offset(wg.theme.menuItemTheme.innerSelectedColor,
+		    wima_color_offset(wg.theme.menuItemTheme.innerSelectedColor,
 		        wg.theme.menuItemTheme.shadeTop),
-		    wima_draw_color_offset(wg.theme.menuItemTheme.innerSelectedColor,
+		    wima_color_offset(wg.theme.menuItemTheme.innerSelectedColor,
 		        wg.theme.menuItemTheme.shadeDown));
 		state = BND_ACTIVE;
 	}
 	wima_draw_label_icon_value(ui,x,y,w,h,iconid,
-	    wima_draw_color_text(&wg.theme.menuItemTheme, state), BND_LEFT,
+	    wima_color_text(&wg.theme.menuItemTheme, state), BND_LEFT,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
@@ -358,7 +358,7 @@ void wima_draw_node_port(WimaUI* ui, float x, float y, BNDwidgetState state,
 	nvgStrokeWidth(ui->nvg,1.0f);
 	nvgStroke(ui->nvg);
 	nvgFillColor(ui->nvg,(state != BND_DEFAULT)?
-	    wima_draw_color_offset(color, BND_HOVER_SHADE):color);
+	    wima_color_offset(color, BND_HOVER_SHADE):color);
 	nvgFill(ui->nvg);
 }
 
@@ -389,25 +389,25 @@ void wima_draw_node_wire_colored(WimaUI* ui, float x0, float y0, float x1, float
 void wima_draw_node_wire(WimaUI* ui, float x0, float y0, float x1, float y1,
     BNDwidgetState state0, BNDwidgetState state1) {
 	wima_draw_node_wire_colored(ui, x0, y0, x1, y1,
-	    wima_draw_color_node_wire(&wg.theme.nodeTheme, state0),
-	    wima_draw_color_node_wire(&wg.theme.nodeTheme, state1));
+	    wima_color_node_wire(&wg.theme.nodeTheme, state0),
+	    wima_color_node_wire(&wg.theme.nodeTheme, state1));
 }
 
 void wima_draw_node_background(WimaUI* ui, float x, float y, float w, float h,
     BNDwidgetState state, int iconid, const char *label, NVGcolor titleColor) {
 	wima_draw_box_inner(ui,x,y,w,BND_NODE_TITLE_HEIGHT+2,
 	    BND_NODE_RADIUS,BND_NODE_RADIUS,0,0,
-	    wima_draw_color_transparent(wima_draw_color_offset(titleColor, BND_BEVEL_SHADE)),
-	    wima_draw_color_transparent(titleColor));
+	    wima_color_transparent(wima_color_offset(titleColor, BND_BEVEL_SHADE)),
+	    wima_color_transparent(titleColor));
 	wima_draw_box_inner(ui,x,y+BND_NODE_TITLE_HEIGHT-1,w,h+2-BND_NODE_TITLE_HEIGHT,
 	    0,0,BND_NODE_RADIUS,BND_NODE_RADIUS,
-	    wima_draw_color_transparent(wg.theme.nodeTheme.nodeBackdropColor),
-	    wima_draw_color_transparent(wg.theme.nodeTheme.nodeBackdropColor));
+	    wima_color_transparent(wg.theme.nodeTheme.nodeBackdropColor),
+	    wima_color_transparent(wg.theme.nodeTheme.nodeBackdropColor));
 	wima_draw_node_label_icon(ui,
 	    x+BND_NODE_ARROW_AREA_WIDTH,y,
 	    w-BND_NODE_ARROW_AREA_WIDTH-BND_NODE_MARGIN_SIDE,BND_NODE_TITLE_HEIGHT,
 	    iconid, wg.theme.regularTheme.textColor,
-	    wima_draw_color_offset(titleColor, BND_BEVEL_SHADE),
+	    wima_color_offset(titleColor, BND_BEVEL_SHADE),
 	    BND_LEFT, BND_LABEL_FONT_SIZE, label);
 	NVGcolor arrowColor;
 	NVGcolor borderColor;
@@ -415,7 +415,7 @@ void wima_draw_node_background(WimaUI* ui, float x, float y, float w, float h,
 		default:
 		case BND_DEFAULT: {
 			borderColor = nvgRGBf(0,0,0);
-			arrowColor = wima_draw_color_offset(titleColor, -BND_BEVEL_SHADE);
+			arrowColor = wima_color_offset(titleColor, -BND_BEVEL_SHADE);
 		} break;
 		case BND_HOVER: {
 			borderColor = wg.theme.nodeTheme.nodeSelectedColor;
@@ -428,7 +428,7 @@ void wima_draw_node_background(WimaUI* ui, float x, float y, float w, float h,
 	}
 	wima_draw_box_outline(ui,x,y,w,h+1,
 	    BND_NODE_RADIUS,BND_NODE_RADIUS,BND_NODE_RADIUS,BND_NODE_RADIUS,
-	    wima_draw_color_transparent(borderColor));
+	    wima_color_transparent(borderColor));
 	/*
 	bndNodeArrowDown(ui->nvg,
 		x + BND_NODE_MARGIN_SIDE, y + BND_NODE_TITLE_HEIGHT-4,
@@ -439,11 +439,11 @@ void wima_draw_node_background(WimaUI* ui, float x, float y, float w, float h,
 }
 
 void wima_draw_splitters(WimaUI* ui, float x, float y, float w, float h) {
-	NVGcolor insetLight = wima_draw_color_transparent(
-	    wima_draw_color_offset(wg.theme.backgroundColor, BND_SPLITTER_SHADE));
-	NVGcolor insetDark = wima_draw_color_transparent(
-	    wima_draw_color_offset(wg.theme.backgroundColor, -BND_SPLITTER_SHADE));
-	NVGcolor inset = wima_draw_color_transparent(wg.theme.backgroundColor);
+	NVGcolor insetLight = wima_color_transparent(
+	    wima_color_offset(wg.theme.backgroundColor, BND_SPLITTER_SHADE));
+	NVGcolor insetDark = wima_color_transparent(
+	    wima_color_offset(wg.theme.backgroundColor, -BND_SPLITTER_SHADE));
+	NVGcolor inset = wima_color_transparent(wg.theme.backgroundColor);
 
 	float x2 = x+w;
 	float y2 = y+h;
@@ -621,16 +621,16 @@ void wima_draw_bevel(WimaUI* ui, float x, float y, float w, float h) {
 	nvgMoveTo(ui->nvg, x, y+h);
 	nvgLineTo(ui->nvg, x+w, y+h);
 	nvgLineTo(ui->nvg, x+w, y);
-	nvgStrokeColor(ui->nvg, wima_draw_color_transparent(
-	    wima_draw_color_offset(wg.theme.backgroundColor, -BND_BEVEL_SHADE)));
+	nvgStrokeColor(ui->nvg, wima_color_transparent(
+	    wima_color_offset(wg.theme.backgroundColor, -BND_BEVEL_SHADE)));
 	nvgStroke(ui->nvg);
 
 	nvgBeginPath(ui->nvg);
 	nvgMoveTo(ui->nvg, x, y+h);
 	nvgLineTo(ui->nvg, x, y);
 	nvgLineTo(ui->nvg, x+w, y);
-	nvgStrokeColor(ui->nvg, wima_draw_color_transparent(
-	    wima_draw_color_offset(wg.theme.backgroundColor, BND_BEVEL_SHADE)));
+	nvgStrokeColor(ui->nvg, wima_color_transparent(
+	    wima_color_offset(wg.theme.backgroundColor, BND_BEVEL_SHADE)));
 	nvgStroke(ui->nvg);
 }
 
@@ -648,7 +648,7 @@ void wima_draw_inset(WimaUI* ui, float x, float y, float w, float h,
 	nvgArcTo(ui->nvg, x+w,y+h, x,y+h, cr2);
 	nvgArcTo(ui->nvg, x,y+h, x,y, cr3);
 
-	NVGcolor bevelColor = wima_draw_color_offset(wg.theme.backgroundColor,
+	NVGcolor bevelColor = wima_color_offset(wg.theme.backgroundColor,
 	    BND_INSET_BEVEL_SHADE);
 
 	nvgStrokeWidth(ui->nvg, 1);
