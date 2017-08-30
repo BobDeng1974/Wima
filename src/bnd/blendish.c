@@ -28,6 +28,7 @@
 #include <nanovg.h>
 
 #include "../global.h"
+#include "../ui.h"
 
 #include "theme.h"
 #include "blendish.h"
@@ -81,98 +82,88 @@ float bnd_clamp(float v, float mn, float mx) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void bndSetTheme(WimaTheme theme) {
+void wima_bnd_theme(WimaTheme theme) {
 	wg.theme = theme;
 }
 
-const WimaTheme wima_bnd_theme() {
-	return wg.theme;
+int wima_bnd_icons(NVGcontext* vg, const char* path) {
+	return nvgCreateImage(vg, path, 0);
 }
 
-// the handle to the image containing the icon sheet
-static int bnd_icon_image = -1;
-
-void bndSetIconImage(int image) {
-	bnd_icon_image = image;
-}
-
-// the handle to the UI font
-static int bnd_font = -1;
-
-void bndSetFont(int font) {
-	bnd_font = font;
+int wima_bnd_font(NVGcontext* vg, const char* name, const char* path) {
+	return nvgCreateFont(vg, name, path);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void bndLabel(NVGcontext *ctx,
+void bndLabel(WimaUI* ui,
     float x, float y, float w, float h, int iconid, const char *label) {
-	bndIconLabelValue(ctx,x,y,w,h,iconid,
+	bndIconLabelValue(ui,x,y,w,h,iconid,
 	    wg.theme.regularTheme.textColor, BND_LEFT,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
-void bndToolButton(NVGcontext *ctx,
+void bndToolButton(WimaUI* ui,
     float x, float y, float w, float h, int flags, BNDwidgetState state,
     int iconid, const char *label) {
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
 	bndSelectCorners(cr, BND_TOOL_RADIUS, flags);
-	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
+	bndBevelInset(ui,x,y,w,h,cr[2],cr[3]);
 	bndInnerColors(&shade_top, &shade_down, &wg.theme.toolTheme, state, 1);
-	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
-	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
+	bndInnerBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
+	bndOutlineBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
 	    bndTransparent(wg.theme.toolTheme.outlineColor));
-	bndIconLabelValue(ctx,x,y,w,h,iconid,
+	bndIconLabelValue(ui,x,y,w,h,iconid,
 	    bndTextColor(&wg.theme.toolTheme, state), BND_CENTER,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
-void bndRadioButton(NVGcontext *ctx,
+void bndRadioButton(WimaUI* ui,
     float x, float y, float w, float h, int flags, BNDwidgetState state,
     int iconid, const char *label) {
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
 	bndSelectCorners(cr, BND_OPTION_RADIUS, flags);
-	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
+	bndBevelInset(ui,x,y,w,h,cr[2],cr[3]);
 	bndInnerColors(&shade_top, &shade_down, &wg.theme.radioTheme, state, 1);
-	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
-	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
+	bndInnerBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
+	bndOutlineBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
 	    bndTransparent(wg.theme.radioTheme.outlineColor));
-	bndIconLabelValue(ctx,x,y,w,h,iconid,
+	bndIconLabelValue(ui,x,y,w,h,iconid,
 	    bndTextColor(&wg.theme.radioTheme, state), BND_CENTER,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
-int bndTextFieldTextPosition(NVGcontext *ctx, float x, float y, float w, float h,
+int bndTextFieldTextPosition(WimaUI* ui, float x, float y, float w, float h,
     int iconid, const char *text, int px, int py) {
-	return bndIconLabelTextPosition(ctx, x, y, w, h,
+	return bndIconLabelTextPosition(ui, x, y, w, h,
 	    iconid, BND_LABEL_FONT_SIZE, text, px, py);
 }
 
-void bndTextField(NVGcontext *ctx,
+void bndTextField(WimaUI* ui,
     float x, float y, float w, float h, int flags, BNDwidgetState state,
     int iconid, const char *text, int cbegin, int cend) {
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
 	bndSelectCorners(cr, BND_TEXT_RADIUS, flags);
-	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
+	bndBevelInset(ui,x,y,w,h,cr[2],cr[3]);
 	bndInnerColors(&shade_top, &shade_down, &wg.theme.textFieldTheme, state, 0);
-	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
-	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
+	bndInnerBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
+	bndOutlineBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
 	    bndTransparent(wg.theme.textFieldTheme.outlineColor));
 	if (state != BND_ACTIVE) {
 		cend = -1;
 	}
-	bndIconLabelCaret(ctx,x,y,w,h,iconid,
+	bndIconLabelCaret(ui,x,y,w,h,iconid,
 	    bndTextColor(&wg.theme.textFieldTheme, state), BND_LABEL_FONT_SIZE,
 	    text, wg.theme.textFieldTheme.itemColor, cbegin, cend);
 }
 
-void bndOptionButton(NVGcontext *ctx,
+void bndOptionButton(WimaUI* ui,
     float x, float y, float w, float h, BNDwidgetState state,
     const char *label) {
 	float ox, oy;
@@ -181,86 +172,86 @@ void bndOptionButton(NVGcontext *ctx,
 	ox = x;
 	oy = y+h-BND_OPTION_HEIGHT-3;
 
-	bndBevelInset(ctx,ox,oy,
+	bndBevelInset(ui,ox,oy,
 	    BND_OPTION_WIDTH,BND_OPTION_HEIGHT,
 	    BND_OPTION_RADIUS,BND_OPTION_RADIUS);
 	bndInnerColors(&shade_top, &shade_down, &wg.theme.optionTheme, state, 1);
-	bndInnerBox(ctx,ox,oy,
+	bndInnerBox(ui,ox,oy,
 	    BND_OPTION_WIDTH,BND_OPTION_HEIGHT,
 	    BND_OPTION_RADIUS,BND_OPTION_RADIUS,BND_OPTION_RADIUS,BND_OPTION_RADIUS,
 	    shade_top, shade_down);
-	bndOutlineBox(ctx,ox,oy,
+	bndOutlineBox(ui,ox,oy,
 	    BND_OPTION_WIDTH,BND_OPTION_HEIGHT,
 	    BND_OPTION_RADIUS,BND_OPTION_RADIUS,BND_OPTION_RADIUS,BND_OPTION_RADIUS,
 	    bndTransparent(wg.theme.optionTheme.outlineColor));
 	if (state == BND_ACTIVE) {
-		bndCheck(ctx,ox,oy, bndTransparent(wg.theme.optionTheme.itemColor));
+		bndCheck(ui,ox,oy, bndTransparent(wg.theme.optionTheme.itemColor));
 	}
-	bndIconLabelValue(ctx,x+12,y,w-12,h,-1,
+	bndIconLabelValue(ui,x+12,y,w-12,h,-1,
 	    bndTextColor(&wg.theme.optionTheme, state), BND_LEFT,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
-void bndChoiceButton(NVGcontext *ctx,
+void bndChoiceButton(WimaUI* ui,
     float x, float y, float w, float h, int flags, BNDwidgetState state,
     int iconid, const char *label) {
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
 	bndSelectCorners(cr, BND_OPTION_RADIUS, flags);
-	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
+	bndBevelInset(ui,x,y,w,h,cr[2],cr[3]);
 	bndInnerColors(&shade_top, &shade_down, &wg.theme.choiceTheme, state, 1);
-	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
-	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
+	bndInnerBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
+	bndOutlineBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
 	    bndTransparent(wg.theme.choiceTheme.outlineColor));
-	bndIconLabelValue(ctx,x,y,w,h,iconid,
+	bndIconLabelValue(ui,x,y,w,h,iconid,
 	    bndTextColor(&wg.theme.choiceTheme, state), BND_LEFT,
 	    BND_LABEL_FONT_SIZE, label, NULL);
-	bndUpDownArrow(ctx,x+w-10,y+10,5,
+	bndUpDownArrow(ui,x+w-10,y+10,5,
 	    bndTransparent(wg.theme.choiceTheme.itemColor));
 }
 
-void bndColorButton(NVGcontext *ctx,
+void bndColorButton(WimaUI* ui,
     float x, float y, float w, float h, int flags, NVGcolor color) {
 	float cr[4];
 	bndSelectCorners(cr, BND_TOOL_RADIUS, flags);
-	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
-	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], color, color);
-	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
+	bndBevelInset(ui,x,y,w,h,cr[2],cr[3]);
+	bndInnerBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], color, color);
+	bndOutlineBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
 	    bndTransparent(wg.theme.toolTheme.outlineColor));
 }
 
-void bndNumberField(NVGcontext *ctx,
+void bndNumberField(WimaUI* ui,
     float x, float y, float w, float h, int flags, BNDwidgetState state,
     const char *label, const char *value) {
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
 	bndSelectCorners(cr, BND_NUMBER_RADIUS, flags);
-	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
+	bndBevelInset(ui,x,y,w,h,cr[2],cr[3]);
 	bndInnerColors(&shade_top, &shade_down, &wg.theme.numberFieldTheme, state, 0);
-	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
-	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
+	bndInnerBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
+	bndOutlineBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
 	    bndTransparent(wg.theme.numberFieldTheme.outlineColor));
-	bndIconLabelValue(ctx,x,y,w,h,-1,
+	bndIconLabelValue(ui,x,y,w,h,-1,
 	    bndTextColor(&wg.theme.numberFieldTheme, state), BND_CENTER,
 	    BND_LABEL_FONT_SIZE, label, value);
-	bndArrow(ctx,x+8,y+10,-BND_NUMBER_ARROW_SIZE,
+	bndArrow(ui,x+8,y+10,-BND_NUMBER_ARROW_SIZE,
 	    bndTransparent(wg.theme.numberFieldTheme.itemColor));
-	bndArrow(ctx,x+w-8,y+10,BND_NUMBER_ARROW_SIZE,
+	bndArrow(ui,x+w-8,y+10,BND_NUMBER_ARROW_SIZE,
 	    bndTransparent(wg.theme.numberFieldTheme.itemColor));
 }
 
-void bndSlider(NVGcontext *ctx,
+void bndSlider(WimaUI* ui,
     float x, float y, float w, float h, int flags, BNDwidgetState state,
     float progress, const char *label, const char *value) {
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
 	bndSelectCorners(cr, BND_NUMBER_RADIUS, flags);
-	bndBevelInset(ctx,x,y,w,h,cr[2],cr[3]);
+	bndBevelInset(ui,x,y,w,h,cr[2],cr[3]);
 	bndInnerColors(&shade_top, &shade_down, &wg.theme.sliderTheme, state, 0);
-	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
+	bndInnerBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 
 	if (state == BND_ACTIVE) {
 		shade_top = bndOffsetColor(
@@ -273,31 +264,31 @@ void bndSlider(NVGcontext *ctx,
 		shade_down = bndOffsetColor(
 		    wg.theme.sliderTheme.itemColor, wg.theme.sliderTheme.shadeTop);
 	}
-	nvgScissor(ctx,x,y,8+(w-8)*bnd_clamp(progress,0,1),h);
-	bndInnerBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
-	nvgResetScissor(ctx);
+	nvgScissor(ui->nvg,x,y,8+(w-8)*bnd_clamp(progress,0,1),h);
+	bndInnerBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
+	nvgResetScissor(ui->nvg);
 
-	bndOutlineBox(ctx,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
+	bndOutlineBox(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
 	    bndTransparent(wg.theme.sliderTheme.outlineColor));
-	bndIconLabelValue(ctx,x,y,w,h,-1,
+	bndIconLabelValue(ui,x,y,w,h,-1,
 	    bndTextColor(&wg.theme.sliderTheme, state), BND_CENTER,
 	    BND_LABEL_FONT_SIZE, label, value);
 }
 
-void bndScrollBar(NVGcontext *ctx,
+void bndScrollBar(WimaUI* ui,
     float x, float y, float w, float h, BNDwidgetState state,
     float offset, float size) {
 
-	bndBevelInset(ctx,x,y,w,h,
+	bndBevelInset(ui,x,y,w,h,
 	    BND_SCROLLBAR_RADIUS, BND_SCROLLBAR_RADIUS);
-	bndInnerBox(ctx,x,y,w,h,
+	bndInnerBox(ui,x,y,w,h,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    bndOffsetColor(
 	        wg.theme.scrollBarTheme.innerColor, 3*wg.theme.scrollBarTheme.shadeDown),
 	    bndOffsetColor(
 	        wg.theme.scrollBarTheme.innerColor, 3*wg.theme.scrollBarTheme.shadeTop));
-	bndOutlineBox(ctx,x,y,w,h,
+	bndOutlineBox(ui,x,y,w,h,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    bndTransparent(wg.theme.scrollBarTheme.outlineColor));
@@ -308,20 +299,20 @@ void bndScrollBar(NVGcontext *ctx,
 
 	bndScrollHandleRect(&x,&y,&w,&h,offset,size);
 
-	bndInnerBox(ctx,x,y,w,h,
+	bndInnerBox(ui,x,y,w,h,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    bndOffsetColor(
 	        itemColor, 3*wg.theme.scrollBarTheme.shadeTop),
 	    bndOffsetColor(
 	        itemColor, 3*wg.theme.scrollBarTheme.shadeDown));
-	bndOutlineBox(ctx,x,y,w,h,
+	bndOutlineBox(ui,x,y,w,h,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    BND_SCROLLBAR_RADIUS,BND_SCROLLBAR_RADIUS,
 	    bndTransparent(wg.theme.scrollBarTheme.outlineColor));
 }
 
-void bndMenuBackground(NVGcontext *ctx,
+void bndMenuBackground(WimaUI* ui,
     float x, float y, float w, float h, int flags) {
 	float cr[4];
 	NVGcolor shade_top, shade_down;
@@ -329,105 +320,105 @@ void bndMenuBackground(NVGcontext *ctx,
 	bndSelectCorners(cr, BND_MENU_RADIUS, flags);
 	bndInnerColors(&shade_top, &shade_down, &wg.theme.menuTheme,
 	    BND_DEFAULT, 0);
-	bndInnerBox(ctx,x,y,w,h+1,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
-	bndOutlineBox(ctx,x,y,w,h+1,cr[0],cr[1],cr[2],cr[3],
+	bndInnerBox(ui,x,y,w,h+1,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
+	bndOutlineBox(ui,x,y,w,h+1,cr[0],cr[1],cr[2],cr[3],
 	    bndTransparent(wg.theme.menuTheme.outlineColor));
-	bndDropShadow(ctx,x,y,w,h,BND_MENU_RADIUS,
+	bndDropShadow(ui,x,y,w,h,BND_MENU_RADIUS,
 	    BND_SHADOW_FEATHER,BND_SHADOW_ALPHA);
 }
 
-void bndTooltipBackground(NVGcontext *ctx, float x, float y, float w, float h) {
+void bndTooltipBackground(WimaUI* ui, float x, float y, float w, float h) {
 	NVGcolor shade_top, shade_down;
 
 	bndInnerColors(&shade_top, &shade_down, &wg.theme.tooltipTheme,
 	    BND_DEFAULT, 0);
-	bndInnerBox(ctx,x,y,w,h+1,
+	bndInnerBox(ui,x,y,w,h+1,
 	    BND_MENU_RADIUS,BND_MENU_RADIUS,BND_MENU_RADIUS,BND_MENU_RADIUS,
 	    shade_top, shade_down);
-	bndOutlineBox(ctx,x,y,w,h+1,
+	bndOutlineBox(ui,x,y,w,h+1,
 	    BND_MENU_RADIUS,BND_MENU_RADIUS,BND_MENU_RADIUS,BND_MENU_RADIUS,
 	    bndTransparent(wg.theme.tooltipTheme.outlineColor));
-	bndDropShadow(ctx,x,y,w,h,BND_MENU_RADIUS,
+	bndDropShadow(ui,x,y,w,h,BND_MENU_RADIUS,
 	    BND_SHADOW_FEATHER,BND_SHADOW_ALPHA);
 }
 
-void bndMenuLabel(NVGcontext *ctx,
+void bndMenuLabel(WimaUI* ui,
     float x, float y, float w, float h, int iconid, const char *label) {
-	bndIconLabelValue(ctx,x,y,w,h,iconid,
+	bndIconLabelValue(ui,x,y,w,h,iconid,
 	    wg.theme.menuTheme.textColor, BND_LEFT,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
-void bndMenuItem(NVGcontext *ctx,
+void bndMenuItem(WimaUI* ui,
     float x, float y, float w, float h, BNDwidgetState state,
     int iconid, const char *label) {
 	if (state != BND_DEFAULT) {
-		bndInnerBox(ctx,x,y,w,h,0,0,0,0,
+		bndInnerBox(ui,x,y,w,h,0,0,0,0,
 		    bndOffsetColor(wg.theme.menuItemTheme.innerSelectedColor,
 		        wg.theme.menuItemTheme.shadeTop),
 		    bndOffsetColor(wg.theme.menuItemTheme.innerSelectedColor,
 		        wg.theme.menuItemTheme.shadeDown));
 		state = BND_ACTIVE;
 	}
-	bndIconLabelValue(ctx,x,y,w,h,iconid,
+	bndIconLabelValue(ui,x,y,w,h,iconid,
 	    bndTextColor(&wg.theme.menuItemTheme, state), BND_LEFT,
 	    BND_LABEL_FONT_SIZE, label, NULL);
 }
 
-void bndNodePort(NVGcontext *ctx, float x, float y, BNDwidgetState state,
+void bndNodePort(WimaUI* ui, float x, float y, BNDwidgetState state,
     NVGcolor color) {
-	nvgBeginPath(ctx);
-	nvgCircle(ctx, x, y, BND_NODE_PORT_RADIUS);
-	nvgStrokeColor(ctx,wg.theme.nodeTheme.wiresColor);
-	nvgStrokeWidth(ctx,1.0f);
-	nvgStroke(ctx);
-	nvgFillColor(ctx,(state != BND_DEFAULT)?
+	nvgBeginPath(ui->nvg);
+	nvgCircle(ui->nvg, x, y, BND_NODE_PORT_RADIUS);
+	nvgStrokeColor(ui->nvg,wg.theme.nodeTheme.wiresColor);
+	nvgStrokeWidth(ui->nvg,1.0f);
+	nvgStroke(ui->nvg);
+	nvgFillColor(ui->nvg,(state != BND_DEFAULT)?
 	    bndOffsetColor(color, BND_HOVER_SHADE):color);
-	nvgFill(ctx);
+	nvgFill(ui->nvg);
 }
 
-void bndColoredNodeWire(NVGcontext *ctx, float x0, float y0, float x1, float y1,
+void bndColoredNodeWire(WimaUI* ui, float x0, float y0, float x1, float y1,
     NVGcolor color0, NVGcolor color1) {
 	float length = bnd_fmaxf(fabsf(x1 - x0),fabsf(y1 - y0));
 	float delta = length*(float)wg.theme.nodeTheme.noodleCurving/10.0f;
 
-	nvgBeginPath(ctx);
-	nvgMoveTo(ctx, x0, y0);
-	nvgBezierTo(ctx,
+	nvgBeginPath(ui->nvg);
+	nvgMoveTo(ui->nvg, x0, y0);
+	nvgBezierTo(ui->nvg,
 	    x0 + delta, y0,
 	    x1 - delta, y1,
 	    x1, y1);
 	NVGcolor colorw = wg.theme.nodeTheme.wiresColor;
 	colorw.a = (color0.a<color1.a)?color0.a:color1.a;
-	nvgStrokeColor(ctx, colorw);
-	nvgStrokeWidth(ctx, BND_NODE_WIRE_OUTLINE_WIDTH);
-	nvgStroke(ctx);
-	nvgStrokePaint(ctx, nvgLinearGradient(ctx,
+	nvgStrokeColor(ui->nvg, colorw);
+	nvgStrokeWidth(ui->nvg, BND_NODE_WIRE_OUTLINE_WIDTH);
+	nvgStroke(ui->nvg);
+	nvgStrokePaint(ui->nvg, nvgLinearGradient(ui->nvg,
 	    x0, y0, x1, y1,
 	    color0,
 	    color1));
-	nvgStrokeWidth(ctx,BND_NODE_WIRE_WIDTH);
-	nvgStroke(ctx);
+	nvgStrokeWidth(ui->nvg,BND_NODE_WIRE_WIDTH);
+	nvgStroke(ui->nvg);
 }
 
-void bndNodeWire(NVGcontext *ctx, float x0, float y0, float x1, float y1,
+void bndNodeWire(WimaUI* ui, float x0, float y0, float x1, float y1,
     BNDwidgetState state0, BNDwidgetState state1) {
-	bndColoredNodeWire(ctx, x0, y0, x1, y1,
+	bndColoredNodeWire(ui, x0, y0, x1, y1,
 	    bndNodeWireColor(&wg.theme.nodeTheme, state0),
 	    bndNodeWireColor(&wg.theme.nodeTheme, state1));
 }
 
-void bndNodeBackground(NVGcontext *ctx, float x, float y, float w, float h,
+void bndNodeBackground(WimaUI* ui, float x, float y, float w, float h,
     BNDwidgetState state, int iconid, const char *label, NVGcolor titleColor) {
-	bndInnerBox(ctx,x,y,w,BND_NODE_TITLE_HEIGHT+2,
+	bndInnerBox(ui,x,y,w,BND_NODE_TITLE_HEIGHT+2,
 	    BND_NODE_RADIUS,BND_NODE_RADIUS,0,0,
 	    bndTransparent(bndOffsetColor(titleColor, BND_BEVEL_SHADE)),
 	    bndTransparent(titleColor));
-	bndInnerBox(ctx,x,y+BND_NODE_TITLE_HEIGHT-1,w,h+2-BND_NODE_TITLE_HEIGHT,
+	bndInnerBox(ui,x,y+BND_NODE_TITLE_HEIGHT-1,w,h+2-BND_NODE_TITLE_HEIGHT,
 	    0,0,BND_NODE_RADIUS,BND_NODE_RADIUS,
 	    bndTransparent(wg.theme.nodeTheme.nodeBackdropColor),
 	    bndTransparent(wg.theme.nodeTheme.nodeBackdropColor));
-	bndNodeIconLabel(ctx,
+	bndNodeIconLabel(ui,
 	    x+BND_NODE_ARROW_AREA_WIDTH,y,
 	    w-BND_NODE_ARROW_AREA_WIDTH-BND_NODE_MARGIN_SIDE,BND_NODE_TITLE_HEIGHT,
 	    iconid, wg.theme.regularTheme.textColor,
@@ -450,19 +441,19 @@ void bndNodeBackground(NVGcontext *ctx, float x, float y, float w, float h,
 			arrowColor = wg.theme.nodeTheme.nodeSelectedColor;
 		} break;
 	}
-	bndOutlineBox(ctx,x,y,w,h+1,
+	bndOutlineBox(ui,x,y,w,h+1,
 	    BND_NODE_RADIUS,BND_NODE_RADIUS,BND_NODE_RADIUS,BND_NODE_RADIUS,
 	    bndTransparent(borderColor));
 	/*
-	bndNodeArrowDown(ctx,
+	bndNodeArrowDown(ui->nvg,
 		x + BND_NODE_MARGIN_SIDE, y + BND_NODE_TITLE_HEIGHT-4,
 		BND_NODE_ARROW_SIZE, arrowColor);
 	*/
-	bndDropShadow(ctx,x,y,w,h,BND_NODE_RADIUS,
+	bndDropShadow(ui,x,y,w,h,BND_NODE_RADIUS,
 	    BND_SHADOW_FEATHER,BND_SHADOW_ALPHA);
 }
 
-void bndSplitterWidgets(NVGcontext *ctx, float x, float y, float w, float h) {
+void bndSplitterWidgets(WimaUI* ui, float x, float y, float w, float h) {
 	NVGcolor insetLight = bndTransparent(
 	    bndOffsetColor(wg.theme.backgroundColor, BND_SPLITTER_SHADE));
 	NVGcolor insetDark = bndTransparent(
@@ -472,62 +463,62 @@ void bndSplitterWidgets(NVGcontext *ctx, float x, float y, float w, float h) {
 	float x2 = x+w;
 	float y2 = y+h;
 
-	nvgBeginPath(ctx);
-	nvgMoveTo(ctx, x, y2-13);
-	nvgLineTo(ctx, x+13, y2);
-	nvgMoveTo(ctx, x, y2-9);
-	nvgLineTo(ctx, x+9, y2);
-	nvgMoveTo(ctx, x, y2-5);
-	nvgLineTo(ctx, x+5, y2);
+	nvgBeginPath(ui->nvg);
+	nvgMoveTo(ui->nvg, x, y2-13);
+	nvgLineTo(ui->nvg, x+13, y2);
+	nvgMoveTo(ui->nvg, x, y2-9);
+	nvgLineTo(ui->nvg, x+9, y2);
+	nvgMoveTo(ui->nvg, x, y2-5);
+	nvgLineTo(ui->nvg, x+5, y2);
 
-	nvgMoveTo(ctx, x2-11, y);
-	nvgLineTo(ctx, x2, y+11);
-	nvgMoveTo(ctx, x2-7, y);
-	nvgLineTo(ctx, x2, y+7);
-	nvgMoveTo(ctx, x2-3, y);
-	nvgLineTo(ctx, x2, y+3);
+	nvgMoveTo(ui->nvg, x2-11, y);
+	nvgLineTo(ui->nvg, x2, y+11);
+	nvgMoveTo(ui->nvg, x2-7, y);
+	nvgLineTo(ui->nvg, x2, y+7);
+	nvgMoveTo(ui->nvg, x2-3, y);
+	nvgLineTo(ui->nvg, x2, y+3);
 
-	nvgStrokeColor(ctx, insetDark);
-	nvgStroke(ctx);
+	nvgStrokeColor(ui->nvg, insetDark);
+	nvgStroke(ui->nvg);
 
-	nvgBeginPath(ctx);
-	nvgMoveTo(ctx, x, y2-11);
-	nvgLineTo(ctx, x+11, y2);
-	nvgMoveTo(ctx, x, y2-7);
-	nvgLineTo(ctx, x+7, y2);
-	nvgMoveTo(ctx, x, y2-3);
-	nvgLineTo(ctx, x+3, y2);
+	nvgBeginPath(ui->nvg);
+	nvgMoveTo(ui->nvg, x, y2-11);
+	nvgLineTo(ui->nvg, x+11, y2);
+	nvgMoveTo(ui->nvg, x, y2-7);
+	nvgLineTo(ui->nvg, x+7, y2);
+	nvgMoveTo(ui->nvg, x, y2-3);
+	nvgLineTo(ui->nvg, x+3, y2);
 
-	nvgMoveTo(ctx, x2-13, y);
-	nvgLineTo(ctx, x2, y+13);
-	nvgMoveTo(ctx, x2-9, y);
-	nvgLineTo(ctx, x2, y+9);
-	nvgMoveTo(ctx, x2-5, y);
-	nvgLineTo(ctx, x2, y+5);
+	nvgMoveTo(ui->nvg, x2-13, y);
+	nvgLineTo(ui->nvg, x2, y+13);
+	nvgMoveTo(ui->nvg, x2-9, y);
+	nvgLineTo(ui->nvg, x2, y+9);
+	nvgMoveTo(ui->nvg, x2-5, y);
+	nvgLineTo(ui->nvg, x2, y+5);
 
-	nvgStrokeColor(ctx, insetLight);
-	nvgStroke(ctx);
+	nvgStrokeColor(ui->nvg, insetLight);
+	nvgStroke(ui->nvg);
 
-	nvgBeginPath(ctx);
-	nvgMoveTo(ctx, x, y2-12);
-	nvgLineTo(ctx, x+12, y2);
-	nvgMoveTo(ctx, x, y2-8);
-	nvgLineTo(ctx, x+8, y2);
-	nvgMoveTo(ctx, x, y2-4);
-	nvgLineTo(ctx, x+4, y2);
+	nvgBeginPath(ui->nvg);
+	nvgMoveTo(ui->nvg, x, y2-12);
+	nvgLineTo(ui->nvg, x+12, y2);
+	nvgMoveTo(ui->nvg, x, y2-8);
+	nvgLineTo(ui->nvg, x+8, y2);
+	nvgMoveTo(ui->nvg, x, y2-4);
+	nvgLineTo(ui->nvg, x+4, y2);
 
-	nvgMoveTo(ctx, x2-12, y);
-	nvgLineTo(ctx, x2, y+12);
-	nvgMoveTo(ctx, x2-8, y);
-	nvgLineTo(ctx, x2, y+8);
-	nvgMoveTo(ctx, x2-4, y);
-	nvgLineTo(ctx, x2, y+4);
+	nvgMoveTo(ui->nvg, x2-12, y);
+	nvgLineTo(ui->nvg, x2, y+12);
+	nvgMoveTo(ui->nvg, x2-8, y);
+	nvgLineTo(ui->nvg, x2, y+8);
+	nvgMoveTo(ui->nvg, x2-4, y);
+	nvgLineTo(ui->nvg, x2, y+4);
 
-	nvgStrokeColor(ctx, inset);
-	nvgStroke(ctx);
+	nvgStrokeColor(ui->nvg, inset);
+	nvgStroke(ui->nvg);
 }
 
-void bndJoinAreaOverlay(NVGcontext *ctx, float x, float y, float w, float h,
+void bndJoinAreaOverlay(WimaUI* ui, float x, float y, float w, float h,
     int vertical, int mirror) {
 
 	if (vertical) {
@@ -571,43 +562,43 @@ void bndJoinAreaOverlay(NVGcontext *ctx, float x, float y, float w, float h,
 	    { x0,yc-s8 }
 	};
 
-	nvgBeginPath(ctx);
+	nvgBeginPath(ui->nvg);
 	int count = sizeof(points) / (sizeof(float)*2);
-	nvgMoveTo(ctx,x+points[0][vertical&1],y+points[0][(vertical&1)^1]);
+	nvgMoveTo(ui->nvg,x+points[0][vertical&1],y+points[0][(vertical&1)^1]);
 	for (int i = 1; i < count; ++i) {
-		nvgLineTo(ctx,x+points[i][vertical&1],y+points[i][(vertical&1)^1]);
+		nvgLineTo(ui->nvg,x+points[i][vertical&1],y+points[i][(vertical&1)^1]);
 	}
 
-	nvgFillColor(ctx, nvgRGBAf(0,0,0,0.3));
-	nvgFill(ctx);
+	nvgFillColor(ui->nvg, nvgRGBAf(0,0,0,0.3));
+	nvgFill(ui->nvg);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-float bndLabelWidth(NVGcontext *ctx, int iconid, const char *label) {
+float bndLabelWidth(WimaUI* ui, int iconid, const char *label) {
 	int w = BND_PAD_LEFT + BND_PAD_RIGHT;
 	if (iconid >= 0) {
 		w += BND_ICON_SHEET_RES;
 	}
-	if (label && (bnd_font >= 0)) {
-		nvgFontFaceId(ctx, bnd_font);
-		nvgFontSize(ctx, BND_LABEL_FONT_SIZE);
-		w += nvgTextBounds(ctx, 1, 1, label, NULL, NULL);
+	if (label && (ui->font >= 0)) {
+		nvgFontFaceId(ui->nvg, ui->font);
+		nvgFontSize(ui->nvg, BND_LABEL_FONT_SIZE);
+		w += nvgTextBounds(ui->nvg, 1, 1, label, NULL, NULL);
 	}
 	return w;
 }
 
-float bndLabelHeight(NVGcontext *ctx, int iconid, const char *label, float width) {
+float bndLabelHeight(WimaUI* ui, int iconid, const char *label, float width) {
 	int h = BND_WIDGET_HEIGHT;
 	width -= BND_TEXT_RADIUS*2;
 	if (iconid >= 0) {
 		width -= BND_ICON_SHEET_RES;
 	}
-	if (label && (bnd_font >= 0)) {
-		nvgFontFaceId(ctx, bnd_font);
-		nvgFontSize(ctx, BND_LABEL_FONT_SIZE);
+	if (label && (ui->font >= 0)) {
+		nvgFontFaceId(ui->nvg, ui->font);
+		nvgFontSize(ui->nvg, BND_LABEL_FONT_SIZE);
 		float bounds[4];
-		nvgTextBoxBounds(ctx, 1, 1, width, label, NULL, bounds);
+		nvgTextBoxBounds(ui->nvg, 1, 1, width, label, NULL, bounds);
 		int bh = (int) (bounds[3] - bounds[1]) + BND_TEXT_PAD_DOWN;
 		if (bh > h)
 			h = bh;
@@ -617,7 +608,7 @@ float bndLabelHeight(NVGcontext *ctx, int iconid, const char *label, float width
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void bndRoundedBox(NVGcontext *ctx, float x, float y, float w, float h,
+void bndRoundedBox(WimaUI* ui, float x, float y, float w, float h,
     float cr0, float cr1, float cr2, float cr3) {
 	float d;
 
@@ -625,12 +616,12 @@ void bndRoundedBox(NVGcontext *ctx, float x, float y, float w, float h,
 	h = bnd_fmaxf(0, h);
 	d = bnd_fminf(w, h);
 
-	nvgMoveTo(ctx, x,y+h*0.5f);
-	nvgArcTo(ctx, x,y, x+w,y, bnd_fminf(cr0, d/2));
-	nvgArcTo(ctx, x+w,y, x+w,y+h, bnd_fminf(cr1, d/2));
-	nvgArcTo(ctx, x+w,y+h, x,y+h, bnd_fminf(cr2, d/2));
-	nvgArcTo(ctx, x,y+h, x,y, bnd_fminf(cr3, d/2));
-	nvgClosePath(ctx);
+	nvgMoveTo(ui->nvg, x,y+h*0.5f);
+	nvgArcTo(ui->nvg, x,y, x+w,y, bnd_fminf(cr0, d/2));
+	nvgArcTo(ui->nvg, x+w,y, x+w,y+h, bnd_fminf(cr1, d/2));
+	nvgArcTo(ui->nvg, x+w,y+h, x,y+h, bnd_fminf(cr2, d/2));
+	nvgArcTo(ui->nvg, x,y+h, x,y, bnd_fminf(cr3, d/2));
+	nvgClosePath(ui->nvg);
 }
 
 NVGcolor bndTransparent(NVGcolor color) {
@@ -649,32 +640,32 @@ NVGcolor bndOffsetColor(NVGcolor color, int delta) {
 	):color;
 }
 
-void bndBevel(NVGcontext *ctx, float x, float y, float w, float h) {
-	nvgStrokeWidth(ctx, 1);
+void bndBevel(WimaUI* ui, float x, float y, float w, float h) {
+	nvgStrokeWidth(ui->nvg, 1);
 
 	x += 0.5f;
 	y += 0.5f;
 	w -= 1;
 	h -= 1;
 
-	nvgBeginPath(ctx);
-	nvgMoveTo(ctx, x, y+h);
-	nvgLineTo(ctx, x+w, y+h);
-	nvgLineTo(ctx, x+w, y);
-	nvgStrokeColor(ctx, bndTransparent(
+	nvgBeginPath(ui->nvg);
+	nvgMoveTo(ui->nvg, x, y+h);
+	nvgLineTo(ui->nvg, x+w, y+h);
+	nvgLineTo(ui->nvg, x+w, y);
+	nvgStrokeColor(ui->nvg, bndTransparent(
 	    bndOffsetColor(wg.theme.backgroundColor, -BND_BEVEL_SHADE)));
-	nvgStroke(ctx);
+	nvgStroke(ui->nvg);
 
-	nvgBeginPath(ctx);
-	nvgMoveTo(ctx, x, y+h);
-	nvgLineTo(ctx, x, y);
-	nvgLineTo(ctx, x+w, y);
-	nvgStrokeColor(ctx, bndTransparent(
+	nvgBeginPath(ui->nvg);
+	nvgMoveTo(ui->nvg, x, y+h);
+	nvgLineTo(ui->nvg, x, y);
+	nvgLineTo(ui->nvg, x+w, y);
+	nvgStrokeColor(ui->nvg, bndTransparent(
 	    bndOffsetColor(wg.theme.backgroundColor, BND_BEVEL_SHADE)));
-	nvgStroke(ctx);
+	nvgStroke(ui->nvg);
 }
 
-void bndBevelInset(NVGcontext *ctx, float x, float y, float w, float h,
+void bndBevelInset(WimaUI* ui, float x, float y, float w, float h,
     float cr2, float cr3) {
 	float d;
 
@@ -683,97 +674,97 @@ void bndBevelInset(NVGcontext *ctx, float x, float y, float w, float h,
 	cr2 = bnd_fminf(cr2, d/2);
 	cr3 = bnd_fminf(cr3, d/2);
 
-	nvgBeginPath(ctx);
-	nvgMoveTo(ctx, x+w,y+h-cr2);
-	nvgArcTo(ctx, x+w,y+h, x,y+h, cr2);
-	nvgArcTo(ctx, x,y+h, x,y, cr3);
+	nvgBeginPath(ui->nvg);
+	nvgMoveTo(ui->nvg, x+w,y+h-cr2);
+	nvgArcTo(ui->nvg, x+w,y+h, x,y+h, cr2);
+	nvgArcTo(ui->nvg, x,y+h, x,y, cr3);
 
 	NVGcolor bevelColor = bndOffsetColor(wg.theme.backgroundColor,
 	    BND_INSET_BEVEL_SHADE);
 
-	nvgStrokeWidth(ctx, 1);
-	nvgStrokePaint(ctx,
-	    nvgLinearGradient(ctx,
+	nvgStrokeWidth(ui->nvg, 1);
+	nvgStrokePaint(ui->nvg,
+	    nvgLinearGradient(ui->nvg,
 	        x,y+h-bnd_fmaxf(cr2,cr3)-1,
 	        x,y+h-1,
 	    nvgRGBAf(bevelColor.r, bevelColor.g, bevelColor.b, 0),
 	    bevelColor));
-	nvgStroke(ctx);
+	nvgStroke(ui->nvg);
 }
 
-void bndBackground(NVGcontext *ctx, float x, float y, float w, float h) {
-	nvgBeginPath(ctx);
-	nvgRect(ctx, x, y, w, h);
-	nvgFillColor(ctx, wg.theme.backgroundColor);
-	nvgFill(ctx);
+void bndBackground(WimaUI* ui, float x, float y, float w, float h) {
+	nvgBeginPath(ui->nvg);
+	nvgRect(ui->nvg, x, y, w, h);
+	nvgFillColor(ui->nvg, wg.theme.backgroundColor);
+	nvgFill(ui->nvg);
 }
 
-void bndIcon(NVGcontext *ctx, float x, float y, int iconid) {
+void bndIcon(WimaUI* ui, float x, float y, int iconid) {
 	int ix, iy, u, v;
-	if (bnd_icon_image < 0) return; // no icons loaded
+	if (ui->icons < 0) return; // no icons loaded
 
 	ix = iconid & 0xff;
 	iy = (iconid>>8) & 0xff;
 	u = BND_ICON_SHEET_OFFSET_X + ix*BND_ICON_SHEET_GRID;
 	v = BND_ICON_SHEET_OFFSET_Y + iy*BND_ICON_SHEET_GRID;
 
-	nvgBeginPath(ctx);
-	nvgRect(ctx,x,y,BND_ICON_SHEET_RES,BND_ICON_SHEET_RES);
-	nvgFillPaint(ctx,
-	    nvgImagePattern(ctx,x-u,y-v,
+	nvgBeginPath(ui->nvg);
+	nvgRect(ui->nvg,x,y,BND_ICON_SHEET_RES,BND_ICON_SHEET_RES);
+	nvgFillPaint(ui->nvg,
+	    nvgImagePattern(ui->nvg,x-u,y-v,
 	    BND_ICON_SHEET_WIDTH,
 	    BND_ICON_SHEET_HEIGHT,
-	    0,bnd_icon_image,1));
-	nvgFill(ctx);
+	    0,ui->icons,1));
+	nvgFill(ui->nvg);
 }
 
-void bndDropShadow(NVGcontext *ctx, float x, float y, float w, float h,
+void bndDropShadow(WimaUI* ui, float x, float y, float w, float h,
     float r, float feather, float alpha) {
 
-	nvgBeginPath(ctx);
+	nvgBeginPath(ui->nvg);
 	y += feather;
 	h -= feather;
 
-	nvgMoveTo(ctx, x-feather, y-feather);
-	nvgLineTo(ctx, x, y-feather);
-	nvgLineTo(ctx, x, y+h-feather);
-	nvgArcTo(ctx, x,y+h,x+r,y+h,r);
-	nvgArcTo(ctx, x+w,y+h,x+w,y+h-r,r);
-	nvgLineTo(ctx, x+w, y-feather);
-	nvgLineTo(ctx, x+w+feather, y-feather);
-	nvgLineTo(ctx, x+w+feather, y+h+feather);
-	nvgLineTo(ctx, x-feather, y+h+feather);
-	nvgClosePath(ctx);
+	nvgMoveTo(ui->nvg, x-feather, y-feather);
+	nvgLineTo(ui->nvg, x, y-feather);
+	nvgLineTo(ui->nvg, x, y+h-feather);
+	nvgArcTo(ui->nvg, x,y+h,x+r,y+h,r);
+	nvgArcTo(ui->nvg, x+w,y+h,x+w,y+h-r,r);
+	nvgLineTo(ui->nvg, x+w, y-feather);
+	nvgLineTo(ui->nvg, x+w+feather, y-feather);
+	nvgLineTo(ui->nvg, x+w+feather, y+h+feather);
+	nvgLineTo(ui->nvg, x-feather, y+h+feather);
+	nvgClosePath(ui->nvg);
 
-	nvgFillPaint(ctx, nvgBoxGradient(ctx,
+	nvgFillPaint(ui->nvg, nvgBoxGradient(ui->nvg,
 	    x - feather*0.5f,y - feather*0.5f,
 	    w + feather,h+feather,
 	    r+feather*0.5f,
 	    feather,
 	    nvgRGBAf(0,0,0,alpha*alpha),
 	    nvgRGBAf(0,0,0,0)));
-	nvgFill(ctx);
+	nvgFill(ui->nvg);
 }
 
-void bndInnerBox(NVGcontext *ctx, float x, float y, float w, float h,
+void bndInnerBox(WimaUI* ui, float x, float y, float w, float h,
     float cr0, float cr1, float cr2, float cr3,
     NVGcolor shade_top, NVGcolor shade_down) {
-	nvgBeginPath(ctx);
-	bndRoundedBox(ctx,x+1,y+1,w-2,h-3,bnd_fmaxf(0,cr0-1),
+	nvgBeginPath(ui->nvg);
+	bndRoundedBox(ui,x+1,y+1,w-2,h-3,bnd_fmaxf(0,cr0-1),
 	    bnd_fmaxf(0,cr1-1),bnd_fmaxf(0,cr2-1),bnd_fmaxf(0,cr3-1));
-	nvgFillPaint(ctx,((h-2)>w)?
-	    nvgLinearGradient(ctx,x,y,x+w,y,shade_top,shade_down):
-	    nvgLinearGradient(ctx,x,y,x,y+h,shade_top,shade_down));
-	nvgFill(ctx);
+	nvgFillPaint(ui->nvg,((h-2)>w)?
+	    nvgLinearGradient(ui->nvg,x,y,x+w,y,shade_top,shade_down):
+	    nvgLinearGradient(ui->nvg,x,y,x,y+h,shade_top,shade_down));
+	nvgFill(ui->nvg);
 }
 
-void bndOutlineBox(NVGcontext *ctx, float x, float y, float w, float h,
+void bndOutlineBox(WimaUI* ui, float x, float y, float w, float h,
     float cr0, float cr1, float cr2, float cr3, NVGcolor color) {
-	nvgBeginPath(ctx);
-	bndRoundedBox(ctx,x+0.5f,y+0.5f,w-1,h-2,cr0,cr1,cr2,cr3);
-	nvgStrokeColor(ctx,color);
-	nvgStrokeWidth(ctx,1);
-	nvgStroke(ctx);
+	nvgBeginPath(ui->nvg);
+	bndRoundedBox(ui,x+0.5f,y+0.5f,w-1,h-2,cr0,cr1,cr2,cr3);
+	nvgStrokeColor(ui->nvg,color);
+	nvgStrokeWidth(ui->nvg,1);
+	nvgStroke(ui->nvg);
 }
 
 void bndSelectCorners(float *radiuses, float r, int flags) {
@@ -811,74 +802,74 @@ NVGcolor bndTextColor(const WimaWidgetTheme* theme, BNDwidgetState state) {
 	return (state == BND_ACTIVE)?theme->textSelectedColor:theme->textColor;
 }
 
-void bndIconLabelValue(NVGcontext *ctx, float x, float y, float w, float h,
+void bndIconLabelValue(WimaUI* ui, float x, float y, float w, float h,
     int iconid, NVGcolor color, int align, float fontsize, const char *label,
     const char *value) {
 	float pleft = BND_PAD_LEFT;
 	if (label) {
 		if (iconid >= 0) {
-			bndIcon(ctx,x+4,y+2,iconid);
+			bndIcon(ui,x+4,y+2,iconid);
 			pleft += BND_ICON_SHEET_RES;
 		}
 
-		if (bnd_font < 0) return;
-		nvgFontFaceId(ctx, bnd_font);
-		nvgFontSize(ctx, fontsize);
-		nvgBeginPath(ctx);
-		nvgFillColor(ctx, color);
+		if (ui->font < 0) return;
+		nvgFontFaceId(ui->nvg, ui->font);
+		nvgFontSize(ui->nvg, fontsize);
+		nvgBeginPath(ui->nvg);
+		nvgFillColor(ui->nvg, color);
 		if (value) {
-			float label_width = nvgTextBounds(ctx, 1, 1, label, NULL, NULL);
-			float sep_width = nvgTextBounds(ctx, 1, 1,
+			float label_width = nvgTextBounds(ui->nvg, 1, 1, label, NULL, NULL);
+			float sep_width = nvgTextBounds(ui->nvg, 1, 1,
 			    BND_LABEL_SEPARATOR, NULL, NULL);
 
-			nvgTextAlign(ctx, NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE);
+			nvgTextAlign(ui->nvg, NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE);
 			x += pleft;
 			if (align == BND_CENTER) {
 				float width = label_width + sep_width
-				    + nvgTextBounds(ctx, 1, 1, value, NULL, NULL);
+				    + nvgTextBounds(ui->nvg, 1, 1, value, NULL, NULL);
 				x += ((w-BND_PAD_RIGHT-pleft)-width)*0.5f;
 			}
 			y += BND_WIDGET_HEIGHT-BND_TEXT_PAD_DOWN;
-			nvgText(ctx, x, y, label, NULL);
+			nvgText(ui->nvg, x, y, label, NULL);
 			x += label_width;
-			nvgText(ctx, x, y, BND_LABEL_SEPARATOR, NULL);
+			nvgText(ui->nvg, x, y, BND_LABEL_SEPARATOR, NULL);
 			x += sep_width;
-			nvgText(ctx, x, y, value, NULL);
+			nvgText(ui->nvg, x, y, value, NULL);
 		} else {
-			nvgTextAlign(ctx,
+			nvgTextAlign(ui->nvg,
 			    (align==BND_LEFT)?(NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE):
 			    (NVG_ALIGN_CENTER|NVG_ALIGN_BASELINE));
-			nvgTextBox(ctx,x+pleft,y+BND_WIDGET_HEIGHT-BND_TEXT_PAD_DOWN,
+			nvgTextBox(ui->nvg,x+pleft,y+BND_WIDGET_HEIGHT-BND_TEXT_PAD_DOWN,
 			    w-BND_PAD_RIGHT-pleft,label, NULL);
 		}
 	} else if (iconid >= 0) {
-		bndIcon(ctx,x+2,y+2,iconid);
+		bndIcon(ui,x+2,y+2,iconid);
 	}
 }
 
-void bndNodeIconLabel(NVGcontext *ctx, float x, float y, float w, float h,
+void bndNodeIconLabel(WimaUI* ui, float x, float y, float w, float h,
     int iconid, NVGcolor color, NVGcolor shadowColor,
     int align, float fontsize, const char *label) {
-	if (label && (bnd_font >= 0)) {
-		nvgFontFaceId(ctx, bnd_font);
-		nvgFontSize(ctx, fontsize);
-		nvgBeginPath(ctx);
-		nvgTextAlign(ctx, NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE);
-		nvgFillColor(ctx, shadowColor);
-		nvgFontBlur(ctx, BND_NODE_TITLE_FEATHER);
-		nvgTextBox(ctx,x+1,y+h+3-BND_TEXT_PAD_DOWN,
+	if (label && (ui->font >= 0)) {
+		nvgFontFaceId(ui->nvg, ui->font);
+		nvgFontSize(ui->nvg, fontsize);
+		nvgBeginPath(ui->nvg);
+		nvgTextAlign(ui->nvg, NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE);
+		nvgFillColor(ui->nvg, shadowColor);
+		nvgFontBlur(ui->nvg, BND_NODE_TITLE_FEATHER);
+		nvgTextBox(ui->nvg,x+1,y+h+3-BND_TEXT_PAD_DOWN,
 		    w,label, NULL);
-		nvgFillColor(ctx, color);
-		nvgFontBlur(ctx, 0);
-		nvgTextBox(ctx,x,y+h+2-BND_TEXT_PAD_DOWN,
+		nvgFillColor(ui->nvg, color);
+		nvgFontBlur(ui->nvg, 0);
+		nvgTextBox(ui->nvg,x,y+h+2-BND_TEXT_PAD_DOWN,
 		    w,label, NULL);
 	}
 	if (iconid >= 0) {
-		bndIcon(ctx,x+w-BND_ICON_SHEET_RES,y+3,iconid);
+		bndIcon(ui,x+w-BND_ICON_SHEET_RES,y+3,iconid);
 	}
 }
 
-int bndIconLabelTextPosition(NVGcontext *ctx, float x, float y, float w, float h,
+int bndIconLabelTextPosition(WimaUI* ui, float x, float y, float w, float h,
     int iconid, float fontsize, const char *label, int px, int py) {
 	float bounds[4];
 	float pleft = BND_TEXT_RADIUS;
@@ -886,31 +877,31 @@ int bndIconLabelTextPosition(NVGcontext *ctx, float x, float y, float w, float h
 	if (iconid >= 0)
 		pleft += BND_ICON_SHEET_RES;
 
-	if (bnd_font < 0) return -1;
+	if (ui->font < 0) return -1;
 
 	x += pleft;
 	y += BND_WIDGET_HEIGHT - BND_TEXT_PAD_DOWN;
 
-	nvgFontFaceId(ctx, bnd_font);
-	nvgFontSize(ctx, fontsize);
-	nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
+	nvgFontFaceId(ui->nvg, ui->font);
+	nvgFontSize(ui->nvg, fontsize);
+	nvgTextAlign(ui->nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
 
 	w -= BND_TEXT_RADIUS + pleft;
 
 	float asc, desc, lh;
 	static NVGtextRow rows[BND_MAX_ROWS];
 	int nrows = nvgTextBreakLines(
-	    ctx, label, NULL, w, rows, BND_MAX_ROWS);
+	    ui->nvg, label, NULL, w, rows, BND_MAX_ROWS);
 	if (nrows == 0) return 0;
-	nvgTextBoxBounds(ctx, x, y, w, label, NULL, bounds);
-	nvgTextMetrics(ctx, &asc, &desc, &lh);
+	nvgTextBoxBounds(ui->nvg, x, y, w, label, NULL, bounds);
+	nvgTextMetrics(ui->nvg, &asc, &desc, &lh);
 
 	// calculate vertical position
 	int row = bnd_clamp((int)((float)(py - bounds[1]) / lh), 0, nrows - 1);
 	// search horizontal position
 	static NVGglyphPosition glyphs[BND_MAX_GLYPHS];
 	int nglyphs = nvgTextGlyphPositions(
-	    ctx, x, y, rows[row].start, rows[row].end + 1, glyphs, BND_MAX_GLYPHS);
+	    ui->nvg, x, y, rows[row].start, rows[row].end + 1, glyphs, BND_MAX_GLYPHS);
 	int col, p = 0;
 	for (col = 0; col < nglyphs && glyphs[col].x < px; ++col)
 		p = glyphs[col].str - label;
@@ -920,7 +911,7 @@ int bndIconLabelTextPosition(NVGcontext *ctx, float x, float y, float w, float h
 	return p;
 }
 
-static void bndCaretPosition(NVGcontext *ctx, float x, float y,
+static void bndCaretPosition(WimaUI* ui, float x, float y,
     float desc, float lineHeight, const char *caret, NVGtextRow *rows,int nrows,
     int *cr, float *cx, float *cy) {
 	static NVGglyphPosition glyphs[BND_MAX_GLYPHS];
@@ -932,31 +923,31 @@ static void bndCaretPosition(NVGcontext *ctx, float x, float y,
 	if (nrows == 0) return;
 	*cx = rows[r].minx;
 	nglyphs = nvgTextGlyphPositions(
-	    ctx, x, y, rows[r].start, rows[r].end+1, glyphs, BND_MAX_GLYPHS);
+	    ui->nvg, x, y, rows[r].start, rows[r].end+1, glyphs, BND_MAX_GLYPHS);
 	for (int i=0; i < nglyphs; ++i) {
 		*cx=glyphs[i].x;
 		if (glyphs[i].str == caret) break;
 	}
 }
 
-void bndIconLabelCaret(NVGcontext *ctx, float x, float y, float w, float h,
+void bndIconLabelCaret(WimaUI* ui, float x, float y, float w, float h,
     int iconid, NVGcolor color, float fontsize, const char *label,
     NVGcolor caretcolor, int cbegin, int cend) {
 	float pleft = BND_TEXT_RADIUS;
 	if (!label) return;
 	if (iconid >= 0) {
-		bndIcon(ctx,x+4,y+2,iconid);
+		bndIcon(ui,x+4,y+2,iconid);
 		pleft += BND_ICON_SHEET_RES;
 	}
 
-	if (bnd_font < 0) return;
+	if (ui->font < 0) return;
 
 	x+=pleft;
 	y+=BND_WIDGET_HEIGHT-BND_TEXT_PAD_DOWN;
 
-	nvgFontFaceId(ctx, bnd_font);
-	nvgFontSize(ctx, fontsize);
-	nvgTextAlign(ctx, NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE);
+	nvgFontFaceId(ui->nvg, ui->font);
+	nvgFontSize(ui->nvg, fontsize);
+	nvgTextAlign(ui->nvg, NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE);
 
 	w -= BND_TEXT_RADIUS+pleft;
 
@@ -966,88 +957,88 @@ void bndIconLabelCaret(NVGcontext *ctx, float x, float y, float w, float h,
 		float desc,lh;
 		static NVGtextRow rows[BND_MAX_ROWS];
 		int nrows = nvgTextBreakLines(
-		    ctx, label, label+cend+1, w, rows, BND_MAX_ROWS);
-		nvgTextMetrics(ctx, NULL, &desc, &lh);
+		    ui->nvg, label, label+cend+1, w, rows, BND_MAX_ROWS);
+		nvgTextMetrics(ui->nvg, NULL, &desc, &lh);
 
-		bndCaretPosition(ctx, x, y, desc, lh, label+cbegin,
+		bndCaretPosition(ui, x, y, desc, lh, label+cbegin,
 		    rows, nrows, &c0r, &c0x, &c0y);
-		bndCaretPosition(ctx, x, y, desc, lh, label+cend,
+		bndCaretPosition(ui, x, y, desc, lh, label+cend,
 		    rows, nrows, &c1r, &c1x, &c1y);
 
-		nvgBeginPath(ctx);
+		nvgBeginPath(ui->nvg);
 		if (cbegin == cend) {
-			nvgFillColor(ctx, nvgRGBf(0.337,0.502,0.761));
-			nvgRect(ctx, c0x-1, c0y, 2, lh+1);
+			nvgFillColor(ui->nvg, nvgRGBf(0.337,0.502,0.761));
+			nvgRect(ui->nvg, c0x-1, c0y, 2, lh+1);
 		} else {
-			nvgFillColor(ctx, caretcolor);
+			nvgFillColor(ui->nvg, caretcolor);
 			if (c0r == c1r) {
-				nvgRect(ctx, c0x-1, c0y, c1x-c0x+1, lh+1);
+				nvgRect(ui->nvg, c0x-1, c0y, c1x-c0x+1, lh+1);
 			} else {
 				int blk=c1r-c0r-1;
-				nvgRect(ctx, c0x-1, c0y, x+w-c0x+1, lh+1);
-				nvgRect(ctx, x, c1y, c1x-x+1, lh+1);
+				nvgRect(ui->nvg, c0x-1, c0y, x+w-c0x+1, lh+1);
+				nvgRect(ui->nvg, x, c1y, c1x-x+1, lh+1);
 
 				if (blk)
-					nvgRect(ctx, x, c0y+lh, w, blk*lh+1);
+					nvgRect(ui->nvg, x, c0y+lh, w, blk*lh+1);
 			}
 		}
-		nvgFill(ctx);
+		nvgFill(ui->nvg);
 	}
 
-	nvgBeginPath(ctx);
-	nvgFillColor(ctx, color);
-	nvgTextBox(ctx,x,y,w,label, NULL);
+	nvgBeginPath(ui->nvg);
+	nvgFillColor(ui->nvg, color);
+	nvgTextBox(ui->nvg,x,y,w,label, NULL);
 }
 
-void bndCheck(NVGcontext *ctx, float ox, float oy, NVGcolor color) {
-	nvgBeginPath(ctx);
-	nvgStrokeWidth(ctx,2);
-	nvgStrokeColor(ctx,color);
-	nvgLineCap(ctx,NVG_BUTT);
-	nvgLineJoin(ctx,NVG_MITER);
-	nvgMoveTo(ctx,ox+4,oy+5);
-	nvgLineTo(ctx,ox+7,oy+8);
-	nvgLineTo(ctx,ox+14,oy+1);
-	nvgStroke(ctx);
+void bndCheck(WimaUI* ui, float ox, float oy, NVGcolor color) {
+	nvgBeginPath(ui->nvg);
+	nvgStrokeWidth(ui->nvg,2);
+	nvgStrokeColor(ui->nvg,color);
+	nvgLineCap(ui->nvg,NVG_BUTT);
+	nvgLineJoin(ui->nvg,NVG_MITER);
+	nvgMoveTo(ui->nvg,ox+4,oy+5);
+	nvgLineTo(ui->nvg,ox+7,oy+8);
+	nvgLineTo(ui->nvg,ox+14,oy+1);
+	nvgStroke(ui->nvg);
 }
 
-void bndArrow(NVGcontext *ctx, float x, float y, float s, NVGcolor color) {
-	nvgBeginPath(ctx);
-	nvgMoveTo(ctx,x,y);
-	nvgLineTo(ctx,x-s,y+s);
-	nvgLineTo(ctx,x-s,y-s);
-	nvgClosePath(ctx);
-	nvgFillColor(ctx,color);
-	nvgFill(ctx);
+void bndArrow(WimaUI* ui, float x, float y, float s, NVGcolor color) {
+	nvgBeginPath(ui->nvg);
+	nvgMoveTo(ui->nvg,x,y);
+	nvgLineTo(ui->nvg,x-s,y+s);
+	nvgLineTo(ui->nvg,x-s,y-s);
+	nvgClosePath(ui->nvg);
+	nvgFillColor(ui->nvg,color);
+	nvgFill(ui->nvg);
 }
 
-void bndUpDownArrow(NVGcontext *ctx, float x, float y, float s, NVGcolor color) {
+void bndUpDownArrow(WimaUI* ui, float x, float y, float s, NVGcolor color) {
 	float w;
 
-	nvgBeginPath(ctx);
+	nvgBeginPath(ui->nvg);
 	w = 1.1f*s;
-	nvgMoveTo(ctx,x,y-1);
-	nvgLineTo(ctx,x+0.5*w,y-s-1);
-	nvgLineTo(ctx,x+w,y-1);
-	nvgClosePath(ctx);
-	nvgMoveTo(ctx,x,y+1);
-	nvgLineTo(ctx,x+0.5*w,y+s+1);
-	nvgLineTo(ctx,x+w,y+1);
-	nvgClosePath(ctx);
-	nvgFillColor(ctx,color);
-	nvgFill(ctx);
+	nvgMoveTo(ui->nvg,x,y-1);
+	nvgLineTo(ui->nvg,x+0.5*w,y-s-1);
+	nvgLineTo(ui->nvg,x+w,y-1);
+	nvgClosePath(ui->nvg);
+	nvgMoveTo(ui->nvg,x,y+1);
+	nvgLineTo(ui->nvg,x+0.5*w,y+s+1);
+	nvgLineTo(ui->nvg,x+w,y+1);
+	nvgClosePath(ui->nvg);
+	nvgFillColor(ui->nvg,color);
+	nvgFill(ui->nvg);
 }
 
-void bndNodeArrowDown(NVGcontext *ctx, float x, float y, float s, NVGcolor color) {
+void bndNodeArrowDown(WimaUI* ui, float x, float y, float s, NVGcolor color) {
 	float w;
-	nvgBeginPath(ctx);
+	nvgBeginPath(ui->nvg);
 	w = 1.0f*s;
-	nvgMoveTo(ctx,x,y);
-	nvgLineTo(ctx,x+0.5*w,y-s);
-	nvgLineTo(ctx,x-0.5*w,y-s);
-	nvgClosePath(ctx);
-	nvgFillColor(ctx,color);
-	nvgFill(ctx);
+	nvgMoveTo(ui->nvg,x,y);
+	nvgLineTo(ui->nvg,x+0.5*w,y-s);
+	nvgLineTo(ui->nvg,x-0.5*w,y-s);
+	nvgClosePath(ui->nvg);
+	nvgFillColor(ui->nvg,color);
+	nvgFill(ui->nvg);
 }
 
 void bndScrollHandleRect(float *x, float *y, float *w, float *h,

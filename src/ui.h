@@ -29,50 +29,26 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	Non-public header file for Wima's window functions and data structures.
+ *	This file holds definitions for UI data structures.
  *
  *	******** END FILE DESCRIPTION ********
  */
 
-#ifndef WIMA_WINDOW_H
-#define WIMA_WINDOW_H
-
-#include <stdbool.h>
-
-#include <GLFW/glfw3.h>
+#ifndef WIMA_UI_H
+#define WIMA_UI_H
 
 #include <nanovg.h>
 
-#include "event.h"
-#include "workspace.h"
-
 #include "oui/oui.h"
-#include "ui.h"
 
-typedef struct wima_window {
+typedef struct wima_ui {
 
-	GLFWwindow* window;
-	DynaString name;
+	NVGcontext* nvg;
+	WimaOuiContext oui;
 
-	void* user;
+	int icons;
+	int font;
 
-	DynaTree areas;
+} WimaUI;
 
-	WimaUI ui;
-
-	int fbwidth;
-	int fbheight;
-
-	int width;
-	int height;
-
-} WimaWin;
-
-WimaStatus wima_window_draw(WimaWindowHandle win);
-WimaStatus wima_window_processEvents(WimaWindowHandle win);
-
-WimaStatus wima_window_free(WimaWindowHandle win);
-
-#define WIMA_WINDOW_HANDLE(win) (WimaWindowHandle) (long) glfwGetWindowUserPointer(win)
-
-#endif // WIMA_WINDOW_H
+#endif // WIMA_UI_H

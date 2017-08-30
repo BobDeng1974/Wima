@@ -132,8 +132,8 @@ void ui_handler(int item, UIevent event) {
 }
 
 void init(NVGcontext *vg) {
-	bndSetFont(nvgCreateFont(vg, "system", "../../res/DejaVuSans.ttf"));
-	bndSetIconImage(nvgCreateImage(vg, "../../res/blender_icons16.png", 0));
+	wima_bnd_font(nvgCreateFont(vg, "system", "../../res/DejaVuSans.ttf"));
+	wima_bnd_icons(nvgCreateImage(vg, "../../res/blender_icons16.png", 0));
 }
 
 void testrect(NVGcontext *vg, UIrect rect) {
@@ -1254,7 +1254,7 @@ int main()
 	}
 
 	init(_vg);
-	bndSetTheme(wima_initial_theme);
+	wima_bnd_theme(wima_initial_theme);
 
 	printf("sizeof(UIitem)=%lu\n", sizeof(UIitem));
 

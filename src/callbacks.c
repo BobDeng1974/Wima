@@ -79,7 +79,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
-	int numEvents = wwin->numEvents;
+	int numEvents = wwin->ui.oui.eventCount;
 
 	// If we've already reached our max.
 	if (numEvents >= WIMA_MAX_EVENTS) {
@@ -88,7 +88,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 		return;
 	}
 
-	WimaEvent* event = wwin->events + numEvents;
+	WimaEvent* event = wwin->ui.oui.events + numEvents;
 
 	event->type = WIMA_EVENT_KEY;
 	event->event.key.key = wkey;
@@ -96,7 +96,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	event->event.key.action = wact;
 	event->event.key.mods = wmods;
 
-	++(wwin->numEvents);
+	++(wwin->ui.oui.eventCount);
 }
 
 void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
@@ -116,7 +116,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
-	int numEvents = wwin->numEvents;
+	int numEvents = wwin->ui.oui.eventCount;
 
 	// If we've already reached our max.
 	if (numEvents >= WIMA_MAX_EVENTS) {
@@ -125,14 +125,14 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		return;
 	}
 
-	WimaEvent* event = wwin->events + numEvents;
+	WimaEvent* event = wwin->ui.oui.events + numEvents;
 
 	event->type = WIMA_EVENT_MOUSE_BTN;
 	event->event.mouse_btn.button = wbtn;
 	event->event.mouse_btn.action = wact;
 	event->event.mouse_btn.mods = wmods;
 
-	++(wwin->numEvents);
+	++(wwin->ui.oui.eventCount);
 }
 
 void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
@@ -154,7 +154,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
-	int numEvents = wwin->numEvents;
+	int numEvents = wwin->ui.oui.eventCount;
 
 	// If we've already reached our max.
 	if (numEvents >= WIMA_MAX_EVENTS) {
@@ -163,13 +163,13 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 		return;
 	}
 
-	WimaEvent* event = wwin->events + numEvents;
+	WimaEvent* event = wwin->ui.oui.events + numEvents;
 
 	event->type = WIMA_EVENT_MOUSE_POS;
 	event->event.pos.x = xint;
 	event->event.pos.y = yint;
 
-	++(wwin->numEvents);
+	++(wwin->ui.oui.eventCount);
 }
 
 void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
@@ -191,7 +191,7 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
-	int numEvents = wwin->numEvents;
+	int numEvents = wwin->ui.oui.eventCount;
 
 	// If we've already reached our max.
 	if (numEvents >= WIMA_MAX_EVENTS) {
@@ -200,13 +200,13 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 		return;
 	}
 
-	WimaEvent* event = wwin->events + numEvents;
+	WimaEvent* event = wwin->ui.oui.events + numEvents;
 
 	event->type = WIMA_EVENT_SCROLL;
 	event->event.mouse_scroll.xoffset = xint;
 	event->event.mouse_scroll.yoffset = yint;
 
-	++(wwin->numEvents);
+	++(wwin->ui.oui.eventCount);
 }
 
 void wima_callback_char(GLFWwindow* window, unsigned int code) {
@@ -226,7 +226,7 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
-	int numEvents = wwin->numEvents;
+	int numEvents = wwin->ui.oui.eventCount;
 
 	// If we've already reached our max.
 	if (numEvents >= WIMA_MAX_EVENTS) {
@@ -235,13 +235,13 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 		return;
 	}
 
-	WimaEvent* event = wwin->events + numEvents;
+	WimaEvent* event = wwin->ui.oui.events + numEvents;
 
 	event->type = WIMA_EVENT_CHAR;
 	event->event.char_event.code = code;
 	event->event.char_event.mods = mods;
 
-	++(wwin->numEvents);
+	++(wwin->ui.oui.eventCount);
 }
 
 void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) {
@@ -259,7 +259,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
-	int numEvents = wwin->numEvents;
+	int numEvents = wwin->ui.oui.eventCount;
 
 	// If we've already reached our max.
 	if (numEvents >= WIMA_MAX_EVENTS) {
@@ -268,7 +268,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 		return;
 	}
 
-	WimaEvent* event = wwin->events + numEvents;
+	WimaEvent* event = wwin->ui.oui.events + numEvents;
 
 	// Allocate a vector.
 	DynaVector strs;
@@ -301,7 +301,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 	event->type = WIMA_EVENT_FILE_DROP;
 	event->event.file_drop = strs;
 
-	++(wwin->numEvents);
+	++(wwin->ui.oui.eventCount);
 }
 
 void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
@@ -317,7 +317,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
-	int numEvents = wwin->numEvents;
+	int numEvents = wwin->ui.oui.eventCount;
 
 	// If we've already reached our max.
 	if (numEvents >= WIMA_MAX_EVENTS) {
@@ -326,12 +326,12 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 		return;
 	}
 
-	WimaEvent* event = wwin->events + numEvents;
+	WimaEvent* event = wwin->ui.oui.events + numEvents;
 
 	event->type = WIMA_EVENT_WIN_ENTER;
 	event->event.mouse_enter = entered ? true : false;
 
-	++(wwin->numEvents);
+	++(wwin->ui.oui.eventCount);
 }
 
 void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
@@ -347,7 +347,7 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
-	int numEvents = wwin->numEvents;
+	int numEvents = wwin->ui.oui.eventCount;
 
 	// If we've already reached our max.
 	if (numEvents >= WIMA_MAX_EVENTS) {
@@ -356,13 +356,13 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 		return;
 	}
 
-	WimaEvent* event = wwin->events + numEvents;
+	WimaEvent* event = wwin->ui.oui.events + numEvents;
 
 	event->type = WIMA_EVENT_WIN_POS;
 	event->event.pos.x = xpos;
 	event->event.pos.y = ypos;
 
-	++(wwin->numEvents);
+	++(wwin->ui.oui.eventCount);
 }
 
 void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
@@ -383,7 +383,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	wwin->fbwidth = width;
 	wwin->fbheight = height;
 
-	int numEvents = wwin->numEvents;
+	int numEvents = wwin->ui.oui.eventCount;
 
 	// If we've already reached our max.
 	if (numEvents >= WIMA_MAX_EVENTS) {
@@ -392,13 +392,13 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 		return;
 	}
 
-	WimaEvent* event = wwin->events + numEvents;
+	WimaEvent* event = wwin->ui.oui.events + numEvents;
 
 	event->type = WIMA_EVENT_FB_SIZE;
 	event->event.size.width = width;
 	event->event.size.height = height;
 
-	++(wwin->numEvents);
+	++(wwin->ui.oui.eventCount);
 }
 
 void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
@@ -419,7 +419,7 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 	wwin->width = width;
 	wwin->height = height;
 
-	int numEvents = wwin->numEvents;
+	int numEvents = wwin->ui.oui.eventCount;
 
 	// If we've already reached our max.
 	if (numEvents >= WIMA_MAX_EVENTS) {
@@ -428,13 +428,13 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 		return;
 	}
 
-	WimaEvent* event = wwin->events + numEvents;
+	WimaEvent* event = wwin->ui.oui.events + numEvents;
 
 	event->type = WIMA_EVENT_WIN_SIZE;
 	event->event.size.width = width;
 	event->event.size.height = height;
 
-	++(wwin->numEvents);
+	++(wwin->ui.oui.eventCount);
 }
 
 void wima_callback_windowClose(GLFWwindow* window) {

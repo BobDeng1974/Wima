@@ -43,6 +43,10 @@
 
 #include <wima.h>
 
+#define NANOVG_GL3_IMPLEMENTATION
+#include <nanovg.h>
+#include <nanovg_gl.h>
+
 #include "callbacks.h"
 #include "region.h"
 #include "area.h"
@@ -56,12 +60,17 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	WimaWin wwin;
 
 	wwin.areas = NULL;
-	wwin.numEvents = 0;
 	wwin.user = NULL;
 	wwin.fbwidth = 0;
 	wwin.fbheight = 0;
 	wwin.width = 0;
 	wwin.height = 0;
+
+	wwin.ui.nvg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+	wwin.ui.font = wima_bnd_font(wwin.ui.nvg, "system", "../../res/DejaVuSans.ttf");
+	wwin.ui.icons = wima_bnd_icons(wwin.ui.nvg, "../../res/blender_icons16.png");
+
+	uiCreateContext(&wwin.ui.oui, 4096, 1 << 20);
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -407,20 +416,20 @@ WimaStatus wima_window_processEvents(WimaWindowHandle wwh) {
 
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 
-	WimaEvent* events = win->events;
-	int numEvents = win->numEvents;
+	WimaEvent* events = win->ui.oui.events;
+	int numEvents = win->ui.oui.eventCount;
 
 	for (int i = 0; i < numEvents; ++i) {
 
 		status = wima_window_processEvent(wwh, events + i);
 
 		if (status) {
-			win->numEvents = 0;
+			win->ui.oui.eventCount = 0;
 			return status;
 		}
 	}
 
-	win->numEvents = 0;
+	win->ui.oui.eventCount = 0;
 
 	return status;
 }
@@ -431,10 +440,12 @@ WimaStatus wima_window_free(WimaWindowHandle wwh) {
 
 	dstr_free(win->name);
 
-	dallocx(win->ctx.items, 0);
-	dallocx(win->ctx.last_items, 0);
-	dallocx(win->ctx.itemMap, 0);
-	dallocx(win->ctx.data, 0);
+	nvgDeleteGL3(win->ui.nvg);
+
+	dallocx(win->ui.oui.items, 0);
+	dallocx(win->ui.oui.last_items, 0);
+	dallocx(win->ui.oui.itemMap, 0);
+	dallocx(win->ui.oui.data, 0);
 
 	return wima_areas_free(win->areas);
 }
