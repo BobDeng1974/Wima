@@ -77,27 +77,26 @@ static double bnd_fmax ( double a, double b )
 ////////////////////////////////////////////////////////////////////////////////
 
 float bnd_clamp(float v, float mn, float mx) {
-	return (v > mx)?mx:(v < mn)?mn:v;
+	return (v > mx) ? mx : ((v < mn) ? mn : v);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void wima_draw_label(WimaUI* ui,
-    float x, float y, float w, float h, int iconid, const char *label) {
-	wima_draw_label_icon_value(ui,x,y,w,h,iconid,
-	    wg.theme.regularTheme.textColor, BND_LEFT,
-	    BND_LABEL_FONT_SIZE, label, NULL);
+void wima_draw_label(WimaUI* ui, float x, float y, float w, float h, int iconid, const char *label) {
+	wima_draw_label_icon_value(ui, x, y, w, h, iconid,
+	                           wg.theme.regularTheme.textColor, BND_LEFT,
+	                           BND_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_draw_toolBtn(WimaUI* ui,
-    float x, float y, float w, float h, int flags, BNDwidgetState state,
-    int iconid, const char *label) {
+void wima_draw_toolBtn(WimaUI* ui, float x, float y, float w, float h, int flags,
+                       BNDwidgetState state, int iconid, const char *label)
+{
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
-	wima_draw_selectCorners(cr, BND_TOOL_RADIUS, flags);
+	wima_draw_corners_rounded(cr, BND_TOOL_RADIUS, flags);
 	wima_draw_inset(ui,x,y,w,h,cr[2],cr[3]);
-	wima_draw_color_inner(&shade_top, &shade_down, &wg.theme.toolTheme, state, 1);
+	wima_color_inner(&shade_top, &shade_down, &wg.theme.toolTheme, state, 1);
 	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	wima_draw_box_outline(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
 	    wima_draw_color_transparent(wg.theme.toolTheme.outlineColor));
@@ -112,9 +111,9 @@ void wima_draw_radioBtn(WimaUI* ui,
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
-	wima_draw_selectCorners(cr, BND_OPTION_RADIUS, flags);
+	wima_draw_corners_rounded(cr, BND_OPTION_RADIUS, flags);
 	wima_draw_inset(ui,x,y,w,h,cr[2],cr[3]);
-	wima_draw_color_inner(&shade_top, &shade_down, &wg.theme.radioTheme, state, 1);
+	wima_color_inner(&shade_top, &shade_down, &wg.theme.radioTheme, state, 1);
 	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	wima_draw_box_outline(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
 	    wima_draw_color_transparent(wg.theme.radioTheme.outlineColor));
@@ -125,7 +124,7 @@ void wima_draw_radioBtn(WimaUI* ui,
 
 int wima_draw_textField_pos(WimaUI* ui, float x, float y, float w, float h,
     int iconid, const char *text, int px, int py) {
-	return wima_draw_label_text_pos(ui, x, y, w, h,
+	return wima_label_text_pos(ui, x, y, w, h,
 	    iconid, BND_LABEL_FONT_SIZE, text, px, py);
 }
 
@@ -135,9 +134,9 @@ void wima_draw_textField(WimaUI* ui,
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
-	wima_draw_selectCorners(cr, BND_TEXT_RADIUS, flags);
+	wima_draw_corners_rounded(cr, BND_TEXT_RADIUS, flags);
 	wima_draw_inset(ui,x,y,w,h,cr[2],cr[3]);
-	wima_draw_color_inner(&shade_top, &shade_down, &wg.theme.textFieldTheme, state, 0);
+	wima_color_inner(&shade_top, &shade_down, &wg.theme.textFieldTheme, state, 0);
 	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	wima_draw_box_outline(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
 	    wima_draw_color_transparent(wg.theme.textFieldTheme.outlineColor));
@@ -161,7 +160,7 @@ void wima_draw_optionBtn(WimaUI* ui,
 	wima_draw_inset(ui,ox,oy,
 	    BND_OPTION_WIDTH,BND_OPTION_HEIGHT,
 	    BND_OPTION_RADIUS,BND_OPTION_RADIUS);
-	wima_draw_color_inner(&shade_top, &shade_down, &wg.theme.optionTheme, state, 1);
+	wima_color_inner(&shade_top, &shade_down, &wg.theme.optionTheme, state, 1);
 	wima_draw_box_inner(ui,ox,oy,
 	    BND_OPTION_WIDTH,BND_OPTION_HEIGHT,
 	    BND_OPTION_RADIUS,BND_OPTION_RADIUS,BND_OPTION_RADIUS,BND_OPTION_RADIUS,
@@ -184,9 +183,9 @@ void wima_draw_choiceBtn(WimaUI* ui,
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
-	wima_draw_selectCorners(cr, BND_OPTION_RADIUS, flags);
+	wima_draw_corners_rounded(cr, BND_OPTION_RADIUS, flags);
 	wima_draw_inset(ui,x,y,w,h,cr[2],cr[3]);
-	wima_draw_color_inner(&shade_top, &shade_down, &wg.theme.choiceTheme, state, 1);
+	wima_color_inner(&shade_top, &shade_down, &wg.theme.choiceTheme, state, 1);
 	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	wima_draw_box_outline(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
 	    wima_draw_color_transparent(wg.theme.choiceTheme.outlineColor));
@@ -200,7 +199,7 @@ void wima_draw_choiceBtn(WimaUI* ui,
 void wima_draw_colorBtn(WimaUI* ui,
     float x, float y, float w, float h, int flags, NVGcolor color) {
 	float cr[4];
-	wima_draw_selectCorners(cr, BND_TOOL_RADIUS, flags);
+	wima_draw_corners_rounded(cr, BND_TOOL_RADIUS, flags);
 	wima_draw_inset(ui,x,y,w,h,cr[2],cr[3]);
 	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], color, color);
 	wima_draw_box_outline(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
@@ -213,9 +212,9 @@ void wima_draw_numField(WimaUI* ui,
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
-	wima_draw_selectCorners(cr, BND_NUMBER_RADIUS, flags);
+	wima_draw_corners_rounded(cr, BND_NUMBER_RADIUS, flags);
 	wima_draw_inset(ui,x,y,w,h,cr[2],cr[3]);
-	wima_draw_color_inner(&shade_top, &shade_down, &wg.theme.numberFieldTheme, state, 0);
+	wima_color_inner(&shade_top, &shade_down, &wg.theme.numberFieldTheme, state, 0);
 	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	wima_draw_box_outline(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3],
 	    wima_draw_color_transparent(wg.theme.numberFieldTheme.outlineColor));
@@ -234,9 +233,9 @@ void wima_draw_slider(WimaUI* ui,
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
-	wima_draw_selectCorners(cr, BND_NUMBER_RADIUS, flags);
+	wima_draw_corners_rounded(cr, BND_NUMBER_RADIUS, flags);
 	wima_draw_inset(ui,x,y,w,h,cr[2],cr[3]);
-	wima_draw_color_inner(&shade_top, &shade_down, &wg.theme.sliderTheme, state, 0);
+	wima_color_inner(&shade_top, &shade_down, &wg.theme.sliderTheme, state, 0);
 	wima_draw_box_inner(ui,x,y,w,h,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 
 	if (state == BND_ACTIVE) {
@@ -303,8 +302,8 @@ void wima_draw_menu_background(WimaUI* ui,
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
-	wima_draw_selectCorners(cr, BND_MENU_RADIUS, flags);
-	wima_draw_color_inner(&shade_top, &shade_down, &wg.theme.menuTheme,
+	wima_draw_corners_rounded(cr, BND_MENU_RADIUS, flags);
+	wima_color_inner(&shade_top, &shade_down, &wg.theme.menuTheme,
 	    BND_DEFAULT, 0);
 	wima_draw_box_inner(ui,x,y,w,h+1,cr[0],cr[1],cr[2],cr[3], shade_top, shade_down);
 	wima_draw_box_outline(ui,x,y,w,h+1,cr[0],cr[1],cr[2],cr[3],
@@ -316,7 +315,7 @@ void wima_draw_menu_background(WimaUI* ui,
 void wima_draw_tooltip_background(WimaUI* ui, float x, float y, float w, float h) {
 	NVGcolor shade_top, shade_down;
 
-	wima_draw_color_inner(&shade_top, &shade_down, &wg.theme.tooltipTheme,
+	wima_color_inner(&shade_top, &shade_down, &wg.theme.tooltipTheme,
 	    BND_DEFAULT, 0);
 	wima_draw_box_inner(ui,x,y,w,h+1,
 	    BND_MENU_RADIUS,BND_MENU_RADIUS,BND_MENU_RADIUS,BND_MENU_RADIUS,
@@ -561,7 +560,7 @@ void wima_draw_areaOverlay(WimaUI* ui, float x, float y, float w, float h,
 
 ////////////////////////////////////////////////////////////////////////////////
 
-float wima_draw_label_width(WimaUI* ui, int iconid, const char *label) {
+float wima_label_estimateWidth(WimaUI* ui, int iconid, const char *label) {
 	int w = BND_PAD_LEFT + BND_PAD_RIGHT;
 	if (iconid >= 0) {
 		w += BND_ICON_SHEET_RES;
@@ -574,7 +573,7 @@ float wima_draw_label_width(WimaUI* ui, int iconid, const char *label) {
 	return w;
 }
 
-float wima_draw_label_height(WimaUI* ui, int iconid, const char *label, float width) {
+float wima_label_estimateHeight(WimaUI* ui, int iconid, const char *label, float width) {
 	int h = BND_WIDGET_HEIGHT;
 	width -= BND_TEXT_RADIUS*2;
 	if (iconid >= 0) {
@@ -608,22 +607,6 @@ void wima_draw_box_rounded(WimaUI* ui, float x, float y, float w, float h,
 	nvgArcTo(ui->nvg, x+w,y+h, x,y+h, bnd_fminf(cr2, d/2));
 	nvgArcTo(ui->nvg, x,y+h, x,y, bnd_fminf(cr3, d/2));
 	nvgClosePath(ui->nvg);
-}
-
-NVGcolor wima_draw_color_transparent(NVGcolor color) {
-	color.a *= BND_TRANSPARENT_ALPHA;
-	return color;
-}
-
-NVGcolor wima_draw_color_offset(NVGcolor color, int delta) {
-	float offset = (float)delta / 255.0f;
-	return delta?(
-	    nvgRGBAf(
-	        bnd_clamp(color.r+offset,0,1),
-	        bnd_clamp(color.g+offset,0,1),
-	        bnd_clamp(color.b+offset,0,1),
-	        color.a)
-	):color;
 }
 
 void wima_draw_bevel(WimaUI* ui, float x, float y, float w, float h) {
@@ -753,39 +736,11 @@ void wima_draw_box_outline(WimaUI* ui, float x, float y, float w, float h,
 	nvgStroke(ui->nvg);
 }
 
-void wima_draw_selectCorners(float *radiuses, float r, int flags) {
+void wima_draw_corners_rounded(float *radiuses, float r, int flags) {
 	radiuses[0] = (flags & BND_CORNER_TOP_LEFT)?0:r;
 	radiuses[1] = (flags & BND_CORNER_TOP_RIGHT)?0:r;
 	radiuses[2] = (flags & BND_CORNER_DOWN_RIGHT)?0:r;
 	radiuses[3] = (flags & BND_CORNER_DOWN_LEFT)?0:r;
-}
-
-void wima_draw_color_inner(
-    NVGcolor *shade_top, NVGcolor *shade_down,
-    const WimaWidgetTheme* theme, BNDwidgetState state, int flipActive) {
-
-	switch(state) {
-		default:
-		case BND_DEFAULT: {
-			*shade_top = wima_draw_color_offset(theme->innerColor, theme->shadeTop);
-			*shade_down = wima_draw_color_offset(theme->innerColor, theme->shadeDown);
-		} break;
-		case BND_HOVER: {
-			NVGcolor color = wima_draw_color_offset(theme->innerColor, BND_HOVER_SHADE);
-		*shade_top = wima_draw_color_offset(color, theme->shadeTop);
-		*shade_down = wima_draw_color_offset(color, theme->shadeDown);
-		} break;
-		case BND_ACTIVE: {
-			*shade_top = wima_draw_color_offset(theme->innerSelectedColor,
-			flipActive?theme->shadeDown:theme->shadeTop);
-			*shade_down = wima_draw_color_offset(theme->innerSelectedColor,
-			flipActive?theme->shadeTop:theme->shadeDown);
-		} break;
-	}
-}
-
-NVGcolor wima_draw_color_text(const WimaWidgetTheme* theme, BNDwidgetState state) {
-	return (state == BND_ACTIVE)?theme->textSelectedColor:theme->textColor;
 }
 
 void wima_draw_label_icon_value(WimaUI* ui, float x, float y, float w, float h,
@@ -855,7 +810,7 @@ void wima_draw_node_label_icon(WimaUI* ui, float x, float y, float w, float h,
 	}
 }
 
-int wima_draw_label_text_pos(WimaUI* ui, float x, float y, float w, float h,
+int wima_label_text_pos(WimaUI* ui, float x, float y, float w, float h,
     int iconid, float fontsize, const char *label, int px, int py) {
 	float bounds[4];
 	float pleft = BND_TEXT_RADIUS;
@@ -1039,15 +994,6 @@ void wima_draw_scroll_handle_rect(float *x, float *y, float *w, float *h,
 		float ws = bnd_fmaxf(size*(*w), (*h)-1);
 		*x = (*x) + ((*w)-ws)*offset;
 		*w = ws;
-	}
-}
-
-NVGcolor wima_draw_color_node_wire(const WimaNodeTheme *theme, BNDwidgetState state) {
-	switch(state) {
-		default:
-		case BND_DEFAULT: return nvgRGBf(0.5f,0.5f,0.5f);
-		case BND_HOVER: return theme->wireSelectColor;
-		case BND_ACTIVE: return theme->activeNodeColor;
 	}
 }
 

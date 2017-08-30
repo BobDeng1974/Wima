@@ -934,11 +934,11 @@ void wima_draw_areaOverlay(WimaUI* ui, float x, float y, float w, float h,
 // Use these functions to estimate sizes for widgets with your NVGcontext.
 
 // returns the ideal width for a label with given icon and text
-float wima_draw_label_width(WimaUI* ui, int iconid, const char *label);
+float wima_label_estimateWidth(WimaUI* ui, int iconid, const char *label);
 
 // returns the height for a label with given icon, text and width; this
 // function is primarily useful in conjunction with multiline labels and textboxes
-float wima_draw_label_height(WimaUI* ui, int iconid, const char *label,
+float wima_label_estimateHeight(WimaUI* ui, int iconid, const char *label,
     float width);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -948,26 +948,10 @@ float wima_draw_label_height(WimaUI* ui, int iconid, const char *label,
 // these are part of the implementation detail and can be used to theme
 // new kinds of controls in a similar fashion.
 
-// make color transparent using the default alpha value
-NVGcolor wima_draw_color_transparent(NVGcolor color);
-
-// offset a color by a given integer delta in the range -100 to 100
-NVGcolor wima_draw_color_offset(NVGcolor color, int delta);
-
 // assigns radius r to the four entries of array radiuses depending on whether
 // the corner is marked as sharp or not; see BNDcornerFlags for possible
 // flag values.
-void wima_draw_selectCorners(float *radiuses, float r, int flags);
-
-// computes the upper and lower gradient colors for the inner box from a widget
-// theme and the widgets state. If flipActive is set and the state is
-// BND_ACTIVE, the upper and lower colors will be swapped.
-void wima_draw_color_inner(NVGcolor *shade_top, NVGcolor *shade_down,
-    const WimaWidgetTheme *theme, BNDwidgetState state, int flipActive);
-
-// computes the text color for a widget label from a widget theme and the
-// widgets state.
-NVGcolor wima_draw_color_text(const WimaWidgetTheme *theme, BNDwidgetState state);
+void wima_draw_corners_rounded(float *radiuses, float r, int flags);
 
 // computes the bounds of the scrollbar handle from the scrollbar size
 // and the handles offset and size.
@@ -1044,7 +1028,7 @@ void wima_draw_node_label_icon(WimaUI* ui, float x, float y, float w, float h,
 // Calculate the corresponding text position for given coordinates px/py
 // in an iconLabel.
 // See bndIconLabelCaret for more info.
-int wima_draw_label_text_pos(WimaUI* ui, float x, float y, float w, float h,
+int wima_label_text_pos(WimaUI* ui, float x, float y, float w, float h,
     int iconid, float fontsize, const char *label, int px, int py);
 
 // Draw an optional icon specified by <iconid>, an optional label and
@@ -1073,11 +1057,6 @@ void wima_draw_arrow_upDown(WimaUI* ui, float x, float y, float s, NVGcolor colo
 
 // Draw a node down-arrow with its tip at (x,y) and size s
 void wima_draw_node_arrow_down(WimaUI* ui, float x, float y, float s, NVGcolor color);
-
-// return the color of a node wire based on state
-// BND_HOVER indicates selected state,
-// BND_ACTIVE indicates dragged state
-NVGcolor wima_draw_color_node_wire(const WimaNodeTheme *theme, BNDwidgetState state);
 
 #ifdef __cplusplus
 }

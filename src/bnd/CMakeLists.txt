@@ -32,6 +32,7 @@ set(WIMA_GLOBAL "${PROJECT_NAME}_global")
 set(WIMA_BND_SRC
 
 	#Put source files here.
+	"color.c"
 	"blendish.c"
 )
 
