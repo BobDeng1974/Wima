@@ -364,7 +364,7 @@ int uiItem(WimaOuiContext* ctx) {
 	return idx;
 }
 
-#if 0
+//#if 0
 void uiNotifyItem(WimaOuiContext* ctx, int item, WimaEvent event) {
 	assert(ctx);
 	if (!ctx->handler)
@@ -375,7 +375,7 @@ void uiNotifyItem(WimaOuiContext* ctx, int item, WimaEvent event) {
 		ctx->handler(item, event);
 	}
 }
-#endif
+//#endif
 
 int uiLastChild(WimaOuiContext* ctx, int item) {
 	item = uiFirstChild(ctx, item);
