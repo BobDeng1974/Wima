@@ -1099,7 +1099,7 @@ void uiProcess(WimaOuiContext* ctx, int timestamp) {
 		for (int i = 0; i < ctx->eventCount; ++i) {
 			ctx->active_key = ctx->events[i].event.key.key;
 			ctx->active_modifier = ctx->events[i].event.key.mods;
-			uiNotifyItem(focus_item, ctx->events[i].event);
+			uiNotifyItem(ctx, focus_item, ctx->events[i]);
 		}
 	} else {
 		ctx->focus_item = -1;
@@ -1109,7 +1109,7 @@ void uiProcess(WimaOuiContext* ctx, int timestamp) {
 		        ctx->cursor.x, ctx->cursor.y,
 		        UI_SCROLL, UI_ANY);
 		if (scroll_item >= 0) {
-			uiNotifyItem(scroll_item, UI_SCROLL);
+			uiNotifyItem(ctx, scroll_item, UI_SCROLL);
 		}
 	}
 
@@ -1141,7 +1141,7 @@ void uiProcess(WimaOuiContext* ctx, int timestamp) {
 				ctx->last_click_timestamp = timestamp;
 				ctx->last_click_item = active_item;
 				ctx->active_modifier = ctx->active_button_modifier;
-				uiNotifyItem(active_item, UI_BUTTON0_DOWN);
+				uiNotifyItem(ctx, active_item, UI_BUTTON0_DOWN);
 			}
 			ctx->state = UI_STATE_CAPTURE;
 		} else if (uiGetButton(ctx, 2) && !uiGetLastButton(ctx, 2)) {
@@ -1151,7 +1151,7 @@ void uiProcess(WimaOuiContext* ctx, int timestamp) {
 			                 UI_BUTTON2_DOWN, UI_ANY);
 			if (hot >= 0) {
 				ctx->active_modifier = ctx->active_button_modifier;
-				uiNotifyItem(hot, UI_BUTTON2_DOWN);
+				uiNotifyItem(ctx, hot, UI_BUTTON2_DOWN);
 			}
 		} else {
 			hot_item = hot;
@@ -1161,9 +1161,9 @@ void uiProcess(WimaOuiContext* ctx, int timestamp) {
 			if (!uiGetButton(ctx, 0)) {
 			if (active_item >= 0) {
 				ctx->active_modifier = ctx->active_button_modifier;
-				uiNotifyItem(active_item, UI_BUTTON0_UP);
+				uiNotifyItem(ctx, active_item, UI_BUTTON0_UP);
 				if (active_item == hot) {
-					uiNotifyItem(active_item, UI_BUTTON0_HOT_UP);
+					uiNotifyItem(ctx, active_item, UI_BUTTON0_HOT_UP);
 				}
 			}
 			active_item = -1;
@@ -1171,7 +1171,7 @@ void uiProcess(WimaOuiContext* ctx, int timestamp) {
 		} else {
 			if (active_item >= 0) {
 				ctx->active_modifier = ctx->active_button_modifier;
-				uiNotifyItem(active_item, UI_BUTTON0_CAPTURE);
+				uiNotifyItem(ctx, active_item, UI_BUTTON0_CAPTURE);
 			}
 			if (hot == active_item)
 				hot_item = hot;
