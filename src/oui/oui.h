@@ -783,7 +783,7 @@ void uiEndLayout(WimaOuiContext* ctx);
 
 // update the current hot item; this only needs to be called if items are kept
 // for more than one frame and uiEndLayout() is not called
-void uiUpdateHotItem(WimaOuiContext* ctx);
+void wima_ui_item_updateHot(WimaOuiContext* ctx);
 
 // update the internal state according to the current cursor position and
 // button states, and call all registered handlers.
@@ -793,7 +793,7 @@ void uiUpdateHotItem(WimaOuiContext* ctx);
 // be done until the next call to uiBeginLayout().
 // Items should be drawn before a call to uiProcess()
 // this is an O(N) operation for N = number of declared items.
-void uiProcess(WimaOuiContext* ctx, int timestamp);
+void wima_ui_process(WimaOuiContext* ctx, int timestamp);
 
 // reset the currently stored hot/active etc. handles; this should be called when
 // a re-declaration of the UI changes the item indices, to avoid state
@@ -859,15 +859,15 @@ int wima_ui_layout_insertBack(WimaOuiContext* ctx, int item, int child);
 void wima_ui_item_setSize(WimaOuiContext* ctx, int item, int w, int h);
 
 // set the anchoring behavior of the item to one or multiple UIlayoutFlags
-void uiSetLayout(WimaOuiContext* ctx, int item, unsigned int flags);
+void wima_ui_layout_setType(WimaOuiContext* ctx, int item, unsigned int flags);
 
 // set the box model behavior of the item to one or multiple UIboxFlags
-void uiSetBox(WimaOuiContext* ctx, int item, unsigned int flags);
+void wima_ui_layout_setBox(WimaOuiContext* ctx, int item, unsigned int flags);
 
 // set the left, top, right and bottom margins of an item; when the item is
 // anchored to the parent or another item, the margin controls the distance
 // from the neighboring element.
-void uiSetMargins(WimaOuiContext* ctx, int item, short l, short t, short r, short b);
+void wima_ui_layout_setMargins(WimaOuiContext* ctx, int item, short l, short t, short r, short b);
 
 // set item as recipient of all keyboard events; if item is -1, no item will
 // be focused.
@@ -879,11 +879,11 @@ void uiFocus(WimaOuiContext* ctx, int item);
 // returns the first child item of a container item. If the item is not
 // a container or does not contain any items, -1 is returned.
 // if item is 0, the first child item of the root item will be returned.
-int uiFirstChild(WimaOuiContext* ctx, int item);
+int wima_ui_item_firstChild(WimaOuiContext* ctx, int item);
 
 // returns an items next sibling in the list of the parent containers children.
 // if item is 0 or the item is the last child item, -1 will be returned.
-int uiNextSibling(WimaOuiContext* ctx, int item);
+int wima_ui_item_nextSibling(WimaOuiContext* ctx, int item);
 
 // Querying
 // --------
@@ -897,7 +897,7 @@ unsigned int uiGetAllocSize(WimaOuiContext* ctx);
 // return the current state of the item. This state is only valid after
 // a call to uiProcess().
 // The returned value is one of UI_COLD, UI_HOT, UI_ACTIVE, UI_FROZEN.
-UIitemState uiGetState(WimaOuiContext* ctx, int item);
+UIitemState wima_ui_item_state(WimaOuiContext* ctx, int item);
 
 // return the application-dependent handle of the item as passed to uiSetHandle()
 // or uiAllocHandle().
@@ -916,7 +916,7 @@ int uiGetFocusedItem(WimaOuiContext* ctx);
 // otherwise the first item matching (item.flags & flags) == mask is returned.
 // you may combine box, layout, event and user flags.
 // frozen items will always be ignored.
-int uiFindItem(WimaOuiContext* ctx, int item, int x, int y,
+int wima_ui_item_find(WimaOuiContext* ctx, int item, int x, int y,
         unsigned int flags, unsigned int mask);
 
 // return the event flags for an item as passed to uiSetEvents()
@@ -932,11 +932,11 @@ unsigned int uiGetModifier(WimaOuiContext* ctx);
 // returns the items layout rectangle in absolute coordinates. If
 // uiGetRect() is called before uiEndLayout(), the values of the returned
 // rectangle are undefined.
-UIrect uiGetRect(WimaOuiContext* ctx, int item);
+UIrect wima_ui_item_rect(WimaOuiContext* ctx, int item);
 
 // returns 1 if an items absolute rectangle contains a given coordinate
 // otherwise 0
-int uiContains(WimaOuiContext* ctx, int item, int x, int y);
+int wima_ui_item_contains(WimaOuiContext* ctx, int item, int x, int y);
 
 // return the width of the item as set by uiSetSize()
 int wima_ui_item_width(WimaOuiContext* ctx, int item);
@@ -944,18 +944,18 @@ int wima_ui_item_width(WimaOuiContext* ctx, int item);
 int wima_ui_item_height(WimaOuiContext* ctx, int item);
 
 // return the anchoring behavior as set by uiSetLayout()
-unsigned int uiGetLayout(WimaOuiContext* ctx, int item);
+unsigned int wima_ui_layout_type(WimaOuiContext* ctx, int item);
 // return the box model as set by uiSetBox()
-unsigned int uiGetBox(WimaOuiContext* ctx, int item);
+unsigned int wima_ui_layout_box(WimaOuiContext* ctx, int item);
 
 // return the left margin of the item as set with uiSetMargins()
-short uiGetMarginLeft(WimaOuiContext* ctx, int item);
+short wima_ui_layout_marginLeft(WimaOuiContext* ctx, int item);
 // return the top margin of the item as set with uiSetMargins()
-short uiGetMarginTop(WimaOuiContext* ctx, int item);
+short wima_ui_layout_marginTop(WimaOuiContext* ctx, int item);
 // return the right margin of the item as set with uiSetMargins()
-short uiGetMarginRight(WimaOuiContext* ctx, int item);
+short wima_ui_layout_marginRight(WimaOuiContext* ctx, int item);
 // return the bottom margin of the item as set with uiSetMargins()
-short uiGetMarginDown(WimaOuiContext* ctx, int item);
+short wima_ui_layout_marginDown(WimaOuiContext* ctx, int item);
 
 // when uiBeginLayout() is called, the most recently declared items are retained.
 // when uiEndLayout() completes, it matches the old item hierarchy to the new one
