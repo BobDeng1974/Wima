@@ -40,7 +40,6 @@
 
 #include <wima.h>
 
-#include "event.h"
 #include "callbacks.h"
 #include "area.h"
 #include "workspace.h"
@@ -170,6 +169,10 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	event->event.pos.y = yint;
 
 	++(wwin->ui.oui.eventCount);
+
+	// Set the cursor position.
+	wwin->ui.oui.cursor.x = x;
+	wwin->ui.oui.cursor.y = y;
 }
 
 void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
@@ -207,6 +210,10 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 	event->event.mouse_scroll.yoffset = yint;
 
 	++(wwin->ui.oui.eventCount);
+
+	// Add the scroll amounts to the context.
+	wwin->ui.oui.scroll.x += xint;
+	wwin->ui.oui.scroll.y += yint;
 }
 
 void wima_callback_char(GLFWwindow* window, unsigned int code) {

@@ -98,22 +98,31 @@ enum {
 
 	// bit 0-2
 	UI_ITEM_BOX_MODEL_MASK = 0x000007,
+
 	// bit 0-4
 	UI_ITEM_BOX_MASK       = 0x00001F,
+
 	// bit 5-8
 	UI_ITEM_LAYOUT_MASK = 0x0003E0,
+
 	// bit 9-18
 	UI_ITEM_EVENT_MASK  = 0x07FC00,
+
 	// item is frozen (bit 19)
 	UI_ITEM_FROZEN      = 0x080000,
+
 	// item handle is pointer to data (bit 20)
 	UI_ITEM_DATA	    = 0x100000,
+
 	// item has been inserted (bit 21)
 	UI_ITEM_INSERTED	= 0x200000,
+
 	// horizontal size has been explicitly set (bit 22)
 	UI_ITEM_HFIXED      = 0x400000,
+
 	// vertical size has been explicitly set (bit 23)
 	UI_ITEM_VFIXED      = 0x800000,
+
 	// bit 22-23
 	UI_ITEM_FIXED_MASK  = 0xC00000,
 
@@ -124,7 +133,7 @@ enum {
 	    | UI_USERMASK,
 };
 
-void uiClear(WimaOuiContext* ctx) {
+void wima_oui_clear(WimaOuiContext* ctx) {
 
 	ctx->lastItemCount = ctx->itemCount;
 	ctx->itemCount = 0;
@@ -141,7 +150,7 @@ void uiClear(WimaOuiContext* ctx) {
 	}
 }
 
-void uiCreateContext(WimaOuiContext* ctx, unsigned int itemCap, unsigned int bufferCap) {
+void wima_oui_context_create(WimaOuiContext* ctx, unsigned int itemCap, unsigned int bufferCap) {
 
 	assert(itemCap);
 
@@ -164,15 +173,9 @@ void uiCreateContext(WimaOuiContext* ctx, unsigned int itemCap, unsigned int buf
 
 	ctx->stage = UI_STAGE_PROCESS;
 
-	uiClear(ctx);
+	wima_oui_clear(ctx);
 	uiClearState(ctx);
 }
-
-#if 0
-WimaOuiContext *uiGetContext() {
-	return ctx;
-}
-#endif
 
 void uiSetButton(WimaOuiContext* ctx, unsigned int button, unsigned int mod, int enabled) {
 
@@ -185,55 +188,13 @@ void uiSetButton(WimaOuiContext* ctx, unsigned int button, unsigned int mod, int
 	ctx->active_button_modifier = mod;
 }
 
-static void uiAddInputEvent(WimaOuiContext* ctx, WimaEvent event) {
-	assert(ctx);
-	if (ctx->eventCount == WIMA_MAX_EVENTS) return;
-	ctx->events[ctx->eventCount++] = event;
-}
-
-static void uiClearInputEvents(WimaOuiContext* ctx) {
+static void wima_oui_clearEvents(WimaOuiContext* ctx) {
 
 	assert(ctx);
 
 	ctx->eventCount = 0;
 	ctx->scroll.x = 0;
 	ctx->scroll.y = 0;
-}
-
-void uiSetKey(WimaOuiContext* ctx, WimaKey key, int scancode, WimaAction act, WimaMods mods) {
-
-	assert(ctx);
-
-	WimaEvent event;
-	event.type = WIMA_EVENT_KEY;
-
-	event.event.key.key = key;
-	event.event.key.action = act;
-	event.event.key.mods = mods;
-	event.event.key.scancode = scancode;
-
-	uiAddInputEvent(ctx, event);
-}
-
-void uiSetChar(WimaOuiContext* ctx, uint32_t code, WimaMods mods) {
-
-	assert(ctx);
-
-	WimaEvent event;
-	event.type = WIMA_EVENT_CHAR;
-
-	event.event.char_event.code = code;
-	event.event.char_event.mods = mods;
-
-	uiAddInputEvent(ctx, event);
-}
-
-void uiSetScroll(WimaOuiContext* ctx, int x, int y) {
-
-	assert(ctx);
-
-	ctx->scroll.x += x;
-	ctx->scroll.y += y;
 }
 
 UIvec2 uiGetScroll(WimaOuiContext* ctx) {
@@ -261,17 +222,6 @@ int uiButtonReleased(WimaOuiContext* ctx, int button) {
 	return uiGetLastButton(ctx, button) && !uiGetButton(ctx, button);
 }
 
-void uiSetCursor(WimaOuiContext* ctx, int x, int y) {
-	assert(ctx);
-	ctx->cursor.x = x;
-	ctx->cursor.y = y;
-}
-
-UIvec2 uiGetCursor(WimaOuiContext* ctx) {
-	assert(ctx);
-	return ctx->cursor;
-}
-
 UIvec2 uiGetCursorStart(WimaOuiContext* ctx) {
 	assert(ctx);
 	return ctx->start_cursor;
@@ -282,15 +232,6 @@ UIvec2 uiGetCursorDelta(WimaOuiContext* ctx) {
 	UIvec2 result = {{{
 	        ctx->cursor.x - ctx->last_cursor.x,
 	        ctx->cursor.y - ctx->last_cursor.y
-	}}};
-	return result;
-}
-
-UIvec2 uiGetCursorStartDelta(WimaOuiContext* ctx) {
-	assert(ctx);
-	UIvec2 result = {{{
-	        ctx->cursor.x - ctx->start_cursor.x,
-	        ctx->cursor.y - ctx->start_cursor.y
 	}}};
 	return result;
 }
@@ -354,14 +295,14 @@ int uiGetFocusedItem(WimaOuiContext* ctx) {
 	return ctx->focus_item;
 }
 
-
 void uiBeginLayout(WimaOuiContext* ctx) {
 
 	assert(ctx);
 
-	 // Must run uiEndLayout() and uiProcess() first.
+	// Must run uiEndLayout() and uiProcess() first.
 	assert(ctx->stage == UI_STAGE_PROCESS);
-	uiClear(ctx);
+
+	wima_oui_clear(ctx);
 	ctx->stage = UI_STAGE_LAYOUT;
 }
 
@@ -433,10 +374,6 @@ int uiInsert(WimaOuiContext* ctx, int item, int child) {
 		uiAppend(ctx, uiLastChild(ctx, item), child);
 	}
 	return child;
-}
-
-int uiInsertFront(WimaOuiContext* ctx, int item, int child) {
-	return uiInsert(ctx, item, child);
 }
 
 int uiInsertBack(WimaOuiContext* ctx, int item, int child) {
@@ -1107,7 +1044,7 @@ void uiProcess(WimaOuiContext* ctx, int timestamp) {
 	ctx->stage = UI_STAGE_PROCESS;
 
 	if (!ctx->itemCount) {
-		uiClearInputEvents(ctx);
+		wima_oui_clearEvents(ctx);
 		return;
 	}
 
@@ -1134,7 +1071,7 @@ void uiProcess(WimaOuiContext* ctx, int timestamp) {
 		}
 	}
 
-	uiClearInputEvents(ctx);
+	wima_oui_clearEvents(ctx);
 
 	int hot = ctx->hot_item;
 

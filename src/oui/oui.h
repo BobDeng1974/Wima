@@ -700,7 +700,7 @@ typedef struct wima_ui {
 // using uiAllocHandle(); you may pass 0 if you don't need to allocate
 // handles.
 // 4096 and (1<<20) are good starting values.
-void uiCreateContext(WimaOuiContext* ui,
+void wima_oui_context_create(WimaOuiContext* ui,
         unsigned int itemCap,
         unsigned int bufferCap);
 
@@ -853,9 +853,6 @@ int uiAppend(WimaOuiContext* ctx, int item, int sibling);
 // it is efficient to call uiInsertBack() repeatedly
 // in cases where drawing or layout order doesn't matter.
 int uiInsertBack(WimaOuiContext* ctx, int item, int child);
-
-// same as uiInsert()
-int uiInsertFront(WimaOuiContext* ctx, int item, int child);
 
 // set the size of the item; a size of 0 indicates the dimension to be
 // dynamic; if the size is set, the item can not expand beyond that size.
