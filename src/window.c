@@ -67,8 +67,8 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	wwin.height = 0;
 
 	wwin.ui.nvg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
-	wwin.ui.font = wima_bnd_font(wwin.ui.nvg, "system", "../../res/DejaVuSans.ttf");
-	wwin.ui.icons = wima_bnd_icons(wwin.ui.nvg, "../../res/blender_icons16.png");
+	wwin.ui.font = wima_theme_font(wwin.ui.nvg, "system", "../../res/DejaVuSans.ttf");
+	wwin.ui.icons = wima_theme_icons(wwin.ui.nvg, "../../res/blender_icons16.png");
 
 	uiCreateContext(&wwin.ui.oui, 4096, 1 << 20);
 
