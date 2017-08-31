@@ -39,7 +39,7 @@
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg_gl.h>
 
-#include "../bnd/blendish.h"
+#include "../theme/theme.h"
 #include "../oui/oui.h"
 
 extern WimaTheme wima_initial_theme;
@@ -132,8 +132,8 @@ void ui_handler(int item, UIevent event) {
 }
 
 void init(NVGcontext *vg) {
-	wima_bnd_font(nvgCreateFont(vg, "system", "../../res/DejaVuSans.ttf"));
-	wima_bnd_icons(nvgCreateImage(vg, "../../res/blender_icons16.png", 0));
+	wima_theme_font(nvgCreateFont(vg, "system", "../../res/DejaVuSans.ttf"));
+	wima_theme_icons(nvgCreateImage(vg, "../../res/blender_icons16.png", 0));
 }
 
 void testrect(NVGcontext *vg, UIrect rect) {
@@ -210,7 +210,7 @@ void drawUI(NVGcontext *vg, int item, int corners) {
 				drawUIItemsVbox(vg, item);
 			} break;
 			case ST_PANEL: {
-				wima_widget_bevel(vg,rect.x,rect.y,rect.w,rect.h);
+				wima_draw_bevel(vg,rect.x,rect.y,rect.w,rect.h);
 				drawUIItems(vg,item,corners);
 			} break;
 			case ST_LABEL: {
@@ -1254,7 +1254,7 @@ int main()
 	}
 
 	init(_vg);
-	wima_bnd_theme(wima_initial_theme);
+	wima_theme(wima_initial_theme);
 
 	printf("sizeof(UIitem)=%lu\n", sizeof(UIitem));
 
