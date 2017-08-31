@@ -1,39 +1,47 @@
-/*
- * Blendish - Blender 2.5 UI based theming functions for NanoVG
+/**
+ *	***** BEGIN LICENSE BLOCK *****
  *
- * Copyright (c) 2014 Leonard Ritter <leonard.ritter@duangle.com>
+ *	Copyright 2017 Project LFyre
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *	Licensed under the Apache License, Version 2.0 (the "Apache License")
+ *	with the following modification; you may not use this file except in
+ *	compliance with the Apache License and the following modification to it:
+ *	Section 6. Trademarks. is deleted and replaced with:
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ *	6. Trademarks. This License does not grant permission to use the trade
+ *		names, trademarks, service marks, or product names of the Licensor
+ *		and its affiliates, except as required to comply with Section 4(c) of
+ *		the License and to reproduce the content of the NOTICE file.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
-*/
+ *	You may obtain a copy of the Apache License at
+ *
+ *		http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *	Unless required by applicable law or agreed to in writing, software
+ *	distributed under the Apache License with the above modification is
+ *	distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *	KIND, either express or implied. See the Apache License for the specific
+ *	language governing permissions and limitations under the Apache License.
+ *
+ *	****** END LICENSE BLOCK ******
+ *
+ *	*****************************************************************
+ *
+ *	******* BEGIN FILE DESCRIPTION *******
+ *
+ *	This file holds the theme definitions.
+ *
+ *	******** END FILE DESCRIPTION ********
+ */
 
-#ifndef BLENDISH_H
-#define BLENDISH_H
-
-#include <nanovg.h>
-
-#ifndef NANOVG_H
-#error "nanovg.h must be included first."
-#endif
+#ifndef WIMA_THEME_H
+#define WIMA_THEME_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include <nanovg.h>
 
 #include "../ui.h"
 
@@ -81,13 +89,115 @@ before including blendish.h, otherwise the file will be in header-only mode.
 
 */
 
-// If thise typedef is provided elsewhere, you may define
-// BLENDISH_NO_NVG_TYPEDEFS before including the header.
-#ifndef BLENDISH_NO_NVG_TYPEDEFS
-typedef struct NVGcontext NVGcontext;
-typedef struct NVGcolor NVGcolor;
-typedef struct NVGglyphPosition NVGglyphPosition;
-#endif
+// Default text color.
+#define BND_COLOR_TEXT {{{ 0,0,0,1 }}}
+// Default highlighted text color.
+#define BND_COLOR_TEXT_SELECTED {{{ 1,1,1,1 }}}
+
+// The theme used to draw a single widget or widget box; these values
+// correspond to the same values that can be retrieved from the Theme
+// panel in the Blender preferences.
+typedef struct wima_widget_theme {
+
+	// Color of widget box outline.
+	NVGcolor outlineColor;
+
+	// Color of widget item (meaning changes depending on class).
+	NVGcolor itemColor;
+
+	// Fill color of widget box.
+	NVGcolor innerColor;
+
+	// Fill color of widget box when active.
+	NVGcolor innerSelectedColor;
+
+	// Color of text label.
+	NVGcolor textColor;
+
+	// Color of text label when active.
+	NVGcolor textSelectedColor;
+
+	// Delta modifier for upper part of gradient (-100 to 100).
+	int shadeTop;
+
+	// Delta modifier for lower part of gradient (-100 to 100).
+	int shadeBottom;
+
+} WimaWidgetTheme;
+
+// The theme used to draw nodes.
+typedef struct wima_node_theme {
+
+	// Inner color of selected node (and downarrow).
+	NVGcolor nodeSelectedColor;
+
+	// Outline of wires.
+	NVGcolor wiresColor;
+
+	// Color of text label when active.
+	NVGcolor textSelectedColor;
+
+	// Inner color of active node (and dragged wire).
+	NVGcolor activeNodeColor;
+
+	// Color of selected wire.
+	NVGcolor wireSelectColor;
+
+	// Color of background of node.
+	NVGcolor nodeBackdropColor;
+
+	// How much a noodle curves (0 to 10).
+	int noodleCurving;
+
+} WimaNodeTheme;
+
+// The theme used to draw widgets.
+typedef struct wima_theme {
+
+	// The background color of panels and windows.
+	NVGcolor backgroundColor;
+
+	// Theme for labels.
+	WimaWidgetTheme regularTheme;
+
+	// Theme for tool buttons.
+	WimaWidgetTheme toolTheme;
+
+	// Theme for radio buttons.
+	WimaWidgetTheme radioTheme;
+
+	// Theme for text fields.
+	WimaWidgetTheme textFieldTheme;
+
+	// Theme for option buttons (checkboxes).
+	WimaWidgetTheme optionTheme;
+
+	// Theme for choice buttons (comboboxes).
+	// Blender calls them "menu buttons."
+	WimaWidgetTheme choiceTheme;
+
+	// Theme for number fields.
+	WimaWidgetTheme numberFieldTheme;
+
+	// Theme for slider controls.
+	WimaWidgetTheme sliderTheme;
+
+	// Theme for scrollbars.
+	WimaWidgetTheme scrollBarTheme;
+
+	// Theme for tooltips.
+	WimaWidgetTheme tooltipTheme;
+
+	// Theme for menu backgrounds.
+	WimaWidgetTheme menuTheme;
+
+	// Theme for menu items.
+	WimaWidgetTheme menuItemTheme;
+
+	// Theme for nodes.
+	WimaNodeTheme nodeTheme;
+
+} WimaTheme;
 
 // Default text size.
 #define BND_LABEL_FONT_SIZE 13
@@ -1062,4 +1172,4 @@ void wima_draw_node_arrow_down(WimaUI* ui, float x, float y, float s, NVGcolor c
 }
 #endif
 
-#endif // BLENDISH_H
+#endif // WIMA_THEME_H

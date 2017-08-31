@@ -29,39 +29,49 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	This header file contains information about Wima's globals.
+ *	Defines useful math functions.
  *
  *	******** END FILE DESCRIPTION ********
  */
 
-#ifndef WIMA_GLOBAL_H
-#define WIMA_GLOBAL_H
+#ifdef _MSC_VER
 
-#include <dyna/vector.h>
-#include <dyna/string.h>
+#pragma warning (disable: 4996) // Switch off security warnings
+#pragma warning (disable: 4100) // Switch off unreferenced formal parameter warnings
+#pragma warning (disable: 4244)
+#pragma warning (disable: 4305)
 
-#include <wima.h>
+#include <float.h>
 
-#include "theme/theme.h"
+static float wima_fminf ( float a, float b )
+{
+	return _isnan(a) ? b : ( _isnan(b) ? a : ((a < b) ? a : b));
+}
 
-typedef struct wima_globals {
+static float wima_fmaxf ( float a, float b )
+{
+	return _isnan(a) ? b : ( _isnan(b) ? a : ((a > b) ? a : b));
+}
 
-	DynaString name;
+static double wima_fmin ( double a, double b )
+{
+	return _isnan(a) ? b : ( _isnan(b) ? a : ((a < b) ? a : b));
+}
 
-	ErrorFunc error;
-	WindowMouseEnterFunc enter;
-	WindowPosFunc pos;
-	FramebufferSizeFunc fb_size;
-	WindowSizeFunc win_size;
-	WindowCloseFunc close;
+static double wima_fmax ( double a, double b )
+{
+	return _isnan(a) ? b : ( _isnan(b) ? a : ((a > b) ? a : b));
+}
 
-	DynaVector windows;
+#else
 
-	DynaVector workspaces;
-	DynaVector regions;
+#define wima_fminf(a, b) fminf(a, b)
+#define wima_fmaxf(a, b) fmaxf(a, b)
+#define wima_fmin(a, b) fmin(a, b)
+#define wima_fmax(a, b) fmax(a, b)
 
-	WimaTheme theme;
+#endif
 
-} WimaG;
-
-#endif // WIMA_GLOBAL_H
+float wima_clamp(float v, float mn, float mx) {
+	return (v > mx) ? mx : ((v < mn) ? mn : v);
+}

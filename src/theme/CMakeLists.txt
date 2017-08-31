@@ -28,38 +28,40 @@
 include_directories("../../lib/nanovg/src")
 
 set(WIMA_GLOBAL "${PROJECT_NAME}_global")
+set(WIMA_MATH "${PROJECT_NAME}_math")
 
-set(WIMA_BND_SRC
+set(WIMA_THEME_SRC
 
 	#Put source files here.
 	"color.c"
-	"blendish.c"
+	"theme.c"
 )
 
 set(WIMA_OUI_PIC "wima_oui_pic")
 
-set(WIMA_BND wima_bnd)
+set(WIMA_THEME wima_theme)
 
-set(WIMA_BND_SHARED "${WIMA_BND}_shared")
-set(WIMA_BND_SHARED "${WIMA_BND_SHARED}" PARENT_SCOPE)
-set(WIMA_BND_STATIC "${WIMA_BND}_static")
-set(WIMA_BND_STATIC "${WIMA_BND_STATIC}" PARENT_SCOPE)
-set(WIMA_BND_PIC "${WIMA_BND}_pic")
-set(WIMA_BND_PIC "${WIMA_BND_PIC}" PARENT_SCOPE)
+set(WIMA_THEME_SHARED "${WIMA_THEME}_shared")
+set(WIMA_THEME_SHARED "${WIMA_THEME_SHARED}" PARENT_SCOPE)
+set(WIMA_THEME_STATIC "${WIMA_THEME}_static")
+set(WIMA_THEME_STATIC "${WIMA_THEME_STATIC}" PARENT_SCOPE)
+set(WIMA_THEME_PIC "${WIMA_THEME}_pic")
+set(WIMA_THEME_PIC "${WIMA_THEME_PIC}" PARENT_SCOPE)
 
 create_all_libraries(
 
-	"${WIMA_BND_SHARED}"
-	"${WIMA_BND_STATIC}"
-	"${WIMA_BND_PIC}"
+	"${WIMA_THEME_SHARED}"
+	"${WIMA_THEME_STATIC}"
+	"${WIMA_THEME_PIC}"
 
-	"${WIMA_BND}"
-	"${WIMA_BND_SRC}"
+	"${WIMA_THEME}"
+	"${WIMA_THEME_SRC}"
 	YES
 
 	# Add libraries here.
 	"${WIMA_OUI_PIC}"
 	"${WIMA_GLOBAL}"
 	"${NANOVG_PIC}"
+	"${WIMA_MATH}"
 	"${JEMALLOC_PIC}"
 )

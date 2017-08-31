@@ -55,8 +55,10 @@ set(WIMA_SRC
 
 include_directories("${X11_INCLUDE_DIR}")
 
+add_subdirectory(math)
+
 add_subdirectory(oui)
-add_subdirectory(bnd)
+add_subdirectory(theme)
 
 set(WIMA_SHARED "${PROJECT_NAME}_shared")
 set(WIMA_STATIC "${PROJECT_NAME}_static")
@@ -67,10 +69,11 @@ create_all_libraries(
 	"${PROJECT_NAME}" "${WIMA_SRC}" "YES"
 
 	# Put the needed libraries here.
-	"${WIMA_BND_PIC}"
+	"${WIMA_THEME_PIC}"
 	"${WIMA_OUI_PIC}"
 	"${WIMA_GLOBAL}"
 	"${NANOVG_PIC}"
+	"${WIMA_MATH}"
 	"${DYNA_LIB}"
 	"${GLFW_LIB}"
 	"${WIMA_GLAD_PIC}"

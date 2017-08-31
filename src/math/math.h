@@ -29,39 +29,38 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	This header file contains information about Wima's globals.
+ *	Declarations of useful math functions.
  *
  *	******** END FILE DESCRIPTION ********
  */
 
-#ifndef WIMA_GLOBAL_H
-#define WIMA_GLOBAL_H
+#ifndef WIMA_MATH_H
+#define WIMA_MATH_H
 
-#include <dyna/vector.h>
-#include <dyna/string.h>
+#ifdef _MSC_VER
 
-#include <wima.h>
+#pragma warning (disable: 4996) // Switch off security warnings
+#pragma warning (disable: 4100) // Switch off unreferenced formal parameter warnings
+#pragma warning (disable: 4244)
+#pragma warning (disable: 4305)
 
-#include "theme/theme.h"
+#include <float.h>
 
-typedef struct wima_globals {
+float wima_fminf(float a, float b);
 
-	DynaString name;
+float wima_fmaxf(float a, float b);
 
-	ErrorFunc error;
-	WindowMouseEnterFunc enter;
-	WindowPosFunc pos;
-	FramebufferSizeFunc fb_size;
-	WindowSizeFunc win_size;
-	WindowCloseFunc close;
+double wima_fmin(double a, double b);
 
-	DynaVector windows;
+double wima_fmax(double a, double b);
 
-	DynaVector workspaces;
-	DynaVector regions;
+#else
 
-	WimaTheme theme;
+#define wima_fminf(a, b) fminf(a, b)
+#define wima_fmaxf(a, b) fmaxf(a, b)
+#define wima_fmin(a, b) fmin(a, b)
+#define wima_fmax(a, b) fmax(a, b)
 
-} WimaG;
+#endif
 
-#endif // WIMA_GLOBAL_H
+#endif // WIMA_MATH_H
