@@ -284,8 +284,6 @@ void layout_window(int w, int h) {
 #include <wima.h>
 #include <nanovg.h>
 
-#include "../event.h"
-
 // limits
 
 enum {
@@ -507,6 +505,102 @@ typedef struct UIinputEvent {
 	UIevent event;
 } UIinputEvent;
 #endif
+
+// The following are originally written for Wima.
+
+#define WIMA_MAX_EVENTS 64
+
+typedef enum wima_event_type {
+
+	WIMA_EVENT_NONE,
+
+	WIMA_EVENT_KEY,
+	WIMA_EVENT_MOUSE_BTN,
+	WIMA_EVENT_MOUSE_POS,
+	WIMA_EVENT_SCROLL,
+	WIMA_EVENT_CHAR,
+	WIMA_EVENT_FILE_DROP,
+
+	WIMA_EVENT_WIN_POS,
+	WIMA_EVENT_FB_SIZE,
+	WIMA_EVENT_WIN_SIZE,
+	WIMA_EVENT_WIN_ENTER
+
+} WimaEventType;
+
+typedef struct wima_key_info {
+
+	WimaKey key;
+	WimaAction action;
+	WimaMods mods;
+
+	int scancode;
+
+} WimaKeyInfo;
+
+typedef struct wima_mouse_btn_info {
+
+	WimaMouseBtn button;
+	WimaAction action;
+	WimaMods mods;
+
+} WimaMouseBtnInfo;
+
+typedef struct wima_pos_info {
+
+	int x;
+	int y;
+
+} WimaPosInfo;
+
+typedef struct wima_mouse_scroll_info {
+
+	int xoffset;
+	int yoffset;
+
+} WimaMouseScrollInfo;
+
+typedef struct wima_char_info {
+
+	uint32_t code;
+	WimaMods mods;
+
+} WimaCharInfo;
+
+typedef struct wima_size_info {
+
+	int width;
+	int height;
+
+} WimaSizeInfo;
+
+typedef struct wima_event {
+
+	WimaEventType type;
+
+	union {
+
+		WimaKeyInfo key;
+
+		WimaMouseBtnInfo mouse_btn;
+
+		WimaPosInfo pos;
+
+		WimaMouseScrollInfo mouse_scroll;
+
+		WimaCharInfo char_event;
+
+		DynaVector file_drop;
+
+		WimaSizeInfo size;
+
+		bool mouse_enter;
+
+	} event;
+
+} WimaEvent;
+
+// The following was originally written for OUI.
 
 struct WimaOuiContext {
 
