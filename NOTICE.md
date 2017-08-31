@@ -21,7 +21,7 @@ License copyright &copy; 2013 [Pixar Animation Studios](https://www.pixar.com/).
 
 For generating themes, Wima uses a modified version of
 [Blendish](https://bitbucket.org/duangle/oui-blendish/src) (contained in the
-[`src/bnd`](src/bnd) directory), a Blender 2.5 UI-based theming library for
+[`src/theme`](src/theme) directory), a Blender 2.5 UI-based theming library for
 [NanoVG](https://github.com/memononen/nanovg). Wima also uses a modified version
 of [OUI](https://bitbucket.org/duangle/oui-blendish/src) (contained in the
 [`src/oui`](src/oui) directory), otherwise known as OpenUI, for layout. OUI is
