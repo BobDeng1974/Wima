@@ -282,6 +282,7 @@ void layout_window(int w, int h) {
  */
 
 #include <wima.h>
+#include <nanovg.h>
 
 #include "../event.h"
 
@@ -559,6 +560,16 @@ struct WimaOuiContext {
 
 	WimaEvent events[WIMA_MAX_EVENTS];
 };
+
+typedef struct wima_ui {
+
+	NVGcontext* nvg;
+	WimaOuiContext oui;
+
+	int icons;
+	int font;
+
+} WimaUI;
 
 // unless declared otherwise, all operations have the complexity O(1).
 
