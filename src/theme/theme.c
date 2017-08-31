@@ -437,15 +437,15 @@ const WimaTheme wima_initial_theme = {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void wima_theme(WimaTheme theme) {
+void wima_theme_loadTheme(WimaTheme theme) {
 	wg.theme = theme;
 }
 
-int wima_theme_icons(NVGcontext* vg, const char* path) {
+int wima_theme_loadIcons(NVGcontext* vg, const char* path) {
 	return nvgCreateImage(vg, path, 0);
 }
 
-int wima_theme_font(NVGcontext* vg, const char* name, const char* path) {
+int wima_theme_loadFont(NVGcontext* vg, const char* name, const char* path) {
 	return nvgCreateFont(vg, name, path);
 }
 

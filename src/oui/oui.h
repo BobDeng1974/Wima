@@ -700,7 +700,7 @@ typedef struct wima_ui {
 // using uiAllocHandle(); you may pass 0 if you don't need to allocate
 // handles.
 // 4096 and (1<<20) are good starting values.
-void wima_oui_context_create(WimaOuiContext* ui,
+void wima_ui_context_create(WimaOuiContext* ui,
         unsigned int itemCap,
         unsigned int bufferCap);
 
@@ -772,7 +772,7 @@ UIvec2 uiGetScroll();
 // After the call, all previously declared item IDs are invalid, and all
 // application dependent context data has been freed.
 // uiBeginLayout() must be followed by uiEndLayout().
-void uiBeginLayout(WimaOuiContext* ctx);
+void wima_ui_layout_begin(WimaOuiContext* ctx);
 
 // layout all added items starting from the root item 0.
 // after calling uiEndLayout(), no further modifications to the item tree should
@@ -798,13 +798,13 @@ void uiProcess(WimaOuiContext* ctx, int timestamp);
 // reset the currently stored hot/active etc. handles; this should be called when
 // a re-declaration of the UI changes the item indices, to avoid state
 // related glitches because item identities have changed.
-void uiClearState(WimaOuiContext* ctx);
+void wima_ui_state_clear(WimaOuiContext* ctx);
 
 // UI Declaration
 // --------------
 
 // create a new UI item and return the new items ID.
-int uiItem();
+int wima_ui_item_new();
 
 // set an items state to frozen; the UI will not recurse into frozen items
 // when searching for hot or active items; subsequently, frozen items and
@@ -813,7 +813,7 @@ int uiItem();
 // UI_COLD for child items. Upon encountering a frozen item, the drawing
 // routine needs to handle rendering of child items appropriately.
 // see example.cpp for a demonstration.
-void uiSetFrozen(WimaOuiContext* ctx, int item, int enable);
+void wima_ui_item_setFrozen(WimaOuiContext* ctx, int item, int enable);
 
 // set the application-dependent handle of an item.
 // handle is an application defined 64-bit handle. If handle is NULL, the item
@@ -841,22 +841,22 @@ void uiSetFlags(WimaOuiContext* ctx, int item, unsigned int flags);
 // O(N) operation for N siblings.
 // it is usually more efficient to call uiInsert() for the first child,
 // then chain additional siblings using uiAppend().
-int uiInsert(WimaOuiContext* ctx, int item, int child);
+int wima_ui_layout_insert(WimaOuiContext* ctx, int item, int child);
 
 // assign an item to the same container as another item
 // sibling is inserted after item.
-int uiAppend(WimaOuiContext* ctx, int item, int sibling);
+int wima_ui_layout_append(WimaOuiContext* ctx, int item, int sibling);
 
 // insert child into container item like uiInsert(), but prepend
 // it to the first child item, effectively putting it in
 // the background.
 // it is efficient to call uiInsertBack() repeatedly
 // in cases where drawing or layout order doesn't matter.
-int uiInsertBack(WimaOuiContext* ctx, int item, int child);
+int wima_ui_layout_insertBack(WimaOuiContext* ctx, int item, int child);
 
 // set the size of the item; a size of 0 indicates the dimension to be
 // dynamic; if the size is set, the item can not expand beyond that size.
-void uiSetSize(WimaOuiContext* ctx, int item, int w, int h);
+void wima_ui_item_setSize(WimaOuiContext* ctx, int item, int w, int h);
 
 // set the anchoring behavior of the item to one or multiple UIlayoutFlags
 void uiSetLayout(WimaOuiContext* ctx, int item, unsigned int flags);
@@ -939,9 +939,9 @@ UIrect uiGetRect(WimaOuiContext* ctx, int item);
 int uiContains(WimaOuiContext* ctx, int item, int x, int y);
 
 // return the width of the item as set by uiSetSize()
-int uiGetWidth(WimaOuiContext* ctx, int item);
+int wima_ui_item_width(WimaOuiContext* ctx, int item);
 // return the height of the item as set by uiSetSize()
-int uiGetHeight(WimaOuiContext* ctx, int item);
+int wima_ui_item_height(WimaOuiContext* ctx, int item);
 
 // return the anchoring behavior as set by uiSetLayout()
 unsigned int uiGetLayout(WimaOuiContext* ctx, int item);
