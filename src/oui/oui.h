@@ -532,8 +532,8 @@ struct WimaOuiContext {
 // create a new UI context; call uiMakeCurrent() to make this context the
 // current context. The context is managed by the client and must be released
 // using uiDestroyContext()
-// item_capacity is the maximum of number of items that can be declared.
-// buffer_capacity is the maximum total size of bytes that can be allocated
+// itemCap is the maximum of number of items that can be declared.
+// bufferCap is the maximum total size of bytes that can be allocated
 // using uiAllocHandle(); you may pass 0 if you don't need to allocate
 // handles.
 // 4096 and (1<<20) are good starting values.
