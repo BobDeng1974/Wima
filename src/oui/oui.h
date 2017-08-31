@@ -358,68 +358,90 @@ typedef enum UIboxFlags {
 
 // child layout flags to pass to uiSetLayout()
 typedef enum UIlayoutFlags {
+
 	// attachments (bit 5-8)
 	// fully valid when parent uses UI_LAYOUT model
 	// partially valid when in UI_FLEX model
 
 	// anchor to left item or left side of parent
 	UI_LEFT = 0x020,
+
 	// anchor to top item or top side of parent
 	UI_TOP = 0x040,
+
 	// anchor to right item or right side of parent
 	UI_RIGHT = 0x080,
+
 	// anchor to bottom item or bottom side of parent
 	UI_DOWN = 0x100,
+
 	// anchor to both left and right item or parent borders
 	UI_HFILL = 0x0a0,
+
 	// anchor to both top and bottom item or parent borders
 	UI_VFILL = 0x140,
+
 	// center horizontally, with left margin as offset
 	UI_HCENTER = 0x000,
+
 	// center vertically, with top margin as offset
 	UI_VCENTER = 0x000,
+
 	// center in both directions, with left/top margin as offset
 	UI_CENTER = 0x000,
+
 	// anchor to all four directions
 	UI_FILL = 0x1e0,
+
 	// when wrapping, put this element on a new line
 	// wrapping layout code auto-inserts UI_BREAK flags,
 	// drawing routines can read them with uiGetLayout()
 	UI_BREAK = 0x200
+
 } UIlayoutFlags;
 
 //#if 0
 // event flags
 typedef enum UIevent {
+
 	// on left mouse button down
 	UI_BUTTON0_DOWN = 0x0400,
+
 	// on left mouse button up
 	// when this event has a handler, uiGetState() will return UI_ACTIVE as
 	// long as left mouse button is down.
 	UI_BUTTON0_UP = 0x0800,
+
 	// on left mouse button up while item is hovered
 	// when this event has a handler, uiGetState() will return UI_ACTIVE
 	// when the cursor is hovering the items rectangle; this is the
 	// behavior expected for buttons.
 	UI_BUTTON0_HOT_UP = 0x1000,
+
 	// item is being captured (left mouse button constantly pressed);
 	// when this event has a handler, uiGetState() will return UI_ACTIVE as
 	// long as left mouse button is down.
 	UI_BUTTON0_CAPTURE = 0x2000,
+
 	// on right mouse button down (usually triggers context menu)
 	UI_BUTTON2_DOWN = 0x4000,
+
 	// item has received a scrollwheel event
 	// the accumulated wheel offset can be queried with uiGetScroll()
 	UI_SCROLL = 0x8000,
+
 	// item is focused and has received a key-down event
 	// the respective key can be queried using uiGetKey() and uiGetModifier()
 	UI_KEY_DOWN = 0x10000,
+
 	// item is focused and has received a key-up event
 	// the respective key can be queried using uiGetKey() and uiGetModifier()
 	UI_KEY_UP = 0x20000,
+
 	// item is focused and has received a character event
 	// the respective character can be queried using uiGetKey()
 	UI_CHAR = 0x40000,
+
 } UIevent;
 //#endif
 

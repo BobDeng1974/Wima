@@ -64,6 +64,7 @@
 
 #include <jemalloc/jemalloc.h>
 
+#include "../math/math.h"
 #include "oui.h"
 
 #ifdef _MSC_VER
@@ -122,22 +123,6 @@ enum {
 	    | UI_ITEM_EVENT_MASK
 	    | UI_USERMASK,
 };
-
-int ui_max(int a, int b) {
-	return (a>b)?a:b;
-}
-
-int ui_min(int a, int b) {
-	return (a<b)?a:b;
-}
-
-float ui_maxf(float a, float b) {
-	return (a>b)?a:b;
-}
-
-float ui_minf(float a, float b) {
-	return (a<b)?a:b;
-}
 
 void uiClear(WimaOuiContext* ctx) {
 
@@ -549,7 +534,7 @@ void uiComputeImposedSize(WimaOuiContext* ctx, UIitem *pitem, int dim) {
 
 		// width = start margin + calculated width + end margin
 		int kidsize = pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
-		need_size = ui_max(need_size, kidsize);
+		need_size = wima_max(need_size, kidsize);
 		kid = uiNextSibling(ctx, kid);
 	}
 	pitem->size[dim] = need_size;
@@ -581,7 +566,7 @@ void uiComputeWrappedStackedSize(WimaOuiContext* ctx, UIitem *pitem, int dim) {
 
 		// if next position moved back, we assume a new line
 		if (pkid->flags & UI_BREAK) {
-			need_size2 = ui_max(need_size2, need_size);
+			need_size2 = wima_max(need_size2, need_size);
 			// newline
 			need_size = 0;
 		}
@@ -590,7 +575,7 @@ void uiComputeWrappedStackedSize(WimaOuiContext* ctx, UIitem *pitem, int dim) {
 		need_size += pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
 		kid = uiNextSibling(ctx, kid);
 	}
-	pitem->size[dim] = ui_max(need_size2, need_size);
+	pitem->size[dim] = wima_max(need_size2, need_size);
 }
 
 // compute bounding box of all items stacked + wrapped
@@ -612,7 +597,7 @@ void uiComputeWrappedSize(WimaOuiContext* ctx, UIitem *pitem, int dim) {
 
 		// width = start margin + calculated width + end margin
 		int kidsize = pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
-		need_size = ui_max(need_size, kidsize);
+		need_size = wima_max(need_size, kidsize);
 		kid = uiNextSibling(ctx, kid);
 	}
 	pitem->size[dim] = need_size2 + need_size;
@@ -755,11 +740,11 @@ void uiArrangeStacked(WimaOuiContext* ctx, UIitem *pitem, int dim, bool wrap) {
 				x1 = x+(float)pkid->size[dim];
 			} else {
 				// squeeze
-				x1 = x+ui_maxf(0.0f,(float)pkid->size[dim]+eater);
+				x1 = x + wima_fmaxf(0.0f,(float)pkid->size[dim]+eater);
 			}
 			ix0 = (short)x;
 			if (wrap)
-				ix1 = (short)ui_minf(max_x2-(float)pkid->margins[wdim], x1);
+				ix1 = (short)wima_fminf(max_x2 - (float)pkid->margins[wdim], x1);
 			else
 				ix1 = (short)x1;
 			pkid->margins[dim] = ix0;
@@ -795,7 +780,7 @@ void uiArrangeImposedRange(WimaOuiContext* ctx, UIitem *pitem, int dim,      int
 				pkid->margins[dim] = space-pkid->size[dim]-pkid->margins[wdim];
 			} break;
 			case UI_HFILL: {
-				pkid->size[dim] = ui_max(0,space-pkid->margins[dim]-pkid->margins[wdim]);
+				pkid->size[dim] = wima_max(0,space-pkid->margins[dim]-pkid->margins[wdim]);
 			} break;
 		}
 		pkid->margins[dim] += offset;
@@ -821,17 +806,17 @@ void uiArrangeImposedSqueezedRange(WimaOuiContext* ctx, UIitem *pitem, int dim, 
 
 		int flags = (pkid->flags & UI_ITEM_LAYOUT_MASK) >> dim;
 
-		short min_size = ui_max(0,space-pkid->margins[dim]-pkid->margins[wdim]);
+		short min_size = wima_max(0,space-pkid->margins[dim]-pkid->margins[wdim]);
 		switch(flags & UI_HFILL) {
 			default: {
-				pkid->size[dim] = ui_min(pkid->size[dim], min_size);
+				pkid->size[dim] = wima_min(pkid->size[dim], min_size);
 			} break;
 			case UI_HCENTER: {
-				pkid->size[dim] = ui_min(pkid->size[dim], min_size);
+				pkid->size[dim] = wima_min(pkid->size[dim], min_size);
 			pkid->margins[dim] += (space-pkid->size[dim])/2 - pkid->margins[wdim];
 			} break;
 			case UI_RIGHT: {
-				pkid->size[dim] = ui_min(pkid->size[dim], min_size);
+				pkid->size[dim] = wima_min(pkid->size[dim], min_size);
 			pkid->margins[dim] = space-pkid->size[dim]-pkid->margins[wdim];
 			} break;
 			case UI_HFILL: {
@@ -870,7 +855,7 @@ short uiArrangeWrappedImposedSqueezed(WimaOuiContext* ctx, UIitem *pitem, int di
 
 		// width = start margin + calculated width + end margin
 		int kidsize = pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
-		need_size = ui_max(need_size, kidsize);
+		need_size = wima_max(need_size, kidsize);
 		kid = uiNextSibling(ctx, kid);
 	}
 

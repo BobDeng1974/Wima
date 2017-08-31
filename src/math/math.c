@@ -54,7 +54,8 @@
  *	******* BEGIN FILE DESCRIPTION *******
  *
  *	Defines useful math functions. The functions wima_fminf, wima_fmaxf,
-* 	wima_fmin, wima_fmax, and wima_clamp were originally part of Blendish.
+ *	wima_fmin, wima_fmax, wima_max, wima_min, and wima_clamp were originally
+ *	part of Blendish.
  *
  *	******** END FILE DESCRIPTION ********
  */
@@ -96,6 +97,14 @@ static double wima_fmax ( double a, double b )
 #define wima_fmax(a, b) fmax(a, b)
 
 #endif
+
+int wima_max(int a, int b) {
+	return (a > b) ? a : b;
+}
+
+int wima_min(int a, int b) {
+	return (a < b) ? a : b;
+}
 
 float wima_clamp(float v, float mn, float mx) {
 	return (v > mx) ? mx : ((v < mn) ? mn : v);

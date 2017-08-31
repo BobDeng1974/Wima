@@ -62,6 +62,8 @@
 #ifndef WIMA_MATH_H
 #define WIMA_MATH_H
 
+#include <math.h>
+
 #ifdef _MSC_VER
 
 #pragma warning (disable: 4996) // Switch off security warnings
@@ -87,5 +89,11 @@ double wima_fmax(double a, double b);
 #define wima_fmax(a, b) fmax(a, b)
 
 #endif
+
+int wima_max(int a, int b);
+
+int wima_min(int a, int b);
+
+float wima_clamp(float v, float mn, float mx);
 
 #endif // WIMA_MATH_H
