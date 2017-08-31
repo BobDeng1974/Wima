@@ -36,8 +36,11 @@ set(WIMA_OUI_SRC
 set(WIMA_OUI "wima_oui")
 
 set(WIMA_OUI_SHARED "${WIMA_OUI}_shared")
+set(WIMA_OUI_SHARED "${WIMA_OUI_SHARED}" PARENT_SCOPE)
 set(WIMA_OUI_STATIC "${WIMA_OUI}_static")
+set(WIMA_OUI_STATIC "${WIMA_OUI_STATIC}" PARENT_SCOPE)
 set(WIMA_OUI_PIC "${WIMA_OUI}_pic")
+set(WIMA_OUI_PIC "${WIMA_OUI_PIC}" PARENT_SCOPE)
 
 create_all_libraries(
 
