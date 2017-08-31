@@ -75,7 +75,7 @@ typedef struct wima_widget_theme {
 	int shadeTop;
 
 	// Delta modifier for lower part of gradient (-100 to 100).
-	int shadeDown;
+	int shadeBottom;
 
 } WimaWidgetTheme;
 

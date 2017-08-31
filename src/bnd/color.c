@@ -22,6 +22,8 @@
  * THE SOFTWARE.
 */
 
+#include "blendish.h"
+#include "theme.h"
 #include "color.h"
 
 // Low Level Color Functions
@@ -35,14 +37,24 @@ NVGcolor wima_color_transparent(NVGcolor color) {
 }
 
 NVGcolor wima_color_offset(NVGcolor color, int delta) {
-	float offset = (float)delta / 255.0f;
-	return delta ? (
-	    nvgRGBAf(
-	        bnd_clamp(color.r+offset,0,1),
-	        bnd_clamp(color.g+offset,0,1),
-	        bnd_clamp(color.b+offset,0,1),
-	        color.a)
-	) : color;
+
+	float offset = (float) delta / 255.0f;
+
+	NVGcolor result;
+
+	if (delta != 0) {
+
+		float r = bnd_clamp(color.r + offset, 0, 1);
+		float g = bnd_clamp(color.g + offset, 0, 1);
+		float b = bnd_clamp(color.b + offset, 0, 1);
+
+		result = nvgRGBAf(r, g, b, color.a);
+	}
+	else {
+		result = color;
+	}
+
+	return result;
 }
 
 void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
@@ -50,34 +62,56 @@ void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
                       int flipActive)
 {
 	switch(state) {
+
 		default:
-		case BND_DEFAULT: {
+
+		case BND_DEFAULT:
+		{
 			*shade_top = wima_draw_color_offset(theme->innerColor, theme->shadeTop);
 			*shade_down = wima_draw_color_offset(theme->innerColor, theme->shadeDown);
-		} break;
-		case BND_HOVER: {
-			NVGcolor color = wima_draw_color_offset(theme->innerColor, BND_HOVER_SHADE);
-		*shade_top = wima_draw_color_offset(color, theme->shadeTop);
-		*shade_down = wima_draw_color_offset(color, theme->shadeDown);
-		} break;
-		case BND_ACTIVE: {
-			*shade_top = wima_draw_color_offset(theme->innerSelectedColor,
-			flipActive?theme->shadeDown:theme->shadeTop);
-			*shade_down = wima_draw_color_offset(theme->innerSelectedColor,
-			flipActive?theme->shadeTop:theme->shadeDown);
-		} break;
+
+			break;
+		}
+
+		case BND_HOVER:
+		{
+			NVGcolor color = wima_color_offset(theme->innerColor, BND_HOVER_SHADE);
+
+			*shade_top = wima_color_offset(color, theme->shadeTop);
+			*shade_down = wima_color_offset(color, theme->shadeDown);
+
+			break;
+		}
+
+		case BND_ACTIVE:
+		{
+			int delta = flipActive ? theme->shadeDown : theme->shadeTop;
+			*shade_top = wima_color_offset(theme->innerSelectedColor, delta);
+
+			delta = flipActive ? theme->shadeTop : theme->shadeDown;
+			*shade_down = wima_color_offset(theme->innerSelectedColor, delta);
+
+			break;
+		}
 	}
 }
 
 NVGcolor wima_color_text(const WimaWidgetTheme* theme, BNDwidgetState state) {
-	return (state == BND_ACTIVE)?theme->textSelectedColor:theme->textColor;
+	return (state == BND_ACTIVE) ? theme->textSelectedColor : theme->textColor;
 }
 
 NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, BNDwidgetState state) {
+
 	switch(state) {
 		default:
-		case BND_DEFAULT: return nvgRGBf(0.5f,0.5f,0.5f);
-		case BND_HOVER: return theme->wireSelectColor;
-		case BND_ACTIVE: return theme->activeNodeColor;
+
+		case BND_DEFAULT:
+			return nvgRGBf(0.5f,0.5f,0.5f);
+
+		case BND_HOVER:
+			return theme->wireSelectColor;
+
+		case BND_ACTIVE:
+			return theme->activeNodeColor;
 	}
 }
