@@ -716,10 +716,10 @@ void uiSetCursor(WimaOuiContext* ctx, int x, int y);
 UIvec2 uiGetCursor(WimaOuiContext* ctx);
 
 // returns the offset of the cursor relative to the last call to uiProcess()
-UIvec2 uiGetCursorDelta(WimaOuiContext* ctx);
+UIvec2 wima_ui_cursor_delta(WimaOuiContext* ctx);
 
 // returns the beginning point of a drag operation.
-UIvec2 uiGetCursorStart(WimaOuiContext* ctx);
+UIvec2 wima_ui_cursor_start(WimaOuiContext* ctx);
 
 // returns the offset of the cursor relative to the beginning point of a drag
 // operation.
@@ -730,16 +730,16 @@ UIvec2 uiGetCursorStartDelta();
 // source.
 // mod is an application defined set of flags for modifier keys
 // enabled is 1 for pressed, 0 for released
-void uiSetButton(WimaOuiContext* ctx, unsigned int button, unsigned int mod, int enabled);
+void wima_ui_setButton(WimaOuiContext* ctx, unsigned int button, unsigned int mod, int enabled);
 
 // returns the current state of an application dependent input button
 // as set by uiSetButton().
 // the function returns 1 if the button has been set to pressed, 0 for released.
-int uiGetButton(WimaOuiContext* ctx, unsigned int button);
+int wima_ui_button(WimaOuiContext* ctx, unsigned int button);
 
 // returns the number of chained clicks; 1 is a single click,
 // 2 is a double click, etc.
-int uiGetClicks(WimaOuiContext* ctx);
+int wima_ui_clicks(WimaOuiContext* ctx);
 
 // sets a key as down/up; the key can be any application defined keycode
 // mod is an application defined set of flags for modifier keys
@@ -757,7 +757,7 @@ void uiSetChar(WimaOuiContext* ctx, uint32_t code, WimaMods mods);
 void uiSetScroll(WimaOuiContext* ctx, int x, int y);
 
 // returns the currently accumulated scroll wheel offsets for this frame
-UIvec2 uiGetScroll();
+UIvec2 wima_ui_setScroll();
 
 
 
@@ -779,7 +779,7 @@ void wima_ui_layout_begin(WimaOuiContext* ctx);
 // be done until the next call to uiBeginLayout().
 // It is safe to immediately draw the items after a call to uiEndLayout().
 // this is an O(N) operation for N = number of declared items.
-void uiEndLayout(WimaOuiContext* ctx);
+void wima_ui_layout_end(WimaOuiContext* ctx);
 
 // update the current hot item; this only needs to be called if items are kept
 // for more than one frame and uiEndLayout() is not called
@@ -818,20 +818,20 @@ void wima_ui_item_setFrozen(WimaOuiContext* ctx, int item, int enable);
 // set the application-dependent handle of an item.
 // handle is an application defined 64-bit handle. If handle is NULL, the item
 // will not be interactive.
-void uiSetHandle(WimaOuiContext* ctx, int item, void *handle);
+void wima_ui_item_setHandle(WimaOuiContext* ctx, int item, void *handle);
 
 // allocate space for application-dependent context data and assign it
 // as the handle to the item.
 // The memory of the pointer is managed by the UI context and released
 // upon the next call to uiBeginLayout()
-void *uiAllocHandle(WimaOuiContext* ctx, int item, unsigned int size);
+void *wima_ui_handle_alloc(WimaOuiContext* ctx, int item, unsigned int size);
 
 // flags is a combination of UI_EVENT_* and designates for which events the
 // handler should be called.
-void uiSetEvents(WimaOuiContext* ctx, int item, unsigned int flags);
+void wima_ui_setEvents(WimaOuiContext* ctx, int item, unsigned int flags);
 
 // flags is a user-defined set of flags defined by UI_USERMASK.
-void uiSetFlags(WimaOuiContext* ctx, int item, unsigned int flags);
+void wima_ui_setFlags(WimaOuiContext* ctx, int item, unsigned int flags);
 
 // assign an item to a container.
 // an item ID of 0 refers to the root item.
@@ -871,7 +871,7 @@ void wima_ui_layout_setMargins(WimaOuiContext* ctx, int item, short l, short t, 
 
 // set item as recipient of all keyboard events; if item is -1, no item will
 // be focused.
-void uiFocus(WimaOuiContext* ctx, int item);
+void wima_ui_item_setFocus(WimaOuiContext* ctx, int item);
 
 // Iteration
 // ---------
@@ -889,10 +889,10 @@ int wima_ui_item_nextSibling(WimaOuiContext* ctx, int item);
 // --------
 
 // return the total number of allocated items
-int uiGetItemCount(WimaOuiContext* ctx);
+int wima_ui_item_count(WimaOuiContext* ctx);
 
 // return the total bytes that have been allocated by uiAllocHandle()
-unsigned int uiGetAllocSize(WimaOuiContext* ctx);
+unsigned int wima_ui_alloc_size(WimaOuiContext* ctx);
 
 // return the current state of the item. This state is only valid after
 // a call to uiProcess().
@@ -901,13 +901,13 @@ UIitemState wima_ui_item_state(WimaOuiContext* ctx, int item);
 
 // return the application-dependent handle of the item as passed to uiSetHandle()
 // or uiAllocHandle().
-void *uiGetHandle(WimaOuiContext* ctx, int item);
+void *wima_ui_item_handle(WimaOuiContext* ctx, int item);
 
 // return the item that is currently under the cursor or -1 for none
-int uiGetHotItem(WimaOuiContext* ctx);
+int wima_ui_item_isHot(WimaOuiContext* ctx);
 
 // return the item that is currently focused or -1 for none
-int uiGetFocusedItem(WimaOuiContext* ctx);
+int wima_ui_item_focus(WimaOuiContext* ctx);
 
 // returns the topmost item containing absolute location (x,y), starting with
 // item as parent, using a set of flags and masks as filter:
@@ -920,14 +920,14 @@ int wima_ui_item_find(WimaOuiContext* ctx, int item, int x, int y,
         unsigned int flags, unsigned int mask);
 
 // return the event flags for an item as passed to uiSetEvents()
-unsigned int uiGetEvents(WimaOuiContext* ctx, int item);
+unsigned int wima_ui_events(WimaOuiContext* ctx, int item);
 // return the user-defined flags for an item as passed to uiSetFlags()
-unsigned int uiGetFlags(WimaOuiContext* ctx, int item);
+unsigned int wima_ui_flags(WimaOuiContext* ctx, int item);
 
 // when handling a KEY_DOWN/KEY_UP event: the key that triggered this event
-unsigned int uiGetKey(WimaOuiContext* ctx);
+unsigned int wima_ui_key(WimaOuiContext* ctx);
 // when handling a keyboard or mouse event: the active modifier keys
-unsigned int uiGetModifier(WimaOuiContext* ctx);
+unsigned int wima_ui_modifiers(WimaOuiContext* ctx);
 
 // returns the items layout rectangle in absolute coordinates. If
 // uiGetRect() is called before uiEndLayout(), the values of the returned
@@ -963,17 +963,17 @@ short wima_ui_layout_marginDown(WimaOuiContext* ctx, int item);
 // when passed an item Id from the previous frame, uiRecoverItem() returns the
 // items new assumed Id, or -1 if the item could not be mapped.
 // it is valid to pass -1 as item.
-int uiRecoverItem(WimaOuiContext* ctx, int olditem);
+int wima_ui_item_recover(WimaOuiContext* ctx, int olditem);
 
 // in cases where it is important to recover old state over changes in
 // the view, and the built-in remapping fails, the UI declaration can manually
 // remap old items to new IDs in cases where e.g. the previous item ID has been
 // temporarily saved; uiRemapItem() would then be called after creating the
 // new item using uiItem().
-void uiRemapItem(WimaOuiContext* ctx, int olditem, int newitem);
+void wima_ui_item_remap(WimaOuiContext* ctx, int olditem, int newitem);
 
 // returns the number if items that have been allocated in the last frame
-int uiGetLastItemCount(WimaOuiContext* ctx);
+int wima_ui_item_lastCount(WimaOuiContext* ctx);
 
 #ifdef __cplusplus
 }
