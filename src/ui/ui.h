@@ -841,10 +841,10 @@ void *wima_ui_handle_alloc(WimaOuiContext* ctx, int item, unsigned int size);
 
 // flags is a combination of UI_EVENT_* and designates for which events the
 // handler should be called.
-void wima_ui_setEvents(WimaOuiContext* ctx, int item, unsigned int flags);
+void wima_ui_item_setEvents(WimaOuiContext* ctx, int item, unsigned int flags);
 
 // flags is a user-defined set of flags defined by UI_USERMASK.
-void wima_ui_setFlags(WimaOuiContext* ctx, int item, unsigned int flags);
+void wima_ui_item_setFlags(WimaOuiContext* ctx, int item, unsigned int flags);
 
 // assign an item to a container.
 // an item ID of 0 refers to the root item.
@@ -854,33 +854,33 @@ void wima_ui_setFlags(WimaOuiContext* ctx, int item, unsigned int flags);
 // O(N) operation for N siblings.
 // it is usually more efficient to call uiInsert() for the first child,
 // then chain additional siblings using uiAppend().
-int wima_ui_layout_insert(WimaOuiContext* ctx, int item, int child);
+int wima_ui_item_insert(WimaOuiContext* ctx, int item, int child);
 
 // assign an item to the same container as another item
 // sibling is inserted after item.
-int wima_ui_layout_append(WimaOuiContext* ctx, int item, int sibling);
+int wima_ui_item_append(WimaOuiContext* ctx, int item, int sibling);
 
 // insert child into container item like uiInsert(), but prepend
 // it to the first child item, effectively putting it in
 // the background.
 // it is efficient to call uiInsertBack() repeatedly
 // in cases where drawing or layout order doesn't matter.
-int wima_ui_layout_insertBack(WimaOuiContext* ctx, int item, int child);
+int wima_ui_item_insertBack(WimaOuiContext* ctx, int item, int child);
 
 // set the size of the item; a size of 0 indicates the dimension to be
 // dynamic; if the size is set, the item can not expand beyond that size.
 void wima_ui_item_setSize(WimaOuiContext* ctx, int item, int w, int h);
 
 // set the anchoring behavior of the item to one or multiple UIlayoutFlags
-void wima_ui_layout_setType(WimaOuiContext* ctx, int item, unsigned int flags);
+void wima_ui_item_setLayoutType(WimaOuiContext* ctx, int item, unsigned int flags);
 
 // set the box model behavior of the item to one or multiple UIboxFlags
-void wima_ui_layout_setBox(WimaOuiContext* ctx, int item, unsigned int flags);
+void wima_ui_item_setBox(WimaOuiContext* ctx, int item, unsigned int flags);
 
 // set the left, top, right and bottom margins of an item; when the item is
 // anchored to the parent or another item, the margin controls the distance
 // from the neighboring element.
-void wima_ui_layout_setMargins(WimaOuiContext* ctx, int item, short l, short t, short r, short b);
+void wima_ui_item_setMargins(WimaOuiContext* ctx, int item, short l, short t, short r, short b);
 
 // set item as recipient of all keyboard events; if item is -1, no item will
 // be focused.
@@ -933,10 +933,10 @@ int wima_ui_item_find(WimaOuiContext* ctx, int item, int x, int y,
         unsigned int flags, unsigned int mask);
 
 // return the event flags for an item as passed to uiSetEvents()
-unsigned int wima_ui_events(WimaOuiContext* ctx, int item);
+unsigned int wima_ui_item_events(WimaOuiContext* ctx, int item);
 
 // return the user-defined flags for an item as passed to uiSetFlags()
-unsigned int wima_ui_flags(WimaOuiContext* ctx, int item);
+unsigned int wima_ui_item_flags(WimaOuiContext* ctx, int item);
 
 // when handling a KEY_DOWN/KEY_UP event: the key that triggered this event
 unsigned int wima_ui_key(WimaOuiContext* ctx);
@@ -960,22 +960,22 @@ int wima_ui_item_width(WimaOuiContext* ctx, int item);
 int wima_ui_item_height(WimaOuiContext* ctx, int item);
 
 // return the anchoring behavior as set by uiSetLayout()
-unsigned int wima_ui_layout_type(WimaOuiContext* ctx, int item);
+unsigned int wima_ui_item_layoutType(WimaOuiContext* ctx, int item);
 
 // return the box model as set by uiSetBox()
-unsigned int wima_ui_layout_box(WimaOuiContext* ctx, int item);
+unsigned int wima_ui_item_box(WimaOuiContext* ctx, int item);
 
 // return the left margin of the item as set with uiSetMargins()
-short wima_ui_layout_marginLeft(WimaOuiContext* ctx, int item);
+short wima_ui_item_marginLeft(WimaOuiContext* ctx, int item);
 
 // return the top margin of the item as set with uiSetMargins()
-short wima_ui_layout_marginTop(WimaOuiContext* ctx, int item);
+short wima_ui_item_marginTop(WimaOuiContext* ctx, int item);
 
 // return the right margin of the item as set with uiSetMargins()
-short wima_ui_layout_marginRight(WimaOuiContext* ctx, int item);
+short wima_ui_item_marginRight(WimaOuiContext* ctx, int item);
 
 // return the bottom margin of the item as set with uiSetMargins()
-short wima_ui_layout_marginDown(WimaOuiContext* ctx, int item);
+short wima_ui_item_marginDown(WimaOuiContext* ctx, int item);
 
 // when uiBeginLayout() is called, the most recently declared items are retained.
 // when uiEndLayout() completes, it matches the old item hierarchy to the new one
