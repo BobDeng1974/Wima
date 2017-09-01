@@ -24,10 +24,11 @@ For generating themes, Wima uses a modified version of
 [`src/theme`](src/theme) directory), a Blender 2.5 UI-based theming library for
 [NanoVG](https://github.com/memononen/nanovg). Wima also uses a modified version
 of [OUI](https://bitbucket.org/duangle/oui-blendish/src) (contained in the
-[`src/oui`](src/oui) directory), otherwise known as OpenUI, for layout. OUI is
+[`src/ui`](src/ui) directory), otherwise known as OpenUI, for layout. OUI is
 pronounced like the French word for "yes." The file
 [`src/tests/bnd_oui_demo.c`](src/tests/bnd_oui_demo.c) is also originally part
-of Blendish/OUI.
+of Blendish/OUI, and there is some code in the [`src/math`](src/math) directory
+that was also part of Blendish/OUI.
 
 The original code for Blendish and OUI is subject to the following copyright:
 

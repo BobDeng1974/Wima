@@ -56,7 +56,7 @@ include_directories("${X11_INCLUDE_DIR}")
 
 add_subdirectory(math)
 
-add_subdirectory(oui)
+add_subdirectory(ui)
 add_subdirectory(theme)
 add_subdirectory(widget)
 
@@ -70,7 +70,7 @@ create_all_libraries(
 
 	# Put the needed libraries here.
 	"${WIMA_THEME_PIC}"
-	"${WIMA_OUI_PIC}"
+	"${WIMA_UI_PIC}"
 	"${WIMA_GLOBAL}"
 	"${NANOVG_PIC}"
 	"${WIMA_MATH}"

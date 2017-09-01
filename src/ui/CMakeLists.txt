@@ -27,32 +27,35 @@
 # We need to include NanoVG's headers.
 include_directories(../../lib/nanovg/src)
 
-set(WIMA_OUI_SRC
+set(WIMA_MATH_PIC "${PROJECT_NAME}_math_pic")
+
+set(WIMA_UI_SRC
 
 	#Put source files here.
-	"oui.c"
+	"ui.c"
 )
 
-set(WIMA_OUI "wima_oui")
+set(WIMA_UI "wima_ui")
 
-set(WIMA_OUI_SHARED "${WIMA_OUI}_shared")
-set(WIMA_OUI_SHARED "${WIMA_OUI_SHARED}" PARENT_SCOPE)
-set(WIMA_OUI_STATIC "${WIMA_OUI}_static")
-set(WIMA_OUI_STATIC "${WIMA_OUI_STATIC}" PARENT_SCOPE)
-set(WIMA_OUI_PIC "${WIMA_OUI}_pic")
-set(WIMA_OUI_PIC "${WIMA_OUI_PIC}" PARENT_SCOPE)
+set(WIMA_UI_SHARED "${WIMA_UI}_shared")
+set(WIMA_UI_SHARED "${WIMA_UI_SHARED}" PARENT_SCOPE)
+set(WIMA_UI_STATIC "${WIMA_UI}_static")
+set(WIMA_UI_STATIC "${WIMA_UI_STATIC}" PARENT_SCOPE)
+set(WIMA_UI_PIC "${WIMA_UI}_pic")
+set(WIMA_UI_PIC "${WIMA_UI_PIC}" PARENT_SCOPE)
 
 create_all_libraries(
 
-	"${WIMA_OUI_SHARED}"
-	"${WIMA_OUI_STATIC}"
-	"${WIMA_OUI_PIC}"
+	"${WIMA_UI_SHARED}"
+	"${WIMA_UI_STATIC}"
+	"${WIMA_UI_PIC}"
 
-	"${WIMA_OUI}"
-	"${WIMA_OUI_SRC}"
+	"${WIMA_UI}"
+	"${WIMA_UI_SRC}"
 	YES
 
 	# Add libraries here.
+	"${WIMA_MATH_PIC}"
 	"${NANOVG_PIC}"
 	"${JEMALLOC_PIC}"
 )
