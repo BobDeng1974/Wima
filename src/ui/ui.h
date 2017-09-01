@@ -552,21 +552,25 @@ typedef struct UIinputEvent {
 
 typedef enum wima_event_type {
 
-	WIMA_EVENT_NONE,
+	WIMA_EVENT_NONE			= 0,
 
-	WIMA_EVENT_KEY,
-	WIMA_EVENT_MOUSE_BTN,
-	WIMA_EVENT_MOUSE_POS,
-	WIMA_EVENT_SCROLL,
-	WIMA_EVENT_CHAR,
-	WIMA_EVENT_FILE_DROP,
+	WIMA_EVENT_KEY			= 1 << 10,
+	WIMA_EVENT_MOUSE_BTN	= 1 << 11,
+	WIMA_EVENT_MOUSE_POS	= 1 << 12,
+	WIMA_EVENT_ITEM_ENTER	= 1 << 12,
+	WIMA_EVENT_SCROLL		= 1 << 13,
+	WIMA_EVENT_CHAR			= 1 << 14,
+	WIMA_EVENT_FILE_DROP	= 1 << 15,
 
-	WIMA_EVENT_WIN_POS,
-	WIMA_EVENT_FB_SIZE,
-	WIMA_EVENT_WIN_SIZE,
-	WIMA_EVENT_WIN_ENTER
+	WIMA_EVENT_WIN_POS		= 1 << 16,
+	WIMA_EVENT_FB_SIZE		= 1 << 17,
+	WIMA_EVENT_WIN_SIZE		= 1 << 18,
+	WIMA_EVENT_WIN_ENTER	= 1 << 19
 
 } WimaEventType;
+
+#define WIMA_UI_ITEM_EVENT_MASK \
+	(WIMA_EVENT_KEY | WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER | WIMA_EVENT_SCROLL | WIMA_EVENT_CHAR)
 
 typedef struct wima_key_info {
 
@@ -652,29 +656,33 @@ struct WimaOuiContext {
 	WimaItem *last_items;
 	int *itemMap;
 
-	// button state in this frame
-	unsigned long long buttons;
-	// button state in the previous frame
-	unsigned long long last_buttons;
+	// Button state in this frame.
+	uint64_t buttons;
 
-	// where the cursor was at the beginning of the active state
+	// Button state in the previous frame.
+	uint64_t last_buttons;
+
+	// Where the cursor was at the beginning of the active state.
 	UIvec2 start_cursor;
-	// where the cursor was last frame
+
+	// Where the cursor was last frame.
 	UIvec2 last_cursor;
-	// where the cursor is currently
+
+	// Where the cursor is currently.
 	UIvec2 cursor;
-	// accumulated scroll wheel offsets
+
+	// Accumulated scroll wheel offsets.
 	UIvec2 scroll;
 
 	// Capacities.
 	unsigned int itemCap;
 	unsigned int bufferCap;
 
-	int active_item;
-	int focus_item;
-	int last_hot_item;
-	int last_click_item;
-	int hot_item;
+	WimaItemHandle active_item;
+	WimaItemHandle focus_item;
+	WimaItemHandle last_hot_item;
+	WimaItemHandle last_click_item;
+	WimaItemHandle hot_item;
 
 	WimaState state;
 	WimaLayoutStage stage;
@@ -897,7 +905,7 @@ int wima_ui_item_nextSibling(WimaOuiContext* ctx, int item);
 int wima_ui_item_count(WimaOuiContext* ctx);
 
 // return the total bytes that have been allocated by uiAllocHandle()
-unsigned int wima_ui_alloc_size(WimaOuiContext* ctx);
+unsigned int wima_ui_allocSize(WimaOuiContext* ctx);
 
 // return the current state of the item. This state is only valid after
 // a call to uiProcess().

@@ -93,45 +93,42 @@
 #define UI_ANY_INPUT (UI_ANY_MOUSE_INPUT \
 	    |UI_ANY_KEY_INPUT)
 
-enum {
-	// extra item flags
 
-	// bit 0-2
-	UI_ITEM_BOX_MODEL_MASK = 0x000007,
+// Extra item flags.
 
-	// bit 0-4
-	UI_ITEM_BOX_MASK       = 0x00001F,
+// Bits 0-2.
+#define UI_ITEM_BOX_MODEL_MASK 0x000007
 
-	// bit 5-8
-	UI_ITEM_LAYOUT_MASK = 0x0003E0,
+// Bits 0-4.
+#define UI_ITEM_BOX_MASK       0x00001F
 
-	// bit 9-18
-	UI_ITEM_EVENT_MASK  = 0x07FC00,
+// Bits 5-8.
+#define UI_ITEM_LAYOUT_MASK    0x0003E0
 
-	// item is frozen (bit 19)
-	UI_ITEM_FROZEN      = 0x080000,
+// Bits 9-18.
+#define UI_ITEM_EVENT_MASK     0x07FC00
 
-	// item handle is pointer to data (bit 20)
-	UI_ITEM_DATA	    = 0x100000,
+// Item is frozen (bit 19).
+#define UI_ITEM_FROZEN         0x080000
 
-	// item has been inserted (bit 21)
-	UI_ITEM_INSERTED	= 0x200000,
+// Item handle is pointer to data (bit 20).
+#define UI_ITEM_DATA           0x100000
 
-	// horizontal size has been explicitly set (bit 22)
-	UI_ITEM_HFIXED      = 0x400000,
+// Item has been inserted (bit 21).
+#define UI_ITEM_INSERTED       0x200000
 
-	// vertical size has been explicitly set (bit 23)
-	UI_ITEM_VFIXED      = 0x800000,
+// Horizontal size has been explicitly set (bit 22).
+#define UI_ITEM_HFIXED         0x400000
 
-	// bit 22-23
-	UI_ITEM_FIXED_MASK  = 0xC00000,
+// Vertical size has been explicitly set (bit 23).
+#define UI_ITEM_VFIXED         0x800000
 
-	// which flag bits will be compared
-	UI_ITEM_COMPARE_MASK = UI_ITEM_BOX_MODEL_MASK
-	    | (UI_ITEM_LAYOUT_MASK & ~UI_BREAK)
-	    | UI_ITEM_EVENT_MASK
-	    | UI_USERMASK,
-};
+// Bit 22-23.
+#define UI_ITEM_FIXED_MASK     0xC00000
+
+// Which flag bits will be compared.
+#define UI_ITEM_COMPARE_MASK \
+	(UI_ITEM_BOX_MODEL_MASK | (UI_ITEM_LAYOUT_MASK & ~UI_BREAK) | UI_ITEM_EVENT_MASK | UI_USERMASK)
 
 void wima_ui_clear(WimaOuiContext* ctx) {
 
@@ -256,17 +253,17 @@ int wima_ui_item_lastCount(WimaOuiContext* ctx) {
 	return ctx->lastItemCount;
 }
 
-unsigned int wima_ui_alloc_size(WimaOuiContext* ctx) {
+unsigned int wima_ui_allocSize(WimaOuiContext* ctx) {
 	assert(ctx);
 	return ctx->datasize;
 }
 
-WimaItem *wima_ui_item_ptr(WimaOuiContext* ctx, int item) {
+WimaItem *wima_ui_item_ptr(WimaOuiContext* ctx, WimaItemHandle item) {
 	assert(ctx && (item >= 0) && (item < ctx->itemCount));
 	return ctx->items + item;
 }
 
-WimaItem *wima_ui_item_lastPtr(WimaOuiContext* ctx, int item) {
+WimaItem *wima_ui_item_lastPtr(WimaOuiContext* ctx, WimaItemHandle item) {
 	assert(ctx && (item >= 0) && (item < ctx->lastItemCount));
 	return ctx->last_items + item;
 }
@@ -276,7 +273,7 @@ int wima_ui_item_hot(WimaOuiContext* ctx) {
 	return ctx->hot_item;
 }
 
-void wima_ui_item_setFocus(WimaOuiContext* ctx, int item) {
+void wima_ui_item_setFocus(WimaOuiContext* ctx, WimaItemHandle item) {
 
 	assert(ctx && (item >= -1) && (item < ctx->itemCount));
 	assert(ctx->stage != UI_STAGE_LAYOUT);
@@ -340,7 +337,7 @@ int wima_ui_item_new(WimaOuiContext* ctx) {
 }
 
 //#if 0
-void wima_ui_item_notify(WimaOuiContext* ctx, int item, WimaEvent event) {
+void wima_ui_item_notify(WimaOuiContext* ctx, WimaItemHandle item, WimaEvent event) {
 
 	assert(ctx);
 
@@ -358,7 +355,7 @@ void wima_ui_item_notify(WimaOuiContext* ctx, int item, WimaEvent event) {
 }
 //#endif
 
-int wima_ui_item_lastChild(WimaOuiContext* ctx, int item) {
+int wima_ui_item_lastChild(WimaOuiContext* ctx, WimaItemHandle item) {
 
 	item = wima_ui_item_firstChild(ctx, item);
 
@@ -378,7 +375,7 @@ int wima_ui_item_lastChild(WimaOuiContext* ctx, int item) {
 	}
 }
 
-int wima_ui_layout_append(WimaOuiContext* ctx, int item, int sibling) {
+int wima_ui_layout_append(WimaOuiContext* ctx, WimaItemHandle item, int sibling) {
 
 	assert(sibling > 0);
 
@@ -394,7 +391,7 @@ int wima_ui_layout_append(WimaOuiContext* ctx, int item, int sibling) {
 	return sibling;
 }
 
-int wima_ui_layout_insert(WimaOuiContext* ctx, int item, int child) {
+int wima_ui_layout_insert(WimaOuiContext* ctx, WimaItemHandle item, int child) {
 
 	assert(child > 0);
 
@@ -414,7 +411,7 @@ int wima_ui_layout_insert(WimaOuiContext* ctx, int item, int child) {
 	return child;
 }
 
-int wima_ui_layout_insertBack(WimaOuiContext* ctx, int item, int child) {
+int wima_ui_layout_insertBack(WimaOuiContext* ctx, WimaItemHandle item, int child) {
 
 	assert(child > 0);
 
@@ -430,7 +427,7 @@ int wima_ui_layout_insertBack(WimaOuiContext* ctx, int item, int child) {
 	return child;
 }
 
-void wima_ui_item_setFrozen(WimaOuiContext* ctx, int item, int enable) {
+void wima_ui_item_setFrozen(WimaOuiContext* ctx, WimaItemHandle item, int enable) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -442,7 +439,7 @@ void wima_ui_item_setFrozen(WimaOuiContext* ctx, int item, int enable) {
 	}
 }
 
-void wima_ui_item_setSize(WimaOuiContext* ctx, int item, int w, int h) {
+void wima_ui_item_setSize(WimaOuiContext* ctx, WimaItemHandle item, int w, int h) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -464,15 +461,15 @@ void wima_ui_item_setSize(WimaOuiContext* ctx, int item, int w, int h) {
 	}
 }
 
-int wima_ui_item_width(WimaOuiContext* ctx, int item) {
+int wima_ui_item_width(WimaOuiContext* ctx, WimaItemHandle item) {
 	return wima_ui_item_ptr(ctx, item)->size[0];
 }
 
-int wima_ui_item_height(WimaOuiContext* ctx, int item) {
+int wima_ui_item_height(WimaOuiContext* ctx, WimaItemHandle item) {
 	return wima_ui_item_ptr(ctx, item)->size[1];
 }
 
-void wima_ui_layout_setType(WimaOuiContext* ctx, int item, unsigned int flags) {
+void wima_ui_layout_setType(WimaOuiContext* ctx, WimaItemHandle item, unsigned int flags) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -482,11 +479,11 @@ void wima_ui_layout_setType(WimaOuiContext* ctx, int item, unsigned int flags) {
 	pitem->flags |= flags & UI_ITEM_LAYOUT_MASK;
 }
 
-unsigned int wima_ui_layout_type(WimaOuiContext* ctx, int item) {
+unsigned int wima_ui_layout_type(WimaOuiContext* ctx, WimaItemHandle item) {
 	return wima_ui_item_ptr(ctx, item)->flags & UI_ITEM_LAYOUT_MASK;
 }
 
-void wima_ui_layout_setBox(WimaOuiContext* ctx, int item, unsigned int flags) {
+void wima_ui_layout_setBox(WimaOuiContext* ctx, WimaItemHandle item, unsigned int flags) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -496,11 +493,11 @@ void wima_ui_layout_setBox(WimaOuiContext* ctx, int item, unsigned int flags) {
 	pitem->flags |= flags & UI_ITEM_BOX_MASK;
 }
 
-unsigned int wima_ui_layout_box(WimaOuiContext* ctx, int item) {
+unsigned int wima_ui_layout_box(WimaOuiContext* ctx, WimaItemHandle item) {
 	return wima_ui_item_ptr(ctx, item)->flags & UI_ITEM_BOX_MASK;
 }
 
-void wima_ui_layout_setMargins(WimaOuiContext* ctx, int item, short l, short t, short r, short b) {
+void wima_ui_layout_setMargins(WimaOuiContext* ctx, WimaItemHandle item, short l, short t, short r, short b) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -510,16 +507,16 @@ void wima_ui_layout_setMargins(WimaOuiContext* ctx, int item, short l, short t, 
 	pitem->margins[3] = b;
 }
 
-short wima_ui_layout_marginLeft(WimaOuiContext* ctx, int item) {
+short wima_ui_layout_marginLeft(WimaOuiContext* ctx, WimaItemHandle item) {
 	return wima_ui_item_ptr(ctx, item)->margins[0];
 }
-short wima_ui_layout_marginTop(WimaOuiContext* ctx, int item) {
+short wima_ui_layout_marginTop(WimaOuiContext* ctx, WimaItemHandle item) {
 	return wima_ui_item_ptr(ctx, item)->margins[1];
 }
-short wima_ui_layout_marginRight(WimaOuiContext* ctx, int item) {
+short wima_ui_layout_marginRight(WimaOuiContext* ctx, WimaItemHandle item) {
 	return wima_ui_item_ptr(ctx, item)->margins[2];
 }
-short wima_ui_layout_marginDown(WimaOuiContext* ctx, int item) {
+short wima_ui_layout_marginDown(WimaOuiContext* ctx, WimaItemHandle item) {
 	return wima_ui_item_ptr(ctx, item)->margins[3];
 }
 
@@ -625,7 +622,7 @@ void wima_ui_layout_computeWrappedSize(WimaOuiContext* ctx, WimaItem *pitem, int
 	pitem->size[dim] = need_size2 + need_size;
 }
 
-static void wima_ui_layout_computeSize(WimaOuiContext* ctx, int item, int dim) {
+static void wima_ui_layout_computeSize(WimaOuiContext* ctx, WimaItemHandle item, int dim) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -1007,7 +1004,7 @@ short wima_ui_layout_arrangeWrappedImposedSqueezed(WimaOuiContext* ctx, WimaItem
 	return offset;
 }
 
-static void wima_ui_layout_arrange(WimaOuiContext* ctx, int item, int dim) {
+static void wima_ui_layout_arrange(WimaOuiContext* ctx, WimaItemHandle item, int dim) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -1080,7 +1077,7 @@ bool wima_ui_item_compare(WimaItem *item1, WimaItem *item2) {
 	return ((item1->flags & UI_ITEM_COMPARE_MASK) == (item2->flags & UI_ITEM_COMPARE_MASK));
 }
 
-static bool wima_ui_item_map(WimaOuiContext* ctx, int item1, int item2) {
+static bool wima_ui_item_map(WimaOuiContext* ctx, WimaItemHandle item1, WimaItemHandle item2) {
 
 	WimaItem *pitem1 = wima_ui_item_lastPtr(ctx, item1);
 
@@ -1174,7 +1171,7 @@ void wima_ui_layout_end(WimaOuiContext* ctx) {
 	ctx->stage = UI_STAGE_POST_LAYOUT;
 }
 
-UIrect wima_ui_item_rect(WimaOuiContext* ctx, int item) {
+UIrect wima_ui_item_rect(WimaOuiContext* ctx, WimaItemHandle item) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -1186,15 +1183,15 @@ UIrect wima_ui_item_rect(WimaOuiContext* ctx, int item) {
 	return rc;
 }
 
-int wima_ui_item_firstChild(WimaOuiContext* ctx, int item) {
+int wima_ui_item_firstChild(WimaOuiContext* ctx, WimaItemHandle item) {
 	return wima_ui_item_ptr(ctx, item)->firstkid;
 }
 
-int wima_ui_item_nextSibling(WimaOuiContext* ctx, int item) {
+int wima_ui_item_nextSibling(WimaOuiContext* ctx, WimaItemHandle item) {
 	return wima_ui_item_ptr(ctx, item)->nextitem;
 }
 
-void *wima_ui_item_allocHandle(WimaOuiContext* ctx, int item, unsigned int size) {
+void *wima_ui_item_allocHandle(WimaOuiContext* ctx, WimaItemHandle item, unsigned int size) {
 
 	// Make sure to align on a eight-byte boundary.
 	size = (size + 7) & (~7);
@@ -1213,7 +1210,7 @@ void *wima_ui_item_allocHandle(WimaOuiContext* ctx, int item, unsigned int size)
 	return pitem->handle;
 }
 
-void wima_ui_item_setHandle(WimaOuiContext* ctx, int item, void *handle) {
+void wima_ui_item_setHandle(WimaOuiContext* ctx, WimaItemHandle item, void *handle) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -1222,11 +1219,11 @@ void wima_ui_item_setHandle(WimaOuiContext* ctx, int item, void *handle) {
 	pitem->handle = handle;
 }
 
-void *wima_ui_item_handle(WimaOuiContext* ctx, int item) {
+void *wima_ui_item_handle(WimaOuiContext* ctx, WimaItemHandle item) {
 	return wima_ui_item_ptr(ctx, item)->handle;
 }
 
-void wima_ui_setEvents(WimaOuiContext* ctx, int item, unsigned int flags) {
+void wima_ui_setEvents(WimaOuiContext* ctx, WimaItemHandle item, unsigned int flags) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -1234,11 +1231,11 @@ void wima_ui_setEvents(WimaOuiContext* ctx, int item, unsigned int flags) {
 	pitem->flags |= flags & UI_ITEM_EVENT_MASK;
 }
 
-unsigned int wima_ui_events(WimaOuiContext* ctx, int item) {
+unsigned int wima_ui_events(WimaOuiContext* ctx, WimaItemHandle item) {
 	return wima_ui_item_ptr(ctx, item)->flags & UI_ITEM_EVENT_MASK;
 }
 
-void wima_ui_setFlags(WimaOuiContext* ctx, int item, unsigned int flags) {
+void wima_ui_setFlags(WimaOuiContext* ctx, WimaItemHandle item, unsigned int flags) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -1246,11 +1243,11 @@ void wima_ui_setFlags(WimaOuiContext* ctx, int item, unsigned int flags) {
 	pitem->flags |= flags & UI_USERMASK;
 }
 
-unsigned int wima_ui_flags(WimaOuiContext* ctx, int item) {
+unsigned int wima_ui_flags(WimaOuiContext* ctx, WimaItemHandle item) {
 	return wima_ui_item_ptr(ctx, item)->flags & UI_USERMASK;
 }
 
-int wima_ui_item_contains(WimaOuiContext* ctx, int item, int x, int y) {
+int wima_ui_item_contains(WimaOuiContext* ctx, WimaItemHandle item, int x, int y) {
 
 	UIrect rect = wima_ui_item_rect(ctx, item);
 
@@ -1264,7 +1261,7 @@ int wima_ui_item_contains(WimaOuiContext* ctx, int item, int x, int y) {
 	return 0;
 }
 
-int wima_ui_item_find(WimaOuiContext* ctx, int item, int x, int y, unsigned int flags, unsigned int mask) {
+int wima_ui_item_find(WimaOuiContext* ctx, WimaItemHandle item, int x, int y, unsigned int flags, unsigned int mask) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -1460,22 +1457,22 @@ void wima_ui_process(WimaOuiContext* ctx, int timestamp) {
 	ctx->last_buttons = ctx->buttons;
 }
 
-static int wima_ui_item_isActive(WimaOuiContext* ctx, int item) {
+static int wima_ui_item_isActive(WimaOuiContext* ctx, WimaItemHandle item) {
 	assert(ctx);
 	return ctx->active_item == item;
 }
 
-static int wima_ui_item_isHot(WimaOuiContext* ctx, int item) {
+static int wima_ui_item_isHot(WimaOuiContext* ctx, WimaItemHandle item) {
 	assert(ctx);
 	return ctx->last_hot_item == item;
 }
 
-static int wima_ui_item_isFocused(WimaOuiContext* ctx, int item) {
+static int wima_ui_item_isFocused(WimaOuiContext* ctx, WimaItemHandle item) {
 	assert(ctx);
 	return ctx->focus_item == item;
 }
 
-WimaItemState wima_ui_item_state(WimaOuiContext* ctx, int item) {
+WimaItemState wima_ui_item_state(WimaOuiContext* ctx, WimaItemHandle item) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
