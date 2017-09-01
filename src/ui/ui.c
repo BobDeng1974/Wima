@@ -134,7 +134,7 @@
 #define UI_ITEM_COMPARE_MASK \
 	(UI_ITEM_BOX_MODEL_MASK | (UI_ITEM_LAYOUT_MASK & ~UI_BREAK) | UI_ITEM_EVENT_MASK | UI_USERMASK)
 
-void wima_ui_state_clear(WimaOuiContext* ctx) {
+void wima_ui_state_clear(WimaUiContext* ctx) {
 
 	assert(ctx);
 
@@ -144,7 +144,7 @@ void wima_ui_state_clear(WimaOuiContext* ctx) {
 	ctx->last_click_item = -1;
 }
 
-void wima_ui_clear(WimaOuiContext* ctx) {
+void wima_ui_clear(WimaUiContext* ctx) {
 
 	ctx->lastItemCount = ctx->itemCount;
 	ctx->itemCount = 0;
@@ -161,11 +161,11 @@ void wima_ui_clear(WimaOuiContext* ctx) {
 	}
 }
 
-void wima_ui_context_create(WimaOuiContext* ctx, uint32_t itemCap, uint32_t bufferCap) {
+void wima_ui_context_create(WimaUiContext* ctx, uint32_t itemCap, uint32_t bufferCap) {
 
 	assert(itemCap);
 
-	memset(ctx, 0, sizeof(WimaOuiContext));
+	memset(ctx, 0, sizeof(WimaUiContext));
 
 	size_t size = nallocx(sizeof(WimaItem) * itemCap, 0);
 
@@ -188,7 +188,7 @@ void wima_ui_context_create(WimaOuiContext* ctx, uint32_t itemCap, uint32_t buff
 	wima_ui_state_clear(ctx);
 }
 
-void wima_ui_setButton(WimaOuiContext* ctx, unsigned int button, unsigned int mod, int enabled) {
+void wima_ui_setButton(WimaUiContext* ctx, unsigned int button, unsigned int mod, int enabled) {
 
 	assert(ctx);
 
@@ -199,7 +199,7 @@ void wima_ui_setButton(WimaOuiContext* ctx, unsigned int button, unsigned int mo
 	ctx->active_button_modifier = mod;
 }
 
-static void wima_ui_clearEvents(WimaOuiContext* ctx) {
+static void wima_ui_clearEvents(WimaUiContext* ctx) {
 
 	assert(ctx);
 
@@ -208,32 +208,32 @@ static void wima_ui_clearEvents(WimaOuiContext* ctx) {
 	ctx->scroll.y = 0;
 }
 
-UIvec2 wima_ui_scroll(WimaOuiContext* ctx) {
+UIvec2 wima_ui_scroll(WimaUiContext* ctx) {
 	assert(ctx);
 	return ctx->scroll;
 }
 
-int wima_ui_button_last(WimaOuiContext* ctx, int button) {
+int wima_ui_button_last(WimaUiContext* ctx, int button) {
 	assert(ctx);
 	return (ctx->last_buttons & (1ull << button)) ? 1 : 0;
 }
 
-int wima_ui_button(WimaOuiContext*ctx, unsigned int button) {
+int wima_ui_button(WimaUiContext*ctx, unsigned int button) {
 	assert(ctx);
 	return (ctx->buttons & (1ull << button)) ? 1 : 0;
 }
 
-int wima_ui_button_pressed(WimaOuiContext* ctx, int button) {
+int wima_ui_button_pressed(WimaUiContext* ctx, int button) {
 	assert(ctx);
 	return !wima_ui_button_last(ctx, button) && wima_ui_button(ctx, button);
 }
 
-int wima_ui_button_released(WimaOuiContext* ctx, int button) {
+int wima_ui_button_released(WimaUiContext* ctx, int button) {
 	assert(ctx);
 	return wima_ui_button_last(ctx, button) && !wima_ui_button(ctx, button);
 }
 
-UIvec2 wima_ui_cursor_start(WimaOuiContext* ctx) {
+UIvec2 wima_ui_cursor_start(WimaUiContext* ctx) {
 	assert(ctx);
 	return ctx->start_cursor;
 }
@@ -247,17 +247,17 @@ UIvec2 wima_ui_cursor_delta(WimaAreaHandle area) {
 	return result;
 }
 
-unsigned int wima_ui_key(WimaOuiContext* ctx) {
+unsigned int wima_ui_key(WimaUiContext* ctx) {
 	assert(ctx);
 	return ctx->active_key;
 }
 
-unsigned int wima_ui_modifiers(WimaOuiContext* ctx) {
+unsigned int wima_ui_modifiers(WimaUiContext* ctx) {
 	assert(ctx);
 	return ctx->active_modifier;
 }
 
-void wima_ui_process(WimaOuiContext* ctx, int timestamp) {
+void wima_ui_process(WimaUiContext* ctx, int timestamp) {
 
 	assert(ctx);
 

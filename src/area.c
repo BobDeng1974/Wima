@@ -147,8 +147,11 @@ WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode
 			return WIMA_WINDOW_ERR;
 		}
 
-		// Get the list of regions.
+		// Get the region pointer.
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
+
+		// Create the UI context.
+		wima_ui_context_create(&area->node.area.ui, region->itemCap, region->bufferCap);
 
 		// Get the particular user function setter.
 		AreaGenUserPointerFunc get_user_ptr = region->get_ptr;
@@ -158,13 +161,10 @@ WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode
 			return WIMA_SUCCESS;
 		}
 
-		// Set all of the area handle
+		// Get all of the area handle
 		// (to pass to the user function).
-		WimaAreaHandle wah;
-		wah.node = (WimaAreaNodeHandle) node;
+		WimaAreaHandle wah = wima_area_handle(area, node);
 		wah.user = NULL;
-		wah.window = win;
-		wah.region = reg;
 
 		// Call the user function.
 		area->node.area.user = get_user_ptr(wah);
@@ -211,6 +211,10 @@ bool wima_area_node_valid(DynaTree regions, DynaNode node) {
 DynaTree wima_area_areas(WimaWindowHandle win) {
 	WimaWin* window = (WimaWin*) dvec_get(wg.windows, win);
 	return window->areas;
+}
+
+WimaAreaNode* wima_area_area(WimaAreaHandle wah) {
+	return (WimaAreaNode*) dtree_node(wima_area_areas(wah.window), wah.node);
 }
 
 inline WimaAreaHandle wima_area_handle(WimaAreaNode* area, DynaNode node) {

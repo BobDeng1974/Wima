@@ -331,7 +331,8 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name
                                 AreaDrawFunc draw,              AreaKeyFunc key,
                                 AreaMouseEventFunc mevent,      AreaMousePosFunc mpos,
                                 AreaMouseEnterFunc menter,      AreaScrollEventFunc sevent,
-                                AreaCharFunc cevent,            AreaFileDropFunc fdrop);
+                                AreaCharFunc cevent,            AreaFileDropFunc fdrop,
+                                uint32_t itemCapacity,          uint32_t bufferCapacity);
 void* wima_region_getUserPointer(WimaRegionHandle reg);
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 

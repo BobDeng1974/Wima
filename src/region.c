@@ -34,6 +34,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <assert.h>
+
 #include <dyna/dyna.h>
 #include <dyna/vector.h>
 
@@ -49,13 +51,14 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name
                                 AreaDrawFunc draw,              AreaKeyFunc key,
                                 AreaMouseEventFunc mevent,      AreaMousePosFunc mpos,
                                 AreaMouseEnterFunc menter,      AreaScrollEventFunc sevent,
-                                AreaCharFunc cevent,            AreaFileDropFunc fdrop)
+                                AreaCharFunc cevent,            AreaFileDropFunc fdrop,
+                                uint32_t itemCapacity,          uint32_t bufferCapacity)
 {
 	WimaRegion reg;
 
-	if (!draw) {
-		return WIMA_AREA_ERR;
-	}
+	assert(draw);
+	assert(itemCapacity);
+	assert(bufferCapacity);
 
 	DynaStatus status = dstr_create(&(reg.name), name);
 	if (status) {
@@ -75,6 +78,9 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name
 	reg.char_event = cevent;
 	reg.file_drop = fdrop;
 
+	reg.itemCap = itemCapacity;
+	reg.bufferCap = bufferCapacity;
+
 	size_t idx = dvec_len(wg.regions);
 
 	status = dvec_push(wg.regions, (uint8_t*) &reg);
@@ -89,13 +95,8 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name
 
 void* wima_region_getUserPointer(WimaRegionHandle reg) {
 
-	if (wg.windows == NULL) {
-		return NULL;
-	}
-
-	if (reg >= dvec_len(wg.regions)) {
-		return NULL;
-	}
+	assert(wg.windows);
+	assert(reg >= dvec_len(wg.regions));
 
 	WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
 
@@ -104,13 +105,8 @@ void* wima_region_getUserPointer(WimaRegionHandle reg) {
 
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr) {
 
-	if (!wg.windows) {
-		return WIMA_INVALID_STATE;
-	}
-
-	if (reg >= dvec_len(wg.regions)) {
-		return WIMA_INVALID_PARAM;
-	}
+	assert(wg.windows);
+	assert(reg < dvec_len(wg.regions));
 
 	WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
 

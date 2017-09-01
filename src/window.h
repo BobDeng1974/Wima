@@ -43,10 +43,8 @@
 
 #include <nanovg.h>
 
-#include "event.h"
 #include "workspace.h"
 
-#include "oui/oui.h"
 #include "ui.h"
 
 typedef struct wima_window {
@@ -57,8 +55,6 @@ typedef struct wima_window {
 	void* user;
 
 	DynaTree areas;
-
-	WimaUI ui;
 
 	int fbwidth;
 	int fbheight;

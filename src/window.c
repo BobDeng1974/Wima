@@ -70,8 +70,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	wwin.ui.font = wima_theme_loadFont(wwin.ui.nvg, "system", "../../res/DejaVuSans.ttf");
 	wwin.ui.icons = wima_theme_loadIcons(wwin.ui.nvg, "../../res/blender_icons16.png");
 
-	wima_ui_context_create(&wwin.ui.oui, 4096, 1 << 20);
-
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
@@ -215,13 +213,11 @@ DynaTree wima_window_areas(WimaWindowHandle wwh) {
 
 	int nodes = dtree_nodes(winareas);
 
-	DynaStatus dstatus = dtree_create(&areas, nodes, sizeof(WimaAreaNode));
-	if (dstatus) {
+	if (dtree_create(&areas, nodes, sizeof(WimaAreaNode))) {
 		return NULL;
 	}
 
-	dstatus = dtree_copy(areas, winareas);
-	if (dstatus) {
+	if (dtree_copy(areas, winareas)) {
 		dtree_free(areas);
 		return NULL;
 	}
@@ -234,9 +230,7 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 	size_t regionsTypesLen = dvec_len(wg.regions);
 	size_t wkspTypesLen = dvec_len(wg.workspaces);
 
-	if (regionsTypesLen == 0 || wkspTypesLen == 0) {
-		return WIMA_INVALID_STATE;
-	}
+	assert(regionsTypesLen != 0 && wkspTypesLen != 0);
 
 	WimaWksp* wksp = (WimaWksp*) dvec_get(wg.workspaces, wksph);
 	DynaTree regs = wksp->regions;

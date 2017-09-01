@@ -34,6 +34,7 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <assert.h>
 #include <math.h>
 #include <stdbool.h>
 
@@ -75,9 +76,7 @@ WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wwh, DynaNode node,
                                   float split,              bool vertical)
 {
 	WimaWksp* wksp = (WimaWksp*) dvec_get(wg.workspaces, wwh);
-	if (!wksp) {
-		return WIMA_INVALID_STATE;
-	}
+	assert(wksp);
 
 	if (!wima_workspace_nodeValid(wwh, node)) {
 		return WIMA_INVALID_PARAM;
@@ -98,13 +97,10 @@ WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wwh, DynaNode node,
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wwh, DynaNode node,
-                                  WimaRegionHandle reg)
+WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wwh, DynaNode node, WimaRegionHandle reg)
 {
 	WimaWksp* wksp = (WimaWksp*) dvec_get(wg.workspaces, wwh);
-	if (!wksp) {
-		return WIMA_INVALID_STATE;
-	}
+	assert(wksp);
 
 	if (!wima_workspace_nodeValid(wwh, node)) {
 		return WIMA_INVALID_PARAM;

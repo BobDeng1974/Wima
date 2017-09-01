@@ -83,9 +83,6 @@ extern "C" {
 
 // End limits.
 
-// Opaque UI context.
-typedef struct WimaOuiContext WimaOuiContext;
-
 // Container flags to pass to uiSetBox().
 typedef enum wima_box_flags {
 
@@ -402,7 +399,7 @@ typedef struct wima_event {
 
 // The following was originally written for OUI.
 
-struct WimaOuiContext {
+typedef struct wima_ui_context {
 
 	// handler
 	//UIhandler handler;
@@ -457,14 +454,15 @@ struct WimaOuiContext {
 	uint32_t datasize;
 
 	WimaEvent events[WIMA_MAX_EVENTS];
-};
+
+} WimaUiContext;
 
 // The following was originally written for Wima.
 
 typedef struct wima_ui {
 
 	NVGcontext* nvg;
-	WimaOuiContext oui;
+	WimaUiContext oui;
 
 	int icons;
 	int font;
@@ -483,9 +481,9 @@ typedef struct wima_ui {
  *					using wima_ui_item_allocHandle(); you may pass 0 if
  *					you don't need to allocate handles.
  */
-void wima_ui_context_create(WimaOuiContext* ctx, uint32_t itemCap, uint32_t bufferCap);
+void wima_ui_context_create(WimaUiContext* ctx, uint32_t itemCap, uint32_t bufferCap);
 
-void wima_ui_clear(WimaOuiContext* ctx);
+void wima_ui_clear(WimaUiContext* ctx);
 
 #ifdef __cplusplus
 }

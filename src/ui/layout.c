@@ -67,7 +67,7 @@
 
 #include "ui.h"
 
-void wima_ui_layout_begin(WimaOuiContext* ctx) {
+void wima_ui_layout_begin(WimaUiContext* ctx) {
 
 	assert(ctx);
 
@@ -79,7 +79,7 @@ void wima_ui_layout_begin(WimaOuiContext* ctx) {
 }
 
 // Compute bounding box of all items super-imposed.
-void wima_ui_layout_computeImposedSize(WimaOuiContext* ctx, WimaItem *pitem, int dim) {
+void wima_ui_layout_computeImposedSize(WimaUiContext* ctx, WimaItem *pitem, int dim) {
 
 	int wdim = dim + 2;
 
@@ -101,7 +101,7 @@ void wima_ui_layout_computeImposedSize(WimaOuiContext* ctx, WimaItem *pitem, int
 }
 
 // Compute bounding box of all items stacked.
-void wima_ui_layout_computeStackedSize(WimaOuiContext* ctx, WimaItem *pitem, int dim) {
+void wima_ui_layout_computeStackedSize(WimaUiContext* ctx, WimaItem *pitem, int dim) {
 
 	int wdim = dim + 2;
 
@@ -121,7 +121,7 @@ void wima_ui_layout_computeStackedSize(WimaOuiContext* ctx, WimaItem *pitem, int
 }
 
 // Compute bounding box of all items stacked, repeating when breaking.
-void wima_ui_layout_computeWrappedStackedSize(WimaOuiContext* ctx, WimaItem *pitem, int dim) {
+void wima_ui_layout_computeWrappedStackedSize(WimaUiContext* ctx, WimaItem *pitem, int dim) {
 
 	int wdim = dim + 2;
 
@@ -151,7 +151,7 @@ void wima_ui_layout_computeWrappedStackedSize(WimaOuiContext* ctx, WimaItem *pit
 }
 
 // Compute bounding box of all items stacked + wrapped.
-void wima_ui_layout_computeWrappedSize(WimaOuiContext* ctx, WimaItem *pitem, int dim) {
+void wima_ui_layout_computeWrappedSize(WimaUiContext* ctx, WimaItem *pitem, int dim) {
 
 	int wdim = dim + 2;
 
@@ -180,7 +180,7 @@ void wima_ui_layout_computeWrappedSize(WimaOuiContext* ctx, WimaItem *pitem, int
 	pitem->size[dim] = need_size2 + need_size;
 }
 
-static void wima_ui_layout_computeSize(WimaOuiContext* ctx, WimaItemHandle item, int dim) {
+static void wima_ui_layout_computeSize(WimaUiContext* ctx, WimaItemHandle item, int dim) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -255,7 +255,7 @@ static void wima_ui_layout_computeSize(WimaOuiContext* ctx, WimaItemHandle item,
 }
 
 // Stack all items according to their alignment.
-void wima_ui_layout_arrangeStacked(WimaOuiContext* ctx, WimaItem *pitem, int dim, bool wrap) {
+void wima_ui_layout_arrangeStacked(WimaUiContext* ctx, WimaItem *pitem, int dim, bool wrap) {
 
 	int wdim = dim + 2;
 
@@ -420,7 +420,7 @@ void wima_ui_layout_arrangeStacked(WimaOuiContext* ctx, WimaItem *pitem, int dim
 }
 
 // Superimpose all items according to their alignment.
-void wima_ui_layout_arrangeImposedRange(WimaOuiContext* ctx, WimaItem *pitem, int dim,
+void wima_ui_layout_arrangeImposedRange(WimaUiContext* ctx, WimaItem *pitem, int dim,
                                         int start_kid, int end_kid, short offset, short space)
 {
 	int wdim = dim + 2;
@@ -463,13 +463,13 @@ void wima_ui_layout_arrangeImposedRange(WimaOuiContext* ctx, WimaItem *pitem, in
 	}
 }
 
-void wima_ui_layout_arrangeImposed(WimaOuiContext* ctx, WimaItem *pitem, int dim) {
+void wima_ui_layout_arrangeImposed(WimaUiContext* ctx, WimaItem *pitem, int dim) {
 	wima_ui_layout_arrangeImposedRange(ctx, pitem, dim, pitem->firstkid, -1, pitem->margins[dim], pitem->size[dim]);
 }
 
 // Superimpose all items according to their alignment,
 // squeeze items that expand the available space.
-void wima_ui_layout_arrangeImposedSqueezedRange(WimaOuiContext* ctx, WimaItem *pitem,
+void wima_ui_layout_arrangeImposedSqueezedRange(WimaUiContext* ctx, WimaItem *pitem,
                                                 int dim,             int start_kid,
                                                 int end_kid,         short offset,
                                                 short space)
@@ -521,13 +521,13 @@ void wima_ui_layout_arrangeImposedSqueezedRange(WimaOuiContext* ctx, WimaItem *p
 	}
 }
 
-void wima_ui_layout_arrangeImposedSqueezed(WimaOuiContext* ctx, WimaItem *pitem, int dim) {
+void wima_ui_layout_arrangeImposedSqueezed(WimaUiContext* ctx, WimaItem *pitem, int dim) {
 	wima_ui_layout_arrangeImposedSqueezedRange(ctx, pitem, dim, pitem->firstkid, -1,
 	                                           pitem->margins[dim], pitem->size[dim]);
 }
 
 // Superimpose all items according to their alignment.
-short wima_ui_layout_arrangeWrappedImposedSqueezed(WimaOuiContext* ctx, WimaItem *pitem, int dim) {
+short wima_ui_layout_arrangeWrappedImposedSqueezed(WimaUiContext* ctx, WimaItem *pitem, int dim) {
 
 	int wdim = dim + 2;
 
@@ -562,7 +562,7 @@ short wima_ui_layout_arrangeWrappedImposedSqueezed(WimaOuiContext* ctx, WimaItem
 	return offset;
 }
 
-static void wima_ui_layout_arrange(WimaOuiContext* ctx, WimaItemHandle item, int dim) {
+static void wima_ui_layout_arrange(WimaUiContext* ctx, WimaItemHandle item, int dim) {
 
 	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
 
@@ -631,7 +631,7 @@ static void wima_ui_layout_arrange(WimaOuiContext* ctx, WimaItemHandle item, int
 	}
 }
 
-void wima_ui_layout_end(WimaOuiContext* ctx) {
+void wima_ui_layout_end(WimaUiContext* ctx) {
 
 	assert(ctx);
 

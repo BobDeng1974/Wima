@@ -38,6 +38,9 @@
 #define WIMA_AREA_H
 
 #include <wima.h>
+#include <ui.h>
+
+#include "ui.h"
 
 typedef enum wima_area_node_type {
 
@@ -56,6 +59,8 @@ typedef struct wima_area_node {
 	union {
 
 		struct wima_area {
+
+			WimaUI ui;
 
 			void* user;
 
@@ -89,6 +94,7 @@ WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
 
 DynaTree wima_area_areas(WimaWindowHandle win);
+WimaAreaNode* wima_area_area(WimaAreaHandle wah);
 WimaAreaHandle wima_area_handle(WimaAreaNode* area, DynaNode node);
 
 WimaStatus wima_area_draw(WimaWindowHandle win, int width, int height);
