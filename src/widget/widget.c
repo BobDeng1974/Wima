@@ -58,6 +58,14 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include "../global.h"
+
+#include "../ui/ui.h"
+
+#include "../theme/color.h"
+#include "widget.h"
+
+extern WimaG wg;
 
 void wima_widget_label(WimaUI* ui, float x, float y, float w, float h, int iconid, const char *label) {
 	wima_widget_label_icon_value(ui, x, y, w, h, iconid,

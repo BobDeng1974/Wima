@@ -58,7 +58,11 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <assert.h>
+#include <string.h>
+
 #include "ui.h"
+#include "item.h"
 
 int wima_ui_item_count(WimaOuiContext* ctx) {
 	assert(ctx);

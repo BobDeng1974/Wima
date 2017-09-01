@@ -58,6 +58,13 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <assert.h>
+
+#include <wima.h>
+#include <ui.h>
+
+#include "../math/math.h"
+
 #include "ui.h"
 
 void wima_ui_layout_begin(WimaOuiContext* ctx) {

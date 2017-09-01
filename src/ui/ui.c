@@ -66,6 +66,7 @@
 
 #include "../math/math.h"
 #include "ui.h"
+#include "item.h"
 
 #ifdef _MSC_VER
     #pragma warning (disable: 4996) // Switch off security warnings
@@ -129,6 +130,16 @@
 // Which flag bits will be compared.
 #define UI_ITEM_COMPARE_MASK \
 	(UI_ITEM_BOX_MODEL_MASK | (UI_ITEM_LAYOUT_MASK & ~UI_BREAK) | UI_ITEM_EVENT_MASK | UI_USERMASK)
+
+void wima_ui_state_clear(WimaOuiContext* ctx) {
+
+	assert(ctx);
+
+	ctx->last_hot_item = -1;
+	ctx->active_item = -1;
+	ctx->focus_item = -1;
+	ctx->last_click_item = -1;
+}
 
 void wima_ui_clear(WimaOuiContext* ctx) {
 
@@ -241,16 +252,6 @@ unsigned int wima_ui_key(WimaOuiContext* ctx) {
 unsigned int wima_ui_modifiers(WimaOuiContext* ctx) {
 	assert(ctx);
 	return ctx->active_modifier;
-}
-
-void wima_ui_state_clear(WimaOuiContext* ctx) {
-
-	assert(ctx);
-
-	ctx->last_hot_item = -1;
-	ctx->active_item = -1;
-	ctx->focus_item = -1;
-	ctx->last_click_item = -1;
 }
 
 void wima_ui_process(WimaOuiContext* ctx, int timestamp) {
