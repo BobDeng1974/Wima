@@ -904,7 +904,7 @@ UIitemState wima_ui_item_state(WimaOuiContext* ctx, int item);
 void *wima_ui_item_handle(WimaOuiContext* ctx, int item);
 
 // return the item that is currently under the cursor or -1 for none
-int wima_ui_item_isHot(WimaOuiContext* ctx);
+int wima_ui_item_hot(WimaOuiContext* ctx);
 
 // return the item that is currently focused or -1 for none
 int wima_ui_item_focus(WimaOuiContext* ctx);

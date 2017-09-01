@@ -58,7 +58,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include "blendish.h"
+#include "../math/math.h"
+
 #include "theme.h"
 #include "color.h"
 
@@ -68,7 +69,7 @@
 // new kinds of controls in a similar fashion.
 
 NVGcolor wima_color_transparent(NVGcolor color) {
-	color.a *= BND_TRANSPARENT_ALPHA;
+	color.a *= WIMA_TRANSPARENT_ALPHA;
 	return color;
 }
 
@@ -80,9 +81,9 @@ NVGcolor wima_color_offset(NVGcolor color, int delta) {
 
 	if (delta != 0) {
 
-		float r = bnd_clamp(color.r + offset, 0, 1);
-		float g = bnd_clamp(color.g + offset, 0, 1);
-		float b = bnd_clamp(color.b + offset, 0, 1);
+		float r = wima_clamp(color.r + offset, 0, 1);
+		float g = wima_clamp(color.g + offset, 0, 1);
+		float b = wima_clamp(color.b + offset, 0, 1);
 
 		result = nvgRGBAf(r, g, b, color.a);
 	}
@@ -101,30 +102,30 @@ void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
 
 		default:
 
-		case BND_DEFAULT:
+		case WIMA_DEFAULT:
 		{
-			*shade_top = wima_draw_color_offset(theme->innerColor, theme->shadeTop);
-			*shade_down = wima_draw_color_offset(theme->innerColor, theme->shadeDown);
+			*shade_top = wima_color_offset(theme->innerColor, theme->shadeTop);
+			*shade_down = wima_color_offset(theme->innerColor, theme->shadeBottom);
 
 			break;
 		}
 
-		case BND_HOVER:
+		case WIMA_HOVER:
 		{
-			NVGcolor color = wima_color_offset(theme->innerColor, BND_HOVER_SHADE);
+			NVGcolor color = wima_color_offset(theme->innerColor, WIMA_HOVER_SHADE);
 
 			*shade_top = wima_color_offset(color, theme->shadeTop);
-			*shade_down = wima_color_offset(color, theme->shadeDown);
+			*shade_down = wima_color_offset(color, theme->shadeBottom);
 
 			break;
 		}
 
-		case BND_ACTIVE:
+		case WIMA_ACTIVE:
 		{
-			int delta = flipActive ? theme->shadeDown : theme->shadeTop;
+			int delta = flipActive ? theme->shadeBottom : theme->shadeTop;
 			*shade_top = wima_color_offset(theme->innerSelectedColor, delta);
 
-			delta = flipActive ? theme->shadeTop : theme->shadeDown;
+			delta = flipActive ? theme->shadeTop : theme->shadeBottom;
 			*shade_down = wima_color_offset(theme->innerSelectedColor, delta);
 
 			break;
@@ -133,7 +134,7 @@ void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
 }
 
 NVGcolor wima_color_text(const WimaWidgetTheme* theme, BNDwidgetState state) {
-	return (state == BND_ACTIVE) ? theme->textSelectedColor : theme->textColor;
+	return (state == WIMA_ACTIVE) ? theme->textSelectedColor : theme->textColor;
 }
 
 NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, BNDwidgetState state) {
@@ -141,13 +142,13 @@ NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, BNDwidgetState state) 
 	switch(state) {
 		default:
 
-		case BND_DEFAULT:
+		case WIMA_DEFAULT:
 			return nvgRGBf(0.5f,0.5f,0.5f);
 
-		case BND_HOVER:
+		case WIMA_HOVER:
 			return theme->wireSelectColor;
 
-		case BND_ACTIVE:
+		case WIMA_ACTIVE:
 			return theme->activeNodeColor;
 	}
 }
