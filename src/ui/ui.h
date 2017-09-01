@@ -79,7 +79,7 @@ extern "C" {
 #define UI_MAX_DEPTH 64
 
 // Consecutive click threshold in ms.
-#define UI_CLICK_THRESHOLD  250
+#define UI_CLICK_THRESHOLD 250
 
 // End limits.
 
@@ -262,22 +262,6 @@ typedef enum UIevent {
 // handler callback; event is one of UI_EVENT_*
 typedef void (*UIhandler)(int item, UIevent event);
 //#endif
-
-// For cursor positions, mainly.
-typedef struct UIvec2 {
-	union {
-		int v[2];
-		struct { int x, y; };
-	};
-} UIvec2;
-
-// Layout rectangle.
-typedef struct UIrect {
-	union {
-		int v[4];
-		struct { int x, y, w, h; };
-	};
-} UIrect;
 
 typedef struct wima_item {
 

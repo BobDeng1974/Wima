@@ -281,6 +281,22 @@ void layout_window(int w, int h) {
 #include <wima.h>
 #include <nanovg.h>
 
+// For cursor positions, mainly.
+typedef struct UIvec2 {
+	union {
+		int v[2];
+		struct { int x, y; };
+	};
+} UIvec2;
+
+// Layout rectangle.
+typedef struct UIrect {
+	union {
+		int v[4];
+		struct { int x, y, w, h; };
+	};
+} UIrect;
+
 // Unless declared otherwise, all operations have the complexity O(1).
 
 // Input Control
