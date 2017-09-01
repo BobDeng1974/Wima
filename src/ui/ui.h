@@ -276,191 +276,205 @@ void layout_window(int w, int h) {
 	// span the checkbox in the same way as the label
 	uiSetLayout(item, UI_HFILL);
 }
-
-
-
  */
 
 #include <wima.h>
 #include <nanovg.h>
 
-// limits
+// Limits.
 
-enum {
-	// maximum size in bytes of a single data buffer passed to uiAllocData().
-	UI_MAX_DATASIZE = 4096,
-	// maximum depth of nested containers
-	UI_MAX_DEPTH = 64,
-	// consecutive click threshold in ms
-	UI_CLICK_THRESHOLD = 250,
-};
+// Maximum size in bytes of a single data buffer passed to uiAllocData().
+#define UI_MAX_DATASIZE 4096
 
-// opaque UI context
+// Maximum depth of nested containers.
+#define UI_MAX_DEPTH 64
+
+// Consecutive click threshold in ms.
+#define UI_CLICK_THRESHOLD  250
+
+// End limits.
+
+// Opaque UI context.
 typedef struct WimaOuiContext WimaOuiContext;
 
-// item states as returned by uiGetState()
+// Item states as returned by uiGetState().
+typedef enum wima_item_state {
 
-typedef enum UIitemState {
-	// the item is inactive
+	// The item is inactive.
 	UI_COLD = 0,
-	// the item is inactive, but the cursor is hovering over this item
+
+	// The item is inactive, but the cursor is hovering over this item.
 	UI_HOT = 1,
-	// the item is toggled, activated, focused (depends on item kind)
+
+	// The item is toggled, activated, focused (depends on item kind).
 	UI_ACTIVE = 2,
-	// the item is unresponsive
+
+	// The item is unresponsive.
 	UI_FROZEN = 3,
-} UIitemState;
 
-// container flags to pass to uiSetBox()
-typedef enum UIboxFlags {
-	// flex-direction (bit 0+1)
+} WimaItemState;
 
-	// left to right
+// Container flags to pass to uiSetBox().
+typedef enum wima_box_flags {
+
+	// Flex direction (bit 0+1).
+
+	// Left to right.
 	UI_ROW = 0x002,
-	// top to bottom
+
+	// Top to bottom.
 	UI_COLUMN = 0x003,
 
-	// model (bit 1)
+	// Model (bit 1).
 
-	// free layout
+	// Free layout.
 	UI_LAYOUT = 0x000,
-	// flex model
+
+	// Flex model.
 	UI_FLEX = 0x002,
 
-	// flex-wrap (bit 2)
+	// Flex-wrap (bit 2).
 
-	// single-line
+	// Single-line.
 	UI_NOWRAP = 0x000,
-	// multi-line, wrap left to right
+
+	// Multi-line, wrap left to right.
 	UI_WRAP = 0x004,
 
+	// Justify content (start, end, center, space-between)...
 
-	// justify-content (start, end, center, space-between)
-	// at start of row/column
+	// ...at start of row/column...
 	UI_START = 0x008,
-	// at center of row/column
+
+	// ...at center of row/column...
 	UI_MIDDLE = 0x000,
-	// at end of row/column
+
+	// ...at end of row/column...
 	UI_END = 0x010,
-	// insert spacing to stretch across whole row/column
+
+	// Insert spacing to stretch across whole row/column.
 	UI_JUSTIFY = 0x018,
 
-	// align-items
-	// can be implemented by putting a flex container in a layout container,
-	// then using UI_TOP, UI_DOWN, UI_VFILL, UI_VCENTER, etc.
-	// FILL is equivalent to stretch/grow
+	// Align items can be implemented by putting a flex container
+	// in a layout container, then using UI_TOP, UI_DOWN, UI_VFILL,
+	// UI_VCENTER, etc. FILL is equivalent to stretch/grow.
 
-	// align-content (start, end, center, stretch)
-	// can be implemented by putting a flex container in a layout container,
-	// then using UI_TOP, UI_DOWN, UI_VFILL, UI_VCENTER, etc.
-	// FILL is equivalent to stretch; space-between is not supported.
-} UIboxFlags;
+	// Align content (start, end, center, stretch) can be implemented
+	// by putting a flex container in a layout container, then using
+	// UI_TOP, UI_DOWN, UI_VFILL, UI_VCENTER, etc. FILL is equivalent
+	// to stretch; space-between is not supported.
 
-// child layout flags to pass to uiSetLayout()
-typedef enum UIlayoutFlags {
+} WimaBoxFlags;
 
-	// attachments (bit 5-8)
-	// fully valid when parent uses UI_LAYOUT model
-	// partially valid when in UI_FLEX model
+// Child layout flags to pass to uiSetLayout().
+typedef enum wima_layout_flags {
 
-	// anchor to left item or left side of parent
+	// Attachments (bit 5-8):
+	// Fully valid when parent uses UI_LAYOUT model
+	// partially valid when in UI_FLEX model.
+
+	// Anchor to left item or left side of parent.
 	UI_LEFT = 0x020,
 
-	// anchor to top item or top side of parent
+	// Anchor to top item or top side of parent.
 	UI_TOP = 0x040,
 
-	// anchor to right item or right side of parent
+	// Anchor to right item or right side of parent.
 	UI_RIGHT = 0x080,
 
-	// anchor to bottom item or bottom side of parent
+	// Anchor to bottom item or bottom side of parent.
 	UI_DOWN = 0x100,
 
-	// anchor to both left and right item or parent borders
+	// Anchor to both left and right item or parent borders.
 	UI_HFILL = 0x0a0,
 
-	// anchor to both top and bottom item or parent borders
+	// Anchor to both top and bottom item or parent borders.
 	UI_VFILL = 0x140,
 
-	// center horizontally, with left margin as offset
+	// Center horizontally, with left margin as offset.
 	UI_HCENTER = 0x000,
 
-	// center vertically, with top margin as offset
+	// Center vertically, with top margin as offset.
 	UI_VCENTER = 0x000,
 
-	// center in both directions, with left/top margin as offset
+	// Center in both directions, with left/top margin as offset.
 	UI_CENTER = 0x000,
 
-	// anchor to all four directions
+	// Anchor to all four directions.
 	UI_FILL = 0x1e0,
 
-	// when wrapping, put this element on a new line
-	// wrapping layout code auto-inserts UI_BREAK flags,
-	// drawing routines can read them with uiGetLayout()
+	// When wrapping, put this element on a new line.
+	// Wrapping layout code auto-inserts UI_BREAK flags.
+	// Drawing routines can read them with wima_ui_item_layout().
 	UI_BREAK = 0x200
 
-} UIlayoutFlags;
+} WimaLayoutFlags;
 
 //#if 0
-// event flags
+// Event flags.
 typedef enum UIevent {
 
-	// on left mouse button down
+	// On left mouse button down.
 	UI_BUTTON0_DOWN = 0x0400,
 
-	// on left mouse button up
-	// when this event has a handler, uiGetState() will return UI_ACTIVE as
-	// long as left mouse button is down.
+	// On left mouse button up.
+	// When this event has a handler, wima_ui_item_state()
+	// will return UI_ACTIVE as long as left mouse button
+	// is down.
 	UI_BUTTON0_UP = 0x0800,
 
-	// on left mouse button up while item is hovered
-	// when this event has a handler, uiGetState() will return UI_ACTIVE
-	// when the cursor is hovering the items rectangle; this is the
-	// behavior expected for buttons.
+	// On left mouse button up while item is hovered.
+	// When this event has a handler, wima_ui_item_state() will
+	// return UI_ACTIVE when the cursor is hovering the item's
+	// rectangle; this is the behavior expected for buttons.
 	UI_BUTTON0_HOT_UP = 0x1000,
 
-	// item is being captured (left mouse button constantly pressed);
-	// when this event has a handler, uiGetState() will return UI_ACTIVE as
-	// long as left mouse button is down.
+	// Item is being captured (left mouse button constantly pressed).
+	// When this event has a handler, wima_ui_item_state() will return
+	// UI_ACTIVE as long as left mouse button is down.
 	UI_BUTTON0_CAPTURE = 0x2000,
 
-	// on right mouse button down (usually triggers context menu)
+	// On right mouse button down (usually triggers context menu).
 	UI_BUTTON2_DOWN = 0x4000,
 
-	// item has received a scrollwheel event
-	// the accumulated wheel offset can be queried with uiGetScroll()
+	// Item has received a scrollwheel event.
+	// The accumulated wheel offset can be queried
+	// with wima_ui_item_scroll().
 	UI_SCROLL = 0x8000,
 
-	// item is focused and has received a key-down event
-	// the respective key can be queried using uiGetKey() and uiGetModifier()
+	// Item is focused and has received a key-down event.
+	// The respective key can be queried using
+	// wima_ui_key() and wima_ui_modifiers().
 	UI_KEY_DOWN = 0x10000,
 
-	// item is focused and has received a key-up event
-	// the respective key can be queried using uiGetKey() and uiGetModifier()
+	// Item is focused and has received a key-up event.
+	// The respective key can be queried using
+	// wima_ui_key() and wima_ui_modifiers().
 	UI_KEY_UP = 0x20000,
 
-	// item is focused and has received a character event
-	// the respective character can be queried using uiGetKey()
+	// Item is focused and has received a character event.
+	// the respective character can be queried using wima_ui_key().
 	UI_CHAR = 0x40000,
 
 } UIevent;
 //#endif
 
-enum {
-	// these bits, starting at bit 24, can be safely assigned by the
-	// application, e.g. as item types, other event types, drop targets, etc.
-	// they can be set and queried using uiSetFlags() and uiGetFlags()
-	UI_USERMASK = 0xff000000,
 
-	// a special mask passed to uiFindItem()
-	UI_ANY = 0xffffffff,
-};
+// These bits, starting at bit 24, can be safely assigned by the
+// application, e.g. as item types, other event types, drop targets, etc.
+// They can be set and queried using wima_ui_item_setFlags() and
+// wima_ui_item_flags()
+#define UI_USERMASK 0xff000000
+
+// A special mask passed to wima_ui_item_find().
+#define UI_ANY 0xffffffff
 
 //#if 0
 // handler callback; event is one of UI_EVENT_*
 typedef void (*UIhandler)(int item, UIevent event);
 //#endif
 
-// for cursor positions, mainly
+// For cursor positions, mainly.
 typedef struct UIvec2 {
 	union {
 		int v[2];
@@ -468,7 +482,7 @@ typedef struct UIvec2 {
 	};
 } UIvec2;
 
-// layout rectangle
+// Layout rectangle.
 typedef struct UIrect {
 	union {
 		int v[4];
@@ -476,7 +490,7 @@ typedef struct UIrect {
 	};
 } UIrect;
 
-typedef struct UIitem {
+typedef struct wima_item {
 
 	// Event functions.
 	ItemKeyFunc key;
@@ -485,38 +499,42 @@ typedef struct UIitem {
 	ItemScrollFunc scroll;
 	ItemCharEvent char_event;
 
-	// data handle
+	// Data handle.
 	void *handle;
 
-	// about 27 bits worth of flags
+	// About 27 bits worth of flags.
 	uint32_t flags;
 
-	// index of first kid
-	// if old item: index of equivalent new item
+	// Index of first kid.
+	// If old item: index of equivalent new item.
 	WimaItemHandle firstkid;
-	// index of next sibling with same parent
+
+	// Index of next sibling with same parent.
 	WimaItemHandle nextitem;
 
-	// margin offsets, interpretation depends on flags
-	// after layouting, the first two components are absolute coordinates
+	// Margin offsets, interpretation depends on flags.
+	// After layouting, the first two components are
+	// absolute coordinates.
 	int16_t margins[4];
-	// size
-	int16_t size[2];
-} UIitem;
 
-typedef enum UIstate {
+	// Size.
+	int16_t size[2];
+
+} WimaItem;
+
+typedef enum wima_state {
 	UI_STATE_IDLE = 0,
 	UI_STATE_CAPTURE,
-} UIstate;
+} WimaState;
 
-typedef enum UIstage {
+typedef enum wima_layout_stage {
 	UI_STAGE_LAYOUT = 0,
 	UI_STAGE_POST_LAYOUT,
 	UI_STAGE_PROCESS,
-} UIstage;
+} WimaLayoutStage;
 
 typedef struct UIhandleEntry {
-		unsigned int key;
+	unsigned int key;
 	int item;
 } UIhandleEntry;
 
@@ -629,9 +647,9 @@ struct WimaOuiContext {
 	// handler
 	//UIhandler handler;
 
-	UIitem *items;
+	WimaItem *items;
 	unsigned char *data;
-	UIitem *last_items;
+	WimaItem *last_items;
 	int *itemMap;
 
 	// button state in this frame
@@ -658,8 +676,8 @@ struct WimaOuiContext {
 	int last_click_item;
 	int hot_item;
 
-	UIstate state;
-	UIstage stage;
+	WimaState state;
+	WimaLayoutStage stage;
 
 	uint32_t active_key;
 	uint32_t active_modifier;
@@ -677,6 +695,8 @@ struct WimaOuiContext {
 	WimaEvent events[WIMA_MAX_EVENTS];
 };
 
+// The following was originally written for Wima.
+
 typedef struct wima_ui {
 
 	NVGcontext* nvg;
@@ -687,43 +707,32 @@ typedef struct wima_ui {
 
 } WimaUI;
 
+//The following was originally written for OUI.
+
 // unless declared otherwise, all operations have the complexity O(1).
 
 // Context Management
 // ------------------
 
-// create a new UI context; call uiMakeCurrent() to make this context the
-// current context. The context is managed by the client and must be released
-// using uiDestroyContext()
-// itemCap is the maximum of number of items that can be declared.
-// bufferCap is the maximum total size of bytes that can be allocated
-// using uiAllocHandle(); you may pass 0 if you don't need to allocate
-// handles.
-// 4096 and (1<<20) are good starting values.
-void wima_ui_context_create(WimaOuiContext* ui,
-        unsigned int itemCap,
-        unsigned int bufferCap);
+/**
+ * Create a new UI context. As a reference, 4096 and (1<<20) are good
+ * starting values for itemCap and bufferCap, respectively.
+ * @param ui		A pointer to the context to initialize.
+ * @param itemCap	The maximum of number of items that can be declared.
+ * @param bufferCap	The maximum total size of bytes that can be allocated
+ *					using wima_ui_item_allocHandle(); you may pass 0 if
+ *					you don't need to allocate handles.
+ */
+void wima_ui_context_create(WimaOuiContext* ui, uint32_t itemCap, uint32_t bufferCap);
 
 // Input Control
 // -------------
-
-// sets the current cursor position (usually belonging to a mouse) to the
-// screen coordinates at (x,y)
-void uiSetCursor(WimaOuiContext* ctx, int x, int y);
-
-// returns the current cursor position in screen coordinates as set by
-// uiSetCursor()
-UIvec2 uiGetCursor(WimaOuiContext* ctx);
 
 // returns the offset of the cursor relative to the last call to uiProcess()
 UIvec2 wima_ui_cursor_delta(WimaOuiContext* ctx);
 
 // returns the beginning point of a drag operation.
 UIvec2 wima_ui_cursor_start(WimaOuiContext* ctx);
-
-// returns the offset of the cursor relative to the beginning point of a drag
-// operation.
-UIvec2 uiGetCursorStartDelta();
 
 // sets a mouse or gamepad button as pressed/released
 // button is in the range 0..63 and maps to an application defined input
@@ -758,10 +767,6 @@ void uiSetScroll(WimaOuiContext* ctx, int x, int y);
 
 // returns the currently accumulated scroll wheel offsets for this frame
 UIvec2 wima_ui_setScroll();
-
-
-
-
 
 // Stages
 // ------
@@ -897,7 +902,7 @@ unsigned int wima_ui_alloc_size(WimaOuiContext* ctx);
 // return the current state of the item. This state is only valid after
 // a call to uiProcess().
 // The returned value is one of UI_COLD, UI_HOT, UI_ACTIVE, UI_FROZEN.
-UIitemState wima_ui_item_state(WimaOuiContext* ctx, int item);
+WimaItemState wima_ui_item_state(WimaOuiContext* ctx, int item);
 
 // return the application-dependent handle of the item as passed to uiSetHandle()
 // or uiAllocHandle().
@@ -921,11 +926,13 @@ int wima_ui_item_find(WimaOuiContext* ctx, int item, int x, int y,
 
 // return the event flags for an item as passed to uiSetEvents()
 unsigned int wima_ui_events(WimaOuiContext* ctx, int item);
+
 // return the user-defined flags for an item as passed to uiSetFlags()
 unsigned int wima_ui_flags(WimaOuiContext* ctx, int item);
 
 // when handling a KEY_DOWN/KEY_UP event: the key that triggered this event
 unsigned int wima_ui_key(WimaOuiContext* ctx);
+
 // when handling a keyboard or mouse event: the active modifier keys
 unsigned int wima_ui_modifiers(WimaOuiContext* ctx);
 
@@ -940,20 +947,25 @@ int wima_ui_item_contains(WimaOuiContext* ctx, int item, int x, int y);
 
 // return the width of the item as set by uiSetSize()
 int wima_ui_item_width(WimaOuiContext* ctx, int item);
+
 // return the height of the item as set by uiSetSize()
 int wima_ui_item_height(WimaOuiContext* ctx, int item);
 
 // return the anchoring behavior as set by uiSetLayout()
 unsigned int wima_ui_layout_type(WimaOuiContext* ctx, int item);
+
 // return the box model as set by uiSetBox()
 unsigned int wima_ui_layout_box(WimaOuiContext* ctx, int item);
 
 // return the left margin of the item as set with uiSetMargins()
 short wima_ui_layout_marginLeft(WimaOuiContext* ctx, int item);
+
 // return the top margin of the item as set with uiSetMargins()
 short wima_ui_layout_marginTop(WimaOuiContext* ctx, int item);
+
 // return the right margin of the item as set with uiSetMargins()
 short wima_ui_layout_marginRight(WimaOuiContext* ctx, int item);
+
 // return the bottom margin of the item as set with uiSetMargins()
 short wima_ui_layout_marginDown(WimaOuiContext* ctx, int item);
 
