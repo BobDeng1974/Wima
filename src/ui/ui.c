@@ -865,8 +865,8 @@ void wima_ui_layout_arrangeStacked(WimaOuiContext* ctx, UIitem *pitem, int dim, 
 }
 
 // Superimpose all items according to their alignment.
-void wima_ui_layout_arrangeImposedRange(WimaOuiContext* ctx, UIitem *pitem, int dim,      int start_kid,
-                                     int end_kid,   short offset, short space)
+void wima_ui_layout_arrangeImposedRange(WimaOuiContext* ctx, UIitem *pitem, int dim,
+                                        int start_kid, int end_kid, short offset, short space)
 {
 	int wdim = dim + 2;
 
