@@ -86,23 +86,6 @@ extern "C" {
 // Opaque UI context.
 typedef struct WimaOuiContext WimaOuiContext;
 
-// Item states as returned by uiGetState().
-typedef enum wima_item_state {
-
-	// The item is inactive.
-	UI_COLD = 0,
-
-	// The item is inactive, but the cursor is hovering over this item.
-	UI_HOT = 1,
-
-	// The item is toggled, activated, focused (depends on item kind).
-	UI_ACTIVE = 2,
-
-	// The item is unresponsive.
-	UI_FROZEN = 3,
-
-} WimaItemState;
-
 // Container flags to pass to uiSetBox().
 typedef enum wima_box_flags {
 

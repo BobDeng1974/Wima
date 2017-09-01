@@ -64,6 +64,9 @@
 
 #include <jemalloc/jemalloc.h>
 
+#include <wima.h>
+#include <ui.h>
+
 #include "../math/math.h"
 #include "ui.h"
 #include "item.h"
@@ -235,11 +238,11 @@ UIvec2 wima_ui_cursor_start(WimaOuiContext* ctx) {
 	return ctx->start_cursor;
 }
 
-UIvec2 wima_ui_cursor_delta(WimaOuiContext* ctx) {
-	assert(ctx);
+UIvec2 wima_ui_cursor_delta(WimaAreaHandle area) {
+	//assert(area);
 	UIvec2 result = {{{
-	        ctx->cursor.x - ctx->last_cursor.x,
-	        ctx->cursor.y - ctx->last_cursor.y
+	        area->cursor.x - area->last_cursor.x,
+	        area->cursor.y - area->last_cursor.y
 	}}};
 	return result;
 }
