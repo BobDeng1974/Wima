@@ -43,9 +43,11 @@
 
 #include <nanovg.h>
 
-#include "workspace.h"
+#include <ui.h>
 
-#include "ui.h"
+#include "ui/ui.h"
+
+#include "workspace.h"
 
 typedef struct wima_window {
 
@@ -56,6 +58,9 @@ typedef struct wima_window {
 
 	DynaTree areas;
 
+	NVGcontext* nvg;
+	WimaUiContext ui;
+
 	int fbwidth;
 	int fbheight;
 
@@ -65,6 +70,9 @@ typedef struct wima_window {
 } WimaWin;
 
 WimaStatus wima_window_draw(WimaWindowHandle win);
+
+WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction action);
+
 WimaStatus wima_window_processEvents(WimaWindowHandle win);
 
 WimaStatus wima_window_free(WimaWindowHandle win);

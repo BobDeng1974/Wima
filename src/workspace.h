@@ -51,4 +51,7 @@ typedef struct wima_wksp {
 
 bool wima_workspace_nodeValid(WimaWorkspaceHandle wwh, DynaNode n);
 
+int wima_workspace_itemCapacity(WimaWksp* wksp);
+int wima_workspace_bufferCapacity(WimaWksp* wksp);
+
 #endif // WIMA_WORKSPACE_H

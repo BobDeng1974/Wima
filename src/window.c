@@ -34,6 +34,7 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <assert.h>
 #include <string.h>
 
 #include <jemalloc/jemalloc.h>
@@ -65,10 +66,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	wwin.fbheight = 0;
 	wwin.width = 0;
 	wwin.height = 0;
-
-	wwin.ui.nvg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
-	wwin.ui.font = wima_theme_loadFont(wwin.ui.nvg, "system", "../../res/DejaVuSans.ttf");
-	wwin.ui.icons = wima_theme_loadIcons(wwin.ui.nvg, "../../res/blender_icons16.png");
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -145,6 +142,20 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	if (!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
 		glfwTerminate();
 		return -1;
+	}
+
+	WimaWin* window = (WimaWin*) dvec_get(wg.windows, idx);
+
+	window->nvg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+
+	// Load the font if not loaded already.
+	if (wg.font < 0) {
+		wg.font = wima_theme_loadFont(window->nvg, "system", "../../res/DejaVuSans.ttf");
+	}
+
+	// Load the icons if not loaded already.
+	if (wg.icons < 0) {
+		wg.icons = wima_theme_loadIcons(window->nvg, "../../res/blender_icons16.png");
 	}
 
 	return WIMA_SUCCESS;
@@ -244,21 +255,28 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 	WimaWin* window = (WimaWin*) dvec_get(wg.windows, wwh);
 
 	if (!window->areas) {
-		if (dtree_create(&window[wwh].areas, dtree_nodes(regs), sizeof(WimaAreaNode))) {
+		if (dtree_create(&window->areas, dtree_nodes(regs), sizeof(WimaAreaNode))) {
 			return WIMA_WINDOW_ERR;
 		}
 	}
 
-	if (dtree_copy(window[wwh].areas, regs)) {
+	if (dtree_copy(window->areas, regs)) {
 		return WIMA_WINDOW_ERR;
 	}
 
-	WimaStatus status = wima_area_node_setData(wwh, window[wwh].areas, root);
+	int itemCap = wima_workspace_itemCapacity(wksp);
+	int bufferCap = wima_workspace_bufferCapacity(wksp);
+
+	wima_ui_context_create(wwh, itemCap, bufferCap);
+
+	WimaStatus status = wima_area_node_setData(wwh, window->areas, root);
 
 	return status;
 }
 
 WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas) {
+
+	// TODO: Handle WimaUiContext.
 
 	WimaWin* window = (WimaWin*) dvec_get(wg.windows, wwh);
 
@@ -278,6 +296,55 @@ WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas) {
 WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 	WimaWin* window = (WimaWin*) dvec_get(wg.windows, wwh);
 	return wima_area_draw(wwh, window->width, window->height);
+}
+
+WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction action) {
+
+	WimaMods mod;
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	switch (key) {
+
+		case WIMA_KEY_LEFT_SHIFT:
+		case WIMA_KEY_RIGHT_SHIFT:
+			mod = WIMA_MOD_SHIFT;
+			break;
+
+		case WIMA_KEY_LEFT_CONTROL:
+		case WIMA_KEY_RIGHT_CONTROL:
+			mod = WIMA_MOD_CONTROL;
+			break;
+
+		case WIMA_KEY_LEFT_ALT:
+		case WIMA_KEY_RIGHT_ALT:
+			mod = WIMA_MOD_ALT;
+			break;
+
+		case WIMA_KEY_LEFT_SUPER:
+		case WIMA_KEY_RIGHT_SUPER:
+			mod = WIMA_MOD_SUPER;
+			break;
+
+		default:
+			mod = WIMA_MOD_NONE;
+			break;
+	}
+
+	switch (action) {
+
+		case WIMA_ACTION_RELEASE:
+			win->ui.mods |= mod;
+			break;
+
+		case WIMA_ACTION_PRESS:
+		case WIMA_ACTION_REPEAT:
+			win->ui.mods &= ~(mod);
+			break;
+	}
+
+	return WIMA_SUCCESS;
 }
 
 static WimaStatus wima_window_processEvent(WimaWindowHandle win, WimaEvent* event) {
@@ -314,8 +381,11 @@ static WimaStatus wima_window_processEvent(WimaWindowHandle win, WimaEvent* even
 
 		case WIMA_EVENT_SCROLL:
 		{
-			WimaMouseScrollInfo* info = &event->event.mouse_scroll;
-			status = wima_area_scroll(win, info->xoffset, info->yoffset);
+			WimaWin* wwin = (WimaWin*) dvec_get(wg.windows, win);
+
+			WimaMouseScrollInfo* info = &event->event.scroll;
+
+			status = wima_area_scroll(win, info->xoffset, info->yoffset, info->mods);
 			break;
 		}
 
@@ -340,7 +410,7 @@ static WimaStatus wima_window_processEvent(WimaWindowHandle win, WimaEvent* even
 				names[i] = dstr_str(*s);
 			}
 
-			status = wima_area_fileDrop(win, len, names);
+			status = wg.file_drop(win, len, names);
 
 			for (int i = 0; i < len; ++i) {
 				DynaString* s = (DynaString*) dvec_get(files, i);
@@ -410,20 +480,20 @@ WimaStatus wima_window_processEvents(WimaWindowHandle wwh) {
 
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 
-	WimaEvent* events = win->ui.oui.events;
-	int numEvents = win->ui.oui.eventCount;
+	WimaEvent* events = win->ui.events;
+	int numEvents = win->ui.eventCount;
 
 	for (int i = 0; i < numEvents; ++i) {
 
 		status = wima_window_processEvent(wwh, events + i);
 
 		if (status) {
-			win->ui.oui.eventCount = 0;
+			win->ui.eventCount = 0;
 			return status;
 		}
 	}
 
-	win->ui.oui.eventCount = 0;
+	win->ui.eventCount = 0;
 
 	return status;
 }
@@ -434,12 +504,12 @@ WimaStatus wima_window_free(WimaWindowHandle wwh) {
 
 	dstr_free(win->name);
 
-	nvgDeleteGL3(win->ui.nvg);
+	nvgDeleteGL3(win->nvg);
 
-	dallocx(win->ui.oui.items, 0);
-	dallocx(win->ui.oui.last_items, 0);
-	dallocx(win->ui.oui.itemMap, 0);
-	dallocx(win->ui.oui.data, 0);
+	dallocx(win->ui.items, 0);
+	dallocx(win->ui.last_items, 0);
+	dallocx(win->ui.itemMap, 0);
+	dallocx(win->ui.data, 0);
 
 	return wima_areas_free(win->areas);
 }

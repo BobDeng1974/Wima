@@ -40,6 +40,7 @@
 
 #include <wima.h>
 
+#include "region.h"
 #include "area.h"
 #include "workspace.h"
 #include "global.h"
@@ -129,4 +130,50 @@ bool wima_workspace_nodeValid(WimaWorkspaceHandle wwh, DynaNode n) {
 	return n == dtree_root() ||
 	       (dtree_exists(wksp->regions, p) &&
 	       ((WimaAreaNode*) dtree_node(wksp->regions, p))->type == WIMA_AREA_PARENT);
+}
+
+int wima_workspace_node_itemCapacity(DynaTree regions, DynaNode n) {
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(regions, n);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		int leftCap = wima_workspace_node_itemCapacity(regions, dtree_left(n));
+		int rightCap = wima_workspace_node_itemCapacity(regions, dtree_right(n));
+
+		return leftCap + rightCap;
+	}
+	else {
+
+		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->node.area.type);
+
+		return region->itemCap;
+	}
+}
+
+int wima_workspace_itemCapacity(WimaWksp* wksp) {
+	return wima_workspace_node_itemCapacity(wksp->regions, dtree_root());
+}
+
+int wima_workspace_node_bufferCapacity(DynaTree regions, DynaNode n) {
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(regions, n);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		int leftCap = wima_workspace_node_bufferCapacity(regions, dtree_left(n));
+		int rightCap = wima_workspace_node_bufferCapacity(regions, dtree_right(n));
+
+		return leftCap + rightCap;
+	}
+	else {
+
+		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->node.area.type);
+
+		return region->bufferCap;
+	}
+}
+
+int wima_workspace_bufferCapacity(WimaWksp* wksp) {
+	return wima_workspace_node_bufferCapacity(wksp->regions, dtree_root());
 }

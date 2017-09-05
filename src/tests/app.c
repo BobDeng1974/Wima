@@ -46,13 +46,13 @@
 void printAction(WimaAction act) {
 
 	switch (act) {
-		case WIMA_RELEASE:
+		case WIMA_ACTION_RELEASE:
 			printf("Release\n");
 			break;
-		case WIMA_PRESS:
+		case WIMA_ACTION_PRESS:
 			printf("Press\n");
 			break;
-		case WIMA_REPEAT:
+		case WIMA_ACTION_REPEAT:
 			printf("Repeat\n");
 			break;
 	}
@@ -103,7 +103,7 @@ WimaStatus mouseCoordsKevent(WimaAreaHandle wah,
 	printf("    Mods: ");
 	printMods(mods);
 
-	if (key == WIMA_KEY_ESCAPE && act == WIMA_PRESS) {
+	if (key == WIMA_KEY_ESCAPE && act == WIMA_ACTION_PRESS) {
 		wima_window_close(wah.window);
 	}
 
@@ -156,9 +156,11 @@ WimaStatus mouseCoordsMenterArea(WimaAreaHandle wah, bool entered) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsSevent(WimaAreaHandle wah, int xoffset, int yoffset) {
+WimaStatus mouseCoordsSevent(WimaAreaHandle wah, int xoffset, int yoffset, WimaMods mods) {
 
-	printf("Scroll: { x: %4d; y: %4d }\n", xoffset, yoffset);
+	printf("Scroll: { x: %4d; y: %4d; }\n", xoffset, yoffset);
+	printf("    Mods: ");
+	printMods(mods);
 
 	return WIMA_SUCCESS;
 }
@@ -171,9 +173,9 @@ WimaStatus mouseCoordsChar(WimaAreaHandle wah, uint32_t code, WimaMods mods) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsFileDrop(WimaAreaHandle wah, int filec, const char* filev[]) {
+WimaStatus mouseCoordsFileDrop(WimaWindowHandle wwh, int filec, const char* filev[]) {
 
-	printf("Dropped Files:\n");
+	printf("Window[%d] Dropped Files:\n", wwh);
 	for (int i = 0; i < filec; ++i) {
 		printf("    %s\n", filev[i]);
 	}
@@ -219,10 +221,10 @@ void mouseCoordsError(WimaStatus status, const char* desc) {
 int main() {
 
 	// Initialize Wima and check for success.
-	WimaStatus status = wima_init("Test Wima App",   mouseCoordsError,
-	                              mouseCoordsMenter, NULL,
-	                              mouseCoordsResize, NULL,
-	                              mouseCoordsClose);
+	WimaStatus status = wima_init("Test Wima App",     mouseCoordsError,
+	                              mouseCoordsFileDrop, mouseCoordsMenter,
+	                              NULL,                mouseCoordsResize,
+	                              NULL,                mouseCoordsClose);
 	if (status != WIMA_SUCCESS) {
 		return status;
 	}
@@ -234,7 +236,7 @@ int main() {
 	                              mouseCoordsDraw,       mouseCoordsKevent,
 	                              mouseCoordsMevent,     mouseCoordsMpos,
 	                              mouseCoordsMenterArea, mouseCoordsSevent,
-	                              mouseCoordsChar,       mouseCoordsFileDrop);
+	                              mouseCoordsChar,       16, 512);
 	if (status) {
 		return status;
 	}

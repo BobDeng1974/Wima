@@ -66,6 +66,13 @@ NVGcolor wima_color_transparent(NVGcolor color);
 // offset a color by a given integer delta in the range -100 to 100
 NVGcolor wima_color_offset(NVGcolor color, int delta);
 
+// computes the upper and lower gradient colors for the inner box from a widget
+// theme and the widgets state. If flipActive is set and the state is
+// BND_ACTIVE, the upper and lower colors will be swapped.
+void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
+                      const WimaWidgetTheme* theme, BNDwidgetState state,
+                      int flipActive);
+
 // computes the text color for a widget label from a widget theme and the
 // widgets state.
 NVGcolor wima_color_text(const WimaWidgetTheme *theme, BNDwidgetState state);

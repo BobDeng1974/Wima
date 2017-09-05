@@ -63,83 +63,109 @@
 
 #include <ui.h>
 
+#include "../global.h"
+
 #include "ui.h"
 #include "item.h"
 
 #include "../area.h"
 
-int wima_ui_item_count(WimaAreaHandle wah) {
+extern WimaG wg;
 
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
+int wima_ui_item_count(WimaWindowHandle wwh) {
 
-	return area->node.area.ui.oui.itemCount;
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ui.itemCount;
 }
 
-int wima_ui_item_lastCount(WimaAreaHandle wah) {
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
-	return ctx->lastItemCount;
+int wima_ui_item_lastCount(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ui.lastItemCount;
 }
 
-unsigned int wima_ui_allocSize(WimaAreaHandle wah) {
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
-	return ctx->datasize;
+unsigned int wima_ui_allocSize(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ui.datasize;
 }
 
-WimaItem *wima_ui_item_ptr(WimaAreaHandle wah, WimaItemHandle item) {
-	assert(ctx && (item >= 0) && (item < ctx->itemCount));
-	return ctx->items + item;
+WimaItem *wima_ui_item_ptr(WimaWindowHandle wwh, int item) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	assert((item >= 0) && (item < win->ui.itemCount));
+
+	return win->ui.items + item;
 }
 
-WimaItem *wima_ui_item_lastPtr(WimaAreaHandle wah, WimaItemHandle item) {
-	assert(ctx && (item >= 0) && (item < ctx->lastItemCount));
-	return ctx->last_items + item;
+WimaItem *wima_ui_item_lastPtr(WimaWindowHandle wwh, int item) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	assert((item >= 0) && (item < win->ui.lastItemCount));
+
+	return win->ui.last_items + item;
 }
 
-int wima_ui_item_hot(WimaAreaHandle wah) {
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
-	return ctx->hot_item;
+int wima_ui_item_hot(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ui.hot_item;
 }
 
-void wima_ui_item_setFocus(WimaAreaHandle wah, WimaItemHandle item) {
+void wima_ui_item_setFocus(WimaWindowHandle wwh, int item) {
 
-	assert(ctx && (item >= -1) && (item < ctx->itemCount));
-	assert(ctx->stage != UI_STAGE_LAYOUT);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
 
-	ctx->focus_item = item;
+	assert((item >= -1) && (item < win->ui.itemCount));
+	assert(win->ui.stage != UI_STAGE_LAYOUT);
+
+	win->ui.focus_item = item;
 }
 
-static void wima_ui_item_validateState(WimaAreaHandle wah) {
+void wima_ui_item_validateState(WimaWindowHandle wwh) {
 
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
 
-	ctx->last_hot_item = wima_ui_item_recover(ctx, ctx->last_hot_item);
-	ctx->active_item = wima_ui_item_recover(ctx, ctx->active_item);
-	ctx->focus_item = wima_ui_item_recover(ctx, ctx->focus_item);
-	ctx->last_click_item = wima_ui_item_recover(ctx, ctx->last_click_item);
+	win->ui.last_hot_item = wima_ui_item_recover(wwh, win->ui.last_hot_item);
+	win->ui.active_item = wima_ui_item_recover(wwh, win->ui.active_item);
+	win->ui.focus_item = wima_ui_item_recover(wwh, win->ui.focus_item);
+	win->ui.last_click_item = wima_ui_item_recover(wwh, win->ui.last_click_item);
 }
 
-int wima_ui_item_focus(WimaAreaHandle wah) {
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
-	return ctx->focus_item;
+int wima_ui_item_focus(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ui.focus_item;
 }
 
-int wima_ui_item_new(WimaAreaHandle wah) {
+int wima_ui_item_new(WimaWindowHandle wwh) {
 
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
-	assert(ctx->itemCount < (int)ctx->itemCap);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	assert(win->ui.itemCount < (int) win->ui.itemCap);
 
 	 // Must run between uiBeginLayout() and uiEndLayout().
-	assert(ctx->stage == UI_STAGE_LAYOUT);
+	assert(win->ui.stage == UI_STAGE_LAYOUT);
 
-	int idx = ctx->itemCount++;
-	WimaItem *item = wima_ui_item_ptr(ctx, idx);
+	int idx = win->ui.itemCount++;
+	WimaItem *item = wima_ui_item_ptr(wwh, idx);
 
 	memset(item, 0, sizeof(WimaItem));
 
@@ -150,28 +176,31 @@ int wima_ui_item_new(WimaAreaHandle wah) {
 }
 
 //#if 0
-void wima_ui_item_notify(WimaAreaHandle wah, WimaItemHandle item, WimaEvent event) {
+void wima_ui_item_notify(WimaWindowHandle wwh, int item, WimaEvent event) {
 
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
 
-	if (!ctx->handler) {
-		return;
-	}
+//	if (!win->oui.handler) {
+//		return;
+//	}
 
-	assert((event & UI_ITEM_EVENT_MASK) == event);
+//	assert((event & UI_ITEM_EVENT_MASK) == event);
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
 
-	if (pitem->flags & event) {
-		ctx->handler(item, event);
-	}
+//	if (pitem->flags & event) {
+//		win->oui.handler(item, event);
+//	}
 }
 //#endif
 
-int wima_ui_item_lastChild(WimaAreaHandle wah, WimaItemHandle item) {
+int wima_ui_item_lastChild(WimaWindowHandle wwh, int item) {
 
-	item = wima_ui_item_firstChild(ctx, item);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	item = wima_ui_item_firstChild(wwh, item);
 
 	if (item < 0) {
 		return -1;
@@ -179,7 +208,7 @@ int wima_ui_item_lastChild(WimaAreaHandle wah, WimaItemHandle item) {
 
 	while (true) {
 
-		int nextitem = wima_ui_item_nextSibling(ctx, item);
+		int nextitem = wima_ui_item_nextSibling(wwh, item);
 
 		if (nextitem < 0) {
 			return item;
@@ -189,12 +218,12 @@ int wima_ui_item_lastChild(WimaAreaHandle wah, WimaItemHandle item) {
 	}
 }
 
-int wima_ui_item_append(WimaAreaHandle wah, WimaItemHandle item, int sibling) {
+int wima_ui_item_append(WimaWindowHandle wwh, int item, int sibling) {
 
 	assert(sibling > 0);
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
-	WimaItem *psibling = wima_ui_item_ptr(ctx, sibling);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
+	WimaItem *psibling = wima_ui_item_ptr(wwh, sibling);
 
 	assert(!(psibling->flags & UI_ITEM_INSERTED));
 
@@ -205,12 +234,12 @@ int wima_ui_item_append(WimaAreaHandle wah, WimaItemHandle item, int sibling) {
 	return sibling;
 }
 
-int wima_ui_item_insert(WimaAreaHandle wah, WimaItemHandle item, int child) {
+int wima_ui_item_insert(WimaWindowHandle wwh, int item, int child) {
 
 	assert(child > 0);
 
-	WimaItem *pparent = wima_ui_item_ptr(ctx, item);
-	WimaItem *pchild = wima_ui_item_ptr(ctx, child);
+	WimaItem *pparent = wima_ui_item_ptr(wwh, item);
+	WimaItem *pchild = wima_ui_item_ptr(wwh, child);
 
 	assert(!(pchild->flags & UI_ITEM_INSERTED));
 
@@ -219,18 +248,18 @@ int wima_ui_item_insert(WimaAreaHandle wah, WimaItemHandle item, int child) {
 		pchild->flags |= UI_ITEM_INSERTED;
 	}
 	else {
-		wima_ui_item_append(ctx, wima_ui_item_lastChild(ctx, item), child);
+		wima_ui_item_append(wwh, wima_ui_item_lastChild(wwh, item), child);
 	}
 
 	return child;
 }
 
-int wima_ui_item_insertBack(WimaAreaHandle wah, WimaItemHandle item, int child) {
+int wima_ui_item_insertBack(WimaWindowHandle wwh, int item, int child) {
 
 	assert(child > 0);
 
-	WimaItem *pparent = wima_ui_item_ptr(ctx, item);
-	WimaItem *pchild = wima_ui_item_ptr(ctx, child);
+	WimaItem *pparent = wima_ui_item_ptr(wwh, item);
+	WimaItem *pchild = wima_ui_item_ptr(wwh, child);
 
 	assert(!(pchild->flags & UI_ITEM_INSERTED));
 
@@ -241,9 +270,9 @@ int wima_ui_item_insertBack(WimaAreaHandle wah, WimaItemHandle item, int child) 
 	return child;
 }
 
-void wima_ui_item_setFrozen(WimaAreaHandle wah, WimaItemHandle item, int enable) {
+void wima_ui_item_setFrozen(WimaWindowHandle wwh, int item, int enable) {
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
 
 	if (enable) {
 		pitem->flags |= UI_ITEM_FROZEN;
@@ -253,9 +282,9 @@ void wima_ui_item_setFrozen(WimaAreaHandle wah, WimaItemHandle item, int enable)
 	}
 }
 
-void wima_ui_item_setSize(WimaAreaHandle wah, WimaItemHandle item, int w, int h) {
+void wima_ui_item_setSize(WimaWindowHandle wwh, int item, int w, int h) {
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
 
 	pitem->size[0] = w;
 	pitem->size[1] = h;
@@ -275,17 +304,17 @@ void wima_ui_item_setSize(WimaAreaHandle wah, WimaItemHandle item, int w, int h)
 	}
 }
 
-int wima_ui_item_width(WimaAreaHandle wah, WimaItemHandle item) {
-	return wima_ui_item_ptr(ctx, item)->size[0];
+int wima_ui_item_width(WimaWindowHandle wwh, int item) {
+	return wima_ui_item_ptr(wwh, item)->size[0];
 }
 
-int wima_ui_item_height(WimaAreaHandle wah, WimaItemHandle item) {
-	return wima_ui_item_ptr(ctx, item)->size[1];
+int wima_ui_item_height(WimaWindowHandle wwh, int item) {
+	return wima_ui_item_ptr(wwh, item)->size[1];
 }
 
-void wima_ui_item_setLayoutType(WimaAreaHandle wah, WimaItemHandle item, unsigned int flags) {
+void wima_ui_item_setLayoutType(WimaWindowHandle wwh, int item, unsigned int flags) {
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
 
 	assert((flags & UI_ITEM_LAYOUT_MASK) == (unsigned int) flags);
 
@@ -293,13 +322,13 @@ void wima_ui_item_setLayoutType(WimaAreaHandle wah, WimaItemHandle item, unsigne
 	pitem->flags |= flags & UI_ITEM_LAYOUT_MASK;
 }
 
-unsigned int wima_ui_item_layoutType(WimaAreaHandle wah, WimaItemHandle item) {
-	return wima_ui_item_ptr(ctx, item)->flags & UI_ITEM_LAYOUT_MASK;
+unsigned int wima_ui_item_layoutType(WimaWindowHandle wwh, int item) {
+	return wima_ui_item_ptr(wwh, item)->flags & UI_ITEM_LAYOUT_MASK;
 }
 
-void wima_ui_item_setBox(WimaAreaHandle wah, WimaItemHandle item, unsigned int flags) {
+void wima_ui_item_setBox(WimaWindowHandle wwh, int item, unsigned int flags) {
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
 
 	assert((flags & UI_ITEM_BOX_MASK) == (unsigned int)flags);
 
@@ -307,13 +336,13 @@ void wima_ui_item_setBox(WimaAreaHandle wah, WimaItemHandle item, unsigned int f
 	pitem->flags |= flags & UI_ITEM_BOX_MASK;
 }
 
-unsigned int wima_ui_item_box(WimaAreaHandle wah, WimaItemHandle item) {
-	return wima_ui_item_ptr(ctx, item)->flags & UI_ITEM_BOX_MASK;
+unsigned int wima_ui_item_box(WimaWindowHandle wwh, int item) {
+	return wima_ui_item_ptr(wwh, item)->flags & UI_ITEM_BOX_MASK;
 }
 
-void wima_ui_item_setMargins(WimaAreaHandle wah, WimaItemHandle item, short l, short t, short r, short b) {
+void wima_ui_item_setMargins(WimaWindowHandle wwh, int item, short l, short t, short r, short b) {
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
 
 	pitem->margins[0] = l;
 	pitem->margins[1] = t;
@@ -321,32 +350,35 @@ void wima_ui_item_setMargins(WimaAreaHandle wah, WimaItemHandle item, short l, s
 	pitem->margins[3] = b;
 }
 
-short wima_ui_item_marginLeft(WimaAreaHandle wah, WimaItemHandle item) {
-	return wima_ui_item_ptr(ctx, item)->margins[0];
+short wima_ui_item_marginLeft(WimaWindowHandle wwh, int item) {
+	return wima_ui_item_ptr(wwh, item)->margins[0];
 }
-short wima_ui_item_marginTop(WimaAreaHandle wah, WimaItemHandle item) {
-	return wima_ui_item_ptr(ctx, item)->margins[1];
+short wima_ui_item_marginTop(WimaWindowHandle wwh, int item) {
+	return wima_ui_item_ptr(wwh, item)->margins[1];
 }
-short wima_ui_item_marginRight(WimaAreaHandle wah, WimaItemHandle item) {
-	return wima_ui_item_ptr(ctx, item)->margins[2];
+short wima_ui_item_marginRight(WimaWindowHandle wwh, int item) {
+	return wima_ui_item_ptr(wwh, item)->margins[2];
 }
-short wima_ui_item_marginDown(WimaAreaHandle wah, WimaItemHandle item) {
-	return wima_ui_item_ptr(ctx, item)->margins[3];
+short wima_ui_item_marginDown(WimaWindowHandle wwh, int item) {
+	return wima_ui_item_ptr(wwh, item)->margins[3];
 }
 
 bool wima_ui_item_compare(WimaItem *item1, WimaItem *item2) {
 	return ((item1->flags & UI_ITEM_COMPARE_MASK) == (item2->flags & UI_ITEM_COMPARE_MASK));
 }
 
-static bool wima_ui_item_map(WimaAreaHandle wah, WimaItemHandle item1, WimaItemHandle item2) {
+bool wima_ui_item_map(WimaWindowHandle wwh, int item1, int item2) {
 
-	WimaItem *pitem1 = wima_ui_item_lastPtr(ctx, item1);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	WimaItem *pitem1 = wima_ui_item_lastPtr(wwh, item1);
 
 	if (item2 == -1) {
 		return false;
 	}
 
-	WimaItem *pitem2 = wima_ui_item_ptr(ctx, item2);
+	WimaItem *pitem2 = wima_ui_item_ptr(wwh, item2);
 	if (!wima_ui_item_compare(pitem1, pitem2)) {
 		return false;
 	}
@@ -358,11 +390,11 @@ static bool wima_ui_item_map(WimaAreaHandle wah, WimaItemHandle item1, WimaItemH
 
 	while (kid1 != -1) {
 
-		WimaItem *pkid1 = wima_ui_item_lastPtr(ctx, kid1);
+		WimaItem *pkid1 = wima_ui_item_lastPtr(wwh, kid1);
 
 		count++;
 
-		if (!wima_ui_item_map(ctx, kid1, kid2)) {
+		if (!wima_ui_item_map(wwh, kid1, kid2)) {
 			failed = count;
 			break;
 		}
@@ -370,7 +402,7 @@ static bool wima_ui_item_map(WimaAreaHandle wah, WimaItemHandle item1, WimaItemH
 		kid1 = pkid1->nextitem;
 
 		if (kid2 != -1) {
-			kid2 = wima_ui_item_ptr(ctx, kid2)->nextitem;
+			kid2 = wima_ui_item_ptr(wwh, kid2)->nextitem;
 		}
 	}
 
@@ -378,36 +410,38 @@ static bool wima_ui_item_map(WimaAreaHandle wah, WimaItemHandle item1, WimaItemH
 		return false;
 	}
 
-	ctx->itemMap[item1] = item2;
+	win->ui.itemMap[item1] = item2;
 	return true;
 }
 
-int wima_ui_item_recover(WimaAreaHandle wah, int olditem) {
+int wima_ui_item_recover(WimaWindowHandle wwh, int olditem) {
 
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
-	assert((olditem >= -1) && (olditem < ctx->lastItemCount));
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	assert((olditem >= -1) && (olditem < win->ui.lastItemCount));
 
 	if (olditem == -1) {
 		return -1;
 	}
 
-	return ctx->itemMap[olditem];
+	return win->ui.itemMap[olditem];
 }
 
-void wima_ui_item_remap(WimaAreaHandle wah, int olditem, int newitem) {
+void wima_ui_item_remap(WimaWindowHandle wwh, int olditem, int newitem) {
 
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
-	assert((olditem >= 0) && (olditem < ctx->lastItemCount));
-	assert((newitem >= -1) && (newitem < ctx->itemCount));
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
 
-	ctx->itemMap[olditem] = newitem;
+	assert((olditem >= 0) && (olditem < win->ui.lastItemCount));
+	assert((newitem >= -1) && (newitem < win->ui.itemCount));
+
+	win->ui.itemMap[olditem] = newitem;
 }
 
-UIrect wima_ui_item_rect(WimaAreaHandle wah, WimaItemHandle item) {
+UIrect wima_ui_item_rect(WimaWindowHandle wwh, int item) {
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
 
 	UIrect rc = {{{
 	        pitem->margins[0], pitem->margins[1],
@@ -417,73 +451,76 @@ UIrect wima_ui_item_rect(WimaAreaHandle wah, WimaItemHandle item) {
 	return rc;
 }
 
-int wima_ui_item_firstChild(WimaAreaHandle wah, WimaItemHandle item) {
-	return wima_ui_item_ptr(ctx, item)->firstkid;
+int wima_ui_item_firstChild(WimaWindowHandle wwh, int item) {
+	return wima_ui_item_ptr(wwh, item)->firstkid;
 }
 
-int wima_ui_item_nextSibling(WimaAreaHandle wah, WimaItemHandle item) {
-	return wima_ui_item_ptr(ctx, item)->nextitem;
+int wima_ui_item_nextSibling(WimaWindowHandle wwh, int item) {
+	return wima_ui_item_ptr(wwh, item)->nextitem;
 }
 
-void *wima_ui_item_allocHandle(WimaAreaHandle wah, WimaItemHandle item, unsigned int size) {
+void *wima_ui_item_allocHandle(WimaWindowHandle wwh, int item, unsigned int size) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
 
 	// Make sure to align on a eight-byte boundary.
 	size = (size + 7) & (~7);
 
 	assert((size > 0) && (size < UI_MAX_DATASIZE));
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
 
 	assert(pitem->handle == NULL);
-	assert((ctx->datasize+size) <= ctx->bufferCap);
+	assert((win->ui.datasize+size) <= win->ui.bufferCap);
 
-	pitem->handle = ctx->data + ctx->datasize;
+	pitem->handle = win->ui.data + win->ui.datasize;
 	pitem->flags |= UI_ITEM_DATA;
-	ctx->datasize += size;
+	win->ui.datasize += size;
 
 	return pitem->handle;
 }
 
-void wima_ui_item_setHandle(WimaAreaHandle wah, WimaItemHandle item, void *handle) {
+void wima_ui_item_setHandle(WimaWindowHandle wwh, int item, void *handle) {
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
 
 	assert(pitem->handle == NULL);
 
 	pitem->handle = handle;
 }
 
-void *wima_ui_item_handle(WimaAreaHandle wah, WimaItemHandle item) {
-	return wima_ui_item_ptr(ctx, item)->handle;
+void *wima_ui_item_handle(WimaWindowHandle wwh, int item) {
+	return wima_ui_item_ptr(wwh, item)->handle;
 }
 
-void wima_ui_item_setEvents(WimaAreaHandle wah, WimaItemHandle item, unsigned int flags) {
+void wima_ui_item_setEvents(WimaWindowHandle wwh, int item, unsigned int flags) {
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
 
 	pitem->flags &= ~UI_ITEM_EVENT_MASK;
 	pitem->flags |= flags & UI_ITEM_EVENT_MASK;
 }
 
-unsigned int wima_ui_item_events(WimaAreaHandle wah, WimaItemHandle item) {
-	return wima_ui_item_ptr(ctx, item)->flags & UI_ITEM_EVENT_MASK;
+unsigned int wima_ui_item_events(WimaWindowHandle wwh, int item) {
+	return wima_ui_item_ptr(wwh, item)->flags & UI_ITEM_EVENT_MASK;
 }
 
-void wima_ui_item_setFlags(WimaAreaHandle wah, WimaItemHandle item, unsigned int flags) {
+void wima_ui_item_setFlags(WimaWindowHandle wwh, int item, unsigned int flags) {
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
 
 	pitem->flags &= ~UI_USERMASK;
 	pitem->flags |= flags & UI_USERMASK;
 }
 
-unsigned int wima_ui_item_flags(WimaAreaHandle wah, WimaItemHandle item) {
-	return wima_ui_item_ptr(ctx, item)->flags & UI_USERMASK;
+unsigned int wima_ui_item_flags(WimaWindowHandle wwh, int item) {
+	return wima_ui_item_ptr(wwh, item)->flags & UI_USERMASK;
 }
 
-int wima_ui_item_contains(WimaAreaHandle wah, WimaItemHandle item, int x, int y) {
+int wima_ui_item_contains(WimaWindowHandle wwh, int item, int x, int y) {
 
-	UIrect rect = wima_ui_item_rect(ctx, item);
+	UIrect rect = wima_ui_item_rect(wwh, item);
 
 	x -= rect.x;
 	y -= rect.y;
@@ -495,28 +532,28 @@ int wima_ui_item_contains(WimaAreaHandle wah, WimaItemHandle item, int x, int y)
 	return 0;
 }
 
-int wima_ui_item_find(WimaAreaHandle wah, WimaItemHandle item, int x, int y, unsigned int flags, unsigned int mask) {
+int wima_ui_item_find(WimaWindowHandle wwh, int item, int x, int y, unsigned int flags, unsigned int mask) {
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
 
 	if (pitem->flags & UI_ITEM_FROZEN) {
 		return -1;
 	}
 
-	if (wima_ui_item_contains(ctx, item, x, y)) {
+	if (wima_ui_item_contains(wwh, item, x, y)) {
 
 		int best_hit = -1;
-		int kid = wima_ui_item_firstChild(ctx, item);
+		int kid = wima_ui_item_firstChild(wwh, item);
 
 		while (kid >= 0) {
 
-			int hit = wima_ui_item_find(ctx, kid, x, y, flags, mask);
+			int hit = wima_ui_item_find(wwh, kid, x, y, flags, mask);
 
 			if (hit >= 0) {
 				best_hit = hit;
 			}
 
-			kid = wima_ui_item_nextSibling(ctx, kid);
+			kid = wima_ui_item_nextSibling(wwh, kid);
 		}
 
 		if (best_hit >= 0) {
@@ -534,65 +571,75 @@ int wima_ui_item_find(WimaAreaHandle wah, WimaItemHandle item, int x, int y, uns
 	return -1;
 }
 
-void wima_ui_item_updateHot(WimaAreaHandle wah) {
+void wima_ui_item_updateHot(WimaWindowHandle wwh) {
 
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
 
-	if (!ctx->itemCount) {
+	if (!win->ui.itemCount) {
 		return;
 	}
 
-	ctx->hot_item = wima_ui_item_find(ctx, 0, ctx->cursor.x, ctx->cursor.y, UI_ANY_MOUSE_INPUT, UI_ANY);
+	win->ui.hot_item = wima_ui_item_find(wwh, 0, win->ui.cursor.x, win->ui.cursor.y, UI_ANY_MOUSE_INPUT, UI_ANY);
 }
 
-int wima_ui_clicks(WimaAreaHandle wah) {
-	return ctx->clicks;
+int wima_ui_clicks(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ui.clicks;
 }
 
-static int wima_ui_item_isActive(WimaAreaHandle wah, WimaItemHandle item) {
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
-	return ctx->active_item == item;
+static int wima_ui_item_isActive(WimaWindowHandle wwh, int item) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ui.active_item == item;
 }
 
-static int wima_ui_item_isHot(WimaAreaHandle wah, WimaItemHandle item) {
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
-	return ctx->last_hot_item == item;
+static int wima_ui_item_isHot(WimaWindowHandle wwh, int item) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ui.last_hot_item == item;
 }
 
-static int wima_ui_item_isFocused(WimaAreaHandle wah, WimaItemHandle item) {
-	WimaAreaNode* area = wima_area_area(wah);
-	assert(area);
-	return ctx->focus_item == item;
+static int wima_ui_item_isFocused(WimaWindowHandle wwh, int item) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ui.focus_item == item;
 }
 
-WimaItemState wima_ui_item_state(WimaAreaHandle wah, WimaItemHandle item) {
+WimaItemState wima_ui_item_state(WimaWindowHandle wwh, int item) {
 
-	WimaItem *pitem = wima_ui_item_ptr(ctx, item);
+	WimaItem *pitem = wima_ui_item_ptr(wwh, item);
 
 	if (pitem->flags & UI_ITEM_FROZEN) {
 		return UI_FROZEN;
 	}
 
-	if (wima_ui_item_isFocused(ctx, item)) {
+	if (wima_ui_item_isFocused(wwh, item)) {
 		if (pitem->flags & (UI_KEY_DOWN|UI_CHAR|UI_KEY_UP)) return UI_ACTIVE;
 	}
 
-	if (wima_ui_item_isActive(ctx, item)) {
+	if (wima_ui_item_isActive(wwh, item)) {
 
 		if (pitem->flags & (UI_BUTTON0_CAPTURE|UI_BUTTON0_UP)) {
 			return UI_ACTIVE;
 		}
 
-		if ((pitem->flags & UI_BUTTON0_HOT_UP) && wima_ui_item_isHot(ctx, item)) {
+		if ((pitem->flags & UI_BUTTON0_HOT_UP) && wima_ui_item_isHot(wwh, item)) {
 			return UI_ACTIVE;
 		}
 
 		return UI_COLD;
 	}
-	else if (wima_ui_item_isHot(ctx, item)) {
+	else if (wima_ui_item_isHot(wwh, item)) {
 		return UI_HOT;
 	}
 

@@ -55,8 +55,6 @@ typedef struct wima_region {
 
 	AreaCharFunc char_event;
 
-	AreaFileDropFunc file_drop;
-
 	uint32_t itemCap;
 	uint32_t bufferCap;
 

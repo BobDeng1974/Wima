@@ -150,9 +150,6 @@ WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode
 		// Get the region pointer.
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
 
-		// Create the UI context.
-		wima_ui_context_create(&area->node.area.ui, region->itemCap, region->bufferCap);
-
 		// Get the particular user function setter.
 		AreaGenUserPointerFunc get_user_ptr = region->get_ptr;
 
@@ -249,16 +246,12 @@ WimaStatus wima_area_mouseEnter(WimaWindowHandle win, bool entered) {
 	return wima_area_node_mouseEnter(wima_area_areas(win), dtree_root(), entered);
 }
 
-WimaStatus wima_area_scroll(WimaWindowHandle win, int xoffset, int yoffset) {
-	return wima_area_node_scroll(wima_area_areas(win), dtree_root(), xoffset, yoffset);
+WimaStatus wima_area_scroll(WimaWindowHandle win, int xoffset, int yoffset, WimaMods mods) {
+	return wima_area_node_scroll(wima_area_areas(win), dtree_root(), xoffset, yoffset, mods);
 }
 
 WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code, WimaMods mods) {
 	return wima_area_node_char(wima_area_areas(win), dtree_root(), code, mods);
-}
-
-WimaStatus wima_area_fileDrop(WimaWindowHandle win, int filec, const char* filev[]) {
-	return wima_area_node_fileDrop(wima_area_areas(win), dtree_root(), filec, filev);
 }
 
 WimaStatus wima_area_node_draw(DynaTree areas, DynaNode node, int width, int height) {
@@ -386,7 +379,7 @@ WimaStatus wima_area_node_mouseEnter(DynaTree areas, DynaNode node, bool entered
 	return status;
 }
 
-WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int yoffset) {
+WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int yoffset, WimaMods mods) {
 
 	WimaStatus status;
 
@@ -403,7 +396,7 @@ WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int
 		AreaScrollEventFunc scroll_event = region->scroll_event;
 
 		if (scroll_event) {
-			status = scroll_event(wima_area_handle(area, node), xoffset, yoffset);
+			status = scroll_event(wima_area_handle(area, node), xoffset, yoffset, mods);
 		}
 	}
 
@@ -428,30 +421,6 @@ WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code,
 
 		if (char_event) {
 			status = char_event(wima_area_handle(area, node), code, mods);
-		}
-	}
-
-	return status;
-}
-
-WimaStatus wima_area_node_fileDrop(DynaTree areas, DynaNode node, int filec, const char* filev[]) {
-
-	WimaStatus status;
-
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
-
-	if (area->type == WIMA_AREA_PARENT) {
-
-		// TODO: Put code to ensure it goes to the right one.
-	}
-	else {
-
-		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->node.area.type);
-
-		AreaFileDropFunc file_drop = region->file_drop;
-
-		if (file_drop) {
-			status = file_drop(wima_area_handle(area, node), filec, filev);
 		}
 	}
 

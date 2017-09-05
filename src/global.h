@@ -49,6 +49,7 @@ typedef struct wima_globals {
 	DynaString name;
 
 	ErrorFunc error;
+	WindowFileDropFunc file_drop;
 	WindowMouseEnterFunc enter;
 	WindowPosFunc pos;
 	FramebufferSizeFunc fb_size;
@@ -61,6 +62,9 @@ typedef struct wima_globals {
 	DynaVector regions;
 
 	WimaTheme theme;
+
+	int icons;
+	int font;
 
 } WimaG;
 

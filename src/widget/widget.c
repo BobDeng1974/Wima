@@ -58,6 +58,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include "../math/math.h"
+
 #include "../global.h"
 
 #include "../ui/ui.h"
@@ -269,7 +271,7 @@ void wima_widget_slider(WimaUI* ui, float x, float y, float w, float h, int flag
 		shade_down = wima_color_offset(wg.theme.sliderTheme.itemColor, wg.theme.sliderTheme.shadeTop);
 	}
 
-	nvgScissor(ui->nvg, x, y, 8 + (w - 8) * bnd_clamp(progress, 0, 1), h);
+	nvgScissor(ui->nvg, x, y, 8 + (w - 8) * wima_clamp(progress, 0, 1), h);
 	wima_widget_box_inner(ui, x, y, w, h, cr[0], cr[1], cr[2],cr[3], shade_top, shade_down);
 	nvgResetScissor(ui->nvg);
 
@@ -396,7 +398,7 @@ void wima_widget_node_port(WimaUI* ui, float x, float y, BNDwidgetState state, N
 void wima_widget_node_wire_colored(WimaUI* ui, float x0, float y0, float x1, float y1,
                                  NVGcolor color0, NVGcolor color1)
 {
-	float length = bnd_fmaxf(fabsf(x1 - x0), fabsf(y1 - y0));
+	float length = wima_fmaxf(fabsf(x1 - x0), fabsf(y1 - y0));
 	float delta = length * (float) wg.theme.nodeTheme.noodleCurving / 10.0f;
 
 	nvgBeginPath(ui->nvg);
@@ -631,8 +633,8 @@ float wima_widget_label_estimateWidth(WimaUI* ui, int iconid, const char *label)
 		w += WIMA_ICON_SHEET_RES;
 	}
 
-	if (label && (ui->font >= 0)) {
-		nvgFontFaceId(ui->nvg, ui->font);
+	if (label && (wg.font >= 0)) {
+		nvgFontFaceId(ui->nvg, wg.font);
 		nvgFontSize(ui->nvg, WIMA_LABEL_FONT_SIZE);
 		w += nvgTextBounds(ui->nvg, 1, 1, label, NULL, NULL);
 	}
@@ -650,9 +652,9 @@ float wima_widget_label_estimateHeight(WimaUI* ui, int iconid, const char *label
 		width -= WIMA_ICON_SHEET_RES;
 	}
 
-	if (label && (ui->font >= 0)) {
+	if (label && (wg.font >= 0)) {
 
-		nvgFontFaceId(ui->nvg, ui->font);
+		nvgFontFaceId(ui->nvg, wg.font);
 		nvgFontSize(ui->nvg, WIMA_LABEL_FONT_SIZE);
 
 		float bounds[4];
@@ -676,16 +678,16 @@ void wima_widget_box_rounded(WimaUI* ui, float x, float y, float w, float h,
 {
 	float d;
 
-	w = bnd_fmaxf(0, w);
-	h = bnd_fmaxf(0, h);
-	d = bnd_fminf(w, h);
+	w = wima_fmaxf(0, w);
+	h = wima_fmaxf(0, h);
+	d = wima_fminf(w, h);
 
 	nvgMoveTo(ui->nvg, x, y + h * 0.5f);
 
-	nvgArcTo(ui->nvg, x, y, x + w, y, bnd_fminf(cr0, d / 2));
-	nvgArcTo(ui->nvg, x + w, y, x + w, y + h, bnd_fminf(cr1, d / 2));
-	nvgArcTo(ui->nvg, x + w, y + h, x, y + h, bnd_fminf(cr2, d / 2));
-	nvgArcTo(ui->nvg, x, y + h, x, y, bnd_fminf(cr3, d / 2));
+	nvgArcTo(ui->nvg, x, y, x + w, y, wima_fminf(cr0, d / 2));
+	nvgArcTo(ui->nvg, x + w, y, x + w, y + h, wima_fminf(cr1, d / 2));
+	nvgArcTo(ui->nvg, x + w, y + h, x, y + h, wima_fminf(cr2, d / 2));
+	nvgArcTo(ui->nvg, x, y + h, x, y, wima_fminf(cr3, d / 2));
 
 	nvgClosePath(ui->nvg);
 }
@@ -726,9 +728,9 @@ void wima_widget_inset(WimaUI* ui, float x, float y, float w, float h, float cr2
 	float d;
 
 	y -= 0.5f;
-	d = bnd_fminf(w, h);
-	cr2 = bnd_fminf(cr2, d / 2);
-	cr3 = bnd_fminf(cr3, d / 2);
+	d = wima_fminf(w, h);
+	cr2 = wima_fminf(cr2, d / 2);
+	cr3 = wima_fminf(cr3, d / 2);
 
 	nvgBeginPath(ui->nvg);
 	nvgMoveTo(ui->nvg, x + w, y + h - cr2);
@@ -740,7 +742,7 @@ void wima_widget_inset(WimaUI* ui, float x, float y, float w, float h, float cr2
 	nvgStrokeWidth(ui->nvg, 1);
 
 	NVGcolor innerColor = nvgRGBAf(bevelColor.r, bevelColor.g, bevelColor.b, 0);
-	NVGpaint paint = nvgLinearGradient(ui->nvg, x, y + h - bnd_fmaxf(cr2,cr3) - 1,
+	NVGpaint paint = nvgLinearGradient(ui->nvg, x, y + h - wima_fmaxf(cr2,cr3) - 1,
 	                                   x, y + h - 1, innerColor, bevelColor);
 
 	nvgStrokePaint(ui->nvg, paint);
@@ -757,7 +759,7 @@ void wima_widget_background(WimaUI* ui, float x, float y, float w, float h) {
 void wima_widget_icon(WimaUI* ui, float x, float y, int iconid) {
 
 	int ix, iy, u, v;
-	if (ui->icons < 0) return; // no icons loaded
+	if (wg.icons < 0) return; // no icons loaded
 
 	ix = iconid & 0xff;
 	iy = (iconid >> 8) & 0xff;
@@ -770,7 +772,7 @@ void wima_widget_icon(WimaUI* ui, float x, float y, int iconid) {
 	NVGpaint paint = nvgImagePattern(ui->nvg, x - u, y - v,
 	                                 WIMA_ICON_SHEET_WIDTH,
 	                                 WIMA_ICON_SHEET_HEIGHT,
-	                                 0, ui->icons, 1);
+	                                 0, wg.icons, 1);
 	nvgFillPaint(ui->nvg, paint);
 	nvgFill(ui->nvg);
 }
@@ -811,8 +813,8 @@ void wima_widget_box_inner(WimaUI* ui, float x, float y, float w, float h,
 	nvgBeginPath(ui->nvg);
 
 	wima_widget_box_rounded(ui, x + 1, y + 1, w - 2, h - 3,
-	                      bnd_fmaxf(0, cr0 - 1), bnd_fmaxf(0, cr1 - 1),
-	                      bnd_fmaxf(0, cr2 - 1), bnd_fmaxf(0, cr3 - 1));
+	                      wima_fmaxf(0, cr0 - 1), wima_fmaxf(0, cr1 - 1),
+	                      wima_fmaxf(0, cr2 - 1), wima_fmaxf(0, cr3 - 1));
 
 	NVGpaint paint;
 	if (h - 2 > w) {
@@ -857,11 +859,11 @@ void wima_widget_label_icon_value(WimaUI* ui, float x, float y, float w, float h
 			pleft += WIMA_ICON_SHEET_RES;
 		}
 
-		if (ui->font < 0) {
+		if (wg.font < 0) {
 			return;
 		}
 
-		nvgFontFaceId(ui->nvg, ui->font);
+		nvgFontFaceId(ui->nvg, wg.font);
 		nvgFontSize(ui->nvg, fontsize);
 		nvgBeginPath(ui->nvg);
 		nvgFillColor(ui->nvg, color);
@@ -911,9 +913,9 @@ void wima_widget_node_label_icon(WimaUI* ui, float x, float y, float w, float h,
                                int iconid, NVGcolor color, NVGcolor shadowColor,
                                int align, float fontsize, const char *label)
 {
-	if (label && (ui->font >= 0)) {
+	if (label && (wg.font >= 0)) {
 
-		nvgFontFaceId(ui->nvg, ui->font);
+		nvgFontFaceId(ui->nvg, wg.font);
 		nvgFontSize(ui->nvg, fontsize);
 
 		nvgBeginPath(ui->nvg);
@@ -951,14 +953,14 @@ int wima_label_text_pos(WimaUI* ui, float x, float y, float w, float h,
 		pleft += WIMA_ICON_SHEET_RES;
 	}
 
-	if (ui->font < 0) {
+	if (wg.font < 0) {
 		return -1;
 	}
 
 	x += pleft;
 	y += WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN;
 
-	nvgFontFaceId(ui->nvg, ui->font);
+	nvgFontFaceId(ui->nvg, wg.font);
 	nvgFontSize(ui->nvg, fontsize);
 	nvgTextAlign(ui->nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
 
@@ -977,7 +979,7 @@ int wima_label_text_pos(WimaUI* ui, float x, float y, float w, float h,
 	nvgTextMetrics(ui->nvg, &asc, &desc, &lh);
 
 	// Calculate vertical position.
-	int row = bnd_clamp((int) ((float) (py - bounds[1]) / lh), 0, nrows - 1);
+	int row = wima_clamp((int) ((float) (py - bounds[1]) / lh), 0, nrows - 1);
 
 	// Search horizontal position.
 	static NVGglyphPosition glyphs[WIMA_MAX_GLYPHS];
@@ -1050,14 +1052,14 @@ void wima_widget_label_caret(WimaUI* ui, float x, float y, float w, float h,
 		pleft += WIMA_ICON_SHEET_RES;
 	}
 
-	if (ui->font < 0) {
+	if (wg.font < 0) {
 		return;
 	}
 
 	x += pleft;
 	y += WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN;
 
-	nvgFontFaceId(ui->nvg, ui->font);
+	nvgFontFaceId(ui->nvg, wg.font);
 	nvgFontSize(ui->nvg, fontsize);
 	nvgTextAlign(ui->nvg, NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE);
 
@@ -1183,18 +1185,18 @@ void wima_widget_node_arrow_down(WimaUI* ui, float x, float y, float s, NVGcolor
 
 void wima_widget_scroll_handle_rect(float *x, float *y, float *w, float *h, float offset, float size) {
 
-	size = bnd_clamp(size,0,1);
-	offset = bnd_clamp(offset,0,1);
+	size = wima_clamp(size,0,1);
+	offset = wima_clamp(offset,0,1);
 
 	if ((*h) > (*w)) {
 
-		float hs = bnd_fmaxf(size * (*h), (*w) + 1);
+		float hs = wima_fmaxf(size * (*h), (*w) + 1);
 
 		*y = (*y) + ((*h) - hs) * offset;
 		*h = hs;
 	}
 	else {
-		float ws = bnd_fmaxf(size * (*w), (*h) - 1);
+		float ws = wima_fmaxf(size * (*w), (*h) - 1);
 		*x = (*x) + ((*w) - ws) * offset;
 		*w = ws;
 	}

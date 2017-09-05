@@ -28,7 +28,7 @@
 include_directories("../../lib/nanovg/src")
 
 set(WIMA_GLOBAL "${PROJECT_NAME}_global")
-set(WIMA_MATH "${PROJECT_NAME}_math")
+set(WIMA_MATH_PIC "${PROJECT_NAME}_math_pic")
 
 set(WIMA_THEME_SRC
 
@@ -37,7 +37,7 @@ set(WIMA_THEME_SRC
 	"theme.c"
 )
 
-set(WIMA_OUI_PIC "wima_oui_pic")
+set(WIMA_UI_PIC "wima_ui_pic")
 
 set(WIMA_THEME wima_theme)
 
@@ -59,9 +59,9 @@ create_all_libraries(
 	YES
 
 	# Add libraries here.
-	"${WIMA_OUI_PIC}"
+	"${WIMA_UI_PIC}"
 	"${WIMA_GLOBAL}"
 	"${NANOVG_PIC}"
-	"${WIMA_MATH}"
+	"${WIMA_MATH_PIC}"
 	"${JEMALLOC_PIC}"
 )

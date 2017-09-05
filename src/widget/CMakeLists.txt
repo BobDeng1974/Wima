@@ -40,7 +40,7 @@ set(WIMA_WIDGET_SRC
 )
 
 set(WIMA_THEME_PIC "${PROJECT_NAME}_theme_pic")
-set(WIMA_OUI_PIC "${PROJECT_NAME}_oui_pic")
+set(WIMA_OUI_PIC "${PROJECT_NAME}_ui_pic")
 set(WIMA_MATH_PIC "${PROJECT_NAME}_math_pic")
 
 create_all_libraries(

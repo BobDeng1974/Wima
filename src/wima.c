@@ -53,16 +53,17 @@
 extern WimaG wg;
 extern const WimaTheme wima_initial_theme;
 
-WimaStatus wima_init(const char* name,           ErrorFunc error,
-                     WindowMouseEnterFunc enter, WindowPosFunc pos,
-                     FramebufferSizeFunc fbsize, WindowSizeFunc winsize,
-                     WindowCloseFunc close)
+WimaStatus wima_init(const char* name,         ErrorFunc error,
+                     WindowFileDropFunc fdrop, WindowMouseEnterFunc enter,
+                     WindowPosFunc pos,        FramebufferSizeFunc fbsize,
+                     WindowSizeFunc winsize,   WindowCloseFunc close)
 {
 	if (!error) {
 		return WIMA_INIT_ERR;
 	}
 
 	wg.error = error;
+	wg.file_drop = fdrop;
 	wg.enter = enter;
 	wg.pos = pos;
 	wg.fb_size = fbsize;
@@ -76,6 +77,10 @@ WimaStatus wima_init(const char* name,           ErrorFunc error,
 
 	// Set the initial theme.
 	wg.theme = wima_initial_theme;
+
+	// Make sure these are cleared.
+	wg.font = -1;
+	wg.icons = -1;
 
 	DynaStatus dstatus = dstr_create(&(wg.name), name);
 	if (dstatus) {

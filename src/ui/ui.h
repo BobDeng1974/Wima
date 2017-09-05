@@ -70,6 +70,62 @@ extern "C" {
 #include <wima.h>
 #include <ui.h>
 
+#define UI_MAX_KIND 16
+
+#define UI_ANY_BUTTON0_INPUT (UI_BUTTON0_DOWN \
+	    |UI_BUTTON0_UP \
+	    |UI_BUTTON0_HOT_UP \
+	    |UI_BUTTON0_CAPTURE)
+
+#define UI_ANY_BUTTON2_INPUT (UI_BUTTON2_DOWN)
+
+#define UI_ANY_MOUSE_INPUT (UI_ANY_BUTTON0_INPUT \
+	    |UI_ANY_BUTTON2_INPUT)
+
+#define UI_ANY_KEY_INPUT (UI_KEY_DOWN \
+	    |UI_KEY_UP \
+	    |UI_CHAR)
+
+#define UI_ANY_INPUT (UI_ANY_MOUSE_INPUT \
+	    |UI_ANY_KEY_INPUT)
+
+
+// Extra item flags.
+
+// Bits 0-2.
+#define UI_ITEM_BOX_MODEL_MASK 0x000007
+
+// Bits 0-4.
+#define UI_ITEM_BOX_MASK       0x00001F
+
+// Bits 5-8.
+#define UI_ITEM_LAYOUT_MASK    0x0003E0
+
+// Bits 9-18.
+#define UI_ITEM_EVENT_MASK     0x07FC00
+
+// Item is frozen (bit 19).
+#define UI_ITEM_FROZEN         0x080000
+
+// Item handle is pointer to data (bit 20).
+#define UI_ITEM_DATA           0x100000
+
+// Item has been inserted (bit 21).
+#define UI_ITEM_INSERTED       0x200000
+
+// Horizontal size has been explicitly set (bit 22).
+#define UI_ITEM_HFIXED         0x400000
+
+// Vertical size has been explicitly set (bit 23).
+#define UI_ITEM_VFIXED         0x800000
+
+// Bit 22-23.
+#define UI_ITEM_FIXED_MASK     0xC00000
+
+// Which flag bits will be compared.
+#define UI_ITEM_COMPARE_MASK \
+	(UI_ITEM_BOX_MODEL_MASK | (UI_ITEM_LAYOUT_MASK & ~UI_BREAK) | UI_ITEM_EVENT_MASK | UI_USERMASK)
+
 // Limits.
 
 // Maximum size in bytes of a single data buffer passed to uiAllocData().
@@ -260,10 +316,10 @@ typedef struct wima_item {
 
 	// Index of first kid.
 	// If old item: index of equivalent new item.
-	WimaItemHandle firstkid;
+	int firstkid;
 
 	// Index of next sibling with same parent.
-	WimaItemHandle nextitem;
+	int nextitem;
 
 	// Margin offsets, interpretation depends on flags.
 	// After layouting, the first two components are
@@ -355,6 +411,8 @@ typedef struct wima_mouse_scroll_info {
 	int xoffset;
 	int yoffset;
 
+	WimaMods mods;
+
 } WimaMouseScrollInfo;
 
 typedef struct wima_char_info {
@@ -383,7 +441,7 @@ typedef struct wima_event {
 
 		WimaPosInfo pos;
 
-		WimaMouseScrollInfo mouse_scroll;
+		WimaMouseScrollInfo scroll;
 
 		WimaCharInfo char_event;
 
@@ -431,18 +489,18 @@ typedef struct wima_ui_context {
 	unsigned int itemCap;
 	unsigned int bufferCap;
 
-	WimaItemHandle active_item;
-	WimaItemHandle focus_item;
-	WimaItemHandle last_hot_item;
-	WimaItemHandle last_click_item;
-	WimaItemHandle hot_item;
+	int active_item;
+	int focus_item;
+	int last_hot_item;
+	int last_click_item;
+	int hot_item;
 
 	WimaState state;
 	WimaLayoutStage stage;
 
 	uint32_t active_key;
-	uint32_t active_modifier;
-	uint32_t active_button_modifier;
+	WimaMods mods;
+	WimaMods button_mods;
 
 	uint32_t last_timestamp;
 	uint32_t last_click_timestamp;
@@ -464,9 +522,6 @@ typedef struct wima_ui {
 	NVGcontext* nvg;
 	WimaUiContext oui;
 
-	int icons;
-	int font;
-
 } WimaUI;
 
 // Context Management
@@ -481,9 +536,9 @@ typedef struct wima_ui {
  *					using wima_ui_item_allocHandle(); you may pass 0 if
  *					you don't need to allocate handles.
  */
-void wima_ui_context_create(WimaUiContext* ctx, uint32_t itemCap, uint32_t bufferCap);
+void wima_ui_context_create(WimaWindowHandle wwh, uint32_t itemCap, uint32_t bufferCap);
 
-void wima_ui_clear(WimaUiContext* ctx);
+void wima_ui_clear(WimaWindowHandle wwh);
 
 #ifdef __cplusplus
 }
