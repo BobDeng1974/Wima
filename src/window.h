@@ -59,7 +59,7 @@ typedef struct wima_window {
 	DynaTree areas;
 
 	NVGcontext* nvg;
-	WimaUiContext ctx;
+	WimaWindowContext ctx;
 
 	int fbwidth;
 	int fbheight;

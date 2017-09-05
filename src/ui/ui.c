@@ -124,7 +124,7 @@ void wima_ui_context_create(WimaWindowHandle wwh, uint32_t itemCap, uint32_t buf
 
 	assert(itemCap);
 
-	memset(&win->ctx, 0, sizeof(WimaUiContext));
+	memset(&win->ctx, 0, sizeof(WimaWindowContext));
 
 	size_t size = nallocx(sizeof(WimaItem) * itemCap, 0);
 

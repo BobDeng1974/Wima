@@ -369,8 +369,8 @@ typedef enum wima_event_type {
 	WIMA_EVENT_ITEM_ENTER	= 1 << 12,
 	WIMA_EVENT_SCROLL		= 1 << 13,
 	WIMA_EVENT_CHAR			= 1 << 14,
-	WIMA_EVENT_FILE_DROP	= 1 << 15,
 
+	WIMA_EVENT_FILE_DROP	= 1 << 15,
 	WIMA_EVENT_WIN_POS		= 1 << 16,
 	WIMA_EVENT_FB_SIZE		= 1 << 17,
 	WIMA_EVENT_WIN_SIZE		= 1 << 18,
@@ -457,15 +457,10 @@ typedef struct wima_event {
 
 // The following was originally written for OUI.
 
-typedef struct wima_ui_context {
+typedef struct wima_window_context {
 
 	// handler
 	//UIhandler handler;
-
-	WimaItem *items;
-	unsigned char *data;
-	WimaItem *last_items;
-	int *itemMap;
 
 	// Button state in this frame.
 	uint64_t buttons;
@@ -485,20 +480,16 @@ typedef struct wima_ui_context {
 	// Accumulated scroll wheel offsets.
 	UIvec2 scroll;
 
-	// Capacities.
-	unsigned int itemCap;
-	unsigned int bufferCap;
-
-	int active_item;
-	int focus_item;
-	int last_hot_item;
-	int last_click_item;
-	int hot_item;
+	WimaItemHandle active_item;
+	WimaItemHandle focus_item;
+	WimaItemHandle last_hot_item;
+	WimaItemHandle last_click_item;
+	WimaItemHandle hot_item;
 
 	WimaState state;
 	WimaLayoutStage stage;
 
-	uint32_t active_key;
+	WimaKey active_key;
 	WimaMods mods;
 	WimaMods button_mods;
 
@@ -506,23 +497,27 @@ typedef struct wima_ui_context {
 	uint32_t last_click_timestamp;
 	uint32_t clicks;
 
-	uint32_t itemCount;
-	uint32_t lastItemCount;
 	uint32_t eventCount;
-	uint32_t datasize;
-
 	WimaEvent events[WIMA_MAX_EVENTS];
 
-} WimaUiContext;
+} WimaWindowContext;
 
-// The following was originally written for Wima.
+typedef struct wima_area_context {
 
-typedef struct wima_ui {
+	WimaItem *items;
+	unsigned char *data;
+	WimaItem *last_items;
+	int *itemMap;
 
-	NVGcontext* nvg;
-	WimaUiContext oui;
+	// Capacities.
+	unsigned int itemCap;
+	unsigned int bufferCap;
 
-} WimaUI;
+	uint32_t itemCount;
+	uint32_t lastItemCount;
+	uint32_t datasize;
+
+} WimaAreaContext;
 
 // Context Management
 // ------------------
