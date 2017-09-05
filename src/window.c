@@ -335,12 +335,12 @@ WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction
 	switch (action) {
 
 		case WIMA_ACTION_RELEASE:
-			win->ui.mods |= mod;
+			win->ctx.mods |= mod;
 			break;
 
 		case WIMA_ACTION_PRESS:
 		case WIMA_ACTION_REPEAT:
-			win->ui.mods &= ~(mod);
+			win->ctx.mods &= ~(mod);
 			break;
 	}
 
@@ -480,20 +480,20 @@ WimaStatus wima_window_processEvents(WimaWindowHandle wwh) {
 
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 
-	WimaEvent* events = win->ui.events;
-	int numEvents = win->ui.eventCount;
+	WimaEvent* events = win->ctx.events;
+	int numEvents = win->ctx.eventCount;
 
 	for (int i = 0; i < numEvents; ++i) {
 
 		status = wima_window_processEvent(wwh, events + i);
 
 		if (status) {
-			win->ui.eventCount = 0;
+			win->ctx.eventCount = 0;
 			return status;
 		}
 	}
 
-	win->ui.eventCount = 0;
+	win->ctx.eventCount = 0;
 
 	return status;
 }
@@ -506,10 +506,10 @@ WimaStatus wima_window_free(WimaWindowHandle wwh) {
 
 	nvgDeleteGL3(win->nvg);
 
-	dallocx(win->ui.items, 0);
-	dallocx(win->ui.last_items, 0);
-	dallocx(win->ui.itemMap, 0);
-	dallocx(win->ui.data, 0);
+	dallocx(win->ctx.items, 0);
+	dallocx(win->ctx.last_items, 0);
+	dallocx(win->ctx.itemMap, 0);
+	dallocx(win->ctx.data, 0);
 
 	return wima_areas_free(win->areas);
 }

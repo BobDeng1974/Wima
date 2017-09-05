@@ -80,10 +80,10 @@ void wima_ui_layout_begin(WimaWindowHandle wwh) {
 	assert(win);
 
 	// Must run uiEndLayout() and uiProcess() first.
-	assert(win->ui.stage == UI_STAGE_PROCESS);
+	assert(win->ctx.stage == UI_STAGE_PROCESS);
 
 	wima_ui_clear(wwh);
-	win->ui.stage = UI_STAGE_LAYOUT;
+	win->ctx.stage = UI_STAGE_LAYOUT;
 }
 
 // Compute bounding box of all items super-imposed.
@@ -645,15 +645,15 @@ void wima_ui_layout_end(WimaWindowHandle wwh) {
 	assert(win);
 
 	// Must run uiBeginLayout() first.
-	assert(win->ui.stage == UI_STAGE_LAYOUT);
+	assert(win->ctx.stage == UI_STAGE_LAYOUT);
 
-	if (win->ui.itemCount) {
+	if (win->ctx.itemCount) {
 		wima_ui_layout_computeSize(wwh, 0,0);
 		wima_ui_layout_arrange(wwh, 0,0);
 		wima_ui_layout_computeSize(wwh, 0,1);
 		wima_ui_layout_arrange(wwh, 0,1);
 
-		if (win->ui.lastItemCount) {
+		if (win->ctx.lastItemCount) {
 			// Map old item id to new item id.
 			wima_ui_item_map(wwh, 0,0);
 		}
@@ -661,10 +661,10 @@ void wima_ui_layout_end(WimaWindowHandle wwh) {
 
 	wima_ui_item_validateState(wwh);
 
-	if (win->ui.itemCount) {
+	if (win->ctx.itemCount) {
 		// Drawing routines may require this to be set already.
 		wima_ui_item_updateHot(wwh);
 	}
 
-	win->ui.stage = UI_STAGE_POST_LAYOUT;
+	win->ctx.stage = UI_STAGE_POST_LAYOUT;
 }

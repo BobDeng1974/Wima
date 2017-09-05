@@ -91,10 +91,10 @@ void wima_ui_state_clear(WimaWindowHandle wwh) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	win->ui.last_hot_item = -1;
-	win->ui.active_item = -1;
-	win->ui.focus_item = -1;
-	win->ui.last_click_item = -1;
+	win->ctx.last_hot_item = -1;
+	win->ctx.active_item = -1;
+	win->ctx.focus_item = -1;
+	win->ctx.last_click_item = -1;
 }
 
 void wima_ui_clear(WimaWindowHandle wwh) {
@@ -102,18 +102,18 @@ void wima_ui_clear(WimaWindowHandle wwh) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	win->ui.lastItemCount = win->ui.itemCount;
-	win->ui.itemCount = 0;
-	win->ui.datasize = 0;
-	win->ui.hot_item = -1;
+	win->ctx.lastItemCount = win->ctx.itemCount;
+	win->ctx.itemCount = 0;
+	win->ctx.datasize = 0;
+	win->ctx.hot_item = -1;
 
 	// swap buffers
-	WimaItem *items = win->ui.items;
-	win->ui.items = win->ui.last_items;
-	win->ui.last_items = items;
+	WimaItem *items = win->ctx.items;
+	win->ctx.items = win->ctx.last_items;
+	win->ctx.last_items = items;
 
-	for (int i = 0; i < win->ui.lastItemCount; ++i) {
-		win->ui.itemMap[i] = -1;
+	for (int i = 0; i < win->ctx.lastItemCount; ++i) {
+		win->ctx.itemMap[i] = -1;
 	}
 }
 
@@ -124,24 +124,24 @@ void wima_ui_context_create(WimaWindowHandle wwh, uint32_t itemCap, uint32_t buf
 
 	assert(itemCap);
 
-	memset(&win->ui, 0, sizeof(WimaUiContext));
+	memset(&win->ctx, 0, sizeof(WimaUiContext));
 
 	size_t size = nallocx(sizeof(WimaItem) * itemCap, 0);
 
-	win->ui.items = (WimaItem *) mallocx(size, 0);
-	win->ui.last_items = (WimaItem *) mallocx(size, 0);
-	win->ui.itemMap = (int *) mallocx(size, MALLOCX_ZERO);
+	win->ctx.items = (WimaItem *) mallocx(size, 0);
+	win->ctx.last_items = (WimaItem *) mallocx(size, 0);
+	win->ctx.itemMap = (int *) mallocx(size, MALLOCX_ZERO);
 
 	itemCap = size / sizeof(WimaItem);
-	win->ui.itemCap = itemCap;
+	win->ctx.itemCap = itemCap;
 
 	if (bufferCap) {
 		bufferCap = nallocx(bufferCap, 0);
-		win->ui.data = (uint8_t*) mallocx(bufferCap, MALLOCX_ZERO);
-		win->ui.bufferCap = bufferCap;
+		win->ctx.data = (uint8_t*) mallocx(bufferCap, MALLOCX_ZERO);
+		win->ctx.bufferCap = bufferCap;
 	}
 
-	win->ui.stage = UI_STAGE_PROCESS;
+	win->ctx.stage = UI_STAGE_PROCESS;
 
 	wima_ui_clear(wwh);
 	wima_ui_state_clear(wwh);
@@ -155,8 +155,8 @@ void wima_ui_setButton(WimaWindowHandle wwh, unsigned int button, unsigned int m
 	unsigned long long mask = 1ull<<button;
 
 	// Set new bit.
-	win->ui.buttons = (enabled) ? (win->ui.buttons | mask) : (win->ui.buttons & ~mask);
-	win->ui.button_mods = mod;
+	win->ctx.buttons = (enabled) ? (win->ctx.buttons | mask) : (win->ctx.buttons & ~mask);
+	win->ctx.button_mods = mod;
 }
 
 static void wima_ui_clearEvents(WimaWindowHandle wwh) {
@@ -164,9 +164,9 @@ static void wima_ui_clearEvents(WimaWindowHandle wwh) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	win->ui.eventCount = 0;
-	win->ui.scroll.x = 0;
-	win->ui.scroll.y = 0;
+	win->ctx.eventCount = 0;
+	win->ctx.scroll.x = 0;
+	win->ctx.scroll.y = 0;
 }
 
 UIvec2 wima_ui_scroll(WimaWindowHandle wwh) {
@@ -174,7 +174,7 @@ UIvec2 wima_ui_scroll(WimaWindowHandle wwh) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	return win->ui.scroll;
+	return win->ctx.scroll;
 }
 
 int wima_ui_button_last(WimaWindowHandle wwh, int button) {
@@ -182,7 +182,7 @@ int wima_ui_button_last(WimaWindowHandle wwh, int button) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	return (win->ui.last_buttons & (1ull << button)) ? 1 : 0;
+	return (win->ctx.last_buttons & (1ull << button)) ? 1 : 0;
 }
 
 int wima_ui_button(WimaWindowHandle wwh, unsigned int button) {
@@ -190,7 +190,7 @@ int wima_ui_button(WimaWindowHandle wwh, unsigned int button) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	return (win->ui.buttons & (1ull << button)) ? 1 : 0;
+	return (win->ctx.buttons & (1ull << button)) ? 1 : 0;
 }
 
 int wima_ui_button_pressed(WimaWindowHandle wwh, int button) {
@@ -206,7 +206,7 @@ UIvec2 wima_ui_cursor_start(WimaWindowHandle wwh) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	return win->ui.start_cursor;
+	return win->ctx.start_cursor;
 }
 
 UIvec2 wima_ui_cursor_delta(WimaWindowHandle wwh) {
@@ -215,8 +215,8 @@ UIvec2 wima_ui_cursor_delta(WimaWindowHandle wwh) {
 	assert(win);
 
 	UIvec2 result = {{{
-	        win->ui.cursor.x - win->ui.last_cursor.x,
-	        win->ui.cursor.y - win->ui.last_cursor.y
+	        win->ctx.cursor.x - win->ctx.last_cursor.x,
+	        win->ctx.cursor.y - win->ctx.last_cursor.y
 	}}};
 	return result;
 }
@@ -226,7 +226,7 @@ unsigned int wima_ui_key(WimaWindowHandle wwh) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	return win->ui.active_key;
+	return win->ctx.active_key;
 }
 
 unsigned int wima_ui_modifiers(WimaWindowHandle wwh) {
@@ -234,7 +234,7 @@ unsigned int wima_ui_modifiers(WimaWindowHandle wwh) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	return win->ui.mods;
+	return win->ctx.mods;
 }
 
 void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
@@ -243,46 +243,46 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 	assert(win);
 
 	// Must run uiBeginLayout(), uiEndLayout() first.
-	assert(win->ui.stage != UI_STAGE_LAYOUT);
+	assert(win->ctx.stage != UI_STAGE_LAYOUT);
 
-	if (win->ui.stage == UI_STAGE_PROCESS) {
+	if (win->ctx.stage == UI_STAGE_PROCESS) {
 		wima_ui_item_updateHot(wwh);
 	}
 
-	win->ui.stage = UI_STAGE_PROCESS;
+	win->ctx.stage = UI_STAGE_PROCESS;
 
-	if (!win->ui.itemCount) {
+	if (!win->ctx.itemCount) {
 		wima_ui_clearEvents(wwh);
 		return;
 	}
 
-	int hot_item = win->ui.last_hot_item;
-	int active_item = win->ui.active_item;
-	int focus_item = win->ui.focus_item;
+	int hot_item = win->ctx.last_hot_item;
+	int active_item = win->ctx.active_item;
+	int focus_item = win->ctx.focus_item;
 
 	// send all keyboard events
 	if (focus_item >= 0) {
 
-		for (int i = 0; i < win->ui.eventCount; ++i) {
-			win->ui.active_key = win->ui.events[i].event.key.key;
-			win->ui.mods = win->ui.events[i].event.key.mods;
-			wima_ui_item_notify(wwh, focus_item, win->ui.events[i]);
+		for (int i = 0; i < win->ctx.eventCount; ++i) {
+			win->ctx.active_key = win->ctx.events[i].event.key.key;
+			win->ctx.mods = win->ctx.events[i].event.key.mods;
+			wima_ui_item_notify(wwh, focus_item, win->ctx.events[i]);
 		}
 	}
 	else {
-		win->ui.focus_item = -1;
+		win->ctx.focus_item = -1;
 	}
 
-	if (win->ui.scroll.x || win->ui.scroll.y) {
+	if (win->ctx.scroll.x || win->ctx.scroll.y) {
 
-		int scroll_item = wima_ui_item_find(wwh, 0, win->ui.cursor.x, win->ui.cursor.y, UI_SCROLL, UI_ANY);
+		int scroll_item = wima_ui_item_find(wwh, 0, win->ctx.cursor.x, win->ctx.cursor.y, UI_SCROLL, UI_ANY);
 
 		if (scroll_item >= 0) {
 
 			WimaEvent e;
 			e.type = WIMA_EVENT_SCROLL;
-			e.event.scroll.xoffset = win->ui.scroll.x;
-			e.event.scroll.yoffset = win->ui.scroll.y;
+			e.event.scroll.xoffset = win->ctx.scroll.x;
+			e.event.scroll.yoffset = win->ctx.scroll.y;
 
 			wima_ui_item_notify(wwh, scroll_item, e);
 		}
@@ -290,14 +290,14 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 	wima_ui_clearEvents(wwh);
 
-	int hot = win->ui.hot_item;
+	int hot = win->ctx.hot_item;
 
-	switch(win->ui.state) {
+	switch(win->ctx.state) {
 
 		default:
 		case UI_STATE_IDLE:
 		{
-			win->ui.start_cursor = win->ui.cursor;
+			win->ctx.start_cursor = win->ctx.cursor;
 
 			if (wima_ui_button(wwh, 0)) {
 
@@ -306,22 +306,22 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 				if (active_item != focus_item) {
 					focus_item = -1;
-					win->ui.focus_item = -1;
+					win->ctx.focus_item = -1;
 				}
 
 				if (active_item >= 0) {
 
-					if (((timestamp - win->ui.last_click_timestamp) > UI_CLICK_THRESHOLD) ||
-					    (win->ui.last_click_item != active_item))
+					if (((timestamp - win->ctx.last_click_timestamp) > UI_CLICK_THRESHOLD) ||
+					    (win->ctx.last_click_item != active_item))
 					{
-						win->ui.clicks = 0;
+						win->ctx.clicks = 0;
 					}
 
-					win->ui.clicks++;
+					win->ctx.clicks++;
 
-					win->ui.last_click_timestamp = timestamp;
-					win->ui.last_click_item = active_item;
-					win->ui.mods = win->ui.button_mods;
+					win->ctx.last_click_timestamp = timestamp;
+					win->ctx.last_click_item = active_item;
+					win->ctx.mods = win->ctx.button_mods;
 
 					WimaEvent e;
 					e.type = WIMA_EVENT_MOUSE_BTN;
@@ -332,15 +332,15 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 					wima_ui_item_notify(wwh, active_item, e);
 				}
 
-				win->ui.state = UI_STATE_CAPTURE;
+				win->ctx.state = UI_STATE_CAPTURE;
 			}
 			else if (wima_ui_button(wwh, 2) && !wima_ui_button_last(wwh, 2)) {
 
 				hot_item = -1;
-				hot = wima_ui_item_find(wwh, 0, win->ui.cursor.x, win->ui.cursor.y, UI_BUTTON2_DOWN, UI_ANY);
+				hot = wima_ui_item_find(wwh, 0, win->ctx.cursor.x, win->ctx.cursor.y, UI_BUTTON2_DOWN, UI_ANY);
 
 				if (hot >= 0) {
-					win->ui.mods = win->ui.button_mods;
+					win->ctx.mods = win->ctx.button_mods;
 
 					WimaEvent e;
 					e.type = WIMA_EVENT_MOUSE_BTN;
@@ -364,7 +364,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 				if (active_item >= 0) {
 
-					win->ui.mods = win->ui.button_mods;
+					win->ctx.mods = win->ctx.button_mods;
 					//wima_ui_item_notify(wwh, active_item, UI_BUTTON0_UP);
 
 					if (active_item == hot) {
@@ -373,12 +373,12 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 				}
 
 				active_item = -1;
-				win->ui.state = UI_STATE_IDLE;
+				win->ctx.state = UI_STATE_IDLE;
 			}
 			else {
 
 				if (active_item >= 0) {
-					win->ui.mods = win->ui.button_mods;
+					win->ctx.mods = win->ctx.button_mods;
 					//wima_ui_item_notify(wwh, active_item, UI_BUTTON0_CAPTURE);
 				}
 
@@ -392,10 +392,10 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 		} break;
 	}
 
-	win->ui.last_cursor = win->ui.cursor;
-	win->ui.last_hot_item = hot_item;
-	win->ui.active_item = active_item;
+	win->ctx.last_cursor = win->ctx.cursor;
+	win->ctx.last_hot_item = hot_item;
+	win->ctx.active_item = active_item;
 
-	win->ui.last_timestamp = timestamp;
-	win->ui.last_buttons = win->ui.buttons;
+	win->ctx.last_timestamp = timestamp;
+	win->ctx.last_buttons = win->ctx.buttons;
 }

@@ -25,13 +25,7 @@
 #	****** END LICENSE BLOCK ******
 
 set(WIMA_MATH "wima_math")
-
-set(WIMA_MATH_SHARED "${WIMA_MATH}_shared")
-set(WIMA_MATH_SHARED "${WIMA_MATH_SHARED}" PARENT_SCOPE)
-set(WIMA_MATH_STATIC "${WIMA_MATH}_static")
-set(WIMA_MATH_STATIC "${WIMA_MATH_STATIC}" PARENT_SCOPE)
-set(WIMA_MATH_PIC "${WIMA_MATH}_pic")
-set(WIMA_MATH_PIC "${WIMA_MATH_PIC}" PARENT_SCOPE)
+set(WIMA_MATH "${WIMA_MATH}" PARENT_SCOPE)
 
 set(WIMA_MATH_SRC
 
@@ -39,9 +33,8 @@ set(WIMA_MATH_SRC
 	"math.c"
 )
 
-create_all_libraries(
-	"${WIMA_MATH_SHARED}" "${WIMA_MATH_STATIC}" "${WIMA_MATH_PIC}"
-	"${WIMA_MATH}" "${WIMA_MATH_SRC}" YES
+create_pic_library(
+	"${WIMA_MATH}" "${WIMA_MATH}" "${WIMA_MATH_SRC}" YES
 
 	# Add libraries here.
 	"${MATH_LIB}"

@@ -25,64 +25,20 @@
 #	****** END LICENSE BLOCK ******
 
 # We use the nanovg includes, so we need this.
-include_directories("../lib/nanovg/src")
+include_directories("../../lib/nanovg/src")
 
-set(WIMA_GLOBAL_SRC
+set(WIMA_COLOR_SRC
 
-	# Add files here.
-	"global.c"
+	#Put source files here.
+	"color.c"
 )
 
-set(WIMA_GLOBAL "${PROJECT_NAME}_global")
-create_pic_library("${WIMA_GLOBAL}" "${WIMA_GLOBAL}" "${WIMA_GLOBAL_SRC}" YES
-
-	# Add libraries here.
-	"${DYNA_LIB}"
-)
-
-set(WIMA_SRC
-
-	# Put all source files here.
-	"callbacks.c"
-	"region.c"
-	"area.c"
-	"workspace.c"
-	"window.c"
-	"wima.c"
-)
-
-include_directories("${X11_INCLUDE_DIR}")
-
-add_subdirectory(math)
-
-add_subdirectory(color)
-add_subdirectory(ui)
-add_subdirectory(theme)
-add_subdirectory(widget)
+set(WIMA_COLOR "wima_color")
+set(WIMA_COLOR "${WIMA_COLOR}" PARENT_SCOPE)
 
 create_pic_library(
-	"${PROJECT_NAME}" "${PROJECT_NAME}" "${WIMA_SRC}" "YES"
+	"${WIMA_COLOR}" "${WIMA_COLOR}" "${WIMA_COLOR_SRC}" YES
 
-	# Put the needed libraries here.
-	"${WIMA_THEME}"
-	"${WIMA_UI}"
-	"${WIMA_GLOBAL}"
-	"${NANOVG_PIC}"
-	"${WIMA_MATH}"
-	"${DYNA_LIB}"
-	"${GLFW_LIB}"
-	"${WIMA_GLAD_PIC}"
-	"${JEMALLOC_LIB}"
-	"${DL_LIB}"
-	"${X11_X11_LIB}"
-	"${X11_Xi_LIB}"
-	"${X11_Xrandr_LIB}"
-	"${X11_Xxf86vm_LIB}"
-	"${X11_Xinerama_LIB}"
-	"${X11_Xcursor_LIB}"
-	"${RT_LIB}"
-	"${MATH_LIB}"
-	"${PTHREAD_LIB}"
+	# Add libraries here.
+	"${WIMA_MATH_PIC}"
 )
-
-add_subdirectory(tests)
