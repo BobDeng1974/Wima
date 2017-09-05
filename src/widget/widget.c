@@ -64,7 +64,7 @@
 
 #include "../ui/ui.h"
 
-#include "../theme/color.h"
+#include "../color/color.h"
 #include "widget.h"
 
 extern WimaG wg;

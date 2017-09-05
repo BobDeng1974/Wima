@@ -37,6 +37,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include <glad/glad.h>
+#include <KHR/khrplatform.h>
+
 #include <wima.h>
 
 /**

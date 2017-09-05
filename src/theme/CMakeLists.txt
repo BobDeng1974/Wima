@@ -36,7 +36,7 @@ set(WIMA_THEME_SRC
 	"theme.c"
 )
 
-set(WIMA_UI_PIC "wima_ui_pic")
+set(WIMA_UI_PIC "wima_ui")
 
 set(WIMA_THEME "wima_theme")
 set(WIMA_THEME "${WIMA_THEME}" PARENT_SCOPE)

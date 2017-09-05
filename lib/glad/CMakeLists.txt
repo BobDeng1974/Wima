@@ -26,23 +26,11 @@
 
 set(WIMA_GLAD_SRC "glad.c")
 
-set(WIMA_GLAD wima_glad)
-set(WIMA_GLAD wima_glad PARENT_SCOPE)
+set(WIMA_GLAD "${PROJECT_NAME}_glad")
+set(WIMA_GLAD "${WIMA_GLAD}" PARENT_SCOPE)
 
-set(WIMA_GLAD_SHARED "${WIMA_GLAD}_shared")
-set(WIMA_GLAD_SHARED "${WIMA_GLAD_SHARED}" PARENT_SCOPE)
-set(WIMA_GLAD_STATIC "${WIMA_GLAD}_static")
-set(WIMA_GLAD_STATIC "${WIMA_GLAD_STATIC}" PARENT_SCOPE)
-set(WIMA_GLAD_PIC "${WIMA_GLAD}_pic")
-set(WIMA_GLAD_PIC "${WIMA_GLAD_PIC}" PARENT_SCOPE)
-
-create_all_libraries(
-	"${WIMA_GLAD_SHARED}"
-	"${WIMA_GLAD_STATIC}"
-	"${WIMA_GLAD_PIC}"
-	"${WIMA_GLAD}"
-	"${WIMA_GLAD_SRC}"
-	YES
+create_pic_library(
+	"${WIMA_GLAD}" "${WIMA_GLAD}" "${WIMA_GLAD_SRC}" YES
 
 	"${DL_LIB}"
 )
