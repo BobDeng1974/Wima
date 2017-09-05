@@ -77,6 +77,6 @@ WimaStatus wima_window_processEvents(WimaWindowHandle win);
 
 WimaStatus wima_window_free(WimaWindowHandle win);
 
-#define WIMA_WINDOW_HANDLE(win) (WimaWindowHandle) (long) glfwGetWindowUserPointer(win)
+#define WIMA_WINDOW_HANDLE(win) ((WimaWindowHandle) (long) glfwGetWindowUserPointer(win))
 
 #endif // WIMA_WINDOW_H
