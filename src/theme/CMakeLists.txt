@@ -33,6 +33,7 @@ set(WIMA_MATH_PIC "${PROJECT_NAME}_math")
 set(WIMA_THEME_SRC
 
 	#Put source files here.
+	"color.c"
 	"theme.c"
 )
 

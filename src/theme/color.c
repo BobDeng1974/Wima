@@ -53,31 +53,101 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	Declares useful color functions.
+ *	Defines useful color functions.
  *
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <nanovg.h>
+#include "../math/math.h"
 
-// make color transparent using the default alpha value
-NVGcolor wima_color_transparent(NVGcolor color);
+#include "theme.h"
 
-// offset a color by a given integer delta in the range -100 to 100
-NVGcolor wima_color_offset(NVGcolor color, int delta);
+// Low Level Color Functions
+// -------------------
+// these are part of the implementation detail and can be used to theme
+// new kinds of controls in a similar fashion.
 
-// computes the upper and lower gradient colors for the inner box from a widget
-// theme and the widgets state. If flipActive is set and the state is
-// BND_ACTIVE, the upper and lower colors will be swapped.
+NVGcolor wima_color_transparent(NVGcolor color) {
+	color.a *= WIMA_TRANSPARENT_ALPHA;
+	return color;
+}
+
+NVGcolor wima_color_offset(NVGcolor color, int delta) {
+
+	float offset = (float) delta / 255.0f;
+
+	NVGcolor result;
+
+	if (delta != 0) {
+
+		float r = wima_clamp(color.r + offset, 0, 1);
+		float g = wima_clamp(color.g + offset, 0, 1);
+		float b = wima_clamp(color.b + offset, 0, 1);
+
+		result = nvgRGBAf(r, g, b, color.a);
+	}
+	else {
+		result = color;
+	}
+
+	return result;
+}
+
 void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
                       const WimaWidgetTheme* theme, BNDwidgetState state,
-                      int flipActive);
+                      int flipActive)
+{
+	switch(state) {
 
-// computes the text color for a widget label from a widget theme and the
-// widgets state.
-NVGcolor wima_color_text(const WimaWidgetTheme *theme, BNDwidgetState state);
+		default:
 
-// return the color of a node wire based on state
-// BND_HOVER indicates selected state,
-// BND_ACTIVE indicates dragged state
-NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, BNDwidgetState state);
+		case WIMA_DEFAULT:
+		{
+			*shade_top = wima_color_offset(theme->innerColor, theme->shadeTop);
+			*shade_down = wima_color_offset(theme->innerColor, theme->shadeBottom);
+
+			break;
+		}
+
+		case WIMA_HOVER:
+		{
+			NVGcolor color = wima_color_offset(theme->innerColor, WIMA_HOVER_SHADE);
+
+			*shade_top = wima_color_offset(color, theme->shadeTop);
+			*shade_down = wima_color_offset(color, theme->shadeBottom);
+
+			break;
+		}
+
+		case WIMA_ACTIVE:
+		{
+			int delta = flipActive ? theme->shadeBottom : theme->shadeTop;
+			*shade_top = wima_color_offset(theme->innerSelectedColor, delta);
+
+			delta = flipActive ? theme->shadeTop : theme->shadeBottom;
+			*shade_down = wima_color_offset(theme->innerSelectedColor, delta);
+
+			break;
+		}
+	}
+}
+
+NVGcolor wima_color_text(const WimaWidgetTheme* theme, BNDwidgetState state) {
+	return (state == WIMA_ACTIVE) ? theme->textSelectedColor : theme->textColor;
+}
+
+NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, BNDwidgetState state) {
+
+	switch(state) {
+		default:
+
+		case WIMA_DEFAULT:
+			return nvgRGBf(0.5f,0.5f,0.5f);
+
+		case WIMA_HOVER:
+			return theme->wireSelectColor;
+
+		case WIMA_ACTIVE:
+			return theme->activeNodeColor;
+	}
+}

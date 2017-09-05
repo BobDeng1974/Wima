@@ -55,7 +55,6 @@ include_directories("${X11_INCLUDE_DIR}")
 
 add_subdirectory(math)
 
-add_subdirectory(color)
 add_subdirectory(ui)
 add_subdirectory(theme)
 add_subdirectory(widget)
