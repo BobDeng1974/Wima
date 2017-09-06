@@ -228,7 +228,7 @@ int main() {
 	                              mouseCoordsFileDrop, mouseCoordsMenter,
 	                              NULL,                mouseCoordsResize,
 	                              NULL,                mouseCoordsClose);
-	if (status != WIMA_SUCCESS) {
+	if (status) {
 		return status;
 	}
 
