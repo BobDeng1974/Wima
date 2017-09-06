@@ -313,15 +313,15 @@ typedef struct wima_item {
 
 } WimaItem;
 
-typedef enum wima_state {
-	UI_STATE_IDLE = 0,
-	UI_STATE_CAPTURE,
-} WimaState;
+typedef enum wima_ui_state {
+	WIMA_UI_STATE_IDLE = 0,
+	WIMA_UI_STATE_CAPTURE,
+} WimaUiState;
 
 typedef enum wima_layout_stage {
-	UI_STAGE_LAYOUT = 0,
-	UI_STAGE_POST_LAYOUT,
-	UI_STAGE_PROCESS,
+	WIMA_UI_STAGE_LAYOUT = 0,
+	WIMA_UI_STAGE_POST_LAYOUT,
+	WIMA_UI_STAGE_PROCESS,
 } WimaLayoutStage;
 
 #ifdef __cplusplus

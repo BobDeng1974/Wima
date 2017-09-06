@@ -165,7 +165,7 @@ void wima_window_context_create(WimaWindowContext* ctx) {
 
 	memset(ctx, 0, sizeof(WimaWindowContext));
 
-	ctx->stage = UI_STAGE_PROCESS;
+	ctx->stage = WIMA_UI_STAGE_PROCESS;
 
 	wima_window_context_clear(ctx);
 }

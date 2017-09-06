@@ -133,7 +133,7 @@ void wima_item_setFocus(WimaItemHandle wih) {
 	assert(area);
 
 	assert((wih.item >= -1) && (wih.item < area->node.area.ctx.itemCount));
-	assert(win->ctx.stage != UI_STAGE_LAYOUT);
+	assert(win->ctx.stage != WIMA_UI_STAGE_LAYOUT);
 
 	win->ctx.focus_item = wih;
 }
@@ -168,7 +168,7 @@ WimaItemHandle wima_item_new(WimaAreaHandle wah) {
 	assert(area->node.area.ctx.itemCount < (int) area->node.area.ctx.itemCap);
 
 	 // Must run between uiBeginLayout() and uiEndLayout().
-	assert(win->ctx.stage == UI_STAGE_LAYOUT);
+	assert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT);
 
 	int idx = area->node.area.ctx.itemCount++;
 

@@ -80,12 +80,12 @@ void wima_area_layout_begin(WimaAreaHandle wah) {
 	assert(win);
 
 	// Must run uiEndLayout() and uiProcess() first.
-	assert(win->ctx.stage == UI_STAGE_PROCESS);
+	assert(win->ctx.stage == WIMA_UI_STAGE_PROCESS);
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(win->areas, wah.node);
 
 	wima_area_context_clear(&area->node.area.ctx);
-	win->ctx.stage = UI_STAGE_LAYOUT;
+	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 }
 
 // Compute bounding box of all items super-imposed.
@@ -681,7 +681,7 @@ void wima_ui_layout_end(WimaAreaHandle wah) {
 	assert(win);
 
 	// Must run uiBeginLayout() first.
-	assert(win->ctx.stage == UI_STAGE_LAYOUT);
+	assert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT);
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(win->areas, wah.node);
 	assert(area);
@@ -709,5 +709,5 @@ void wima_ui_layout_end(WimaAreaHandle wah) {
 		wima_ui_item_updateHot(wah.window);
 	}
 
-	win->ctx.stage = UI_STAGE_POST_LAYOUT;
+	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
 }

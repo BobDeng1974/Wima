@@ -180,13 +180,13 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 	assert(win);
 
 	// Must run uiBeginLayout(), uiEndLayout() first.
-	assert(win->ctx.stage != UI_STAGE_LAYOUT);
+	assert(win->ctx.stage != WIMA_UI_STAGE_LAYOUT);
 
-	if (win->ctx.stage == UI_STAGE_PROCESS) {
+	if (win->ctx.stage == WIMA_UI_STAGE_PROCESS) {
 		wima_ui_item_updateHot(wwh);
 	}
 
-	win->ctx.stage = UI_STAGE_PROCESS;
+	win->ctx.stage = WIMA_UI_STAGE_PROCESS;
 
 	WimaItemHandle hot_item = win->ctx.last_hot_item;
 	WimaItemHandle active_item = win->ctx.active_item;
@@ -233,7 +233,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 	switch(win->ctx.state) {
 
 		default:
-		case UI_STATE_IDLE:
+		case WIMA_UI_STATE_IDLE:
 		{
 			win->ctx.start_cursor = win->ctx.cursor;
 
@@ -270,7 +270,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 					wima_area_item_notify(active_item, e);
 				}
 
-				win->ctx.state = UI_STATE_CAPTURE;
+				win->ctx.state = WIMA_UI_STATE_CAPTURE;
 			}
 			else if (wima_ui_button(wwh, 2) && !wima_ui_button_last(wwh, 2)) {
 
@@ -302,7 +302,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 			break;
 		}
 
-		case UI_STATE_CAPTURE:
+		case WIMA_UI_STATE_CAPTURE:
 		{
 			if (!wima_ui_button(wwh, 0)) {
 
@@ -317,7 +317,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 				}
 
 				active_item.item = -1;
-				win->ctx.state = UI_STATE_IDLE;
+				win->ctx.state = WIMA_UI_STATE_IDLE;
 			}
 			else {
 
