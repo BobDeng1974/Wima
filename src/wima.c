@@ -152,8 +152,7 @@ WimaStatus wima_main() {
 		wwh = WIMA_WINDOW_HANDLE(win);
 
 		// Process events and check for error.
-		WimaStatus status = wima_window_processEvents(wwh);
-		if (status) {
+		if (wima_window_processEvents(wwh)) {
 			wg.error(status, "Wima encountered an error processing events.");
 		}
 	}
