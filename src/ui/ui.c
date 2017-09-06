@@ -111,26 +111,6 @@ void wima_area_context_clear(WimaAreaContext* ctx) {
 	}
 }
 
-void wima_area_context_create(WimaAreaContext* ctx, int itemCap, int bufferCap) {
-
-	memset(ctx, 0, sizeof(WimaAreaContext));
-
-	size_t size = nallocx(sizeof(WimaItem) * itemCap, 0);
-
-	ctx->items = (WimaItem *) mallocx(size, 0);
-	ctx->last_items = (WimaItem *) mallocx(size, 0);
-	ctx->itemMap = (int *) mallocx(size, MALLOCX_ZERO);
-
-	itemCap = size / sizeof(WimaItem);
-	ctx->itemCap = itemCap;
-
-	if (bufferCap) {
-		bufferCap = nallocx(bufferCap, 0);
-		ctx->data = (uint8_t*) mallocx(bufferCap, MALLOCX_ZERO);
-		ctx->bufferCap = bufferCap;
-	}
-}
-
 void wima_window_context_create(WimaWindowContext* ctx) {
 
 	memset(ctx, 0, sizeof(WimaWindowContext));

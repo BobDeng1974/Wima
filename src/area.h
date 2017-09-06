@@ -87,7 +87,7 @@ typedef struct wima_area_node {
 
 WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 
-WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode node);
+WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node);
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
 
 DynaTree wima_area_areas(WimaWindowHandle win);

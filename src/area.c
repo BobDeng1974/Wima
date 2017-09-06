@@ -34,6 +34,10 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <string.h>
+
+#include <jemalloc/jemalloc.h>
+
 #include <wima.h>
 
 #include "region.h"
@@ -42,6 +46,26 @@
 #include "global.h"
 
 extern WimaG wg;
+
+void wima_area_context_create(WimaAreaContext* ctx, int itemCap, int bufferCap) {
+
+	memset(ctx, 0, sizeof(WimaAreaContext));
+
+	size_t size = nallocx(sizeof(WimaItem) * itemCap, 0);
+
+	ctx->items = (WimaItem *) mallocx(size, 0);
+	ctx->last_items = (WimaItem *) mallocx(size, 0);
+	ctx->itemMap = (int *) mallocx(size, MALLOCX_ZERO);
+
+	itemCap = size / sizeof(WimaItem);
+	ctx->itemCap = itemCap;
+
+	if (bufferCap) {
+		bufferCap = nallocx(bufferCap, 0);
+		ctx->data = (uint8_t*) mallocx(bufferCap, MALLOCX_ZERO);
+		ctx->bufferCap = bufferCap;
+	}
+}
 
 WimaStatus wima_areas_free(DynaTree areas) {
 
@@ -121,7 +145,7 @@ WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode node) {
+WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node) {
 
 	// Make sure this is clear.
 	WimaStatus status = WIMA_SUCCESS;
@@ -136,13 +160,13 @@ WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode
 	if (area->type == WIMA_AREA_PARENT) {
 
 		// Set the left child user pointer and check for error.
-		status = wima_area_node_setData(win, areas, dtree_left(node));
+		status = wima_area_node_init(win, areas, dtree_left(node));
 		if (status) {
 			return status;
 		}
 
 		// Set the right child user pointer and check for error.
-		status = wima_area_node_setData(win, areas, dtree_right(node));
+		status = wima_area_node_init(win, areas, dtree_right(node));
 		if (status) {
 			return status;
 		}
@@ -175,6 +199,8 @@ WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode
 
 		// Call the user function.
 		area->node.area.user = get_user_ptr(wah);
+
+		wima_area_context_create(&area->node.area.ctx, region->itemCap, region->bufferCap);
 	}
 
 	return status;
