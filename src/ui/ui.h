@@ -72,24 +72,6 @@ extern "C" {
 
 #define UI_MAX_KIND 16
 
-#define UI_ANY_BUTTON0_INPUT (UI_BUTTON0_DOWN \
-	    |UI_BUTTON0_UP \
-	    |UI_BUTTON0_HOT_UP \
-	    |UI_BUTTON0_CAPTURE)
-
-#define UI_ANY_BUTTON2_INPUT (UI_BUTTON2_DOWN)
-
-#define UI_ANY_MOUSE_INPUT (UI_ANY_BUTTON0_INPUT \
-	    |UI_ANY_BUTTON2_INPUT)
-
-#define UI_ANY_KEY_INPUT (UI_KEY_DOWN \
-	    |UI_KEY_UP \
-	    |UI_CHAR)
-
-#define UI_ANY_INPUT (UI_ANY_MOUSE_INPUT \
-	    |UI_ANY_KEY_INPUT)
-
-
 // Extra item flags.
 
 // Bits 0-2.
@@ -294,10 +276,10 @@ typedef enum UIevent {
 // A special mask passed to wima_ui_item_find().
 #define UI_ANY 0xffffffff
 
-//#if 0
+#if 0
 // handler callback; event is one of UI_EVENT_*
 typedef void (*UIhandler)(int item, UIevent event);
-//#endif
+#endif
 
 typedef struct wima_item {
 
@@ -378,7 +360,7 @@ typedef enum wima_event_type {
 
 } WimaEventType;
 
-#define WIMA_UI_ITEM_EVENT_MASK \
+#define WIMA_ITEM_EVENT_MASK \
 	(WIMA_EVENT_KEY | WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER | WIMA_EVENT_SCROLL | WIMA_EVENT_CHAR)
 
 typedef struct wima_key_info {
@@ -451,7 +433,7 @@ typedef struct wima_event {
 
 		bool mouse_enter;
 
-	} event;
+	} e;
 
 } WimaEvent;
 
@@ -531,9 +513,14 @@ typedef struct wima_area_context {
  *					using wima_ui_item_allocHandle(); you may pass 0 if
  *					you don't need to allocate handles.
  */
-void wima_ui_context_create(WimaWindowHandle wwh, uint32_t itemCap, uint32_t bufferCap);
+void wima_window_context_create(WimaWindowContext* ctx);
 
-void wima_ui_clear(WimaWindowHandle wwh);
+// reset the currently stored hot/active etc. handles; this should be called when
+// a re-declaration of the UI changes the item indices, to avoid state
+// related glitches because item identities have changed.
+void wima_window_context_clear(WimaWindowContext* ctx);
+
+void wima_area_context_clear(WimaAreaContext* ctx);
 
 #ifdef __cplusplus
 }

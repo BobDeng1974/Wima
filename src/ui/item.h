@@ -68,104 +68,42 @@
 
 #include "ui.h"
 
-int wima_ui_item_count(WimaWindowHandle wwh);
+WimaItem* wima_item_ptr(WimaItemHandle wih);
 
-int wima_ui_item_lastCount(WimaWindowHandle wwh);
-
-unsigned int wima_ui_allocSize(WimaWindowHandle wwh);
-
-WimaItem *wima_ui_item_ptr(WimaWindowHandle wwh, int item);
-
-WimaItem *wima_ui_item_lastPtr(WimaWindowHandle wwh, int item);
-
-int wima_ui_item_hot(WimaWindowHandle wwh);
-
-void wima_ui_item_setFocus(WimaWindowHandle wwh, int item);
+WimaItem* wima_item_lastPtr(WimaItemHandle wih);
 
 void wima_ui_item_validateState(WimaWindowHandle wwh);
 
-int wima_ui_item_focus(WimaWindowHandle wwh);
-
 //#if 0
-void wima_ui_item_notify(WimaWindowHandle wwh, int item, WimaEvent event);
+void wima_area_item_notify(WimaItemHandle wih, WimaEvent e);
 //#endif
 
-int wima_ui_item_lastChild(WimaWindowHandle wwh, int item);
+WimaItemHandle wima_ui_item_lastChild(WimaItemHandle item);
 
-int wima_ui_item_append(WimaWindowHandle wwh, int item, int sibling);
+short wima_ui_item_marginLeft(WimaItemHandle item);
 
-int wima_ui_item_insert(WimaWindowHandle wwh, int item, int child);
+short wima_ui_item_marginTop(WimaItemHandle item);
 
-int wima_ui_item_insertBack(WimaWindowHandle wwh, int item, int child);
+short wima_ui_item_marginRight(WimaItemHandle item);
 
-void wima_ui_item_setFrozen(WimaWindowHandle wwh, int item, int enable);
-
-void wima_ui_item_setSize(WimaWindowHandle wwh, int item, int w, int h);
-
-int wima_ui_item_width(WimaWindowHandle wwh, int item);
-
-int wima_ui_item_height(WimaWindowHandle wwh, int item);
-
-void wima_ui_item_setLayoutType(WimaWindowHandle wwh, int item, unsigned int flags);
-
-unsigned int wima_ui_item_layoutType(WimaWindowHandle wwh, int item);
-
-void wima_ui_item_setBox(WimaWindowHandle wwh, int item, unsigned int flags);
-
-unsigned int wima_ui_item_box(WimaWindowHandle wwh, int item);
-
-void wima_ui_item_setMargins(WimaWindowHandle wwh, int item, short l, short t, short r, short b);
-
-short wima_ui_item_marginLeft(WimaWindowHandle wwh, int item);
-
-short wima_ui_item_marginTop(WimaWindowHandle wwh, int item);
-
-short wima_ui_item_marginRight(WimaWindowHandle wwh, int item);
-
-short wima_ui_item_marginDown(WimaWindowHandle wwh, int item);
+short wima_ui_item_marginDown(WimaItemHandle item);
 
 bool wima_ui_item_compare(WimaItem *item1, WimaItem *item2);
 
-bool wima_ui_item_map(WimaWindowHandle wwh, int item1, int item2);
+bool wima_ui_item_map(WimaItemHandle item1, WimaItemHandle item2);
 
-int wima_ui_item_recover(WimaWindowHandle wwh, int olditem);
-
-void wima_ui_item_remap(WimaWindowHandle wwh, int olditem, int newitem);
-
-UIrect wima_ui_item_rect(WimaWindowHandle wwh, int item);
-
-int wima_ui_item_firstChild(WimaWindowHandle wwh, int item);
-
-int wima_ui_item_nextSibling(WimaWindowHandle wwh, int item);
-
-void *wima_ui_item_allocHandle(WimaWindowHandle wwh, int item, unsigned int size);
-
-void wima_ui_item_setHandle(WimaWindowHandle wwh, int item, void *handle);
-
-void *wima_ui_item_handle(WimaWindowHandle wwh, int item);
-
-void wima_ui_item_setEvents(WimaWindowHandle wwh, int item, unsigned int flags);
-
-unsigned int wima_ui_item_events(WimaWindowHandle wwh, int item);
-
-void wima_ui_item_setFlags(WimaWindowHandle wwh, int item, unsigned int flags);
-
-unsigned int wima_ui_item_flags(WimaWindowHandle wwh, int item);
-
-int wima_ui_item_contains(WimaWindowHandle wwh, int item, int x, int y);
-
-int wima_ui_item_find(WimaWindowHandle wwh, int item, int x, int y, unsigned int flags, unsigned int mask);
+void* wima_ui_item_allocHandle(WimaItemHandle item, unsigned int size);
 
 void wima_ui_item_updateHot(WimaWindowHandle wwh);
 
 int wima_ui_clicks(WimaWindowHandle wwh);
 
-static int wima_ui_item_isActive(WimaWindowHandle wwh, int item);
+static bool wima_ui_item_isActive(WimaItemHandle item);
 
-static int wima_ui_item_isHot(WimaWindowHandle wwh, int item);
+static bool wima_ui_item_isHot(WimaItemHandle item);
 
-static int wima_ui_item_isFocused(WimaWindowHandle wwh, int item);
+static bool wima_ui_item_isFocused(WimaItemHandle item);
 
-WimaItemState wima_ui_item_state(WimaWindowHandle wwh, int item);
+WimaItemState wima_ui_item_state(WimaItemHandle item);
 
 #endif // WIMA_ITEM_H

@@ -56,17 +56,17 @@ extern "C" {
 /**
  * A handle to a region (area template) type.
  */
-typedef uint16_t WimaRegionHandle;
+typedef uint8_t WimaRegionHandle;
 
 /**
  * A handle to a window.
  */
-typedef uint16_t WimaWindowHandle;
+typedef uint8_t WimaWindowHandle;
 
 /**
  * A handle to a workspace (window template) type.
  */
-typedef uint16_t WimaWorkspaceHandle;
+typedef uint8_t WimaWorkspaceHandle;
 
 /**
  * A handle to a node. This is to make the node size
@@ -74,7 +74,7 @@ typedef uint16_t WimaWorkspaceHandle;
  * sure that nothing will go over the limit, so I feel
  * comfortable doing this.
  */
-typedef uint32_t WimaAreaNodeHandle;
+typedef uint16_t WimaAreaNodeHandle;
 
 /**
  * A handle to a area.
@@ -97,8 +97,10 @@ typedef struct wima_area_handle {
  */
 typedef struct wima_item_handle {
 
-	WimaAreaHandle area;
-	uint32_t item;
+	int16_t item;
+
+	WimaAreaNodeHandle area;
+	WimaWindowHandle window;
 
 } WimaItemHandle;
 
@@ -311,7 +313,7 @@ typedef enum wima_action {
 typedef WimaStatus (*ItemKeyFunc)(WimaItemHandle, WimaKey, int, WimaAction, WimaMods);
 typedef WimaStatus (*ItemMouseEventFunc)(WimaItemHandle, WimaMouseBtn, WimaAction, WimaMods);
 typedef WimaStatus (*ItemMouseEnterFunc)(WimaItemHandle, bool);
-typedef WimaStatus (*ItemScrollFunc)(WimaItemHandle, int, int);
+typedef WimaStatus (*ItemScrollFunc)(WimaItemHandle, int, int, WimaMods);
 typedef WimaStatus (*ItemCharEvent)(WimaItemHandle, uint32_t, WimaMods);
 
 typedef void* (*AreaGenUserPointerFunc)(WimaAreaHandle);

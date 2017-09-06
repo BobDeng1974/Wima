@@ -85,8 +85,8 @@ WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wwh, DynaNode node,
 
 	WimaAreaNode wan;
 	wan.type = WIMA_AREA_PARENT;
-	wan.node.parent.width = -1;
-	wan.node.parent.height = -1;
+	wan.width = -1;
+	wan.height = -1;
 	wan.node.parent.split = fabs(split);
 	wan.node.parent.vertical = vertical;
 
@@ -109,8 +109,8 @@ WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wwh, DynaNode node, Wima
 
 	WimaAreaNode wan;
 	wan.type = WIMA_AREA_LEAF;
-	wan.node.area.width = -1;
-	wan.node.area.height = -1;
+	wan.width = -1;
+	wan.height = -1;
 	wan.node.area.type = reg;
 
 	DynaStatus status = dtree_add(wksp->regions, node, (uint8_t*) &wan);
@@ -130,50 +130,4 @@ bool wima_workspace_nodeValid(WimaWorkspaceHandle wwh, DynaNode n) {
 	return n == dtree_root() ||
 	       (dtree_exists(wksp->regions, p) &&
 	       ((WimaAreaNode*) dtree_node(wksp->regions, p))->type == WIMA_AREA_PARENT);
-}
-
-int wima_workspace_node_itemCapacity(DynaTree regions, DynaNode n) {
-
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(regions, n);
-
-	if (area->type == WIMA_AREA_PARENT) {
-
-		int leftCap = wima_workspace_node_itemCapacity(regions, dtree_left(n));
-		int rightCap = wima_workspace_node_itemCapacity(regions, dtree_right(n));
-
-		return leftCap + rightCap;
-	}
-	else {
-
-		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->node.area.type);
-
-		return region->itemCap;
-	}
-}
-
-int wima_workspace_itemCapacity(WimaWksp* wksp) {
-	return wima_workspace_node_itemCapacity(wksp->regions, dtree_root());
-}
-
-int wima_workspace_node_bufferCapacity(DynaTree regions, DynaNode n) {
-
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(regions, n);
-
-	if (area->type == WIMA_AREA_PARENT) {
-
-		int leftCap = wima_workspace_node_bufferCapacity(regions, dtree_left(n));
-		int rightCap = wima_workspace_node_bufferCapacity(regions, dtree_right(n));
-
-		return leftCap + rightCap;
-	}
-	else {
-
-		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->node.area.type);
-
-		return region->bufferCap;
-	}
-}
-
-int wima_workspace_bufferCapacity(WimaWksp* wksp) {
-	return wima_workspace_node_bufferCapacity(wksp->regions, dtree_root());
 }

@@ -56,6 +56,9 @@ typedef enum wima_area_node_type {
 
 typedef struct wima_area_node {
 
+	int width;
+	int height;
+
 	WimaAreaNodeType type;
 	WimaWindowHandle window;
 
@@ -63,12 +66,9 @@ typedef struct wima_area_node {
 
 		struct wima_area {
 
+			WimaAreaContext ctx;
+
 			void* user;
-
-			// These are bigger, so put them first.
-			int width;
-			int height;
-
 			WimaRegionHandle type;
 
 		} area;
@@ -76,10 +76,6 @@ typedef struct wima_area_node {
 		struct wima_area_parent {
 
 			float split;
-
-			// These are bigger, so put them first.
-			int width;
-			int height;
 
 			bool vertical;
 
@@ -89,13 +85,13 @@ typedef struct wima_area_node {
 
 } WimaAreaNode;
 
-WimaStatus wima_area_node_freeUserPointer(DynaTree areas, DynaNode node);
+WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 
 WimaStatus wima_area_node_setData(WimaWindowHandle win, DynaTree areas, DynaNode node);
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
 
 DynaTree wima_area_areas(WimaWindowHandle win);
-WimaAreaNode* wima_area_area(WimaAreaHandle wah);
+WimaAreaNode* wima_area_area(WimaWindowHandle win, WimaAreaNodeHandle node);
 WimaWin* wima_area_window(WimaAreaHandle wah);
 WimaAreaHandle wima_area_handle(WimaAreaNode* area, DynaNode node);
 

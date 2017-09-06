@@ -114,10 +114,10 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_KEY;
-	event->event.key.key = wkey;
-	event->event.key.scancode = scancode;
-	event->event.key.action = wact;
-	event->event.key.mods = wmods;
+	event->e.key.key = wkey;
+	event->e.key.scancode = scancode;
+	event->e.key.action = wact;
+	event->e.key.mods = wmods;
 
 	++(wwin->ctx.eventCount);
 }
@@ -151,9 +151,9 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_MOUSE_BTN;
-	event->event.mouse_btn.button = wbtn;
-	event->event.mouse_btn.action = wact;
-	event->event.mouse_btn.mods = wmods;
+	event->e.mouse_btn.button = wbtn;
+	event->e.mouse_btn.action = wact;
+	event->e.mouse_btn.mods = wmods;
 
 	++(wwin->ctx.eventCount);
 }
@@ -189,8 +189,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_MOUSE_POS;
-	event->event.pos.x = xint;
-	event->event.pos.y = yint;
+	event->e.pos.x = xint;
+	event->e.pos.y = yint;
 
 	++(wwin->ctx.eventCount);
 
@@ -230,9 +230,9 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_SCROLL;
-	event->event.scroll.xoffset = xint;
-	event->event.scroll.yoffset = yint;
-	event->event.scroll.mods = wwin->ctx.mods;
+	event->e.scroll.xoffset = xint;
+	event->e.scroll.yoffset = yint;
+	event->e.scroll.mods = wwin->ctx.mods;
 
 	++(wwin->ctx.eventCount);
 
@@ -270,8 +270,8 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_CHAR;
-	event->event.char_event.code = code;
-	event->event.char_event.mods = mods;
+	event->e.char_event.code = code;
+	event->e.char_event.mods = mods;
 
 	++(wwin->ctx.eventCount);
 }
@@ -331,7 +331,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 	}
 
 	event->type = WIMA_EVENT_FILE_DROP;
-	event->event.file_drop = strs;
+	event->e.file_drop = strs;
 
 	++(wwin->ctx.eventCount);
 }
@@ -361,7 +361,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_WIN_ENTER;
-	event->event.mouse_enter = entered ? true : false;
+	event->e.mouse_enter = entered ? true : false;
 
 	++(wwin->ctx.eventCount);
 }
@@ -391,8 +391,8 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_WIN_POS;
-	event->event.pos.x = xpos;
-	event->event.pos.y = ypos;
+	event->e.pos.x = xpos;
+	event->e.pos.y = ypos;
 
 	++(wwin->ctx.eventCount);
 }
@@ -427,8 +427,8 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_FB_SIZE;
-	event->event.size.width = width;
-	event->event.size.height = height;
+	event->e.size.width = width;
+	event->e.size.height = height;
 
 	++(wwin->ctx.eventCount);
 }
@@ -463,8 +463,8 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_WIN_SIZE;
-	event->event.size.width = width;
-	event->event.size.height = height;
+	event->e.size.width = width;
+	event->e.size.height = height;
 
 	++(wwin->ctx.eventCount);
 }

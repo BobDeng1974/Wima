@@ -47,14 +47,14 @@ WimaStatus wima_areas_free(DynaTree areas) {
 
 	DynaNode root = dtree_root();
 
-	WimaStatus status = wima_area_node_freeUserPointer(areas, root);
+	WimaStatus status = wima_area_node_free(areas, root);
 
 	dtree_free(areas);
 
 	return status;
 }
 
-WimaStatus wima_area_node_freeUserPointer(DynaTree areas, DynaNode node) {
+WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 
 	// Make sure this is clear.
 	WimaStatus status = WIMA_SUCCESS;
@@ -66,18 +66,28 @@ WimaStatus wima_area_node_freeUserPointer(DynaTree areas, DynaNode node) {
 	if (area->type == WIMA_AREA_PARENT) {
 
 		// Set the left child user pointer and check for error.
-		status = wima_area_node_freeUserPointer(areas, dtree_left(node));
+		status = wima_area_node_free(areas, dtree_left(node));
 		if (status) {
 			return status;
 		}
 
 		// Set the right child user pointer and check for error.
-		status = wima_area_node_freeUserPointer(areas, dtree_right(node));
+		status = wima_area_node_free(areas, dtree_right(node));
 		if (status) {
 			return status;
 		}
 	}
 	else {
+
+		// Free the items arrays.
+		dallocx(area->node.area.ctx.items, 0);
+		dallocx(area->node.area.ctx.last_items, 0);
+		dallocx(area->node.area.ctx.itemMap, 0);
+
+		// Free the buffer.
+		if (area->node.area.ctx.data) {
+			dallocx(area->node.area.ctx.data, 0);
+		}
 
 		// If the user didn't allocate anything, just return.
 		void* user = area->node.area.user;
@@ -210,8 +220,8 @@ DynaTree wima_area_areas(WimaWindowHandle win) {
 	return window->areas;
 }
 
-WimaAreaNode* wima_area_area(WimaAreaHandle wah) {
-	return (WimaAreaNode*) dtree_node(wima_area_areas(wah.window), wah.node);
+WimaAreaNode* wima_area_area(WimaWindowHandle win, WimaAreaNodeHandle node) {
+	return (WimaAreaNode*) dtree_node(wima_area_areas(win), node);
 }
 
 inline WimaAreaHandle wima_area_handle(WimaAreaNode* area, DynaNode node) {

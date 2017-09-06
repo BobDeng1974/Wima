@@ -86,65 +86,58 @@
 
 extern WimaG wg;
 
-void wima_ui_state_clear(WimaWindowHandle wwh) {
+void wima_window_context_clear(WimaWindowContext* ctx) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
-	assert(win);
-
-	win->ctx.last_hot_item = -1;
-	win->ctx.active_item = -1;
-	win->ctx.focus_item = -1;
-	win->ctx.last_click_item = -1;
+	memset(&ctx->last_hot_item, -1, sizeof(WimaItemHandle));
+	memset(&ctx->active_item, -1, sizeof(WimaItemHandle));
+	memset(&ctx->focus_item, -1, sizeof(WimaItemHandle));
+	memset(&ctx->last_click_item, -1, sizeof(WimaItemHandle));
+	memset(&ctx->hot_item, -1, sizeof(WimaItemHandle));
 }
 
-void wima_ui_clear(WimaWindowHandle wwh) {
+void wima_area_context_clear(WimaAreaContext* ctx) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
-	assert(win);
-
-	win->ctx.lastItemCount = win->ctx.itemCount;
-	win->ctx.itemCount = 0;
-	win->ctx.datasize = 0;
-	win->ctx.hot_item = -1;
+	ctx->lastItemCount = ctx->itemCount;
+	ctx->itemCount = 0;
+	ctx->datasize = 0;
 
 	// swap buffers
-	WimaItem *items = win->ctx.items;
-	win->ctx.items = win->ctx.last_items;
-	win->ctx.last_items = items;
+	WimaItem *items = ctx->items;
+	ctx->items = ctx->last_items;
+	ctx->last_items = items;
 
-	for (int i = 0; i < win->ctx.lastItemCount; ++i) {
-		win->ctx.itemMap[i] = -1;
+	for (int i = 0; i < ctx->lastItemCount; ++i) {
+		ctx->itemMap[i] = -1;
 	}
 }
 
-void wima_ui_context_create(WimaWindowHandle wwh, uint32_t itemCap, uint32_t bufferCap) {
+void wima_area_context_create(WimaAreaContext* ctx, int itemCap, int bufferCap) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
-	assert(win);
-
-	assert(itemCap);
-
-	memset(&win->ctx, 0, sizeof(WimaWindowContext));
+	memset(ctx, 0, sizeof(WimaAreaContext));
 
 	size_t size = nallocx(sizeof(WimaItem) * itemCap, 0);
 
-	win->ctx.items = (WimaItem *) mallocx(size, 0);
-	win->ctx.last_items = (WimaItem *) mallocx(size, 0);
-	win->ctx.itemMap = (int *) mallocx(size, MALLOCX_ZERO);
+	ctx->items = (WimaItem *) mallocx(size, 0);
+	ctx->last_items = (WimaItem *) mallocx(size, 0);
+	ctx->itemMap = (int *) mallocx(size, MALLOCX_ZERO);
 
 	itemCap = size / sizeof(WimaItem);
-	win->ctx.itemCap = itemCap;
+	ctx->itemCap = itemCap;
 
 	if (bufferCap) {
 		bufferCap = nallocx(bufferCap, 0);
-		win->ctx.data = (uint8_t*) mallocx(bufferCap, MALLOCX_ZERO);
-		win->ctx.bufferCap = bufferCap;
+		ctx->data = (uint8_t*) mallocx(bufferCap, MALLOCX_ZERO);
+		ctx->bufferCap = bufferCap;
 	}
+}
 
-	win->ctx.stage = UI_STAGE_PROCESS;
+void wima_window_context_create(WimaWindowContext* ctx) {
 
-	wima_ui_clear(wwh);
-	wima_ui_state_clear(wwh);
+	memset(ctx, 0, sizeof(WimaWindowContext));
+
+	ctx->stage = UI_STAGE_PROCESS;
+
+	wima_window_context_clear(ctx);
 }
 
 void wima_ui_setButton(WimaWindowHandle wwh, unsigned int button, unsigned int mod, int enabled) {
@@ -251,46 +244,47 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 	win->ctx.stage = UI_STAGE_PROCESS;
 
-	if (!win->ctx.itemCount) {
-		wima_ui_clearEvents(wwh);
-		return;
-	}
-
-	int hot_item = win->ctx.last_hot_item;
-	int active_item = win->ctx.active_item;
-	int focus_item = win->ctx.focus_item;
+	WimaItemHandle hot_item = win->ctx.last_hot_item;
+	WimaItemHandle active_item = win->ctx.active_item;
+	WimaItemHandle focus_item = win->ctx.focus_item;
 
 	// send all keyboard events
-	if (focus_item >= 0) {
+	if (focus_item.item >= 0) {
 
 		for (int i = 0; i < win->ctx.eventCount; ++i) {
-			win->ctx.active_key = win->ctx.events[i].event.key.key;
-			win->ctx.mods = win->ctx.events[i].event.key.mods;
-			wima_ui_item_notify(wwh, focus_item, win->ctx.events[i]);
+			win->ctx.active_key = win->ctx.events[i].e.key.key;
+			win->ctx.mods = win->ctx.events[i].e.key.mods;
+			wima_area_item_notify(focus_item, win->ctx.events[i]);
 		}
 	}
 	else {
-		win->ctx.focus_item = -1;
+		win->ctx.focus_item.item = -1;
 	}
+
+	// TODO: Send the scroll event to the right area.
 
 	if (win->ctx.scroll.x || win->ctx.scroll.y) {
 
-		int scroll_item = wima_ui_item_find(wwh, 0, win->ctx.cursor.x, win->ctx.cursor.y, UI_SCROLL, UI_ANY);
+		WimaItemHandle item;
+		item.item = 0;
+		item.window = wwh;
 
-		if (scroll_item >= 0) {
+		WimaItemHandle scroll_item = wima_ui_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_SCROLL, UI_ANY);
+
+		if (scroll_item.item >= 0) {
 
 			WimaEvent e;
 			e.type = WIMA_EVENT_SCROLL;
-			e.event.scroll.xoffset = win->ctx.scroll.x;
-			e.event.scroll.yoffset = win->ctx.scroll.y;
+			e.e.scroll.xoffset = win->ctx.scroll.x;
+			e.e.scroll.yoffset = win->ctx.scroll.y;
 
-			wima_ui_item_notify(wwh, scroll_item, e);
+			wima_area_item_notify(scroll_item, e);
 		}
 	}
 
 	wima_ui_clearEvents(wwh);
 
-	int hot = win->ctx.hot_item;
+	WimaItemHandle hot = win->ctx.hot_item;
 
 	switch(win->ctx.state) {
 
@@ -301,18 +295,18 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 			if (wima_ui_button(wwh, 0)) {
 
-				hot_item = -1;
+				hot_item.item = -1;
 				active_item = hot;
 
-				if (active_item != focus_item) {
-					focus_item = -1;
-					win->ctx.focus_item = -1;
+				if (active_item.item != focus_item.item) {
+					focus_item.item = -1;
+					win->ctx.focus_item.item = -1;
 				}
 
-				if (active_item >= 0) {
+				if (active_item.item >= 0) {
 
 					if (((timestamp - win->ctx.last_click_timestamp) > UI_CLICK_THRESHOLD) ||
-					    (win->ctx.last_click_item != active_item))
+					    (win->ctx.last_click_item.item != active_item.item))
 					{
 						win->ctx.clicks = 0;
 					}
@@ -325,30 +319,36 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 					WimaEvent e;
 					e.type = WIMA_EVENT_MOUSE_BTN;
-					e.event.mouse_btn.button = WIMA_MOUSE_LEFT;
-					e.event.mouse_btn.action = WIMA_ACTION_PRESS;
-					e.event.mouse_btn.mods = WIMA_MOD_NONE;
+					e.e.mouse_btn.button = WIMA_MOUSE_LEFT;
+					e.e.mouse_btn.action = WIMA_ACTION_PRESS;
+					e.e.mouse_btn.mods = WIMA_MOD_NONE;
 
-					wima_ui_item_notify(wwh, active_item, e);
+					wima_area_item_notify(active_item, e);
 				}
 
 				win->ctx.state = UI_STATE_CAPTURE;
 			}
 			else if (wima_ui_button(wwh, 2) && !wima_ui_button_last(wwh, 2)) {
 
-				hot_item = -1;
-				hot = wima_ui_item_find(wwh, 0, win->ctx.cursor.x, win->ctx.cursor.y, UI_BUTTON2_DOWN, UI_ANY);
+				// TODO: Send the event to the right area.
 
-				if (hot >= 0) {
+				WimaItemHandle item;
+				item.item = 0;
+				item.window = wwh;
+
+				hot_item.item = -1;
+				hot = wima_ui_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_BUTTON2_DOWN, UI_ANY);
+
+				if (hot.item >= 0) {
 					win->ctx.mods = win->ctx.button_mods;
 
 					WimaEvent e;
 					e.type = WIMA_EVENT_MOUSE_BTN;
-					e.event.mouse_btn.button = WIMA_MOUSE_RIGHT;
-					e.event.mouse_btn.action = WIMA_ACTION_PRESS;
-					e.event.mouse_btn.mods = WIMA_MOD_NONE;
+					e.e.mouse_btn.button = WIMA_MOUSE_RIGHT;
+					e.e.mouse_btn.action = WIMA_ACTION_PRESS;
+					e.e.mouse_btn.mods = WIMA_MOD_NONE;
 
-					wima_ui_item_notify(wwh, hot, e);
+					wima_area_item_notify(hot, e);
 				}
 			}
 			else {
@@ -362,31 +362,31 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 		{
 			if (!wima_ui_button(wwh, 0)) {
 
-				if (active_item >= 0) {
+				if (active_item.item >= 0) {
 
 					win->ctx.mods = win->ctx.button_mods;
 					//wima_ui_item_notify(wwh, active_item, UI_BUTTON0_UP);
 
-					if (active_item == hot) {
+					if (active_item.item == hot.item) {
 						//wima_ui_item_notify(wwh, active_item, UI_BUTTON0_HOT_UP);
 					}
 				}
 
-				active_item = -1;
+				active_item.item = -1;
 				win->ctx.state = UI_STATE_IDLE;
 			}
 			else {
 
-				if (active_item >= 0) {
+				if (active_item.item >= 0) {
 					win->ctx.mods = win->ctx.button_mods;
 					//wima_ui_item_notify(wwh, active_item, UI_BUTTON0_CAPTURE);
 				}
 
-				if (hot == active_item) {
+				if (hot.item == active_item.item) {
 					hot_item = hot;
 				}
 				else {
-					hot_item = -1;
+					hot_item.item = -1;
 				}
 			}
 		} break;
