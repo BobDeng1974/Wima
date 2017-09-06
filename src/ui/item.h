@@ -66,6 +66,8 @@
 
 #include <wima.h>
 
+#include "../event.h"
+
 #include "ui.h"
 
 WimaItem* wima_item_ptr(WimaItemHandle wih);

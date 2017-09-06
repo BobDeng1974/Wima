@@ -161,6 +161,24 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	return WIMA_SUCCESS;
 }
 
+void wima_window_context_create(WimaWindowContext* ctx) {
+
+	memset(ctx, 0, sizeof(WimaWindowContext));
+
+	ctx->stage = UI_STAGE_PROCESS;
+
+	wima_window_context_clear(ctx);
+}
+
+void wima_window_context_clear(WimaWindowContext* ctx) {
+
+	memset(&ctx->last_hot_item, -1, sizeof(WimaItemHandle));
+	memset(&ctx->active_item, -1, sizeof(WimaItemHandle));
+	memset(&ctx->focus_item, -1, sizeof(WimaItemHandle));
+	memset(&ctx->last_click_item, -1, sizeof(WimaItemHandle));
+	memset(&ctx->hot_item, -1, sizeof(WimaItemHandle));
+}
+
 GLFWwindow* wima_window_glfw(WimaWindowHandle wwh) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	return win->window;

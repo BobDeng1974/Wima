@@ -59,8 +59,6 @@
  */
 
 #include <assert.h>
-#include <stddef.h>
-#include <string.h>
 
 #include <jemalloc/jemalloc.h>
 
@@ -85,40 +83,6 @@
 #endif
 
 extern WimaG wg;
-
-void wima_window_context_clear(WimaWindowContext* ctx) {
-
-	memset(&ctx->last_hot_item, -1, sizeof(WimaItemHandle));
-	memset(&ctx->active_item, -1, sizeof(WimaItemHandle));
-	memset(&ctx->focus_item, -1, sizeof(WimaItemHandle));
-	memset(&ctx->last_click_item, -1, sizeof(WimaItemHandle));
-	memset(&ctx->hot_item, -1, sizeof(WimaItemHandle));
-}
-
-void wima_area_context_clear(WimaAreaContext* ctx) {
-
-	ctx->lastItemCount = ctx->itemCount;
-	ctx->itemCount = 0;
-	ctx->datasize = 0;
-
-	// swap buffers
-	WimaItem *items = ctx->items;
-	ctx->items = ctx->last_items;
-	ctx->last_items = items;
-
-	for (int i = 0; i < ctx->lastItemCount; ++i) {
-		ctx->itemMap[i] = -1;
-	}
-}
-
-void wima_window_context_create(WimaWindowContext* ctx) {
-
-	memset(ctx, 0, sizeof(WimaWindowContext));
-
-	ctx->stage = UI_STAGE_PROCESS;
-
-	wima_window_context_clear(ctx);
-}
 
 void wima_ui_setButton(WimaWindowHandle wwh, unsigned int button, unsigned int mod, int enabled) {
 

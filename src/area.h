@@ -43,7 +43,22 @@
 
 #include "window.h"
 
-#include "ui/ui.h"
+typedef struct wima_area_context {
+
+	WimaItem *items;
+	unsigned char *data;
+	WimaItem *last_items;
+	int *itemMap;
+
+	// Capacities.
+	unsigned int itemCap;
+	unsigned int bufferCap;
+
+	uint32_t itemCount;
+	uint32_t lastItemCount;
+	uint32_t datasize;
+
+} WimaAreaContext;
 
 typedef enum wima_area_node_type {
 
@@ -85,10 +100,13 @@ typedef struct wima_area_node {
 
 } WimaAreaNode;
 
-WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
-
 WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node);
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
+
+void wima_area_context_create(WimaAreaContext* ctx, int itemCap, int bufferCap);
+void wima_area_context_clear(WimaAreaContext* ctx);
+
+WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 
 DynaTree wima_area_areas(WimaWindowHandle win);
 WimaAreaNode* wima_area_area(WimaWindowHandle win, WimaAreaNodeHandle node);

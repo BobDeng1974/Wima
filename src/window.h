@@ -47,7 +47,49 @@
 
 #include "ui/ui.h"
 
+#include "event.h"
+
 #include "workspace.h"
+
+// The following was originally written for OUI.
+
+typedef struct wima_window_context {
+
+	// Where the cursor was at the beginning of the active state.
+	UIvec2 start_cursor;
+
+	// Where the cursor was last frame.
+	UIvec2 last_cursor;
+
+	// Where the cursor is currently.
+	UIvec2 cursor;
+
+	// Accumulated scroll wheel offsets.
+	UIvec2 scroll;
+
+	WimaItemHandle active_item;
+	WimaItemHandle focus_item;
+	WimaItemHandle last_hot_item;
+	WimaItemHandle last_click_item;
+	WimaItemHandle hot_item;
+
+	WimaState state;
+	WimaLayoutStage stage;
+
+	WimaKey active_key;
+	WimaMods mods;
+	WimaMods button_mods;
+
+	uint32_t last_timestamp;
+	uint32_t last_click_timestamp;
+	uint32_t clicks;
+
+	uint32_t eventCount;
+	WimaEvent events[WIMA_MAX_EVENTS];
+
+} WimaWindowContext;
+
+// The following was originally written for Wima.
 
 typedef struct wima_window {
 
@@ -68,6 +110,25 @@ typedef struct wima_window {
 	int height;
 
 } WimaWin;
+
+// Context Management
+// ------------------
+
+/**
+ * Create a new UI context. As a reference, 4096 and (1<<20) are good
+ * starting values for itemCap and bufferCap, respectively.
+ * @param ui		A pointer to the context to initialize.
+ * @param itemCap	The maximum of number of items that can be declared.
+ * @param bufferCap	The maximum total size of bytes that can be allocated
+ *					using wima_ui_item_allocHandle(); you may pass 0 if
+ *					you don't need to allocate handles.
+ */
+void wima_window_context_create(WimaWindowContext* ctx);
+
+// reset the currently stored hot/active etc. handles; this should be called when
+// a re-declaration of the UI changes the item indices, to avoid state
+// related glitches because item identities have changed.
+void wima_window_context_clear(WimaWindowContext* ctx);
 
 WimaStatus wima_window_draw(WimaWindowHandle win);
 

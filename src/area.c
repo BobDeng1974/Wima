@@ -47,104 +47,6 @@
 
 extern WimaG wg;
 
-void wima_area_context_create(WimaAreaContext* ctx, int itemCap, int bufferCap) {
-
-	memset(ctx, 0, sizeof(WimaAreaContext));
-
-	size_t size = nallocx(sizeof(WimaItem) * itemCap, 0);
-
-	ctx->items = (WimaItem *) mallocx(size, 0);
-	ctx->last_items = (WimaItem *) mallocx(size, 0);
-	ctx->itemMap = (int *) mallocx(size, MALLOCX_ZERO);
-
-	itemCap = size / sizeof(WimaItem);
-	ctx->itemCap = itemCap;
-
-	if (bufferCap) {
-		bufferCap = nallocx(bufferCap, 0);
-		ctx->data = (uint8_t*) mallocx(bufferCap, MALLOCX_ZERO);
-		ctx->bufferCap = bufferCap;
-	}
-}
-
-WimaStatus wima_areas_free(DynaTree areas) {
-
-	DynaNode root = dtree_root();
-
-	WimaStatus status = wima_area_node_free(areas, root);
-
-	dtree_free(areas);
-
-	return status;
-}
-
-WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
-
-	// Make sure this is clear.
-	WimaStatus status = WIMA_SUCCESS;
-
-	// Get the particular area that we care about.
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
-
-	// We do something different depending on what type of node it is.
-	if (area->type == WIMA_AREA_PARENT) {
-
-		// Set the left child user pointer and check for error.
-		status = wima_area_node_free(areas, dtree_left(node));
-		if (status) {
-			return status;
-		}
-
-		// Set the right child user pointer and check for error.
-		status = wima_area_node_free(areas, dtree_right(node));
-		if (status) {
-			return status;
-		}
-	}
-	else {
-
-		// Free the items arrays.
-		dallocx(area->node.area.ctx.items, 0);
-		dallocx(area->node.area.ctx.last_items, 0);
-		dallocx(area->node.area.ctx.itemMap, 0);
-
-		// Free the buffer.
-		if (area->node.area.ctx.data) {
-			dallocx(area->node.area.ctx.data, 0);
-		}
-
-		// If the user didn't allocate anything, just return.
-		void* user = area->node.area.user;
-		if (!user) {
-			return WIMA_SUCCESS;
-		}
-
-		// Get the region handle.
-		WimaRegionHandle reg = area->node.area.type;
-
-		// Check that the region handle is valid.
-		if (reg >= dvec_len(wg.regions)) {
-			return WIMA_WINDOW_ERR;
-		}
-
-		// Get the list of regions.
-		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
-
-		// Get the particular user function setter.
-		AreaFreeUserPointerFunc free_user_ptr = region->free_ptr;
-
-		// If the user didn't specify one, don't call it.
-		if (!free_user_ptr) {
-			return WIMA_SUCCESS;
-		}
-
-		// Call the user function.
-		free_user_ptr(user);
-	}
-
-	return WIMA_SUCCESS;
-}
-
 WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node) {
 
 	// Make sure this is clear.
@@ -239,6 +141,120 @@ bool wima_area_node_valid(DynaTree regions, DynaNode node) {
 	}
 
 	return result;
+}
+
+void wima_area_context_create(WimaAreaContext* ctx, int itemCap, int bufferCap) {
+
+	memset(ctx, 0, sizeof(WimaAreaContext));
+
+	size_t size = nallocx(sizeof(WimaItem) * itemCap, 0);
+
+	ctx->items = (WimaItem *) mallocx(size, 0);
+	ctx->last_items = (WimaItem *) mallocx(size, 0);
+	ctx->itemMap = (int *) mallocx(size, MALLOCX_ZERO);
+
+	itemCap = size / sizeof(WimaItem);
+	ctx->itemCap = itemCap;
+
+	if (bufferCap) {
+		bufferCap = nallocx(bufferCap, 0);
+		ctx->data = (uint8_t*) mallocx(bufferCap, MALLOCX_ZERO);
+		ctx->bufferCap = bufferCap;
+	}
+}
+
+void wima_area_context_clear(WimaAreaContext* ctx) {
+
+	ctx->lastItemCount = ctx->itemCount;
+	ctx->itemCount = 0;
+	ctx->datasize = 0;
+
+	// swap buffers
+	WimaItem *items = ctx->items;
+	ctx->items = ctx->last_items;
+	ctx->last_items = items;
+
+	for (int i = 0; i < ctx->lastItemCount; ++i) {
+		ctx->itemMap[i] = -1;
+	}
+}
+
+WimaStatus wima_areas_free(DynaTree areas) {
+
+	DynaNode root = dtree_root();
+
+	WimaStatus status = wima_area_node_free(areas, root);
+
+	dtree_free(areas);
+
+	return status;
+}
+
+WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
+
+	// Make sure this is clear.
+	WimaStatus status = WIMA_SUCCESS;
+
+	// Get the particular area that we care about.
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	// We do something different depending on what type of node it is.
+	if (area->type == WIMA_AREA_PARENT) {
+
+		// Set the left child user pointer and check for error.
+		status = wima_area_node_free(areas, dtree_left(node));
+		if (status) {
+			return status;
+		}
+
+		// Set the right child user pointer and check for error.
+		status = wima_area_node_free(areas, dtree_right(node));
+		if (status) {
+			return status;
+		}
+	}
+	else {
+
+		// Free the items arrays.
+		dallocx(area->node.area.ctx.items, 0);
+		dallocx(area->node.area.ctx.last_items, 0);
+		dallocx(area->node.area.ctx.itemMap, 0);
+
+		// Free the buffer.
+		if (area->node.area.ctx.data) {
+			dallocx(area->node.area.ctx.data, 0);
+		}
+
+		// If the user didn't allocate anything, just return.
+		void* user = area->node.area.user;
+		if (!user) {
+			return WIMA_SUCCESS;
+		}
+
+		// Get the region handle.
+		WimaRegionHandle reg = area->node.area.type;
+
+		// Check that the region handle is valid.
+		if (reg >= dvec_len(wg.regions)) {
+			return WIMA_WINDOW_ERR;
+		}
+
+		// Get the list of regions.
+		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
+
+		// Get the particular user function setter.
+		AreaFreeUserPointerFunc free_user_ptr = region->free_ptr;
+
+		// If the user didn't specify one, don't call it.
+		if (!free_user_ptr) {
+			return WIMA_SUCCESS;
+		}
+
+		// Call the user function.
+		free_user_ptr(user);
+	}
+
+	return WIMA_SUCCESS;
 }
 
 DynaTree wima_area_areas(WimaWindowHandle win) {
