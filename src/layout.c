@@ -70,7 +70,7 @@
 #include "area.h"
 
 #include "ui/ui.h"
-#include "ui/item.h"
+#include "item.h"
 
 extern WimaG wg;
 
@@ -92,7 +92,7 @@ static void wima_layout_computeImposedSize(WimaItem* pitem, int dim) {
 		// width = start margin + calculated width + end margin
 		int kidsize = pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
 		need_size = wima_max(need_size, kidsize);
-		kid = wima_ui_item_nextSibling(kid);
+		kid = wima_item_nextSibling(kid);
 	}
 
 	pitem->size[dim] = need_size;
@@ -113,7 +113,7 @@ static void wima_layout_computeStackedSize(WimaItem* pitem, int dim) {
 
 		// width += start margin + calculated width + end margin
 		need_size += pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
-		kid = wima_ui_item_nextSibling(kid);
+		kid = wima_item_nextSibling(kid);
 	}
 
 	pitem->size[dim] = need_size;
@@ -145,7 +145,7 @@ static void wima_layout_computeWrappedStackedSize(WimaItem* pitem, int dim) {
 
 		// width = start margin + calculated width + end margin
 		need_size += pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
-		kid = wima_ui_item_nextSibling(kid);
+		kid = wima_item_nextSibling(kid);
 	}
 
 	pitem->size[dim] = wima_max(need_size2, need_size);
@@ -177,7 +177,7 @@ static void wima_layout_computeWrappedSize(WimaItem *pitem, int dim) {
 		// width = start margin + calculated width + end margin
 		int kidsize = pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
 		need_size = wima_max(need_size, kidsize);
-		kid = wima_ui_item_nextSibling(kid);
+		kid = wima_item_nextSibling(kid);
 	}
 
 	pitem->size[dim] = need_size2 + need_size;
@@ -193,7 +193,7 @@ void wima_layout_computeSize(WimaItemHandle item, int dim) {
 	// Children expand the size.
 	while (kid.item >= 0) {
 		wima_layout_computeSize(kid, dim);
-		kid = wima_ui_item_nextSibling(kid);
+		kid = wima_item_nextSibling(kid);
 	}
 
 	if (pitem->size[dim]) {
@@ -326,7 +326,7 @@ static void wima_layout_arrangeStacked(WimaItem *pitem, int dim, bool wrap) {
 			}
 			else {
 				used = extend;
-				kid = wima_ui_item_nextSibling(kid);
+				kid = wima_item_nextSibling(kid);
 			}
 
 			total++;
@@ -421,7 +421,7 @@ static void wima_layout_arrangeStacked(WimaItem *pitem, int dim, bool wrap) {
 			pkid->size[dim] = ix1-ix0;
 			x = x1 + (float)pkid->margins[wdim];
 
-			kid = wima_ui_item_nextSibling(kid);
+			kid = wima_item_nextSibling(kid);
 			extra_margin = spacer;
 		}
 
@@ -470,7 +470,7 @@ static void wima_layout_arrangeImposedRange(WimaItem *pitem, int dim,
 
 		pkid->margins[dim] += offset;
 
-		kid = wima_ui_item_nextSibling(kid);
+		kid = wima_item_nextSibling(kid);
 	}
 }
 
@@ -535,7 +535,7 @@ static void wima_layout_arrangeImposedSqueezedRange(WimaItem *pitem,
 
 		pkid->margins[dim] += offset;
 
-		kid = wima_ui_item_nextSibling(kid);
+		kid = wima_item_nextSibling(kid);
 	}
 }
 
@@ -581,7 +581,7 @@ static short wima_layout_arrangeWrappedImposedSqueezed(WimaItem *pitem, int dim)
 		// width = start margin + calculated width + end margin
 		int kidsize = pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
 		need_size = wima_max(need_size, kidsize);
-		kid = wima_ui_item_nextSibling(kid);
+		kid = wima_item_nextSibling(kid);
 	}
 
 	WimaItemHandle item;
@@ -653,10 +653,10 @@ void wima_layout_arrange(WimaItemHandle item, int dim) {
 		}
 	}
 
-	WimaItemHandle kid = wima_ui_item_firstChild(item);
+	WimaItemHandle kid = wima_item_firstChild(item);
 
 	while (kid.item >= 0) {
 		wima_layout_arrange(kid, dim);
-		kid = wima_ui_item_nextSibling(kid);
+		kid = wima_item_nextSibling(kid);
 	}
 }

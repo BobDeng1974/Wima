@@ -363,7 +363,7 @@ void wima_ui_item_setFrozen(WimaItemHandle item, bool enable);
 // set the application-dependent handle of an item.
 // handle is an application defined 64-bit handle. If handle is NULL, the item
 // will not be interactive.
-void wima_ui_item_setHandle(WimaItemHandle item, void* handle);
+void wima_item_setHandle(WimaItemHandle item, void* handle);
 
 // allocate space for application-dependent context data and assign it
 // as the handle to the item.
@@ -373,10 +373,10 @@ void *wima_ui_handle_alloc(WimaWindowHandle wwh, int item, unsigned int size);
 
 // flags is a combination of UI_EVENT_* and designates for which events the
 // handler should be called.
-void wima_ui_item_setEvents(WimaItemHandle item, uint32_t flags);
+void wima_item_setEvents(WimaItemHandle item, uint32_t flags);
 
 // flags is a user-defined set of flags defined by UI_USERMASK.
-void wima_ui_item_setFlags(WimaItemHandle item, uint32_t flags);
+void wima_item_setFlags(WimaItemHandle item, uint32_t flags);
 
 // assign an item to a container.
 // an item ID of 0 refers to the root item.
@@ -386,33 +386,33 @@ void wima_ui_item_setFlags(WimaItemHandle item, uint32_t flags);
 // O(N) operation for N siblings.
 // it is usually more efficient to call uiInsert() for the first child,
 // then chain additional siblings using uiAppend().
-WimaItemHandle wima_ui_item_insert(WimaAreaHandle wah, WimaItemHandle item, WimaItemHandle child);
+WimaItemHandle wima_item_insert(WimaAreaHandle wah, WimaItemHandle item, WimaItemHandle child);
 
 // assign an item to the same container as another item
 // sibling is inserted after item.
-WimaItemHandle wima_ui_item_append(WimaItemHandle item, WimaItemHandle sibling);
+WimaItemHandle wima_item_append(WimaItemHandle item, WimaItemHandle sibling);
 
 // insert child into container item like uiInsert(), but prepend
 // it to the first child item, effectively putting it in
 // the background.
 // it is efficient to call uiInsertBack() repeatedly
 // in cases where drawing or layout order doesn't matter.
-WimaItemHandle wima_ui_item_insertBack(WimaItemHandle item, WimaItemHandle child);
+WimaItemHandle wima_item_insertBack(WimaItemHandle item, WimaItemHandle child);
 
 // set the size of the item; a size of 0 indicates the dimension to be
 // dynamic; if the size is set, the item can not expand beyond that size.
-void wima_ui_item_setSize(WimaItemHandle item, int w, int h);
+void wima_item_setSize(WimaItemHandle item, int w, int h);
 
 // set the anchoring behavior of the item to one or multiple UIlayoutFlags
-void wima_ui_item_setLayoutType(WimaItemHandle item, uint32_t flags);
+void wima_item_setLayoutType(WimaItemHandle item, uint32_t flags);
 
 // set the box model behavior of the item to one or multiple UIboxFlags
-void wima_ui_item_setBox(WimaItemHandle item, uint32_t flags);
+void wima_item_setBox(WimaItemHandle item, uint32_t flags);
 
 // set the left, top, right and bottom margins of an item; when the item is
 // anchored to the parent or another item, the margin controls the distance
 // from the neighboring element.
-void wima_ui_item_setMargins(WimaItemHandle item, short l, short t, short r, short b);
+void wima_item_setMargins(WimaItemHandle item, short l, short t, short r, short b);
 
 // set item as recipient of all keyboard events; if item is -1, no item will
 // be focused.
@@ -424,17 +424,17 @@ void wima_item_setFocus(WimaItemHandle wih);
 // returns the first child item of a container item. If the item is not
 // a container or does not contain any items, -1 is returned.
 // if item is 0, the first child item of the root item will be returned.
-WimaItemHandle wima_ui_item_firstChild(WimaItemHandle item);
+WimaItemHandle wima_item_firstChild(WimaItemHandle item);
 
 // returns an items next sibling in the list of the parent containers children.
 // if item is 0 or the item is the last child item, -1 will be returned.
-WimaItemHandle wima_ui_item_nextSibling(WimaItemHandle item);
+WimaItemHandle wima_item_nextSibling(WimaItemHandle item);
 
 // Querying
 // --------
 
 // return the total number of allocated items
-int wima_area_item_count(WimaAreaHandle wah);
+int wima_area_itemCount(WimaAreaHandle wah);
 
 // return the total bytes that have been allocated by uiAllocHandle()
 unsigned int wima_area_allocSize(WimaAreaHandle wah);
@@ -442,11 +442,11 @@ unsigned int wima_area_allocSize(WimaAreaHandle wah);
 // return the current state of the item. This state is only valid after
 // a call to uiProcess().
 // The returned value is one of UI_COLD, UI_HOT, UI_ACTIVE, UI_FROZEN.
-WimaItemState wima_ui_item_state(WimaItemHandle item);
+WimaItemState wima_item_state(WimaItemHandle item);
 
 // return the application-dependent handle of the item as passed to uiSetHandle()
 // or uiAllocHandle().
-void* wima_ui_item_handle(WimaItemHandle item);
+void* wima_item_handle(WimaItemHandle item);
 
 // return the item that is currently under the cursor or -1 for none
 WimaItemHandle wima_window_hotItem(WimaWindowHandle wwh);
@@ -461,10 +461,10 @@ WimaItemHandle wima_window_focus(WimaWindowHandle wwh);
 // otherwise the first item matching (item.flags & flags) == mask is returned.
 // you may combine box, layout, event and user flags.
 // frozen items will always be ignored.
-WimaItemHandle wima_ui_item_find(WimaItemHandle item, int x, int y, uint32_t flags, uint32_t mask);
+WimaItemHandle wima_item_find(WimaItemHandle item, int x, int y, uint32_t flags, uint32_t mask);
 
 // return the event flags for an item as passed to uiSetEvents()
-uint32_t wima_ui_item_events(WimaItemHandle item);
+uint32_t wima_item_events(WimaItemHandle item);
 
 // return the user-defined flags for an item as passed to uiSetFlags()
 uint32_t wima_ui_item_flags(WimaItemHandle item);
@@ -478,35 +478,35 @@ unsigned int wima_ui_modifiers(WimaWindowHandle wwh);
 // returns the items layout rectangle in absolute coordinates. If
 // uiGetRect() is called before uiEndLayout(), the values of the returned
 // rectangle are undefined.
-UIrect wima_ui_item_rect(WimaItemHandle item);
+UIrect wima_item_rect(WimaItemHandle item);
 
 // returns 1 if an items absolute rectangle contains a given coordinate
 // otherwise 0
-bool wima_ui_item_contains(WimaItemHandle item, int x, int y);
+bool wima_item_contains(WimaItemHandle item, int x, int y);
 
 // return the width of the item as set by uiSetSize()
-int wima_ui_item_width(WimaItemHandle item);
+int wima_item_width(WimaItemHandle item);
 
 // return the height of the item as set by uiSetSize()
-int wima_ui_item_height(WimaItemHandle item);
+int wima_item_height(WimaItemHandle item);
 
 // return the anchoring behavior as set by uiSetLayout()
-uint32_t wima_ui_item_layoutType(WimaItemHandle item);
+uint32_t wima_item_layoutType(WimaItemHandle item);
 
 // return the box model as set by uiSetBox()
-uint32_t wima_ui_item_box(WimaItemHandle item);
+uint32_t wima_item_box(WimaItemHandle item);
 
 // return the left margin of the item as set with uiSetMargins()
-short wima_ui_item_marginLeft(WimaItemHandle item);
+short wima_item_marginLeft(WimaItemHandle item);
 
 // return the top margin of the item as set with uiSetMargins()
-short wima_ui_item_marginTop(WimaItemHandle item);
+short wima_item_marginTop(WimaItemHandle item);
 
 // return the right margin of the item as set with uiSetMargins()
-short wima_ui_item_marginRight(WimaItemHandle item);
+short wima_item_marginRight(WimaItemHandle item);
 
 // return the bottom margin of the item as set with uiSetMargins()
-short wima_ui_item_marginDown(WimaItemHandle item);
+short wima_item_marginDown(WimaItemHandle item);
 
 // when uiBeginLayout() is called, the most recently declared items are retained.
 // when uiEndLayout() completes, it matches the old item hierarchy to the new one
@@ -514,17 +514,17 @@ short wima_ui_item_marginDown(WimaItemHandle item);
 // when passed an item Id from the previous frame, uiRecoverItem() returns the
 // items new assumed Id, or -1 if the item could not be mapped.
 // it is valid to pass -1 as item.
-WimaItemHandle wima_area_recoverItem(WimaItemHandle olditem);
+WimaItemHandle wima_item_recover(WimaItemHandle olditem);
 
 // in cases where it is important to recover old state over changes in
 // the view, and the built-in remapping fails, the UI declaration can manually
 // remap old items to new IDs in cases where e.g. the previous item ID has been
 // temporarily saved; uiRemapItem() would then be called after creating the
 // new item using uiItem().
-void wima_ui_item_remap(WimaItemHandle olditem, WimaItemHandle newitem);
+void wima_item_remap(WimaItemHandle olditem, WimaItemHandle newitem);
 
 // returns the number if items that have been allocated in the last frame
-int wima_area_item_lastCount(WimaAreaHandle wah);
+int wima_area_lastItemCount(WimaAreaHandle wah);
 
 #ifdef __cplusplus
 }

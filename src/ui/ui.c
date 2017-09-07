@@ -73,7 +73,7 @@
 #include "../window.h"
 
 #include "ui.h"
-#include "item.h"
+#include "../item.h"
 
 #ifdef _MSC_VER
     #pragma warning (disable: 4996) // Switch off security warnings
@@ -104,7 +104,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 	if (focus_item.item >= 0) {
 
 		for (int i = 0; i < win->ctx.eventCount; ++i) {
-			wima_area_item_notify(focus_item, win->ctx.events[i]);
+			wima_area_notifyItem(focus_item, win->ctx.events[i]);
 		}
 	}
 	else {
@@ -119,7 +119,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 		item.item = 0;
 		item.window = wwh;
 
-		WimaItemHandle scroll_item = wima_ui_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_SCROLL, UI_ANY);
+		WimaItemHandle scroll_item = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_SCROLL, UI_ANY);
 
 		if (scroll_item.item >= 0) {
 
@@ -128,7 +128,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 			e.e.scroll.xoffset = win->ctx.scroll.x;
 			e.e.scroll.yoffset = win->ctx.scroll.y;
 
-			wima_area_item_notify(scroll_item, e);
+			wima_area_notifyItem(scroll_item, e);
 		}
 	}
 
@@ -173,7 +173,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 					e.e.mouse_btn.action = WIMA_ACTION_PRESS;
 					e.e.mouse_btn.mods = WIMA_MOD_NONE;
 
-					wima_area_item_notify(active_item, e);
+					wima_area_notifyItem(active_item, e);
 				}
 
 				win->ctx.state = WIMA_UI_STATE_CAPTURE;
@@ -189,7 +189,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 				item.window = wwh;
 
 				hot_item.item = -1;
-				hot = wima_ui_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_BUTTON2_DOWN, UI_ANY);
+				hot = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_BUTTON2_DOWN, UI_ANY);
 
 				if (hot.item >= 0) {
 
@@ -199,7 +199,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 					e.e.mouse_btn.action = WIMA_ACTION_PRESS;
 					e.e.mouse_btn.mods = WIMA_MOD_NONE;
 
-					wima_area_item_notify(hot, e);
+					wima_area_notifyItem(hot, e);
 				}
 			}
 

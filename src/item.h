@@ -66,7 +66,7 @@
 
 #include <wima.h>
 
-#include "../event.h"
+#include "event.h"
 
 #include "ui.h"
 
@@ -74,38 +74,38 @@ WimaItem* wima_item_ptr(WimaItemHandle wih);
 
 WimaItem* wima_item_lastPtr(WimaItemHandle wih);
 
-void wima_ui_item_validateState(WimaWindowHandle wwh);
+void wima_window_validateItems(WimaWindowHandle wwh);
 
 //#if 0
-void wima_area_item_notify(WimaItemHandle wih, WimaEvent e);
+void wima_area_notifyItem(WimaItemHandle wih, WimaEvent e);
 //#endif
 
-WimaItemHandle wima_ui_item_lastChild(WimaItemHandle item);
+WimaItemHandle wima_item_lastChild(WimaItemHandle item);
 
-short wima_ui_item_marginLeft(WimaItemHandle item);
+short wima_item_marginLeft(WimaItemHandle item);
 
-short wima_ui_item_marginTop(WimaItemHandle item);
+short wima_item_marginTop(WimaItemHandle item);
 
-short wima_ui_item_marginRight(WimaItemHandle item);
+short wima_item_marginRight(WimaItemHandle item);
 
-short wima_ui_item_marginDown(WimaItemHandle item);
+short wima_item_marginDown(WimaItemHandle item);
 
-bool wima_ui_item_compare(WimaItem *item1, WimaItem *item2);
+bool wima_item_compare(WimaItem *item1, WimaItem *item2);
 
-bool wima_ui_item_map(WimaItemHandle item1, WimaItemHandle item2);
+bool wima_item_map(WimaItemHandle item1, WimaItemHandle item2);
 
-void* wima_ui_item_allocHandle(WimaItemHandle item, unsigned int size);
+void* wima_item_allocHandle(WimaItemHandle item, unsigned int size);
 
-void wima_ui_item_updateHot(WimaWindowHandle wwh);
+void wima_window_updateHotItem(WimaWindowHandle wwh);
 
 int wima_window_clicks(WimaWindowHandle wwh);
 
-static bool wima_ui_item_isActive(WimaItemHandle item);
+static bool wima_item_isActive(WimaItemHandle item);
 
-static bool wima_ui_item_isHot(WimaItemHandle item);
+static bool wima_item_isHot(WimaItemHandle item);
 
-static bool wima_ui_item_isFocused(WimaItemHandle item);
+static bool wima_item_isFocused(WimaItemHandle item);
 
-WimaItemState wima_ui_item_state(WimaItemHandle item);
+WimaItemState wima_item_state(WimaItemHandle item);
 
 #endif // WIMA_ITEM_H

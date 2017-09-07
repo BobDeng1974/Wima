@@ -417,6 +417,52 @@ UIvec2 wima_window_scroll(WimaWindowHandle wwh) {
 	return win->ctx.scroll;
 }
 
+void wima_window_validateItems(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->ctx.last_hot_item = wima_item_recover(win->ctx.last_hot_item);
+	win->ctx.active_item = wima_item_recover(win->ctx.active_item);
+	win->ctx.focus_item = wima_item_recover(win->ctx.focus_item);
+	win->ctx.last_click_item = wima_item_recover(win->ctx.last_click_item);
+}
+
+WimaItemHandle wima_window_focus(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.focus_item;
+}
+
+WimaItemHandle wima_window_hotItem(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.hot_item;
+}
+
+void wima_window_updateHotItem(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	// TODO: Figure out which area the hot item is in.
+
+	//if (!win->ctx.itemCount) {
+	//	return;
+	//}
+
+	WimaItemHandle item;
+	item.window = wwh;
+	item.item = 0;
+
+	win->ctx.hot_item = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y,
+	                                      WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER, UI_ANY);
+}
+
 static WimaStatus wima_window_processEvent(WimaWindowHandle win, WimaEvent* event) {
 
 	WimaStatus status;

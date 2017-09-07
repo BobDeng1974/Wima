@@ -47,7 +47,7 @@
 #include "window.h"
 #include "global.h"
 
-#include "ui/item.h"
+#include "item.h"
 
 extern WimaG wg;
 
@@ -196,6 +196,91 @@ void wima_area_node_context_clear(DynaTree areas, DynaNode node) {
 	}
 }
 
+int wima_area_itemCount(WimaAreaHandle wah) {
+
+	WimaAreaNode* area = wima_area_area(wah.window, wah.node);
+	assert(area);
+
+	return area->node.area.ctx.itemCount;
+}
+
+int wima_area_lastItemCount(WimaAreaHandle wah) {
+
+	WimaAreaNode* area = wima_area_area(wah.window, wah.node);
+	assert(area);
+
+	return area->node.area.ctx.lastItemCount;
+}
+
+uint32_t wima_area_allocSize(WimaAreaHandle wah) {
+
+	WimaAreaNode* area = wima_area_area(wah.window, wah.node);
+	assert(area);
+
+	return area->node.area.ctx.datasize;
+}
+
+void wima_area_notifyItem(WimaItemHandle wih, WimaEvent e) {
+
+	assert((e.type & WIMA_ITEM_EVENT_MASK) == e.type);
+
+	WimaItem* pitem = wima_item_ptr(wih);
+
+	if (!(pitem->flags & e.type)) {
+		return;
+	}
+
+	WimaStatus status = WIMA_SUCCESS;
+
+	switch (e.type) {
+
+		case WIMA_EVENT_KEY:
+		{
+			if (pitem->key) {
+				status = pitem->key(wih, e.e.key.key, e.e.key.scancode, e.e.key.action, e.e.key.mods);
+			}
+
+			break;
+		}
+
+		case WIMA_EVENT_MOUSE_BTN:
+		{
+			if (pitem->mouse_event) {
+				status = pitem->mouse_event(wih, e.e.mouse_btn.button, e.e.mouse_btn.action, e.e.mouse_btn.mods);
+			}
+
+			break;
+		}
+
+		case WIMA_EVENT_ITEM_ENTER:
+		{
+			// TODO: Figure out if mouse exited and entered something else.
+			break;
+		}
+
+		case WIMA_EVENT_SCROLL:
+		{
+			if (pitem->scroll) {
+				status = pitem->scroll(wih, e.e.scroll.xoffset, e.e.scroll.yoffset, e.e.scroll.mods);
+			}
+
+			break;
+		}
+
+		case WIMA_EVENT_CHAR:
+		{
+			if (pitem->char_event) {
+				status = pitem->char_event(wih, e.e.char_event.code, e.e.char_event.mods);
+			}
+
+			break;
+		}
+
+		default:
+			assert(false);
+	}
+}
+
 WimaStatus wima_area_layout(DynaTree areas) {
 	return wima_area_node_layout(areas, dtree_root());
 }
@@ -230,15 +315,15 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 			if (area->node.area.ctx.lastItemCount) {
 				// Map old item id to new item id.
-				wima_ui_item_map(zero, zero);
+				wima_item_map(zero, zero);
 			}
 		}
 
-		wima_ui_item_validateState(area->window);
+		wima_window_validateItems(area->window);
 
 		if (area->node.area.ctx.itemCount) {
 			// Drawing routines may require this to be set already.
-			wima_ui_item_updateHot(area->window);
+			wima_window_updateHotItem(area->window);
 		}
 
 		status = WIMA_SUCCESS;
