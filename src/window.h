@@ -53,7 +53,7 @@
 // The following was originally written for OUI.
 
 // Consecutive click threshold in ms.
-#define UI_CLICK_THRESHOLD 250
+#define WIMA_CLICK_THRESHOLD 250
 
 typedef struct wima_window_context {
 

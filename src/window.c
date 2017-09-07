@@ -634,7 +634,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 	if (focus_item.item >= 0) {
 
 		for (int i = 0; i < win->ctx.eventCount; ++i) {
-			wima_area_notifyItem(focus_item, win->ctx.events[i]);
+			wima_item_notify(focus_item, win->ctx.events[i]);
 		}
 	}
 	else {
@@ -658,7 +658,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 			e.e.scroll.xoffset = win->ctx.scroll.x;
 			e.e.scroll.yoffset = win->ctx.scroll.y;
 
-			wima_area_notifyItem(scroll_item, e);
+			wima_item_notify(scroll_item, e);
 		}
 	}
 
@@ -686,7 +686,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 				if (active_item.item >= 0) {
 
-					if (((timestamp - win->ctx.last_click_timestamp) > UI_CLICK_THRESHOLD) ||
+					if (((timestamp - win->ctx.last_click_timestamp) > WIMA_CLICK_THRESHOLD) ||
 					    (win->ctx.last_click_item.item != active_item.item))
 					{
 						win->ctx.clicks = 0;
@@ -703,7 +703,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 					e.e.mouse_btn.action = WIMA_ACTION_PRESS;
 					e.e.mouse_btn.mods = WIMA_MOD_NONE;
 
-					wima_area_notifyItem(active_item, e);
+					wima_item_notify(active_item, e);
 				}
 
 				win->ctx.state = WIMA_UI_STATE_CAPTURE;
@@ -729,7 +729,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 					e.e.mouse_btn.action = WIMA_ACTION_PRESS;
 					e.e.mouse_btn.mods = WIMA_MOD_NONE;
 
-					wima_area_notifyItem(hot, e);
+					wima_item_notify(hot, e);
 				}
 			}
 

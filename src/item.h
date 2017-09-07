@@ -205,7 +205,7 @@ WimaItem* wima_item_lastPtr(WimaItemHandle wih);
 void wima_window_validateItems(WimaWindowHandle wwh);
 
 //#if 0
-void wima_area_notifyItem(WimaItemHandle wih, WimaEvent e);
+void wima_item_notify(WimaItemHandle wih, WimaEvent e);
 //#endif
 
 WimaItemHandle wima_item_lastChild(WimaItemHandle item);
