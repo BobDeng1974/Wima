@@ -34,7 +34,6 @@ set(WIMA_UI_SRC
 	#Put source files here.
 	"ui.c"
 	"item.c"
-	"layout.c"
 )
 
 set(WIMA_UI "wima_ui")

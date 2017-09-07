@@ -34,16 +34,20 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <assert.h>
 #include <string.h>
 
 #include <jemalloc/jemalloc.h>
 
 #include <wima.h>
 
+#include "layout.h"
 #include "region.h"
 #include "area.h"
 #include "window.h"
 #include "global.h"
+
+#include "ui/item.h"
 
 extern WimaG wg;
 
@@ -190,6 +194,57 @@ void wima_area_node_context_clear(DynaTree areas, DynaNode node) {
 			area->node.area.ctx.itemMap[i] = -1;
 		}
 	}
+}
+
+WimaStatus wima_area_layout(DynaTree areas) {
+	return wima_area_node_layout(areas, dtree_root());
+}
+
+WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+	assert(area);
+
+	WimaStatus status;
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		status = wima_area_node_layout(areas, dtree_left(node));
+		if (status) {
+			return status;
+		}
+
+		status = wima_area_node_layout(areas, dtree_right(node));
+	}
+	else {
+
+		if (area->node.area.ctx.itemCount) {
+
+			WimaItemHandle zero;
+			zero.item = 0;
+
+			wima_layout_computeSize(zero, 0);
+			wima_layout_arrange(zero, 0);
+			wima_layout_computeSize(zero, 1);
+			wima_layout_arrange(zero, 1);
+
+			if (area->node.area.ctx.lastItemCount) {
+				// Map old item id to new item id.
+				wima_ui_item_map(zero, zero);
+			}
+		}
+
+		wima_ui_item_validateState(area->window);
+
+		if (area->node.area.ctx.itemCount) {
+			// Drawing routines may require this to be set already.
+			wima_ui_item_updateHot(area->window);
+		}
+
+		status = WIMA_SUCCESS;
+	}
+
+	return status;
 }
 
 WimaStatus wima_areas_free(DynaTree areas) {
