@@ -621,6 +621,8 @@ WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code,
 	}
 	else {
 
+		// TODO: Send the event to item instead of area.
+
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
 		AreaCharFunc char_event = region->char_event;
