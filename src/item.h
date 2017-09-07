@@ -176,7 +176,7 @@ typedef struct wima_item {
 	ItemCharEvent char_event;
 
 	// Data handle.
-	void *handle;
+	void* handle;
 
 	// About 27 bits worth of flags.
 	uint32_t flags;
