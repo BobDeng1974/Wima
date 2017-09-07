@@ -284,7 +284,7 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 
 	wima_window_context_create(&window->ctx);
 
-	WimaStatus status = wima_area_node_init(wwh, window->areas, root);
+	WimaStatus status = wima_area_node_init(wwh, window->areas, root, 0, 0, window->fbwidth, window->fbheight);
 
 	return status;
 }

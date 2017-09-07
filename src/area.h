@@ -82,17 +82,6 @@ typedef enum wima_area_node_type {
 
 typedef struct wima_area_node {
 
-	int x;
-	int y;
-
-	int width;
-	int height;
-
-	//DynaNode ;
-
-	WimaAreaNodeType type;
-	WimaWindowHandle window;
-
 	union {
 
 		struct wima_area {
@@ -114,9 +103,21 @@ typedef struct wima_area_node {
 
 	};
 
+	int x;
+	int y;
+
+	int width;
+	int height;
+
+	WimaAreaNodeType type;
+	WimaWindowHandle window;
+
+	WimaAreaNodeHandle node;
+
 } WimaAreaNode;
 
-WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node);
+WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node,
+                               int x, int y, int width, int height);
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
 
 void wima_area_context_create(WimaAreaContext* ctx, int itemCap, int bufferCap);
@@ -136,7 +137,7 @@ WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 DynaTree wima_area_areas(WimaWindowHandle win);
 WimaAreaNode* wima_area_area(WimaWindowHandle win, WimaAreaNodeHandle node);
 WimaWin* wima_area_window(WimaAreaHandle wah);
-WimaAreaHandle wima_area_handle(WimaAreaNode* area, DynaNode node);
+WimaAreaHandle wima_area_handle(WimaAreaNode* area);
 
 WimaStatus wima_area_draw(WimaWindowHandle win, int width, int height);
 WimaStatus wima_area_key(WimaWindowHandle win, WimaKey key, int scancode, WimaAction act, WimaMods mods);

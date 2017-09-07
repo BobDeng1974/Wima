@@ -51,7 +51,7 @@
 
 extern WimaG wg;
 
-WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node) {
+WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node, int x, int y, int width, int height) {
 
 	// Make sure this is clear.
 	WimaStatus status = WIMA_SUCCESS;
@@ -59,20 +59,76 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 	// Get the particular area that we care about.
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
-	// Set the window handle.
+	// Set the common data.
+	area->node = node;
+	area->x = x;
+	area->y = y;
+	area->width = width;
+	area->height = height;
 	area->window = win;
 
 	// We do something different depending on what type of node it is.
 	if (area->type == WIMA_AREA_PARENT) {
 
+		int leftx = x;
+		int lefty = y;
+
+		int split;
+
+		int leftw, lefth;
+		int rightx, righty, rightw, righth;
+
+		if (area->parent.vertical) {
+
+			split = (int) ((width - 1) * area->parent.split);
+
+			// These can just be set now.
+			righty = y;
+			lefth = righth = height;
+
+			// The real number is split - 2, plus 1 because
+			// the result of split - 2 is the last pixel, not
+			// the height. And since pixels are zero-based, we
+			// have to add 1.
+			leftw = split - 1;
+
+			// The real number is (split + 2) minus 1 because
+			// The result of split + 2 is the first pixel, not
+			// the height. And since pixels are zero-based, we
+			// have to add 1.
+			rightx = (split + 2);
+			rightw = width - 1 - rightx;
+		}
+		else {
+
+			split = (int) ((height - 1) * area->parent.split);
+
+			// These can just be set now.
+			rightx = x;
+			leftw = rightw = width;
+
+			// The real number is split - 2, plus 1 because
+			// the result of split - 2 is the last pixel, not
+			// the height. And since pixels are zero-based, we
+			// have to add 1.
+			lefth = split - 1;
+
+			// The real number is (split + 2) minus 1 because
+			// The result of split + 2 is the first pixel, not
+			// the height. And since pixels are zero-based, we
+			// have to add 1.
+			righty = (split + 2);
+			righth = height - 1 - righty;
+		}
+
 		// Set the left child user pointer and check for error.
-		status = wima_area_node_init(win, areas, dtree_left(node));
+		status = wima_area_node_init(win, areas, dtree_left(node), leftx, lefty, leftw, lefth);
 		if (status) {
 			return status;
 		}
 
 		// Set the right child user pointer and check for error.
-		status = wima_area_node_init(win, areas, dtree_right(node));
+		status = wima_area_node_init(win, areas, dtree_right(node), rightx, righty, rightw, righth);
 		if (status) {
 			return status;
 		}
@@ -100,7 +156,7 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 
 		// Get all of the area handle
 		// (to pass to the user function).
-		WimaAreaHandle wah = wima_area_handle(area, node);
+		WimaAreaHandle wah = wima_area_handle(area);
 
 		// Call the user function.
 		area->area.user = get_user_ptr(wah);
@@ -365,11 +421,11 @@ WimaAreaNode* wima_area_area(WimaWindowHandle win, WimaAreaNodeHandle node) {
 	return (WimaAreaNode*) dtree_node(wima_area_areas(win), node);
 }
 
-inline WimaAreaHandle wima_area_handle(WimaAreaNode* area, DynaNode node) {
+inline WimaAreaHandle wima_area_handle(WimaAreaNode* area) {
 
 	WimaAreaHandle wah;
 
-	wah.area = (WimaAreaNodeHandle) node;
+	wah.area = (WimaAreaNodeHandle) area->node;
 	wah.window = area->window;
 	wah.region = area->area.type;
 
@@ -421,7 +477,7 @@ WimaStatus wima_area_node_draw(DynaTree areas, DynaNode node, int width, int hei
 		AreaDrawFunc draw = region->draw;
 
 		// The draw function is guaranteed to be non-null.
-		status = draw(wima_area_handle(area, node), width, height);
+		status = draw(wima_area_handle(area), width, height);
 	}
 
 	return WIMA_SUCCESS;
@@ -445,7 +501,7 @@ WimaStatus wima_area_node_key(DynaTree areas, DynaNode node,  WimaKey key,
 		AreaKeyFunc key_event = region->key_event;
 
 		if (key_event) {
-			status = key_event(wima_area_handle(area, node), key, scancode, act, mods);
+			status = key_event(wima_area_handle(area), key, scancode, act, mods);
 		}
 	}
 
@@ -470,7 +526,7 @@ WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtn b
 		AreaMouseEventFunc mouse_event = region->mouse_event;
 
 		if (mouse_event) {
-			status = mouse_event(wima_area_handle(area, node), btn, act, mods);
+			status = mouse_event(wima_area_handle(area), btn, act, mods);
 		}
 	}
 
@@ -496,7 +552,7 @@ WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, int x, int y) 
 		AreaMousePosFunc mouse_pos = region->mouse_pos;
 
 		if (mouse_pos) {
-			status = mouse_pos(wima_area_handle(area, node), x, y);
+			status = mouse_pos(wima_area_handle(area), x, y);
 		}
 	}
 
@@ -522,7 +578,7 @@ WimaStatus wima_area_node_mouseEnter(DynaTree areas, DynaNode node, bool entered
 		AreaMouseEnterFunc mouse_enter = region->mouse_enter;
 
 		if (mouse_enter) {
-			status = mouse_enter(wima_area_handle(area, node), entered);
+			status = mouse_enter(wima_area_handle(area), entered);
 		}
 	}
 
@@ -546,7 +602,7 @@ WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int
 		AreaScrollEventFunc scroll_event = region->scroll_event;
 
 		if (scroll_event) {
-			status = scroll_event(wima_area_handle(area, node), xoffset, yoffset, mods);
+			status = scroll_event(wima_area_handle(area), xoffset, yoffset, mods);
 		}
 	}
 
@@ -570,7 +626,7 @@ WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code,
 		AreaCharFunc char_event = region->char_event;
 
 		if (char_event) {
-			status = char_event(wima_area_handle(area, node), code, mods);
+			status = char_event(wima_area_handle(area), code, mods);
 		}
 	}
 
