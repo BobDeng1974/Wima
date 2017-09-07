@@ -82,8 +82,13 @@ typedef enum wima_area_node_type {
 
 typedef struct wima_area_node {
 
+	int x;
+	int y;
+
 	int width;
 	int height;
+
+	//DynaNode ;
 
 	WimaAreaNodeType type;
 	WimaWindowHandle window;
@@ -107,7 +112,7 @@ typedef struct wima_area_node {
 
 		} parent;
 
-	} node;
+	};
 
 } WimaAreaNode;
 

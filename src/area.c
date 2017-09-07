@@ -80,7 +80,7 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 	else {
 
 		// Get the region handle.
-		WimaRegionHandle reg = area->node.area.type;
+		WimaRegionHandle reg = area->area.type;
 
 		// Check that the region handle is valid.
 		if (reg >= dvec_len(wg.regions)) {
@@ -101,12 +101,11 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 		// Get all of the area handle
 		// (to pass to the user function).
 		WimaAreaHandle wah = wima_area_handle(area, node);
-		wah.user = NULL;
 
 		// Call the user function.
-		area->node.area.user = get_user_ptr(wah);
+		area->area.user = get_user_ptr(wah);
 
-		wima_area_context_create(&area->node.area.ctx, region->itemCap, region->bufferCap);
+		wima_area_context_create(&area->area.ctx, region->itemCap, region->bufferCap);
 	}
 
 	return status;
@@ -181,43 +180,51 @@ void wima_area_node_context_clear(DynaTree areas, DynaNode node) {
 	}
 	else {
 
-		area->node.area.ctx.lastItemCount = area->node.area.ctx.itemCount;
-		area->node.area.ctx.itemCount = 0;
-		area->node.area.ctx.datasize = 0;
+		area->area.ctx.lastItemCount = area->area.ctx.itemCount;
+		area->area.ctx.itemCount = 0;
+		area->area.ctx.datasize = 0;
 
 		// swap buffers
-		WimaItem *items = area->node.area.ctx.items;
-		area->node.area.ctx.items = area->node.area.ctx.last_items;
-		area->node.area.ctx.last_items = items;
+		WimaItem *items = area->area.ctx.items;
+		area->area.ctx.items = area->area.ctx.last_items;
+		area->area.ctx.last_items = items;
 
-		for (int i = 0; i < area->node.area.ctx.lastItemCount; ++i) {
-			area->node.area.ctx.itemMap[i] = -1;
+		for (int i = 0; i < area->area.ctx.lastItemCount; ++i) {
+			area->area.ctx.itemMap[i] = -1;
 		}
 	}
 }
 
 int wima_area_itemCount(WimaAreaHandle wah) {
 
-	WimaAreaNode* area = wima_area_area(wah.window, wah.node);
+	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area);
 
-	return area->node.area.ctx.itemCount;
+	return area->area.ctx.itemCount;
 }
 
 int wima_area_lastItemCount(WimaAreaHandle wah) {
 
-	WimaAreaNode* area = wima_area_area(wah.window, wah.node);
+	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area);
 
-	return area->node.area.ctx.lastItemCount;
+	return area->area.ctx.lastItemCount;
 }
 
 uint32_t wima_area_allocSize(WimaAreaHandle wah) {
 
-	WimaAreaNode* area = wima_area_area(wah.window, wah.node);
+	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area);
 
-	return area->node.area.ctx.datasize;
+	return area->area.ctx.datasize;
+}
+
+void* wima_area_userPointer(WimaAreaHandle wah) {
+
+	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
+	assert(area);
+
+	return area->area.user;
 }
 
 WimaStatus wima_area_layout(DynaTree areas) {
@@ -242,7 +249,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 	}
 	else {
 
-		if (area->node.area.ctx.itemCount) {
+		if (area->area.ctx.itemCount) {
 
 			WimaItemHandle zero;
 			zero.item = 0;
@@ -252,7 +259,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 			wima_layout_computeSize(zero, 1);
 			wima_layout_arrange(zero, 1);
 
-			if (area->node.area.ctx.lastItemCount) {
+			if (area->area.ctx.lastItemCount) {
 				// Map old item id to new item id.
 				wima_item_map(zero, zero);
 			}
@@ -260,7 +267,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 		wima_window_validateItems(area->window);
 
-		if (area->node.area.ctx.itemCount) {
+		if (area->area.ctx.itemCount) {
 			// Drawing routines may require this to be set already.
 			wima_window_updateHotItem(area->window);
 		}
@@ -308,23 +315,23 @@ WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 	else {
 
 		// Free the items arrays.
-		dallocx(area->node.area.ctx.items, 0);
-		dallocx(area->node.area.ctx.last_items, 0);
-		dallocx(area->node.area.ctx.itemMap, 0);
+		dallocx(area->area.ctx.items, 0);
+		dallocx(area->area.ctx.last_items, 0);
+		dallocx(area->area.ctx.itemMap, 0);
 
 		// Free the buffer.
-		if (area->node.area.ctx.data) {
-			dallocx(area->node.area.ctx.data, 0);
+		if (area->area.ctx.data) {
+			dallocx(area->area.ctx.data, 0);
 		}
 
 		// If the user didn't allocate anything, just return.
-		void* user = area->node.area.user;
+		void* user = area->area.user;
 		if (!user) {
 			return WIMA_SUCCESS;
 		}
 
 		// Get the region handle.
-		WimaRegionHandle reg = area->node.area.type;
+		WimaRegionHandle reg = area->area.type;
 
 		// Check that the region handle is valid.
 		if (reg >= dvec_len(wg.regions)) {
@@ -362,10 +369,9 @@ inline WimaAreaHandle wima_area_handle(WimaAreaNode* area, DynaNode node) {
 
 	WimaAreaHandle wah;
 
-	wah.user = area->node.area.user;
-	wah.node = (WimaAreaNodeHandle) node;
+	wah.area = (WimaAreaNodeHandle) node;
 	wah.window = area->window;
-	wah.region = area->node.area.type;
+	wah.region = area->area.type;
 
 	return wah;
 }
@@ -410,7 +416,7 @@ WimaStatus wima_area_node_draw(DynaTree areas, DynaNode node, int width, int hei
 	}
 	else {
 
-		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->node.area.type);
+		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
 		AreaDrawFunc draw = region->draw;
 
@@ -434,7 +440,7 @@ WimaStatus wima_area_node_key(DynaTree areas, DynaNode node,  WimaKey key,
 	}
 	else {
 
-		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->node.area.type);
+		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
 		AreaKeyFunc key_event = region->key_event;
 
@@ -459,7 +465,7 @@ WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtn b
 	}
 	else {
 
-		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->node.area.type);
+		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
 		AreaMouseEventFunc mouse_event = region->mouse_event;
 
@@ -485,7 +491,7 @@ WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, int x, int y) 
 	}
 	else {
 
-		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->node.area.type);
+		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
 		AreaMousePosFunc mouse_pos = region->mouse_pos;
 
@@ -511,7 +517,7 @@ WimaStatus wima_area_node_mouseEnter(DynaTree areas, DynaNode node, bool entered
 	}
 	else {
 
-		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->node.area.type);
+		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
 		AreaMouseEnterFunc mouse_enter = region->mouse_enter;
 
@@ -535,7 +541,7 @@ WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int
 	}
 	else {
 
-		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->node.area.type);
+		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
 		AreaScrollEventFunc scroll_event = region->scroll_event;
 
@@ -559,7 +565,7 @@ WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code,
 	}
 	else {
 
-		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->node.area.type);
+		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
 		AreaCharFunc char_event = region->char_event;
 

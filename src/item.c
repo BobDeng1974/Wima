@@ -73,33 +73,33 @@ extern WimaG wg;
 
 WimaItem* wima_item_ptr(WimaItemHandle wih) {
 
-	WimaAreaNode* area = wima_area_area(wih.window, wih.area);
+	WimaAreaNode* area = wima_area_area(wih.area.window, wih.area.area);
 	assert(area);
 
-	assert((wih.item >= 0) && (wih.item < area->node.area.ctx.itemCount));
+	assert((wih.item >= 0) && (wih.item < area->area.ctx.itemCount));
 
-	return area->node.area.ctx.items + wih.item;
+	return area->area.ctx.items + wih.item;
 }
 
 WimaItem* wima_item_lastPtr(WimaItemHandle wih) {
 
-	WimaAreaNode* area = wima_area_area(wih.window, wih.area);
+	WimaAreaNode* area = wima_area_area(wih.area.window, wih.area.area);
 	assert(area);
 
-	assert((wih.item >= 0) && (wih.item < area->node.area.ctx.lastItemCount));
+	assert((wih.item >= 0) && (wih.item < area->area.ctx.lastItemCount));
 
-	return area->node.area.ctx.last_items + wih.item;
+	return area->area.ctx.last_items + wih.item;
 }
 
 void wima_item_setFocus(WimaItemHandle wih) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wih.window);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wih.area.window);
 	assert(win);
 
-	WimaAreaNode* area = wima_area_area(wih.window, wih.area);
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(win->areas, wih.area.area);
 	assert(area);
 
-	assert((wih.item >= -1) && (wih.item < area->node.area.ctx.itemCount));
+	assert((wih.item >= -1) && (wih.item < area->area.ctx.itemCount));
 	assert(win->ctx.stage != WIMA_UI_STAGE_LAYOUT);
 
 	win->ctx.focus_item = wih;
@@ -110,20 +110,19 @@ WimaItemHandle wima_item_new(WimaAreaHandle wah) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wah.window);
 	assert(win);
 
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(win->areas, wah.node);
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(win->areas, wah.area);
 	assert(area);
 
-	assert(area->node.area.ctx.itemCount < (int) area->node.area.ctx.itemCap);
+	assert(area->area.ctx.itemCount < (int) area->area.ctx.itemCap);
 
 	 // Must run between uiBeginLayout() and uiEndLayout().
 	assert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT);
 
-	int idx = area->node.area.ctx.itemCount++;
+	int idx = area->area.ctx.itemCount++;
 
 	WimaItemHandle wih;
-	wih.area = wah.node;
+	wih.area = wah;
 	wih.item = idx;
-	wih.window = wah.window;
 
 	WimaItem* item = wima_item_ptr(wih);
 
@@ -322,12 +321,10 @@ bool wima_item_map(WimaItemHandle item1, WimaItemHandle item2) {
 
 	WimaItemHandle kid1;
 	kid1.area = item1.area;
-	kid1.window = item1.window;
 	kid1.item = pitem1->firstkid;
 
 	WimaItemHandle kid2;
 	kid2.area = item2.area;
-	kid2.window = item2.window;
 	kid2.item = pitem2->firstkid;
 
 	while (kid1.item != -1) {
@@ -352,37 +349,37 @@ bool wima_item_map(WimaItemHandle item1, WimaItemHandle item2) {
 		return false;
 	}
 
-	WimaAreaNode* area = wima_area_area(item1.window, item1.area);
+	WimaAreaNode* area = wima_area_area(item1.area.window, item1.area.area);
 
-	area->node.area.ctx.itemMap[item1.item] = item2.item;
+	area->area.ctx.itemMap[item1.item] = item2.item;
 	return true;
 }
 
 WimaItemHandle wima_item_recover(WimaItemHandle olditem) {
 
-	WimaAreaNode* area = wima_area_area(olditem.window, olditem.area);
+	WimaAreaNode* area = wima_area_area(olditem.area.window, olditem.area.area);
 	assert(area);
 
-	assert((olditem.item >= -1) && (olditem.item < area->node.area.ctx.lastItemCount));
+	assert((olditem.item >= -1) && (olditem.item < area->area.ctx.lastItemCount));
 
 	if (olditem.item == -1) {
 		return olditem;
 	}
 
-	olditem.item = area->node.area.ctx.itemMap[olditem.item];
+	olditem.item = area->area.ctx.itemMap[olditem.item];
 
 	return olditem;
 }
 
 void wima_item_remap(WimaItemHandle olditem, WimaItemHandle newitem) {
 
-	WimaAreaNode* area = wima_area_area(olditem.window, olditem.area);
+	WimaAreaNode* area = wima_area_area(olditem.area.window, olditem.area.area);
 	assert(area);
 
-	assert((olditem.item >= 0) && (olditem.item < area->node.area.ctx.lastItemCount));
-	assert((newitem.item >= -1) && (newitem.item < area->node.area.ctx.itemCount));
+	assert((olditem.item >= 0) && (olditem.item < area->area.ctx.lastItemCount));
+	assert((newitem.item >= -1) && (newitem.item < area->area.ctx.itemCount));
 
-	area->node.area.ctx.itemMap[olditem.item] = newitem.item;
+	area->area.ctx.itemMap[olditem.item] = newitem.item;
 }
 
 UIrect wima_item_rect(WimaItemHandle item) {
@@ -403,7 +400,6 @@ WimaItemHandle wima_item_firstChild(WimaItemHandle item) {
 
 	result.item = wima_item_ptr(item)->firstkid;
 	result.area = item.area;
-	result.window = item.window;
 
 	return result;
 }
@@ -414,14 +410,13 @@ WimaItemHandle wima_item_nextSibling(WimaItemHandle item) {
 
 	result.item = wima_item_ptr(item)->nextitem;
 	result.area = item.area;
-	result.window = item.window;
 
 	return result;
 }
 
 void* wima_item_allocHandle(WimaItemHandle item, unsigned int size) {
 
-	WimaAreaNode* area = wima_area_area(item.window, item.area);
+	WimaAreaNode* area = wima_area_area(item.area.window, item.area.area);
 	assert(area);
 
 	// Make sure to align on a eight-byte boundary.
@@ -432,11 +427,11 @@ void* wima_item_allocHandle(WimaItemHandle item, unsigned int size) {
 	WimaItem *pitem = wima_item_ptr(item);
 
 	assert(pitem->handle == NULL);
-	assert((area->node.area.ctx.datasize + size) <= area->node.area.ctx.bufferCap);
+	assert((area->area.ctx.datasize + size) <= area->area.ctx.bufferCap);
 
-	pitem->handle = area->node.area.ctx.data + area->node.area.ctx.datasize;
+	pitem->handle = area->area.ctx.data + area->area.ctx.datasize;
 	pitem->flags |= WIMA_ITEM_DATA;
-	area->node.area.ctx.datasize += size;
+	area->area.ctx.datasize += size;
 
 	return pitem->handle;
 }
@@ -492,9 +487,10 @@ bool wima_item_contains(WimaItemHandle item, int x, int y) {
 	return 0;
 }
 
-WimaItemHandle wima_item_find(WimaItemHandle item, int x, int y, uint32_t flags, uint32_t mask) {
+WimaItemHandle wima_item_find(WimaItemHandle item, int x, int y, uint32_t flags) {
 
 	WimaItemHandle best_hit;
+	best_hit.area = item.area;
 	best_hit.item = -1;
 
 	WimaItem *pitem = wima_item_ptr(item);
@@ -509,7 +505,7 @@ WimaItemHandle wima_item_find(WimaItemHandle item, int x, int y, uint32_t flags,
 
 		while (kid.item >= 0) {
 
-			WimaItemHandle hit = wima_item_find(kid, x, y, flags, mask);
+			WimaItemHandle hit = wima_item_find(kid, x, y, flags);
 
 			if (hit.item >= 0) {
 				best_hit = hit;
@@ -522,11 +518,7 @@ WimaItemHandle wima_item_find(WimaItemHandle item, int x, int y, uint32_t flags,
 			return best_hit;
 		}
 
-		if (((mask == UI_ANY) &&
-		     ((flags == UI_ANY) ||
-		      (pitem->flags & flags))) ||
-		        ((pitem->flags & flags) == mask))
-		{
+		if (flags == UI_ANY || pitem->flags & flags) {
 			return item;
 		}
 	}
@@ -535,12 +527,14 @@ WimaItemHandle wima_item_find(WimaItemHandle item, int x, int y, uint32_t flags,
 }
 
 static bool wima_item_compareHandles(WimaItemHandle item1, WimaItemHandle item2) {
-	return item1.item == item2.item && item1.area == item2.area && item1.window == item2.window;
+	return (item1.item        == item2.item      &&
+	        item1.area.area   == item2.area.area &&
+	        item1.area.window == item2.area.window);
 }
 
 static bool wima_item_isActive(WimaItemHandle item) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.window);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.area.window);
 	assert(win);
 
 	return wima_item_compareHandles(win->ctx.active_item, item);
@@ -548,7 +542,7 @@ static bool wima_item_isActive(WimaItemHandle item) {
 
 static bool wima_item_isHot(WimaItemHandle item) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.window);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.area.window);
 	assert(win);
 
 	return wima_item_compareHandles(win->ctx.last_hot_item, item);
@@ -556,7 +550,7 @@ static bool wima_item_isHot(WimaItemHandle item) {
 
 static bool wima_item_isFocused(WimaItemHandle item) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.window);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.area.window);
 	assert(win);
 
 	return wima_item_compareHandles(win->ctx.focus_item, item);

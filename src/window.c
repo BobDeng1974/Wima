@@ -205,7 +205,7 @@ WimaStatus wima_window_title(WimaWindowHandle wwh, const char* title) {
 	return WIMA_SUCCESS;
 }
 
-void* wima_window_getUserPointer(WimaWindowHandle wwh) {
+void* wima_window_userPointer(WimaWindowHandle wwh) {
 
 	if (wwh >= dvec_len(wg.windows)) {
 		return NULL;
@@ -456,11 +456,10 @@ void wima_window_updateHotItem(WimaWindowHandle wwh) {
 	//}
 
 	WimaItemHandle item;
-	item.window = wwh;
 	item.item = 0;
 
 	win->ctx.hot_item = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y,
-	                                      WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER, UI_ANY);
+	                                   WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER);
 }
 
 static WimaStatus wima_window_processEvent(WimaWindowHandle win, WimaEvent* event) {
@@ -490,7 +489,7 @@ static WimaStatus wima_window_processEvent(WimaWindowHandle win, WimaEvent* even
 		case WIMA_EVENT_MOUSE_POS:
 		{
 			WimaPosInfo* info = &event->e.pos;
-			// TODO: Check for entering an area.
+			// TODO: Check for entering an area and an item.
 			status = wima_area_mousePos(win, info->x, info->y);
 			break;
 		}
@@ -647,9 +646,8 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 		WimaItemHandle item;
 		item.item = 0;
-		item.window = wwh;
 
-		WimaItemHandle scroll_item; // = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_SCROLL, UI_ANY);
+		WimaItemHandle scroll_item;// = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, WIMA_SCROLL);
 
 		if (scroll_item.item >= 0) {
 
@@ -716,10 +714,9 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 				WimaItemHandle item;
 				item.item = 0;
-				item.window = wwh;
 
 				hot_item.item = -1;
-				//hot = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_BUTTON2_DOWN, UI_ANY);
+				//hot = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_BUTTON2_DOWN);
 
 				if (hot.item >= 0) {
 

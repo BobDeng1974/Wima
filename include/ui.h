@@ -461,7 +461,7 @@ WimaItemHandle wima_window_focus(WimaWindowHandle wwh);
 // otherwise the first item matching (item.flags & flags) == mask is returned.
 // you may combine box, layout, event and user flags.
 // frozen items will always be ignored.
-WimaItemHandle wima_item_find(WimaItemHandle item, int x, int y, uint32_t flags, uint32_t mask);
+WimaItemHandle wima_item_find(WimaItemHandle item, int x, int y, uint32_t flags);
 
 // return the event flags for an item as passed to uiSetEvents()
 uint32_t wima_item_events(WimaItemHandle item);

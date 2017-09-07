@@ -92,7 +92,7 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name
 	return WIMA_SUCCESS;
 }
 
-void* wima_region_getUserPointer(WimaRegionHandle reg) {
+void* wima_region_userPointer(WimaRegionHandle reg) {
 
 	assert(wg.windows);
 	assert(reg >= dvec_len(wg.regions));

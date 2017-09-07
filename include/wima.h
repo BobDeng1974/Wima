@@ -81,11 +81,8 @@ typedef uint16_t WimaAreaNodeHandle;
  */
 typedef struct wima_area_handle {
 
-	// User data. They may need this every time.
-	void* user;
-
 	// Put this first because it's bigger.
-	WimaAreaNodeHandle node;
+	WimaAreaNodeHandle area;
 
 	WimaWindowHandle window;
 	WimaRegionHandle region;
@@ -97,10 +94,8 @@ typedef struct wima_area_handle {
  */
 typedef struct wima_item_handle {
 
-	int16_t item;
-
-	WimaAreaNodeHandle area;
-	WimaWindowHandle window;
+	WimaAreaHandle area;
+	int32_t item;
 
 } WimaItemHandle;
 
@@ -341,9 +336,10 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name
                                 AreaMouseEnterFunc menter,      AreaScrollEventFunc sevent,
                                 AreaCharFunc cevent,
                                 uint32_t itemCapacity,          uint32_t bufferCapacity);
-void* wima_region_getUserPointer(WimaRegionHandle reg);
+void* wima_region_userPointer(WimaRegionHandle reg);
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 
+void* wima_area_userPointer(WimaAreaHandle wah);
 WimaStatus wima_areas_free(DynaTree areas);
 
 WimaStatus wima_workspace_register(WimaWorkspaceHandle* type, const char* name);
@@ -354,7 +350,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph);
 GLFWwindow* wima_window_glfw(WimaWindowHandle wwh);
 WimaStatus wima_window_close(WimaWindowHandle wwh);
 WimaStatus wima_window_title(WimaWindowHandle wwh, const char* title);
-void* wima_window_getUserPointer(WimaWindowHandle win);
+void* wima_window_userPointer(WimaWindowHandle win);
 WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user);
 DynaTree wima_window_areas(WimaWindowHandle wwh);
 WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle wksp);
