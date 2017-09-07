@@ -76,9 +76,7 @@ typedef struct wima_window_context {
 	WimaUiState state;
 	WimaLayoutStage stage;
 
-	WimaKey active_key;
 	WimaMods mods;
-	WimaMods button_mods;
 
 	uint32_t last_timestamp;
 	uint32_t last_click_timestamp;
@@ -130,11 +128,19 @@ void wima_window_context_create(WimaWindowContext* ctx);
 // related glitches because item identities have changed.
 void wima_window_context_clear(WimaWindowContext* ctx);
 
+// clear the item buffers and draw all areas; uiBeginLayout() should be called
+// before the first UI declaration for this frame to avoid concatenation of the
+// same UI multiple times.
+// After the call, all previously declared item IDs are invalid, and all
+// application dependent context data has been freed.
+// uiBeginLayout() must be followed by uiEndLayout()
 WimaStatus wima_window_draw(WimaWindowHandle win);
 
 WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction action);
 
 WimaStatus wima_window_processEvents(WimaWindowHandle win);
+
+void wima_window_clearEvents(WimaWindowHandle wwh);
 
 WimaStatus wima_window_free(WimaWindowHandle win);
 

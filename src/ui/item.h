@@ -98,7 +98,7 @@ void* wima_ui_item_allocHandle(WimaItemHandle item, unsigned int size);
 
 void wima_ui_item_updateHot(WimaWindowHandle wwh);
 
-int wima_ui_clicks(WimaWindowHandle wwh);
+int wima_window_clicks(WimaWindowHandle wwh);
 
 static bool wima_ui_item_isActive(WimaItemHandle item);
 

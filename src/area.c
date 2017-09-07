@@ -163,19 +163,32 @@ void wima_area_context_create(WimaAreaContext* ctx, int itemCap, int bufferCap) 
 	}
 }
 
-void wima_area_context_clear(WimaAreaContext* ctx) {
+void wima_area_context_clear(DynaTree areas) {
+	wima_area_node_context_clear(areas, dtree_root());
+}
 
-	ctx->lastItemCount = ctx->itemCount;
-	ctx->itemCount = 0;
-	ctx->datasize = 0;
+void wima_area_node_context_clear(DynaTree areas, DynaNode node) {
 
-	// swap buffers
-	WimaItem *items = ctx->items;
-	ctx->items = ctx->last_items;
-	ctx->last_items = items;
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
-	for (int i = 0; i < ctx->lastItemCount; ++i) {
-		ctx->itemMap[i] = -1;
+	if (area->type == WIMA_AREA_PARENT) {
+		wima_area_node_context_clear(areas, dtree_left(node));
+		wima_area_node_context_clear(areas, dtree_right(node));
+	}
+	else {
+
+		area->node.area.ctx.lastItemCount = area->node.area.ctx.itemCount;
+		area->node.area.ctx.itemCount = 0;
+		area->node.area.ctx.datasize = 0;
+
+		// swap buffers
+		WimaItem *items = area->node.area.ctx.items;
+		area->node.area.ctx.items = area->node.area.ctx.last_items;
+		area->node.area.ctx.last_items = items;
+
+		for (int i = 0; i < area->node.area.ctx.lastItemCount; ++i) {
+			area->node.area.ctx.itemMap[i] = -1;
+		}
 	}
 }
 

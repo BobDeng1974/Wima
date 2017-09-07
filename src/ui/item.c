@@ -88,7 +88,7 @@ int wima_area_item_lastCount(WimaAreaHandle wah) {
 	return area->node.area.ctx.lastItemCount;
 }
 
-unsigned int wima_area_allocSize(WimaAreaHandle wah) {
+uint32_t wima_area_allocSize(WimaAreaHandle wah) {
 
 	WimaAreaNode* area = wima_area_area(wah.window, wah.node);
 	assert(area);
@@ -666,14 +666,6 @@ void wima_ui_item_updateHot(WimaWindowHandle wwh) {
 
 	win->ctx.hot_item = wima_ui_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y,
 	                                      WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER, UI_ANY);
-}
-
-int wima_ui_clicks(WimaWindowHandle wwh) {
-
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
-	assert(win);
-
-	return win->ctx.clicks;
 }
 
 static bool wima_item_compareHandles(WimaItemHandle item1, WimaItemHandle item2) {

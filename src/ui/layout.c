@@ -74,20 +74,6 @@
 
 extern WimaG wg;
 
-void wima_area_layout_begin(WimaAreaHandle wah) {
-
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wah.window);
-	assert(win);
-
-	// Must run uiEndLayout() and uiProcess() first.
-	assert(win->ctx.stage == WIMA_UI_STAGE_PROCESS);
-
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(win->areas, wah.node);
-
-	wima_area_context_clear(&area->node.area.ctx);
-	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
-}
-
 // Compute bounding box of all items super-imposed.
 void wima_ui_layout_computeImposedSize(WimaItem* pitem, int dim) {
 
@@ -675,39 +661,53 @@ static void wima_ui_layout_arrange(WimaItemHandle item, int dim) {
 	}
 }
 
-void wima_ui_layout_end(WimaAreaHandle wah) {
+WimaStatus wima_area_layout(DynaTree areas) {
+	return wima_area_node_layout(areas, dtree_root());
+}
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wah.window);
-	assert(win);
+WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
-	// Must run uiBeginLayout() first.
-	assert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT);
-
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(win->areas, wah.node);
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 	assert(area);
 
-	if (area->node.area.ctx.itemCount) {
+	WimaStatus status;
 
-		WimaItemHandle zero;
-		zero.item = 0;
+	if (area->type == WIMA_AREA_PARENT) {
 
-		wima_ui_layout_computeSize(zero, 0);
-		wima_ui_layout_arrange(zero, 0);
-		wima_ui_layout_computeSize(zero, 1);
-		wima_ui_layout_arrange(zero, 1);
-
-		if (area->node.area.ctx.lastItemCount) {
-			// Map old item id to new item id.
-			wima_ui_item_map(zero, zero);
+		status = wima_area_node_layout(areas, dtree_left(node));
+		if (status) {
+			return status;
 		}
+
+		status = wima_area_node_layout(areas, dtree_right(node));
+	}
+	else {
+
+		if (area->node.area.ctx.itemCount) {
+
+			WimaItemHandle zero;
+			zero.item = 0;
+
+			wima_ui_layout_computeSize(zero, 0);
+			wima_ui_layout_arrange(zero, 0);
+			wima_ui_layout_computeSize(zero, 1);
+			wima_ui_layout_arrange(zero, 1);
+
+			if (area->node.area.ctx.lastItemCount) {
+				// Map old item id to new item id.
+				wima_ui_item_map(zero, zero);
+			}
+		}
+
+		wima_ui_item_validateState(area->window);
+
+		if (area->node.area.ctx.itemCount) {
+			// Drawing routines may require this to be set already.
+			wima_ui_item_updateHot(area->window);
+		}
+
+		status = WIMA_SUCCESS;
 	}
 
-	wima_ui_item_validateState(wah.window);
-
-	if (area->node.area.ctx.itemCount) {
-		// Drawing routines may require this to be set already.
-		wima_ui_item_updateHot(wah.window);
-	}
-
-	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
+	return status;
 }

@@ -309,8 +309,27 @@ WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas) {
 }
 
 WimaStatus wima_window_draw(WimaWindowHandle wwh) {
-	WimaWin* window = (WimaWin*) dvec_get(wg.windows, wwh);
-	return wima_area_draw(wwh, window->width, window->height);
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	// Must run uiEndLayout() and uiProcess() first.
+	assert(win->ctx.stage == WIMA_UI_STAGE_PROCESS);
+
+	wima_area_context_clear(win->areas);
+
+	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
+
+	WimaStatus status = wima_area_draw(wwh, win->width, win->height);
+	if (status) {
+		return status;
+	}
+
+	status = wima_area_layout(win->areas);
+
+	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
+
+	return status;
 }
 
 WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction action) {
@@ -360,6 +379,42 @@ WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction
 	}
 
 	return WIMA_SUCCESS;
+}
+
+UIvec2 wima_window_cursor_start(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.start_cursor;
+}
+
+UIvec2 wima_window_cursor_delta(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	UIvec2 result = {{{
+	        win->ctx.cursor.x - win->ctx.last_cursor.x,
+	        win->ctx.cursor.y - win->ctx.last_cursor.y
+	}}};
+	return result;
+}
+
+int wima_window_clicks(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.clicks;
+}
+
+UIvec2 wima_window_scroll(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.scroll;
 }
 
 static WimaStatus wima_window_processEvent(WimaWindowHandle win, WimaEvent* event) {
@@ -511,6 +566,16 @@ WimaStatus wima_window_processEvents(WimaWindowHandle wwh) {
 	win->ctx.eventCount = 0;
 
 	return status;
+}
+
+void wima_window_clearEvents(WimaWindowHandle wwh) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->ctx.eventCount = 0;
+	win->ctx.scroll.x = 0;
+	win->ctx.scroll.y = 0;
 }
 
 WimaStatus wima_window_free(WimaWindowHandle wwh) {

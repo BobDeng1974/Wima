@@ -104,7 +104,16 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
 
 void wima_area_context_create(WimaAreaContext* ctx, int itemCap, int bufferCap);
-void wima_area_context_clear(WimaAreaContext* ctx);
+void wima_area_context_clear(DynaTree areas);
+void wima_area_node_context_clear(DynaTree areas, DynaNode node);
+
+// layout all added items starting from the root item 0.
+// after calling uiEndLayout(), no further modifications to the item tree should
+// be done until the next call to uiBeginLayout().
+// It is safe to immediately draw the items after a call to uiEndLayout().
+// this is an O(N) operation for N = number of declared items.
+WimaStatus wima_area_layout(DynaTree areas);
+WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
 
 WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 

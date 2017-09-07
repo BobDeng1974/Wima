@@ -320,66 +320,20 @@ typedef enum wima_item_state {
 // -------------
 
 // returns the offset of the cursor relative to the last call to uiProcess()
-UIvec2 wima_ui_cursor_delta(WimaWindowHandle wwh);
+UIvec2 wima_window_cursor_delta(WimaWindowHandle wwh);
 
 // returns the beginning point of a drag operation.
-UIvec2 wima_ui_cursor_start(WimaWindowHandle wwh);
-
-// sets a mouse or gamepad button as pressed/released
-// button is in the range 0..63 and maps to an application defined input
-// source.
-// mod is an application defined set of flags for modifier keys
-// enabled is 1 for pressed, 0 for released
-void wima_ui_setButton(WimaWindowHandle wwh, unsigned int button, unsigned int mod, int enabled);
-
-// returns the current state of an application dependent input button
-// as set by uiSetButton().
-// the function returns 1 if the button has been set to pressed, 0 for released.
-int wima_ui_button(WimaWindowHandle wwh, unsigned int button);
+UIvec2 wima_window_cursor_start(WimaWindowHandle wwh);
 
 // returns the number of chained clicks; 1 is a single click,
 // 2 is a double click, etc.
-int wima_ui_clicks(WimaWindowHandle wwh);
-
-// sets a key as down/up; the key can be any application defined keycode
-// mod is an application defined set of flags for modifier keys
-// enabled is 1 for key down, 0 for key up
-// all key events are being buffered until the next call to uiProcess()
-void uiSetKey(WimaWindowHandle wwh, WimaKey key, int scancode, WimaAction act, WimaMods mods);
-
-// sends a single character for text input; the character is usually in the
-// unicode range, but can be application defined.
-// all char events are being buffered until the next call to uiProcess()
-void uiSetChar(WimaWindowHandle wwh, uint32_t code, WimaMods mods);
-
-// accumulates scroll wheel offsets for the current frame
-// all offsets are being accumulated until the next call to uiProcess()
-void uiSetScroll(WimaWindowHandle wwh, int x, int y);
+int wima_window_clicks(WimaWindowHandle wwh);
 
 // returns the currently accumulated scroll wheel offsets for this frame
-UIvec2 wima_ui_setScroll();
+UIvec2 wima_window_scroll(WimaWindowHandle wwh);
 
 // Stages
 // ------
-
-// clear the item buffer; uiBeginLayout() should be called before the first
-// UI declaration for this frame to avoid concatenation of the same UI multiple
-// times.
-// After the call, all previously declared item IDs are invalid, and all
-// application dependent context data has been freed.
-// uiBeginLayout() must be followed by uiEndLayout().
-void wima_area_layout_begin(WimaAreaHandle wah);
-
-// layout all added items starting from the root item 0.
-// after calling uiEndLayout(), no further modifications to the item tree should
-// be done until the next call to uiBeginLayout().
-// It is safe to immediately draw the items after a call to uiEndLayout().
-// this is an O(N) operation for N = number of declared items.
-void wima_ui_layout_end(WimaAreaHandle wah);
-
-// update the current hot item; this only needs to be called if items are kept
-// for more than one frame and uiEndLayout() is not called
-void wima_ui_item_updateHot(WimaWindowHandle wwh);
 
 // update the internal state according to the current cursor position and
 // button states, and call all registered handlers.
