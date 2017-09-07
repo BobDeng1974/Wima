@@ -43,6 +43,16 @@
 
 #include "window.h"
 
+// Limits.
+
+// Maximum size in bytes of a single data buffer passed to uiAllocData().
+#define UI_MAX_DATASIZE 4096
+
+// Maximum depth of nested containers.
+#define UI_MAX_DEPTH 64
+
+// End limits.
+
 typedef struct wima_area_context {
 
 	WimaItem *items;

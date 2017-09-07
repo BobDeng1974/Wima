@@ -73,7 +73,7 @@ typedef struct wima_window_context {
 	WimaItemHandle last_click_item;
 	WimaItemHandle hot_item;
 
-	WimaUiState state;
+	WimaEventState state;
 	WimaLayoutStage stage;
 
 	WimaMods mods;
