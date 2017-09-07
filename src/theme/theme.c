@@ -65,7 +65,6 @@
 #include "../math/math.h"
 
 #include "../global.h"
-#include "../ui/ui.h"
 
 #include "theme.h"
 

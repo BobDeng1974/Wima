@@ -41,6 +41,7 @@
 
 #include <wima.h>
 
+#include "item.h"
 #include "window.h"
 
 // Limits.

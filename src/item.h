@@ -65,8 +65,18 @@
 #include <string.h>
 
 #include <wima.h>
+#include <ui.h>
 
 #include "event.h"
+
+// These bits, starting at bit 24, can be safely assigned by the
+// application, e.g. as item types, other event types, drop targets, etc.
+// They can be set and queried using wima_ui_item_setFlags() and
+// wima_ui_item_flags()
+#define WIMA_USERMASK 0xff000000
+
+// A special mask passed to wima_ui_item_find().
+#define UI_ANY 0xffffffff
 
 // Extra item flags.
 
@@ -80,7 +90,7 @@
 #define WIMA_ITEM_LAYOUT_MASK    0x0003E0
 
 // Bits 9-18.
-#define WIMA_ITEM_EVENT_MASK     0x07FC00
+#define WIMA_ITEM_EVENT_MASK     (WIMA_EVENT_KEY | WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER | WIMA_EVENT_SCROLL | WIMA_EVENT_CHAR)
 
 // Item is frozen (bit 19).
 #define WIMA_ITEM_FROZEN         0x080000
@@ -102,19 +112,10 @@
 
 // Which flag bits will be compared.
 #define WIMA_ITEM_COMPARE_MASK \
-	(WIMA_ITEM_BOX_MODEL_MASK | (WIMA_ITEM_LAYOUT_MASK & ~WIMA_BREAK) | WIMA_ITEM_EVENT_MASK | WIMA_USERMASK)
-
-// These bits, starting at bit 24, can be safely assigned by the
-// application, e.g. as item types, other event types, drop targets, etc.
-// They can be set and queried using wima_ui_item_setFlags() and
-// wima_ui_item_flags()
-#define UI_USERMASK 0xff000000
-
-// A special mask passed to wima_ui_item_find().
-#define UI_ANY 0xffffffff
+	(WIMA_ITEM_BOX_MODEL_MASK | (WIMA_ITEM_LAYOUT_MASK & ~WIMA_LAYOUT_BREAK) | WIMA_ITEM_EVENT_MASK | WIMA_USERMASK)
 
 // Container flags to pass to uiSetBox().
-typedef enum wima_box_flags {
+typedef enum wima_item_box {
 
 	// Flex direction (bit 0+1).
 
@@ -163,7 +164,7 @@ typedef enum wima_box_flags {
 	// UI_TOP, UI_DOWN, UI_VFILL, UI_VCENTER, etc. FILL is equivalent
 	// to stretch; space-between is not supported.
 
-} WimaBoxFlags;
+} WimaItemBox;
 
 typedef struct wima_item {
 

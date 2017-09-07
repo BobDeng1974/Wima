@@ -62,8 +62,6 @@
 
 #include "../global.h"
 
-#include "../ui/ui.h"
-
 #include "../window.h"
 
 #include "../theme/theme.h"

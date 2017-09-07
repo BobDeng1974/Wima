@@ -37,8 +37,6 @@ set(WIMA_THEME_SRC
 	"theme.c"
 )
 
-set(WIMA_UI_PIC "wima_ui")
-
 set(WIMA_THEME "wima_theme")
 set(WIMA_THEME "${WIMA_THEME}" PARENT_SCOPE)
 
@@ -46,7 +44,6 @@ create_pic_library(
 	"${WIMA_THEME}" "${WIMA_THEME}" "${WIMA_THEME_SRC}" YES
 
 	# Add libraries here.
-	"${WIMA_UI_PIC}"
 	"${WIMA_GLOBAL}"
 	"${NANOVG_PIC}"
 	"${WIMA_MATH_PIC}"

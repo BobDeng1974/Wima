@@ -69,7 +69,6 @@
 
 #include "area.h"
 
-#include "ui/ui.h"
 #include "item.h"
 
 extern WimaG wg;
@@ -135,7 +134,7 @@ static void wima_layout_computeWrappedStackedSize(WimaItem* pitem, int dim) {
 		WimaItem *pkid = wima_item_ptr(kid);
 
 		// If next position moved back, we assume a new line.
-		if (pkid->flags & UI_BREAK) {
+		if (pkid->flags & WIMA_LAYOUT_BREAK) {
 
 			need_size2 = wima_max(need_size2, need_size);
 
@@ -167,7 +166,7 @@ static void wima_layout_computeWrappedSize(WimaItem *pitem, int dim) {
 		WimaItem *pkid = wima_item_ptr(kid);
 
 		// If next position moved back, we assume a new line.
-		if (pkid->flags & UI_BREAK) {
+		if (pkid->flags & WIMA_LAYOUT_BREAK) {
 			need_size2 += need_size;
 
 			// Newline.
@@ -200,7 +199,7 @@ void wima_layout_computeSize(WimaItemHandle item, int dim) {
 		return;
 	}
 
-	switch(pitem->flags & UI_ITEM_BOX_MODEL_MASK) {
+	switch(pitem->flags & WIMA_ITEM_BOX_MODEL_MASK) {
 
 		case UI_COLUMN | UI_WRAP:
 		{
@@ -294,19 +293,19 @@ static void wima_layout_arrangeStacked(WimaItem *pitem, int dim, bool wrap) {
 
 			WimaItem *pkid = wima_item_ptr(kid);
 
-			int flags = (pkid->flags & UI_ITEM_LAYOUT_MASK) >> dim;
-			int fflags = (pkid->flags & UI_ITEM_FIXED_MASK) >> dim;
+			int flags = (pkid->flags & WIMA_ITEM_LAYOUT_MASK) >> dim;
+			int fflags = (pkid->flags & WIMA_ITEM_FIXED_MASK) >> dim;
 
 			short extend = used;
 
 			 // Grow.
-			if ((flags & UI_HFILL) == UI_HFILL) {
+			if ((flags & WIMA_LAYOUT_HFILL) == WIMA_LAYOUT_HFILL) {
 				count++;
 				extend += pkid->margins[dim] + pkid->margins[wdim];
 			}
 			else {
 
-				if ((fflags & UI_ITEM_HFIXED) != UI_ITEM_HFIXED) {
+				if ((fflags & WIMA_ITEM_HFIXED) != WIMA_ITEM_HFIXED) {
 					squeezed_count++;
 				}
 
@@ -314,13 +313,13 @@ static void wima_layout_arrangeStacked(WimaItem *pitem, int dim, bool wrap) {
 			}
 
 			// Wrap on end of line or manual flag.
-			if (wrap && (total && ((extend > space) || (pkid->flags & UI_BREAK)))) {
+			if (wrap && (total && ((extend > space) || (pkid->flags & WIMA_LAYOUT_BREAK)))) {
 
 				end_kid = kid;
-				hardbreak = ((pkid->flags & UI_BREAK) == UI_BREAK);
+				hardbreak = ((pkid->flags & WIMA_LAYOUT_BREAK) == WIMA_LAYOUT_BREAK);
 
 				// Add marker for subsequent queries.
-				pkid->flags |= UI_BREAK;
+				pkid->flags |= WIMA_LAYOUT_BREAK;
 
 				break;
 			}
@@ -390,16 +389,16 @@ static void wima_layout_arrangeStacked(WimaItem *pitem, int dim, bool wrap) {
 
 			WimaItem *pkid = wima_item_ptr(kid);
 
-			int flags = (pkid->flags & UI_ITEM_LAYOUT_MASK) >> dim;
-			int fflags = (pkid->flags & UI_ITEM_FIXED_MASK) >> dim;
+			int flags = (pkid->flags & WIMA_ITEM_LAYOUT_MASK) >> dim;
+			int fflags = (pkid->flags & WIMA_ITEM_FIXED_MASK) >> dim;
 
 			x += (float)pkid->margins[dim] + extra_margin;
 
 			// Grow.
-			if ((flags & UI_HFILL) == UI_HFILL) {
+			if ((flags & WIMA_LAYOUT_HFILL) == WIMA_LAYOUT_HFILL) {
 				x1 = x+filler;
 			}
-			else if ((fflags & UI_ITEM_HFIXED) == UI_ITEM_HFIXED) {
+			else if ((fflags & WIMA_ITEM_HFIXED) == WIMA_ITEM_HFIXED) {
 				x1 = x+(float)pkid->size[dim];
 			}
 			else {
@@ -442,26 +441,26 @@ static void wima_layout_arrangeImposedRange(WimaItem *pitem, int dim,
 
 		WimaItem *pkid = wima_item_ptr(kid);
 
-		int flags = (pkid->flags & UI_ITEM_LAYOUT_MASK) >> dim;
+		int flags = (pkid->flags & WIMA_ITEM_LAYOUT_MASK) >> dim;
 
-		switch(flags & UI_HFILL) {
+		switch(flags & WIMA_LAYOUT_HFILL) {
 
 			default:
 				break;
 
-			case UI_HCENTER:
+			case WIMA_LAYOUT_HCENTER:
 			{
 				pkid->margins[dim] += (space-pkid->size[dim])/2 - pkid->margins[wdim];
 				break;
 			}
 
-			case UI_RIGHT:
+			case WIMA_LAYOUT_RIGHT:
 			{
 				pkid->margins[dim] = space-pkid->size[dim]-pkid->margins[wdim];
 				break;
 			}
 
-			case UI_HFILL:
+			case WIMA_LAYOUT_HFILL:
 			{
 				pkid->size[dim] = wima_max(0,space-pkid->margins[dim]-pkid->margins[wdim]);
 				break;
@@ -500,11 +499,11 @@ static void wima_layout_arrangeImposedSqueezedRange(WimaItem *pitem,
 
 		WimaItem *pkid = wima_item_ptr(kid);
 
-		int flags = (pkid->flags & UI_ITEM_LAYOUT_MASK) >> dim;
+		int flags = (pkid->flags & WIMA_ITEM_LAYOUT_MASK) >> dim;
 
 		short min_size = wima_max(0,space-pkid->margins[dim]-pkid->margins[wdim]);
 
-		switch(flags & UI_HFILL) {
+		switch(flags & WIMA_LAYOUT_HFILL) {
 
 			default:
 			{
@@ -512,21 +511,21 @@ static void wima_layout_arrangeImposedSqueezedRange(WimaItem *pitem,
 				break;
 			}
 
-			case UI_HCENTER:
+			case WIMA_LAYOUT_HCENTER:
 			{
 				pkid->size[dim] = wima_min(pkid->size[dim], min_size);
 				pkid->margins[dim] += (space-pkid->size[dim]) / 2 - pkid->margins[wdim];
 				break;
 			}
 
-			case UI_RIGHT:
+			case WIMA_LAYOUT_RIGHT:
 			{
 				pkid->size[dim] = wima_min(pkid->size[dim], min_size);
 				pkid->margins[dim] = space-pkid->size[dim]-pkid->margins[wdim];
 				break;
 			}
 
-			case UI_HFILL:
+			case WIMA_LAYOUT_HFILL:
 			{
 				pkid->size[dim] = min_size;
 				break;
@@ -568,7 +567,7 @@ static short wima_layout_arrangeWrappedImposedSqueezed(WimaItem *pitem, int dim)
 
 		WimaItem *pkid = wima_item_ptr(kid);
 
-		if (pkid->flags & UI_BREAK) {
+		if (pkid->flags & WIMA_LAYOUT_BREAK) {
 
 			wima_layout_arrangeImposedSqueezedRange(pitem, dim, start_kid, kid, offset, need_size);
 			offset += need_size;
@@ -596,7 +595,7 @@ void wima_layout_arrange(WimaItemHandle item, int dim) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	switch(pitem->flags & UI_ITEM_BOX_MODEL_MASK) {
+	switch(pitem->flags & WIMA_ITEM_BOX_MODEL_MASK) {
 
 		case UI_COLUMN|UI_WRAP:
 		{

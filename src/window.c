@@ -649,7 +649,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 		item.item = 0;
 		item.window = wwh;
 
-		WimaItemHandle scroll_item = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_SCROLL, UI_ANY);
+		WimaItemHandle scroll_item; // = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_SCROLL, UI_ANY);
 
 		if (scroll_item.item >= 0) {
 
@@ -719,7 +719,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 				item.window = wwh;
 
 				hot_item.item = -1;
-				hot = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_BUTTON2_DOWN, UI_ANY);
+				//hot = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_BUTTON2_DOWN, UI_ANY);
 
 				if (hot.item >= 0) {
 

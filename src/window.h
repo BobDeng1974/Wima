@@ -45,13 +45,15 @@
 
 #include <ui.h>
 
-#include "ui/ui.h"
-
 #include "event.h"
+#include "layout.h"
 
 #include "workspace.h"
 
 // The following was originally written for OUI.
+
+// Consecutive click threshold in ms.
+#define UI_CLICK_THRESHOLD 250
 
 typedef struct wima_window_context {
 

@@ -65,7 +65,6 @@
 
 #include "global.h"
 
-#include "ui/ui.h"
 #include "item.h"
 
 #include "area.h"
@@ -163,10 +162,10 @@ WimaItemHandle wima_item_append(WimaItemHandle item, WimaItemHandle sibling) {
 	WimaItem *pitem = wima_item_ptr(item);
 	WimaItem *psibling = wima_item_ptr(sibling);
 
-	assert(!(psibling->flags & UI_ITEM_INSERTED));
+	assert(!(psibling->flags & WIMA_ITEM_INSERTED));
 
 	psibling->nextitem = pitem->nextitem;
-	psibling->flags |= UI_ITEM_INSERTED;
+	psibling->flags |= WIMA_ITEM_INSERTED;
 	pitem->nextitem = sibling.item;
 
 	return sibling;
@@ -179,11 +178,11 @@ WimaItemHandle wima_item_insert(WimaAreaHandle wah, WimaItemHandle item, WimaIte
 	WimaItem *pparent = wima_item_ptr(item);
 	WimaItem *pchild = wima_item_ptr(child);
 
-	assert(!(pchild->flags & UI_ITEM_INSERTED));
+	assert(!(pchild->flags & WIMA_ITEM_INSERTED));
 
 	if (pparent->firstkid < 0) {
 		pparent->firstkid = child.item;
-		pchild->flags |= UI_ITEM_INSERTED;
+		pchild->flags |= WIMA_ITEM_INSERTED;
 	}
 	else {
 		wima_item_append(wima_item_lastChild(item), child);
@@ -199,11 +198,11 @@ WimaItemHandle wima_item_insertBack(WimaItemHandle item, WimaItemHandle child) {
 	WimaItem *pparent = wima_item_ptr(item);
 	WimaItem *pchild = wima_item_ptr(child);
 
-	assert(!(pchild->flags & UI_ITEM_INSERTED));
+	assert(!(pchild->flags & WIMA_ITEM_INSERTED));
 
 	pchild->nextitem = pparent->firstkid;
 	pparent->firstkid = child.item;
-	pchild->flags |= UI_ITEM_INSERTED;
+	pchild->flags |= WIMA_ITEM_INSERTED;
 
 	return child;
 }
@@ -213,10 +212,10 @@ void wima_ui_item_setFrozen(WimaItemHandle item, bool enable) {
 	WimaItem *pitem = wima_item_ptr(item);
 
 	if (enable) {
-		pitem->flags |= UI_ITEM_FROZEN;
+		pitem->flags |= WIMA_ITEM_FROZEN;
 	}
 	else {
-		pitem->flags &= ~UI_ITEM_FROZEN;
+		pitem->flags &= ~WIMA_ITEM_FROZEN;
 	}
 }
 
@@ -228,17 +227,17 @@ void wima_item_setSize(WimaItemHandle item, int w, int h) {
 	pitem->size[1] = h;
 
 	if (!w) {
-		pitem->flags &= ~UI_ITEM_HFIXED;
+		pitem->flags &= ~WIMA_ITEM_HFIXED;
 	}
 	else {
-		pitem->flags |= UI_ITEM_HFIXED;
+		pitem->flags |= WIMA_ITEM_HFIXED;
 	}
 
 	if (!h) {
-		pitem->flags &= ~UI_ITEM_VFIXED;
+		pitem->flags &= ~WIMA_ITEM_VFIXED;
 	}
 	else {
-		pitem->flags |= UI_ITEM_VFIXED;
+		pitem->flags |= WIMA_ITEM_VFIXED;
 	}
 }
 
@@ -254,28 +253,28 @@ void wima_item_setLayoutType(WimaItemHandle item, uint32_t flags) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	assert((flags & UI_ITEM_LAYOUT_MASK) == (unsigned int) flags);
+	assert((flags & WIMA_ITEM_LAYOUT_MASK) == flags);
 
-	pitem->flags &= ~UI_ITEM_LAYOUT_MASK;
-	pitem->flags |= flags & UI_ITEM_LAYOUT_MASK;
+	pitem->flags &= ~WIMA_ITEM_LAYOUT_MASK;
+	pitem->flags |= flags & WIMA_ITEM_LAYOUT_MASK;
 }
 
 uint32_t wima_item_layoutType(WimaItemHandle item) {
-	return wima_item_ptr(item)->flags & UI_ITEM_LAYOUT_MASK;
+	return wima_item_ptr(item)->flags & WIMA_ITEM_LAYOUT_MASK;
 }
 
 void wima_item_setBox(WimaItemHandle item, uint32_t flags) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	assert((flags & UI_ITEM_BOX_MASK) == (unsigned int)flags);
+	assert((flags & WIMA_ITEM_BOX_MASK) == (unsigned int)flags);
 
-	pitem->flags &= ~UI_ITEM_BOX_MASK;
-	pitem->flags |= flags & UI_ITEM_BOX_MASK;
+	pitem->flags &= ~WIMA_ITEM_BOX_MASK;
+	pitem->flags |= flags & WIMA_ITEM_BOX_MASK;
 }
 
 uint32_t wima_item_box(WimaItemHandle item) {
-	return wima_item_ptr(item)->flags & UI_ITEM_BOX_MASK;
+	return wima_item_ptr(item)->flags & WIMA_ITEM_BOX_MASK;
 }
 
 void wima_item_setMargins(WimaItemHandle item, short l, short t, short r, short b) {
@@ -302,7 +301,7 @@ short wima_item_marginDown(WimaItemHandle item) {
 }
 
 bool wima_item_compare(WimaItem *item1, WimaItem *item2) {
-	return ((item1->flags & UI_ITEM_COMPARE_MASK) == (item2->flags & UI_ITEM_COMPARE_MASK));
+	return ((item1->flags & WIMA_ITEM_COMPARE_MASK) == (item2->flags & WIMA_ITEM_COMPARE_MASK));
 }
 
 bool wima_item_map(WimaItemHandle item1, WimaItemHandle item2) {
@@ -436,7 +435,7 @@ void* wima_item_allocHandle(WimaItemHandle item, unsigned int size) {
 	assert((area->node.area.ctx.datasize + size) <= area->node.area.ctx.bufferCap);
 
 	pitem->handle = area->node.area.ctx.data + area->node.area.ctx.datasize;
-	pitem->flags |= UI_ITEM_DATA;
+	pitem->flags |= WIMA_ITEM_DATA;
 	area->node.area.ctx.datasize += size;
 
 	return pitem->handle;
@@ -459,24 +458,24 @@ void wima_item_setEvents(WimaItemHandle item, uint32_t flags) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	pitem->flags &= ~UI_ITEM_EVENT_MASK;
-	pitem->flags |= flags & UI_ITEM_EVENT_MASK;
+	pitem->flags &= ~WIMA_ITEM_EVENT_MASK;
+	pitem->flags |= flags & WIMA_ITEM_EVENT_MASK;
 }
 
 uint32_t wima_item_events(WimaItemHandle item) {
-	return wima_item_ptr(item)->flags & UI_ITEM_EVENT_MASK;
+	return wima_item_ptr(item)->flags & WIMA_ITEM_EVENT_MASK;
 }
 
 void wima_item_setFlags(WimaItemHandle item, uint32_t flags) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	pitem->flags &= ~UI_USERMASK;
-	pitem->flags |= flags & UI_USERMASK;
+	pitem->flags &= ~WIMA_USERMASK;
+	pitem->flags |= flags & WIMA_USERMASK;
 }
 
 uint32_t wima_ui_item_flags(WimaItemHandle item) {
-	return wima_item_ptr(item)->flags & UI_USERMASK;
+	return wima_item_ptr(item)->flags & WIMA_USERMASK;
 }
 
 bool wima_item_contains(WimaItemHandle item, int x, int y) {
@@ -500,7 +499,7 @@ WimaItemHandle wima_item_find(WimaItemHandle item, int x, int y, uint32_t flags,
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	if (pitem->flags & UI_ITEM_FROZEN) {
+	if (pitem->flags & WIMA_ITEM_FROZEN) {
 		return best_hit;
 	}
 
@@ -567,23 +566,23 @@ WimaItemState wima_item_state(WimaItemHandle item) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	if (pitem->flags & UI_ITEM_FROZEN) {
+	if (pitem->flags & WIMA_ITEM_FROZEN) {
 		return UI_FROZEN;
 	}
 
 	if (wima_item_isFocused(item)) {
-		if (pitem->flags & (UI_KEY_DOWN|UI_CHAR|UI_KEY_UP)) return UI_ACTIVE;
+		//if (pitem->flags & (UI_KEY_DOWN|UI_CHAR|UI_KEY_UP)) return UI_ACTIVE;
 	}
 
 	if (wima_item_isActive(item)) {
 
-		if (pitem->flags & (UI_BUTTON0_CAPTURE|UI_BUTTON0_UP)) {
-			return UI_ACTIVE;
-		}
+		//if (pitem->flags & (UI_BUTTON0_CAPTURE|UI_BUTTON0_UP)) {
+		//	return UI_ACTIVE;
+		//}
 
-		if ((pitem->flags & UI_BUTTON0_HOT_UP) && wima_item_isHot(item)) {
-			return UI_ACTIVE;
-		}
+		//if ((pitem->flags & UI_BUTTON0_HOT_UP) && wima_item_isHot(item)) {
+		//	return UI_ACTIVE;
+		//}
 
 		return UI_COLD;
 	}

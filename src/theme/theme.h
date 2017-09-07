@@ -68,8 +68,6 @@ extern "C" {
 
 #include <nanovg.h>
 
-#include "../ui/ui.h"
-
 /*
 
 Revision 6 (2014-09-21)
