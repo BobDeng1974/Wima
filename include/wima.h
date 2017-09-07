@@ -311,15 +311,33 @@ typedef WimaStatus (*ItemMouseEnterFunc)(WimaItemHandle, bool);
 typedef WimaStatus (*ItemScrollFunc)(WimaItemHandle, int, int, WimaMods);
 typedef WimaStatus (*ItemCharEvent)(WimaItemHandle, uint32_t, WimaMods);
 
+typedef struct wima_item_funcs {
+
+	ItemKeyFunc key;
+	ItemMouseEventFunc mouse;
+	ItemMouseEnterFunc enter;
+	ItemScrollFunc scroll;
+	ItemCharEvent char_event;
+
+} WimaItemFuncs;
+
 typedef void* (*AreaGenUserPointerFunc)(WimaAreaHandle);
 typedef void (*AreaFreeUserPointerFunc)(void*);
 typedef WimaStatus (*AreaDrawFunc)(WimaAreaHandle, int, int);
 typedef WimaStatus (*AreaKeyFunc)(WimaAreaHandle, WimaKey, int, WimaAction, WimaMods);
-typedef WimaStatus (*AreaMouseEventFunc)(WimaAreaHandle, WimaMouseBtn, WimaAction, WimaMods);
 typedef WimaStatus (*AreaMousePosFunc)(WimaAreaHandle, int, int);
 typedef WimaStatus (*AreaMouseEnterFunc)(WimaAreaHandle, bool);
-typedef WimaStatus (*AreaScrollEventFunc)(WimaAreaHandle, int, int, WimaMods);
-typedef WimaStatus (*AreaCharFunc)(WimaAreaHandle, uint32_t, WimaMods);
+
+typedef struct wima_region_funcs {
+
+	AreaGenUserPointerFunc gen_ptr;
+	AreaFreeUserPointerFunc free_ptr;
+	AreaDrawFunc draw;
+	AreaKeyFunc key;
+	AreaMousePosFunc pos;
+	AreaMouseEnterFunc enter;
+
+} WimaRegionFuncs;
 
 typedef void (*ErrorFunc)(WimaStatus, const char*);
 typedef WimaStatus (*WindowFileDropFunc)(WimaWindowHandle, int, const char**);
@@ -329,13 +347,21 @@ typedef WimaStatus (*WindowSizeFunc)(WimaWindowHandle, int, int);
 typedef WimaStatus (*WindowMouseEnterFunc)(WimaWindowHandle, bool);
 typedef bool (*WindowCloseFunc)(WimaWindowHandle);
 
-WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name,
-                                AreaGenUserPointerFunc userPtr, AreaFreeUserPointerFunc userFree,
-                                AreaDrawFunc draw,              AreaKeyFunc key,
-                                AreaMouseEventFunc mevent,      AreaMousePosFunc mpos,
-                                AreaMouseEnterFunc menter,      AreaScrollEventFunc sevent,
-                                AreaCharFunc cevent,
-                                uint32_t itemCapacity,          uint32_t bufferCapacity);
+typedef struct wima_app_funcs {
+
+	ErrorFunc error;
+	WindowFileDropFunc file_drop;
+	WindowPosFunc pos;
+	FramebufferSizeFunc fbsize;
+	WindowSizeFunc winsize;
+	WindowMouseEnterFunc enter;
+	WindowCloseFunc close;
+
+} WimaAppFuncs;
+
+WimaStatus wima_region_register(WimaRegionHandle* wrh, const char* name,
+                                WimaRegionFuncs funcs, uint32_t itemCapacity,
+                                uint32_t bufferCapacity);
 void* wima_region_userPointer(WimaRegionHandle reg);
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 
@@ -356,10 +382,7 @@ DynaTree wima_window_areas(WimaWindowHandle wwh);
 WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle wksp);
 WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas);
 
-WimaStatus wima_init(const char* name,         ErrorFunc error,
-                     WindowFileDropFunc fdrop, WindowMouseEnterFunc enter,
-                     WindowPosFunc pos,        FramebufferSizeFunc fbsize,
-                     WindowSizeFunc winsize,   WindowCloseFunc close);
+WimaStatus wima_init(const char* name, WimaAppFuncs funcs);
 WimaStatus wima_main();
 void wima_exit();
 

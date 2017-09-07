@@ -349,7 +349,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp);
 // --------------
 
 // create a new UI item and return the new items ID.
-WimaItemHandle wima_item_new(WimaAreaHandle wah);
+WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs);
 
 // set an items state to frozen; the UI will not recurse into frozen items
 // when searching for hot or active items; subsequently, frozen items and

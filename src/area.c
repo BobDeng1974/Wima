@@ -147,7 +147,7 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
 
 		// Get the particular user function setter.
-		AreaGenUserPointerFunc get_user_ptr = region->get_ptr;
+		AreaGenUserPointerFunc get_user_ptr = region->gen_ptr;
 
 		// If the user didn't specify one, don't call it.
 		if (!get_user_ptr) {
@@ -523,11 +523,7 @@ WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtn b
 
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
-		AreaMouseEventFunc mouse_event = region->mouse_event;
-
-		if (mouse_event) {
-			status = mouse_event(wima_area_handle(area), btn, act, mods);
-		}
+		// TODO: Send event to item.
 	}
 
 	return status;
@@ -599,11 +595,7 @@ WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int
 
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
-		AreaScrollEventFunc scroll_event = region->scroll_event;
-
-		if (scroll_event) {
-			status = scroll_event(wima_area_handle(area), xoffset, yoffset, mods);
-		}
+		// TODO: Send the event to item instead of area.
 	}
 
 	return status;
@@ -621,15 +613,9 @@ WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code,
 	}
 	else {
 
-		// TODO: Send the event to item instead of area.
-
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
-		AreaCharFunc char_event = region->char_event;
-
-		if (char_event) {
-			status = char_event(wima_area_handle(area), code, mods);
-		}
+		// TODO: Send the event to item instead of area.
 	}
 
 	return status;

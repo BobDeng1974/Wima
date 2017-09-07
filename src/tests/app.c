@@ -223,23 +223,32 @@ void mouseCoordsError(WimaStatus status, const char* desc) {
 
 int main() {
 
+	WimaAppFuncs appfuncs;
+	appfuncs.error = mouseCoordsError;
+	appfuncs.file_drop = mouseCoordsFileDrop;
+	appfuncs.pos = NULL;
+	appfuncs.fbsize = mouseCoordsResize;
+	appfuncs.winsize = NULL;
+	appfuncs.enter = mouseCoordsMenter;
+	appfuncs.close = mouseCoordsClose;
+
 	// Initialize Wima and check for success.
-	WimaStatus status = wima_init("Test Wima App",     mouseCoordsError,
-	                              mouseCoordsFileDrop, mouseCoordsMenter,
-	                              NULL,                mouseCoordsResize,
-	                              NULL,                mouseCoordsClose);
+	WimaStatus status = wima_init("Test Wima App", appfuncs);
 	if (status) {
 		return status;
 	}
 
+	WimaRegionFuncs funcs;
+	funcs.gen_ptr = mouseCoordsUserPtr;
+	funcs.free_ptr = mouseCoordsUserPtrFree;
+	funcs.draw = mouseCoordsDraw;
+	funcs.key = mouseCoordsKevent;
+	funcs.pos = mouseCoordsMpos;
+	funcs.enter = mouseCoordsMenterArea;
+
 	// Register a region.
 	WimaRegionHandle region;
-	status = wima_region_register(&region,               "Mouse Coordinates",
-	                              mouseCoordsUserPtr,    mouseCoordsUserPtrFree,
-	                              mouseCoordsDraw,       mouseCoordsKevent,
-	                              mouseCoordsMevent,     mouseCoordsMpos,
-	                              mouseCoordsMenterArea, mouseCoordsSevent,
-	                              mouseCoordsChar,       16, 512);
+	status = wima_region_register(&region, "Mouse Coordinates", funcs, 16, 512);
 	if (status) {
 		return status;
 	}

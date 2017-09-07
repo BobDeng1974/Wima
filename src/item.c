@@ -105,7 +105,7 @@ void wima_item_setFocus(WimaItemHandle wih) {
 	win->ctx.focus_item = wih;
 }
 
-WimaItemHandle wima_item_new(WimaAreaHandle wah) {
+WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs) {
 
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wah.window);
 	assert(win);
@@ -130,6 +130,12 @@ WimaItemHandle wima_item_new(WimaAreaHandle wah) {
 
 	item->firstkid = -1;
 	item->nextitem = -1;
+
+	item->key = funcs.key;
+	item->mouse_event = funcs.mouse;
+	item->mouse_enter = funcs.enter;
+	item->scroll = funcs.scroll;
+	item->char_event = funcs.char_event;
 
 	return wih;
 }

@@ -42,18 +42,14 @@ typedef struct wima_region {
 
 	void* user;
 
-	AreaGenUserPointerFunc get_ptr;
+	AreaGenUserPointerFunc gen_ptr;
 	AreaFreeUserPointerFunc free_ptr;
 
 	AreaDrawFunc draw;
 
 	AreaKeyFunc key_event;
-	AreaMouseEventFunc mouse_event;
 	AreaMousePosFunc mouse_pos;
 	AreaMouseEnterFunc mouse_enter;
-	AreaScrollEventFunc scroll_event;
-
-	AreaCharFunc char_event;
 
 	uint32_t itemCap;
 	uint32_t bufferCap;

@@ -46,17 +46,13 @@
 
 extern WimaG wg;
 
-WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name,
-                                AreaGenUserPointerFunc userPtr, AreaFreeUserPointerFunc userFree,
-                                AreaDrawFunc draw,              AreaKeyFunc key,
-                                AreaMouseEventFunc mevent,      AreaMousePosFunc mpos,
-                                AreaMouseEnterFunc menter,      AreaScrollEventFunc sevent,
-                                AreaCharFunc cevent,            uint32_t itemCapacity,
+WimaStatus wima_region_register(WimaRegionHandle* wrh, const char* name,
+                                WimaRegionFuncs funcs, uint32_t itemCapacity,
                                 uint32_t bufferCapacity)
 {
 	WimaRegion reg;
 
-	assert(draw);
+	assert(funcs.draw);
 	assert(itemCapacity);
 	assert(bufferCapacity);
 
@@ -67,15 +63,12 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh,          const char* name
 
 	reg.user = NULL;
 
-	reg.get_ptr = userPtr;
-	reg.free_ptr = userFree;
-	reg.draw = draw;
-	reg.key_event = key;
-	reg.mouse_event = mevent;
-	reg.mouse_pos = mpos;
-	reg.mouse_enter = menter;
-	reg.scroll_event = sevent;
-	reg.char_event = cevent;
+	reg.gen_ptr = funcs.gen_ptr;
+	reg.free_ptr = funcs.free_ptr;
+	reg.draw = funcs.draw;
+	reg.key_event = funcs.key;
+	reg.mouse_pos = funcs.pos;
+	reg.mouse_enter = funcs.enter;
 
 	reg.itemCap = itemCapacity;
 	reg.bufferCap = bufferCapacity;

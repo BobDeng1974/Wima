@@ -53,22 +53,19 @@
 extern WimaG wg;
 extern const WimaTheme wima_initial_theme;
 
-WimaStatus wima_init(const char* name,         ErrorFunc error,
-                     WindowFileDropFunc fdrop, WindowMouseEnterFunc enter,
-                     WindowPosFunc pos,        FramebufferSizeFunc fbsize,
-                     WindowSizeFunc winsize,   WindowCloseFunc close)
-{
-	if (!error) {
+WimaStatus wima_init(const char* name, WimaAppFuncs funcs) {
+
+	if (!funcs.error) {
 		return WIMA_INIT_ERR;
 	}
 
-	wg.error = error;
-	wg.file_drop = fdrop;
-	wg.enter = enter;
-	wg.pos = pos;
-	wg.fb_size = fbsize;
-	wg.win_size = winsize;
-	wg.close = close;
+	wg.error = funcs.error;
+	wg.file_drop = funcs.file_drop;
+	wg.enter = funcs.enter;
+	wg.pos = funcs.pos;
+	wg.fb_size = funcs.fbsize;
+	wg.win_size = funcs.winsize;
+	wg.close = funcs.close;
 
 	wg.regions = NULL;
 	wg.workspaces = NULL;
