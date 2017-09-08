@@ -103,7 +103,6 @@ typedef struct wima_window {
 	WimaWindowContext ctx;
 
 	WimaSize fbsize;
-
 	WimaSize winsize;
 
 } WimaWin;
