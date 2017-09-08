@@ -69,20 +69,19 @@ typedef struct wima_window_context {
 	// Accumulated scroll wheel offsets.
 	UIvec2 scroll;
 
-	WimaItemHandle active_item;
-	WimaItemHandle focus_item;
-	WimaItemHandle last_hot_item;
-	WimaItemHandle last_click_item;
-	WimaItemHandle hot_item;
+	WimaItemHandle active;
+	WimaItemHandle focus;
+	WimaItemHandle hot;
+
+	WimaItemHandle click_item;
+	WimaMouseBtn click_button;
+	uint32_t click_timestamp;
+	uint32_t clicks;
 
 	WimaEventState state;
 	WimaLayoutStage stage;
 
 	WimaMods mods;
-
-	uint32_t last_timestamp;
-	uint32_t last_click_timestamp;
-	uint32_t clicks;
 
 	uint32_t eventCount;
 	WimaEvent events[WIMA_MAX_EVENTS];

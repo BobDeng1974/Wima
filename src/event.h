@@ -37,6 +37,8 @@
 #ifndef WIMA_EVENT_H
 #define WIMA_EVENT_H
 
+#include <wima.h>
+
 // Limits.
 
 // Max events we will process on one frame.
@@ -86,9 +88,13 @@ typedef struct wima_key_info {
 
 typedef struct wima_mouse_btn_info {
 
+	uint32_t timestamp;
+
 	WimaMouseBtn button;
 	WimaAction action;
 	WimaMods mods;
+
+	uint16_t clicks;
 
 } WimaMouseBtnInfo;
 

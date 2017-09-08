@@ -102,7 +102,7 @@ void wima_item_setFocus(WimaItemHandle wih) {
 	assert((wih.item >= -1) && (wih.item < area->area.ctx.itemCount));
 	assert(win->ctx.stage != WIMA_UI_STAGE_LAYOUT);
 
-	win->ctx.focus_item = wih;
+	win->ctx.focus = wih;
 }
 
 WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs) {
@@ -543,7 +543,7 @@ static bool wima_item_isActive(WimaItemHandle item) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.area.window);
 	assert(win);
 
-	return wima_item_compareHandles(win->ctx.active_item, item);
+	return wima_item_compareHandles(win->ctx.active, item);
 }
 
 static bool wima_item_isHot(WimaItemHandle item) {
@@ -551,7 +551,7 @@ static bool wima_item_isHot(WimaItemHandle item) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.area.window);
 	assert(win);
 
-	return wima_item_compareHandles(win->ctx.last_hot_item, item);
+	return wima_item_compareHandles(win->ctx.hot, item);
 }
 
 static bool wima_item_isFocused(WimaItemHandle item) {
@@ -559,7 +559,7 @@ static bool wima_item_isFocused(WimaItemHandle item) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.area.window);
 	assert(win);
 
-	return wima_item_compareHandles(win->ctx.focus_item, item);
+	return wima_item_compareHandles(win->ctx.focus, item);
 }
 
 WimaItemState wima_item_state(WimaItemHandle item) {
