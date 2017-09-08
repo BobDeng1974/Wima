@@ -53,12 +53,14 @@ set(WIMA_SRC
 	"wima.c"
 )
 
-include_directories("${X11_INCLUDE_DIR}")
+include_directories("${X11_INCLUDE_DIR}" "${OPENGL_INCLUDE_DIR}")
 
 add_subdirectory(math)
 
 add_subdirectory(theme)
 add_subdirectory(widget)
+
+set(WIMA_GLAD "${PROJECT_NAME}_glad")
 
 create_pic_library(
 	"${PROJECT_NAME}" "${PROJECT_NAME}" "${WIMA_SRC}" "YES"
@@ -73,6 +75,7 @@ create_pic_library(
 	"${WIMA_GLAD}"
 	"${JEMALLOC_LIB}"
 	"${DL_LIB}"
+	"${OPENGL_LIBRARIES}"
 	"${X11_X11_LIB}"
 	"${X11_Xi_LIB}"
 	"${X11_Xrandr_LIB}"

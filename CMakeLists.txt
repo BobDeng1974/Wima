@@ -35,6 +35,7 @@ set(ignoreMe "${CMAKE_CXX_COMPILER}")
 enable_testing()
 
 find_package(X11 REQUIRED)
+find_package(OpenGL REQUIRED)
 
 find_library(RT_LIB rt PATHS "/usr/lib" "/usr/local/lib")
 find_library(MATH_LIB m PATHS "/usr/lib" "/usr/local/lib")
