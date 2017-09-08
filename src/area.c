@@ -462,6 +462,9 @@ WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code, WimaMods mods
 
 WimaStatus wima_area_node_draw(DynaTree areas, DynaNode node, int width, int height) {
 
+	// TODO: Handle difference between GLFW coords (from upper left) and
+	// OpenGL coords (from lower left).
+
 	WimaStatus status;
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
@@ -511,6 +514,9 @@ WimaStatus wima_area_node_key(DynaTree areas, DynaNode node,  WimaKey key,
 WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtn btn,
                                    WimaAction act, WimaMods mods)
 {
+	// TODO: Handle window splits and joins. Also, make sure to remember that
+	// GLFW coords are from upper left and OpenGL coords are from lower left.
+
 	WimaStatus status;
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
