@@ -412,9 +412,17 @@ void wima_window_validateItems(WimaWindowHandle wwh) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	win->ctx.hot = wima_item_recover(win->ctx.hot);
-	win->ctx.active = wima_item_recover(win->ctx.active);
-	win->ctx.focus = wima_item_recover(win->ctx.focus);
+	if (win->ctx.hot.item >= 0) {
+		win->ctx.hot = wima_item_recover(win->ctx.hot);
+	}
+
+	if (win->ctx.active.item >= 0) {
+		win->ctx.active = wima_item_recover(win->ctx.active);
+	}
+
+	if (win->ctx.focus.item >= 0) {
+		win->ctx.focus = wima_item_recover(win->ctx.focus);
+	}
 }
 
 WimaItemHandle wima_window_focus(WimaWindowHandle wwh) {
@@ -534,7 +542,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_WIN_POS:
 		{
-			if (!wg.pos) {
+			if (wg.pos) {
 				WimaPosInfo* info = &event->e.pos;
 				status = wg.pos(wwh, info->x, info->y);
 			}
@@ -547,7 +555,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_FB_SIZE:
 		{
-			if (!wg.fb_size) {
+			if (wg.fb_size) {
 				WimaSizeInfo* info = &event->e.size;
 				status = wg.fb_size(wwh, info->width, info->height);
 			}
@@ -577,6 +585,9 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 			else {
 				status = WIMA_SUCCESS;
 			}
+
+
+
 			break;
 		}
 	}
@@ -678,9 +689,9 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 			win->ctx.start_cursor = win->ctx.cursor;
 
 			// Left mouse button.
-			if (wima_ui_button(wwh, 0)) {
+			//if (wima_ui_button(wwh, 0)) {
 
-				hot_item.item = -1;
+			    hot_item.item = -1;
 				active_item = hot;
 
 				if (active_item.item != focus_item.item) {
@@ -711,10 +722,10 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 				}
 
 				win->ctx.state = WIMA_UI_STATE_CAPTURE;
-			}
+			//}
 
 			// Right mouse button, and right mouse button was not pressed last time.
-			else if (wima_ui_button(wwh, 2)) {// && !wima_ui_button_last(wwh, 2)) {
+			//else if (wima_ui_button(wwh, 2)) {// && !wima_ui_button_last(wwh, 2)) {
 
 				// TODO: Send the event to the right area.
 
@@ -734,7 +745,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 					wima_item_notify(hot, e);
 				}
-			}
+			//}
 
 			// Otherwise.
 			else {
@@ -747,9 +758,9 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 		case WIMA_UI_STATE_CAPTURE:
 		{
 			// Left mouse button.
-			if (!wima_ui_button(wwh, 0)) {
+			//if (!wima_ui_button(wwh, 0)) {
 
-				if (active_item.item >= 0) {
+			    if (active_item.item >= 0) {
 
 					//wima_ui_item_notify(wwh, active_item, UI_BUTTON0_UP);
 
@@ -760,10 +771,10 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 				active_item.item = -1;
 				win->ctx.state = WIMA_UI_STATE_IDLE;
-			}
+			//}
 
 			// Otherwise.
-			else {
+			//else {
 
 				if (active_item.item >= 0) {
 					//wima_ui_item_notify(wwh, active_item, UI_BUTTON0_CAPTURE);
@@ -775,7 +786,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 				else {
 					hot_item.item = -1;
 				}
-			}
+			//}
 		} break;
 	}
 }
