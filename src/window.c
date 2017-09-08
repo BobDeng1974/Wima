@@ -62,10 +62,10 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 
 	wwin.areas = NULL;
 	wwin.user = NULL;
-	wwin.fbwidth = 0;
-	wwin.fbheight = 0;
-	wwin.width = 0;
-	wwin.height = 0;
+	wwin.fbsize.w = 0;
+	wwin.fbsize.h = 0;
+	wwin.winsize.w = 0;
+	wwin.winsize.h = 0;
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -282,7 +282,14 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 
 	wima_window_context_create(&window->ctx);
 
-	WimaStatus status = wima_area_node_init(wwh, window->areas, root, 0, 0, window->fbwidth, window->fbheight);
+	WimaRect rect;
+
+	rect.x = 0;
+	rect.y = 0;
+	rect.w = window->fbsize.w;
+	rect.h = window->fbsize.h;
+
+	WimaStatus status = wima_area_node_init(wwh, window->areas, root, rect);
 
 	return status;
 }
@@ -318,7 +325,7 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
 	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 
-	WimaStatus status = wima_area_draw(wwh, win->width, win->height);
+	WimaStatus status = wima_area_draw(wwh, win->fbsize);
 	if (status) {
 		return status;
 	}
@@ -379,7 +386,7 @@ WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction
 	return WIMA_SUCCESS;
 }
 
-UIvec2 wima_window_cursor_start(WimaWindowHandle wwh) {
+WimaPos wima_window_cursor_start(WimaWindowHandle wwh) {
 
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
@@ -387,19 +394,19 @@ UIvec2 wima_window_cursor_start(WimaWindowHandle wwh) {
 	return win->ctx.start_cursor;
 }
 
-UIvec2 wima_window_cursor_delta(WimaWindowHandle wwh) {
+WimaPos wima_window_cursor_delta(WimaWindowHandle wwh) {
 
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	UIvec2 result = {{{
+	WimaPos result = {{{
 	        win->ctx.cursor.x - win->ctx.last_cursor.x,
 	        win->ctx.cursor.y - win->ctx.last_cursor.y
 	}}};
 	return result;
 }
 
-UIvec2 wima_window_scroll(WimaWindowHandle wwh) {
+WimaPos wima_window_scroll(WimaWindowHandle wwh) {
 
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
@@ -487,9 +494,9 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_MOUSE_POS:
 		{
-			WimaPosInfo* info = &event->e.pos;
+			WimaPos pos = event->e.pos;
 			// TODO: Check for entering an area and an item.
-			status = wima_area_mousePos(wwh, info->x, info->y);
+			status = wima_area_mousePos(wwh, pos);
 			break;
 		}
 
@@ -543,8 +550,8 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_WIN_POS:
 		{
 			if (wg.pos) {
-				WimaPosInfo* info = &event->e.pos;
-				status = wg.pos(wwh, info->x, info->y);
+				WimaPos pos = event->e.pos;
+				status = wg.pos(wwh, pos);
 			}
 			else {
 				status = WIMA_SUCCESS;
@@ -556,8 +563,8 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_FB_SIZE:
 		{
 			if (wg.fb_size) {
-				WimaSizeInfo* info = &event->e.size;
-				status = wg.fb_size(wwh, info->width, info->height);
+				WimaSize size = event->e.size;
+				status = wg.fb_size(wwh, size);
 			}
 			else {
 				status = WIMA_SUCCESS;
@@ -568,8 +575,8 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_WIN_SIZE:
 		{
 			if (wg.win_size) {
-				WimaSizeInfo* info = &event->e.size;
-				status = wg.win_size(wwh, info->width, info->height);
+				WimaSize size = event->e.size;
+				status = wg.win_size(wwh, size);
 			}
 			else {
 				status = WIMA_SUCCESS;

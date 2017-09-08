@@ -412,8 +412,8 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
-	wwin->fbwidth = width;
-	wwin->fbheight = height;
+	wwin->fbsize.w = width;
+	wwin->fbsize.h = height;
 
 	int numEvents = wwin->ctx.eventCount;
 
@@ -427,8 +427,8 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_FB_SIZE;
-	event->e.size.width = width;
-	event->e.size.height = height;
+	event->e.size.w = width;
+	event->e.size.h = height;
 
 	++(wwin->ctx.eventCount);
 }
@@ -448,8 +448,8 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
 	}
 
-	wwin->width = width;
-	wwin->height = height;
+	wwin->winsize.w = width;
+	wwin->winsize.h = height;
 
 	int numEvents = wwin->ctx.eventCount;
 
@@ -463,8 +463,8 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_WIN_SIZE;
-	event->e.size.width = width;
-	event->e.size.height = height;
+	event->e.size.w = width;
+	event->e.size.h = height;
 
 	++(wwin->ctx.eventCount);
 }

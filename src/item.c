@@ -388,11 +388,11 @@ void wima_item_remap(WimaItemHandle olditem, WimaItemHandle newitem) {
 	area->area.ctx.itemMap[olditem.item] = newitem.item;
 }
 
-UIrect wima_item_rect(WimaItemHandle item) {
+WimaRect wima_item_rect(WimaItemHandle item) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	UIrect rc = {{{
+	WimaRect rc = {{{
 	        pitem->margins[0], pitem->margins[1],
 	        pitem->size[0], pitem->size[1]
 	}}};
@@ -481,7 +481,7 @@ uint32_t wima_ui_item_flags(WimaItemHandle item) {
 
 bool wima_item_contains(WimaItemHandle item, int x, int y) {
 
-	UIrect rect = wima_item_rect(item);
+	WimaRect rect = wima_item_rect(item);
 
 	x -= rect.x;
 	y -= rect.y;

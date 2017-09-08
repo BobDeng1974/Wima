@@ -51,7 +51,7 @@
 
 extern WimaG wg;
 
-WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node, int x, int y, int width, int height) {
+WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node, WimaRect rect) {
 
 	// Make sure this is clear.
 	WimaStatus status = WIMA_SUCCESS;
@@ -61,74 +61,71 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 
 	// Set the common data.
 	area->node = node;
-	area->x = x;
-	area->y = y;
-	area->width = width;
-	area->height = height;
+	area->rect = rect;
 	area->window = win;
 
 	// We do something different depending on what type of node it is.
 	if (area->type == WIMA_AREA_PARENT) {
 
-		int leftx = x;
-		int lefty = y;
+		WimaRect left;
+		WimaRect right;
 
 		int split;
 
-		int leftw, lefth;
-		int rightx, righty, rightw, righth;
+		left.x = rect.x;
+		left.y = rect.y;
 
 		if (area->parent.vertical) {
 
-			split = (int) ((width - 1) * area->parent.split);
+			split = (int) ((rect.w - 1) * area->parent.split);
 
 			// These can just be set now.
-			righty = y;
-			lefth = righth = height;
+			right.y = rect.y;
+			left.h = right.h = rect.h;
 
 			// The real number is split - 2, plus 1 because
 			// the result of split - 2 is the last pixel, not
 			// the height. And since pixels are zero-based, we
 			// have to add 1.
-			leftw = split - 1;
+			left.w = split - 1;
 
 			// The real number is (split + 2) minus 1 because
 			// The result of split + 2 is the first pixel, not
 			// the height. And since pixels are zero-based, we
 			// have to add 1.
-			rightx = (split + 2);
-			rightw = width - 1 - rightx;
+			right.x = (split + 2);
+			right.w = rect.w - 1 - right.x;
 		}
 		else {
 
-			split = (int) ((height - 1) * area->parent.split);
+			split = (int) ((rect.h - 1) * area->parent.split);
 
 			// These can just be set now.
-			rightx = x;
-			leftw = rightw = width;
+			right.x = rect.x;
+			left.w = right.w = rect.w;
 
 			// The real number is split - 2, plus 1 because
 			// the result of split - 2 is the last pixel, not
 			// the height. And since pixels are zero-based, we
 			// have to add 1.
-			lefth = split - 1;
+			left.h = split - 1;
 
 			// The real number is (split + 2) minus 1 because
 			// The result of split + 2 is the first pixel, not
 			// the height. And since pixels are zero-based, we
 			// have to add 1.
-			righty = (split + 2);
-			righth = height - 1 - righty;
+			right.y = (split + 2);
+			right.h = rect.h - 1 - right.y;
 		}
 
 		// Set the left child user pointer and check for error.
-		status = wima_area_node_init(win, areas, dtree_left(node), leftx, lefty, leftw, lefth);
+		status = wima_area_node_init(win, areas, dtree_left(node), left);
 		if (status) {
 			return status;
 		}
 
 		// Set the right child user pointer and check for error.
-		status = wima_area_node_init(win, areas, dtree_right(node), rightx, righty, rightw, righth);
+		status = wima_area_node_init(win, areas, dtree_right(node), right);
 		if (status) {
 			return status;
 		}
@@ -432,8 +429,8 @@ inline WimaAreaHandle wima_area_handle(WimaAreaNode* area) {
 	return wah;
 }
 
-WimaStatus wima_area_draw(WimaWindowHandle win, int width, int height) {
-	return wima_area_node_draw(wima_area_areas(win), dtree_root(), width, height);
+WimaStatus wima_area_draw(WimaWindowHandle win, WimaSize size) {
+	return wima_area_node_draw(wima_area_areas(win), dtree_root(), size);
 }
 
 WimaStatus wima_area_key(WimaWindowHandle win, WimaKey key, int scancode, WimaAction act, WimaMods mods) {
@@ -444,8 +441,8 @@ WimaStatus wima_area_mouseBtn(WimaWindowHandle win, WimaMouseBtn btn, WimaAction
 	return wima_area_node_mouseBtn(wima_area_areas(win), dtree_root(), btn, act, mods);
 }
 
-WimaStatus wima_area_mousePos(WimaWindowHandle win, int x, int y) {
-	return wima_area_node_mousePos(wima_area_areas(win), dtree_root(), x, y);
+WimaStatus wima_area_mousePos(WimaWindowHandle win, WimaPos pos) {
+	return wima_area_node_mousePos(wima_area_areas(win), dtree_root(), pos);
 }
 
 WimaStatus wima_area_mouseEnter(WimaWindowHandle win, bool entered) {
@@ -460,7 +457,7 @@ WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code, WimaMods mods
 	return wima_area_node_char(wima_area_areas(win), dtree_root(), code, mods);
 }
 
-WimaStatus wima_area_node_draw(DynaTree areas, DynaNode node, int width, int height) {
+WimaStatus wima_area_node_draw(DynaTree areas, DynaNode node, WimaSize size) {
 
 	// TODO: Handle difference between GLFW coords (from upper left) and
 	// OpenGL coords (from lower left).
@@ -480,7 +477,7 @@ WimaStatus wima_area_node_draw(DynaTree areas, DynaNode node, int width, int hei
 		AreaDrawFunc draw = region->draw;
 
 		// The draw function is guaranteed to be non-null.
-		status = draw(wima_area_handle(area), width, height);
+		status = draw(wima_area_handle(area), size);
 	}
 
 	return WIMA_SUCCESS;
@@ -527,7 +524,7 @@ WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtn b
 	}
 	else {
 
-		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
+		//WimaItemHandle item = wima_item_find()
 
 		// TODO: Send event to item.
 	}
@@ -535,7 +532,7 @@ WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtn b
 	return status;
 }
 
-WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, int x, int y) {
+WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos) {
 
 	WimaStatus status;
 
@@ -554,7 +551,7 @@ WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, int x, int y) 
 		AreaMousePosFunc mouse_pos = region->mouse_pos;
 
 		if (mouse_pos) {
-			status = mouse_pos(wima_area_handle(area), x, y);
+			status = mouse_pos(wima_area_handle(area), pos);
 		}
 	}
 
@@ -625,4 +622,14 @@ WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code,
 	}
 
 	return status;
+}
+
+WimaPos wima_area_cursorPosition(WimaAreaNode* area, int x, int y) {
+
+	WimaPos pos;
+
+	pos.x = x - area->rect.x;
+	pos.y = y - area->rect.y;
+
+	return pos;
 }

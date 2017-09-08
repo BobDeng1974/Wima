@@ -86,8 +86,8 @@ void printMods(WimaMods mods) {
 	fputc('\n', stdout);
 }
 
-WimaStatus mouseCoordsDraw(WimaAreaHandle wah, int width, int height) {
-	printf("Draw: { handle: %10u, width: %4d; height: %4d }\n", wah.area, width, height);
+WimaStatus mouseCoordsDraw(WimaAreaHandle wah, WimaSize size) {
+	printf("Draw: { handle: %10u, width: %4d; height: %4d }\n", wah.area, size.w, size.h);
 	glClear(GL_COLOR_BUFFER_BIT);
 	return WIMA_SUCCESS;
 }
@@ -142,8 +142,8 @@ WimaStatus mouseCoordsMevent(WimaAreaHandle wah, WimaMouseBtn mbtn, WimaAction a
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsMpos(WimaAreaHandle wah, int x, int y) {
-	printf("Pos: { x: %4d; y: %4d }\n", x, y);
+WimaStatus mouseCoordsMpos(WimaAreaHandle wah, WimaPos pos) {
+	printf("Area[%d] Pos: { x: %4d; y: %4d }\n", wah.area, pos.x, pos.y);
 	return WIMA_SUCCESS;
 }
 
@@ -206,8 +206,8 @@ WimaStatus mouseCoordsMenter(WimaWindowHandle wwh, bool entered) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsResize(WimaWindowHandle wwh, int width, int height) {
-	printf("Resize: { handle: %u; width: %4d; height: %4d }\n", wwh, width, height);
+WimaStatus mouseCoordsResize(WimaWindowHandle wwh, WimaSize size) {
+	printf("Resize: { handle: %u; width: %4d; height: %4d }\n", wwh, size.w, size.h);
 	return WIMA_SUCCESS;
 }
 

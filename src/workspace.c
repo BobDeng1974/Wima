@@ -85,8 +85,8 @@ WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wwh, DynaNode node,
 
 	WimaAreaNode wan;
 	wan.type = WIMA_AREA_PARENT;
-	wan.width = -1;
-	wan.height = -1;
+	wan.rect.w = -1;
+	wan.rect.h = -1;
 	wan.parent.split = fabs(split);
 	wan.parent.vertical = vertical;
 
@@ -109,8 +109,8 @@ WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wwh, DynaNode node, Wima
 
 	WimaAreaNode wan;
 	wan.type = WIMA_AREA_LEAF;
-	wan.width = -1;
-	wan.height = -1;
+	wan.rect.w = -1;
+	wan.rect.h = -1;
 	wan.area.type = reg;
 
 	DynaStatus status = dtree_add(wksp->regions, node, (uint8_t*) &wan);

@@ -53,6 +53,62 @@ extern "C" {
 #include <dyna/string.h>
 #include <dyna/tree.h>
 
+// For cursor positions, mainly.
+typedef struct wima_pos {
+
+	union {
+
+		int v[2];
+
+		struct {
+
+			int x;
+			int y;
+
+		};
+
+	};
+
+} WimaPos;
+
+// For cursor positions, mainly.
+typedef struct wima_size {
+
+	union {
+
+		int v[2];
+
+		struct {
+
+			int w;
+			int h;
+
+		};
+
+	};
+
+} WimaSize;
+
+// Layout rectangle.
+typedef struct WimaRect {
+
+	union {
+
+		int v[4];
+
+		struct {
+
+			int x;
+			int y;
+			int w;
+			int h;
+
+		};
+
+	};
+
+} WimaRect;
+
 /**
  * A handle to a region (area template) type.
  */
@@ -79,7 +135,7 @@ typedef uint16_t WimaAreaNodeHandle;
 /**
  * A handle to a area.
  */
-typedef struct wima_area_handle {
+typedef struct wima_area_han {
 
 	// Put this first because it's bigger.
 	WimaAreaNodeHandle area;
@@ -323,9 +379,9 @@ typedef struct wima_item_funcs {
 
 typedef void* (*AreaGenUserPointerFunc)(WimaAreaHandle);
 typedef void (*AreaFreeUserPointerFunc)(void*);
-typedef WimaStatus (*AreaDrawFunc)(WimaAreaHandle, int, int);
+typedef WimaStatus (*AreaDrawFunc)(WimaAreaHandle, WimaSize);
 typedef WimaStatus (*AreaKeyFunc)(WimaAreaHandle, WimaKey, int, WimaAction, WimaMods);
-typedef WimaStatus (*AreaMousePosFunc)(WimaAreaHandle, int, int);
+typedef WimaStatus (*AreaMousePosFunc)(WimaAreaHandle, WimaPos);
 typedef WimaStatus (*AreaMouseEnterFunc)(WimaAreaHandle, bool);
 
 typedef struct wima_region_funcs {
@@ -341,9 +397,9 @@ typedef struct wima_region_funcs {
 
 typedef void (*ErrorFunc)(WimaStatus, const char*);
 typedef WimaStatus (*WindowFileDropFunc)(WimaWindowHandle, int, const char**);
-typedef WimaStatus (*WindowPosFunc)(WimaWindowHandle, int, int);
-typedef WimaStatus (*FramebufferSizeFunc)(WimaWindowHandle, int, int);
-typedef WimaStatus (*WindowSizeFunc)(WimaWindowHandle, int, int);
+typedef WimaStatus (*WindowPosFunc)(WimaWindowHandle, WimaPos);
+typedef WimaStatus (*FramebufferSizeFunc)(WimaWindowHandle, WimaSize);
+typedef WimaStatus (*WindowSizeFunc)(WimaWindowHandle, WimaSize);
 typedef WimaStatus (*WindowMouseEnterFunc)(WimaWindowHandle, bool);
 typedef bool (*WindowCloseFunc)(WimaWindowHandle);
 

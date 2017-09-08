@@ -281,22 +281,6 @@ void layout_window(int w, int h) {
 #include <wima.h>
 #include <nanovg.h>
 
-// For cursor positions, mainly.
-typedef struct UIvec2 {
-	union {
-		int v[2];
-		struct { int x, y; };
-	};
-} UIvec2;
-
-// Layout rectangle.
-typedef struct UIrect {
-	union {
-		int v[4];
-		struct { int x, y, w, h; };
-	};
-} UIrect;
-
 // Item states as returned by uiGetState().
 typedef enum wima_item_state {
 
@@ -320,17 +304,17 @@ typedef enum wima_item_state {
 // -------------
 
 // returns the offset of the cursor relative to the last call to uiProcess()
-UIvec2 wima_window_cursor_delta(WimaWindowHandle wwh);
+WimaPos wima_window_cursor_delta(WimaWindowHandle wwh);
 
 // returns the beginning point of a drag operation.
-UIvec2 wima_window_cursor_start(WimaWindowHandle wwh);
+WimaPos wima_window_cursor_start(WimaWindowHandle wwh);
 
 // returns the number of chained clicks; 1 is a single click,
 // 2 is a double click, etc.
 int wima_window_clicks(WimaWindowHandle wwh);
 
 // returns the currently accumulated scroll wheel offsets for this frame
-UIvec2 wima_window_scroll(WimaWindowHandle wwh);
+WimaPos wima_window_scroll(WimaWindowHandle wwh);
 
 // Stages
 // ------
@@ -478,7 +462,7 @@ unsigned int wima_ui_modifiers(WimaWindowHandle wwh);
 // returns the items layout rectangle in absolute coordinates. If
 // uiGetRect() is called before uiEndLayout(), the values of the returned
 // rectangle are undefined.
-UIrect wima_item_rect(WimaItemHandle item);
+WimaRect wima_item_rect(WimaItemHandle item);
 
 // returns 1 if an items absolute rectangle contains a given coordinate
 // otherwise 0

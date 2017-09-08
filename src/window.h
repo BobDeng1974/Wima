@@ -58,16 +58,16 @@
 typedef struct wima_window_context {
 
 	// Where the cursor was at the beginning of the active state.
-	UIvec2 start_cursor;
+	WimaPos start_cursor;
 
 	// Where the cursor was last frame.
-	UIvec2 last_cursor;
+	WimaPos last_cursor;
 
 	// Where the cursor is currently.
-	UIvec2 cursor;
+	WimaPos cursor;
 
 	// Accumulated scroll wheel offsets.
-	UIvec2 scroll;
+	WimaPos scroll;
 
 	WimaItemHandle active;
 	WimaItemHandle focus;
@@ -102,11 +102,9 @@ typedef struct wima_window {
 	NVGcontext* nvg;
 	WimaWindowContext ctx;
 
-	int fbwidth;
-	int fbheight;
+	WimaSize fbsize;
 
-	int width;
-	int height;
+	WimaSize winsize;
 
 } WimaWin;
 

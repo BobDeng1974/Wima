@@ -98,13 +98,6 @@ typedef struct wima_mouse_btn_info {
 
 } WimaMouseBtnInfo;
 
-typedef struct wima_pos_info {
-
-	int x;
-	int y;
-
-} WimaPosInfo;
-
 typedef struct wima_mouse_scroll_info {
 
 	int xoffset;
@@ -121,13 +114,6 @@ typedef struct wima_char_info {
 
 } WimaCharInfo;
 
-typedef struct wima_size_info {
-
-	int width;
-	int height;
-
-} WimaSizeInfo;
-
 typedef struct wima_event {
 
 	WimaEventType type;
@@ -138,7 +124,7 @@ typedef struct wima_event {
 
 		WimaMouseBtnInfo mouse_btn;
 
-		WimaPosInfo pos;
+		WimaPos pos;
 
 		WimaMouseScrollInfo scroll;
 
@@ -146,7 +132,7 @@ typedef struct wima_event {
 
 		DynaVector file_drop;
 
-		WimaSizeInfo size;
+		WimaSize size;
 
 		bool mouse_enter;
 
