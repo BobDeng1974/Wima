@@ -42,6 +42,8 @@
 
 #include <wima.h>
 
+#include "../area.h"
+
 #include "../widget/widget.h"
 
 /**
@@ -90,37 +92,42 @@ void printMods(WimaMods mods) {
 
 WimaStatus mouseCoordsDraw(WimaAreaHandle wah, WimaSize size) {
 	printf("Draw: { handle: %10u, width: %4d; height: %4d }\n", wah.area, size.w, size.h);
+
+	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
+
+	printf("    Rect: { x: %4d, y: %4d, w: %4d, h: %4d }\n",
+	       area->rect.x, area->rect.y, area->rect.w, area->rect.h);
+
 	glClear(GL_COLOR_BUFFER_BIT);
+	wima_widget_background(wah, 0, 0, size.w, size.h);
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsKevent(WimaAreaHandle wah,
-                             WimaKey key, int scancode,
-                             WimaAction act, WimaMods mods)
+WimaStatus mouseCoordsKevent(WimaAreaHandle wah, WimaKeyEvent e)
 {
-	printf("Key Event:\n    Key: %d\n", key);
+	printf("Key Event:\n    Key: %d\n", e.key);
 
-	printf("    Scancode: %d\n", scancode);
+	printf("    Scancode: %d\n", e.scancode);
 
 	printf("    Type: ");
-	printAction(act);
+	printAction(e.action);
 
 	printf("    Mods: ");
-	printMods(mods);
+	printMods(e.mods);
 
-	if (key == WIMA_KEY_ESCAPE && act == WIMA_ACTION_PRESS) {
+	if (e.key == WIMA_KEY_ESCAPE && e.action == WIMA_ACTION_PRESS) {
 		wima_window_close(wah.window);
 	}
 
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsMevent(WimaAreaHandle wah, WimaMouseBtn mbtn, WimaAction act, WimaMods mods) {
+WimaStatus mouseCoordsMevent(WimaAreaHandle wah, WimaMouseBtnEvent e) {
 
 	printf("Mouse Button Event:\n");
 	printf("    Button: ");
 
-	switch (mbtn) {
+	switch (e.button) {
 		case WIMA_MOUSE_LEFT:
 			printf("Left\n");
 			break;
@@ -136,10 +143,10 @@ WimaStatus mouseCoordsMevent(WimaAreaHandle wah, WimaMouseBtn mbtn, WimaAction a
 	}
 
 	printf("    Type: ");
-	printAction(act);
+	printAction(e.action);
 
 	printf("    Mods: ");
-	printMods(mods);
+	printMods(e.mods);
 
 	return WIMA_SUCCESS;
 }
@@ -161,19 +168,19 @@ WimaStatus mouseCoordsMenterArea(WimaAreaHandle wah, bool entered) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsSevent(WimaAreaHandle wah, int xoffset, int yoffset, WimaMods mods) {
+WimaStatus mouseCoordsSevent(WimaAreaHandle wah, WimaScrollEvent e) {
 
-	printf("Scroll: { x: %4d; y: %4d; }\n", xoffset, yoffset);
+	printf("Scroll: { x: %4d; y: %4d; }\n", e.xoffset, e.yoffset);
 	printf("    Mods: ");
-	printMods(mods);
+	printMods(e.mods);
 
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsChar(WimaAreaHandle wah, uint32_t code, WimaMods mods) {
+WimaStatus mouseCoordsChar(WimaAreaHandle wah, WimaCharEvent e) {
 
-	printf("Char: %lc; Mods: ", code);
-	printMods(mods);
+	printf("Char: %lc; Mods: ", e.code);
+	printMods(e.mods);
 
 	return WIMA_SUCCESS;
 }
@@ -262,11 +269,23 @@ int main() {
 		return status;
 	}
 
-	// Cache this.
+	// Cache these.
 	DynaNode root = dtree_root();
+	DynaNode left = dtree_left(root);
+	DynaNode right = dtree_right(root);
 
-	// Add the region to the workspace.
-	status = wima_workspace_addRegion(wksp, root, region);
+	// Add the node and regions to the workspace.
+	status = wima_workspace_addNode(wksp, root, 0.5f, true);
+	if (status) {
+		return status;
+	}
+
+	status = wima_workspace_addRegion(wksp, left, region);
+	if (status) {
+		return status;
+	}
+
+	status = wima_workspace_addRegion(wksp, right, region);
 	if (status) {
 		return status;
 	}
