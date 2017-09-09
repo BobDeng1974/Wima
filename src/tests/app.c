@@ -42,6 +42,8 @@
 
 #include <wima.h>
 
+#include "../widget/widget.h"
+
 /**
  * Prints a WimaAction to stdout.
  * @param act	The WimaAction to print.
