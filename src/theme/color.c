@@ -94,7 +94,7 @@ NVGcolor wima_color_offset(NVGcolor color, int delta) {
 }
 
 void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
-                      const WimaWidgetTheme* theme, BNDwidgetState state,
+                      const WimaWidgetTheme* theme, WimaWidgetState state,
                       int flipActive)
 {
 	switch(state) {
@@ -132,11 +132,11 @@ void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
 	}
 }
 
-NVGcolor wima_color_text(const WimaWidgetTheme* theme, BNDwidgetState state) {
+NVGcolor wima_color_text(const WimaWidgetTheme* theme, WimaWidgetState state) {
 	return (state == WIMA_ACTIVE) ? theme->textSelectedColor : theme->textColor;
 }
 
-NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, BNDwidgetState state) {
+NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, WimaWidgetState state) {
 
 	switch(state) {
 		default:

@@ -34,7 +34,6 @@ set(WIMA_WIDGET_SRC
 )
 
 set(WIMA_THEME "${PROJECT_NAME}_theme")
-set(WIMA_UI "${PROJECT_NAME}_ui")
 set(WIMA_MATH "${PROJECT_NAME}_math")
 
 create_pic_library(

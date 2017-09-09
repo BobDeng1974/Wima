@@ -313,14 +313,14 @@ typedef enum BNDtextAlignment {
 } BNDtextAlignment;
 
 // states altering the styling of a widget
-typedef enum BNDwidgetState {
+typedef enum WimaWidgetState {
 	// not interacting
 	WIMA_DEFAULT = 0,
 	// the mouse is hovering over the control
 	WIMA_HOVER,
 	// the widget is activated (pressed) or in an active state (toggled)
 	WIMA_ACTIVE
-} BNDwidgetState;
+} WimaWidgetState;
 
 // flags indicating which corners are sharp (for grouping widgets)
 typedef enum BNDcornerFlags {
@@ -903,17 +903,17 @@ NVGcolor wima_color_offset(NVGcolor color, int delta);
 // theme and the widgets state. If flipActive is set and the state is
 // BND_ACTIVE, the upper and lower colors will be swapped.
 void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
-                      const WimaWidgetTheme* theme, BNDwidgetState state,
+                      const WimaWidgetTheme* theme, WimaWidgetState state,
                       int flipActive);
 
 // computes the text color for a widget label from a widget theme and the
 // widgets state.
-NVGcolor wima_color_text(const WimaWidgetTheme *theme, BNDwidgetState state);
+NVGcolor wima_color_text(const WimaWidgetTheme *theme, WimaWidgetState state);
 
 // return the color of a node wire based on state
 // BND_HOVER indicates selected state,
 // BND_ACTIVE indicates dragged state
-NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, BNDwidgetState state);
+NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, WimaWidgetState state);
 
 ////////////////////////////////////////////////////////////////////////////////
 
