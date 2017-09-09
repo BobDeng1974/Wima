@@ -43,6 +43,7 @@
 
 #include <nanovg.h>
 
+#include <wima.h>
 #include <ui.h>
 
 #include "event.h"
@@ -98,6 +99,7 @@ typedef struct wima_window {
 	void* user;
 
 	DynaTree areas;
+	DynaVector scissorStack;
 
 	NVGcontext* nvg;
 	WimaWindowContext ctx;

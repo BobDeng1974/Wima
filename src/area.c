@@ -429,8 +429,15 @@ inline WimaAreaHandle wima_area_handle(WimaAreaNode* area) {
 	return wah;
 }
 
-WimaStatus wima_area_draw(WimaWindowHandle win, WimaSize size) {
-	return wima_area_node_draw(wima_area_areas(win), dtree_root(), size);
+WimaStatus wima_area_draw(WimaWindowHandle wwh, WimaSize size, DynaVector stack) {
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
+	assert(win);
+
+	NVGcontext* nvg = win->nvg;
+	assert(nvg);
+
+	return wima_area_node_draw(nvg, win->areas, dtree_root(), size, stack);
 }
 
 WimaStatus wima_area_key(WimaWindowHandle win, WimaKey key, int scancode, WimaAction act, WimaMods mods) {
@@ -445,10 +452,6 @@ WimaStatus wima_area_mousePos(WimaWindowHandle win, WimaPos pos) {
 	return wima_area_node_mousePos(wima_area_areas(win), dtree_root(), pos);
 }
 
-WimaStatus wima_area_mouseEnter(WimaWindowHandle win, bool entered) {
-	return wima_area_node_mouseEnter(wima_area_areas(win), dtree_root(), entered);
-}
-
 WimaStatus wima_area_scroll(WimaWindowHandle win, int xoffset, int yoffset, WimaMods mods) {
 	return wima_area_node_scroll(wima_area_areas(win), dtree_root(), xoffset, yoffset, mods);
 }
@@ -457,7 +460,7 @@ WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code, WimaMods mods
 	return wima_area_node_char(wima_area_areas(win), dtree_root(), code, mods);
 }
 
-WimaStatus wima_area_node_draw(DynaTree areas, DynaNode node, WimaSize size) {
+WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, WimaSize size, DynaVector stack) {
 
 	// TODO: Handle difference between GLFW coords (from upper left) and
 	// OpenGL coords (from lower left).
@@ -466,9 +469,24 @@ WimaStatus wima_area_node_draw(DynaTree areas, DynaNode node, WimaSize size) {
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
+	wima_area_pushScissor(area, stack);
+
 	if (area->type == WIMA_AREA_PARENT) {
 
 		// TODO: Put code to ensure it goes to the right one.
+
+		//glLineWidth(1.0f);
+
+		// TODO: Draw the split lines.
+		if (area->parent.vertical) {
+
+			nvgStrokeWidth(nvg, 1.0f);
+
+			//nvgMoveTo(nvg, );
+		}
+		else {
+
+		}
 	}
 	else {
 
@@ -479,6 +497,8 @@ WimaStatus wima_area_node_draw(DynaTree areas, DynaNode node, WimaSize size) {
 		// The draw function is guaranteed to be non-null.
 		status = draw(wima_area_handle(area), size);
 	}
+
+	wima_area_popScissor(area, stack);
 
 	return WIMA_SUCCESS;
 }
@@ -558,32 +578,6 @@ WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos) {
 	return status;
 }
 
-WimaStatus wima_area_node_mouseEnter(DynaTree areas, DynaNode node, bool entered) {
-
-	WimaStatus status;
-
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
-
-	if (area->type == WIMA_AREA_PARENT) {
-
-		// TODO: Write code to do mouse enter and exit.
-
-		// TODO: Put code to ensure it goes to the right one.
-	}
-	else {
-
-		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
-
-		AreaMouseEnterFunc mouse_enter = region->mouse_enter;
-
-		if (mouse_enter) {
-			status = mouse_enter(wima_area_handle(area), entered);
-		}
-	}
-
-	return status;
-}
-
 WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int yoffset, WimaMods mods) {
 
 	WimaStatus status;
@@ -624,12 +618,49 @@ WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code,
 	return status;
 }
 
-WimaPos wima_area_cursorPosition(WimaAreaNode* area, int x, int y) {
+WimaPos wima_area_cursorPosition(WimaAreaNode* area, WimaPos pos) {
 
-	WimaPos pos;
+	WimaPos result;
 
-	pos.x = x - area->rect.x;
-	pos.y = y - area->rect.y;
+	result.x = pos.x - area->rect.x;
+	result.y = pos.y - area->rect.y;
 
-	return pos;
+	return result;
+}
+
+WimaPos wima_area_opengl(WimaAreaNode* area) {
+
+	WimaPos result;
+
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, area->window);
+	assert(win);
+
+	result.x = area->rect.x;
+	result.y = win->fbsize.h - area->rect.h - area->rect.y;
+
+	return result;
+}
+
+void wima_area_pushScissor(WimaAreaNode* area, DynaVector stack) {
+
+	WimaRect rect;
+	WimaPos pos = wima_area_opengl(area);
+
+	rect.x = pos.x;
+	rect.y = pos.y;
+	rect.w = area->rect.w;
+	rect.h = area->rect.h;
+
+	glScissor(rect.x, rect.y, rect.w, rect.h);
+
+	dvec_push(stack, (uint8_t*) &rect);
+}
+
+void wima_area_popScissor(WimaAreaNode* area, DynaVector stack) {
+
+	WimaRect* rect = (WimaRect*) dvec_get(stack, dvec_len(stack) - 1);
+
+	dvec_pop(stack);
+
+	glScissor(rect->x, rect->y, rect->w, rect->h);
 }

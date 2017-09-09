@@ -79,6 +79,11 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 		return WIMA_WINDOW_ERR;
 	}
 
+	if (dvec_create(&wwin.scissorStack, 16, sizeof(WimaRect))) {
+		dstr_free(wwin.name);
+		return WIMA_WINDOW_ERR;
+	}
+
 	GLFWwindow* win = glfwCreateWindow(640, 480, name, NULL, NULL);
 
 	if (!win) {
@@ -325,14 +330,23 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
 	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 
-	WimaStatus status = wima_area_draw(wwh, win->fbsize);
+	WimaStatus status = wima_area_layout(win->areas);
+
+	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
+
 	if (status) {
 		return status;
 	}
 
-	status = wima_area_layout(win->areas);
+	nvgBeginFrame(win->nvg, win->winsize.w, win->winsize.h, win->fbsize.w / win->winsize.w);
 
-	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
+	glEnable(GL_SCISSOR_TEST);
+
+	status = wima_area_draw(wwh, win->fbsize, win->scissorStack);
+
+	glDisable(GL_SCISSOR_TEST);
+
+	nvgEndFrame(win->nvg);
 
 	return status;
 }
