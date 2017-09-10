@@ -87,6 +87,7 @@ void printMods(WimaMods mods) {
 	if (mods) {
 		fputc('|', stdout);
 	}
+
 	fputc('\n', stdout);
 }
 
