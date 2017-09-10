@@ -35,6 +35,7 @@
  */
 
 #include <assert.h>
+#include <math.h>
 #include <string.h>
 
 #include <jemalloc/jemalloc.h>
@@ -70,53 +71,7 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 		WimaRect left;
 		WimaRect right;
 
-		int split;
-
-		left.x = rect.x;
-		left.y = rect.y;
-
-		if (area->parent.vertical) {
-
-			split = (int) ((rect.w - 1) * area->parent.split);
-
-			// These can just be set now.
-			right.y = rect.y;
-			left.h = right.h = rect.h;
-
-			// The real number is split - 2, plus 1 because
-			// the result of split - 2 is the last pixel, not
-			// the height. And since pixels are zero-based, we
-			// have to add 1.
-			left.w = split - 1;
-
-			// The real number is (split + 2) minus 1 because
-			// The result of split + 2 is the first pixel, not
-			// the height. And since pixels are zero-based, we
-			// have to add 1.
-			right.x = (split + 2);
-			right.w = rect.w - 1 - right.x;
-		}
-		else {
-
-			split = (int) ((rect.h - 1) * area->parent.split);
-
-			// These can just be set now.
-			right.x = rect.x;
-			left.w = right.w = rect.w;
-
-			// The real number is split - 2, plus 1 because
-			// the result of split - 2 is the last pixel, not
-			// the height. And since pixels are zero-based, we
-			// have to add 1.
-			left.h = split - 1;
-
-			// The real number is (split + 2) minus 1 because
-			// The result of split + 2 is the first pixel, not
-			// the height. And since pixels are zero-based, we
-			// have to add 1.
-			right.y = (split + 2);
-			right.h = rect.h - 1 - right.y;
-		}
+		wima_area_childrenRects(area, &left, &right);
 
 		// Set the left child user pointer and check for error.
 		status = wima_area_node_init(win, areas, dtree_left(node), left);
@@ -418,7 +373,7 @@ WimaAreaNode* wima_area_area(WimaWindowHandle win, WimaAreaNodeHandle node) {
 	return (WimaAreaNode*) dtree_node(wima_area_areas(win), node);
 }
 
-inline WimaAreaHandle wima_area_handle(WimaAreaNode* area) {
+WimaAreaHandle wima_area_handle(WimaAreaNode* area) {
 
 	WimaAreaHandle wah;
 
@@ -429,7 +384,7 @@ inline WimaAreaHandle wima_area_handle(WimaAreaNode* area) {
 	return wah;
 }
 
-WimaStatus wima_area_draw(WimaWindowHandle wwh, WimaSize size, DynaVector stack) {
+WimaStatus wima_area_draw(WimaWindowHandle wwh, DynaVector stack, float ratio) {
 
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
@@ -437,7 +392,7 @@ WimaStatus wima_area_draw(WimaWindowHandle wwh, WimaSize size, DynaVector stack)
 	NVGcontext* nvg = win->nvg;
 	assert(nvg);
 
-	return wima_area_node_draw(nvg, win->areas, dtree_root(), size, stack);
+	return wima_area_node_draw(nvg, win->areas, dtree_root(), stack, ratio);
 }
 
 WimaStatus wima_area_key(DynaTree areas, WimaKeyEvent info) {
@@ -460,7 +415,11 @@ WimaStatus wima_area_char(DynaTree areas, WimaCharEvent info) {
 	return wima_area_node_char(areas, dtree_root(), info);
 }
 
-WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, WimaSize size, DynaVector stack) {
+WimaStatus wima_area_resize(DynaTree areas, WimaRect rect) {
+	return wima_area_node_resize(areas, dtree_root(), rect);
+}
+
+WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, DynaVector stack, float ratio) {
 
 	// TODO: Handle difference between GLFW coords (from upper left) and
 	// OpenGL coords (from lower left).
@@ -469,26 +428,50 @@ WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, W
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
-	wima_area_pushScissor(area, stack);
+	wima_area_pushViewport(area, nvg, stack);
 
 	if (area->type == WIMA_AREA_PARENT) {
 
-		// TODO: Put code to ensure it goes to the right one.
+		nvgStrokeWidth(nvg, 7.0f);
+		nvgStrokeColor(nvg, nvgRGB(200, 200, 200));
 
-		//glLineWidth(1.0f);
-
-		// TODO: Draw the split lines.
 		if (area->parent.vertical) {
 
-			nvgStrokeWidth(nvg, 1.0f);
+			float split = roundf(area->parent.split * area->rect.w) - 1.0f;
 
-			//nvgMoveTo(nvg, );
+			// I don't know why I have to put these twice, but if I don't,
+			// the split line isn't drawn until the first event.
+			nvgMoveTo(nvg, split, 0.0f);
+			nvgLineTo(nvg, split, area->rect.h);
+			nvgStroke(nvg);
+
+			nvgMoveTo(nvg, split, 0.0f);
+			nvgLineTo(nvg, split, area->rect.h);
+			nvgStroke(nvg);
 		}
 		else {
 
+			float split = roundf(area->parent.split * area->rect.h) - 1.0f;
+
+			// I don't know why I have to put these twice, but if I don't,
+			// the split line isn't drawn until the first event.
+			nvgMoveTo(nvg, 0.0f, split);
+			nvgLineTo(nvg, area->rect.w, split);
+			nvgStroke(nvg);
+
+			nvgMoveTo(nvg, 0.0f, split);
+			nvgLineTo(nvg, area->rect.w, split);
+			nvgStroke(nvg);
 		}
+
+		wima_area_node_draw(nvg, areas, dtree_left(node), stack, ratio);
+		wima_area_node_draw(nvg, areas, dtree_right(node), stack, ratio);
 	}
 	else {
+
+		WimaSize size;
+		size.w = area->rect.w;
+		size.h = area->rect.h;
 
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
@@ -498,7 +481,7 @@ WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, W
 		status = draw(wima_area_handle(area), size);
 	}
 
-	wima_area_popScissor(area, stack);
+	wima_area_popViewport(nvg, stack);
 
 	return WIMA_SUCCESS;
 }
@@ -616,6 +599,86 @@ WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, WimaCharEvent info
 	return status;
 }
 
+WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect) {
+
+	WimaStatus status = WIMA_SUCCESS;
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	area->rect = rect;
+
+	if (area->type == WIMA_AREA_LEAF) {
+		return status;
+	}
+
+	WimaRect left;
+	WimaRect right;
+
+	wima_area_childrenRects(area, &left, &right);
+
+	status = wima_area_node_resize(areas, dtree_left(node), left);
+	if (status) {
+		return status;
+	}
+
+	status = wima_area_node_resize(areas, dtree_right(node), right);
+
+	return status;
+}
+
+void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right) {
+
+	int split;
+
+	left->x = area->rect.x;
+	left->y = area->rect.y;
+
+	if (area->parent.vertical) {
+
+		split = (int) ((area->rect.w - 1) * area->parent.split);
+
+		printf("Split: %d\n", split);
+
+		// These can just be set now.
+		right->y = area->rect.y;
+		left->h = right->h = area->rect.h;
+
+		// The real number is split - 2, plus 1 because
+		// the result of split - 2 is the last pixel, not
+		// the height. And since pixels are zero-based, we
+		// have to add 1.
+		left->w = split - 1;
+
+		// The real number is (split + 2) minus 1 because
+		// The result of split + 2 is the first pixel, not
+		// the height. And since pixels are zero-based, we
+		// have to add 1.
+		right->x = (split + 3);
+		right->w = area->rect.w - 1 - right->x;
+	}
+	else {
+
+		split = (int) ((area->rect.h - 1) * area->parent.split);
+
+		// These can just be set now.
+		right->x = area->rect.x;
+		left->w = right->w = area->rect.w;
+
+		// The real number is split - 2, plus 1 because
+		// the result of split - 2 is the last pixel, not
+		// the height. And since pixels are zero-based, we
+		// have to add 1.
+		left->h = split - 1;
+
+		// The real number is (split + 2) minus 1 because
+		// The result of split + 2 is the first pixel, not
+		// the height. And since pixels are zero-based, we
+		// have to add 1.
+		right->y = (split + 3);
+		right->h = area->rect.h - 1 - right->y;
+	}
+}
+
 WimaPos wima_area_cursorPosition(WimaAreaNode* area, WimaPos pos) {
 
 	WimaPos result;
@@ -639,7 +702,7 @@ WimaPos wima_area_opengl(WimaAreaNode* area) {
 	return result;
 }
 
-void wima_area_pushScissor(WimaAreaNode* area, DynaVector stack) {
+void wima_area_pushViewport(WimaAreaNode* area, NVGcontext* nvg, DynaVector stack) {
 
 	WimaRect rect;
 	WimaPos pos = wima_area_opengl(area);
@@ -649,16 +712,29 @@ void wima_area_pushScissor(WimaAreaNode* area, DynaVector stack) {
 	rect.w = area->rect.w;
 	rect.h = area->rect.h;
 
-	glScissor(rect.x, rect.y, rect.w, rect.h);
+	// Set up NanoVG.
+	nvgResetScissor(nvg);
+	nvgScissor(nvg, rect.x, rect.y, rect.w, rect.h);
+	nvgResetTransform(nvg);
+	nvgTranslate(nvg, rect.x, rect.y);
 
 	dvec_push(stack, (uint8_t*) &rect);
 }
 
-void wima_area_popScissor(WimaAreaNode* area, DynaVector stack) {
-
-	WimaRect* rect = (WimaRect*) dvec_get(stack, dvec_len(stack) - 1);
+void wima_area_popViewport(NVGcontext* nvg, DynaVector stack) {
 
 	dvec_pop(stack);
 
-	glScissor(rect->x, rect->y, rect->w, rect->h);
+	int idx = dvec_len(stack) - 1;
+
+	if (idx >= 0) {
+
+		WimaRect* rect = (WimaRect*) dvec_get(stack, idx);
+
+		// Set up NanoVG.
+		nvgResetTransform(nvg);
+		nvgTranslate(nvg, rect->x, rect->y);
+		nvgResetScissor(nvg);
+		nvgScissor(nvg, rect->x, rect->y, rect->w, rect->h);
+	}
 }

@@ -107,6 +107,8 @@ typedef struct wima_window {
 	WimaSize fbsize;
 	WimaSize winsize;
 
+	float pixelRatio;
+
 } WimaWin;
 
 // Context Management

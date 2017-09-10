@@ -144,27 +144,26 @@ WimaAreaNode* wima_area_area(WimaWindowHandle win, WimaAreaNodeHandle node);
 WimaWin* wima_area_window(WimaAreaHandle wah);
 WimaAreaHandle wima_area_handle(WimaAreaNode* area);
 
+void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right);
 WimaPos wima_area_cursorPosition(WimaAreaNode* area, WimaPos cursor);
 WimaPos wima_area_opengl(WimaAreaNode* area);
-void wima_area_pushScissor(WimaAreaNode* area, DynaVector stack);
-void wima_area_popScissor(WimaAreaNode* area, DynaVector stack);
+void wima_area_pushViewport(WimaAreaNode* area, NVGcontext* nvg, DynaVector stack);
+void wima_area_popViewport(NVGcontext* nvg, DynaVector stack);
 
-WimaStatus wima_area_draw(WimaWindowHandle win, WimaSize size, DynaVector stack);
-WimaStatus wima_area_key(WimaWindowHandle win, WimaKey key, int scancode, WimaAction act, WimaMods mods);
-WimaStatus wima_area_mouseBtn(WimaWindowHandle win, WimaMouseBtn btn, WimaAction act, WimaMods mods);
-WimaStatus wima_area_mousePos(WimaWindowHandle win, WimaPos pos);
-WimaStatus wima_area_scroll(WimaWindowHandle win, int xoffset, int yoffset, WimaMods mods);
-WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code, WimaMods mods);
-WimaStatus wima_area_fileDrop(WimaWindowHandle win, int filec, const char* filev[]);
+WimaStatus wima_area_draw(WimaWindowHandle wwh, DynaVector stack, float ratio);
+WimaStatus wima_area_key(DynaTree areas, WimaKeyEvent info);
+WimaStatus wima_area_mouseBtn(DynaTree areas, WimaMouseBtnEvent info);
+WimaStatus wima_area_mousePos(DynaTree areas, WimaPos pos);
+WimaStatus wima_area_scroll(DynaTree areas, WimaScrollEvent info);
+WimaStatus wima_area_char(DynaTree areas, WimaCharEvent info);
+WimaStatus wima_area_resize(DynaTree areas, WimaRect rect);
 
-WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, WimaSize size, DynaVector stack);
-WimaStatus wima_area_node_key(DynaTree areas, DynaNode node,  WimaKey key,
-                              int scancode,   WimaAction act, WimaMods mods);
-WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtn btn,
-                                   WimaAction act, WimaMods mods);
+WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, DynaVector stack, float ratio);
+WimaStatus wima_area_node_key(DynaTree areas, DynaNode node,  WimaKeyEvent info);
+WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtnEvent info);
 WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos);
-WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int yoffset, WimaMods mods);
-WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code, WimaMods mods);
-WimaStatus wima_area_node_fileDrop(DynaTree areas, DynaNode node, int filec, const char* filev[]);
+WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, WimaScrollEvent info);
+WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, WimaCharEvent info);
+WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect);
 
 #endif // WIMA_AREA_H

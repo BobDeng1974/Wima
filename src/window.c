@@ -90,6 +90,13 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 		return WIMA_WINDOW_ERR;
 	}
 
+	// Set the sizes.
+	glfwGetWindowSize(win, &wwin.winsize.w, &wwin.winsize.h);
+	glfwGetFramebufferSize(win, &wwin.fbsize.w, &wwin.fbsize.h);
+
+	// Calculate and set the ratio.
+	wwin.pixelRatio = (float) wwin.fbsize.w / wwin.winsize.w;
+
 	// Set all of the callbacks.
 	glfwSetMouseButtonCallback(win, wima_callback_mouseBtn);
 	glfwSetCursorPosCallback(win, wima_callback_mousePos);
@@ -295,6 +302,9 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 	rect.h = window->fbsize.h;
 
 	WimaStatus status = wima_area_node_init(wwh, window->areas, root, rect);
+	if (status) {
+		return status;
+	}
 
 	return status;
 }
@@ -338,15 +348,18 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 		return status;
 	}
 
-	nvgBeginFrame(win->nvg, win->winsize.w, win->winsize.h, win->fbsize.w / win->winsize.w);
+	nvgBeginFrame(win->nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 
 	glEnable(GL_SCISSOR_TEST);
 
-	status = wima_area_draw(wwh, win->fbsize, win->scissorStack);
+	status = wima_area_draw(wwh, win->scissorStack, win->pixelRatio);
 
 	glDisable(GL_SCISSOR_TEST);
 
 	nvgEndFrame(win->nvg);
+
+	// Swap front and back buffers.
+	glfwSwapBuffers(wima_window_glfw(wwh));
 
 	return status;
 }

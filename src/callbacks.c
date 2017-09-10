@@ -414,6 +414,18 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
 	wwin->fbsize.w = width;
 	wwin->fbsize.h = height;
+	wwin->pixelRatio = (float) width / wwin->winsize.w;
+
+	WimaRect rect;
+	rect.x = 0;
+	rect.y = 0;
+	rect.w = width;
+	rect.h = height;
+
+	WimaStatus status = wima_area_resize(wwin->areas, rect);
+	if (status) {
+		wg.error(status, descs[status - 128]);
+	}
 
 	int numEvents = wwin->ctx.eventCount;
 
@@ -439,8 +451,6 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 		exit(WIMA_INVALID_STATE);
 	}
 
-	glViewport(0, 0, width, height);
-
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	WimaWin* wwin = (WimaWin*) dvec_get(wg.windows, wwh);
@@ -450,6 +460,7 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
 	wwin->winsize.w = width;
 	wwin->winsize.h = height;
+	wwin->pixelRatio = (float) wwin->fbsize.w / width;
 
 	int numEvents = wwin->ctx.eventCount;
 
