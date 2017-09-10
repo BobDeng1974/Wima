@@ -48,13 +48,13 @@ typedef struct wima_globals {
 
 	DynaString name;
 
-	ErrorFunc error;
-	WindowFileDropFunc file_drop;
-	WindowMouseEnterFunc enter;
-	WindowPosFunc pos;
-	FramebufferSizeFunc fb_size;
-	WindowSizeFunc win_size;
-	WindowCloseFunc close;
+	WimaErrorFunc error;
+	WimaWindowFileDropFunc file_drop;
+	WimaWindowMouseEnterFunc enter;
+	WimaWindowPosFunc pos;
+	WimaFramebufferSizeFunc fb_size;
+	WimaWindowSizeFunc win_size;
+	WimaWindowCloseFunc close;
 
 	DynaVector windows;
 

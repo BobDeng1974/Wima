@@ -76,59 +76,21 @@ typedef enum wima_event_type {
 #define WIMA_ITEM_EVENT_MASK \
 	(WIMA_EVENT_KEY | WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER | WIMA_EVENT_SCROLL | WIMA_EVENT_CHAR)
 
-typedef struct wima_key_info {
-
-	WimaKey key;
-	WimaAction action;
-	WimaMods mods;
-
-	int scancode;
-
-} WimaKeyInfo;
-
-typedef struct wima_mouse_btn_info {
-
-	uint32_t timestamp;
-
-	WimaMouseBtn button;
-	WimaAction action;
-	WimaMods mods;
-
-	uint16_t clicks;
-
-} WimaMouseBtnInfo;
-
-typedef struct wima_mouse_scroll_info {
-
-	int xoffset;
-	int yoffset;
-
-	WimaMods mods;
-
-} WimaMouseScrollInfo;
-
-typedef struct wima_char_info {
-
-	uint32_t code;
-	WimaMods mods;
-
-} WimaCharInfo;
-
 typedef struct wima_event {
 
 	WimaEventType type;
 
 	union {
 
-		WimaKeyInfo key;
+		WimaKeyEvent key;
 
-		WimaMouseBtnInfo mouse_btn;
+		WimaMouseBtnEvent mouse_btn;
 
 		WimaPos pos;
 
-		WimaMouseScrollInfo scroll;
+		WimaScrollEvent scroll;
 
-		WimaCharInfo char_event;
+		WimaCharEvent char_event;
 
 		DynaVector file_drop;
 
@@ -136,7 +98,7 @@ typedef struct wima_event {
 
 		bool mouse_enter;
 
-	} e;
+	};
 
 } WimaEvent;
 

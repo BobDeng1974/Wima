@@ -131,7 +131,6 @@ WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs) {
 	item->firstkid = -1;
 	item->nextitem = -1;
 
-	item->key = funcs.key;
 	item->mouse_event = funcs.mouse;
 	item->mouse_enter = funcs.enter;
 	item->scroll = funcs.scroll;
@@ -607,19 +606,10 @@ void wima_item_notify(WimaItemHandle wih, WimaEvent e) {
 
 	switch (e.type) {
 
-		case WIMA_EVENT_KEY:
-		{
-			if (pitem->key) {
-				status = pitem->key(wih, e.e.key.key, e.e.key.scancode, e.e.key.action, e.e.key.mods);
-			}
-
-			break;
-		}
-
 		case WIMA_EVENT_MOUSE_BTN:
 		{
 			if (pitem->mouse_event) {
-				status = pitem->mouse_event(wih, e.e.mouse_btn.button, e.e.mouse_btn.action, e.e.mouse_btn.mods);
+				status = pitem->mouse_event(wih, e.mouse_btn);
 			}
 
 			break;
@@ -634,7 +624,7 @@ void wima_item_notify(WimaItemHandle wih, WimaEvent e) {
 		case WIMA_EVENT_SCROLL:
 		{
 			if (pitem->scroll) {
-				status = pitem->scroll(wih, e.e.scroll.xoffset, e.e.scroll.yoffset, e.e.scroll.mods);
+				status = pitem->scroll(wih, e.scroll);
 			}
 
 			break;
@@ -643,7 +633,7 @@ void wima_item_notify(WimaItemHandle wih, WimaEvent e) {
 		case WIMA_EVENT_CHAR:
 		{
 			if (pitem->char_event) {
-				status = pitem->char_event(wih, e.e.char_event.code, e.e.char_event.mods);
+				status = pitem->char_event(wih, e.char_event);
 			}
 
 			break;

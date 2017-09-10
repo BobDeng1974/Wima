@@ -169,11 +169,10 @@ typedef enum wima_item_box {
 typedef struct wima_item {
 
 	// Event functions.
-	ItemKeyFunc key;
-	ItemMouseEventFunc mouse_event;
-	ItemMouseEnterFunc mouse_enter;
-	ItemScrollFunc scroll;
-	ItemCharEvent char_event;
+	WimaItemMouseEventFunc mouse_event;
+	WimaItemMouseEnterFunc mouse_enter;
+	WimaItemScrollFunc scroll;
+	WimaItemCharEvent char_event;
 
 	// Data handle.
 	void* handle;

@@ -144,7 +144,7 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
 
 		// Get the particular user function setter.
-		AreaGenUserPointerFunc get_user_ptr = region->gen_ptr;
+		WimaAreaGenUserPointerFunc get_user_ptr = region->gen_ptr;
 
 		// If the user didn't specify one, don't call it.
 		if (!get_user_ptr) {
@@ -289,7 +289,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 	assert(area);
 
-	WimaStatus status;
+	WimaStatus status = WIMA_SUCCESS;
 
 	if (area->type == WIMA_AREA_PARENT) {
 
@@ -395,7 +395,7 @@ WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
 
 		// Get the particular user function setter.
-		AreaFreeUserPointerFunc free_user_ptr = region->free_ptr;
+		WimaAreaFreeUserPointerFunc free_user_ptr = region->free_ptr;
 
 		// If the user didn't specify one, don't call it.
 		if (!free_user_ptr) {
@@ -440,24 +440,24 @@ WimaStatus wima_area_draw(WimaWindowHandle wwh, WimaSize size, DynaVector stack)
 	return wima_area_node_draw(nvg, win->areas, dtree_root(), size, stack);
 }
 
-WimaStatus wima_area_key(WimaWindowHandle win, WimaKey key, int scancode, WimaAction act, WimaMods mods) {
-	return wima_area_node_key(wima_area_areas(win), dtree_root(), key, scancode, act, mods);
+WimaStatus wima_area_key(DynaTree areas, WimaKeyEvent info) {
+	return wima_area_node_key(areas, dtree_root(), info);
 }
 
-WimaStatus wima_area_mouseBtn(WimaWindowHandle win, WimaMouseBtn btn, WimaAction act, WimaMods mods) {
-	return wima_area_node_mouseBtn(wima_area_areas(win), dtree_root(), btn, act, mods);
+WimaStatus wima_area_mouseBtn(DynaTree areas, WimaMouseBtnEvent info) {
+	return wima_area_node_mouseBtn(areas, dtree_root(), info);
 }
 
-WimaStatus wima_area_mousePos(WimaWindowHandle win, WimaPos pos) {
-	return wima_area_node_mousePos(wima_area_areas(win), dtree_root(), pos);
+WimaStatus wima_area_mousePos(DynaTree areas, WimaPos pos) {
+	return wima_area_node_mousePos(areas, dtree_root(), pos);
 }
 
-WimaStatus wima_area_scroll(WimaWindowHandle win, int xoffset, int yoffset, WimaMods mods) {
-	return wima_area_node_scroll(wima_area_areas(win), dtree_root(), xoffset, yoffset, mods);
+WimaStatus wima_area_scroll(DynaTree areas, WimaScrollEvent info) {
+	return wima_area_node_scroll(areas, dtree_root(), info);
 }
 
-WimaStatus wima_area_char(WimaWindowHandle win, unsigned int code, WimaMods mods) {
-	return wima_area_node_char(wima_area_areas(win), dtree_root(), code, mods);
+WimaStatus wima_area_char(DynaTree areas, WimaCharEvent info) {
+	return wima_area_node_char(areas, dtree_root(), info);
 }
 
 WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, WimaSize size, DynaVector stack) {
@@ -465,7 +465,7 @@ WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, W
 	// TODO: Handle difference between GLFW coords (from upper left) and
 	// OpenGL coords (from lower left).
 
-	WimaStatus status;
+	WimaStatus status = WIMA_SUCCESS;
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
@@ -492,9 +492,9 @@ WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, W
 
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
-		AreaDrawFunc draw = region->draw;
+		WimaAreaDrawFunc draw = region->draw;
 
-		// The draw function is guaranteed to be non-null.
+		// Draw the area. The draw function is guaranteed to be non-null.
 		status = draw(wima_area_handle(area), size);
 	}
 
@@ -503,10 +503,9 @@ WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, W
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_area_node_key(DynaTree areas, DynaNode node,  WimaKey key,
-                              int scancode,   WimaAction act, WimaMods mods)
+WimaStatus wima_area_node_key(DynaTree areas, DynaNode node, WimaKeyEvent e)
 {
-	WimaStatus status;
+	WimaStatus status = WIMA_SUCCESS;
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
@@ -518,23 +517,22 @@ WimaStatus wima_area_node_key(DynaTree areas, DynaNode node,  WimaKey key,
 
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
-		AreaKeyFunc key_event = region->key_event;
+		WimaAreaKeyFunc key_event = region->key_event;
 
 		if (key_event) {
-			status = key_event(wima_area_handle(area), key, scancode, act, mods);
+			status = key_event(wima_area_handle(area), e);
 		}
 	}
 
 	return status;
 }
 
-WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtn btn,
-                                   WimaAction act, WimaMods mods)
-{
+WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtnEvent info) {
+
 	// TODO: Handle window splits and joins. Also, make sure to remember that
 	// GLFW coords are from upper left and OpenGL coords are from lower left.
 
-	WimaStatus status;
+	WimaStatus status = WIMA_SUCCESS;
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
@@ -554,7 +552,7 @@ WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtn b
 
 WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos) {
 
-	WimaStatus status;
+	WimaStatus status = WIMA_SUCCESS;
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
@@ -568,7 +566,7 @@ WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos) {
 
 		WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, area->area.type);
 
-		AreaMousePosFunc mouse_pos = region->mouse_pos;
+		WimaAreaMousePosFunc mouse_pos = region->mouse_pos;
 
 		if (mouse_pos) {
 			status = mouse_pos(wima_area_handle(area), pos);
@@ -578,9 +576,9 @@ WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos) {
 	return status;
 }
 
-WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int yoffset, WimaMods mods) {
+WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, WimaScrollEvent info) {
 
-	WimaStatus status;
+	WimaStatus status = WIMA_SUCCESS;
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
@@ -598,9 +596,9 @@ WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, int xoffset, int
 	return status;
 }
 
-WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, unsigned int code, WimaMods mods) {
+WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, WimaCharEvent info) {
 
-	WimaStatus status;
+	WimaStatus status = WIMA_SUCCESS;
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 

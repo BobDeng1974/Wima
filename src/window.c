@@ -484,6 +484,8 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 	WimaStatus status;
 
+	DynaTree areas = win->areas;
+
 	switch (event->type) {
 
 		case WIMA_EVENT_NONE:
@@ -494,38 +496,33 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_KEY:
 		{
-			WimaKeyInfo* info = &event->e.key;
-			status = wima_area_key(wwh, info->key, info->scancode, info->action, info->mods);
+			status = wima_area_key(areas, event->key);
 			break;
 		}
 
 		case WIMA_EVENT_MOUSE_BTN:
 		{
-			WimaMouseBtnInfo* info = &event->e.mouse_btn;
-			status = wima_area_mouseBtn(wwh, info->button, info->action, info->mods);
+			status = wima_area_mouseBtn(areas, event->mouse_btn);
 			break;
 		}
 
 		case WIMA_EVENT_MOUSE_POS:
 		{
-			WimaPos pos = event->e.pos;
+			WimaPos pos = event->pos;
 			// TODO: Check for entering an area and an item.
-			status = wima_area_mousePos(wwh, pos);
+			status = wima_area_mousePos(areas, pos);
 			break;
 		}
 
 		case WIMA_EVENT_SCROLL:
 		{
-			WimaMouseScrollInfo* info = &event->e.scroll;
-
-			status = wima_area_scroll(wwh, info->xoffset, info->yoffset, info->mods);
+			status = wima_area_scroll(areas, event->scroll);
 			break;
 		}
 
 		case WIMA_EVENT_CHAR:
 		{
-			WimaCharInfo* info = &event->e.char_event;
-			status = wima_area_char(wwh, info->code, info->mods);
+			status = wima_area_char(areas, event->char_event);
 			break;
 		}
 
@@ -533,7 +530,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		{
 			if (wg.file_drop) {
 
-				DynaVector files = event->e.file_drop;
+				DynaVector files = event->file_drop;
 				size_t len = dvec_len(files);
 
 				const char** names = malloc(len * sizeof(char*));
@@ -564,7 +561,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_WIN_POS:
 		{
 			if (wg.pos) {
-				WimaPos pos = event->e.pos;
+				WimaPos pos = event->pos;
 				status = wg.pos(wwh, pos);
 			}
 			else {
@@ -577,7 +574,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_FB_SIZE:
 		{
 			if (wg.fb_size) {
-				WimaSize size = event->e.size;
+				WimaSize size = event->size;
 				status = wg.fb_size(wwh, size);
 			}
 			else {
@@ -589,7 +586,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_WIN_SIZE:
 		{
 			if (wg.win_size) {
-				WimaSize size = event->e.size;
+				WimaSize size = event->size;
 				status = wg.win_size(wwh, size);
 			}
 			else {
@@ -601,7 +598,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_WIN_ENTER:
 		{
 			if (wg.enter) {
-				status = wg.enter(wwh, event->e.mouse_enter);
+				status = wg.enter(wwh, event->mouse_enter);
 			}
 			else {
 				status = WIMA_SUCCESS;
@@ -691,8 +688,8 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 			WimaEvent e;
 			e.type = WIMA_EVENT_SCROLL;
-			e.e.scroll.xoffset = win->ctx.scroll.x;
-			e.e.scroll.yoffset = win->ctx.scroll.y;
+			e.scroll.xoffset = win->ctx.scroll.x;
+			e.scroll.yoffset = win->ctx.scroll.y;
 
 			wima_item_notify(scroll_item, e);
 		}
@@ -735,9 +732,9 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 					WimaEvent e;
 					e.type = WIMA_EVENT_MOUSE_BTN;
-					e.e.mouse_btn.button = WIMA_MOUSE_LEFT;
-					e.e.mouse_btn.action = WIMA_ACTION_PRESS;
-					e.e.mouse_btn.mods = WIMA_MOD_NONE;
+					e.mouse_btn.button = WIMA_MOUSE_LEFT;
+					e.mouse_btn.action = WIMA_ACTION_PRESS;
+					e.mouse_btn.mods = WIMA_MOD_NONE;
 
 					wima_item_notify(active_item, e);
 				}
@@ -760,9 +757,9 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 					WimaEvent e;
 					e.type = WIMA_EVENT_MOUSE_BTN;
-					e.e.mouse_btn.button = WIMA_MOUSE_RIGHT;
-					e.e.mouse_btn.action = WIMA_ACTION_PRESS;
-					e.e.mouse_btn.mods = WIMA_MOD_NONE;
+					e.mouse_btn.button = WIMA_MOUSE_RIGHT;
+					e.mouse_btn.action = WIMA_ACTION_PRESS;
+					e.mouse_btn.mods = WIMA_MOD_NONE;
 
 					wima_item_notify(hot, e);
 				}

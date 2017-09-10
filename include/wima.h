@@ -358,60 +358,97 @@ typedef enum wima_action {
 
 } WimaAction;
 
+typedef struct wima_key_event {
+
+	// This might be bigger than the others.
+	int scancode;
+
+	WimaKey key;
+	WimaAction action;
+	WimaMods mods;
+
+} WimaKeyEvent;
+
+typedef struct wima_mouse_btn_event {
+
+	uint32_t timestamp;
+
+	WimaMouseBtn button;
+	WimaAction action;
+	WimaMods mods;
+
+	uint16_t clicks;
+
+} WimaMouseBtnEvent;
+
+typedef struct wima_scroll_event {
+
+	int xoffset;
+	int yoffset;
+
+	WimaMods mods;
+
+} WimaScrollEvent;
+
+typedef struct wima_char_event {
+
+	uint32_t code;
+	WimaMods mods;
+
+} WimaCharEvent;
+
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
-typedef WimaStatus (*ItemKeyFunc)(WimaItemHandle, WimaKey, int, WimaAction, WimaMods);
-typedef WimaStatus (*ItemMouseEventFunc)(WimaItemHandle, WimaMouseBtn, WimaAction, WimaMods);
-typedef WimaStatus (*ItemMouseEnterFunc)(WimaItemHandle, bool);
-typedef WimaStatus (*ItemScrollFunc)(WimaItemHandle, int, int, WimaMods);
-typedef WimaStatus (*ItemCharEvent)(WimaItemHandle, uint32_t, WimaMods);
+typedef WimaStatus (*WimaItemMouseEventFunc)(WimaItemHandle, WimaMouseBtnEvent);
+typedef WimaStatus (*WimaItemMouseEnterFunc)(WimaItemHandle, bool);
+typedef WimaStatus (*WimaItemScrollFunc)(WimaItemHandle, WimaScrollEvent);
+typedef WimaStatus (*WimaItemCharEvent)(WimaItemHandle, WimaCharEvent);
 
 typedef struct wima_item_funcs {
 
-	ItemKeyFunc key;
-	ItemMouseEventFunc mouse;
-	ItemMouseEnterFunc enter;
-	ItemScrollFunc scroll;
-	ItemCharEvent char_event;
+	WimaItemMouseEventFunc mouse;
+	WimaItemMouseEnterFunc enter;
+	WimaItemScrollFunc scroll;
+	WimaItemCharEvent char_event;
 
 } WimaItemFuncs;
 
-typedef void* (*AreaGenUserPointerFunc)(WimaAreaHandle);
-typedef void (*AreaFreeUserPointerFunc)(void*);
-typedef WimaStatus (*AreaDrawFunc)(WimaAreaHandle, WimaSize);
-typedef WimaStatus (*AreaKeyFunc)(WimaAreaHandle, WimaKey, int, WimaAction, WimaMods);
-typedef WimaStatus (*AreaMousePosFunc)(WimaAreaHandle, WimaPos);
-typedef WimaStatus (*AreaMouseEnterFunc)(WimaAreaHandle, bool);
+typedef void* (*WimaAreaGenUserPointerFunc)(WimaAreaHandle);
+typedef void (*WimaAreaFreeUserPointerFunc)(void*);
+typedef WimaStatus (*WimaAreaDrawFunc)(WimaAreaHandle, WimaSize);
+typedef WimaStatus (*WimaAreaKeyFunc)(WimaAreaHandle, WimaKeyEvent);
+typedef WimaStatus (*WimaAreaMousePosFunc)(WimaAreaHandle, WimaPos);
+typedef WimaStatus (*WimaAreaMouseEnterFunc)(WimaAreaHandle, bool);
 
 typedef struct wima_region_funcs {
 
-	AreaGenUserPointerFunc gen_ptr;
-	AreaFreeUserPointerFunc free_ptr;
-	AreaDrawFunc draw;
-	AreaKeyFunc key;
-	AreaMousePosFunc pos;
-	AreaMouseEnterFunc enter;
+	WimaAreaGenUserPointerFunc gen_ptr;
+	WimaAreaFreeUserPointerFunc free_ptr;
+	WimaAreaDrawFunc draw;
+	WimaAreaKeyFunc key;
+	WimaAreaMousePosFunc pos;
+	WimaAreaMouseEnterFunc enter;
 
 } WimaRegionFuncs;
 
-typedef void (*ErrorFunc)(WimaStatus, const char*);
-typedef WimaStatus (*WindowFileDropFunc)(WimaWindowHandle, int, const char**);
-typedef WimaStatus (*WindowPosFunc)(WimaWindowHandle, WimaPos);
-typedef WimaStatus (*FramebufferSizeFunc)(WimaWindowHandle, WimaSize);
-typedef WimaStatus (*WindowSizeFunc)(WimaWindowHandle, WimaSize);
-typedef WimaStatus (*WindowMouseEnterFunc)(WimaWindowHandle, bool);
-typedef bool (*WindowCloseFunc)(WimaWindowHandle);
+typedef void (*WimaErrorFunc)(WimaStatus, const char*);
+typedef WimaStatus (*WimaWindowFileDropFunc)(WimaWindowHandle, int, const char**);
+typedef WimaStatus (*WimaWindowPosFunc)(WimaWindowHandle, WimaPos);
+typedef WimaStatus (*WimaFramebufferSizeFunc)(WimaWindowHandle, WimaSize);
+typedef WimaStatus (*WimaWindowSizeFunc)(WimaWindowHandle, WimaSize);
+typedef WimaStatus (*WimaWindowMouseEnterFunc)(WimaWindowHandle, bool);
+typedef bool (*WimaWindowCloseFunc)(WimaWindowHandle);
 
 typedef struct wima_app_funcs {
 
-	ErrorFunc error;
-	WindowFileDropFunc file_drop;
-	WindowPosFunc pos;
-	FramebufferSizeFunc fbsize;
-	WindowSizeFunc winsize;
-	WindowMouseEnterFunc enter;
-	WindowCloseFunc close;
+	WimaErrorFunc error;
+	WimaWindowFileDropFunc file_drop;
+	WimaWindowPosFunc pos;
+	WimaFramebufferSizeFunc fbsize;
+	WimaWindowSizeFunc winsize;
+	WimaWindowMouseEnterFunc enter;
+	WimaWindowCloseFunc close;
 
 } WimaAppFuncs;
 
