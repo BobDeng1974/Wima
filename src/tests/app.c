@@ -92,15 +92,24 @@ void printMods(WimaMods mods) {
 }
 
 WimaStatus mouseCoordsDraw(WimaAreaHandle wah, WimaSize size) {
-	printf("Draw: { handle: %10u, width: %4d; height: %4d }\n", wah.area, size.w, size.h);
+
+	printf("Draw: { handle: %4u, width: %4d; height: %4d }\n", wah.area, size.w, size.h);
 
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 
 	printf("    Rect: { x: %4d, y: %4d, w: %4d, h: %4d }\n",
 	       area->rect.x, area->rect.y, area->rect.w, area->rect.h);
 
+	printf("    Size: { w: %4d, h: %4d }\n", size.w, size.h);
+
+	char buffer[100];
+
+	sprintf(buffer, "%d", wah.area);
+
 	glClear(GL_COLOR_BUFFER_BIT);
 	wima_widget_background(wah, 0, 0, size.w, size.h);
+	wima_widget_label(wah, 0, 0, 100, 100, -1, buffer);
+
 	return WIMA_SUCCESS;
 }
 
