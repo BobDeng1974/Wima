@@ -53,6 +53,23 @@ extern "C" {
 #include <dyna/string.h>
 #include <dyna/tree.h>
 
+// Item states as returned by uiGetState().
+typedef enum wima_item_state {
+
+	// The item is inactive.
+	WIMA_ITEM_DEFAULT = 0,
+
+	// The item is inactive, but the cursor is hovering over this item.
+	WIMA_ITEM_HOVER = 1,
+
+	// The item is toggled, activated, focused (depends on item kind).
+	WIMA_ITEM_ACTIVE = 2,
+
+	// The item is unresponsive.
+	WIMA_ITEM_FROZEN = 3,
+
+} WimaItemState;
+
 // For cursor positions, mainly.
 typedef struct wima_pos {
 
@@ -473,6 +490,15 @@ WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user);
 DynaTree wima_window_areas(WimaWindowHandle wwh);
 WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle wksp);
 WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas);
+// returns the offset of the cursor relative to the last call to uiProcess()
+WimaPos wima_window_cursor_delta(WimaWindowHandle wwh);
+// returns the beginning point of a drag operation.
+WimaPos wima_window_cursor_start(WimaWindowHandle wwh);
+// returns the number of chained clicks; 1 is a single click,
+// 2 is a double click, etc.
+int wima_window_clicks(WimaWindowHandle wwh);
+// returns the currently accumulated scroll wheel offsets for this frame
+WimaPos wima_window_scroll(WimaWindowHandle wwh);
 
 WimaStatus wima_init(const char* name, WimaAppFuncs funcs);
 WimaStatus wima_main();

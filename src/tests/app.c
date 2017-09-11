@@ -41,10 +41,9 @@
 #include <KHR/khrplatform.h>
 
 #include <wima.h>
+#include <widget.h>
 
 #include "../area.h"
-
-#include "../widget/widget.h"
 
 /**
  * Prints a WimaAction to stdout.

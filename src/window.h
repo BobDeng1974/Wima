@@ -72,7 +72,7 @@ typedef struct wima_window_context {
 
 	WimaItemHandle active;
 	WimaItemHandle focus;
-	WimaItemHandle hot;
+	WimaItemHandle hover;
 
 	WimaItemHandle click_item;
 	WimaMouseBtn click_button;
@@ -125,7 +125,7 @@ typedef struct wima_window {
  */
 void wima_window_context_create(WimaWindowContext* ctx);
 
-// reset the currently stored hot/active etc. handles; this should be called when
+// reset the currently stored hover/active etc. handles; this should be called when
 // a re-declaration of the UI changes the item indices, to avoid state
 // related glitches because item identities have changed.
 void wima_window_context_clear(WimaWindowContext* ctx);

@@ -277,7 +277,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 		if (area->area.ctx.itemCount) {
 			// Drawing routines may require this to be set already.
-			wima_window_updateHotItem(area->window);
+			wima_window_updateHover(area->window);
 		}
 
 		status = WIMA_SUCCESS;

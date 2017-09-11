@@ -131,10 +131,18 @@ WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs) {
 	item->firstkid = -1;
 	item->nextitem = -1;
 
+	uint32_t flags = 0;
+	flags |= (funcs.mouse ? WIMA_EVENT_MOUSE_BTN : 0);
+	flags |= (funcs.enter ? WIMA_EVENT_ITEM_ENTER : 0);
+	flags |= (funcs.scroll ? WIMA_EVENT_SCROLL : 0);
+	flags |= (funcs.char_event ? WIMA_EVENT_CHAR : 0);
+
 	item->mouse_event = funcs.mouse;
 	item->mouse_enter = funcs.enter;
 	item->scroll = funcs.scroll;
 	item->char_event = funcs.char_event;
+
+	item->flags |= flags;
 
 	return wih;
 }
@@ -211,7 +219,7 @@ WimaItemHandle wima_item_insertBack(WimaItemHandle item, WimaItemHandle child) {
 	return child;
 }
 
-void wima_ui_item_setFrozen(WimaItemHandle item, bool enable) {
+void wima_item_setFrozen(WimaItemHandle item, bool enable) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
@@ -419,7 +427,7 @@ WimaItemHandle wima_item_nextSibling(WimaItemHandle item) {
 	return result;
 }
 
-void* wima_item_allocHandle(WimaItemHandle item, unsigned int size) {
+void* wima_item_allocHandle(WimaItemHandle item, uint32_t size) {
 
 	WimaAreaNode* area = wima_area_area(item.area.window, item.area.area);
 	assert(area);
@@ -545,12 +553,12 @@ static bool wima_item_isActive(WimaItemHandle item) {
 	return wima_item_compareHandles(win->ctx.active, item);
 }
 
-static bool wima_item_isHot(WimaItemHandle item) {
+static bool wima_item_isHovered(WimaItemHandle item) {
 
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.area.window);
 	assert(win);
 
-	return wima_item_compareHandles(win->ctx.hot, item);
+	return wima_item_compareHandles(win->ctx.hover, item);
 }
 
 static bool wima_item_isFocused(WimaItemHandle item) {
@@ -566,7 +574,7 @@ WimaItemState wima_item_state(WimaItemHandle item) {
 	WimaItem *pitem = wima_item_ptr(item);
 
 	if (pitem->flags & WIMA_ITEM_FROZEN) {
-		return UI_FROZEN;
+		return WIMA_ITEM_FROZEN;
 	}
 
 	if (wima_item_isFocused(item)) {
@@ -583,13 +591,13 @@ WimaItemState wima_item_state(WimaItemHandle item) {
 		//	return UI_ACTIVE;
 		//}
 
-		return UI_COLD;
+		return WIMA_ITEM_DEFAULT;
 	}
-	else if (wima_item_isHot(item)) {
-		return UI_HOT;
+	else if (wima_item_isHovered(item)) {
+		return WIMA_ITEM_HOVER;
 	}
 
-	return UI_COLD;
+	return WIMA_ITEM_DEFAULT;
 }
 
 void wima_item_notify(WimaItemHandle wih, WimaEvent e) {

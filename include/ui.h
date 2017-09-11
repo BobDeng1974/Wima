@@ -281,53 +281,7 @@ void layout_window(int w, int h) {
 #include <wima.h>
 #include <nanovg.h>
 
-// Item states as returned by uiGetState().
-typedef enum wima_item_state {
-
-	// The item is inactive.
-	UI_COLD = 0,
-
-	// The item is inactive, but the cursor is hovering over this item.
-	UI_HOT = 1,
-
-	// The item is toggled, activated, focused (depends on item kind).
-	UI_ACTIVE = 2,
-
-	// The item is unresponsive.
-	UI_FROZEN = 3,
-
-} WimaItemState;
-
 // Unless declared otherwise, all operations have the complexity O(1).
-
-// Input Control
-// -------------
-
-// returns the offset of the cursor relative to the last call to uiProcess()
-WimaPos wima_window_cursor_delta(WimaWindowHandle wwh);
-
-// returns the beginning point of a drag operation.
-WimaPos wima_window_cursor_start(WimaWindowHandle wwh);
-
-// returns the number of chained clicks; 1 is a single click,
-// 2 is a double click, etc.
-int wima_window_clicks(WimaWindowHandle wwh);
-
-// returns the currently accumulated scroll wheel offsets for this frame
-WimaPos wima_window_scroll(WimaWindowHandle wwh);
-
-// Stages
-// ------
-
-// update the internal state according to the current cursor position and
-// button states, and call all registered handlers.
-// timestamp is the time in milliseconds relative to the last call to uiProcess()
-// and is used to estimate the threshold for double-clicks
-// after calling uiProcess(), no further modifications to the item tree should
-// be done until the next call to uiBeginLayout().
-// Items should be drawn before a call to uiProcess()
-// this is an O(N) operation for N = number of declared items.
-void wima_ui_process(WimaWindowHandle wwh, int timestamp);
 
 // UI Declaration
 // --------------
@@ -336,13 +290,13 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp);
 WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs);
 
 // set an items state to frozen; the UI will not recurse into frozen items
-// when searching for hot or active items; subsequently, frozen items and
+// when searching for hover or active items; subsequently, frozen items and
 // their child items will not cause mouse event notifications.
 // The frozen state is not applied recursively; uiGetState() will report
 // UI_COLD for child items. Upon encountering a frozen item, the drawing
 // routine needs to handle rendering of child items appropriately.
 // see example.cpp for a demonstration.
-void wima_ui_item_setFrozen(WimaItemHandle item, bool enable);
+void wima_item_setFrozen(WimaItemHandle item, bool enable);
 
 // set the application-dependent handle of an item.
 // handle is an application defined 64-bit handle. If handle is NULL, the item
@@ -353,7 +307,7 @@ void wima_item_setHandle(WimaItemHandle item, void* handle);
 // as the handle to the item.
 // The memory of the pointer is managed by the UI context and released
 // upon the next call to uiBeginLayout()
-void *wima_ui_handle_alloc(WimaWindowHandle wwh, int item, unsigned int size);
+void* wima_item_allocHandle(WimaItemHandle item, uint32_t size);
 
 // flags is a combination of UI_EVENT_* and designates for which events the
 // handler should be called.
@@ -425,7 +379,8 @@ unsigned int wima_area_allocSize(WimaAreaHandle wah);
 
 // return the current state of the item. This state is only valid after
 // a call to uiProcess().
-// The returned value is one of UI_COLD, UI_HOT, UI_ACTIVE, UI_FROZEN.
+// The returned value is one of WIMA_ITEM_DEFAULT, WIMA_ITEM_HOVER,
+// WIMA_ITEM_ACTIVE, WIMA_ITEM_FROZEN.
 WimaItemState wima_item_state(WimaItemHandle item);
 
 // return the application-dependent handle of the item as passed to uiSetHandle()
@@ -433,7 +388,7 @@ WimaItemState wima_item_state(WimaItemHandle item);
 void* wima_item_handle(WimaItemHandle item);
 
 // return the item that is currently under the cursor or -1 for none
-WimaItemHandle wima_window_hotItem(WimaWindowHandle wwh);
+WimaItemHandle wima_window_hover(WimaWindowHandle wwh);
 
 // return the item that is currently focused or -1 for none
 WimaItemHandle wima_window_focus(WimaWindowHandle wwh);

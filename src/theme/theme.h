@@ -68,6 +68,8 @@ extern "C" {
 
 #include <nanovg.h>
 
+#include <wima.h>
+
 /*
 
 Revision 6 (2014-09-21)
@@ -307,45 +309,47 @@ typedef struct wima_theme_loadTheme {
 #define WIMA_NODE_ARROW_SIZE 9
 
 // How text on a control is aligned.
-typedef enum BNDtextAlignment {
+typedef enum wima_text_alignment {
+
 	WIMA_LEFT = 0,
 	WIMA_CENTER,
-} BNDtextAlignment;
 
-// states altering the styling of a widget
-typedef enum WimaWidgetState {
-	// not interacting
-	WIMA_DEFAULT = 0,
-	// the mouse is hovering over the control
-	WIMA_HOVER,
-	// the widget is activated (pressed) or in an active state (toggled)
-	WIMA_ACTIVE
-} WimaWidgetState;
+} WimaTextAlignment;
 
 // flags indicating which corners are sharp (for grouping widgets)
-typedef enum BNDcornerFlags {
+typedef enum WimaWidgetCorner {
+
 	// all corners are round
 	WIMA_CORNER_NONE = 0,
+
 	// sharp top left corner
 	WIMA_CORNER_TOP_LEFT = 1,
+
 	// sharp top right corner
 	WIMA_CORNER_TOP_RIGHT = 2,
+
 	// sharp bottom right corner
 	WIMA_CORNER_DOWN_RIGHT = 4,
+
 	// sharp bottom left corner
 	WIMA_CORNER_DOWN_LEFT = 8,
+
 	// all corners are sharp;
 	// you can invert a set of flags using ^= WIMA_CORNER_ALL
 	WIMA_CORNER_ALL = 0xF,
+
 	// top border is sharp
 	WIMA_CORNER_TOP = 3,
+
 	// bottom border is sharp
 	WIMA_CORNER_DOWN = 0xC,
+
 	// left border is sharp
 	WIMA_CORNER_LEFT = 9,
+
 	// right border is sharp
 	WIMA_CORNER_RIGHT = 6
-} BNDcornerFlags;
+} WimaWidgetCorner;
 
 // build an icon ID from two coordinates into the icon sheet, where
 // (0,0) designates the upper-leftmost icon, (1,0) the one right next to it,
@@ -903,17 +907,17 @@ NVGcolor wima_color_offset(NVGcolor color, int delta);
 // theme and the widgets state. If flipActive is set and the state is
 // BND_ACTIVE, the upper and lower colors will be swapped.
 void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
-                      const WimaWidgetTheme* theme, WimaWidgetState state,
+                      const WimaWidgetTheme* theme, WimaItemState state,
                       int flipActive);
 
 // computes the text color for a widget label from a widget theme and the
 // widgets state.
-NVGcolor wima_color_text(const WimaWidgetTheme *theme, WimaWidgetState state);
+NVGcolor wima_color_text(const WimaWidgetTheme *theme, WimaItemState state);
 
 // return the color of a node wire based on state
 // BND_HOVER indicates selected state,
 // BND_ACTIVE indicates dragged state
-NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, WimaWidgetState state);
+NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, WimaItemState state);
 
 ////////////////////////////////////////////////////////////////////////////////
 

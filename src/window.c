@@ -184,7 +184,7 @@ void wima_window_context_clear(WimaWindowContext* ctx) {
 
 	memset(&ctx->active, -1, sizeof(WimaItemHandle));
 	memset(&ctx->focus, -1, sizeof(WimaItemHandle));
-	memset(&ctx->hot, -1, sizeof(WimaItemHandle));
+	memset(&ctx->hover, -1, sizeof(WimaItemHandle));
 }
 
 GLFWwindow* wima_window_glfw(WimaWindowHandle wwh) {
@@ -443,8 +443,8 @@ void wima_window_validateItems(WimaWindowHandle wwh) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	if (win->ctx.hot.item >= 0) {
-		win->ctx.hot = wima_item_recover(win->ctx.hot);
+	if (win->ctx.hover.item >= 0) {
+		win->ctx.hover = wima_item_recover(win->ctx.hover);
 	}
 
 	if (win->ctx.active.item >= 0) {
@@ -464,20 +464,20 @@ WimaItemHandle wima_window_focus(WimaWindowHandle wwh) {
 	return win->ctx.focus;
 }
 
-WimaItemHandle wima_window_hotItem(WimaWindowHandle wwh) {
+WimaItemHandle wima_window_hover(WimaWindowHandle wwh) {
 
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	return win->ctx.hot;
+	return win->ctx.hover;
 }
 
-void wima_window_updateHotItem(WimaWindowHandle wwh) {
+void wima_window_updateHover(WimaWindowHandle wwh) {
 
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	// TODO: Figure out which area the hot item is in.
+	// TODO: Figure out which area the hover item is in.
 
 	//if (!win->ctx.itemCount) {
 	//	return;
@@ -486,7 +486,7 @@ void wima_window_updateHotItem(WimaWindowHandle wwh) {
 	WimaItemHandle item;
 	item.item = 0;
 
-	win->ctx.hot = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y,
+	win->ctx.hover = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y,
 	                                   WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER);
 }
 
@@ -635,9 +635,9 @@ WimaStatus wima_window_processEvents(WimaWindowHandle wwh) {
 
 	win->ctx.stage = WIMA_UI_STAGE_PROCESS;
 
-	WimaItemHandle hot_item = win->ctx.hot;
-	WimaItemHandle active_item = win->ctx.active;
-	WimaItemHandle focus_item = win->ctx.focus;
+	WimaItemHandle hover = win->ctx.hover;
+	WimaItemHandle active = win->ctx.active;
+	WimaItemHandle focus = win->ctx.focus;
 
 	WimaEvent* events = win->ctx.events;
 	int numEvents = win->ctx.eventCount;
@@ -670,15 +670,15 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 	win->ctx.stage = WIMA_UI_STAGE_PROCESS;
 
-	WimaItemHandle hot_item = win->ctx.hot;
-	WimaItemHandle active_item = win->ctx.active;
-	WimaItemHandle focus_item = win->ctx.focus;
+	WimaItemHandle hover = win->ctx.hover;
+	WimaItemHandle active = win->ctx.active;
+	WimaItemHandle focus = win->ctx.focus;
 
 	// send all keyboard events
-	if (focus_item.item >= 0) {
+	if (focus.item >= 0) {
 
 		for (int i = 0; i < win->ctx.eventCount; ++i) {
-			wima_item_notify(focus_item, win->ctx.events[i]);
+			wima_item_notify(focus, win->ctx.events[i]);
 		}
 	}
 	else {
@@ -692,22 +692,22 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 		WimaItemHandle item;
 		item.item = 0;
 
-		WimaItemHandle scroll_item;// = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, WIMA_SCROLL);
+		WimaItemHandle scroll;// = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, WIMA_SCROLL);
 
-		if (scroll_item.item >= 0) {
+		if (scroll.item >= 0) {
 
 			WimaEvent e;
 			e.type = WIMA_EVENT_SCROLL;
 			e.scroll.xoffset = win->ctx.scroll.x;
 			e.scroll.yoffset = win->ctx.scroll.y;
 
-			wima_item_notify(scroll_item, e);
+			wima_item_notify(scroll, e);
 		}
 	}
 
 	wima_window_clearEvents(wwh);
 
-	WimaItemHandle hot = win->ctx.hot;
+	WimaItemHandle hot = win->ctx.hover;
 
 	switch(win->ctx.state) {
 
@@ -719,18 +719,18 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 			// Left mouse button.
 			//if (wima_ui_button(wwh, 0)) {
 
-			    hot_item.item = -1;
-				active_item = hot;
+			    hover.item = -1;
+				active = hot;
 
-				if (active_item.item != focus_item.item) {
-					focus_item.item = -1;
+				if (active.item != focus.item) {
+					focus.item = -1;
 					win->ctx.focus.item = -1;
 				}
 
-				if (active_item.item >= 0) {
+				if (active.item >= 0) {
 
 					if (((timestamp - win->ctx.click_timestamp) > WIMA_CLICK_THRESHOLD) ||
-					    (win->ctx.click_item.item != active_item.item))
+					    (win->ctx.click_item.item != active.item))
 					{
 						win->ctx.clicks = 0;
 					}
@@ -738,7 +738,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 					win->ctx.clicks++;
 
 					win->ctx.click_timestamp = timestamp;
-					win->ctx.click_item = active_item;
+					win->ctx.click_item = active;
 
 					WimaEvent e;
 					e.type = WIMA_EVENT_MOUSE_BTN;
@@ -746,7 +746,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 					e.mouse_btn.action = WIMA_ACTION_PRESS;
 					e.mouse_btn.mods = WIMA_MOD_NONE;
 
-					wima_item_notify(active_item, e);
+					wima_item_notify(active, e);
 				}
 
 				win->ctx.state = WIMA_UI_STATE_CAPTURE;
@@ -760,7 +760,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 				WimaItemHandle item;
 				item.item = 0;
 
-				hot_item.item = -1;
+				hover.item = -1;
 				//hot = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y, UI_BUTTON2_DOWN);
 
 				if (hot.item >= 0) {
@@ -777,7 +777,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 
 			// Otherwise.
 			else {
-				hot_item = hot;
+				hover = hot;
 			}
 
 			break;
@@ -788,31 +788,31 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 			// Left mouse button.
 			//if (!wima_ui_button(wwh, 0)) {
 
-			    if (active_item.item >= 0) {
+			    if (active.item >= 0) {
 
 					//wima_ui_item_notify(wwh, active_item, UI_BUTTON0_UP);
 
-					if (active_item.item == hot.item) {
+					if (active.item == hot.item) {
 						//wima_ui_item_notify(wwh, active_item, UI_BUTTON0_HOT_UP);
 					}
 				}
 
-				active_item.item = -1;
+				active.item = -1;
 				win->ctx.state = WIMA_UI_STATE_IDLE;
 			//}
 
 			// Otherwise.
 			//else {
 
-				if (active_item.item >= 0) {
+				if (active.item >= 0) {
 					//wima_ui_item_notify(wwh, active_item, UI_BUTTON0_CAPTURE);
 				}
 
-				if (hot.item == active_item.item) {
-					hot_item = hot;
+				if (hot.item == active.item) {
+					hover = hot;
 				}
 				else {
-					hot_item.item = -1;
+					hover.item = -1;
 				}
 			//}
 		} break;

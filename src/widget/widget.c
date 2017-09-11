@@ -76,7 +76,7 @@ void wima_widget_label(WimaAreaHandle wah, float x, float y, float w, float h, i
 }
 
 void wima_widget_toolBtn(WimaAreaHandle wah, float x, float y, float w, float h, int flags,
-                       WimaWidgetState state, int iconid, const char *label)
+                       WimaItemState state, int iconid, const char *label)
 {
 	float cr[4];
 	NVGcolor shade_top, shade_down;
@@ -96,7 +96,7 @@ void wima_widget_toolBtn(WimaAreaHandle wah, float x, float y, float w, float h,
 }
 
 void wima_widget_radioBtn(WimaAreaHandle wah, float x, float y, float w, float h, int flags,
-                        WimaWidgetState state, int iconid, const char *label)
+                        WimaItemState state, int iconid, const char *label)
 {
 	float cr[4];
 	NVGcolor shade_top, shade_down;
@@ -123,7 +123,7 @@ int wima_widget_textField_pos(WimaAreaHandle wah, float x, float y, float w, flo
 }
 
 void wima_widget_textField(WimaAreaHandle wah, float x, float y, float w, float h, int flags,
-                         WimaWidgetState state, int iconid, const char *text, int cbegin,
+                         WimaItemState state, int iconid, const char *text, int cbegin,
                          int cend)
 {
 	float cr[4];
@@ -139,7 +139,7 @@ void wima_widget_textField(WimaAreaHandle wah, float x, float y, float w, float 
 	NVGcolor transparent = wima_color_transparent(wg.theme.textFieldTheme.outlineColor);
 	wima_widget_box_outline(wah, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 
-	if (state != WIMA_ACTIVE) {
+	if (state != WIMA_ITEM_ACTIVE) {
 		cend = -1;
 	}
 
@@ -149,7 +149,7 @@ void wima_widget_textField(WimaAreaHandle wah, float x, float y, float w, float 
 }
 
 void wima_widget_optionBtn(WimaAreaHandle wah, float x, float y, float w, float h,
-                         WimaWidgetState state, const char *label)
+                         WimaItemState state, const char *label)
 {
 	float ox, oy;
 	NVGcolor shade_top, shade_down;
@@ -176,7 +176,7 @@ void wima_widget_optionBtn(WimaAreaHandle wah, float x, float y, float w, float 
 	                      WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS,
 	                      transparent);
 
-	if (state == WIMA_ACTIVE) {
+	if (state == WIMA_ITEM_ACTIVE) {
 		wima_widget_check(wah, ox, oy, wima_color_transparent(wg.theme.optionTheme.itemColor));
 	}
 
@@ -186,7 +186,7 @@ void wima_widget_optionBtn(WimaAreaHandle wah, float x, float y, float w, float 
 }
 
 void wima_widget_choiceBtn(WimaAreaHandle wah, float x, float y, float w, float h, int flags,
-                         WimaWidgetState state, int iconid, const char *label)
+                         WimaItemState state, int iconid, const char *label)
 {
 	float cr[4];
 	NVGcolor shade_top, shade_down;
@@ -223,7 +223,7 @@ void wima_widget_colorBtn(WimaAreaHandle wah, float x, float y, float w, float h
 }
 
 void wima_widget_numField(WimaAreaHandle wah, float x, float y, float w, float h, int flags,
-                        WimaWidgetState state, const char *label, const char *value)
+                        WimaItemState state, const char *label, const char *value)
 {
 	float cr[4];
 	NVGcolor shade_top, shade_down;
@@ -249,7 +249,7 @@ void wima_widget_numField(WimaAreaHandle wah, float x, float y, float w, float h
 }
 
 void wima_widget_slider(WimaAreaHandle wah, float x, float y, float w, float h, int flags,
-                      WimaWidgetState state, float progress, const char *label,
+                      WimaItemState state, float progress, const char *label,
                       const char *value)
 {
 	NVGcontext* nvg = ((WimaWin*) dvec_get(wg.windows, wah.window))->nvg;
@@ -264,7 +264,7 @@ void wima_widget_slider(WimaAreaHandle wah, float x, float y, float w, float h, 
 
 	wima_widget_box_inner(wah, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
 
-	if (state == WIMA_ACTIVE) {
+	if (state == WIMA_ITEM_ACTIVE) {
 		shade_top = wima_color_offset(wg.theme.sliderTheme.itemColor, wg.theme.sliderTheme.shadeTop);
 		shade_down = wima_color_offset(wg.theme.sliderTheme.itemColor, wg.theme.sliderTheme.shadeBottom);
 	}
@@ -286,7 +286,7 @@ void wima_widget_slider(WimaAreaHandle wah, float x, float y, float w, float h, 
 }
 
 void wima_widget_scrollbar(WimaAreaHandle wah,float x, float y, float w, float h,
-                         WimaWidgetState state, float offset, float size)
+                         WimaItemState state, float offset, float size)
 {
 	wima_widget_inset(wah, x, y, w, h, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS);
 
@@ -304,7 +304,7 @@ void wima_widget_scrollbar(WimaAreaHandle wah,float x, float y, float w, float h
 	                      WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
 	                      transparent);
 
-	int delta = (state == WIMA_ACTIVE) ? WIMA_SCROLLBAR_ACTIVE_SHADE : 0;
+	int delta = (state == WIMA_ITEM_ACTIVE) ? WIMA_SCROLLBAR_ACTIVE_SHADE : 0;
 	NVGcolor itemColor = wima_color_offset(wg.theme.scrollBarTheme.itemColor, delta);
 
 	wima_widget_scroll_handle_rect(&x,&y,&w,&h,offset,size);
@@ -330,7 +330,7 @@ void wima_widget_menu_background(WimaAreaHandle wah, float x, float y, float w, 
 
 	wima_widget_corners_rounded(cr, WIMA_MENU_RADIUS, flags);
 
-	wima_color_inner(&shade_top, &shade_down, &wg.theme.menuTheme, WIMA_DEFAULT, 0);
+	wima_color_inner(&shade_top, &shade_down, &wg.theme.menuTheme, WIMA_ITEM_DEFAULT, 0);
 	wima_widget_box_inner(wah, x, y, w, h + 1, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
 
 	NVGcolor color = wima_color_transparent(wg.theme.menuTheme.outlineColor);
@@ -342,7 +342,7 @@ void wima_widget_tooltip_background(WimaAreaHandle wah, float x, float y, float 
 
 	NVGcolor shade_top, shade_down;
 
-	wima_color_inner(&shade_top, &shade_down, &wg.theme.tooltipTheme, WIMA_DEFAULT, 0);
+	wima_color_inner(&shade_top, &shade_down, &wg.theme.tooltipTheme, WIMA_ITEM_DEFAULT, 0);
 
 	wima_widget_box_inner(wah, x, y, w, h + 1,
 	                    WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
@@ -364,9 +364,9 @@ void wima_widget_menu_label(WimaAreaHandle wah, float x, float y, float w, float
 }
 
 void wima_widget_menu_item(WimaAreaHandle wah, float x, float y, float w, float h,
-                         WimaWidgetState state, int iconid, const char *label)
+                         WimaItemState state, int iconid, const char *label)
 {
-	if (state != WIMA_DEFAULT) {
+	if (state != WIMA_ITEM_DEFAULT) {
 
 		NVGcolor shadeTop = wima_color_offset(wg.theme.menuItemTheme.innerSelectedColor,
 		                                      wg.theme.menuItemTheme.shadeTop);
@@ -375,7 +375,7 @@ void wima_widget_menu_item(WimaAreaHandle wah, float x, float y, float w, float 
 
 		wima_widget_box_inner(wah, x, y, w, h, 0, 0, 0, 0, shadeTop, shadeBottom);
 
-		state = WIMA_ACTIVE;
+		state = WIMA_ITEM_ACTIVE;
 	}
 
 	NVGcolor textColor = wima_color_text(&wg.theme.menuItemTheme, state);
@@ -383,7 +383,7 @@ void wima_widget_menu_item(WimaAreaHandle wah, float x, float y, float w, float 
 	    WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_widget_node_port(WimaAreaHandle wah, float x, float y, WimaWidgetState state, NVGcolor color) {
+void wima_widget_node_port(WimaAreaHandle wah, float x, float y, WimaItemState state, NVGcolor color) {
 
 	NVGcontext* nvg = ((WimaWin*) dvec_get(wg.windows, wah.window))->nvg;
 
@@ -395,7 +395,7 @@ void wima_widget_node_port(WimaAreaHandle wah, float x, float y, WimaWidgetState
 	nvgStrokeWidth(nvg, 1.0f);
 	nvgStroke(nvg);
 
-	nvgFillColor(nvg, (state != WIMA_DEFAULT) ? wima_color_offset(color, WIMA_HOVER_SHADE) : color);
+	nvgFillColor(nvg, (state != WIMA_ITEM_DEFAULT) ? wima_color_offset(color, WIMA_HOVER_SHADE) : color);
 	nvgFill(nvg);
 }
 
@@ -426,7 +426,7 @@ void wima_widget_node_wire_colored(WimaAreaHandle wah, float x0, float y0, float
 }
 
 void wima_widget_node_wire(WimaAreaHandle wah, float x0, float y0, float x1, float y1,
-                         WimaWidgetState state0, WimaWidgetState state1)
+                         WimaItemState state0, WimaItemState state1)
 {
 	NVGcolor first = wima_color_node_wire(&wg.theme.nodeTheme, state0);
 	NVGcolor second = wima_color_node_wire(&wg.theme.nodeTheme, state1);
@@ -435,7 +435,7 @@ void wima_widget_node_wire(WimaAreaHandle wah, float x0, float y0, float x1, flo
 }
 
 void wima_widget_node_background(WimaAreaHandle wah, float x, float y, float w, float h,
-                               WimaWidgetState state, int iconid, const char *label,
+                               WimaItemState state, int iconid, const char *label,
                                NVGcolor titleColor)
 {
 	NVGcolor top = wima_color_transparent(wima_color_offset(titleColor, WIMA_BEVEL_SHADE));
@@ -463,7 +463,7 @@ void wima_widget_node_background(WimaAreaHandle wah, float x, float y, float w, 
 
 		default:
 
-		case WIMA_DEFAULT:
+		case WIMA_ITEM_DEFAULT:
 		{
 			borderColor = nvgRGBf(0,0,0);
 			arrowColor = wima_color_offset(titleColor, -WIMA_BEVEL_SHADE);
@@ -471,7 +471,7 @@ void wima_widget_node_background(WimaAreaHandle wah, float x, float y, float w, 
 			break;
 		}
 
-		case WIMA_HOVER:
+		case WIMA_ITEM_HOVER:
 		{
 			borderColor = wg.theme.nodeTheme.nodeSelectedColor;
 			arrowColor = wg.theme.nodeTheme.nodeSelectedColor;
@@ -479,7 +479,7 @@ void wima_widget_node_background(WimaAreaHandle wah, float x, float y, float w, 
 			break;
 		}
 
-		case WIMA_ACTIVE:
+		case WIMA_ITEM_ACTIVE:
 		{
 			borderColor = wg.theme.nodeTheme.activeNodeColor;
 			arrowColor = wg.theme.nodeTheme.nodeSelectedColor;

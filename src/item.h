@@ -221,15 +221,13 @@ bool wima_item_compare(WimaItem *item1, WimaItem *item2);
 
 bool wima_item_map(WimaItemHandle item1, WimaItemHandle item2);
 
-void* wima_item_allocHandle(WimaItemHandle item, unsigned int size);
-
-void wima_window_updateHotItem(WimaWindowHandle wwh);
+void wima_window_updateHover(WimaWindowHandle wwh);
 
 int wima_window_clicks(WimaWindowHandle wwh);
 
 static bool wima_item_isActive(WimaItemHandle item);
 
-static bool wima_item_isHot(WimaItemHandle item);
+static bool wima_item_isHovered(WimaItemHandle item);
 
 static bool wima_item_isFocused(WimaItemHandle item);
 
