@@ -432,37 +432,7 @@ WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, D
 
 	if (area->type == WIMA_AREA_PARENT) {
 
-		nvgStrokeWidth(nvg, 7.0f);
-		nvgStrokeColor(nvg, nvgRGB(200, 200, 200));
-
-		if (area->parent.vertical) {
-
-			float split = roundf(area->parent.split * area->rect.w) - 1.0f;
-
-			// I don't know why I have to put these twice, but if I don't,
-			// the split line isn't drawn until the first event.
-			nvgMoveTo(nvg, split, 0.0f);
-			nvgLineTo(nvg, split, area->rect.h);
-			nvgStroke(nvg);
-
-			nvgMoveTo(nvg, split, 0.0f);
-			nvgLineTo(nvg, split, area->rect.h);
-			nvgStroke(nvg);
-		}
-		else {
-
-			float split = roundf(area->parent.split * area->rect.h) - 1.0f;
-
-			// I don't know why I have to put these twice, but if I don't,
-			// the split line isn't drawn until the first event.
-			nvgMoveTo(nvg, 0.0f, split);
-			nvgLineTo(nvg, area->rect.w, split);
-			nvgStroke(nvg);
-
-			nvgMoveTo(nvg, 0.0f, split);
-			nvgLineTo(nvg, area->rect.w, split);
-			nvgStroke(nvg);
-		}
+		wima_area_drawSplit(area, nvg);
 
 		wima_area_node_draw(nvg, areas, dtree_left(node), stack, ratio);
 		wima_area_node_draw(nvg, areas, dtree_right(node), stack, ratio);
@@ -479,6 +449,9 @@ WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, D
 
 		// Draw the area. The draw function is guaranteed to be non-null.
 		status = draw(wima_area_handle(area), size);
+
+		// Draw the border shading.
+		wima_area_drawBorders(area, nvg);
 	}
 
 	wima_area_popViewport(nvg, stack);
@@ -643,18 +616,10 @@ void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right
 		right->y = area->rect.y;
 		left->h = right->h = area->rect.h;
 
-		// The real number is split - 2, plus 1 because
-		// the result of split - 2 is the last pixel, not
-		// the height. And since pixels are zero-based, we
-		// have to add 1.
-		left->w = split - 1;
+		left->w = split;
 
-		// The real number is (split + 2) minus 1 because
-		// The result of split + 2 is the first pixel, not
-		// the height. And since pixels are zero-based, we
-		// have to add 1.
-		right->x = (split + 3);
-		right->w = area->rect.w - 1 - right->x;
+		right->x = (split + 1);
+		right->w = area->rect.w - right->x;
 	}
 	else {
 
@@ -664,18 +629,10 @@ void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right
 		right->x = area->rect.x;
 		left->w = right->w = area->rect.w;
 
-		// The real number is split - 2, plus 1 because
-		// the result of split - 2 is the last pixel, not
-		// the height. And since pixels are zero-based, we
-		// have to add 1.
-		left->h = split - 1;
+		left->h = split;
 
-		// The real number is (split + 2) minus 1 because
-		// The result of split + 2 is the first pixel, not
-		// the height. And since pixels are zero-based, we
-		// have to add 1.
-		right->y = (split + 3);
-		right->h = area->rect.h - 1 - right->y;
+		right->y = (split + 1);
+		right->h = area->rect.h - right->y;
 	}
 }
 
@@ -706,14 +663,97 @@ void wima_area_popViewport(NVGcontext* nvg, DynaVector stack) {
 
 	int idx = dvec_len(stack) - 1;
 
+	nvgResetTransform(nvg);
+	nvgResetScissor(nvg);
+
 	if (idx >= 0) {
 
 		WimaRect* rect = (WimaRect*) dvec_get(stack, idx);
 
 		// Set up NanoVG.
-		nvgResetTransform(nvg);
 		nvgTranslate(nvg, rect->x, rect->y);
-		nvgResetScissor(nvg);
 		nvgScissor(nvg, rect->x, rect->y, rect->w, rect->h);
 	}
+}
+
+void wima_area_drawSplit(WimaAreaNode* area, NVGcontext* nvg) {
+
+	nvgStrokeWidth(nvg, 7.0f);
+	nvgStrokeColor(nvg, nvgRGB(0, 0, 0));
+
+	if (area->parent.vertical) {
+
+		float split = roundf(area->parent.split * area->rect.w) - 1.0f;
+
+		// I don't know why I have to put these twice, but if I don't,
+		// the split line isn't drawn until the first event.
+		nvgMoveTo(nvg, split, 0.0f);
+		nvgLineTo(nvg, split, area->rect.h);
+		nvgStroke(nvg);
+
+		nvgMoveTo(nvg, split, 0.0f);
+		nvgLineTo(nvg, split, area->rect.h);
+		nvgStroke(nvg);
+	}
+	else {
+
+		float split = roundf(area->parent.split * area->rect.h) - 1.0f;
+
+		// I don't know why I have to put these twice, but if I don't,
+		// the split line isn't drawn until the first event.
+		nvgMoveTo(nvg, 0.0f, split);
+		nvgLineTo(nvg, area->rect.w, split);
+		nvgStroke(nvg);
+
+		nvgMoveTo(nvg, 0.0f, split);
+		nvgLineTo(nvg, area->rect.w, split);
+		nvgStroke(nvg);
+	}
+}
+
+void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg) {
+
+	NVGcolor ltborder = nvgRGBAf(1.0f, 1.0f, 1.0f, 0.20f);
+	NVGcolor rbborder = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.20f);
+
+	nvgStrokeWidth(nvg, 1.0f);
+	nvgStrokeColor(nvg, ltborder);
+	nvgFillColor(nvg, nvgRGBA(0, 0, 0, 0));
+
+	float xend = area->rect.w;
+	float yend = area->rect.h;
+
+	// I don't know why I have to put these twice, but if I don't,
+	// the border isn't drawn until the first event.
+	nvgBeginPath(nvg);
+	nvgMoveTo(nvg, 0.0f, yend);
+	nvgLineTo(nvg, 0.0f, 0.0f);
+	nvgLineTo(nvg, xend, 0.0f);
+	nvgStroke(nvg);
+	nvgFill(nvg);
+
+	nvgBeginPath(nvg);
+	nvgMoveTo(nvg, 0.0f, yend);
+	nvgLineTo(nvg, 0.0f, 0.0f);
+	nvgLineTo(nvg, xend, 0.0f);
+	nvgStroke(nvg);
+	nvgFill(nvg);
+
+	nvgStrokeColor(nvg, rbborder);
+
+	// I don't know why I have to put these twice, but if I don't,
+	// the border isn't drawn until the first event.
+	nvgBeginPath(nvg);
+	nvgMoveTo(nvg, xend, 0.0f);
+	nvgLineTo(nvg, xend, yend);
+	nvgLineTo(nvg, 0.0f, yend);
+	nvgStroke(nvg);
+	nvgFill(nvg);
+
+	nvgBeginPath(nvg);
+	nvgMoveTo(nvg, xend, 0.0f);
+	nvgLineTo(nvg, xend, yend);
+	nvgLineTo(nvg, 0.0f, yend);
+	nvgStroke(nvg);
+	nvgFill(nvg);
 }
