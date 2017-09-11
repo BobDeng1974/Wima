@@ -267,7 +267,7 @@ int main() {
 
 	// Register a region.
 	WimaRegionHandle region;
-	status = wima_region_register(&region, funcs, 16, 512);
+	status = wima_region_register(&region, funcs, 4096, 1 << 20);
 	if (status) {
 		return status;
 	}
