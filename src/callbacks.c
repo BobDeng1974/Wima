@@ -48,17 +48,18 @@
 
 extern WimaG wg;
 
-const char* descs[] = { "Allocation failed",
-                        "Platform returned an unknown error",
-                        "Wima is in an invalid state",
-                        "Wima does not have an OpenGL context",
-                        "Wima could not be initialized",
-                        "Wima could not create a window",
-                        "Wima could not create the requested workspace",
-                        "Wima could not create the requested area",
-                        "Wima was given an invalid enum value",
-                        "Wima was given an invalid parameter",
-                        "Clipboard contents were invalid"
+const char* descs[] = {
+    "Allocation failed",
+    "Platform returned an unknown error",
+    "Wima is in an invalid state",
+    "Wima does not have an OpenGL context",
+    "Wima could not be initialized",
+    "Wima could not create a window",
+    "Wima could not create the requested workspace",
+    "Wima could not create the requested area",
+    "Wima was given an invalid enum value",
+    "Wima was given an invalid parameter",
+    "Clipboard contents were invalid"
 };
 
 void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
