@@ -89,12 +89,12 @@ static void wima_layout_computeImposedSize(WimaItem* pitem, int dim) {
 		WimaItem* pkid = wima_item_ptr(kid);
 
 		// width = start margin + calculated width + end margin
-		int kidsize = pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
+		int kidsize = pkid->margins[dim] + pkid->size.v[dim] + pkid->margins[wdim];
 		need_size = wima_max(need_size, kidsize);
 		kid = wima_item_nextSibling(kid);
 	}
 
-	pitem->size[dim] = need_size;
+	pitem->size.v[dim] = need_size;
 }
 
 // Compute bounding box of all items stacked.
@@ -111,11 +111,11 @@ static void wima_layout_computeStackedSize(WimaItem* pitem, int dim) {
 		WimaItem *pkid = wima_item_ptr(kid);
 
 		// width += start margin + calculated width + end margin
-		need_size += pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
+		need_size += pkid->margins[dim] + pkid->size.v[dim] + pkid->margins[wdim];
 		kid = wima_item_nextSibling(kid);
 	}
 
-	pitem->size[dim] = need_size;
+	pitem->size.v[dim] = need_size;
 }
 
 // Compute bounding box of all items stacked, repeating when breaking.
@@ -143,11 +143,11 @@ static void wima_layout_computeWrappedStackedSize(WimaItem* pitem, int dim) {
 		}
 
 		// width = start margin + calculated width + end margin
-		need_size += pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
+		need_size += pkid->margins[dim] + pkid->size.v[dim] + pkid->margins[wdim];
 		kid = wima_item_nextSibling(kid);
 	}
 
-	pitem->size[dim] = wima_max(need_size2, need_size);
+	pitem->size.v[dim] = wima_max(need_size2, need_size);
 }
 
 // Compute bounding box of all items stacked + wrapped.
@@ -174,12 +174,12 @@ static void wima_layout_computeWrappedSize(WimaItem *pitem, int dim) {
 		}
 
 		// width = start margin + calculated width + end margin
-		int kidsize = pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
+		int kidsize = pkid->margins[dim] + pkid->size.v[dim] + pkid->margins[wdim];
 		need_size = wima_max(need_size, kidsize);
 		kid = wima_item_nextSibling(kid);
 	}
 
-	pitem->size[dim] = need_size2 + need_size;
+	pitem->size.v[dim] = need_size2 + need_size;
 }
 
 void wima_layout_computeSize(WimaItemHandle item, int dim) {
@@ -195,7 +195,7 @@ void wima_layout_computeSize(WimaItemHandle item, int dim) {
 		kid = wima_item_nextSibling(kid);
 	}
 
-	if (pitem->size[dim]) {
+	if (pitem->size.v[dim]) {
 		return;
 	}
 
@@ -262,7 +262,7 @@ static void wima_layout_arrangeStacked(WimaItem *pitem, int dim, bool wrap) {
 
 	int wdim = dim + 2;
 
-	short space = pitem->size[dim];
+	short space = pitem->size.v[dim];
 	float max_x2 = (float) pitem->margins[dim] + (float) space;
 
 	WimaItemHandle start_kid;
@@ -309,7 +309,7 @@ static void wima_layout_arrangeStacked(WimaItem *pitem, int dim, bool wrap) {
 					squeezed_count++;
 				}
 
-				extend += pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
+				extend += pkid->margins[dim] + pkid->size.v[dim] + pkid->margins[wdim];
 			}
 
 			// Wrap on end of line or manual flag.
@@ -399,12 +399,12 @@ static void wima_layout_arrangeStacked(WimaItem *pitem, int dim, bool wrap) {
 				x1 = x+filler;
 			}
 			else if ((fflags & WIMA_ITEM_HFIXED) == WIMA_ITEM_HFIXED) {
-				x1 = x+(float)pkid->size[dim];
+				x1 = x+(float)pkid->size.v[dim];
 			}
 			else {
 
 				// Squeeze.
-				x1 = x + wima_fmaxf(0.0f,(float)pkid->size[dim]+eater);
+				x1 = x + wima_fmaxf(0.0f,(float)pkid->size.v[dim]+eater);
 			}
 
 			ix0 = (short)x;
@@ -417,7 +417,7 @@ static void wima_layout_arrangeStacked(WimaItem *pitem, int dim, bool wrap) {
 			}
 
 			pkid->margins[dim] = ix0;
-			pkid->size[dim] = ix1-ix0;
+			pkid->size.v[dim] = ix1-ix0;
 			x = x1 + (float)pkid->margins[wdim];
 
 			kid = wima_item_nextSibling(kid);
@@ -450,19 +450,19 @@ static void wima_layout_arrangeImposedRange(WimaItem *pitem, int dim,
 
 			case WIMA_LAYOUT_HCENTER:
 			{
-				pkid->margins[dim] += (space-pkid->size[dim])/2 - pkid->margins[wdim];
+				pkid->margins[dim] += (space - pkid->size.v[dim]) / 2 - pkid->margins[wdim];
 				break;
 			}
 
 			case WIMA_LAYOUT_RIGHT:
 			{
-				pkid->margins[dim] = space-pkid->size[dim]-pkid->margins[wdim];
+				pkid->margins[dim] = space - pkid->size.v[dim] - pkid->margins[wdim];
 				break;
 			}
 
 			case WIMA_LAYOUT_HFILL:
 			{
-				pkid->size[dim] = wima_max(0,space-pkid->margins[dim]-pkid->margins[wdim]);
+				pkid->size.v[dim] = wima_max(0, space - pkid->margins[dim] - pkid->margins[wdim]);
 				break;
 			}
 		}
@@ -481,7 +481,7 @@ static void wima_layout_arrangeImposed(WimaItem *pitem, int dim) {
 	WimaItemHandle first;
 	first.item = pitem->firstkid;
 
-	wima_layout_arrangeImposedRange(pitem, dim, first, item, pitem->margins[dim], pitem->size[dim]);
+	wima_layout_arrangeImposedRange(pitem, dim, first, item, pitem->margins[dim], pitem->size.v[dim]);
 }
 
 // Superimpose all items according to their alignment,
@@ -507,27 +507,27 @@ static void wima_layout_arrangeImposedSqueezedRange(WimaItem *pitem,
 
 			default:
 			{
-				pkid->size[dim] = wima_min(pkid->size[dim], min_size);
+				pkid->size.v[dim] = wima_min(pkid->size.v[dim], min_size);
 				break;
 			}
 
 			case WIMA_LAYOUT_HCENTER:
 			{
-				pkid->size[dim] = wima_min(pkid->size[dim], min_size);
-				pkid->margins[dim] += (space-pkid->size[dim]) / 2 - pkid->margins[wdim];
+				pkid->size.v[dim] = wima_min(pkid->size.v[dim], min_size);
+				pkid->margins[dim] += (space-pkid->size.v[dim]) / 2 - pkid->margins[wdim];
 				break;
 			}
 
 			case WIMA_LAYOUT_RIGHT:
 			{
-				pkid->size[dim] = wima_min(pkid->size[dim], min_size);
-				pkid->margins[dim] = space-pkid->size[dim]-pkid->margins[wdim];
+				pkid->size.v[dim] = wima_min(pkid->size.v[dim], min_size);
+				pkid->margins[dim] = space - pkid->size.v[dim] - pkid->margins[wdim];
 				break;
 			}
 
 			case WIMA_LAYOUT_HFILL:
 			{
-				pkid->size[dim] = min_size;
+				pkid->size.v[dim] = min_size;
 				break;
 			}
 		}
@@ -547,7 +547,7 @@ static void wima_layout_arrangeImposedSqueezed(WimaItem *pitem, int dim) {
 	first.item = pitem->firstkid;
 
 	wima_layout_arrangeImposedSqueezedRange(pitem, dim, first, item,
-	                                           pitem->margins[dim], pitem->size[dim]);
+	                                           pitem->margins[dim], pitem->size.v[dim]);
 }
 
 // Superimpose all items according to their alignment.
@@ -578,7 +578,7 @@ static short wima_layout_arrangeWrappedImposedSqueezed(WimaItem *pitem, int dim)
 		}
 
 		// width = start margin + calculated width + end margin
-		int kidsize = pkid->margins[dim] + pkid->size[dim] + pkid->margins[wdim];
+		int kidsize = pkid->margins[dim] + pkid->size.v[dim] + pkid->margins[wdim];
 		need_size = wima_max(need_size, kidsize);
 		kid = wima_item_nextSibling(kid);
 	}
@@ -608,7 +608,7 @@ void wima_layout_arrange(WimaItemHandle item, int dim) {
 
 				// This retroactive resize will not affect parent widths.
 				short offset = wima_layout_arrangeWrappedImposedSqueezed(pitem, 0);
-				pitem->size[0] = offset - pitem->margins[0];
+				pitem->size.v[0] = offset - pitem->margins[0];
 			}
 
 			break;

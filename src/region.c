@@ -51,7 +51,7 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs,
 {
 	WimaRegion reg;
 
-	assert(funcs.draw);
+	assert(funcs.layout);
 	assert(itemCapacity);
 	assert(bufferCapacity);
 
@@ -59,7 +59,7 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs,
 
 	reg.gen_ptr = funcs.gen_ptr;
 	reg.free_ptr = funcs.free_ptr;
-	reg.draw = funcs.draw;
+	reg.layout = funcs.layout;
 	reg.key_event = funcs.key;
 	reg.mouse_pos = funcs.pos;
 	reg.mouse_enter = funcs.enter;

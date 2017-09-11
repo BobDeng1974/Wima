@@ -48,6 +48,7 @@ typedef struct wima_globals {
 
 	DynaString name;
 
+	WimaDrawFunc draw;
 	WimaErrorFunc error;
 	WimaWindowFileDropFunc file_drop;
 	WimaWindowMouseEnterFunc enter;

@@ -339,7 +339,7 @@ WimaItemHandle wima_item_insertBack(WimaItemHandle item, WimaItemHandle child);
 
 // set the size of the item; a size of 0 indicates the dimension to be
 // dynamic; if the size is set, the item can not expand beyond that size.
-void wima_item_setSize(WimaItemHandle item, int w, int h);
+void wima_item_setSize(WimaItemHandle item, WimaSize size);
 
 // set the anchoring behavior of the item to one or multiple UIlayoutFlags
 void wima_item_setLayoutType(WimaItemHandle item, uint32_t flags);
@@ -392,15 +392,6 @@ WimaItemHandle wima_window_hover(WimaWindowHandle wwh);
 
 // return the item that is currently focused or -1 for none
 WimaItemHandle wima_window_focus(WimaWindowHandle wwh);
-
-// returns the topmost item containing absolute location (x,y), starting with
-// item as parent, using a set of flags and masks as filter:
-// if both flags and mask are UI_ANY, the first topmost item is returned.
-// if mask is UI_ANY, the first topmost item matching *any* of flags is returned.
-// otherwise the first item matching (item.flags & flags) == mask is returned.
-// you may combine box, layout, event and user flags.
-// frozen items will always be ignored.
-WimaItemHandle wima_item_find(WimaItemHandle item, int x, int y, uint32_t flags);
 
 // return the event flags for an item as passed to uiSetEvents()
 uint32_t wima_item_events(WimaItemHandle item);

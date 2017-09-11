@@ -45,6 +45,8 @@
 
 #include "../area.h"
 
+WimaStatus mouseCoordsMevent(WimaItemHandle wih, WimaMouseBtnEvent e);
+
 /**
  * Prints a WimaAction to stdout.
  * @param act	The WimaAction to print.
@@ -90,9 +92,20 @@ void printMods(WimaMods mods) {
 	fputc('\n', stdout);
 }
 
-WimaStatus mouseCoordsDraw(WimaAreaHandle wah, WimaSize size) {
+WimaStatus mouseCoordsDraw(WimaItemHandle item, NVGcontext* nvg) {
 
-	printf("Draw: { handle: %4u, width: %4d; height: %4d }\n", wah.area, size.w, size.h);
+	char buffer[100];
+
+	sprintf(buffer, "%d", item.area);
+
+	wima_widget_label(nvg, 0, 0, 100, 100, -1, buffer);
+
+	return WIMA_SUCCESS;
+}
+
+WimaStatus mouseCoordsLayout(WimaAreaHandle wah, WimaSize size) {
+
+	printf("Layout: { handle: %4u, width: %4d; height: %4d }\n", wah.area, size.w, size.h);
 
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 
@@ -101,13 +114,14 @@ WimaStatus mouseCoordsDraw(WimaAreaHandle wah, WimaSize size) {
 
 	printf("    Size: { w: %4d, h: %4d }\n", size.w, size.h);
 
-	char buffer[100];
+	WimaItemFuncs funcs;
 
-	sprintf(buffer, "%d", wah.area);
+	memset(&funcs, 0, sizeof(WimaItemFuncs));
 
-	glClear(GL_COLOR_BUFFER_BIT);
-	wima_widget_background(wah, 0, 0, size.w, size.h);
-	wima_widget_label(wah, 0, 0, 100, 100, -1, buffer);
+	funcs.mouse = mouseCoordsMevent;
+
+	WimaItemHandle item = wima_item_new(wah, funcs);
+	wima_item_setSize(item, size);
 
 	return WIMA_SUCCESS;
 }
@@ -131,9 +145,13 @@ WimaStatus mouseCoordsKevent(WimaAreaHandle wah, WimaKeyEvent e)
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsMevent(WimaAreaHandle wah, WimaMouseBtnEvent e) {
+WimaStatus mouseCoordsMevent(WimaItemHandle wih, WimaMouseBtnEvent e) {
 
 	printf("Mouse Button Event:\n");
+
+	printf("    Item: %d\n", wih.item);
+	printf("    Area: %d\n", wih.area);
+
 	printf("    Button: ");
 
 	switch (e.button) {
@@ -156,6 +174,8 @@ WimaStatus mouseCoordsMevent(WimaAreaHandle wah, WimaMouseBtnEvent e) {
 
 	printf("    Mods: ");
 	printMods(e.mods);
+
+	printf("    Clicks: %d\n", e.clicks);
 
 	return WIMA_SUCCESS;
 }
@@ -242,6 +262,7 @@ void mouseCoordsError(WimaStatus status, const char* desc) {
 int main() {
 
 	WimaAppFuncs appfuncs;
+	appfuncs.draw = mouseCoordsDraw;
 	appfuncs.error = mouseCoordsError;
 	appfuncs.file_drop = mouseCoordsFileDrop;
 	appfuncs.pos = NULL;
@@ -259,7 +280,7 @@ int main() {
 	WimaRegionFuncs funcs;
 	funcs.gen_ptr = mouseCoordsUserPtr;
 	funcs.free_ptr = mouseCoordsUserPtrFree;
-	funcs.draw = mouseCoordsDraw;
+	funcs.layout = mouseCoordsLayout;
 	funcs.key = mouseCoordsKevent;
 	funcs.pos = mouseCoordsMpos;
 	funcs.enter = mouseCoordsMenterArea;

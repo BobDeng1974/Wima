@@ -47,7 +47,9 @@ extern "C" {
 
 #include <glad/glad.h>
 #include <KHR/khrplatform.h>
+
 #include <GLFW/glfw3.h>
+#include <nanovg.h>
 
 #include <dyna/vector.h>
 #include <dyna/string.h>
@@ -167,8 +169,10 @@ typedef struct wima_area_han {
  */
 typedef struct wima_item_handle {
 
-	WimaAreaHandle area;
 	int32_t item;
+
+	WimaAreaNodeHandle area;
+	WimaWindowHandle window;
 
 } WimaItemHandle;
 
@@ -433,7 +437,7 @@ typedef struct wima_item_funcs {
 
 typedef void* (*WimaAreaGenUserPointerFunc)(WimaAreaHandle);
 typedef void (*WimaAreaFreeUserPointerFunc)(void*);
-typedef WimaStatus (*WimaAreaDrawFunc)(WimaAreaHandle, WimaSize);
+typedef WimaStatus (*WimaAreaLayoutFunc)(WimaAreaHandle, WimaSize);
 typedef WimaStatus (*WimaAreaKeyFunc)(WimaAreaHandle, WimaKeyEvent);
 typedef WimaStatus (*WimaAreaMousePosFunc)(WimaAreaHandle, WimaPos);
 typedef WimaStatus (*WimaAreaMouseEnterFunc)(WimaAreaHandle, bool);
@@ -442,13 +446,14 @@ typedef struct wima_region_funcs {
 
 	WimaAreaGenUserPointerFunc gen_ptr;
 	WimaAreaFreeUserPointerFunc free_ptr;
-	WimaAreaDrawFunc draw;
+	WimaAreaLayoutFunc layout;
 	WimaAreaKeyFunc key;
 	WimaAreaMousePosFunc pos;
 	WimaAreaMouseEnterFunc enter;
 
 } WimaRegionFuncs;
 
+typedef WimaStatus (*WimaDrawFunc)(WimaItemHandle, NVGcontext*);
 typedef void (*WimaErrorFunc)(WimaStatus, const char*);
 typedef WimaStatus (*WimaWindowFileDropFunc)(WimaWindowHandle, int, const char**);
 typedef WimaStatus (*WimaWindowPosFunc)(WimaWindowHandle, WimaPos);
@@ -459,6 +464,7 @@ typedef bool (*WimaWindowCloseFunc)(WimaWindowHandle);
 
 typedef struct wima_app_funcs {
 
+	WimaDrawFunc draw;
 	WimaErrorFunc error;
 	WimaWindowFileDropFunc file_drop;
 	WimaWindowPosFunc pos;
@@ -484,7 +490,8 @@ WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wwh, DynaNode node, Wima
 WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph);
 GLFWwindow* wima_window_glfw(WimaWindowHandle wwh);
 WimaStatus wima_window_close(WimaWindowHandle wwh);
-WimaStatus wima_window_title(WimaWindowHandle wwh, const char* title);
+DynaString wima_window_title(WimaWindowHandle wwh);
+WimaStatus wima_window_setTitle(WimaWindowHandle wwh, const char* title);
 void* wima_window_userPointer(WimaWindowHandle win);
 WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user);
 DynaTree wima_window_areas(WimaWindowHandle wwh);

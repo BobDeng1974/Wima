@@ -73,8 +73,8 @@ extern WimaG wg;
 
 WimaItem* wima_item_ptr(WimaItemHandle wih) {
 
-	WimaAreaNode* area = wima_area_area(wih.area.window, wih.area.area);
-	assert(area);
+	WimaAreaNode* area = wima_area_area(wih.window, wih.area);
+	assert(area && area->type == WIMA_AREA_LEAF);
 
 	assert((wih.item >= 0) && (wih.item < area->area.ctx.itemCount));
 
@@ -83,7 +83,7 @@ WimaItem* wima_item_ptr(WimaItemHandle wih) {
 
 WimaItem* wima_item_lastPtr(WimaItemHandle wih) {
 
-	WimaAreaNode* area = wima_area_area(wih.area.window, wih.area.area);
+	WimaAreaNode* area = wima_area_area(wih.window, wih.area);
 	assert(area);
 
 	assert((wih.item >= 0) && (wih.item < area->area.ctx.lastItemCount));
@@ -93,10 +93,10 @@ WimaItem* wima_item_lastPtr(WimaItemHandle wih) {
 
 void wima_item_setFocus(WimaItemHandle wih) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wih.area.window);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wih.window);
 	assert(win);
 
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(win->areas, wih.area.area);
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(win->areas, wih.area);
 	assert(area);
 
 	assert((wih.item >= -1) && (wih.item < area->area.ctx.itemCount));
@@ -118,10 +118,10 @@ WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs) {
 	 // Must run between uiBeginLayout() and uiEndLayout().
 	assert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT);
 
-	int idx = area->area.ctx.itemCount++;
+	int idx = (area->area.ctx.itemCount)++;
 
 	WimaItemHandle wih;
-	wih.area = wah;
+	wih.area = wah.area;
 	wih.item = idx;
 
 	WimaItem* item = wima_item_ptr(wih);
@@ -129,7 +129,7 @@ WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs) {
 	memset(item, 0, sizeof(WimaItem));
 
 	item->firstkid = -1;
-	item->nextitem = -1;
+	item->nextSibling = -1;
 
 	uint32_t flags = 0;
 	flags |= (funcs.mouse ? WIMA_EVENT_MOUSE_BTN : 0);
@@ -176,9 +176,9 @@ WimaItemHandle wima_item_append(WimaItemHandle item, WimaItemHandle sibling) {
 
 	assert(!(psibling->flags & WIMA_ITEM_INSERTED));
 
-	psibling->nextitem = pitem->nextitem;
+	psibling->nextSibling = pitem->nextSibling;
 	psibling->flags |= WIMA_ITEM_INSERTED;
-	pitem->nextitem = sibling.item;
+	pitem->nextSibling = sibling.item;
 
 	return sibling;
 }
@@ -212,7 +212,7 @@ WimaItemHandle wima_item_insertBack(WimaItemHandle item, WimaItemHandle child) {
 
 	assert(!(pchild->flags & WIMA_ITEM_INSERTED));
 
-	pchild->nextitem = pparent->firstkid;
+	pchild->nextSibling = pparent->firstkid;
 	pparent->firstkid = child.item;
 	pchild->flags |= WIMA_ITEM_INSERTED;
 
@@ -231,21 +231,20 @@ void wima_item_setFrozen(WimaItemHandle item, bool enable) {
 	}
 }
 
-void wima_item_setSize(WimaItemHandle item, int w, int h) {
+void wima_item_setSize(WimaItemHandle item, WimaSize size) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	pitem->size[0] = w;
-	pitem->size[1] = h;
+	pitem->size = size;
 
-	if (!w) {
+	if (!size.w) {
 		pitem->flags &= ~WIMA_ITEM_HFIXED;
 	}
 	else {
 		pitem->flags |= WIMA_ITEM_HFIXED;
 	}
 
-	if (!h) {
+	if (!size.h) {
 		pitem->flags &= ~WIMA_ITEM_VFIXED;
 	}
 	else {
@@ -254,11 +253,11 @@ void wima_item_setSize(WimaItemHandle item, int w, int h) {
 }
 
 int wima_item_width(WimaItemHandle item) {
-	return wima_item_ptr(item)->size[0];
+	return wima_item_ptr(item)->size.v[0];
 }
 
 int wima_item_height(WimaItemHandle item) {
-	return wima_item_ptr(item)->size[1];
+	return wima_item_ptr(item)->size.v[1];
 }
 
 void wima_item_setLayoutType(WimaItemHandle item, uint32_t flags) {
@@ -351,10 +350,10 @@ bool wima_item_map(WimaItemHandle item1, WimaItemHandle item2) {
 			break;
 		}
 
-		kid1.item = pkid1->nextitem;
+		kid1.item = pkid1->nextSibling;
 
 		if (kid2.item != -1) {
-			kid2.item = wima_item_ptr(kid2)->nextitem;
+			kid2.item = wima_item_ptr(kid2)->nextSibling;
 		}
 	}
 
@@ -362,7 +361,7 @@ bool wima_item_map(WimaItemHandle item1, WimaItemHandle item2) {
 		return false;
 	}
 
-	WimaAreaNode* area = wima_area_area(item1.area.window, item1.area.area);
+	WimaAreaNode* area = wima_area_area(item1.window, item1.area);
 
 	area->area.ctx.itemMap[item1.item] = item2.item;
 	return true;
@@ -370,7 +369,7 @@ bool wima_item_map(WimaItemHandle item1, WimaItemHandle item2) {
 
 WimaItemHandle wima_item_recover(WimaItemHandle olditem) {
 
-	WimaAreaNode* area = wima_area_area(olditem.area.window, olditem.area.area);
+	WimaAreaNode* area = wima_area_area(olditem.window, olditem.area);
 	assert(area);
 
 	assert((olditem.item >= -1) && (olditem.item < area->area.ctx.lastItemCount));
@@ -386,7 +385,7 @@ WimaItemHandle wima_item_recover(WimaItemHandle olditem) {
 
 void wima_item_remap(WimaItemHandle olditem, WimaItemHandle newitem) {
 
-	WimaAreaNode* area = wima_area_area(olditem.area.window, olditem.area.area);
+	WimaAreaNode* area = wima_area_area(olditem.window, olditem.area);
 	assert(area);
 
 	assert((olditem.item >= 0) && (olditem.item < area->area.ctx.lastItemCount));
@@ -401,7 +400,7 @@ WimaRect wima_item_rect(WimaItemHandle item) {
 
 	WimaRect rc = {{{
 	        pitem->margins[0], pitem->margins[1],
-	        pitem->size[0], pitem->size[1]
+	        pitem->size.v[0], pitem->size.v[1]
 	}}};
 
 	return rc;
@@ -421,7 +420,7 @@ WimaItemHandle wima_item_nextSibling(WimaItemHandle item) {
 
 	WimaItemHandle result;
 
-	result.item = wima_item_ptr(item)->nextitem;
+	result.item = wima_item_ptr(item)->nextSibling;
 	result.area = item.area;
 
 	return result;
@@ -429,7 +428,7 @@ WimaItemHandle wima_item_nextSibling(WimaItemHandle item) {
 
 void* wima_item_allocHandle(WimaItemHandle item, uint32_t size) {
 
-	WimaAreaNode* area = wima_area_area(item.area.window, item.area.area);
+	WimaAreaNode* area = wima_area_area(item.window, item.area);
 	assert(area);
 
 	// Make sure to align on a eight-byte boundary.
@@ -500,70 +499,29 @@ bool wima_item_contains(WimaItemHandle item, int x, int y) {
 	return 0;
 }
 
-WimaItemHandle wima_item_find(WimaItemHandle item, int x, int y, uint32_t flags) {
-
-	WimaItemHandle best_hit;
-	best_hit.area = item.area;
-	best_hit.item = -1;
-
-	WimaItem *pitem = wima_item_ptr(item);
-
-	if (pitem->flags & WIMA_ITEM_FROZEN) {
-		return best_hit;
-	}
-
-	if (wima_item_contains(item, x, y)) {
-
-		WimaItemHandle kid = wima_item_firstChild(item);
-
-		while (kid.item >= 0) {
-
-			WimaItemHandle hit = wima_item_find(kid, x, y, flags);
-
-			if (hit.item >= 0) {
-				best_hit = hit;
-			}
-
-			kid = wima_item_nextSibling(kid);
-		}
-
-		if (best_hit.item >= 0) {
-			return best_hit;
-		}
-
-		if (flags == UI_ANY || pitem->flags & flags) {
-			return item;
-		}
-	}
-
-	return best_hit;
+bool wima_item_compareHandles(WimaItemHandle item1, WimaItemHandle item2) {
+	return (item1.item == item2.item && item1.area   == item2.area && item1.window == item2.window);
 }
 
-static bool wima_item_compareHandles(WimaItemHandle item1, WimaItemHandle item2) {
-	return (item1.item        == item2.item      &&
-	        item1.area.area   == item2.area.area &&
-	        item1.area.window == item2.area.window);
-}
+bool wima_item_isActive(WimaItemHandle item) {
 
-static bool wima_item_isActive(WimaItemHandle item) {
-
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.area.window);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.window);
 	assert(win);
 
 	return wima_item_compareHandles(win->ctx.active, item);
 }
 
-static bool wima_item_isHovered(WimaItemHandle item) {
+bool wima_item_isHovered(WimaItemHandle item) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.area.window);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.window);
 	assert(win);
 
 	return wima_item_compareHandles(win->ctx.hover, item);
 }
 
-static bool wima_item_isFocused(WimaItemHandle item) {
+bool wima_item_isFocused(WimaItemHandle item) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.area.window);
+	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.window);
 	assert(win);
 
 	return wima_item_compareHandles(win->ctx.focus, item);
@@ -600,14 +558,14 @@ WimaItemState wima_item_state(WimaItemHandle item) {
 	return WIMA_ITEM_DEFAULT;
 }
 
-void wima_item_notify(WimaItemHandle wih, WimaEvent e) {
+WimaStatus wima_item_notify(WimaItemHandle wih, WimaEvent e) {
 
 	assert((e.type & WIMA_ITEM_EVENT_MASK) == e.type);
 
 	WimaItem* pitem = wima_item_ptr(wih);
 
 	if (!(pitem->flags & e.type)) {
-		return;
+		return WIMA_SUCCESS;
 	}
 
 	WimaStatus status = WIMA_SUCCESS;
@@ -650,4 +608,6 @@ void wima_item_notify(WimaItemHandle wih, WimaEvent e) {
 		default:
 			assert(false);
 	}
+
+	return status;
 }

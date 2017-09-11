@@ -185,7 +185,7 @@ typedef struct wima_item {
 	int firstkid;
 
 	// Index of next sibling with same parent.
-	int nextitem;
+	int nextSibling;
 
 	// Margin offsets, interpretation depends on flags.
 	// After layouting, the first two components are
@@ -193,7 +193,7 @@ typedef struct wima_item {
 	int16_t margins[4];
 
 	// Size.
-	int16_t size[2];
+	WimaSize size;
 
 } WimaItem;
 
@@ -203,9 +203,7 @@ WimaItem* wima_item_lastPtr(WimaItemHandle wih);
 
 void wima_window_validateItems(WimaWindowHandle wwh);
 
-//#if 0
-void wima_item_notify(WimaItemHandle wih, WimaEvent e);
-//#endif
+WimaStatus wima_item_notify(WimaItemHandle wih, WimaEvent e);
 
 WimaItemHandle wima_item_lastChild(WimaItemHandle item);
 
@@ -225,11 +223,13 @@ void wima_window_updateHover(WimaWindowHandle wwh);
 
 int wima_window_clicks(WimaWindowHandle wwh);
 
-static bool wima_item_isActive(WimaItemHandle item);
+bool wima_item_compareHandles(WimaItemHandle item1, WimaItemHandle item2);
 
-static bool wima_item_isHovered(WimaItemHandle item);
+bool wima_item_isActive(WimaItemHandle item);
 
-static bool wima_item_isFocused(WimaItemHandle item);
+bool wima_item_isHovered(WimaItemHandle item);
+
+bool wima_item_isFocused(WimaItemHandle item);
 
 WimaItemState wima_item_state(WimaItemHandle item);
 

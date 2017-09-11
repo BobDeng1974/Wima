@@ -43,7 +43,7 @@ typedef struct wima_region {
 	WimaAreaGenUserPointerFunc gen_ptr;
 	WimaAreaFreeUserPointerFunc free_ptr;
 
-	WimaAreaDrawFunc draw;
+	WimaAreaLayoutFunc layout;
 
 	WimaAreaKeyFunc key_event;
 	WimaAreaMousePosFunc mouse_pos;

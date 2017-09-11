@@ -41,6 +41,7 @@
 #include <wima.h>
 
 #include "callbacks.h"
+#include "item.h"
 #include "area.h"
 #include "workspace.h"
 #include "window.h"
@@ -125,6 +126,9 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
+	double time = glfwGetTime();
+	uint32_t ts = (uint32_t) (time * 1000);
+
 	if (!wg.name) {
 		exit(WIMA_INVALID_STATE);
 	}
@@ -149,12 +153,36 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		return;
 	}
 
+	WimaItemHandle clickItem = wima_area_findItem(wwin->areas,        wwin->ctx.cursor.x,
+	                                              wwin->ctx.cursor.y, WIMA_EVENT_MOUSE_BTN);
+
+	if (wact == WIMA_ACTION_PRESS) {
+
+		if (ts - WIMA_CLICK_THRESHOLD > wwin->ctx.click_timestamp ||
+		    wwin->ctx.click_button != wbtn ||
+		    !wima_item_compareHandles(clickItem, wwin->ctx.click_item))
+		{
+			wwin->ctx.clicks = 0;
+		}
+
+		++(wwin->ctx.clicks);
+	}
+
+	wwin->ctx.click_timestamp = ts;
+	wwin->ctx.click_button = wbtn;
+	wwin->ctx.click_item = clickItem;
+
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_MOUSE_BTN;
+	event->mouse_btn.item = clickItem;
+	event->mouse_btn.timestamp = ts;
 	event->mouse_btn.button = wbtn;
 	event->mouse_btn.action = wact;
 	event->mouse_btn.mods = wmods;
+	event->mouse_btn.clicks = wwin->ctx.clicks;
+
+	wwin->ctx.eventItems[numEvents] = clickItem;
 
 	++(wwin->ctx.eventCount);
 }

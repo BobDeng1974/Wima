@@ -55,10 +55,11 @@ extern const WimaTheme wima_initial_theme;
 
 WimaStatus wima_init(const char* name, WimaAppFuncs funcs) {
 
-	if (!funcs.error) {
+	if (!funcs.draw || !funcs.error) {
 		return WIMA_INIT_ERR;
 	}
 
+	wg.draw = funcs.draw;
 	wg.error = funcs.error;
 	wg.file_drop = funcs.file_drop;
 	wg.enter = funcs.enter;

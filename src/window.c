@@ -199,14 +199,17 @@ WimaStatus wima_window_close(WimaWindowHandle wwh) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_window_title(WimaWindowHandle wwh, const char* title) {
+DynaString wima_window_title(WimaWindowHandle wwh) {
+	return ((WimaWin*) dvec_get(wg.windows, wwh))->name;
+}
+
+WimaStatus wima_window_setTitle(WimaWindowHandle wwh, const char* title) {
 
 	glfwSetWindowTitle(wima_window_glfw(wwh), title);
 
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 
-	dstr_free(win->name);
-	if (dstr_create(&win->name, title)) {
+	if (dstr_set(win->name, title)) {
 		return WIMA_WINDOW_ERR;
 	}
 
@@ -337,23 +340,21 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
 	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 
-	WimaStatus status = wima_area_layout(win->areas);
-
-	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
-
-	if (status) {
-		return status;
-	}
-
 	nvgBeginFrame(win->nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 
 	glEnable(GL_SCISSOR_TEST);
 
-	status = wima_area_draw(wwh, win->scissorStack, win->pixelRatio);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	WimaStatus status = wima_area_draw(wwh, win->scissorStack, win->pixelRatio);
 
 	glDisable(GL_SCISSOR_TEST);
 
 	nvgEndFrame(win->nvg);
+
+	status = wima_area_layout(win->areas);
+
+	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
 
 	// Swap front and back buffers.
 	glfwSwapBuffers(wima_window_glfw(wwh));
@@ -415,7 +416,7 @@ WimaPos wima_window_cursor_start(WimaWindowHandle wwh) {
 	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wwh);
 	assert(win);
 
-	return win->ctx.start_cursor;
+	return win->ctx.last_cursor;
 }
 
 WimaPos wima_window_cursor_delta(WimaWindowHandle wwh) {
@@ -486,17 +487,17 @@ void wima_window_updateHover(WimaWindowHandle wwh) {
 	WimaItemHandle item;
 	item.item = 0;
 
-	win->ctx.hover = wima_item_find(item, win->ctx.cursor.x, win->ctx.cursor.y,
+	win->ctx.hover = wima_area_findItem(win->areas, win->ctx.cursor.x, win->ctx.cursor.y,
 	                                   WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER);
 }
 
-static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, WimaEvent* event) {
+static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, WimaItemHandle wih, WimaEvent event) {
 
 	WimaStatus status;
 
 	DynaTree areas = win->areas;
 
-	switch (event->type) {
+	switch (event.type) {
 
 		case WIMA_EVENT_NONE:
 		{
@@ -506,19 +507,19 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_KEY:
 		{
-			status = wima_area_key(areas, event->key);
+			status = wima_area_key(areas, event.key);
 			break;
 		}
 
 		case WIMA_EVENT_MOUSE_BTN:
 		{
-			status = wima_area_mouseBtn(areas, event->mouse_btn);
+			status = wima_area_mouseBtn(areas, wih, event);
 			break;
 		}
 
 		case WIMA_EVENT_MOUSE_POS:
 		{
-			WimaPos pos = event->pos;
+			WimaPos pos = event.pos;
 			// TODO: Check for entering an area and an item.
 			status = wima_area_mousePos(areas, pos);
 			break;
@@ -526,13 +527,13 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_SCROLL:
 		{
-			status = wima_area_scroll(areas, event->scroll);
+			status = wima_area_scroll(areas, event.scroll);
 			break;
 		}
 
 		case WIMA_EVENT_CHAR:
 		{
-			status = wima_area_char(areas, event->char_event);
+			status = wima_area_char(areas, event.char_event);
 			break;
 		}
 
@@ -540,7 +541,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		{
 			if (wg.file_drop) {
 
-				DynaVector files = event->file_drop;
+				DynaVector files = event.file_drop;
 				size_t len = dvec_len(files);
 
 				const char** names = malloc(len * sizeof(char*));
@@ -571,7 +572,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_WIN_POS:
 		{
 			if (wg.pos) {
-				WimaPos pos = event->pos;
+				WimaPos pos = event.pos;
 				status = wg.pos(wwh, pos);
 			}
 			else {
@@ -584,7 +585,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_FB_SIZE:
 		{
 			if (wg.fb_size) {
-				WimaSize size = event->size;
+				WimaSize size = event.size;
 				status = wg.fb_size(wwh, size);
 			}
 			else {
@@ -596,7 +597,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_WIN_SIZE:
 		{
 			if (wg.win_size) {
-				WimaSize size = event->size;
+				WimaSize size = event.size;
 				status = wg.win_size(wwh, size);
 			}
 			else {
@@ -608,7 +609,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_WIN_ENTER:
 		{
 			if (wg.enter) {
-				status = wg.enter(wwh, event->mouse_enter);
+				status = wg.enter(wwh, event.mouse_enter);
 			}
 			else {
 				status = WIMA_SUCCESS;
@@ -640,11 +641,12 @@ WimaStatus wima_window_processEvents(WimaWindowHandle wwh) {
 	WimaItemHandle focus = win->ctx.focus;
 
 	WimaEvent* events = win->ctx.events;
+	WimaItemHandle* handles = win->ctx.eventItems;
 	int numEvents = win->ctx.eventCount;
 
 	for (int i = 0; i < numEvents; ++i) {
 
-		status = wima_window_processEvent(win, wwh, events + i);
+		status = wima_window_processEvent(win, wwh, handles[i], events[i]);
 
 		if (status) {
 			break;
@@ -714,7 +716,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 		default:
 		case WIMA_UI_STATE_IDLE:
 		{
-			win->ctx.start_cursor = win->ctx.cursor;
+			//win->ctx.start_cursor = win->ctx.cursor;
 
 			// Left mouse button.
 			//if (wima_ui_button(wwh, 0)) {

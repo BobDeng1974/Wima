@@ -58,9 +58,6 @@
 
 typedef struct wima_window_context {
 
-	// Where the cursor was at the beginning of the active state.
-	WimaPos start_cursor;
-
 	// Where the cursor was last frame.
 	WimaPos last_cursor;
 
@@ -86,6 +83,7 @@ typedef struct wima_window_context {
 
 	uint32_t eventCount;
 	WimaEvent events[WIMA_MAX_EVENTS];
+	WimaItemHandle eventItems[WIMA_MAX_EVENTS];
 
 } WimaWindowContext;
 
