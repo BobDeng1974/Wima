@@ -47,16 +47,11 @@
 
 extern WimaG wg;
 
-WimaStatus wima_workspace_register(WimaWorkspaceHandle* wth, const char* name) {
+WimaStatus wima_workspace_register(WimaWorkspaceHandle* wth) {
 
 	WimaWksp wksp;
 
-	DynaStatus status = dstr_create(&wksp.name, name);
-	if (status) {
-		return WIMA_WORKSPACE_ERR;
-	}
-
-	status = dtree_create(&wksp.regions, 0, sizeof(WimaAreaNode));
+	DynaStatus status = dtree_create(&wksp, 0, sizeof(WimaAreaNode));
 	if (status) {
 		return WIMA_WORKSPACE_ERR;
 	}
@@ -76,7 +71,7 @@ WimaStatus wima_workspace_register(WimaWorkspaceHandle* wth, const char* name) {
 WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wwh, DynaNode node,
                                   float split,              bool vertical)
 {
-	WimaWksp* wksp = (WimaWksp*) dvec_get(wg.workspaces, wwh);
+	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwh));
 	assert(wksp);
 
 	if (!wima_workspace_nodeValid(wwh, node)) {
@@ -91,7 +86,7 @@ WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wwh, DynaNode node,
 	wan.parent.mouse = WIMA_AREA_NONE;
 	wan.parent.vertical = vertical;
 
-	DynaStatus status = dtree_add(wksp->regions, node, (uint8_t*) &wan);
+	DynaStatus status = dtree_add(wksp, node, (uint8_t*) &wan);
 	if (status) {
 		return WIMA_WORKSPACE_ERR;
 	}
@@ -101,7 +96,7 @@ WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wwh, DynaNode node,
 
 WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wwh, DynaNode node, WimaRegionHandle reg)
 {
-	WimaWksp* wksp = (WimaWksp*) dvec_get(wg.workspaces, wwh);
+	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwh));
 	assert(wksp);
 
 	if (!wima_workspace_nodeValid(wwh, node)) {
@@ -114,7 +109,7 @@ WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wwh, DynaNode node, Wima
 	wan.rect.h = -1;
 	wan.area.type = reg;
 
-	DynaStatus status = dtree_add(wksp->regions, node, (uint8_t*) &wan);
+	DynaStatus status = dtree_add(wksp, node, (uint8_t*) &wan);
 	if (status) {
 		return WIMA_WORKSPACE_ERR;
 	}
@@ -124,11 +119,11 @@ WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wwh, DynaNode node, Wima
 
 bool wima_workspace_nodeValid(WimaWorkspaceHandle wwh, DynaNode n) {
 
-	WimaWksp* wksp = (WimaWksp*) dvec_get(wg.workspaces, wwh);
+	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwh));
 
 	DynaNode p = dtree_parent(n);
 
-	return n == dtree_root() ||
-	       (dtree_exists(wksp->regions, p) &&
-	       ((WimaAreaNode*) dtree_node(wksp->regions, p))->type == WIMA_AREA_PARENT);
+	bool root = n == dtree_root();
+
+	return root || (dtree_exists(wksp, p) && ((WimaAreaNode*) dtree_node(wksp, p))->type == WIMA_AREA_PARENT);
 }

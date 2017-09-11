@@ -452,16 +452,15 @@ typedef struct wima_app_funcs {
 
 } WimaAppFuncs;
 
-WimaStatus wima_region_register(WimaRegionHandle* wrh, const char* name,
-                                WimaRegionFuncs funcs, uint32_t itemCapacity,
-                                uint32_t bufferCapacity);
+WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs,
+                                uint32_t itemCapacity, uint32_t bufferCapacity);
 void* wima_region_userPointer(WimaRegionHandle reg);
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 
 void* wima_area_userPointer(WimaAreaHandle wah);
 WimaStatus wima_areas_free(DynaTree areas);
 
-WimaStatus wima_workspace_register(WimaWorkspaceHandle* type, const char* name);
+WimaStatus wima_workspace_register(WimaWorkspaceHandle* type);
 WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wksp, DynaNode node, float split, bool vertical);
 WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wwh, DynaNode node, WimaRegionHandle reg);
 

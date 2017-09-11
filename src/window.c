@@ -73,7 +73,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 
 	WimaWksp* wksp = (WimaWksp*) dvec_get(wg.workspaces, wksph);
 
-	const char* name = dstr_str(wksp->name);
+	const char* name = dstr_str(wg.name);
 
 	if (dstr_create(&wwin.name, name)) {
 		return WIMA_WINDOW_ERR;
@@ -271,24 +271,23 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 
 	assert(regionsTypesLen != 0 && wkspTypesLen != 0);
 
-	WimaWksp* wksp = (WimaWksp*) dvec_get(wg.workspaces, wksph);
-	DynaTree regs = wksp->regions;
+	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wksph));
 
 	DynaNode root = dtree_root();
 
-	if (!wima_area_node_valid(regs, root)) {
+	if (!wima_area_node_valid(wksp, root)) {
 		return WIMA_WINDOW_ERR;
 	}
 
 	WimaWin* window = (WimaWin*) dvec_get(wg.windows, wwh);
 
 	if (!window->areas) {
-		if (dtree_create(&window->areas, dtree_nodes(regs), sizeof(WimaAreaNode))) {
+		if (dtree_create(&window->areas, dtree_nodes(wksp), sizeof(WimaAreaNode))) {
 			return WIMA_WINDOW_ERR;
 		}
 	}
 
-	if (dtree_copy(window->areas, regs)) {
+	if (dtree_copy(window->areas, wksp)) {
 		return WIMA_WINDOW_ERR;
 	}
 

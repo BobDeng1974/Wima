@@ -46,20 +46,14 @@
 
 extern WimaG wg;
 
-WimaStatus wima_region_register(WimaRegionHandle* wrh, const char* name,
-                                WimaRegionFuncs funcs, uint32_t itemCapacity,
-                                uint32_t bufferCapacity)
+WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs,
+                                uint32_t itemCapacity, uint32_t bufferCapacity)
 {
 	WimaRegion reg;
 
 	assert(funcs.draw);
 	assert(itemCapacity);
 	assert(bufferCapacity);
-
-	DynaStatus status = dstr_create(&(reg.name), name);
-	if (status) {
-		return WIMA_AREA_ERR;
-	}
 
 	reg.user = NULL;
 
@@ -75,7 +69,7 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh, const char* name,
 
 	size_t idx = dvec_len(wg.regions);
 
-	status = dvec_push(wg.regions, (uint8_t*) &reg);
+	DynaStatus status = dvec_push(wg.regions, (uint8_t*) &reg);
 	if (status) {
 		return WIMA_AREA_ERR;
 	}

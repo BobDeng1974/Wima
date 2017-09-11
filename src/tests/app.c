@@ -252,7 +252,7 @@ int main() {
 	appfuncs.close = mouseCoordsClose;
 
 	// Initialize Wima and check for success.
-	WimaStatus status = wima_init("Test Wima App", appfuncs);
+	WimaStatus status = wima_init("Wima Test App", appfuncs);
 	if (status) {
 		return status;
 	}
@@ -267,14 +267,14 @@ int main() {
 
 	// Register a region.
 	WimaRegionHandle region;
-	status = wima_region_register(&region, "Mouse Coordinates", funcs, 16, 512);
+	status = wima_region_register(&region, funcs, 16, 512);
 	if (status) {
 		return status;
 	}
 
 	// Register a workspace.
 	WimaWorkspaceHandle wksp;
-	status = wima_workspace_register(&wksp, "Default");
+	status = wima_workspace_register(&wksp);
 	if (status) {
 		return status;
 	}

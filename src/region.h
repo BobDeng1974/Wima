@@ -38,8 +38,6 @@
 
 typedef struct wima_region {
 
-	DynaString name;
-
 	void* user;
 
 	WimaAreaGenUserPointerFunc gen_ptr;

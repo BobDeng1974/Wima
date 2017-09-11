@@ -42,16 +42,8 @@
 /**
  * A workspace, which can be broken down into areas.
  */
-typedef struct wima_wksp {
-
-	DynaString name;
-	DynaTree regions;
-
-} WimaWksp;
+typedef DynaTree WimaWksp;
 
 bool wima_workspace_nodeValid(WimaWorkspaceHandle wwh, DynaNode n);
-
-int wima_workspace_itemCapacity(WimaWksp* wksp);
-int wima_workspace_bufferCapacity(WimaWksp* wksp);
 
 #endif // WIMA_WORKSPACE_H
