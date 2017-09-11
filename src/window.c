@@ -71,8 +71,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
-	WimaWksp* wksp = (WimaWksp*) dvec_get(wg.workspaces, wksph);
-
 	const char* name = dstr_str(wg.name);
 
 	if (dstr_create(&wwin.name, name)) {
