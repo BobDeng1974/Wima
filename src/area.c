@@ -428,7 +428,7 @@ WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, D
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
-	wima_area_pushViewport(area, nvg, stack);
+	wima_area_pushViewport(nvg, stack, area->rect);
 
 	if (area->type == WIMA_AREA_PARENT) {
 
@@ -689,36 +689,15 @@ WimaPos wima_area_cursorPosition(WimaAreaNode* area, WimaPos pos) {
 	return result;
 }
 
-WimaPos wima_area_opengl(WimaAreaNode* area) {
-
-	WimaPos result;
-
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, area->window);
-	assert(win);
-
-	result.x = area->rect.x;
-	result.y = win->fbsize.h - area->rect.h - area->rect.y;
-
-	return result;
-}
-
-void wima_area_pushViewport(WimaAreaNode* area, NVGcontext* nvg, DynaVector stack) {
-
-	WimaRect rect;
-	WimaPos pos = wima_area_opengl(area);
-
-	rect.x = pos.x;
-	rect.y = pos.y;
-	rect.w = area->rect.w;
-	rect.h = area->rect.h;
+void wima_area_pushViewport(NVGcontext* nvg, DynaVector stack, WimaRect viewport) {
 
 	// Set up NanoVG.
 	nvgResetScissor(nvg);
-	nvgScissor(nvg, rect.x, rect.y, rect.w, rect.h);
 	nvgResetTransform(nvg);
-	nvgTranslate(nvg, rect.x, rect.y);
+	nvgScissor(nvg, viewport.x, viewport.y, viewport.w, viewport.h);
+	nvgTranslate(nvg, viewport.x, viewport.y);
 
-	dvec_push(stack, (uint8_t*) &rect);
+	dvec_push(stack, (uint8_t*) &viewport);
 }
 
 void wima_area_popViewport(NVGcontext* nvg, DynaVector stack) {

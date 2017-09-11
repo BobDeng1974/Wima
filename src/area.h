@@ -146,8 +146,7 @@ WimaAreaHandle wima_area_handle(WimaAreaNode* area);
 
 void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right);
 WimaPos wima_area_cursorPosition(WimaAreaNode* area, WimaPos cursor);
-WimaPos wima_area_opengl(WimaAreaNode* area);
-void wima_area_pushViewport(WimaAreaNode* area, NVGcontext* nvg, DynaVector stack);
+void wima_area_pushViewport(NVGcontext* nvg, DynaVector stack, WimaRect viewport);
 void wima_area_popViewport(NVGcontext* nvg, DynaVector stack);
 
 WimaStatus wima_area_draw(WimaWindowHandle wwh, DynaVector stack, float ratio);
