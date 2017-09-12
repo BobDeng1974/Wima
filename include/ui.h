@@ -397,7 +397,7 @@ WimaItemHandle wima_window_focus(WimaWindowHandle wwh);
 uint32_t wima_item_events(WimaItemHandle item);
 
 // return the user-defined flags for an item as passed to uiSetFlags()
-uint32_t wima_ui_item_flags(WimaItemHandle item);
+uint32_t wima_item_flags(WimaItemHandle item);
 
 // when handling a KEY_DOWN/KEY_UP event: the key that triggered this event
 unsigned int wima_ui_key(WimaWindowHandle wwh);
@@ -412,7 +412,7 @@ WimaRect wima_item_rect(WimaItemHandle item);
 
 // returns 1 if an items absolute rectangle contains a given coordinate
 // otherwise 0
-bool wima_item_contains(WimaItemHandle item, int x, int y);
+bool wima_item_contains(WimaItemHandle item, WimaPos pos);
 
 // return the width of the item as set by uiSetSize()
 int wima_item_width(WimaItemHandle item);

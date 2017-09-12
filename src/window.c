@@ -487,8 +487,7 @@ void wima_window_updateHover(WimaWindowHandle wwh) {
 	WimaItemHandle item;
 	item.item = 0;
 
-	win->ctx.hover = wima_area_findItem(win->areas, win->ctx.cursor.x, win->ctx.cursor.y,
-	                                   WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER);
+	win->ctx.hover = wima_area_findItem(win->areas, win->ctx.cursor, WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER);
 }
 
 static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, WimaItemHandle wih, WimaEvent event) {
@@ -513,27 +512,85 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_MOUSE_BTN:
 		{
-			status = wima_area_mouseBtn(areas, wih, event);
+			if (wih.item >= 0) {
+
+				WimaItem* pitem = wima_item_ptr(wih);
+
+				if (pitem->flags & event.type) {
+					status = pitem->mouse_event(wih, event.mouse_btn);
+				}
+				else {
+					status = WIMA_SUCCESS;
+				}
+			}
+			else {
+				wima_area_mouseBtn(areas, event.mouse_btn);
+			}
+
 			break;
 		}
 
 		case WIMA_EVENT_MOUSE_POS:
 		{
-			WimaPos pos = event.pos;
-			// TODO: Check for entering an area and an item.
-			status = wima_area_mousePos(areas, pos);
+			status = wima_area_mousePos(areas, event.pos);
 			break;
+		}
+
+		case WIMA_EVENT_ITEM_ENTER:
+		{
+			if (wih.item >= 0) {
+
+				WimaItem* pitem = wima_item_ptr(wih);
+
+				if (pitem->flags & event.type) {
+					status = pitem->mouse_enter(wih, event.mouse_enter);
+				}
+				else {
+					status = WIMA_SUCCESS;
+				}
+			}
+			else {
+				status = WIMA_SUCCESS;
+			}
 		}
 
 		case WIMA_EVENT_SCROLL:
 		{
-			status = wima_area_scroll(areas, event.scroll);
+			if (wih.item >= 0) {
+
+				WimaItem* pitem = wima_item_ptr(wih);
+
+				if (pitem->flags & event.type) {
+					status = pitem->scroll(wih, event.scroll);
+				}
+				else {
+					status = WIMA_SUCCESS;
+				}
+			}
+			else {
+				status = WIMA_SUCCESS;
+			}
+
 			break;
 		}
 
 		case WIMA_EVENT_CHAR:
 		{
-			status = wima_area_char(areas, event.char_event);
+			if (wih.item >= 0) {
+
+				WimaItem* pitem = wima_item_ptr(wih);
+
+				if (pitem->flags & event.type) {
+					status = pitem->char_event(wih, event.char_event);
+				}
+				else {
+					status = WIMA_SUCCESS;
+				}
+			}
+			else {
+				status = WIMA_SUCCESS;
+			}
+
 			break;
 		}
 
@@ -615,8 +672,6 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 				status = WIMA_SUCCESS;
 			}
 
-
-
 			break;
 		}
 	}
@@ -680,7 +735,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 	if (focus.item >= 0) {
 
 		for (int i = 0; i < win->ctx.eventCount; ++i) {
-			wima_item_notify(focus, win->ctx.events[i]);
+			//wima_item_notify(focus, win->ctx.events[i]);
 		}
 	}
 	else {
@@ -703,7 +758,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 			e.scroll.xoffset = win->ctx.scroll.x;
 			e.scroll.yoffset = win->ctx.scroll.y;
 
-			wima_item_notify(scroll, e);
+			//wima_item_notify(scroll, e);
 		}
 	}
 
@@ -748,7 +803,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 					e.mouse_btn.action = WIMA_ACTION_PRESS;
 					e.mouse_btn.mods = WIMA_MOD_NONE;
 
-					wima_item_notify(active, e);
+					//wima_item_notify(active, e);
 				}
 
 				win->ctx.state = WIMA_UI_STATE_CAPTURE;
@@ -773,7 +828,7 @@ void wima_ui_process(WimaWindowHandle wwh, int timestamp) {
 					e.mouse_btn.action = WIMA_ACTION_PRESS;
 					e.mouse_btn.mods = WIMA_MOD_NONE;
 
-					wima_item_notify(hot, e);
+					//wima_item_notify(hot, e);
 				}
 			//}
 

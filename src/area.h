@@ -160,24 +160,26 @@ void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg);
 // otherwise the first item matching (item.flags & flags) == mask is returned.
 // you may combine box, layout, event and user flags.
 // frozen items will always be ignored.
-WimaItemHandle wima_area_findItem(DynaTree areas, int x, int y, uint32_t flags);
-WimaItemHandle wima_area_node_findItem(DynaTree areas, DynaNode node, int x, int y, uint32_t flags);
-bool wima_area_contains(WimaAreaNode* area, int x, int y);
+WimaItemHandle wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags);
+WimaItemHandle wima_area_node_findItem(DynaTree areas, DynaNode node, WimaPos pos, uint32_t flags);
+bool wima_area_contains(WimaAreaNode* area, WimaPos pos);
 
 WimaStatus wima_area_draw(WimaWindowHandle wwh, DynaVector stack, float ratio);
 WimaStatus wima_area_key(DynaTree areas, WimaKeyEvent info);
-WimaStatus wima_area_mouseBtn(DynaTree areas, WimaItemHandle wih, WimaEvent e);
+WimaStatus wima_area_mouseBtn(DynaTree areas, WimaMouseBtnEvent e);
 WimaStatus wima_area_mousePos(DynaTree areas, WimaPos pos);
 WimaStatus wima_area_scroll(DynaTree areas, WimaScrollEvent info);
 WimaStatus wima_area_char(DynaTree areas, WimaCharEvent info);
 WimaStatus wima_area_resize(DynaTree areas, WimaRect rect);
+bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos);
 
 WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, DynaVector stack, float ratio);
 WimaStatus wima_area_node_key(DynaTree areas, DynaNode node,  WimaKeyEvent info);
-WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaItemHandle wih, WimaEvent e);
+WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtnEvent e);
 WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos);
 WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, WimaScrollEvent info);
 WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, WimaCharEvent info);
 WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect);
+bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos);
 
 #endif // WIMA_AREA_H

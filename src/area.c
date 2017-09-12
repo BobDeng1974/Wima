@@ -422,8 +422,8 @@ WimaStatus wima_area_key(DynaTree areas, WimaKeyEvent info) {
 	return wima_area_node_key(areas, dtree_root(), info);
 }
 
-WimaStatus wima_area_mouseBtn(DynaTree areas, WimaItemHandle wih, WimaEvent e) {
-	return wima_area_node_mouseBtn(areas, wih.area, wih, e);
+WimaStatus wima_area_mouseBtn(DynaTree areas, WimaMouseBtnEvent e) {
+	return wima_area_node_mouseBtn(areas, dtree_root(), e);
 }
 
 WimaStatus wima_area_mousePos(DynaTree areas, WimaPos pos) {
@@ -442,10 +442,11 @@ WimaStatus wima_area_resize(DynaTree areas, WimaRect rect) {
 	return wima_area_node_resize(areas, dtree_root(), rect);
 }
 
-WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, DynaVector stack, float ratio) {
+bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos) {
+	return wima_area_node_mouseOnSplit(areas, dtree_root(), pos);
+}
 
-	// TODO: Handle difference between GLFW coords (from upper left) and
-	// OpenGL coords (from lower left).
+WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, DynaVector stack, float ratio) {
 
 	WimaStatus status = WIMA_SUCCESS;
 
@@ -505,7 +506,7 @@ WimaStatus wima_area_node_key(DynaTree areas, DynaNode node, WimaKeyEvent e)
 	return status;
 }
 
-WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaItemHandle wih, WimaEvent e) {
+WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtnEvent e) {
 
 	// TODO: Handle window splits and joins. Also, make sure to remember that
 	// GLFW coords are from upper left and OpenGL coords are from lower left.
@@ -520,12 +521,6 @@ WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaItemHandle
 
 	}
 	else {
-
-		if (wih.item < 0) {
-			return WIMA_SUCCESS;
-		}
-
-		status = wima_item_notify(wih, e);
 	}
 
 	return status;
@@ -625,6 +620,26 @@ WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect) {
 	status = wima_area_node_resize(areas, dtree_right(node), right);
 
 	return status;
+}
+
+bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos) {
+
+	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
+
+	assert(area->type == WIMA_AREA_PARENT);
+
+	if (area->parent.vertical) {
+
+		int x = pos.x - area->parent.spliti;
+
+		return x >= -1 && x <= 1;
+	}
+	else {
+
+		int y = pos.y - area->parent.spliti;
+
+		return y >= -1 && y <= 1;
+	}
 }
 
 void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right) {
@@ -778,19 +793,19 @@ void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg) {
 	nvgFill(nvg);
 }
 
-bool wima_area_contains(WimaAreaNode* area, int x, int y) {
+bool wima_area_contains(WimaAreaNode* area, WimaPos pos) {
 
-	x -= area->rect.x;
-	y -= area->rect.y;
+	int x = pos.x - area->rect.x;
+	int y = pos.y - area->rect.y;
 
 	return x >= 0 && y >= 0 && x < area->rect.w && y < area->rect.h;
 }
 
-WimaItemHandle wima_area_findItem(DynaTree areas, int x, int y, uint32_t flags) {
-	return wima_area_node_findItem(areas, dtree_root(), x, y, flags);
+WimaItemHandle wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags) {
+	return wima_area_node_findItem(areas, dtree_root(), pos, flags);
 }
 
-WimaItemHandle wima_area_node_findItem(DynaTree areas, DynaNode node, int x, int y, uint32_t flags) {
+WimaItemHandle wima_area_node_findItem(DynaTree areas, DynaNode node, WimaPos pos, uint32_t flags) {
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
@@ -801,16 +816,16 @@ WimaItemHandle wima_area_node_findItem(DynaTree areas, DynaNode node, int x, int
 
 		WimaItemHandle item;
 
-		if (wima_area_contains(left, x, y)) {
-			item = wima_area_node_findItem(areas, leftNode, x, y, flags);
+		if (wima_area_contains(left, pos)) {
+			item = wima_area_node_findItem(areas, leftNode, pos, flags);
 		}
 		else {
 
 			DynaNode rightNode = dtree_right(node);
 			WimaAreaNode* right = (WimaAreaNode*) dtree_node(areas, rightNode);
 
-			if (wima_area_contains(right, x, y)) {
-				item = wima_area_node_findItem(areas, rightNode, x, y, flags);
+			if (wima_area_contains(right, pos)) {
+				item = wima_area_node_findItem(areas, rightNode, pos, flags);
 			}
 			else {
 				item.item = -1;
@@ -833,14 +848,14 @@ WimaItemHandle wima_area_node_findItem(DynaTree areas, DynaNode node, int x, int
 		WimaItemHandle best_hit = item;
 		best_hit.item = -1;
 
-		x -= area->rect.x;
-		y -= area->rect.y;
+		int x = pos.x - area->rect.x;
+		int y = pos.y - area->rect.y;
 
 		while (item.item >= 0) {
 
 			pitem = wima_item_ptr(item);
 
-			if (wima_item_contains(item, x, y)) {
+			if (wima_item_contains(item, pos)) {
 
 				if (pitem->flags & WIMA_ITEM_FROZEN) {
 					break;

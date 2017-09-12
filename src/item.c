@@ -481,22 +481,18 @@ void wima_item_setFlags(WimaItemHandle item, uint32_t flags) {
 	pitem->flags |= flags & WIMA_USERMASK;
 }
 
-uint32_t wima_ui_item_flags(WimaItemHandle item) {
+uint32_t wima_item_flags(WimaItemHandle item) {
 	return wima_item_ptr(item)->flags & WIMA_USERMASK;
 }
 
-bool wima_item_contains(WimaItemHandle item, int x, int y) {
+bool wima_item_contains(WimaItemHandle item, WimaPos pos) {
 
 	WimaRect rect = wima_item_rect(item);
 
-	x -= rect.x;
-	y -= rect.y;
+	int x = pos.x - rect.x;
+	int y = pos.y - rect.y;
 
-	if ((x>=0) && (y>=0)  && (x<rect.w) && (y<rect.h)) {
-		return 1;
-	}
-
-	return 0;
+	return x >= 0 && y >= 0 && x < rect.w && y < rect.h;
 }
 
 bool wima_item_compareHandles(WimaItemHandle item1, WimaItemHandle item2) {
@@ -556,58 +552,4 @@ WimaItemState wima_item_state(WimaItemHandle item) {
 	}
 
 	return WIMA_ITEM_DEFAULT;
-}
-
-WimaStatus wima_item_notify(WimaItemHandle wih, WimaEvent e) {
-
-	assert((e.type & WIMA_ITEM_EVENT_MASK) == e.type);
-
-	WimaItem* pitem = wima_item_ptr(wih);
-
-	if (!(pitem->flags & e.type)) {
-		return WIMA_SUCCESS;
-	}
-
-	WimaStatus status = WIMA_SUCCESS;
-
-	switch (e.type) {
-
-		case WIMA_EVENT_MOUSE_BTN:
-		{
-			if (pitem->mouse_event) {
-				status = pitem->mouse_event(wih, e.mouse_btn);
-			}
-
-			break;
-		}
-
-		case WIMA_EVENT_ITEM_ENTER:
-		{
-			// TODO: Figure out if mouse exited and entered something else.
-			break;
-		}
-
-		case WIMA_EVENT_SCROLL:
-		{
-			if (pitem->scroll) {
-				status = pitem->scroll(wih, e.scroll);
-			}
-
-			break;
-		}
-
-		case WIMA_EVENT_CHAR:
-		{
-			if (pitem->char_event) {
-				status = pitem->char_event(wih, e.char_event);
-			}
-
-			break;
-		}
-
-		default:
-			assert(false);
-	}
-
-	return status;
 }

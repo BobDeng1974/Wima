@@ -203,8 +203,6 @@ WimaItem* wima_item_lastPtr(WimaItemHandle wih);
 
 void wima_window_validateItems(WimaWindowHandle wwh);
 
-WimaStatus wima_item_notify(WimaItemHandle wih, WimaEvent e);
-
 WimaItemHandle wima_item_lastChild(WimaItemHandle item);
 
 short wima_item_marginLeft(WimaItemHandle item);

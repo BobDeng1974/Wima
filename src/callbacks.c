@@ -153,8 +153,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		return;
 	}
 
-	WimaItemHandle clickItem = wima_area_findItem(wwin->areas,        wwin->ctx.cursor.x,
-	                                              wwin->ctx.cursor.y, WIMA_EVENT_MOUSE_BTN);
+	WimaItemHandle clickItem = wima_area_findItem(wwin->areas, wwin->ctx.cursor, WIMA_EVENT_MOUSE_BTN);
 
 	if (wact == WIMA_ACTION_PRESS) {
 
@@ -175,7 +174,6 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_MOUSE_BTN;
-	event->mouse_btn.item = clickItem;
 	event->mouse_btn.timestamp = ts;
 	event->mouse_btn.button = wbtn;
 	event->mouse_btn.action = wact;
@@ -188,6 +186,8 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 }
 
 void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
+
+	// TODO: Check for entering an area and an item.
 
 	if (!wg.name) {
 		exit(WIMA_INVALID_STATE);
