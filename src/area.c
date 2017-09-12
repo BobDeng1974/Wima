@@ -626,20 +626,45 @@ bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos) {
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
-	assert(area->type == WIMA_AREA_PARENT);
+	if (area->type == WIMA_AREA_LEAF) {
+		return false;
+	}
+
+	bool result;
 
 	if (area->parent.vertical) {
 
 		int x = pos.x - area->parent.spliti;
 
-		return x >= -1 && x <= 1;
+		result = x >= -1 && x <= 1;
 	}
 	else {
 
 		int y = pos.y - area->parent.spliti;
 
-		return y >= -1 && y <= 1;
+		result = y >= -1 && y <= 1;
 	}
+
+	if (!result) {
+
+		DynaNode leftNode = dtree_left(node);
+		WimaAreaNode* left = (WimaAreaNode*) dtree_node(areas, leftNode);
+
+		if (wima_area_contains(left, pos)) {
+			result = wima_area_node_mouseOnSplit(areas, leftNode, pos);
+		}
+		else {
+
+			DynaNode rightNode = dtree_right(node);
+			WimaAreaNode* right = (WimaAreaNode*) dtree_node(areas, rightNode);
+
+			if (wima_area_contains(right, pos)) {
+				result = wima_area_node_mouseOnSplit(areas, rightNode, pos);
+			}
+		}
+	}
+
+	return result;
 }
 
 void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right) {

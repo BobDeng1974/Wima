@@ -153,25 +153,36 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		return;
 	}
 
+	WimaEvent* event = wwin->ctx.events + numEvents;
+
 	WimaItemHandle clickItem = wima_area_findItem(wwin->areas, wwin->ctx.cursor, WIMA_EVENT_MOUSE_BTN);
 
 	if (wact == WIMA_ACTION_PRESS) {
 
-		if (ts - WIMA_CLICK_THRESHOLD > wwin->ctx.click_timestamp ||
-		    wwin->ctx.click_button != wbtn ||
-		    !wima_item_compareHandles(clickItem, wwin->ctx.click_item))
+		if (wima_area_mouseOnSplit(wwin->areas, wwin->ctx.cursor)) {
+
+			event->type = WIMA_EVENT_MOUSE_SPLIT;
+			++(wwin->ctx.eventCount);
+
+			return;
+		}
+		else  if (ts - WIMA_CLICK_THRESHOLD > wwin->ctx.click_timestamp ||
+		          wwin->ctx.click_button != wbtn ||
+		          !wima_item_compareHandles(clickItem, wwin->ctx.click_item))
 		{
 			wwin->ctx.clicks = 0;
 		}
 
 		++(wwin->ctx.clicks);
 	}
+	else {
+		wwin->ctx.split.x = -1;
+		wwin->ctx.split.y = -1;
+	}
 
 	wwin->ctx.click_timestamp = ts;
 	wwin->ctx.click_button = wbtn;
 	wwin->ctx.click_item = clickItem;
-
-	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_MOUSE_BTN;
 	event->mouse_btn.timestamp = ts;
@@ -222,10 +233,6 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	event->pos.y = yint;
 
 	++(wwin->ctx.eventCount);
-
-	// Set the cursor position.
-	wwin->ctx.cursor.x = x;
-	wwin->ctx.cursor.y = y;
 }
 
 void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
