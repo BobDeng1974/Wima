@@ -74,6 +74,17 @@ typedef enum wima_event_type {
 
 } WimaEventType;
 
+typedef struct wima_mouse_split_event {
+
+	int split;
+
+	WimaAreaNodeHandle area;
+	WimaWindowHandle window;
+
+	bool vertical;
+
+} WimaMouseSplitEvent;
+
 #define WIMA_ITEM_EVENT_MASK \
 	(WIMA_EVENT_KEY | WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER | WIMA_EVENT_SCROLL | WIMA_EVENT_CHAR)
 
@@ -86,6 +97,8 @@ typedef struct wima_event {
 		WimaKeyEvent key;
 
 		WimaMouseBtnEvent mouse_btn;
+
+		WimaMouseSplitEvent split;
 
 		WimaPos pos;
 

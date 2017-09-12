@@ -182,8 +182,7 @@ void wima_window_context_create(WimaWindowContext* ctx) {
 
 void wima_window_context_clear(WimaWindowContext* ctx) {
 
-	ctx->split.x = -1;
-	ctx->split.y = -1;
+	ctx->split.split = -1;
 
 	memset(&ctx->active, -1, sizeof(WimaItemHandle));
 	memset(&ctx->focus, -1, sizeof(WimaItemHandle));
@@ -538,7 +537,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 			// Set the cursor position.
 			win->ctx.cursor = event.pos;
 
-			if (win->ctx.split.x >= 0) {
+			if (win->ctx.split.split >= 0) {
 
 				// TODO: Send the event to the area.
 
@@ -553,7 +552,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_MOUSE_SPLIT:
 		{
 			// TODO: Handle split.
-			win->ctx.split = win->ctx.cursor;
+			win->ctx.dragStart = win->ctx.cursor;
 			break;
 		}
 

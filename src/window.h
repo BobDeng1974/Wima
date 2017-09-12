@@ -81,7 +81,9 @@ typedef struct wima_window_context {
 
 	WimaMods mods;
 
-	WimaPos split;
+	WimaPos dragStart;
+
+	WimaMouseSplitEvent split;
 
 	uint32_t eventCount;
 	WimaEvent events[WIMA_MAX_EVENTS];

@@ -442,8 +442,8 @@ WimaStatus wima_area_resize(DynaTree areas, WimaRect rect) {
 	return wima_area_node_resize(areas, dtree_root(), rect);
 }
 
-bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos) {
-	return wima_area_node_mouseOnSplit(areas, dtree_root(), pos);
+bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos, WimaMouseSplitEvent* result) {
+	return wima_area_node_mouseOnSplit(areas, dtree_root(), pos, result);
 }
 
 WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, DynaVector stack, float ratio) {
@@ -622,7 +622,7 @@ WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect) {
 	return status;
 }
 
-bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos) {
+bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, WimaMouseSplitEvent* result) {
 
 	WimaAreaNode* area = (WimaAreaNode*) dtree_node(areas, node);
 
@@ -630,28 +630,31 @@ bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos) {
 		return false;
 	}
 
-	bool result;
+	bool on;
 
-	if (area->parent.vertical) {
+	bool vertical = area->parent.vertical;
+	int split = area->parent.spliti;
 
-		int x = pos.x - area->parent.spliti;
+	if (vertical) {
 
-		result = x >= -1 && x <= 1;
+		int x = pos.x - split;
+
+		on = x >= -1 && x <= 1;
 	}
 	else {
 
-		int y = pos.y - area->parent.spliti;
+		int y = pos.y - split;
 
-		result = y >= -1 && y <= 1;
+		on = y >= -1 && y <= 1;
 	}
 
-	if (!result) {
+	if (!on) {
 
 		DynaNode leftNode = dtree_left(node);
 		WimaAreaNode* left = (WimaAreaNode*) dtree_node(areas, leftNode);
 
 		if (wima_area_contains(left, pos)) {
-			result = wima_area_node_mouseOnSplit(areas, leftNode, pos);
+			on = wima_area_node_mouseOnSplit(areas, leftNode, pos, on);
 		}
 		else {
 
@@ -659,12 +662,18 @@ bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos) {
 			WimaAreaNode* right = (WimaAreaNode*) dtree_node(areas, rightNode);
 
 			if (wima_area_contains(right, pos)) {
-				result = wima_area_node_mouseOnSplit(areas, rightNode, pos);
+				on = wima_area_node_mouseOnSplit(areas, rightNode, pos, on);
 			}
 		}
 	}
+	else {
+		result->split = split;
+		result->area = node;
+		result->window = area->window;
+		result->vertical = vertical;
+	}
 
-	return result;
+	return on;
 }
 
 void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right) {

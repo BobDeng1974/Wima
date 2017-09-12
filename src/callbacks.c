@@ -159,9 +159,12 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	if (wact == WIMA_ACTION_PRESS) {
 
-		if (wima_area_mouseOnSplit(wwin->areas, wwin->ctx.cursor)) {
+		WimaMouseSplitEvent split_event;
+
+		if (wima_area_mouseOnSplit(wwin->areas, wwin->ctx.cursor, &split_event)) {
 
 			event->type = WIMA_EVENT_MOUSE_SPLIT;
+			event->split = split_event;
 			++(wwin->ctx.eventCount);
 
 			return;
@@ -176,8 +179,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		++(wwin->ctx.clicks);
 	}
 	else {
-		wwin->ctx.split.x = -1;
-		wwin->ctx.split.y = -1;
+		wwin->ctx.split.split = -1;
 	}
 
 	wwin->ctx.click_timestamp = ts;
