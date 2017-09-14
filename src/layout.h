@@ -62,7 +62,6 @@
 #define WIMA_LAYOUT_H
 
 #include <wima.h>
-#include <ui.h>
 
 typedef enum wima_layout_stage {
 	WIMA_UI_STAGE_LAYOUT = 0,

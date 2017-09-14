@@ -65,7 +65,6 @@
 #include <string.h>
 
 #include <wima.h>
-#include <ui.h>
 
 #include "event.h"
 

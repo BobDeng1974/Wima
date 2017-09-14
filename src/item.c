@@ -61,8 +61,6 @@
 #include <assert.h>
 #include <string.h>
 
-#include <ui.h>
-
 #include "global.h"
 
 #include "item.h"

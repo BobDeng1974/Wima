@@ -61,7 +61,6 @@
 #include <assert.h>
 
 #include <wima.h>
-#include <ui.h>
 
 #include "math/math.h"
 
