@@ -143,6 +143,50 @@ typedef enum wima_item_box {
 
 } WimaItemBox;
 
+// Child layout flags to pass to uiSetLayout().
+typedef enum wima_item_layout_flags {
+
+	// Attachments (bit 5-8):
+	// Fully valid when parent uses UI_LAYOUT model
+	// partially valid when in UI_FLEX model.
+
+	// Anchor to left item or left side of parent.
+	WIMA_LAYOUT_LEFT = 0x020,
+
+	// Anchor to top item or top side of parent.
+	WIMA_LAYOUT_TOP = 0x040,
+
+	// Anchor to right item or right side of parent.
+	WIMA_LAYOUT_RIGHT = 0x080,
+
+	// Anchor to bottom item or bottom side of parent.
+	WIMA_LAYOUT_DOWN = 0x100,
+
+	// Anchor to both left and right item or parent borders.
+	WIMA_LAYOUT_HFILL = 0x0a0,
+
+	// Anchor to both top and bottom item or parent borders.
+	WIMA_LAYOUT_VFILL = 0x140,
+
+	// Center horizontally, with left margin as offset.
+	WIMA_LAYOUT_HCENTER = 0x000,
+
+	// Center vertically, with top margin as offset.
+	WIMA_LAYOUT_VCENTER = 0x000,
+
+	// Center in both directions, with left/top margin as offset.
+	WIMA_LAYOUT_CENTER = 0x000,
+
+	// Anchor to all four directions.
+	WIMA_LAYOUT_FILL = 0x1e0,
+
+	// When wrapping, put this element on a new line.
+	// Wrapping layout code auto-inserts UI_BREAK flags.
+	// Drawing routines can read them with wima_ui_item_layout().
+	WIMA_LAYOUT_BREAK = 0x200
+
+} WimaItemLayout;
+
 // Item states as returned by uiGetState().
 typedef enum wima_item_state {
 
@@ -572,8 +616,8 @@ void wima_item_setFrozen(WimaItemHandle item, bool enable);
 void wima_item_setSize(WimaItemHandle item, WimaSize size);
 int wima_item_width(WimaItemHandle item);
 int wima_item_height(WimaItemHandle item);
-void wima_item_setLayoutType(WimaItemHandle item, uint32_t flags);
-uint32_t wima_item_layoutType(WimaItemHandle item);
+void wima_item_setLayout(WimaItemHandle item, uint32_t flags);
+uint32_t wima_item_layout(WimaItemHandle item);
 void wima_item_setBox(WimaItemHandle item, uint32_t flags);
 uint32_t wima_item_box(WimaItemHandle item);
 void wima_item_setMargins(WimaItemHandle item, short l, short t, short r, short b);

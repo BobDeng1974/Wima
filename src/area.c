@@ -895,6 +895,7 @@ WimaItemHandle wima_area_node_findItem(DynaTree areas, DynaNode node, WimaPos po
 		WimaItemHandle best_hit = item;
 		best_hit.item = -1;
 
+		// Translate the position to the area.
 		int x = pos.x - area->rect.x;
 		int y = pos.y - area->rect.y;
 

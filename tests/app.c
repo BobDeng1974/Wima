@@ -120,12 +120,13 @@ WimaStatus mouseCoordsLayout(WimaAreaHandle wah, WimaSize size) {
 
 	WimaItemHandle item = wima_item_new(wah, funcs);
 	wima_item_setSize(item, size);
+	wima_item_setLayout(item, WIMA_LAYOUT_FILL | WIMA_LAYOUT_CENTER);
 
 	return WIMA_SUCCESS;
 }
 
-WimaStatus mouseCoordsKevent(WimaAreaHandle wah, WimaKeyEvent e)
-{
+WimaStatus mouseCoordsKevent(WimaAreaHandle wah, WimaKeyEvent e) {
+
 	printf("Key Event:\n    Key: %d\n", e.key);
 
 	printf("    Scancode: %d\n", e.scancode);

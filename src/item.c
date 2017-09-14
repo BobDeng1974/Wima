@@ -260,7 +260,7 @@ int wima_item_height(WimaItemHandle item) {
 	return wima_item_ptr(item)->size.v[1];
 }
 
-void wima_item_setLayoutType(WimaItemHandle item, uint32_t flags) {
+void wima_item_setLayout(WimaItemHandle item, uint32_t flags) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
@@ -270,7 +270,7 @@ void wima_item_setLayoutType(WimaItemHandle item, uint32_t flags) {
 	pitem->flags |= flags & WIMA_ITEM_LAYOUT_MASK;
 }
 
-uint32_t wima_item_layoutType(WimaItemHandle item) {
+uint32_t wima_item_layout(WimaItemHandle item) {
 	return wima_item_ptr(item)->flags & WIMA_ITEM_LAYOUT_MASK;
 }
 

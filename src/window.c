@@ -554,13 +554,13 @@ void wima_window_updateHover(WimaWindowHandle wwh) {
 	win->ctx.hover = wima_area_findItem(win->areas, win->ctx.cursor, WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER);
 }
 
-static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, WimaItemHandle wih, WimaEvent event) {
+static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, WimaItemHandle wih, WimaEvent e) {
 
 	WimaStatus status;
 
 	DynaTree areas = win->areas;
 
-	switch (event.type) {
+	switch (e.type) {
 
 		case WIMA_EVENT_NONE:
 		{
@@ -570,7 +570,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_KEY:
 		{
-			status = wima_area_key(areas, event.key);
+			status = wima_area_key(areas, e.key);
 			break;
 		}
 
@@ -580,15 +580,15 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 				WimaItem* pitem = wima_item_ptr(wih);
 
-				if (pitem->flags & event.type) {
-					status = pitem->mouse_event(wih, event.mouse_btn);
+				if (pitem->flags & e.type) {
+					status = pitem->mouse_event(wih, e.mouse_btn);
 				}
 				else {
 					status = WIMA_SUCCESS;
 				}
 			}
 			else {
-				wima_area_mouseBtn(areas, event.mouse_btn);
+				wima_area_mouseBtn(areas, e.mouse_btn);
 			}
 
 			break;
@@ -597,7 +597,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_MOUSE_POS:
 		{
 			// Set the cursor position.
-			win->ctx.cursor = event.pos;
+			win->ctx.cursor = e.pos;
 
 			if (win->ctx.split.split >= 0) {
 
@@ -605,7 +605,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 			}
 			else {
-				status = wima_area_mousePos(areas, event.pos);
+				status = wima_area_mousePos(areas, e.pos);
 			}
 
 			break;
@@ -624,8 +624,8 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 				WimaItem* pitem = wima_item_ptr(wih);
 
-				if (pitem->flags & event.type) {
-					status = pitem->mouse_enter(wih, event.mouse_enter);
+				if (pitem->flags & e.type) {
+					status = pitem->mouse_enter(wih, e.mouse_enter);
 				}
 				else {
 					status = WIMA_SUCCESS;
@@ -642,8 +642,8 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 				WimaItem* pitem = wima_item_ptr(wih);
 
-				if (pitem->flags & event.type) {
-					status = pitem->scroll(wih, event.scroll);
+				if (pitem->flags & e.type) {
+					status = pitem->scroll(wih, e.scroll);
 				}
 				else {
 					status = WIMA_SUCCESS;
@@ -662,8 +662,8 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 				WimaItem* pitem = wima_item_ptr(wih);
 
-				if (pitem->flags & event.type) {
-					status = pitem->char_event(wih, event.char_event);
+				if (pitem->flags & e.type) {
+					status = pitem->char_event(wih, e.char_event);
 				}
 				else {
 					status = WIMA_SUCCESS;
@@ -680,7 +680,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		{
 			if (wg.file_drop) {
 
-				DynaVector files = event.file_drop;
+				DynaVector files = e.file_drop;
 				size_t len = dvec_len(files);
 
 				const char** names = malloc(len * sizeof(char*));
@@ -711,7 +711,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_WIN_POS:
 		{
 			if (wg.pos) {
-				WimaPos pos = event.pos;
+				WimaPos pos = e.pos;
 				status = wg.pos(wwh, pos);
 			}
 			else {
@@ -724,7 +724,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_FB_SIZE:
 		{
 			if (wg.fb_size) {
-				WimaSize size = event.size;
+				WimaSize size = e.size;
 				status = wg.fb_size(wwh, size);
 			}
 			else {
@@ -736,7 +736,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_WIN_SIZE:
 		{
 			if (wg.win_size) {
-				WimaSize size = event.size;
+				WimaSize size = e.size;
 				status = wg.win_size(wwh, size);
 			}
 			else {
@@ -748,7 +748,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_WIN_ENTER:
 		{
 			if (wg.enter) {
-				status = wg.enter(wwh, event.mouse_enter);
+				status = wg.enter(wwh, e.mouse_enter);
 			}
 			else {
 				status = WIMA_SUCCESS;

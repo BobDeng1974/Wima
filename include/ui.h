@@ -342,7 +342,7 @@ WimaItemHandle wima_item_insertBack(WimaItemHandle item, WimaItemHandle child);
 void wima_item_setSize(WimaItemHandle item, WimaSize size);
 
 // set the anchoring behavior of the item to one or multiple UIlayoutFlags
-void wima_item_setLayoutType(WimaItemHandle item, uint32_t flags);
+void wima_item_setLayout(WimaItemHandle item, uint32_t flags);
 
 // set the box model behavior of the item to one or multiple UIboxFlags
 void wima_item_setBox(WimaItemHandle item, uint32_t flags);
@@ -421,7 +421,7 @@ int wima_item_width(WimaItemHandle item);
 int wima_item_height(WimaItemHandle item);
 
 // return the anchoring behavior as set by uiSetLayout()
-uint32_t wima_item_layoutType(WimaItemHandle item);
+uint32_t wima_item_layout(WimaItemHandle item);
 
 // return the box model as set by uiSetBox()
 uint32_t wima_item_box(WimaItemHandle item);
