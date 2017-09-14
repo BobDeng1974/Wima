@@ -69,7 +69,7 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs,
 
 	size_t idx = dvec_len(wg.regions);
 
-	DynaStatus status = dvec_push(wg.regions, (uint8_t*) &reg);
+	DynaStatus status = dvec_push(wg.regions, &reg);
 	if (status) {
 		return WIMA_AREA_ERR;
 	}
@@ -84,7 +84,7 @@ void* wima_region_userPointer(WimaRegionHandle reg) {
 	assert(wg.windows);
 	assert(reg >= dvec_len(wg.regions));
 
-	WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
+	WimaRegion* region = dvec_get(wg.regions, reg);
 
 	return region->user;
 }
@@ -94,7 +94,7 @@ WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr) {
 	assert(wg.windows);
 	assert(reg < dvec_len(wg.regions));
 
-	WimaRegion* region = (WimaRegion*) dvec_get(wg.regions, reg);
+	WimaRegion* region = dvec_get(wg.regions, reg);
 
 	region->user = ptr;
 

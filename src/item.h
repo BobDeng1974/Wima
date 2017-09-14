@@ -78,94 +78,6 @@
 // A special mask passed to wima_ui_item_find().
 #define UI_ANY 0xffffffff
 
-// Extra item flags.
-
-// Bits 0-2.
-#define WIMA_ITEM_BOX_MODEL_MASK 0x000007
-
-// Bits 0-4.
-#define WIMA_ITEM_BOX_MASK       0x00001F
-
-// Bits 5-8.
-#define WIMA_ITEM_LAYOUT_MASK    0x0003E0
-
-// Bits 9-18.
-#define WIMA_ITEM_EVENT_MASK     (WIMA_EVENT_KEY | WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER | WIMA_EVENT_SCROLL | WIMA_EVENT_CHAR)
-
-// Item is frozen (bit 19).
-#define WIMA_ITEM_FROZEN         0x080000
-
-// Item handle is pointer to data (bit 20).
-#define WIMA_ITEM_DATA           0x100000
-
-// Item has been inserted (bit 21).
-#define WIMA_ITEM_INSERTED       0x200000
-
-// Horizontal size has been explicitly set (bit 22).
-#define WIMA_ITEM_HFIXED         0x400000
-
-// Vertical size has been explicitly set (bit 23).
-#define WIMA_ITEM_VFIXED         0x800000
-
-// Bit 22-23.
-#define WIMA_ITEM_FIXED_MASK     0xC00000
-
-// Which flag bits will be compared.
-#define WIMA_ITEM_COMPARE_MASK \
-	(WIMA_ITEM_BOX_MODEL_MASK | (WIMA_ITEM_LAYOUT_MASK & ~WIMA_LAYOUT_BREAK) | WIMA_ITEM_EVENT_MASK | WIMA_USERMASK)
-
-// Container flags to pass to uiSetBox().
-typedef enum wima_item_box {
-
-	// Flex direction (bit 0+1).
-
-	// Left to right.
-	UI_ROW = 0x002,
-
-	// Top to bottom.
-	UI_COLUMN = 0x003,
-
-	// Model (bit 1).
-
-	// Free layout.
-	UI_LAYOUT = 0x000,
-
-	// Flex model.
-	UI_FLEX = 0x002,
-
-	// Flex-wrap (bit 2).
-
-	// Single-line.
-	UI_NOWRAP = 0x000,
-
-	// Multi-line, wrap left to right.
-	UI_WRAP = 0x004,
-
-	// Justify content (start, end, center, space-between)...
-
-	// ...at start of row/column...
-	UI_START = 0x008,
-
-	// ...at center of row/column...
-	UI_MIDDLE = 0x000,
-
-	// ...at end of row/column...
-	UI_END = 0x010,
-
-	// Insert spacing to stretch across whole row/column.
-	UI_JUSTIFY = 0x018,
-
-	// Align items can be implemented by putting a flex container
-	// in a layout container, then using UI_TOP, UI_DOWN, UI_VFILL,
-	// UI_VCENTER, etc. FILL is equivalent to stretch/grow.
-
-	// Align content (start, end, center, stretch) can be implemented
-	// by putting a flex container in a layout container, then using
-	// UI_TOP, UI_DOWN, UI_VFILL, UI_VCENTER, etc. FILL is equivalent
-	// to stretch; space-between is not supported.
-
-} WimaItemBox;
-
 typedef struct wima_item {
 
 	// Event functions.
@@ -202,33 +114,6 @@ WimaItem* wima_item_ptr(WimaItemHandle wih);
 WimaItem* wima_item_lastPtr(WimaItemHandle wih);
 
 void wima_window_validateItems(WimaWindowHandle wwh);
-
-WimaItemHandle wima_item_lastChild(WimaItemHandle item);
-
-short wima_item_marginLeft(WimaItemHandle item);
-
-short wima_item_marginTop(WimaItemHandle item);
-
-short wima_item_marginRight(WimaItemHandle item);
-
-short wima_item_marginDown(WimaItemHandle item);
-
 bool wima_item_compare(WimaItem *item1, WimaItem *item2);
-
-bool wima_item_map(WimaItemHandle item1, WimaItemHandle item2);
-
-void wima_window_updateHover(WimaWindowHandle wwh);
-
-int wima_window_clicks(WimaWindowHandle wwh);
-
-bool wima_item_compareHandles(WimaItemHandle item1, WimaItemHandle item2);
-
-bool wima_item_isActive(WimaItemHandle item);
-
-bool wima_item_isHovered(WimaItemHandle item);
-
-bool wima_item_isFocused(WimaItemHandle item);
-
-WimaItemState wima_item_state(WimaItemHandle item);
 
 #endif // WIMA_ITEM_H

@@ -201,7 +201,7 @@ void wima_layout_computeSize(WimaItemHandle item, int dim) {
 
 	switch(pitem->flags & WIMA_ITEM_BOX_MODEL_MASK) {
 
-		case UI_COLUMN | UI_WRAP:
+		case WIMA_ITEM_COLUMN | WIMA_ITEM_WRAP:
 		{
 			// Flex model.
 
@@ -216,7 +216,7 @@ void wima_layout_computeSize(WimaItemHandle item, int dim) {
 			break;
 		}
 
-		case UI_ROW|UI_WRAP:
+		case WIMA_ITEM_ROW|WIMA_ITEM_WRAP:
 		{
 			// Flex model.
 
@@ -231,8 +231,8 @@ void wima_layout_computeSize(WimaItemHandle item, int dim) {
 			break;
 		}
 
-		case UI_COLUMN:
-		case UI_ROW:
+		case WIMA_ITEM_COLUMN:
+		case WIMA_ITEM_ROW:
 		{
 			// Flex model.
 
@@ -343,7 +343,7 @@ static void wima_layout_arrangeStacked(WimaItem *pitem, int dim, bool wrap) {
 				filler = (float)extra_space / (float)count;
 			}
 			else if (total) {
-				switch(pitem->flags & UI_JUSTIFY) {
+				switch(pitem->flags & WIMA_ITEM_JUSTIFY) {
 
 					default:
 					{
@@ -351,7 +351,7 @@ static void wima_layout_arrangeStacked(WimaItem *pitem, int dim, bool wrap) {
 						break;
 					}
 
-					case UI_JUSTIFY:
+					case WIMA_ITEM_JUSTIFY:
 					{
 						// Justify when not wrapping or not in last line,
 						// or not manually breaking.
@@ -362,10 +362,10 @@ static void wima_layout_arrangeStacked(WimaItem *pitem, int dim, bool wrap) {
 						break;
 					}
 
-					case UI_START:
+					case WIMA_ITEM_START:
 						break;
 
-					case UI_END:
+					case WIMA_ITEM_END:
 					{
 						extra_margin = extra_space;
 						break;
@@ -597,7 +597,7 @@ void wima_layout_arrange(WimaItemHandle item, int dim) {
 
 	switch(pitem->flags & WIMA_ITEM_BOX_MODEL_MASK) {
 
-		case UI_COLUMN|UI_WRAP:
+		case WIMA_ITEM_COLUMN|WIMA_ITEM_WRAP:
 		{
 			// Flex model, wrapping.
 
@@ -614,7 +614,7 @@ void wima_layout_arrange(WimaItemHandle item, int dim) {
 			break;
 		}
 
-		case UI_ROW|UI_WRAP:
+		case WIMA_ITEM_ROW|WIMA_ITEM_WRAP:
 		{
 			// Flex model, wrapping.
 
@@ -628,8 +628,8 @@ void wima_layout_arrange(WimaItemHandle item, int dim) {
 
 			break;
 		}
-		case UI_COLUMN:
-		case UI_ROW:
+		case WIMA_ITEM_COLUMN:
+		case WIMA_ITEM_ROW:
 		{
 			// Flex model.
 

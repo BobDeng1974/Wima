@@ -86,19 +86,19 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs) {
 		return WIMA_INIT_ERR;
 	}
 
-	dstatus = dvec_create(&wg.windows, 0, sizeof(WimaWin));
+	dstatus = dvec_create(&wg.windows, NULL, 0, sizeof(WimaWin));
 	if (dstatus) {
 		wima_exit();
 		return WIMA_INIT_ERR;
 	}
 
-	dstatus = dvec_create(&wg.regions, 0, sizeof(WimaRegion));
+	dstatus = dvec_create(&wg.regions, NULL, 0, sizeof(WimaRegion));
 	if (dstatus) {
 		wima_exit();
 		return WIMA_INIT_ERR;
 	}
 
-	dstatus = dvec_create(&wg.workspaces, 0, sizeof(WimaWksp));
+	dstatus = dvec_create(&wg.workspaces, NULL, 0, sizeof(WimaWksp));
 	if (dstatus) {
 		wima_exit();
 		return WIMA_INIT_ERR;
@@ -179,7 +179,7 @@ void wima_exit() {
 
 		for (int i = 0; i < len; ++i) {
 
-			WimaWin* win = (WimaWin*) dvec_get(wg.windows, i);
+			WimaWin* win = dvec_get(wg.windows, i);
 
 			if (win->window) {
 				wima_window_free(i);

@@ -55,6 +55,94 @@ extern "C" {
 #include <dyna/string.h>
 #include <dyna/tree.h>
 
+// Extra item flags.
+
+// Bits 0-2.
+#define WIMA_ITEM_BOX_MODEL_MASK 0x000007
+
+// Bits 0-4.
+#define WIMA_ITEM_BOX_MASK       0x00001F
+
+// Bits 5-8.
+#define WIMA_ITEM_LAYOUT_MASK    0x0003E0
+
+// Bits 9-18.
+#define WIMA_ITEM_EVENT_MASK     (WIMA_EVENT_KEY | WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER | WIMA_EVENT_SCROLL | WIMA_EVENT_CHAR)
+
+// Item is frozen (bit 19).
+#define WIMA_ITEM_FROZEN_BIT         0x080000
+
+// Item handle is pointer to data (bit 20).
+#define WIMA_ITEM_DATA           0x100000
+
+// Item has been inserted (bit 21).
+#define WIMA_ITEM_INSERTED       0x200000
+
+// Horizontal size has been explicitly set (bit 22).
+#define WIMA_ITEM_HFIXED         0x400000
+
+// Vertical size has been explicitly set (bit 23).
+#define WIMA_ITEM_VFIXED         0x800000
+
+// Bit 22-23.
+#define WIMA_ITEM_FIXED_MASK     0xC00000
+
+// Which flag bits will be compared.
+#define WIMA_ITEM_COMPARE_MASK \
+	(WIMA_ITEM_BOX_MODEL_MASK | (WIMA_ITEM_LAYOUT_MASK & ~WIMA_LAYOUT_BREAK) | WIMA_ITEM_EVENT_MASK | WIMA_USERMASK)
+
+// Container flags to pass to uiSetBox().
+typedef enum wima_item_box {
+
+	// Flex direction (bit 0+1).
+
+	// Left to right.
+	WIMA_ITEM_ROW = 0x002,
+
+	// Top to bottom.
+	WIMA_ITEM_COLUMN = 0x003,
+
+	// Model (bit 1).
+
+	// Free layout.
+	WIMA_ITEM_LAYOUT = 0x000,
+
+	// Flex model.
+	WIMA_ITEM_FLEX = 0x002,
+
+	// Flex-wrap (bit 2).
+
+	// Single-line.
+	WIMA_ITEM_NOWRAP = 0x000,
+
+	// Multi-line, wrap left to right.
+	WIMA_ITEM_WRAP = 0x004,
+
+	// Justify content (start, end, center, space-between)...
+
+	// ...at start of row/column...
+	WIMA_ITEM_START = 0x008,
+
+	// ...at center of row/column...
+	WIMA_ITEM_MIDDLE = 0x000,
+
+	// ...at end of row/column...
+	WIMA_ITEM_END = 0x010,
+
+	// Insert spacing to stretch across whole row/column.
+	WIMA_ITEM_JUSTIFY = 0x018,
+
+	// Align items can be implemented by putting a flex container
+	// in a layout container, then using UI_TOP, UI_DOWN, UI_VFILL,
+	// UI_VCENTER, etc. FILL is equivalent to stretch/grow.
+
+	// Align content (start, end, center, stretch) can be implemented
+	// by putting a flex container in a layout container, then using
+	// UI_TOP, UI_DOWN, UI_VFILL, UI_VCENTER, etc. FILL is equivalent
+	// to stretch; space-between is not supported.
+
+} WimaItemBox;
+
 // Item states as returned by uiGetState().
 typedef enum wima_item_state {
 
@@ -475,12 +563,50 @@ typedef struct wima_app_funcs {
 
 } WimaAppFuncs;
 
+WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs);
+WimaItemHandle wima_item_lastChild(WimaItemHandle item);
+WimaItemHandle wima_item_append(WimaItemHandle item, WimaItemHandle sibling);
+WimaItemHandle wima_item_insert(WimaAreaHandle wah, WimaItemHandle item, WimaItemHandle child);
+WimaItemHandle wima_item_insertBack(WimaItemHandle item, WimaItemHandle child);
+void wima_item_setFrozen(WimaItemHandle item, bool enable);
+void wima_item_setSize(WimaItemHandle item, WimaSize size);
+int wima_item_width(WimaItemHandle item);
+int wima_item_height(WimaItemHandle item);
+void wima_item_setLayoutType(WimaItemHandle item, uint32_t flags);
+uint32_t wima_item_layoutType(WimaItemHandle item);
+void wima_item_setBox(WimaItemHandle item, uint32_t flags);
+uint32_t wima_item_box(WimaItemHandle item);
+void wima_item_setMargins(WimaItemHandle item, short l, short t, short r, short b);
+short wima_item_marginLeft(WimaItemHandle item);
+short wima_item_marginTop(WimaItemHandle item);
+short wima_item_marginRight(WimaItemHandle item);
+short wima_item_marginDown(WimaItemHandle item);
+bool wima_item_map(WimaItemHandle item1, WimaItemHandle item2);
+WimaItemHandle wima_item_recover(WimaItemHandle olditem);
+void wima_item_remap(WimaItemHandle olditem, WimaItemHandle newitem);
+WimaRect wima_item_rect(WimaItemHandle item);
+WimaItemHandle wima_item_firstChild(WimaItemHandle item);
+WimaItemHandle wima_item_nextSibling(WimaItemHandle item);
+void* wima_item_allocHandle(WimaItemHandle item, uint32_t size);
+void wima_item_setHandle(WimaItemHandle item, void* handle);
+void* wima_item_handle(WimaItemHandle item);
+uint32_t wima_item_events(WimaItemHandle item);
+void wima_item_setFlags(WimaItemHandle item, uint32_t flags);
+uint32_t wima_item_flags(WimaItemHandle item);
+bool wima_item_contains(WimaItemHandle item, WimaPos pos);
+bool wima_item_compareHandles(WimaItemHandle item1, WimaItemHandle item2);
+bool wima_item_isActive(WimaItemHandle item);
+bool wima_item_isHovered(WimaItemHandle item);
+bool wima_item_isFocused(WimaItemHandle item);
+WimaItemState wima_item_state(WimaItemHandle item);
+
 WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs,
                                 uint32_t itemCapacity, uint32_t bufferCapacity);
 void* wima_region_userPointer(WimaRegionHandle reg);
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 
 void* wima_area_userPointer(WimaAreaHandle wah);
+WimaRect wima_area_rect(WimaAreaHandle wah);
 WimaStatus wima_areas_free(DynaTree areas);
 
 WimaStatus wima_workspace_register(WimaWorkspaceHandle* type);
@@ -497,15 +623,18 @@ WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user);
 DynaTree wima_window_areas(WimaWindowHandle wwh);
 WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle wksp);
 WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas);
-// returns the offset of the cursor relative to the last call to uiProcess()
+// Returns the offset of the cursor relative to the last call to uiProcess()
 WimaPos wima_window_cursor_delta(WimaWindowHandle wwh);
-// returns the beginning point of a drag operation.
+// Returns the beginning point of a drag operation.
 WimaPos wima_window_cursor_start(WimaWindowHandle wwh);
-// returns the number of chained clicks; 1 is a single click,
+// Returns the number of chained clicks; 1 is a single click,
 // 2 is a double click, etc.
 int wima_window_clicks(WimaWindowHandle wwh);
 // returns the currently accumulated scroll wheel offsets for this frame
 WimaPos wima_window_scroll(WimaWindowHandle wwh);
+WimaStatus wima_window_setHover(WimaWindowHandle wwh, WimaItemHandle wih);
+WimaStatus wima_window_setActive(WimaWindowHandle wwh, WimaItemHandle wih);
+WimaStatus wima_window_setFocus(WimaWindowHandle wwh, WimaItemHandle wih);
 
 WimaStatus wima_init(const char* name, WimaAppFuncs funcs);
 WimaStatus wima_main();

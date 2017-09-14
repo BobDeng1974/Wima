@@ -36,14 +36,13 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <glad/glad.h>
 #include <KHR/khrplatform.h>
 
 #include <wima.h>
 #include <widget.h>
-
-#include "../area.h"
 
 WimaStatus mouseCoordsMevent(WimaItemHandle wih, WimaMouseBtnEvent e);
 
@@ -107,10 +106,9 @@ WimaStatus mouseCoordsLayout(WimaAreaHandle wah, WimaSize size) {
 
 	printf("Layout: { handle: %4u, width: %4d; height: %4d }\n", wah.area, size.w, size.h);
 
-	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
+	WimaRect r = wima_area_rect(wah);
 
-	printf("    Rect: { x: %4d, y: %4d, w: %4d, h: %4d }\n",
-	       area->rect.x, area->rect.y, area->rect.w, area->rect.h);
+	printf("    Rect: { x: %4d, y: %4d, w: %4d, h: %4d }\n", r.x, r.y, r.w, r.h);
 
 	printf("    Size: { w: %4d, h: %4d }\n", size.w, size.h);
 

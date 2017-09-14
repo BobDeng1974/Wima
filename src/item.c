@@ -93,10 +93,10 @@ WimaItem* wima_item_lastPtr(WimaItemHandle wih) {
 
 void wima_item_setFocus(WimaItemHandle wih) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wih.window);
+	WimaWin* win = dvec_get(wg.windows, wih.window);
 	assert(win);
 
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(win->areas, wih.area);
+	WimaAreaNode* area = dtree_node(win->areas, wih.area);
 	assert(area);
 
 	assert((wih.item >= -1) && (wih.item < area->area.ctx.itemCount));
@@ -107,10 +107,10 @@ void wima_item_setFocus(WimaItemHandle wih) {
 
 WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, wah.window);
+	WimaWin* win = dvec_get(wg.windows, wah.window);
 	assert(win);
 
-	WimaAreaNode* area = (WimaAreaNode*) dtree_node(win->areas, wah.area);
+	WimaAreaNode* area = dtree_node(win->areas, wah.area);
 	assert(area);
 
 	assert(area->area.ctx.itemCount < (int) area->area.ctx.itemCap);
@@ -461,14 +461,6 @@ void* wima_item_handle(WimaItemHandle item) {
 	return wima_item_ptr(item)->handle;
 }
 
-void wima_item_setEvents(WimaItemHandle item, uint32_t flags) {
-
-	WimaItem *pitem = wima_item_ptr(item);
-
-	pitem->flags &= ~WIMA_ITEM_EVENT_MASK;
-	pitem->flags |= flags & WIMA_ITEM_EVENT_MASK;
-}
-
 uint32_t wima_item_events(WimaItemHandle item) {
 	return wima_item_ptr(item)->flags & WIMA_ITEM_EVENT_MASK;
 }
@@ -501,7 +493,7 @@ bool wima_item_compareHandles(WimaItemHandle item1, WimaItemHandle item2) {
 
 bool wima_item_isActive(WimaItemHandle item) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.window);
+	WimaWin* win = dvec_get(wg.windows, item.window);
 	assert(win);
 
 	return wima_item_compareHandles(win->ctx.active, item);
@@ -509,7 +501,7 @@ bool wima_item_isActive(WimaItemHandle item) {
 
 bool wima_item_isHovered(WimaItemHandle item) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.window);
+	WimaWin* win = dvec_get(wg.windows, item.window);
 	assert(win);
 
 	return wima_item_compareHandles(win->ctx.hover, item);
@@ -517,7 +509,7 @@ bool wima_item_isHovered(WimaItemHandle item) {
 
 bool wima_item_isFocused(WimaItemHandle item) {
 
-	WimaWin* win = (WimaWin*) dvec_get(wg.windows, item.window);
+	WimaWin* win = dvec_get(wg.windows, item.window);
 	assert(win);
 
 	return wima_item_compareHandles(win->ctx.focus, item);

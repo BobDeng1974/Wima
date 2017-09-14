@@ -129,6 +129,7 @@ bool wima_area_node_valid(DynaTree regions, DynaNode node);
 void wima_area_context_create(WimaAreaContext* ctx, int itemCap, int bufferCap);
 void wima_area_context_clear(DynaTree areas);
 void wima_area_node_context_clear(DynaTree areas, DynaNode node);
+void wima_area_context_free(WimaAreaContext* ctx);
 
 // layout all added items starting from the root item 0.
 // after calling uiEndLayout(), no further modifications to the item tree should

@@ -25,7 +25,7 @@
 #	****** END LICENSE BLOCK ******
 
 # We need to include NanoVG's headers.
-include_directories(../../lib/nanovg/src)
+include_directories("../lib/nanovg/src")
 
 set(WIMA_GLOBAL "${PROJECT_NAME}_global")
 set(WIMA_WIDGET "${PROJECT_NAME}_widget")
