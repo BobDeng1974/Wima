@@ -31,6 +31,7 @@ set(WIMA_GLOBAL "${PROJECT_NAME}_global")
 set(WIMA_WIDGET "${PROJECT_NAME}_widget")
 
 set(WIMA_GLAD "${PROJECT_NAME}_glad")
+set(WIMA_WIDGET "${PROJECT_NAME}_widget")
 set(NANOVG "nanovg")
 
 create_test(app "${PROJECT_NAME}" "${DYNA_LIB}" "${WIMA_GLAD}" "${NANOVG}" "${WIMA_WIDGET}")

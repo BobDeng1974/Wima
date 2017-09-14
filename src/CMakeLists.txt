@@ -86,5 +86,3 @@ create_pic_library(
 	"${MATH_LIB}"
 	"${PTHREAD_LIB}"
 )
-
-add_subdirectory(tests)

@@ -60,3 +60,5 @@ add_subdirectory("${WIMA_LIB_DIR}")
 add_subdirectory("${WIMA_SRC_DIR}")
 
 add_subdirectory("${WIMA_RES_DIR}")
+
+add_subdirectory(tests)
