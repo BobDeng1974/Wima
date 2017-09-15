@@ -119,5 +119,5 @@ bool wima_rect_contains(WimaRect r, WimaPos pos) {
 	int x = pos.x - r.x;
 	int y = pos.y - r.y;
 
-	return pos.x >= 0 && pos.y >= 0 && x < r.w && y < r.h;
+	return x >= 0 && y >= 0 && x < r.w && y < r.h;
 }
