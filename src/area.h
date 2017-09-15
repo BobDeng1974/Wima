@@ -163,7 +163,6 @@ void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg);
 // frozen items will always be ignored.
 WimaItemHandle wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags);
 WimaItemHandle wima_area_node_findItem(DynaTree areas, DynaNode node, WimaPos pos, uint32_t flags);
-bool wima_area_contains(WimaAreaNode* area, WimaPos pos);
 
 WimaStatus wima_area_draw(WimaWindowHandle wwh, DynaVector stack, float ratio);
 WimaStatus wima_area_key(DynaTree areas, WimaKeyEvent info);

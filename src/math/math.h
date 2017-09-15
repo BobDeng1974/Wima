@@ -64,6 +64,8 @@
 
 #include <math.h>
 
+#include <wima.h>
+
 #ifdef _MSC_VER
 
 #pragma warning (disable: 4996) // Switch off security warnings
@@ -95,5 +97,7 @@ int wima_max(int a, int b);
 int wima_min(int a, int b);
 
 float wima_clamp(float v, float mn, float mx);
+
+bool wima_rect_contains(WimaRect r, WimaPos pos);
 
 #endif // WIMA_MATH_H

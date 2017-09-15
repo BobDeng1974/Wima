@@ -44,10 +44,13 @@
 #include <dyna/tree.h>
 
 #include <wima.h>
+#include <widget.h>
 
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg.h>
 #include <nanovg_gl.h>
+
+#include "math/math.h"
 
 #include "callbacks.h"
 #include "region.h"
@@ -56,6 +59,8 @@
 #include "global.h"
 
 extern WimaG wg;
+
+WimaPos areaOptionMenuOffset = {{ 0, 0 }};
 
 WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) {
 
@@ -67,6 +72,9 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	wwin.fbsize.h = 0;
 	wwin.winsize.w = 0;
 	wwin.winsize.h = 0;
+
+	wwin.haveUserMenu = false;
+	wwin.haveWimaMenu = false;
 
 	// Set the standard cursor as the cursor.
 	wwin.cursor = wg.cursors[WIMA_CURSOR_ARROW];
@@ -421,11 +429,50 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	status = wima_area_draw(wwh, win->scissorStack, win->pixelRatio);
+	bool drawTwice = win->drawTwice;
 
-	if (win->drawTwice) {
+	win->drawTwice = false;
+
+	status = wima_area_draw(wwh, win->scissorStack, win->pixelRatio);
+	if (status) {
+		return status;
+	}
+
+	if (drawTwice) {
+
 		status = wima_area_draw(wwh, win->scissorStack, win->pixelRatio);
-		win->drawTwice = false;
+		if (status) {
+			return status;
+		}
+	}
+
+	if (win->haveWimaMenu) {
+
+		status = wima_window_drawMenu(win, &win->wimaMenu);
+		if (status) {
+			return status;
+		}
+
+		if (drawTwice) {
+			status = wima_window_drawMenu(win, &win->wimaMenu);
+			if (status) {
+				return status;
+			}
+		}
+	}
+	else if (win->haveUserMenu) {
+
+		status = wima_window_drawMenu(win, &win->userMenu);
+		if (status) {
+			return status;
+		}
+
+		if (drawTwice) {
+			status = wima_window_drawMenu(win, &win->userMenu);
+			if (status) {
+				return status;
+			}
+		}
 	}
 
 	glDisable(GL_SCISSOR_TEST);
@@ -433,9 +480,65 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 	nvgEndFrame(win->nvg);
 
 	// Swap front and back buffers.
-	glfwSwapBuffers(wima_window_glfw(wwh));
+	glfwSwapBuffers(win->window);
 
-	return status;
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu) {
+
+	assert(menu->numItems <= WIMA_MAX_MENU_ITEMS);
+
+	NVGcontext* nvg = win->nvg;
+
+	float width = wima_widget_label_estimateWidth(nvg, menu->icon, menu->title) * 8;
+
+	float w, h;
+
+	// Estimate width.
+	for (int i = 0; i < menu->numItems; ++i) {
+
+		WimaMenuItem item = menu->items[i];
+
+		w = wima_widget_label_estimateWidth(nvg, item.icon, item.label) * 8;
+
+		win->menuItemRects[i].x = menu->rect.x;
+		win->menuItemRects[i].h = (int) h;
+
+		width = wima_max(width, w);
+	}
+
+	float height = wima_widget_label_estimateHeight(nvg, menu->icon, menu->title, width);
+
+	// Now estimate height.
+	for (int i = 0; i < menu->numItems; ++i) {
+
+		WimaMenuItem item = menu->items[i];
+
+		h = wima_widget_label_estimateHeight(nvg, item.icon, item.label, width);
+
+		win->menuItemRects[i].y = height - 2;
+		win->menuItemRects[i].h = (int) h;
+
+		height += h;
+	}
+
+	// Store these for hit tests.
+	menu->rect.w = width;
+	menu->rect.h = height;
+
+	wima_widget_menu_background(nvg, menu->rect.x, menu->rect.y, width, height, WIMA_CORNER_TOP);
+	wima_widget_menu_label(nvg, menu->rect.x, menu->rect.y, width, height, menu->icon, menu->title);
+
+	for (int i = 0; i < menu->numItems; ++i) {
+
+		WimaMenuItem item = menu->items[i];
+		WimaRect r = win->menuItemRects[i];
+
+		wima_widget_menu_item(nvg, r.x, r.y, r.w, r.h, WIMA_ITEM_DEFAULT, item.icon, item.label);
+	}
+
+	return WIMA_SUCCESS;
 }
 
 WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction action) {
@@ -527,8 +630,8 @@ WimaPos wima_window_cursor_delta(WimaWindowHandle wwh) {
 	assert(win);
 
 	WimaPos result = {{{
-	        win->ctx.cursor.x - win->ctx.last_cursor.x,
-	        win->ctx.cursor.y - win->ctx.last_cursor.y
+	        win->ctx.cursorPos.x - win->ctx.last_cursor.x,
+	        win->ctx.cursorPos.y - win->ctx.last_cursor.y
 	}}};
 	return result;
 }
@@ -589,7 +692,36 @@ void wima_window_updateHover(WimaWindowHandle wwh) {
 	WimaItemHandle item;
 	item.item = 0;
 
-	win->ctx.hover = wima_area_findItem(win->areas, win->ctx.cursor, WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER);
+	win->ctx.hover = wima_area_findItem(win->areas, win->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER);
+}
+
+WimaStatus wima_window_setContextMenu(WimaWindowHandle wwh, WimaContextMenu menu) {
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->userMenu = menu;
+	win->haveUserMenu = true;
+
+	return WIMA_SUCCESS;
+}
+
+WimaStatus wima_window_removeContextMenu(WimaWindowHandle wwh) {
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->haveUserMenu = false;
+
+	return WIMA_SUCCESS;
+}
+
+WimaContextMenu wima_window_contextMenu(WimaWindowHandle wwh) {
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->userMenu;
 }
 
 static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, WimaItemHandle wih, WimaEvent e) {
@@ -614,6 +746,25 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_MOUSE_BTN:
 		{
+			if (win->haveWimaMenu || win->haveUserMenu) {
+
+				WimaContextMenu* menu = win->haveWimaMenu ? &win->wimaMenu : &win->userMenu;
+
+				WimaRect r = menu->rect;
+				WimaPos pos = win->ctx.cursorPos;
+
+				printf("Rect: { x: %4d, y: %4d, w: %4d, h: %4d }\n", r.x, r.y, r.w, r.h);
+				printf("Pos:  { x: %4d, y: %4d }\n", pos.x, pos.y);
+
+				if (wima_rect_contains(menu->rect, win->ctx.cursorPos)) {
+
+				}
+				else {
+
+					// Dismiss the menu.
+					win->haveUserMenu = win->haveWimaMenu = false;
+				}
+			}
 			if (wih.item >= 0) {
 
 				WimaItem* pitem = wima_item_ptr(wih);
@@ -635,7 +786,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_MOUSE_POS:
 		{
 			// Set the cursor position.
-			win->ctx.cursor = e.pos;
+			win->ctx.cursorPos = e.pos;
 
 			if (win->ctx.split.split >= 0) {
 
@@ -652,7 +803,14 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		case WIMA_EVENT_MOUSE_SPLIT:
 		{
 			// TODO: Handle split.
-			win->ctx.dragStart = win->ctx.cursor;
+
+			if (e.split.move) {
+
+			}
+			else {
+				win->ctx.dragStart = win->ctx.cursorPos;
+			}
+
 			break;
 		}
 
@@ -819,7 +977,7 @@ WimaStatus wima_window_processEvents(WimaWindowHandle wwh) {
 	WimaItemHandle* handles = win->ctx.eventItems;
 	int numEvents = win->ctx.eventCount;
 
-	win->ctx.cursor = win->ctx.last_cursor;
+	win->ctx.cursorPos = win->ctx.last_cursor;
 
 	for (int i = 0; i < numEvents; ++i) {
 
@@ -832,7 +990,7 @@ WimaStatus wima_window_processEvents(WimaWindowHandle wwh) {
 
 	win->ctx.eventCount = 0;
 
-	win->ctx.last_cursor = win->ctx.cursor;
+	win->ctx.last_cursor = win->ctx.cursorPos;
 
 	return status;
 }

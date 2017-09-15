@@ -60,6 +60,10 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <math.h>
+
+#include <wima.h>
+
 #ifdef _MSC_VER
 
 #pragma warning (disable: 4996) // Switch off security warnings
@@ -108,4 +112,12 @@ int wima_min(int a, int b) {
 
 float wima_clamp(float v, float mn, float mx) {
 	return (v > mx) ? mx : ((v < mn) ? mn : v);
+}
+
+bool wima_rect_contains(WimaRect r, WimaPos pos) {
+
+	int x = pos.x - r.x;
+	int y = pos.y - r.y;
+
+	return pos.x >= 0 && pos.y >= 0 && x < r.w && y < r.h;
 }

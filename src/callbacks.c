@@ -63,6 +63,13 @@ const char* descs[] = {
     "Clipboard contents were invalid"
 };
 
+WimaMenuItem areaOptionMenuItems[] = {
+    { "Split Area", -1 },
+    { "Join Area", -1 }
+};
+
+extern WimaPos areaOptionMenuOffset;
+
 void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
 	if (!wg.name) {
@@ -153,9 +160,12 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		return;
 	}
 
+	// TODO: Don't send mouse events to area when Wima has a menu.
+	// Clicking outside of the menu should just make it go away.
+
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
-	WimaItemHandle clickItem = wima_area_findItem(wwin->areas, wwin->ctx.cursor, WIMA_EVENT_MOUSE_BTN);
+	WimaItemHandle clickItem = wima_area_findItem(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN);
 
 	if (wact == WIMA_ACTION_PRESS) {
 
@@ -163,7 +173,24 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 			event->type = WIMA_EVENT_MOUSE_SPLIT;
 			event->split = wwin->ctx.split;
+			event->split.move = wbtn != WIMA_MOUSE_RIGHT;
 			++(wwin->ctx.eventCount);
+
+			if (!event->split.move) {
+
+				wwin->haveWimaMenu = true;
+				wwin->wimaMenu.title = "Area Options";
+
+				wwin->wimaMenu.rect.x = wwin->ctx.cursorPos.x - areaOptionMenuOffset.x;
+				wwin->wimaMenu.rect.y = wwin->ctx.cursorPos.y - areaOptionMenuOffset.y;
+
+				wwin->wimaMenu.items = areaOptionMenuItems;
+				wwin->wimaMenu.numItems = 2;
+
+				wwin->wimaMenu.icon = -1;
+
+				wwin->drawTwice = true;
+			}
 
 			return;
 		}
@@ -223,26 +250,29 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 		return;
 	}
 
-	wwin->ctx.cursor.x = xint;
-	wwin->ctx.cursor.y = yint;
+	// TODO: Don't send mouse pos to area when Wima has a menu.
+
+	wwin->ctx.cursorPos.x = xint;
+	wwin->ctx.cursorPos.y = yint;
 
 	WimaMouseSplitEvent split_event;
 
-	if (wima_area_mouseOnSplit(wwin->areas, wwin->ctx.cursor, &split_event)) {
-
-		wwin->ctx.split = split_event;
-
-		// Set the cursor.
-		WimaCursor c = wwin->ctx.split.vertical ? WIMA_CURSOR_HRESIZE : WIMA_CURSOR_VRESIZE;
-		glfwSetCursor(wwin->window, wg.cursors[c]);
-	}
-	else {
+	if (wwin->haveUserMenu || wwin->haveWimaMenu ||
+	    !wima_area_mouseOnSplit(wwin->areas, wwin->ctx.cursorPos, &split_event))
+	{
 
 		// Erase the split.
 		wwin->ctx.split.split = -1;
 
 		// Set the cursor.
 		glfwSetCursor(wwin->window, wwin->cursor);
+	}
+	else {
+		wwin->ctx.split = split_event;
+
+		// Set the cursor.
+		WimaCursor c = wwin->ctx.split.vertical ? WIMA_CURSOR_HRESIZE : WIMA_CURSOR_VRESIZE;
+		glfwSetCursor(wwin->window, wg.cursors[c]);
 	}
 
 	WimaEvent* event = wwin->ctx.events + numEvents;

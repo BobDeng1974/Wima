@@ -82,6 +82,7 @@ typedef struct wima_mouse_split_event {
 	WimaWindowHandle window;
 
 	bool vertical;
+	bool move;
 
 } WimaMouseSplitEvent;
 

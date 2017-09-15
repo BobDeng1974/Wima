@@ -282,6 +282,26 @@ typedef struct WimaRect {
 
 } WimaRect;
 
+typedef struct wima_menu_item {
+
+	const char* label;
+	int icon;
+
+} WimaMenuItem;
+
+typedef struct wima_context_menu {
+
+	const char* title;
+
+	WimaRect rect;
+
+	WimaMenuItem* items;
+	int numItems;
+
+	int icon;
+
+} WimaContextMenu;
+
 /**
  * A handle to a region (area template) type.
  */
@@ -999,6 +1019,8 @@ int wima_area_lastItemCount(WimaAreaHandle wah);
 // return the total bytes that have been allocated by uiAllocHandle()
 unsigned int wima_area_allocSize(WimaAreaHandle wah);
 
+bool wima_area_contains(WimaAreaHandle wah, WimaPos pos);
+
 WimaStatus wima_workspace_register(WimaWorkspaceHandle* type);
 WimaStatus wima_workspace_addParent(WimaWorkspaceHandle wksp, DynaNode node, float split, bool vertical);
 WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wwh, DynaNode node, WimaRegionHandle reg);
@@ -1013,6 +1035,9 @@ WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user);
 DynaTree wima_window_areas(WimaWindowHandle wwh);
 WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle wksp);
 WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas);
+WimaStatus wima_window_setContextMenu(WimaWindowHandle wwh, WimaContextMenu menu);
+WimaStatus wima_window_removeContextMenu(WimaWindowHandle wwh);
+WimaContextMenu wima_window_contextMenu(WimaWindowHandle wwh);
 void wima_window_cursor_setType(WimaWindowHandle wwh, GLFWcursor* c);
 void wima_window_cursor_setStandardType(WimaWindowHandle wwh, WimaCursor c);
 GLFWcursor* wima_window_cursor_type(WimaWindowHandle wwh);
@@ -1027,6 +1052,9 @@ int wima_window_clicks(WimaWindowHandle wwh);
 WimaPos wima_window_scroll(WimaWindowHandle wwh);
 WimaStatus wima_window_setHover(WimaWindowHandle wwh, WimaItemHandle wih);
 
+WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction action);
+void wima_window_clearEvents(WimaWindowHandle wwh);
+
 // return the item that is currently under the cursor or -1 for none
 WimaItemHandle wima_window_hover(WimaWindowHandle wwh);
 
@@ -1038,6 +1066,8 @@ WimaStatus wima_window_setFocus(WimaWindowHandle wwh, WimaItemHandle wih);
 
 // return the item that is currently focused or -1 for none
 WimaItemHandle wima_window_focus(WimaWindowHandle wwh);
+
+WimaStatus wima_window_free(WimaWindowHandle win);
 
 WimaStatus wima_init(const char* name, WimaAppFuncs funcs);
 GLFWcursor* wima_standardCursor(WimaCursor cursor);

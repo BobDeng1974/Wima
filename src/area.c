@@ -43,6 +43,8 @@
 #include <wima.h>
 #include <widget.h>
 
+#include "math/math.h"
+
 #include "layout.h"
 #include "region.h"
 #include "area.h"
@@ -245,6 +247,14 @@ WimaRect wima_area_rect(WimaAreaHandle wah) {
 	assert(area);
 
 	return area->rect;
+}
+
+bool wima_area_contains(WimaAreaHandle wah, WimaPos pos) {
+
+	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
+	assert(area);
+
+	return wima_rect_contains(area->rect, pos);
 }
 
 WimaStatus wima_area_layout(DynaTree areas) {
@@ -670,7 +680,7 @@ bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, Wim
 		DynaNode leftNode = dtree_left(node);
 		WimaAreaNode* left = dtree_node(areas, leftNode);
 
-		if (wima_area_contains(left, pos)) {
+		if (wima_rect_contains(left->rect, pos)) {
 			on = wima_area_node_mouseOnSplit(areas, leftNode, pos, result);
 		}
 		else {
@@ -678,7 +688,7 @@ bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, Wim
 			DynaNode rightNode = dtree_right(node);
 			WimaAreaNode* right = dtree_node(areas, rightNode);
 
-			if (wima_area_contains(right, pos)) {
+			if (wima_rect_contains(right->rect, pos)) {
 				on = wima_area_node_mouseOnSplit(areas, rightNode, pos, result);
 			}
 		}
@@ -825,14 +835,6 @@ void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg) {
 	nvgFill(nvg);
 }
 
-bool wima_area_contains(WimaAreaNode* area, WimaPos pos) {
-
-	int x = pos.x - area->rect.x;
-	int y = pos.y - area->rect.y;
-
-	return x >= 0 && y >= 0 && x < area->rect.w && y < area->rect.h;
-}
-
 WimaItemHandle wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags) {
 	return wima_area_node_findItem(areas, dtree_root(), pos, flags);
 }
@@ -848,7 +850,7 @@ WimaItemHandle wima_area_node_findItem(DynaTree areas, DynaNode node, WimaPos po
 
 		WimaItemHandle item;
 
-		if (wima_area_contains(left, pos)) {
+		if (wima_rect_contains(left->rect, pos)) {
 			item = wima_area_node_findItem(areas, leftNode, pos, flags);
 		}
 		else {
@@ -856,7 +858,7 @@ WimaItemHandle wima_area_node_findItem(DynaTree areas, DynaNode node, WimaPos po
 			DynaNode rightNode = dtree_right(node);
 			WimaAreaNode* right = dtree_node(areas, rightNode);
 
-			if (wima_area_contains(right, pos)) {
+			if (wima_rect_contains(right->rect, pos)) {
 				item = wima_area_node_findItem(areas, rightNode, pos, flags);
 			}
 			else {

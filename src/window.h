@@ -55,13 +55,16 @@
 // Consecutive click threshold in ms.
 #define WIMA_CLICK_THRESHOLD 250
 
+// Max number of menu items in a menu.
+#define WIMA_MAX_MENU_ITEMS 256
+
 typedef struct wima_window_context {
 
 	// Where the cursor was last frame.
 	WimaPos last_cursor;
 
 	// Where the cursor is currently.
-	WimaPos cursor;
+	WimaPos cursorPos;
 
 	// Accumulated scroll wheel offsets.
 	WimaPos scroll;
@@ -107,6 +110,11 @@ typedef struct wima_window {
 	NVGcontext* nvg;
 	WimaWindowContext ctx;
 
+	WimaContextMenu userMenu;
+	WimaContextMenu wimaMenu;
+
+	WimaRect menuItemRects[WIMA_MAX_MENU_ITEMS];
+
 	WimaSize fbsize;
 	WimaSize winsize;
 
@@ -115,6 +123,11 @@ typedef struct wima_window {
 	// For some reason, NanoVG has a bug where things
 	// are not drawn properly unless you draw twice.
 	bool drawTwice;
+
+	// Whether or not we have a user context menu and
+	// a wima-specific context menu, respectively.
+	bool haveUserMenu;
+	bool haveWimaMenu;
 
 } WimaWin;
 
@@ -145,15 +158,11 @@ void wima_window_context_clear(WimaWindowContext* ctx);
 // uiBeginLayout() must be followed by uiEndLayout()
 WimaStatus wima_window_draw(WimaWindowHandle win);
 
-WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction action);
+WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu);
 
 WimaStatus wima_window_processEvents(WimaWindowHandle win);
 
-void wima_window_clearEvents(WimaWindowHandle wwh);
-
 void wima_window_updateHover(WimaWindowHandle wwh);
-
-WimaStatus wima_window_free(WimaWindowHandle win);
 
 #define WIMA_WINDOW_HANDLE(win) ((WimaWindowHandle) (long) glfwGetWindowUserPointer(win))
 
