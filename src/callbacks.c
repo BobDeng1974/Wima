@@ -159,17 +159,15 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	if (wact == WIMA_ACTION_PRESS) {
 
-		WimaMouseSplitEvent split_event;
-
-		if (wima_area_mouseOnSplit(wwin->areas, wwin->ctx.cursor, &split_event)) {
+		if (wwin->ctx.split.split >= 0) {
 
 			event->type = WIMA_EVENT_MOUSE_SPLIT;
-			event->split = split_event;
+			event->split = wwin->ctx.split;
 			++(wwin->ctx.eventCount);
 
 			return;
 		}
-		else  if (ts - WIMA_CLICK_THRESHOLD > wwin->ctx.click_timestamp ||
+		else if (ts - WIMA_CLICK_THRESHOLD > wwin->ctx.click_timestamp ||
 		          wwin->ctx.click_button != wbtn ||
 		          !wima_item_compareHandles(clickItem, wwin->ctx.click_item))
 		{
@@ -177,9 +175,6 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		}
 
 		++(wwin->ctx.clicks);
-	}
-	else {
-		wwin->ctx.split.split = -1;
 	}
 
 	wwin->ctx.click_timestamp = ts;
@@ -226,6 +221,28 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 		// Drop the event.
 		return;
+	}
+
+	wwin->ctx.cursor.x = xint;
+	wwin->ctx.cursor.y = yint;
+
+	WimaMouseSplitEvent split_event;
+
+	if (wima_area_mouseOnSplit(wwin->areas, wwin->ctx.cursor, &split_event)) {
+
+		wwin->ctx.split = split_event;
+
+		// Set the cursor.
+		WimaCursor c = wwin->ctx.split.vertical ? WIMA_CURSOR_HRESIZE : WIMA_CURSOR_VRESIZE;
+		glfwSetCursor(wwin->window, wg.cursors[c]);
+	}
+	else {
+
+		// Erase the split.
+		wwin->ctx.split.split = -1;
+
+		// Set the cursor.
+		glfwSetCursor(wwin->window, wwin->cursor);
 	}
 
 	WimaEvent* event = wwin->ctx.events + numEvents;

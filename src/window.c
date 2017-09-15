@@ -819,6 +819,8 @@ WimaStatus wima_window_processEvents(WimaWindowHandle wwh) {
 	WimaItemHandle* handles = win->ctx.eventItems;
 	int numEvents = win->ctx.eventCount;
 
+	win->ctx.cursor = win->ctx.last_cursor;
+
 	for (int i = 0; i < numEvents; ++i) {
 
 		status = wima_window_processEvent(win, wwh, handles[i], events[i]);
