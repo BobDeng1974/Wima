@@ -110,6 +110,10 @@ typedef struct wima_window {
 
 	float pixelRatio;
 
+	// For some reason, NanoVG has a bug where things
+	// are not drawn properly unless you draw twice.
+	bool drawTwice;
+
 } WimaWin;
 
 // Context Management

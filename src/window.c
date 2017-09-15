@@ -35,6 +35,7 @@
  */
 
 #include <assert.h>
+#include <stdbool.h>
 #include <string.h>
 
 #include <jemalloc/jemalloc.h>
@@ -66,6 +67,9 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	wwin.fbsize.h = 0;
 	wwin.winsize.w = 0;
 	wwin.winsize.h = 0;
+
+	// Draw twice at the start.
+	wwin.drawTwice = true;
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -404,21 +408,26 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
 	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 
+	WimaStatus status = wima_area_layout(win->areas);
+
+	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
+
 	nvgBeginFrame(win->nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 
 	glEnable(GL_SCISSOR_TEST);
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	WimaStatus status = wima_area_draw(wwh, win->scissorStack, win->pixelRatio);
+	status = wima_area_draw(wwh, win->scissorStack, win->pixelRatio);
+
+	if (win->drawTwice) {
+		status = wima_area_draw(wwh, win->scissorStack, win->pixelRatio);
+		win->drawTwice = false;
+	}
 
 	glDisable(GL_SCISSOR_TEST);
 
 	nvgEndFrame(win->nvg);
-
-	status = wima_area_layout(win->areas);
-
-	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
 
 	// Swap front and back buffers.
 	glfwSwapBuffers(wima_window_glfw(wwh));

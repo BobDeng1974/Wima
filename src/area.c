@@ -809,16 +809,6 @@ void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg) {
 	float xend = area->rect.w;
 	float yend = area->rect.h;
 
-	// I don't know why I have to put these twice, but if I don't,
-	// the border isn't drawn until the first event.
-	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, 0.0f, yend);
-	nvgLineTo(nvg, 0.0f, 0.0f);
-	nvgLineTo(nvg, xend, 0.0f);
-	nvgStroke(nvg);
-	nvgFill(nvg);
-
-	nvgBeginPath(nvg);
 	nvgMoveTo(nvg, 0.0f, yend);
 	nvgLineTo(nvg, 0.0f, 0.0f);
 	nvgLineTo(nvg, xend, 0.0f);
@@ -826,15 +816,6 @@ void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg) {
 	nvgFill(nvg);
 
 	nvgStrokeColor(nvg, rbborder);
-
-	// I don't know why I have to put these twice, but if I don't,
-	// the border isn't drawn until the first event.
-	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, xend, 0.0f);
-	nvgLineTo(nvg, xend, yend);
-	nvgLineTo(nvg, 0.0f, yend);
-	nvgStroke(nvg);
-	nvgFill(nvg);
 
 	nvgBeginPath(nvg);
 	nvgMoveTo(nvg, xend, 0.0f);

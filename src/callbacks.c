@@ -431,6 +431,9 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 	event->pos.y = ypos;
 
 	++(wwin->ctx.eventCount);
+
+	// Make sure to draw twice after this event.
+	wwin->drawTwice = true;
 }
 
 void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
@@ -479,6 +482,9 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	event->size.h = height;
 
 	++(wwin->ctx.eventCount);
+
+	// Make sure to draw twice after this event.
+	wwin->drawTwice = true;
 }
 
 void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
@@ -514,6 +520,9 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 	event->size.h = height;
 
 	++(wwin->ctx.eventCount);
+
+	// Make sure to draw twice after this event.
+	wwin->drawTwice = true;
 }
 
 void wima_callback_windowClose(GLFWwindow* window) {
