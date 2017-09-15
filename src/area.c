@@ -656,13 +656,13 @@ bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, Wim
 
 		int x = pos.x - split;
 
-		on = x >= -1 && x <= 1;
+		on = x >= -2 && x <= 2;
 	}
 	else {
 
 		int y = pos.y - split;
 
-		on = y >= -1 && y <= 1;
+		on = y >= -2 && y <= 2;
 	}
 
 	if (!on) {
