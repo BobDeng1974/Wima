@@ -423,11 +423,11 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
 	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
 
-	nvgBeginFrame(win->nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
-
 	glEnable(GL_SCISSOR_TEST);
 
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+
+	nvgBeginFrame(win->nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 
 	bool drawTwice = win->drawTwice;
 
@@ -475,9 +475,9 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 		}
 	}
 
-	glDisable(GL_SCISSOR_TEST);
-
 	nvgEndFrame(win->nvg);
+
+	glDisable(GL_SCISSOR_TEST);
 
 	// Swap front and back buffers.
 	glfwSwapBuffers(win->window);
@@ -502,8 +502,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu) {
 
 		w = wima_widget_label_estimateWidth(nvg, item.icon, item.label) * 8;
 
-		win->menuItemRects[i].x = menu->rect.x;
-		win->menuItemRects[i].h = (int) h;
+		win->menuItemSizes[i].h = (int) h;
 
 		width = wima_max(width, w);
 	}
@@ -517,8 +516,8 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu) {
 
 		h = wima_widget_label_estimateHeight(nvg, item.icon, item.label, width);
 
-		win->menuItemRects[i].y = height - 2;
-		win->menuItemRects[i].h = (int) h;
+		win->menuItemYs[i] = height - 2;
+		win->menuItemSizes[i].h = (int) h;
 
 		height += h;
 	}
@@ -527,15 +526,24 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu) {
 	menu->rect.w = width;
 	menu->rect.h = height;
 
+	// Set up NanoVG.
+	nvgResetTransform(nvg);
+	nvgResetScissor(nvg);
+
 	wima_widget_menu_background(nvg, menu->rect.x, menu->rect.y, width, height, WIMA_CORNER_TOP);
-	wima_widget_menu_label(nvg, menu->rect.x, menu->rect.y, width, height, menu->icon, menu->title);
+
+	nvgTranslate(nvg, menu->rect.x, menu->rect.y);
+	nvgScissor(nvg, menu->rect.x, menu->rect.y, width, height);
+
+	wima_widget_menu_label(nvg, 0, 0, width, height, menu->icon, menu->title);
 
 	for (int i = 0; i < menu->numItems; ++i) {
 
 		WimaMenuItem item = menu->items[i];
-		WimaRect r = win->menuItemRects[i];
+		WimaSize s = win->menuItemSizes[i];
 
-		wima_widget_menu_item(nvg, r.x, r.y, r.w, r.h, WIMA_ITEM_DEFAULT, item.icon, item.label);
+		wima_widget_menu_item(nvg, 0, win->menuItemYs[i], s.w, s.h, WIMA_ITEM_DEFAULT, item.icon, item.label);
+		wima_widget_check(nvg, 0, win->menuItemYs[i], nvgRGBAf(0.9f, 0.9f, 0.9f, 1.0f));
 	}
 
 	return WIMA_SUCCESS;

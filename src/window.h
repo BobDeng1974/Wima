@@ -113,7 +113,8 @@ typedef struct wima_window {
 	WimaContextMenu userMenu;
 	WimaContextMenu wimaMenu;
 
-	WimaRect menuItemRects[WIMA_MAX_MENU_ITEMS];
+	WimaSize menuItemSizes[WIMA_MAX_MENU_ITEMS];
+	int menuItemYs[WIMA_MAX_MENU_ITEMS];
 
 	WimaSize fbsize;
 	WimaSize winsize;
