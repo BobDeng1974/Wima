@@ -44,9 +44,6 @@
 // Max events we will process on one frame.
 #define WIMA_MAX_EVENTS 64
 
-// Consecutive click threshold in ms.
-#define UI_CLICK_THRESHOLD 250
-
 // End limits.
 
 typedef enum wima_event_state {
