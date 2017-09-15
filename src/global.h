@@ -41,8 +41,7 @@
 #include <dyna/string.h>
 
 #include <wima.h>
-
-#include "theme/theme.h"
+#include <theme.h>
 
 typedef struct wima_globals {
 

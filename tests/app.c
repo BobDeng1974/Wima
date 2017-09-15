@@ -43,6 +43,7 @@
 
 #include <wima.h>
 #include <widget.h>
+#include <theme.h>
 
 WimaStatus mouseCoordsMevent(WimaItemHandle wih, WimaMouseBtnEvent e);
 
@@ -97,7 +98,11 @@ WimaStatus mouseCoordsDraw(WimaItemHandle item, NVGcontext* nvg) {
 
 	sprintf(buffer, "%d", item.area);
 
-	wima_widget_label(nvg, 0, 0, 100, 100, -1, buffer);
+	WimaRect r = wima_item_rect(item);
+
+	printf("Item Rect: { x: %d. y: %d, w: %d, h: %d }\n", r.x, r.y, r.w, r.h);
+
+	wima_widget_menu_background(nvg, r.x, r.y, r.w, r.h, WIMA_CORNER_ALL);
 
 	return WIMA_SUCCESS;
 }

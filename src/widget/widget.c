@@ -58,13 +58,14 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <theme.h>
+
 #include "../math/math.h"
 
 #include "../global.h"
 
 #include "../window.h"
 
-#include "../theme/theme.h"
 #include "widget.h"
 
 extern WimaG wg;
