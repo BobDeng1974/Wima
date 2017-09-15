@@ -68,8 +68,8 @@ WimaStatus wima_workspace_register(WimaWorkspaceHandle* wth) {
 	return WIMA_SUCCESS;
 }
 
-WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wwh, DynaNode node,
-                                  float split,              bool vertical)
+WimaStatus wima_workspace_addParent(WimaWorkspaceHandle wwh, DynaNode node,
+                                    float split,             bool vertical)
 {
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwh));
 	assert(wksp);

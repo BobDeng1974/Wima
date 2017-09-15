@@ -1000,7 +1000,7 @@ int wima_area_lastItemCount(WimaAreaHandle wah);
 unsigned int wima_area_allocSize(WimaAreaHandle wah);
 
 WimaStatus wima_workspace_register(WimaWorkspaceHandle* type);
-WimaStatus wima_workspace_addNode(WimaWorkspaceHandle wksp, DynaNode node, float split, bool vertical);
+WimaStatus wima_workspace_addParent(WimaWorkspaceHandle wksp, DynaNode node, float split, bool vertical);
 WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wwh, DynaNode node, WimaRegionHandle reg);
 
 WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph);
