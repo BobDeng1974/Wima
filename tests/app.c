@@ -100,7 +100,7 @@ WimaStatus mouseCoordsDraw(WimaItemHandle item, NVGcontext* nvg) {
 
 	WimaRect r = wima_item_rect(item);
 
-	printf("Item Rect: { x: %d. y: %d, w: %d, h: %d }\n", r.x, r.y, r.w, r.h);
+	printf("Item[%s] Rect: { x: %d. y: %d, w: %d, h: %d }\n", buffer, r.x, r.y, r.w, r.h);
 
 	wima_widget_menu_background(nvg, r.x, r.y, r.w, r.h, WIMA_CORNER_ALL);
 
