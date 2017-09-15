@@ -68,6 +68,9 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	wwin.winsize.w = 0;
 	wwin.winsize.h = 0;
 
+	// Set the standard cursor as the cursor.
+	wwin.cursor = wg.cursors[WIMA_CURSOR_ARROW];
+
 	// Draw twice at the start.
 	wwin.drawTwice = true;
 
@@ -482,6 +485,32 @@ WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction
 	}
 
 	return WIMA_SUCCESS;
+}
+
+void wima_window_cursor_setType(WimaWindowHandle wwh, GLFWcursor* c) {
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->cursor = c;
+	glfwSetCursor(win->window, c);
+}
+
+void wima_window_cursor_setStandardType(WimaWindowHandle wwh, WimaCursor c) {
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->cursor = wg.cursors[c];
+	glfwSetCursor(win->window, wg.cursors[c]);
+}
+
+GLFWcursor* wima_window_cursor_type(WimaWindowHandle wwh) {
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->cursor;
 }
 
 WimaPos wima_window_cursor_start(WimaWindowHandle wwh) {

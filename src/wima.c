@@ -50,8 +50,14 @@
 #include "window.h"
 #include "global.h"
 
+#define GLFW_CURSOR_OFFSET (0x00036001)
+
 extern WimaG wg;
 extern const WimaTheme wima_initial_theme;
+
+GLFWcursor* wima_standardCursor(WimaCursor cursor) {
+	return wg.cursors[cursor];
+}
 
 WimaStatus wima_init(const char* name, WimaAppFuncs funcs) {
 
@@ -110,6 +116,11 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs) {
 	}
 
 	glfwSetErrorCallback(wima_callback_error);
+
+	// Create the cursors.
+	for (int i = 0; i < 6; ++i) {
+		wg.cursors[i] = glfwCreateStandardCursor(i + GLFW_CURSOR_OFFSET);
+	}
 
 	return WIMA_SUCCESS;
 }

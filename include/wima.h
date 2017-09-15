@@ -55,6 +55,28 @@ extern "C" {
 #include <dyna/string.h>
 #include <dyna/tree.h>
 
+typedef enum wima_cursor {
+
+	// Standard arrow cursor.
+	WIMA_CURSOR_ARROW		= 0,
+
+	// Ibeam cursor.
+	WIMA_CURSOR_IBEAM,
+
+	// Crosshair cursor.
+	WIMA_CURSOR_CROSSHAIR,
+
+	// Hand cursor.
+	WIMA_CURSOR_HAND,
+
+	// Horizontal resize cursor.
+	WIMA_CURSOR_HRESIZE,
+
+	// Vertical resize cursor.
+	WIMA_CURSOR_VRESIZE
+
+} WimaCursor;
+
 // Extra item flags.
 
 // Bits 0-2.
@@ -991,6 +1013,9 @@ WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user);
 DynaTree wima_window_areas(WimaWindowHandle wwh);
 WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle wksp);
 WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas);
+void wima_window_cursor_setType(WimaWindowHandle wwh, GLFWcursor* c);
+void wima_window_cursor_setStandardType(WimaWindowHandle wwh, WimaCursor c);
+GLFWcursor* wima_window_cursor_type(WimaWindowHandle wwh);
 // Returns the offset of the cursor relative to the last call to uiProcess()
 WimaPos wima_window_cursor_delta(WimaWindowHandle wwh);
 // Returns the beginning point of a drag operation.
@@ -1015,6 +1040,7 @@ WimaStatus wima_window_setFocus(WimaWindowHandle wwh, WimaItemHandle wih);
 WimaItemHandle wima_window_focus(WimaWindowHandle wwh);
 
 WimaStatus wima_init(const char* name, WimaAppFuncs funcs);
+GLFWcursor* wima_standardCursor(WimaCursor cursor);
 WimaStatus wima_main();
 void wima_exit();
 

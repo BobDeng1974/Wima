@@ -102,6 +102,8 @@ typedef struct wima_window {
 	DynaTree areas;
 	DynaVector scissorStack;
 
+	GLFWcursor* cursor;
+
 	NVGcontext* nvg;
 	WimaWindowContext ctx;
 

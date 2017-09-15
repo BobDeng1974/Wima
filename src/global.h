@@ -66,6 +66,9 @@ typedef struct wima_globals {
 	int icons;
 	int font;
 
+	// Standard cursors.
+	GLFWcursor* cursors[6];
+
 } WimaG;
 
 #endif // WIMA_GLOBAL_H
