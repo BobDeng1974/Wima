@@ -800,7 +800,7 @@ void wima_area_drawSplit(WimaAreaNode* area, NVGcontext* nvg) {
 void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg) {
 
 	NVGcolor ltborder = nvgRGBAf(1.0f, 1.0f, 1.0f, 0.20f);
-	NVGcolor rbborder = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.20f);
+	NVGcolor rbborder = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.50f);
 
 	nvgStrokeWidth(nvg, 1.0f);
 	nvgStrokeColor(nvg, ltborder);
