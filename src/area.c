@@ -479,13 +479,16 @@ WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, D
 
 		wima_widget_background(nvg, 0, 0, area->rect.w, area->rect.h);
 
-		WimaItemHandle item;
-		item.item = 0;
-		item.area = node;
-		item.window = area->window;
+		if (area->area.ctx.itemCount > 0) {
 
-		// Draw the area. The draw function is guaranteed to be non-null.
-		status = wg.draw(item, nvg);
+			WimaItemHandle item;
+			item.item = 0;
+			item.area = node;
+			item.window = area->window;
+
+			// Draw the area. The draw function is guaranteed to be non-null.
+			status = wg.draw(item, nvg);
+		}
 
 		// Draw the border shading.
 		wima_area_drawBorders(area, nvg);
