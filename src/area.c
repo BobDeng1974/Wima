@@ -299,6 +299,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 			wima_layout_arrange(zero, 1);
 
 			if (area->area.ctx.lastItemCount) {
+
 				// Map old item id to new item id.
 				wima_item_map(zero, zero);
 			}
