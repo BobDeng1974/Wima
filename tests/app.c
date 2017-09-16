@@ -102,7 +102,7 @@ WimaStatus mouseCoordsDraw(WimaItemHandle item, NVGcontext* nvg) {
 
 	printf("Item[%s] Rect: { x: %d. y: %d, w: %d, h: %d }\n", buffer, r.x, r.y, r.w, r.h);
 
-	wima_widget_menu_background(nvg, r.x, r.y, r.w, r.h, WIMA_CORNER_ALL);
+	wima_widget_label(nvg, r.x, r.y, r.w, r.h, 6, buffer);
 
 	return WIMA_SUCCESS;
 }
