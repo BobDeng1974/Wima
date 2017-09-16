@@ -176,12 +176,13 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 
 	// Load the font if not loaded already.
 	if (wg.font < 0) {
-		wg.font = wima_theme_loadFont(window->nvg, "system", "../../res/DejaVuSans.ttf");
+		wg.font = wima_theme_loadFont(window->nvg, "system", "../res/DejaVuSans.ttf");
+		printf("Font: %d\n", wg.font);
 	}
 
 	// Load the icons if not loaded already.
 	if (wg.icons < 0) {
-		wg.icons = wima_theme_loadIcons(window->nvg, "../../res/blender_icons16.png");
+		wg.icons = wima_theme_loadIcons(window->nvg, "../res/blender_icons16.png");
 	}
 
 	return WIMA_SUCCESS;
@@ -491,7 +492,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu) {
 
 	NVGcontext* nvg = win->nvg;
 
-	float width = wima_widget_label_estimateWidth(nvg, menu->icon, menu->title) * 8;
+	float width = wima_widget_label_estimateWidth(nvg, menu->icon, menu->title);
 
 	float w, h;
 
@@ -500,7 +501,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu) {
 
 		WimaMenuItem item = menu->items[i];
 
-		w = wima_widget_label_estimateWidth(nvg, item.icon, item.label) * 8;
+		w = wima_widget_label_estimateWidth(nvg, item.icon, item.label);
 
 		win->menuItemSizes[i].h = (int) h;
 
@@ -844,14 +845,16 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		{
 			if (wih.item >= 0) {
 
-				WimaItem* pitem = wima_item_ptr(wih);
+				// TODO: Send the event to the area.
 
-				if (pitem->flags & e.type) {
-					status = pitem->scroll(wih, e.scroll);
-				}
-				else {
-					status = WIMA_SUCCESS;
-				}
+				//WimaItem* pitem = wima_item_ptr(wih);
+
+				//if (pitem->flags & e.type) {
+				//	status = pitem->scroll(wih, e.scroll);
+				//}
+				//else {
+				//	status = WIMA_SUCCESS;
+				//}
 			}
 			else {
 				status = WIMA_SUCCESS;
