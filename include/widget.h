@@ -189,6 +189,9 @@ void wima_widget_menu_background(NVGcontext* nvg,
 void wima_widget_menu_label(NVGcontext* nvg,
     float x, float y, float w, float h, int iconid, const char *label);
 
+// Draw a menu separator.
+void wima_widget_menu_separator(NVGcontext* nvg, float x, float y, float w, float h);
+
 // Draw a menu item with its lower left origin at (x,y) and size of (w,h),
 // where state denotes the widgets current UI state.
 // if iconid >= 0, an icon will be added to the widget
@@ -196,7 +199,7 @@ void wima_widget_menu_label(NVGcontext* nvg,
 // widget looks best when height is WIMA_WIDGET_HEIGHT
 void wima_widget_menu_item(NVGcontext* nvg,
     float x, float y, float w, float h, WimaItemState state,
-    int iconid, const char *label);
+    int iconid, const char *label, bool hasSubMenu);
 
 // Draw a tooltip background with its lower left origin at (x,y) and size of (w,h)
 void wima_widget_tooltip_background(NVGcontext* nvg, float x, float y, float w, float h);

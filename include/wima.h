@@ -286,6 +286,7 @@ typedef struct wima_menu_item {
 
 	const char* label;
 	int icon;
+	bool hasSubMenu;
 
 } WimaMenuItem;
 

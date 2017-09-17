@@ -116,6 +116,8 @@ before including blendish.h, otherwise the file will be in header-only mode.
 #define WIMA_COLOR_TEXT {{{ 0,0,0,1 }}}
 // Default highlighted text color.
 #define WIMA_COLOR_TEXT_SELECTED {{{ 1,1,1,1 }}}
+// Menu separator color.
+#define WIMA_COLOR_MENU_SEPARATOR {{{ 0.21568627451f, 0.21568627451f, 0.21568627451f, 1.0f}}}
 
 // The theme used to draw a single widget or widget box; these values
 // correspond to the same values that can be retrieved from the Theme
@@ -231,6 +233,9 @@ typedef struct wima_theme_loadTheme {
 
 // Label: value separator string.
 #define WIMA_LABEL_SEPARATOR ": "
+
+// The height of a menu separator.
+#define WIMA_MENU_SEPARATOR_HEIGHT (9)
 
 // Alpha intensity of transparent items (0xa4).
 #define WIMA_TRANSPARENT_ALPHA 0.643

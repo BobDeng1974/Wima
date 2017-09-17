@@ -496,28 +496,41 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu) {
 
 	float w, h;
 
+	float arrowWidth = wima_widget_label_estimateWidth(nvg, WIMA_ICONID(28,2), NULL);
+
 	// Estimate width.
 	for (int i = 0; i < menu->numItems; ++i) {
 
 		WimaMenuItem item = menu->items[i];
 
-		w = wima_widget_label_estimateWidth(nvg, item.icon, item.label);
+		if (item.label) {
+			w = wima_widget_label_estimateWidth(nvg, item.icon, item.label) + arrowWidth;
+		}
+		else {
+			w = width;
+		}
 
-		win->menuItemSizes[i].h = (int) h;
-
+		win->menuItemSizes[i].w = (int) w;
 		width = wima_max(width, w);
 	}
 
-	float height = wima_widget_label_estimateHeight(nvg, menu->icon, menu->title, width);
+	float titleHeight = wima_widget_label_estimateHeight(nvg, menu->icon, menu->title, width) + 5;
+	float height = titleHeight + WIMA_MENU_SEPARATOR_HEIGHT;
 
 	// Now estimate height.
 	for (int i = 0; i < menu->numItems; ++i) {
 
 		WimaMenuItem item = menu->items[i];
 
-		h = wima_widget_label_estimateHeight(nvg, item.icon, item.label, width);
+		if (item.label) {
+			h = wima_widget_label_estimateHeight(nvg, item.icon, item.label, width);
+		}
+		else {
+			h = WIMA_MENU_SEPARATOR_HEIGHT;
+		}
 
-		win->menuItemYs[i] = height - 2;
+
+		win->menuItemYs[i] = height;
 		win->menuItemSizes[i].h = (int) h;
 
 		height += h;
@@ -531,20 +544,25 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu) {
 	nvgResetTransform(nvg);
 	nvgResetScissor(nvg);
 
-	wima_widget_menu_background(nvg, menu->rect.x, menu->rect.y, width, height, WIMA_CORNER_TOP);
-
 	nvgTranslate(nvg, menu->rect.x, menu->rect.y);
-	nvgScissor(nvg, menu->rect.x, menu->rect.y, width, height);
+	nvgScissor(nvg, 0, 0, width, height);
 
-	wima_widget_menu_label(nvg, 0, 0, width, height, menu->icon, menu->title);
+	wima_widget_menu_background(nvg, 0, 0, width, height, WIMA_CORNER_NONE);
+	wima_widget_menu_label(nvg, 0, 5, width, titleHeight, menu->icon, menu->title);
+	wima_widget_menu_separator(nvg, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
 
 	for (int i = 0; i < menu->numItems; ++i) {
 
 		WimaMenuItem item = menu->items[i];
 		WimaSize s = win->menuItemSizes[i];
 
-		wima_widget_menu_item(nvg, 0, win->menuItemYs[i], s.w, s.h, WIMA_ITEM_DEFAULT, item.icon, item.label);
-		wima_widget_check(nvg, 0, win->menuItemYs[i], nvgRGBAf(0.9f, 0.9f, 0.9f, 1.0f));
+		if (item.label) {
+			wima_widget_menu_item(nvg, 0, win->menuItemYs[i], s.w, s.h, WIMA_ITEM_DEFAULT,
+			                      item.icon, item.label, item.hasSubMenu);
+		}
+		else {
+			wima_widget_menu_separator(nvg, 0, win->menuItemYs[i], s.w, s.h);
+		}
 	}
 
 	return WIMA_SUCCESS;

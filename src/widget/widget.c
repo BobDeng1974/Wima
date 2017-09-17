@@ -362,8 +362,24 @@ void wima_widget_menu_label(NVGcontext* nvg, float x, float y, float w, float h,
 	                           WIMA_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
+void wima_widget_menu_separator(NVGcontext* nvg, float x, float y, float w, float h) {
+
+	NVGcolor color = WIMA_COLOR_MENU_SEPARATOR;
+
+	nvgStrokeColor(nvg, color);
+	nvgStrokeWidth(nvg, 1.0f);
+
+	float sepY = y + (h / 2);
+
+	nvgBeginPath(nvg);
+	nvgMoveTo(nvg, x, sepY);
+	nvgLineTo(nvg, w, sepY);
+	nvgStroke(nvg);
+}
+
 void wima_widget_menu_item(NVGcontext* nvg, float x, float y, float w, float h,
-                         WimaItemState state, int iconid, const char *label)
+                           WimaItemState state, int iconid, const char *label,
+                           bool hasSubMenu)
 {
 	if (state != WIMA_ITEM_DEFAULT) {
 
@@ -380,6 +396,10 @@ void wima_widget_menu_item(NVGcontext* nvg, float x, float y, float w, float h,
 	NVGcolor textColor = wima_color_text(&wg.theme.menuItemTheme, state);
 	wima_widget_label_icon_value(nvg, x, y, w, h, iconid, textColor, WIMA_LEFT,
 	    WIMA_LABEL_FONT_SIZE, label, NULL);
+
+	if (hasSubMenu) {
+		wima_widget_icon(nvg, w - WIMA_ICON_SHEET_RES, y, WIMA_ICONID(0,0));
+	}
 }
 
 void wima_widget_node_port(NVGcontext* nvg, float x, float y, WimaItemState state, NVGcolor color) {
@@ -840,7 +860,7 @@ void wima_widget_box_outline(NVGcontext* nvg, float x, float y, float w, float h
 	nvgStroke(nvg);
 }
 
-void wima_widget_corners_rounded(float *radiuses, float r, int flags) {
+void wima_widget_corners_rounded(float* radiuses, float r, int flags) {
 	radiuses[0] = (flags & WIMA_CORNER_TOP_LEFT) ? 0 : r;
 	radiuses[1] = (flags & WIMA_CORNER_TOP_RIGHT) ? 0 : r;
 	radiuses[2] = (flags & WIMA_CORNER_DOWN_RIGHT) ? 0 : r;
