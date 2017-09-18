@@ -117,7 +117,7 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs) {
 
 	// Create the cursors.
 	for (int i = 0; i < 6; ++i) {
-		wg.cursors[i] = glfwCreateStandardCursor(i + GLFW_CURSOR_OFFSET);
+		wg.cursors[i] = glfwCreateStandardCursor(i + GLFW_ARROW_CURSOR);
 	}
 
 	return WIMA_STATUS_SUCCESS;
