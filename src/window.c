@@ -824,11 +824,102 @@ WimaContextMenu wima_window_contextMenu(WimaWindowHandle wwh) {
 	return win->userMenu;
 }
 
-static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, WimaItemHandle wih, WimaEvent e) {
+static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle wih, WimaMouseBtnEvent e) {
+
+	WimaStatus status = WIMA_STATUS_SUCCESS;
+
+	if (win->haveWimaMenu || win->haveUserMenu) {
+
+		WimaContextMenu* menu = win->haveWimaMenu ? &win->wimaMenu : &win->userMenu;
+
+		WimaPos pos = win->ctx.cursorPos;
+
+		WimaContextMenu* m = wima_window_menu_contains(win, menu, pos);
+
+		if (e.action == WIMA_ACTION_RELEASE && m) {
+
+			// Send event to menu item.
+
+			pos.x -= m->rect.x;
+			pos.y -= m->rect.y;
+
+			for (int i = 0; i < m->numItems; ++i) {
+
+				WimaMenuItem item = m->items[i];
+
+				if (!item.hasSubMenu && wima_rect_contains(item.rect, pos) && item.func) {
+
+					win->haveUserMenu = win->haveWimaMenu = false;
+					win->drawTwice = true;
+
+					// Call the item's function.
+					status = item.func(wih);
+
+					break;
+				}
+			}
+		}
+		else if (e.action == WIMA_ACTION_PRESS && !m) {
+
+			// Dismiss the menu.
+			win->haveUserMenu = win->haveWimaMenu = false;
+			win->drawTwice = true;
+		}
+	}
+	else if (wih.item >= 0) {
+
+		WimaItem* pitem = wima_item_ptr(wih);
+
+		if (pitem->flags & WIMA_EVENT_MOUSE_BTN) {
+			status = pitem->mouse_event(wih, e);
+		}
+		else {
+			status = WIMA_STATUS_SUCCESS;
+		}
+	}
+	else {
+		status = wima_area_mouseBtn(win->areas, e);
+	}
+
+	return status;
+}
+
+static WimaStatus wima_window_processFileDrop(WimaWindowHandle wwh, DynaVector files) {
 
 	WimaStatus status;
 
-	DynaTree areas = win->areas;
+	if (wg.file_drop) {
+
+		size_t len = dvec_len(files);
+
+		const char** names = malloc(len * sizeof(char*));
+
+		for (int i = 0; i < len; ++i) {
+
+			DynaString s = dvec_get(files, i);
+
+			names[i] = dstr_str(s);
+		}
+
+		status = wg.file_drop(wwh, len, names);
+
+		for (int i = 0; i < len; ++i) {
+			DynaString s = dvec_get(files, i);
+			dstr_free(s);
+		}
+
+		dvec_free(files);
+	}
+	else {
+		status = WIMA_STATUS_SUCCESS;
+	}
+
+	return status;
+}
+
+static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, WimaItemHandle wih, WimaEvent e) {
+
+	WimaStatus status;
 
 	switch (e.type) {
 
@@ -840,75 +931,13 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_KEY:
 		{
-			status = wima_area_key(areas, e.key);
+			status = wima_area_key(win->areas, e.key);
 			break;
 		}
 
 		case WIMA_EVENT_MOUSE_BTN:
 		{
-			if (win->haveWimaMenu || win->haveUserMenu) {
-
-				WimaContextMenu* menu = win->haveWimaMenu ? &win->wimaMenu : &win->userMenu;
-
-				WimaPos pos = win->ctx.cursorPos;
-
-				WimaContextMenu* m = wima_window_menu_contains(win, menu, pos);
-
-				if (e.mouse_btn.action == WIMA_ACTION_RELEASE) {
-
-					if (m) {
-
-						// Send event to menu item.
-
-						pos.x -= m->rect.x;
-						pos.y -= m->rect.y;
-
-						for (int i = 0; i < m->numItems; ++i) {
-
-							WimaMenuItem item = m->items[i];
-
-							if (!item.hasSubMenu && wima_rect_contains(item.rect, pos)) {
-
-								// Make sure this has something worth calling.
-								if (item.func) {
-
-									win->haveUserMenu = win->haveWimaMenu = false;
-									win->drawTwice = true;
-
-									// Call the item's function.
-									item.func(wih);
-								}
-
-								break;
-							}
-						}
-					}
-				}
-				else if (e.mouse_btn.action == WIMA_ACTION_PRESS) {
-
-					if (!m) {
-
-						// Dismiss the menu.
-						win->haveUserMenu = win->haveWimaMenu = false;
-						win->drawTwice = true;
-					}
-				}
-			}
-			else if (wih.item >= 0) {
-
-				WimaItem* pitem = wima_item_ptr(wih);
-
-				if (pitem->flags & e.type) {
-					status = pitem->mouse_event(wih, e.mouse_btn);
-				}
-				else {
-					status = WIMA_STATUS_SUCCESS;
-				}
-			}
-			else {
-				wima_area_mouseBtn(areas, e.mouse_btn);
-			}
-
+			status = wima_window_processMouseBtnEvent(win, wih, e.mouse_btn);
 			break;
 		}
 
@@ -923,7 +952,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 			}
 			else {
-				status = wima_area_mousePos(areas, e.pos);
+				status = wima_area_mousePos(win->areas, e.pos);
 			}
 
 			break;
@@ -1005,33 +1034,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_FILE_DROP:
 		{
-			if (wg.file_drop) {
-
-				DynaVector files = e.file_drop;
-				size_t len = dvec_len(files);
-
-				const char** names = malloc(len * sizeof(char*));
-
-				for (int i = 0; i < len; ++i) {
-
-					DynaString s = dvec_get(files, i);
-
-					names[i] = dstr_str(s);
-				}
-
-				status = wg.file_drop(wwh, len, names);
-
-				for (int i = 0; i < len; ++i) {
-					DynaString s = dvec_get(files, i);
-					dstr_free(s);
-				}
-
-				dvec_free(files);
-			}
-			else {
-				status = WIMA_STATUS_SUCCESS;
-			}
-
+			status = wima_window_processFileDrop(wwh, e.file_drop);
 			break;
 		}
 
