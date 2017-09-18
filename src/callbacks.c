@@ -64,8 +64,9 @@ const char* descs[] = {
 };
 
 WimaMenuItem areaOptionMenuItems[] = {
-    { "Split Area", -1 },
-    { "Join Area", -1 }
+    { "Split Area", -1, true },
+    { NULL, -1, false },
+    { "Join Area", -1, false }
 };
 
 extern WimaPos areaOptionMenuOffset;
@@ -73,7 +74,7 @@ extern WimaPos areaOptionMenuOffset;
 void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
 	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
+		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
@@ -108,7 +109,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
+		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -137,7 +138,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	uint32_t ts = (uint32_t) (time * 1000);
 
 	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
+		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
@@ -148,7 +149,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
+		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -185,7 +186,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 				wwin->wimaMenu.rect.y = wwin->ctx.cursorPos.y - areaOptionMenuOffset.y;
 
 				wwin->wimaMenu.items = areaOptionMenuItems;
-				wwin->wimaMenu.numItems = 2;
+				wwin->wimaMenu.numItems = 3;
 
 				wwin->wimaMenu.icon = -1;
 
@@ -225,7 +226,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	// TODO: Check for entering an area and an item.
 
 	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
+		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
@@ -238,7 +239,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
+		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -287,7 +288,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
+		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
@@ -300,7 +301,7 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
+		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -333,14 +334,14 @@ void wima_callback_char(GLFWwindow* window, unsigned int code) {
 void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
 	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
+		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
+		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -366,14 +367,14 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 	const char* errorMsg = "Could not allocate a file name";
 
 	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
+		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
+		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -390,7 +391,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 	// Allocate a vector.
 	DynaVector strs;
 	if (dvec_createStringVec(&strs, filec)) {
-		wg.error(WIMA_MALLOC_ERR, errorMsg);
+		wg.error(WIMA_STATUS_MALLOC_ERR, errorMsg);
 		return;
 	}
 
@@ -407,7 +408,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 
 			dvec_free(strs);
 
-			wg.error(WIMA_MALLOC_ERR, errorMsg);
+			wg.error(WIMA_STATUS_MALLOC_ERR, errorMsg);
 
 			break;
 		}
@@ -422,14 +423,14 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
+		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
+		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -452,14 +453,14 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 
 	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
+		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
+		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -486,7 +487,7 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
 	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
+		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
 	glViewport(0, 0, width, height);
@@ -495,7 +496,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
+		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	wwin->fbsize.w = width;
@@ -537,14 +538,14 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
 	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
+		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
+		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	wwin->winsize.w = width;
@@ -581,7 +582,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 	// could get a segfault.
 
 	if (!wg.name) {
-		exit(WIMA_INVALID_STATE);
+		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
@@ -599,7 +600,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 
 			WimaWin* wwin = dvec_get(wg.windows, wwh);
 			if (!wwin) {
-				wg.error(WIMA_INVALID_STATE, descs[WIMA_INVALID_STATE - 128]);
+				wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 			}
 
 			memset(wwin, 0, sizeof(WimaWin));
@@ -614,33 +615,33 @@ void wima_callback_error(int error, const char* desc) {
 
 	fprintf(stderr, "Error[%d]: %s\n", error, desc);
 
-	WimaStatus status = WIMA_SUCCESS;
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	switch (error) {
 		case GLFW_NOT_INITIALIZED:
-			status = WIMA_INIT_ERR;
+			status = WIMA_STATUS_INIT_ERR;
 			break;
 		case GLFW_NO_CURRENT_CONTEXT:
-			status = WIMA_CONTEXT_ERR;
+			status = WIMA_STATUS_CONTEXT_ERR;
 			break;
 		case GLFW_INVALID_ENUM:
-			status = WIMA_INVALID_ENUM;
+			status = WIMA_STATUS_INVALID_ENUM;
 			break;
 		case GLFW_INVALID_VALUE:
-			status = WIMA_INVALID_PARAM;
+			status = WIMA_STATUS_INVALID_PARAM;
 			break;
 		case GLFW_OUT_OF_MEMORY:
-			status = WIMA_MALLOC_ERR;
+			status = WIMA_STATUS_MALLOC_ERR;
 			break;
 		case GLFW_API_UNAVAILABLE:
 		case GLFW_VERSION_UNAVAILABLE:
-			status = WIMA_INIT_ERR;
+			status = WIMA_STATUS_INIT_ERR;
 			break;
 		case GLFW_PLATFORM_ERROR:
-			status = WIMA_PLATFORM_ERR;
+			status = WIMA_STATUS_PLATFORM_ERR;
 			break;
 		case GLFW_FORMAT_UNAVAILABLE:
-			status = WIMA_INVALID_CLIP;
+			status = WIMA_STATUS_INVALID_CLIP;
 			break;
 	}
 

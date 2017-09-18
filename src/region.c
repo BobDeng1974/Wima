@@ -71,12 +71,12 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs,
 
 	DynaStatus status = dvec_push(wg.regions, &reg);
 	if (status) {
-		return WIMA_AREA_ERR;
+		return WIMA_STATUS_AREA_ERR;
 	}
 
 	*wrh = idx;
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 void* wima_region_userPointer(WimaRegionHandle reg) {
@@ -98,5 +98,5 @@ WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr) {
 
 	region->user = ptr;
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }

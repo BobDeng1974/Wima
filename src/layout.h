@@ -64,9 +64,11 @@
 #include <wima.h>
 
 typedef enum wima_layout_stage {
-	WIMA_UI_STAGE_LAYOUT = 0,
-	WIMA_UI_STAGE_POST_LAYOUT,
-	WIMA_UI_STAGE_PROCESS,
+
+	WIMA_UI_STAGE_LAYOUT       = 0,
+	WIMA_UI_STAGE_POST_LAYOUT  = 1,
+	WIMA_UI_STAGE_PROCESS      = 2,
+
 } WimaLayoutStage;
 
 void wima_layout_computeSize(WimaItemHandle item, int dim);

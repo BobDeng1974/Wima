@@ -90,18 +90,18 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	const char* name = dstr_str(wg.name);
 
 	if (dstr_create(&wwin.name, name)) {
-		return WIMA_WINDOW_ERR;
+		return WIMA_STATUS_WINDOW_ERR;
 	}
 
 	if (dvec_create(&wwin.scissorStack, NULL, 16, sizeof(WimaRect))) {
 		dstr_free(wwin.name);
-		return WIMA_WINDOW_ERR;
+		return WIMA_STATUS_WINDOW_ERR;
 	}
 
 	GLFWwindow* win = glfwCreateWindow(640, 480, name, NULL, NULL);
 
 	if (!win) {
-		return WIMA_WINDOW_ERR;
+		return WIMA_STATUS_WINDOW_ERR;
 	}
 
 	// Set the sizes.
@@ -149,7 +149,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 		idx = len;
 
 		if (dvec_push(wg.windows, &wwin)) {
-			return WIMA_WINDOW_ERR;
+			return WIMA_STATUS_WINDOW_ERR;
 		}
 	}
 
@@ -185,7 +185,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 		wg.icons = wima_theme_loadIcons(window->nvg, "../res/blender_icons16.png");
 	}
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 void wima_window_context_create(WimaWindowContext* ctx) {
@@ -220,10 +220,10 @@ WimaStatus wima_window_setHover(WimaWindowHandle wwh, WimaItemHandle wih) {
 
 	if (area->area.ctx.itemCount < wih.item) {
 		win->ctx.hover = wih;
-		return WIMA_SUCCESS;
+		return WIMA_STATUS_SUCCESS;
 	}
 	else {
-		return WIMA_WINDOW_ERR;
+		return WIMA_STATUS_WINDOW_ERR;
 	}
 }
 
@@ -241,10 +241,10 @@ WimaStatus wima_window_setActive(WimaWindowHandle wwh, WimaItemHandle wih) {
 
 	if (area->area.ctx.itemCount < wih.item) {
 		win->ctx.active = wih;
-		return WIMA_SUCCESS;
+		return WIMA_STATUS_SUCCESS;
 	}
 	else {
-		return WIMA_WINDOW_ERR;
+		return WIMA_STATUS_WINDOW_ERR;
 	}
 }
 
@@ -262,10 +262,10 @@ WimaStatus wima_window_setFocus(WimaWindowHandle wwh, WimaItemHandle wih) {
 
 	if (area->area.ctx.itemCount < wih.item) {
 		win->ctx.focus = wih;
-		return WIMA_SUCCESS;
+		return WIMA_STATUS_SUCCESS;
 	}
 	else {
-		return WIMA_WINDOW_ERR;
+		return WIMA_STATUS_WINDOW_ERR;
 	}
 }
 
@@ -278,7 +278,7 @@ WimaStatus wima_window_close(WimaWindowHandle wwh) {
 	if (!wg.close || wg.close(wwh)) {
 		glfwSetWindowShouldClose(wima_window_glfw(wwh), 1);
 	}
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 DynaString wima_window_title(WimaWindowHandle wwh) {
@@ -293,10 +293,10 @@ WimaStatus wima_window_setTitle(WimaWindowHandle wwh, const char* title) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	if (dstr_set(win->name, title)) {
-		return WIMA_WINDOW_ERR;
+		return WIMA_STATUS_WINDOW_ERR;
 	}
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 void* wima_window_userPointer(WimaWindowHandle wwh) {
@@ -313,18 +313,18 @@ void* wima_window_userPointer(WimaWindowHandle wwh) {
 WimaStatus wima_window_setUserPointer(WimaWindowHandle wwh, void* user) {
 
 	if (!wg.windows) {
-		return WIMA_INVALID_STATE;
+		return WIMA_STATUS_INVALID_STATE;
 	}
 
 	if (wwh >= dvec_len(wg.windows)) {
-		return WIMA_INVALID_PARAM;
+		return WIMA_STATUS_INVALID_PARAM;
 	}
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	win->user = user;
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 DynaTree wima_window_areas(WimaWindowHandle wwh) {
@@ -360,19 +360,19 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 	DynaNode root = dtree_root();
 
 	if (!wima_area_node_valid(wksp, root)) {
-		return WIMA_WINDOW_ERR;
+		return WIMA_STATUS_WINDOW_ERR;
 	}
 
 	WimaWin* window = dvec_get(wg.windows, wwh);
 
 	if (!window->areas) {
 		if (dtree_create(&window->areas, NULL, dtree_nodes(wksp), sizeof(WimaAreaNode))) {
-			return WIMA_WINDOW_ERR;
+			return WIMA_STATUS_WINDOW_ERR;
 		}
 	}
 
 	if (dtree_copy(window->areas, wksp)) {
-		return WIMA_WINDOW_ERR;
+		return WIMA_STATUS_WINDOW_ERR;
 	}
 
 	wima_window_context_create(&window->ctx);
@@ -397,15 +397,15 @@ WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas) {
 
 	if (!window->areas) {
 		if (dtree_create(&window->areas, NULL, dtree_nodes(areas), sizeof(WimaAreaNode))) {
-			return WIMA_WINDOW_ERR;
+			return WIMA_STATUS_WINDOW_ERR;
 		}
 	}
 
 	if (dtree_copy(window->areas, areas)) {
-		return WIMA_WINDOW_ERR;
+		return WIMA_STATUS_WINDOW_ERR;
 	}
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus wima_window_draw(WimaWindowHandle wwh) {
@@ -483,7 +483,7 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 	// Swap front and back buffers.
 	glfwSwapBuffers(win->window);
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu) {
@@ -565,7 +565,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu) {
 		}
 	}
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction action) {
@@ -614,7 +614,7 @@ WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction
 			break;
 	}
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 void wima_window_cursor_setType(WimaWindowHandle wwh, GLFWcursor* c) {
@@ -730,7 +730,7 @@ WimaStatus wima_window_setContextMenu(WimaWindowHandle wwh, WimaContextMenu menu
 	win->userMenu = menu;
 	win->haveUserMenu = true;
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus wima_window_removeContextMenu(WimaWindowHandle wwh) {
@@ -740,7 +740,7 @@ WimaStatus wima_window_removeContextMenu(WimaWindowHandle wwh) {
 
 	win->haveUserMenu = false;
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaContextMenu wima_window_contextMenu(WimaWindowHandle wwh) {
@@ -761,7 +761,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_NONE:
 		{
-			status = WIMA_SUCCESS;
+			status = WIMA_STATUS_SUCCESS;
 			break;
 		}
 
@@ -800,7 +800,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 					status = pitem->mouse_event(wih, e.mouse_btn);
 				}
 				else {
-					status = WIMA_SUCCESS;
+					status = WIMA_STATUS_SUCCESS;
 				}
 			}
 			else {
@@ -851,11 +851,11 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 					status = pitem->mouse_enter(wih, e.mouse_enter);
 				}
 				else {
-					status = WIMA_SUCCESS;
+					status = WIMA_STATUS_SUCCESS;
 				}
 			}
 			else {
-				status = WIMA_SUCCESS;
+				status = WIMA_STATUS_SUCCESS;
 			}
 		}
 
@@ -875,7 +875,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 				//}
 			}
 			else {
-				status = WIMA_SUCCESS;
+				status = WIMA_STATUS_SUCCESS;
 			}
 
 			break;
@@ -891,11 +891,11 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 					status = pitem->char_event(wih, e.char_event);
 				}
 				else {
-					status = WIMA_SUCCESS;
+					status = WIMA_STATUS_SUCCESS;
 				}
 			}
 			else {
-				status = WIMA_SUCCESS;
+				status = WIMA_STATUS_SUCCESS;
 			}
 
 			break;
@@ -927,7 +927,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 				dvec_free(files);
 			}
 			else {
-				status = WIMA_SUCCESS;
+				status = WIMA_STATUS_SUCCESS;
 			}
 
 			break;
@@ -940,7 +940,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 				status = wg.pos(wwh, pos);
 			}
 			else {
-				status = WIMA_SUCCESS;
+				status = WIMA_STATUS_SUCCESS;
 			}
 
 			break;
@@ -953,7 +953,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 				status = wg.fb_size(wwh, size);
 			}
 			else {
-				status = WIMA_SUCCESS;
+				status = WIMA_STATUS_SUCCESS;
 			}
 			break;
 		}
@@ -965,7 +965,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 				status = wg.win_size(wwh, size);
 			}
 			else {
-				status = WIMA_SUCCESS;
+				status = WIMA_STATUS_SUCCESS;
 			}
 			break;
 		}
@@ -976,7 +976,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 				status = wg.enter(wwh, e.mouse_enter);
 			}
 			else {
-				status = WIMA_SUCCESS;
+				status = WIMA_STATUS_SUCCESS;
 			}
 
 			break;
@@ -988,7 +988,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 WimaStatus wima_window_processEvents(WimaWindowHandle wwh) {
 
-	WimaStatus status = WIMA_SUCCESS;
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);

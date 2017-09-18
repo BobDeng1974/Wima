@@ -50,8 +50,6 @@
 #include "window.h"
 #include "global.h"
 
-#define GLFW_CURSOR_OFFSET (0x00036001)
-
 extern WimaG wg;
 extern const WimaTheme wima_initial_theme;
 
@@ -62,7 +60,7 @@ GLFWcursor* wima_standardCursor(WimaCursor cursor) {
 WimaStatus wima_init(const char* name, WimaAppFuncs funcs) {
 
 	if (!funcs.draw || !funcs.error) {
-		return WIMA_INIT_ERR;
+		return WIMA_STATUS_INIT_ERR;
 	}
 
 	wg.draw = funcs.draw;
@@ -89,30 +87,30 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs) {
 	DynaStatus dstatus = dstr_create(&(wg.name), name);
 	if (dstatus) {
 		wima_exit();
-		return WIMA_INIT_ERR;
+		return WIMA_STATUS_INIT_ERR;
 	}
 
 	dstatus = dvec_create(&wg.windows, NULL, 0, sizeof(WimaWin));
 	if (dstatus) {
 		wima_exit();
-		return WIMA_INIT_ERR;
+		return WIMA_STATUS_INIT_ERR;
 	}
 
 	dstatus = dvec_create(&wg.regions, NULL, 0, sizeof(WimaRegion));
 	if (dstatus) {
 		wima_exit();
-		return WIMA_INIT_ERR;
+		return WIMA_STATUS_INIT_ERR;
 	}
 
 	dstatus = dvec_create(&wg.workspaces, NULL, 0, sizeof(WimaWksp));
 	if (dstatus) {
 		wima_exit();
-		return WIMA_INIT_ERR;
+		return WIMA_STATUS_INIT_ERR;
 	}
 
 	if (!glfwInit()) {
 		wima_exit();
-		return WIMA_INIT_ERR;
+		return WIMA_STATUS_INIT_ERR;
 	}
 
 	glfwSetErrorCallback(wima_callback_error);
@@ -122,18 +120,18 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs) {
 		wg.cursors[i] = glfwCreateStandardCursor(i + GLFW_CURSOR_OFFSET);
 	}
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus wima_main() {
 
 	GLFWwindow* win = glfwGetCurrentContext();
 	if (!win) {
-		return WIMA_INVALID_STATE;
+		return WIMA_STATUS_INVALID_STATE;
 	}
 
 	if (glfwWindowShouldClose(win)) {
-		return WIMA_SUCCESS;
+		return WIMA_STATUS_SUCCESS;
 	}
 
 	// Main event loop.
@@ -167,7 +165,7 @@ WimaStatus wima_main() {
 		}
 	}
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 void wima_exit() {

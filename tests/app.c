@@ -104,7 +104,7 @@ WimaStatus mouseCoordsDraw(WimaItemHandle item, NVGcontext* nvg) {
 
 	wima_widget_label(nvg, r.x, r.y, r.w, r.h, 6, buffer);
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus mouseCoordsLayout(WimaAreaHandle wah, WimaSize size) {
@@ -127,7 +127,7 @@ WimaStatus mouseCoordsLayout(WimaAreaHandle wah, WimaSize size) {
 	wima_item_setSize(item, size);
 	wima_item_setLayout(item, WIMA_LAYOUT_FILL | WIMA_LAYOUT_CENTER);
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus mouseCoordsKevent(WimaAreaHandle wah, WimaKeyEvent e) {
@@ -146,7 +146,7 @@ WimaStatus mouseCoordsKevent(WimaAreaHandle wah, WimaKeyEvent e) {
 		wima_window_close(wah.window);
 	}
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus mouseCoordsMevent(WimaItemHandle wih, WimaMouseBtnEvent e) {
@@ -181,12 +181,12 @@ WimaStatus mouseCoordsMevent(WimaItemHandle wih, WimaMouseBtnEvent e) {
 
 	printf("    Clicks: %d\n", e.clicks);
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus mouseCoordsMpos(WimaAreaHandle wah, WimaPos pos) {
 	printf("Area[%d] Pos: { x: %4d; y: %4d }\n", wah.area, pos.x, pos.y);
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus mouseCoordsMenterArea(WimaAreaHandle wah, bool entered) {
@@ -198,7 +198,7 @@ WimaStatus mouseCoordsMenterArea(WimaAreaHandle wah, bool entered) {
 		printf("Mouse Exit Area\n");
 	}
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus mouseCoordsSevent(WimaAreaHandle wah, WimaScrollEvent e) {
@@ -207,7 +207,7 @@ WimaStatus mouseCoordsSevent(WimaAreaHandle wah, WimaScrollEvent e) {
 	printf("    Mods: ");
 	printMods(e.mods);
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus mouseCoordsChar(WimaAreaHandle wah, WimaCharEvent e) {
@@ -215,7 +215,7 @@ WimaStatus mouseCoordsChar(WimaAreaHandle wah, WimaCharEvent e) {
 	printf("Char: %lc; Mods: ", e.code);
 	printMods(e.mods);
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus mouseCoordsFileDrop(WimaWindowHandle wwh, int filec, const char* filev[]) {
@@ -225,7 +225,7 @@ WimaStatus mouseCoordsFileDrop(WimaWindowHandle wwh, int filec, const char* file
 		printf("    %s\n", filev[i]);
 	}
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 void* mouseCoordsUserPtr(WimaAreaHandle wah) {
@@ -245,12 +245,12 @@ WimaStatus mouseCoordsMenter(WimaWindowHandle wwh, bool entered) {
 		printf("Mouse Exit\n");
 	}
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus mouseCoordsResize(WimaWindowHandle wwh, WimaSize size) {
 	printf("Resize: { handle: %u; width: %4d; height: %4d }\n", wwh, size.w, size.h);
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 bool mouseCoordsClose(WimaWindowHandle wwh) {

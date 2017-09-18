@@ -58,7 +58,7 @@ extern WimaG wg;
 WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node, WimaRect rect) {
 
 	// Make sure this is clear.
-	WimaStatus status = WIMA_SUCCESS;
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	// Get the particular area that we care about.
 	WimaAreaNode* area = dtree_node(areas, node);
@@ -98,7 +98,7 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 
 		// Check that the region handle is valid.
 		if (reg >= dvec_len(wg.regions)) {
-			return WIMA_WINDOW_ERR;
+			return WIMA_STATUS_WINDOW_ERR;
 		}
 
 		// Get the region pointer.
@@ -109,7 +109,7 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 
 		// If the user didn't specify one, don't call it.
 		if (!get_user_ptr) {
-			return WIMA_SUCCESS;
+			return WIMA_STATUS_SUCCESS;
 		}
 
 		// Get all of the area handle
@@ -266,7 +266,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 	WimaAreaNode* area = dtree_node(areas, node);
 	assert(area);
 
-	WimaStatus status = WIMA_SUCCESS;
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	if (area->type == WIMA_AREA_PARENT) {
 
@@ -322,7 +322,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 		//	wima_window_updateHover(area->window);
 		//}
 
-		status = WIMA_SUCCESS;
+		status = WIMA_STATUS_SUCCESS;
 	}
 
 	return status;
@@ -342,7 +342,7 @@ WimaStatus wima_areas_free(DynaTree areas) {
 WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 
 	// Make sure this is clear.
-	WimaStatus status = WIMA_SUCCESS;
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	// Get the particular area that we care about.
 	WimaAreaNode* area = dtree_node(areas, node);
@@ -369,7 +369,7 @@ WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 		// If the user didn't allocate anything, just return.
 		void* user = area->area.user;
 		if (!user) {
-			return WIMA_SUCCESS;
+			return WIMA_STATUS_SUCCESS;
 		}
 
 		// Get the region handle.
@@ -377,7 +377,7 @@ WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 
 		// Check that the region handle is valid.
 		if (reg >= dvec_len(wg.regions)) {
-			return WIMA_WINDOW_ERR;
+			return WIMA_STATUS_WINDOW_ERR;
 		}
 
 		// Get the list of regions.
@@ -388,14 +388,14 @@ WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 
 		// If the user didn't specify one, don't call it.
 		if (!free_user_ptr) {
-			return WIMA_SUCCESS;
+			return WIMA_STATUS_SUCCESS;
 		}
 
 		// Call the user function.
 		free_user_ptr(user);
 	}
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 void wima_area_context_free(WimaAreaContext* ctx) {
@@ -472,7 +472,7 @@ bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos, WimaMouseSplitEvent* re
 
 WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, DynaVector stack, float ratio) {
 
-	WimaStatus status = WIMA_SUCCESS;
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	WimaAreaNode* area = dtree_node(areas, node);
 
@@ -506,12 +506,12 @@ WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, D
 
 	wima_area_popViewport(nvg, stack);
 
-	return WIMA_SUCCESS;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus wima_area_node_key(DynaTree areas, DynaNode node, WimaKeyEvent e)
 {
-	WimaStatus status = WIMA_SUCCESS;
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	WimaAreaNode* area = dtree_node(areas, node);
 
@@ -538,7 +538,7 @@ WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtnEv
 	// TODO: Handle window splits and joins. Also, make sure to remember that
 	// GLFW coords are from upper left and OpenGL coords are from lower left.
 
-	WimaStatus status = WIMA_SUCCESS;
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	WimaAreaNode* area = dtree_node(areas, node);
 
@@ -555,7 +555,7 @@ WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtnEv
 
 WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos) {
 
-	WimaStatus status = WIMA_SUCCESS;
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	WimaAreaNode* area = dtree_node(areas, node);
 
@@ -581,7 +581,7 @@ WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos) {
 
 WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, WimaScrollEvent info) {
 
-	WimaStatus status = WIMA_SUCCESS;
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	WimaAreaNode* area = dtree_node(areas, node);
 
@@ -601,7 +601,7 @@ WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, WimaScrollEvent 
 
 WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, WimaCharEvent info) {
 
-	WimaStatus status = WIMA_SUCCESS;
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	WimaAreaNode* area = dtree_node(areas, node);
 
@@ -621,7 +621,7 @@ WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, WimaCharEvent info
 
 WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect) {
 
-	WimaStatus status = WIMA_SUCCESS;
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	WimaAreaNode* area = dtree_node(areas, node);
 
