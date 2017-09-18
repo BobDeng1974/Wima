@@ -50,6 +50,8 @@
 
 #include "workspace.h"
 
+#define WIMA_MIN_AREA_DIM (26)
+
 // The following was originally written for OUI.
 
 // Consecutive click threshold in ms.
