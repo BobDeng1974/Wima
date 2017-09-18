@@ -282,27 +282,6 @@ typedef struct WimaRect {
 
 } WimaRect;
 
-typedef struct wima_menu_item {
-
-	const char* label;
-	int icon;
-	bool hasSubMenu;
-
-} WimaMenuItem;
-
-typedef struct wima_context_menu {
-
-	const char* title;
-
-	WimaRect rect;
-
-	WimaMenuItem* items;
-	int numItems;
-
-	int icon;
-
-} WimaContextMenu;
-
 /**
  * A handle to a region (area template) type.
  */
@@ -329,7 +308,7 @@ typedef uint16_t WimaAreaNodeHandle;
 /**
  * A handle to a area.
  */
-typedef struct wima_area_han {
+typedef struct wima_area_handle_struct {
 
 	// Put this first because it's bigger.
 	WimaAreaNodeHandle area;
@@ -619,6 +598,49 @@ typedef struct wima_char_event {
 	WimaMods mods;
 
 } WimaCharEvent;
+
+typedef struct wima_context_menu WimaContextMenu;
+
+typedef WimaStatus (*WimaMenuItemFunc)(WimaItemHandle);
+
+typedef struct wima_menu_item {
+
+	const char* label;
+
+	union {
+		WimaContextMenu* subMenu;
+		WimaMenuItemFunc func;
+	};
+
+	WimaRect rect;
+
+	WimaItemState state;
+
+	int icon;
+
+	bool hasSubMenu;
+
+} WimaMenuItem;
+
+typedef struct wima_context_menu {
+
+	const char* title;
+
+	WimaRect rect;
+
+	union {
+		WimaContextMenu* subMenu;
+		WimaMenuItemFunc func;
+	};
+
+	WimaMenuItem* items;
+	int numItems;
+
+	int icon;
+
+	bool hasSubMenu;
+
+} WimaContextMenu;
 
 /**
  *These typedefs are here to make the following procedures shorter to write.

@@ -49,6 +49,36 @@
 
 extern WimaG wg;
 
+WimaStatus joinItemClick(WimaItemHandle wih) {
+	printf("Join clicked!\n");
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus splitSub1Click(WimaItemHandle wih) {
+	printf("Split sub 1 clicked!\n");
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus splitSub2Click(WimaItemHandle wih) {
+	printf("Split sub 2 clicked!\n");
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus splitSub3Click(WimaItemHandle wih) {
+	printf("Split sub 3 clicked!\n");
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus splitSub4Click(WimaItemHandle wih) {
+	printf("Split sub 4 clicked!\n");
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus splitSub5Click(WimaItemHandle wih) {
+	printf("Split sub 5 clicked!\n");
+	return WIMA_STATUS_SUCCESS;
+}
+
 const char* descs[] = {
     "Allocation failed",
     "Platform returned an unknown error",
@@ -63,10 +93,31 @@ const char* descs[] = {
     "Clipboard contents were invalid"
 };
 
+WimaMenuItem splitSubItems[] = {
+    { "Split sub 1", { .func = splitSub1Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
+    { NULL, NULL, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, -1, false },
+    { "Split sub 2",{ .func = splitSub2Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
+    { "Split sub 3",{ .func = splitSub3Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
+    { "Split sub 4",{ .func = splitSub4Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
+    { "Split sub 5",{ .func = splitSub5Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false }
+};
+
+WimaContextMenu splitSub = {
+
+    "Area Options Sub",
+    {{ 0, 0, 0, 0 }},
+    NULL,
+    splitSubItems,
+    6,
+    WIMA_ICONID(0,1),
+    false
+
+};
+
 WimaMenuItem areaOptionMenuItems[] = {
-    { "Split Area", -1, true },
-    { NULL, -1, false },
-    { "Join Area", -1, false }
+    { "Split Area", &splitSub, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, -1, true },
+    { NULL, NULL, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, -1, false },
+    { "Join Area", { .func = joinItemClick }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(0,0), false }
 };
 
 extern WimaPos areaOptionMenuOffset;
@@ -168,6 +219,8 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	WimaItemHandle clickItem = wima_area_findItem(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN);
 
+	wwin->ctx.eventItems[numEvents] = clickItem;
+
 	if (wact == WIMA_ACTION_PRESS) {
 
 		if (wwin->ctx.split.split >= 0) {
@@ -189,6 +242,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 				wwin->wimaMenu.numItems = 3;
 
 				wwin->wimaMenu.icon = -1;
+				wwin->wimaMenu.hasSubMenu = false;
 
 				wwin->drawTwice = true;
 			}
@@ -215,8 +269,6 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	event->mouse_btn.action = wact;
 	event->mouse_btn.mods = wmods;
 	event->mouse_btn.clicks = wwin->ctx.clicks;
-
-	wwin->ctx.eventItems[numEvents] = clickItem;
 
 	++(wwin->ctx.eventCount);
 }

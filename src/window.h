@@ -55,9 +55,6 @@
 // Consecutive click threshold in ms.
 #define WIMA_CLICK_THRESHOLD 250
 
-// Max number of menu items in a menu.
-#define WIMA_MAX_MENU_ITEMS 256
-
 typedef struct wima_window_context {
 
 	// Where the cursor was last frame.
@@ -113,9 +110,6 @@ typedef struct wima_window {
 	WimaContextMenu userMenu;
 	WimaContextMenu wimaMenu;
 
-	WimaSize menuItemSizes[WIMA_MAX_MENU_ITEMS];
-	int menuItemYs[WIMA_MAX_MENU_ITEMS];
-
 	WimaSize fbsize;
 	WimaSize winsize;
 
@@ -159,7 +153,7 @@ void wima_window_context_clear(WimaWindowContext* ctx);
 // uiBeginLayout() must be followed by uiEndLayout()
 WimaStatus wima_window_draw(WimaWindowHandle win);
 
-WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu);
+WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentWidth);
 
 WimaStatus wima_window_processEvents(WimaWindowHandle win);
 

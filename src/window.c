@@ -449,13 +449,13 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
 	if (win->haveWimaMenu) {
 
-		status = wima_window_drawMenu(win, &win->wimaMenu);
+		status = wima_window_drawMenu(win, &win->wimaMenu, 0);
 		if (status) {
 			return status;
 		}
 
 		if (drawTwice) {
-			status = wima_window_drawMenu(win, &win->wimaMenu);
+			status = wima_window_drawMenu(win, &win->wimaMenu, 0);
 			if (status) {
 				return status;
 			}
@@ -463,13 +463,13 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 	}
 	else if (win->haveUserMenu) {
 
-		status = wima_window_drawMenu(win, &win->userMenu);
+		status = wima_window_drawMenu(win, &win->userMenu, 0);
 		if (status) {
 			return status;
 		}
 
 		if (drawTwice) {
-			status = wima_window_drawMenu(win, &win->userMenu);
+			status = wima_window_drawMenu(win, &win->userMenu, 0);
 			if (status) {
 				return status;
 			}
@@ -486,11 +486,11 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu) {
-
-	assert(menu->numItems <= WIMA_MAX_MENU_ITEMS);
+WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentWidth) {
 
 	NVGcontext* nvg = win->nvg;
+
+	// TODO: Handle sending events to menu items.
 
 	float width = wima_widget_label_estimateWidth(nvg, menu->icon, menu->title);
 
@@ -504,13 +504,14 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu) {
 		WimaMenuItem item = menu->items[i];
 
 		if (item.label) {
-			w = wima_widget_label_estimateWidth(nvg, item.icon, item.label) + arrowWidth;
+			w = wima_widget_label_estimateWidth(nvg, item.icon, item.label);
+			w += item.hasSubMenu ? arrowWidth : 0;
 		}
 		else {
 			w = width;
 		}
 
-		win->menuItemSizes[i].w = (int) w;
+		menu->items[i].rect.w = (int) w;
 		width = wima_max(width, w);
 	}
 
@@ -529,40 +530,86 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu) {
 			h = WIMA_MENU_SEPARATOR_HEIGHT;
 		}
 
+		// We want to make sure all items have the same width.
+		menu->items[i].rect.w = width;
 
-		win->menuItemYs[i] = height;
-		win->menuItemSizes[i].h = (int) h;
+		menu->items[i].rect.y = height;
+		menu->items[i].rect.h = (int) h;
 
 		height += h;
 	}
 
-	// Store these for hit tests.
+	// Add a 5 pixel bottom border.
+	height += 5;
+
 	menu->rect.w = width;
 	menu->rect.h = height;
+
+	if (menu->rect.x + width >= win->fbsize.w) {
+		menu->rect.x -= parentWidth + width;
+	}
+
+	int heightPos = menu->rect.y + height;
+
+	if (heightPos >= win->fbsize.h) {
+		menu->rect.y -= heightPos - (win->fbsize.h);
+	}
+
+	// Get the cursor.
+	WimaPos cursor = win->ctx.cursorPos;
+
+	// Figure out if the cursor is.
+	bool menuContainsCursor = wima_rect_contains(menu->rect, cursor);
+
+	// Translate the cursor into the menu space.
+	cursor.x -= menu->rect.x;
+	cursor.y -= menu->rect.y;
 
 	// Set up NanoVG.
 	nvgResetTransform(nvg);
 	nvgResetScissor(nvg);
 
 	nvgTranslate(nvg, menu->rect.x, menu->rect.y);
-	nvgScissor(nvg, 0, 0, width, height);
+	nvgScissor(nvg, 0, 0, menu->rect.w, menu->rect.h);
 
-	wima_widget_menu_background(nvg, 0, 0, width, height, WIMA_CORNER_NONE);
+	wima_widget_menu_background(nvg, 0, 0, menu->rect.w, menu->rect.h, WIMA_CORNER_NONE);
 	wima_widget_menu_label(nvg, 0, 5, width, titleHeight, menu->icon, menu->title);
 	wima_widget_menu_separator(nvg, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
 
 	for (int i = 0; i < menu->numItems; ++i) {
 
 		WimaMenuItem item = menu->items[i];
-		WimaSize s = win->menuItemSizes[i];
 
 		if (item.label) {
-			wima_widget_menu_item(nvg, 0, win->menuItemYs[i], s.w, s.h, WIMA_ITEM_DEFAULT,
-			                      item.icon, item.label, item.hasSubMenu);
+
+			if (menuContainsCursor) {
+
+				bool contained = wima_rect_contains(item.rect, cursor);
+
+				if (contained) {
+					menu->subMenu = item.subMenu;
+					menu->hasSubMenu = item.hasSubMenu;
+					if (item.hasSubMenu) {
+						menu->subMenu->rect.x = menu->rect.x + width;
+						menu->subMenu->rect.y = menu->rect.y + item.rect.y;
+						menu->subMenu->rect.y -= titleHeight + WIMA_MENU_SEPARATOR_HEIGHT;
+					}
+				}
+
+				// Get the state.
+				item.state = contained ? WIMA_ITEM_HOVER : item.state;
+			}
+
+			wima_widget_menu_item(nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h,
+			                      item.state, item.icon, item.label, item.hasSubMenu);
 		}
 		else {
-			wima_widget_menu_separator(nvg, 0, win->menuItemYs[i], s.w, s.h);
+			wima_widget_menu_separator(nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h);
 		}
+	}
+
+	if (menu->hasSubMenu) {
+		wima_window_drawMenu(win, menu->subMenu, width);
 	}
 
 	return WIMA_STATUS_SUCCESS;
@@ -777,22 +824,54 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 				WimaContextMenu* menu = win->haveWimaMenu ? &win->wimaMenu : &win->userMenu;
 
-				WimaRect r = menu->rect;
 				WimaPos pos = win->ctx.cursorPos;
 
-				printf("Rect: { x: %4d, y: %4d, w: %4d, h: %4d }\n", r.x, r.y, r.w, r.h);
-				printf("Pos:  { x: %4d, y: %4d }\n", pos.x, pos.y);
+				if (e.mouse_btn.action == WIMA_ACTION_RELEASE) {
 
-				if (wima_rect_contains(menu->rect, win->ctx.cursorPos)) {
+					WimaContextMenu* m = menu;
 
-				}
-				else {
+					bool contains = wima_rect_contains(m->rect, pos);
 
-					// Dismiss the menu.
-					win->haveUserMenu = win->haveWimaMenu = false;
+					while (!contains && m->hasSubMenu) {
+						m = m->subMenu;
+						contains = wima_rect_contains(m->rect, pos);
+					}
+
+					if (!contains) {
+
+						// Dismiss the menu.
+						win->haveUserMenu = win->haveWimaMenu = false;
+						win->drawTwice = true;
+					}
+					else {
+						// TODO: Send event to menu item.
+
+						pos.x -= m->rect.x;
+						pos.y -= m->rect.y;
+
+						for (int i = 0; i < m->numItems; ++i) {
+
+							WimaMenuItem item = m->items[i];
+
+							if (wima_rect_contains(item.rect, pos) && !item.hasSubMenu) {
+
+								// Make sure this has something worth calling.
+								if (item.func) {
+
+									win->haveUserMenu = win->haveWimaMenu = false;
+									win->drawTwice = true;
+
+									// Call the item's function.
+									item.func(wih);
+								}
+
+								break;
+							}
+						}
+					}
 				}
 			}
-			if (wih.item >= 0) {
+			else if (wih.item >= 0) {
 
 				WimaItem* pitem = wima_item_ptr(wih);
 

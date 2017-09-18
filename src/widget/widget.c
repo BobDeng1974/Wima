@@ -398,7 +398,7 @@ void wima_widget_menu_item(NVGcontext* nvg, float x, float y, float w, float h,
 	    WIMA_LABEL_FONT_SIZE, label, NULL);
 
 	if (hasSubMenu) {
-		wima_widget_icon(nvg, w - WIMA_ICON_SHEET_RES, y, WIMA_ICONID(0,0));
+		wima_widget_icon(nvg, w - WIMA_ICON_SHEET_RES, y, WIMA_ICONID(2,28));
 	}
 }
 
