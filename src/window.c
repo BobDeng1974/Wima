@@ -867,7 +867,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 							WimaMenuItem item = m->items[i];
 
-							if (wima_rect_contains(item.rect, pos) && !item.hasSubMenu) {
+							if (!item.hasSubMenu && wima_rect_contains(item.rect, pos)) {
 
 								// Make sure this has something worth calling.
 								if (item.func) {
