@@ -946,7 +946,11 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 			// Set the cursor position.
 			win->ctx.cursorPos = e.pos;
 
-			if (win->ctx.split.split >= 0) {
+			// Don't do anything if we have a menu up.
+			if (win->haveUserMenu || win->haveWimaMenu) {
+				status = WIMA_STATUS_SUCCESS;
+			}
+			else if (win->ctx.split.split >= 0) {
 
 				// TODO: Send the event to the area.
 

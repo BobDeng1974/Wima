@@ -563,7 +563,19 @@ WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos) {
 
 		// TODO: Write code to do mouse enter and exit.
 
-		// TODO: Put code to ensure it goes to the right one.
+		// I send without checking for splits because that check happens
+		// before we get here, so I don't have to worry about it.
+
+		DynaNode leftNode = dtree_left(node);
+
+		WimaAreaNode* left = dtree_node(areas, leftNode);
+
+		if (wima_rect_contains(left->rect, pos)) {
+			status = wima_area_node_mousePos(areas, leftNode, pos);
+		}
+		else {
+			status = wima_area_node_mousePos(areas, dtree_right(node), pos);
+		}
 	}
 	else {
 
