@@ -177,7 +177,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	// Load the font if not loaded already.
 	if (wg.font < 0) {
 		wg.font = wima_theme_loadFont(window->nvg, "system", "../res/DejaVuSans.ttf");
-		printf("Font: %d\n", wg.font);
 	}
 
 	// Load the icons if not loaded already.
@@ -612,8 +611,6 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 				if (contained && m == menu) {
 					menu->subMenu = item.subMenu;
 					menu->hasSubMenu = item.hasSubMenu;
-
-					printf("Item has sub menu: %s\n", item.hasSubMenu ? "true" : "false");
 
 					if (item.hasSubMenu) {
 						menu->subMenu->rect.x = menu->rect.x + width;
