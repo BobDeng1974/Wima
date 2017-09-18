@@ -322,8 +322,6 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 		return;
 	}
 
-	// TODO: Don't send mouse pos to area when Wima has a menu.
-
 	wwin->ctx.cursorPos.x = xint;
 	wwin->ctx.cursorPos.y = yint;
 
