@@ -59,11 +59,6 @@ WimaStatus splitSub1Click(WimaItemHandle wih) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus splitSub2Click(WimaItemHandle wih) {
-	printf("Split sub 2 clicked!\n");
-	return WIMA_STATUS_SUCCESS;
-}
-
 WimaStatus splitSub3Click(WimaItemHandle wih) {
 	printf("Split sub 3 clicked!\n");
 	return WIMA_STATUS_SUCCESS;
@@ -76,6 +71,11 @@ WimaStatus splitSub4Click(WimaItemHandle wih) {
 
 WimaStatus splitSub5Click(WimaItemHandle wih) {
 	printf("Split sub 5 clicked!\n");
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus splitSubSub1Click(WimaItemHandle wih) {
+	printf("Split sub sub 1 clicked!\n");
 	return WIMA_STATUS_SUCCESS;
 }
 
@@ -93,13 +93,29 @@ const char* descs[] = {
     "Clipboard contents were invalid"
 };
 
+WimaMenuItem splitSubSubItems[] = {
+    { "Split sub sub 1", { .func = splitSubSub1Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
+};
+
+WimaContextMenu splitSubSub = {
+
+    "Area Options Sub Sub",
+    {{ 0, 0, 0, 0 }},
+    NULL,
+    splitSubSubItems,
+    1,
+    WIMA_ICONID(0,1),
+    false
+
+};
+
 WimaMenuItem splitSubItems[] = {
     { "Split sub 1", { .func = splitSub1Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
     { NULL, NULL, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, -1, false },
-    { "Split sub 2",{ .func = splitSub2Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
-    { "Split sub 3",{ .func = splitSub3Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
-    { "Split sub 4",{ .func = splitSub4Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
-    { "Split sub 5",{ .func = splitSub5Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false }
+    { "Split sub 2", &splitSubSub, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), true },
+    { "Split sub 3", { .func = splitSub3Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
+    { "Split sub 4", { .func = splitSub4Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
+    { "Split sub 5", { .func = splitSub5Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false }
 };
 
 WimaContextMenu splitSub = {
@@ -244,14 +260,17 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 				wwin->wimaMenu.icon = -1;
 				wwin->wimaMenu.hasSubMenu = false;
 
+				// Make sure the sub sub menu won't be drawn.
+				splitSub.hasSubMenu = false;
+
 				wwin->drawTwice = true;
 			}
 
 			return;
 		}
 		else if (ts - WIMA_CLICK_THRESHOLD > wwin->ctx.click_timestamp ||
-		          wwin->ctx.click_button != wbtn ||
-		          !wima_item_compareHandles(clickItem, wwin->ctx.click_item))
+		         wwin->ctx.click_button != wbtn ||
+		         !wima_item_compareHandles(clickItem, wwin->ctx.click_item))
 		{
 			wwin->ctx.clicks = 0;
 		}

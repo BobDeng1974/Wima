@@ -486,6 +486,24 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 	return WIMA_STATUS_SUCCESS;
 }
 
+static WimaContextMenu* wima_window_menu_contains(WimaWin* win, WimaContextMenu* menu, WimaPos pos) {
+
+	WimaContextMenu* result = wima_rect_contains(menu->rect, pos) ? menu : NULL;
+
+	WimaContextMenu* child;
+
+	if (menu->hasSubMenu) {
+		child = wima_window_menu_contains(win, menu->subMenu, pos);
+	}
+	else {
+		child = NULL;
+	}
+
+	result = child ? child : result;
+
+	return result;
+}
+
 WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentWidth) {
 
 	NVGcontext* nvg = win->nvg;
@@ -558,6 +576,9 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 	// Get the cursor.
 	WimaPos cursor = win->ctx.cursorPos;
 
+	// Need to keep this for later.
+	WimaPos pos = cursor;
+
 	// Figure out if the cursor is.
 	bool menuContainsCursor = wima_rect_contains(menu->rect, cursor);
 
@@ -586,9 +607,14 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 
 				bool contained = wima_rect_contains(item.rect, cursor);
 
-				if (contained) {
+				WimaContextMenu* m = wima_window_menu_contains(win, menu, pos);
+
+				if (contained && m == menu) {
 					menu->subMenu = item.subMenu;
 					menu->hasSubMenu = item.hasSubMenu;
+
+					printf("Item has sub menu: %s\n", item.hasSubMenu ? "true" : "false");
+
 					if (item.hasSubMenu) {
 						menu->subMenu->rect.x = menu->rect.x + width;
 						menu->subMenu->rect.y = menu->rect.y + item.rect.y;
@@ -826,25 +852,13 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 				WimaPos pos = win->ctx.cursorPos;
 
+				WimaContextMenu* m = wima_window_menu_contains(win, menu, pos);
+
 				if (e.mouse_btn.action == WIMA_ACTION_RELEASE) {
 
-					WimaContextMenu* m = menu;
+					if (m) {
 
-					bool contains = wima_rect_contains(m->rect, pos);
-
-					while (!contains && m->hasSubMenu) {
-						m = m->subMenu;
-						contains = wima_rect_contains(m->rect, pos);
-					}
-
-					if (!contains) {
-
-						// Dismiss the menu.
-						win->haveUserMenu = win->haveWimaMenu = false;
-						win->drawTwice = true;
-					}
-					else {
-						// TODO: Send event to menu item.
+						// Send event to menu item.
 
 						pos.x -= m->rect.x;
 						pos.y -= m->rect.y;
@@ -868,6 +882,15 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 								break;
 							}
 						}
+					}
+				}
+				else if (e.mouse_btn.action == WIMA_ACTION_PRESS) {
+
+					if (!m) {
+
+						// Dismiss the menu.
+						win->haveUserMenu = win->haveWimaMenu = false;
+						win->drawTwice = true;
 					}
 				}
 			}
