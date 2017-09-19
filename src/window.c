@@ -609,13 +609,19 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 				WimaContextMenu* m = wima_window_menu_contains(win, menu, pos);
 
 				if (contained && m == menu) {
+
 					menu->subMenu = item.subMenu;
 					menu->hasSubMenu = item.hasSubMenu;
 
 					if (item.hasSubMenu) {
+
+						// Set the start pos for the submenu.
 						menu->subMenu->rect.x = menu->rect.x + width;
 						menu->subMenu->rect.y = menu->rect.y + item.rect.y;
 						menu->subMenu->rect.y -= titleHeight + WIMA_MENU_SEPARATOR_HEIGHT;
+
+						// We want to draw twice now.
+						win->drawTwice = true;
 					}
 				}
 
@@ -854,6 +860,18 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 
 					break;
 				}
+			}
+
+			if (m->hasSubMenu) {
+
+				// Dismiss sub menus.
+				WimaContextMenu* subMenu = m->subMenu;
+				while (subMenu && subMenu->hasSubMenu) {
+					subMenu->hasSubMenu = false;
+					subMenu = subMenu->subMenu;
+				}
+
+				m->hasSubMenu = false;
 			}
 		}
 		else if (e.action == WIMA_ACTION_PRESS && !m) {
