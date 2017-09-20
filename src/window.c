@@ -60,8 +60,6 @@
 
 extern WimaG wg;
 
-WimaPos areaOptionMenuOffset = {{ 0, 0 }};
-
 WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) {
 
 	WimaWin wwin;
@@ -448,13 +446,13 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
 	if (win->haveWimaMenu) {
 
-		status = wima_window_drawMenu(win, &win->wimaMenu, 0);
+		status = wima_window_drawMenu(win, win->wimaMenu, 0);
 		if (status) {
 			return status;
 		}
 
 		if (drawTwice) {
-			status = wima_window_drawMenu(win, &win->wimaMenu, 0);
+			status = wima_window_drawMenu(win, win->wimaMenu, 0);
 			if (status) {
 				return status;
 			}
@@ -462,13 +460,13 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 	}
 	else if (win->haveUserMenu) {
 
-		status = wima_window_drawMenu(win, &win->userMenu, 0);
+		status = wima_window_drawMenu(win, win->userMenu, 0);
 		if (status) {
 			return status;
 		}
 
 		if (drawTwice) {
-			status = wima_window_drawMenu(win, &win->userMenu, 0);
+			status = wima_window_drawMenu(win, win->userMenu, 0);
 			if (status) {
 				return status;
 			}
@@ -571,6 +569,11 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 	if (heightPos >= win->fbsize.h) {
 		menu->rect.y -= heightPos - (win->fbsize.h);
 	}
+	else if (menu->rect.y < 0) {
+
+		// Make sure the menu does not go past the top.
+		menu->rect.y = 0;
+	}
 
 	// Get the cursor.
 	WimaPos cursor = win->ctx.cursorPos;
@@ -585,6 +588,13 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 	cursor.x -= menu->rect.x;
 	cursor.y -= menu->rect.y;
 
+	// If parentWidth is 0, that means that this is the highest
+	// level menu. In that case, we want to set the window menu
+	// offsets if we are still in the menu.
+	if (menuContainsCursor && parentWidth == 0) {
+		win->menuOffset = cursor;
+	}
+
 	// Set up NanoVG.
 	nvgResetTransform(nvg);
 	nvgResetScissor(nvg);
@@ -596,6 +606,10 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 	wima_widget_menu_label(nvg, 0, 5, width, titleHeight, menu->icon, menu->title);
 	wima_widget_menu_separator(nvg, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
 
+	bool onItem = false;
+
+	WimaContextMenu* m = wima_window_menu_contains(win, menu, pos);
+
 	for (int i = 0; i < menu->numItems; ++i) {
 
 		WimaMenuItem item = menu->items[i];
@@ -606,9 +620,9 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 
 				bool contained = wima_rect_contains(item.rect, cursor);
 
-				WimaContextMenu* m = wima_window_menu_contains(win, menu, pos);
-
 				if (contained && m == menu) {
+
+					onItem = true;
 
 					menu->subMenu = item.subMenu;
 					menu->hasSubMenu = item.hasSubMenu;
@@ -625,7 +639,6 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 					}
 				}
 
-				// Get the state.
 				item.state = contained ? WIMA_ITEM_HOVER : item.state;
 			}
 
@@ -635,6 +648,13 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 		else {
 			wima_widget_menu_separator(nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h);
 		}
+	}
+
+	// If we are not on an item with a submenu
+	// (and we are not on the submenu), then
+	// we should dismiss the submenu.
+	if (!onItem && (m == menu || !m)) {
+		menu->hasSubMenu = false;
 	}
 
 	if (menu->hasSubMenu) {
@@ -798,13 +818,24 @@ void wima_window_updateHover(WimaWindowHandle wwh) {
 	win->ctx.hover = wima_area_findItem(win->areas, win->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER);
 }
 
-WimaStatus wima_window_setContextMenu(WimaWindowHandle wwh, WimaContextMenu menu) {
+WimaStatus wima_window_setContextMenu(WimaWindowHandle wwh, WimaContextMenu* menu) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
-	win->userMenu = menu;
 	win->haveUserMenu = true;
+	win->menuHasReleased = true;
+	win->drawTwice = true;
+
+	// Set up the offset.
+	win->menuOffset.x = menu->rect.x;
+	win->menuOffset.y = menu->rect.y;
+
+	// Make sure the menu pops up at the right place.
+	menu->rect.x = win->ctx.cursorPos.x - menu->rect.x;
+	menu->rect.y = win->ctx.cursorPos.y - menu->rect.y;
+
+	win->userMenu = menu;
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -819,12 +850,30 @@ WimaStatus wima_window_removeContextMenu(WimaWindowHandle wwh) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaContextMenu wima_window_contextMenu(WimaWindowHandle wwh) {
+WimaContextMenu* wima_window_contextMenu(WimaWindowHandle wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
 	return win->userMenu;
+}
+
+void wima_window_setupMenu(WimaWin* win, WimaContextMenu* menu) {
+
+	win->haveWimaMenu = true;
+	win->menuHasReleased = false;
+	win->drawTwice = true;
+
+	// Set up the offset.
+	win->menuOffset.x = menu->rect.x;
+	win->menuOffset.y = menu->rect.y;
+
+	// Make sure the menu pops up at the right place.
+	menu->rect.x = win->ctx.cursorPos.x - menu->rect.x;
+	menu->rect.y = win->ctx.cursorPos.y - menu->rect.y;
+
+	// Set the menu.
+	win->wimaMenu = menu;
 }
 
 static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle wih, WimaMouseBtnEvent e) {
@@ -833,13 +882,21 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 
 	if (win->haveWimaMenu || win->haveUserMenu) {
 
-		WimaContextMenu* menu = win->haveWimaMenu ? &win->wimaMenu : &win->userMenu;
+		WimaContextMenu* menu = win->haveWimaMenu ? win->wimaMenu : win->userMenu;
 
 		WimaPos pos = win->ctx.cursorPos;
 
 		WimaContextMenu* m = wima_window_menu_contains(win, menu, pos);
 
 		if (e.action == WIMA_ACTION_RELEASE && m) {
+
+			// If the mouse button hasn't been released yet,
+			// set it to released and return because we don't
+			// need to do anything else.
+			if (!win->menuHasReleased) {
+				win->menuHasReleased = true;
+				return WIMA_STATUS_SUCCESS;
+			}
 
 			// Send event to menu item.
 
@@ -852,8 +909,25 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 
 				if (!item.hasSubMenu && wima_rect_contains(item.rect, pos) && item.func) {
 
+					// Dismiss the menu.
 					win->haveUserMenu = win->haveWimaMenu = false;
 					win->drawTwice = true;
+
+					// Set the new offsets for the menu. This
+					// is so the user can just click if they
+					// want the same thing as last time.
+					m->rect.x = pos.x;
+					m->rect.y = pos.y;
+
+					// If the two menus are not equal, set
+					// the menu offsets for the first.
+					if (m != menu) {
+						menu->rect.x = win->menuOffset.x;
+						menu->rect.y = win->menuOffset.y;
+
+						// Also clear the sub menu.
+						menu->hasSubMenu = false;
+					}
 
 					// Call the item's function.
 					status = item.func(wih);
@@ -875,6 +949,10 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 			}
 		}
 		else if (e.action == WIMA_ACTION_PRESS && !m) {
+
+			// Set the menu's offsets.
+			menu->rect.x = win->menuOffset.x;
+			menu->rect.y = win->menuOffset.y;
 
 			// Dismiss the menu.
 			win->haveUserMenu = win->haveWimaMenu = false;

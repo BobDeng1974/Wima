@@ -109,17 +109,23 @@ typedef struct wima_window {
 	NVGcontext* nvg;
 	WimaWindowContext ctx;
 
-	WimaContextMenu userMenu;
-	WimaContextMenu wimaMenu;
+	WimaContextMenu* userMenu;
+	WimaContextMenu* wimaMenu;
 
 	WimaSize fbsize;
 	WimaSize winsize;
 
 	float pixelRatio;
 
+	WimaPos menuOffset;
+
 	// For some reason, NanoVG has a bug where things
 	// are not drawn properly unless you draw twice.
 	bool drawTwice;
+
+	// We also need this to make sure that the mouse release
+	// after a menu appears does not click the menu.
+	bool menuHasReleased;
 
 	// Whether or not we have a user context menu and
 	// a wima-specific context menu, respectively.
@@ -155,6 +161,7 @@ void wima_window_context_clear(WimaWindowContext* ctx);
 // uiBeginLayout() must be followed by uiEndLayout()
 WimaStatus wima_window_draw(WimaWindowHandle win);
 
+void wima_window_setupMenu(WimaWin* win, WimaContextMenu* menu);
 WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentWidth);
 
 WimaStatus wima_window_processEvents(WimaWindowHandle win);

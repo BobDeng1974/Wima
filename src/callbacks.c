@@ -136,7 +136,16 @@ WimaMenuItem areaOptionMenuItems[] = {
     { "Join Area", { .func = joinItemClick }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(0,0), false }
 };
 
-extern WimaPos areaOptionMenuOffset;
+WimaContextMenu areaOptionMenu = {
+
+    "Area Options",
+    {{ 0, 0, 0, 0 }},
+    NULL,
+    areaOptionMenuItems,
+    3,
+    -1,
+    false
+};
 
 void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
@@ -241,6 +250,9 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 		if (wwin->ctx.split.split >= 0) {
 
+			// Set the cursor back.
+			glfwSetCursor(wwin->window, wwin->cursor);
+
 			event->type = WIMA_EVENT_MOUSE_SPLIT;
 			event->split = wwin->ctx.split;
 			event->split.move = wbtn != WIMA_MOUSE_RIGHT;
@@ -248,22 +260,11 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 			if (!event->split.move) {
 
-				wwin->haveWimaMenu = true;
-				wwin->wimaMenu.title = "Area Options";
-
-				wwin->wimaMenu.rect.x = wwin->ctx.cursorPos.x - areaOptionMenuOffset.x;
-				wwin->wimaMenu.rect.y = wwin->ctx.cursorPos.y - areaOptionMenuOffset.y;
-
-				wwin->wimaMenu.items = areaOptionMenuItems;
-				wwin->wimaMenu.numItems = 3;
-
-				wwin->wimaMenu.icon = -1;
-				wwin->wimaMenu.hasSubMenu = false;
+				// Set up the menu.
+				wima_window_setupMenu(wwin, &areaOptionMenu);
 
 				// Make sure the sub sub menu won't be drawn.
 				splitSub.hasSubMenu = false;
-
-				wwin->drawTwice = true;
 			}
 
 			return;
