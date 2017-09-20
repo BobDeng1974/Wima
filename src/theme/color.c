@@ -103,15 +103,15 @@ void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
 
 		case WIMA_ITEM_DEFAULT:
 		{
-			*shade_top = wima_color_offset(theme->innerColor, theme->shadeTop);
-			*shade_down = wima_color_offset(theme->innerColor, theme->shadeBottom);
+			*shade_top = wima_color_offset(theme->inner, theme->shadeTop);
+			*shade_down = wima_color_offset(theme->inner, theme->shadeBottom);
 
 			break;
 		}
 
 		case WIMA_ITEM_HOVER:
 		{
-			NVGcolor color = wima_color_offset(theme->innerColor, WIMA_HOVER_SHADE);
+			NVGcolor color = wima_color_offset(theme->inner, WIMA_HOVER_SHADE);
 
 			*shade_top = wima_color_offset(color, theme->shadeTop);
 			*shade_down = wima_color_offset(color, theme->shadeBottom);
@@ -122,10 +122,10 @@ void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
 		case WIMA_ITEM_ACTIVE:
 		{
 			int delta = flipActive ? theme->shadeBottom : theme->shadeTop;
-			*shade_top = wima_color_offset(theme->innerSelectedColor, delta);
+			*shade_top = wima_color_offset(theme->innerSelected, delta);
 
 			delta = flipActive ? theme->shadeTop : theme->shadeBottom;
-			*shade_down = wima_color_offset(theme->innerSelectedColor, delta);
+			*shade_down = wima_color_offset(theme->innerSelected, delta);
 
 			break;
 		}
@@ -133,7 +133,7 @@ void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
 }
 
 NVGcolor wima_color_text(const WimaWidgetTheme* theme, WimaItemState state) {
-	return (state == WIMA_ITEM_ACTIVE) ? theme->textSelectedColor : theme->textColor;
+	return (state == WIMA_ITEM_ACTIVE) ? theme->textSelected : theme->text;
 }
 
 NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, WimaItemState state) {
@@ -145,9 +145,9 @@ NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, WimaItemState state) {
 			return nvgRGBf(0.5f,0.5f,0.5f);
 
 		case WIMA_ITEM_HOVER:
-			return theme->wireSelectColor;
+			return theme->wireSelected;
 
 		case WIMA_ITEM_ACTIVE:
-			return theme->activeNodeColor;
+			return theme->nodeActive;
 	}
 }

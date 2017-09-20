@@ -125,22 +125,22 @@ before including blendish.h, otherwise the file will be in header-only mode.
 typedef struct wima_widget_theme {
 
 	// Color of widget box outline.
-	NVGcolor outlineColor;
+	NVGcolor outline;
 
 	// Color of widget item (meaning changes depending on class).
-	NVGcolor itemColor;
+	NVGcolor item;
 
 	// Fill color of widget box.
-	NVGcolor innerColor;
+	NVGcolor inner;
 
 	// Fill color of widget box when active.
-	NVGcolor innerSelectedColor;
+	NVGcolor innerSelected;
 
 	// Color of text label.
-	NVGcolor textColor;
+	NVGcolor text;
 
 	// Color of text label when active.
-	NVGcolor textSelectedColor;
+	NVGcolor textSelected;
 
 	// Delta modifier for upper part of gradient (-100 to 100).
 	int shadeTop;
@@ -154,22 +154,22 @@ typedef struct wima_widget_theme {
 typedef struct wima_node_theme {
 
 	// Inner color of selected node (and downarrow).
-	NVGcolor nodeSelectedColor;
+	NVGcolor nodeSelected;
 
 	// Outline of wires.
-	NVGcolor wiresColor;
+	NVGcolor wire;
 
 	// Color of text label when active.
-	NVGcolor textSelectedColor;
+	NVGcolor textSelected;
 
 	// Inner color of active node (and dragged wire).
-	NVGcolor activeNodeColor;
+	NVGcolor nodeActive;
 
 	// Color of selected wire.
-	NVGcolor wireSelectColor;
+	NVGcolor wireSelected;
 
 	// Color of background of node.
-	NVGcolor nodeBackdropColor;
+	NVGcolor nodeBackdrop;
 
 	// How much a noodle curves (0 to 10).
 	int noodleCurving;
@@ -183,44 +183,44 @@ typedef struct wima_theme_loadTheme {
 	NVGcolor backgroundColor;
 
 	// Theme for labels.
-	WimaWidgetTheme regularTheme;
+	WimaWidgetTheme regular;
 
 	// Theme for tool buttons.
-	WimaWidgetTheme toolTheme;
+	WimaWidgetTheme tool;
 
 	// Theme for radio buttons.
-	WimaWidgetTheme radioTheme;
+	WimaWidgetTheme radio;
 
 	// Theme for text fields.
-	WimaWidgetTheme textFieldTheme;
+	WimaWidgetTheme textField;
 
 	// Theme for option buttons (checkboxes).
-	WimaWidgetTheme optionTheme;
+	WimaWidgetTheme option;
 
 	// Theme for choice buttons (comboboxes).
 	// Blender calls them "menu buttons."
-	WimaWidgetTheme choiceTheme;
+	WimaWidgetTheme choice;
 
 	// Theme for number fields.
-	WimaWidgetTheme numberFieldTheme;
+	WimaWidgetTheme numField;
 
 	// Theme for slider controls.
-	WimaWidgetTheme sliderTheme;
+	WimaWidgetTheme slider;
 
 	// Theme for scrollbars.
-	WimaWidgetTheme scrollBarTheme;
+	WimaWidgetTheme scrollBar;
 
 	// Theme for tooltips.
-	WimaWidgetTheme tooltipTheme;
+	WimaWidgetTheme tooltip;
 
 	// Theme for menu backgrounds.
-	WimaWidgetTheme menuTheme;
+	WimaWidgetTheme menu;
 
 	// Theme for menu items.
-	WimaWidgetTheme menuItemTheme;
+	WimaWidgetTheme menuItem;
 
 	// Theme for nodes.
-	WimaNodeTheme nodeTheme;
+	WimaNodeTheme node;
 
 } WimaTheme;
 
