@@ -436,10 +436,7 @@ WimaStatus wima_area_draw(WimaWindowHandle wwh, DynaVector stack, float ratio) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
-	NVGcontext* nvg = win->nvg;
-	assert(nvg);
-
-	return wima_area_node_draw(nvg, win->areas, dtree_root(), stack, ratio);
+	return wima_area_node_draw(win->nvg, win->areas, dtree_root(), stack, ratio);
 }
 
 WimaStatus wima_area_key(DynaTree areas, WimaKeyEvent info) {
@@ -470,17 +467,17 @@ bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos, WimaMouseSplitEvent* re
 	return wima_area_node_mouseOnSplit(areas, dtree_root(), pos, result);
 }
 
-WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, DynaVector stack, float ratio) {
+WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, DynaVector stack, float ratio) {
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	WimaAreaNode* area = dtree_node(areas, node);
 
-	wima_area_pushViewport(nvg, stack, area->rect);
+	wima_area_pushViewport(nvg.nvg, stack, area->rect);
 
 	if (area->type == WIMA_AREA_PARENT) {
 
-		wima_area_drawSplit(area, nvg);
+		wima_area_drawSplit(area, nvg.nvg);
 
 		wima_area_node_draw(nvg, areas, dtree_left(node), stack, ratio);
 		wima_area_node_draw(nvg, areas, dtree_right(node), stack, ratio);
@@ -501,10 +498,10 @@ WimaStatus wima_area_node_draw(NVGcontext* nvg, DynaTree areas, DynaNode node, D
 		}
 
 		// Draw the border shading.
-		wima_area_drawBorders(area, nvg);
+		wima_area_drawBorders(area, nvg.nvg);
 	}
 
-	wima_area_popViewport(nvg, stack);
+	wima_area_popViewport(nvg.nvg, stack);
 
 	return WIMA_STATUS_SUCCESS;
 }

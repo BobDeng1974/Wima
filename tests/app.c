@@ -92,7 +92,7 @@ void printMods(WimaMods mods) {
 	fputc('\n', stdout);
 }
 
-WimaStatus mouseCoordsDraw(WimaItemHandle item, NVGcontext* nvg) {
+WimaStatus mouseCoordsDraw(WimaItemHandle item, WimaNvgInfo nvg) {
 
 	char buffer[100];
 
@@ -276,7 +276,7 @@ int main() {
 	appfuncs.close = mouseCoordsClose;
 
 	// Initialize Wima and check for success.
-	WimaStatus status = wima_init("Wima Test App", appfuncs);
+	WimaStatus status = wima_init("Wima Test App", appfuncs, "../res/DejaVuSans.ttf", "../res/blender_icons16.png");
 	if (status) {
 		return status;
 	}

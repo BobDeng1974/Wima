@@ -70,13 +70,13 @@
 
 extern WimaG wg;
 
-void wima_widget_label(NVGcontext* nvg, float x, float y, float w, float h, int iconid, const char *label) {
+void wima_widget_label(WimaNvgInfo nvg, float x, float y, float w, float h, int iconid, const char *label) {
 	wima_widget_label_icon_value(nvg, x, y, w, h, iconid,
 	                           wg.theme.regularTheme.textColor, WIMA_LEFT,
 	                           WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_widget_toolBtn(NVGcontext* nvg, float x, float y, float w, float h, int flags,
+void wima_widget_toolBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
                        WimaItemState state, int iconid, const char *label)
 {
 	float cr[4];
@@ -96,7 +96,7 @@ void wima_widget_toolBtn(NVGcontext* nvg, float x, float y, float w, float h, in
 	                           WIMA_CENTER, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_widget_radioBtn(NVGcontext* nvg, float x, float y, float w, float h, int flags,
+void wima_widget_radioBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
                         WimaItemState state, int iconid, const char *label)
 {
 	float cr[4];
@@ -117,13 +117,13 @@ void wima_widget_radioBtn(NVGcontext* nvg, float x, float y, float w, float h, i
 	                           WIMA_CENTER, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-int wima_widget_textField_pos(NVGcontext* nvg, float x, float y, float w, float h,
+int wima_widget_textField_pos(WimaNvgInfo nvg, float x, float y, float w, float h,
                             int iconid, const char *text, int px, int py)
 {
 	return wima_label_text_pos(nvg, x, y, w, h, iconid, WIMA_LABEL_FONT_SIZE, text, px, py);
 }
 
-void wima_widget_textField(NVGcontext* nvg, float x, float y, float w, float h, int flags,
+void wima_widget_textField(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
                          WimaItemState state, int iconid, const char *text, int cbegin,
                          int cend)
 {
@@ -149,7 +149,7 @@ void wima_widget_textField(NVGcontext* nvg, float x, float y, float w, float h, 
 	                      text, wg.theme.textFieldTheme.itemColor, cbegin, cend);
 }
 
-void wima_widget_optionBtn(NVGcontext* nvg, float x, float y, float w, float h,
+void wima_widget_optionBtn(WimaNvgInfo nvg, float x, float y, float w, float h,
                          WimaItemState state, const char *label)
 {
 	float ox, oy;
@@ -186,7 +186,7 @@ void wima_widget_optionBtn(NVGcontext* nvg, float x, float y, float w, float h,
 	                           WIMA_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_widget_choiceBtn(NVGcontext* nvg, float x, float y, float w, float h, int flags,
+void wima_widget_choiceBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
                          WimaItemState state, int iconid, const char *label)
 {
 	float cr[4];
@@ -210,7 +210,7 @@ void wima_widget_choiceBtn(NVGcontext* nvg, float x, float y, float w, float h, 
 	wima_widget_arrow_upDown(nvg, x + w - 10, y + 10, 5, arrowTrans);
 }
 
-void wima_widget_colorBtn(NVGcontext* nvg, float x, float y, float w, float h, int flags, NVGcolor color) {
+void wima_widget_colorBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int flags, NVGcolor color) {
 
 	float cr[4];
 
@@ -223,7 +223,7 @@ void wima_widget_colorBtn(NVGcontext* nvg, float x, float y, float w, float h, i
 	wima_widget_box_outline(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 }
 
-void wima_widget_numField(NVGcontext* nvg, float x, float y, float w, float h, int flags,
+void wima_widget_numField(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
                         WimaItemState state, const char *label, const char *value)
 {
 	float cr[4];
@@ -249,7 +249,7 @@ void wima_widget_numField(NVGcontext* nvg, float x, float y, float w, float h, i
 	wima_widget_arrow(nvg, x + w - 8, y + 10, WIMA_NUMBER_ARROW_SIZE, arrowTrans);
 }
 
-void wima_widget_slider(NVGcontext* nvg, float x, float y, float w, float h, int flags,
+void wima_widget_slider(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
                       WimaItemState state, float progress, const char *label,
                       const char *value)
 {
@@ -272,9 +272,9 @@ void wima_widget_slider(NVGcontext* nvg, float x, float y, float w, float h, int
 		shade_down = wima_color_offset(wg.theme.sliderTheme.itemColor, wg.theme.sliderTheme.shadeTop);
 	}
 
-	nvgScissor(nvg, x, y, 8 + (w - 8) * wima_clamp(progress, 0, 1), h);
+	nvgScissor(nvg.nvg, x, y, 8 + (w - 8) * wima_clamp(progress, 0, 1), h);
 	wima_widget_box_inner(nvg, x, y, w, h, cr[0], cr[1], cr[2],cr[3], shade_top, shade_down);
-	nvgResetScissor(nvg);
+	nvgResetScissor(nvg.nvg);
 
 	NVGcolor transparent = wima_color_transparent(wg.theme.sliderTheme.outlineColor);
 	wima_widget_box_outline(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
@@ -284,7 +284,7 @@ void wima_widget_slider(NVGcontext* nvg, float x, float y, float w, float h, int
 	                           WIMA_CENTER, WIMA_LABEL_FONT_SIZE, label, value);
 }
 
-void wima_widget_scrollbar(NVGcontext* nvg,float x, float y, float w, float h,
+void wima_widget_scrollbar(WimaNvgInfo nvg,float x, float y, float w, float h,
                          WimaItemState state, float offset, float size)
 {
 	wima_widget_inset(nvg, x, y, w, h, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS);
@@ -322,7 +322,7 @@ void wima_widget_scrollbar(NVGcontext* nvg,float x, float y, float w, float h,
 	                      transparent);
 }
 
-void wima_widget_menu_background(NVGcontext* nvg, float x, float y, float w, float h, int flags) {
+void wima_widget_menu_background(WimaNvgInfo nvg, float x, float y, float w, float h, int flags) {
 
 	float cr[4];
 	NVGcolor shade_top, shade_down;
@@ -337,7 +337,7 @@ void wima_widget_menu_background(NVGcontext* nvg, float x, float y, float w, flo
 	wima_widget_dropShadow(nvg, x, y, w, h, WIMA_MENU_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
 }
 
-void wima_widget_tooltip_background(NVGcontext* nvg, float x, float y, float w, float h) {
+void wima_widget_tooltip_background(WimaNvgInfo nvg, float x, float y, float w, float h) {
 
 	NVGcolor shade_top, shade_down;
 
@@ -357,27 +357,27 @@ void wima_widget_tooltip_background(NVGcontext* nvg, float x, float y, float w, 
 	wima_widget_dropShadow(nvg, x, y, w, h, WIMA_MENU_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
 }
 
-void wima_widget_menu_label(NVGcontext* nvg, float x, float y, float w, float h, int iconid, const char *label) {
+void wima_widget_menu_label(WimaNvgInfo nvg, float x, float y, float w, float h, int iconid, const char *label) {
 	wima_widget_label_icon_value(nvg, x, y, w, h, iconid, wg.theme.menuTheme.textColor,
 	                           WIMA_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_widget_menu_separator(NVGcontext* nvg, float x, float y, float w, float h) {
+void wima_widget_menu_separator(WimaNvgInfo nvg, float x, float y, float w, float h) {
 
 	NVGcolor color = WIMA_COLOR_MENU_SEPARATOR;
 
-	nvgStrokeColor(nvg, color);
-	nvgStrokeWidth(nvg, 1.0f);
+	nvgStrokeColor(nvg.nvg, color);
+	nvgStrokeWidth(nvg.nvg, 1.0f);
 
 	float sepY = y + (h / 2);
 
-	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, x, sepY);
-	nvgLineTo(nvg, w, sepY);
-	nvgStroke(nvg);
+	nvgBeginPath(nvg.nvg);
+	nvgMoveTo(nvg.nvg, x, sepY);
+	nvgLineTo(nvg.nvg, w, sepY);
+	nvgStroke(nvg.nvg);
 }
 
-void wima_widget_menu_item(NVGcontext* nvg, float x, float y, float w, float h,
+void wima_widget_menu_item(WimaNvgInfo nvg, float x, float y, float w, float h,
                            WimaItemState state, int iconid, const char *label,
                            bool hasSubMenu)
 {
@@ -402,45 +402,45 @@ void wima_widget_menu_item(NVGcontext* nvg, float x, float y, float w, float h,
 	}
 }
 
-void wima_widget_node_port(NVGcontext* nvg, float x, float y, WimaItemState state, NVGcolor color) {
+void wima_widget_node_port(WimaNvgInfo nvg, float x, float y, WimaItemState state, NVGcolor color) {
 
-	nvgBeginPath(nvg);
+	nvgBeginPath(nvg.nvg);
 
-	nvgCircle(nvg, x, y, WIMA_NODE_PORT_RADIUS);
+	nvgCircle(nvg.nvg, x, y, WIMA_NODE_PORT_RADIUS);
 
-	nvgStrokeColor(nvg, wg.theme.nodeTheme.wiresColor);
-	nvgStrokeWidth(nvg, 1.0f);
-	nvgStroke(nvg);
+	nvgStrokeColor(nvg.nvg, wg.theme.nodeTheme.wiresColor);
+	nvgStrokeWidth(nvg.nvg, 1.0f);
+	nvgStroke(nvg.nvg);
 
-	nvgFillColor(nvg, (state != WIMA_ITEM_DEFAULT) ? wima_color_offset(color, WIMA_HOVER_SHADE) : color);
-	nvgFill(nvg);
+	nvgFillColor(nvg.nvg, (state != WIMA_ITEM_DEFAULT) ? wima_color_offset(color, WIMA_HOVER_SHADE) : color);
+	nvgFill(nvg.nvg);
 }
 
-void wima_widget_node_wire_colored(NVGcontext* nvg, float x0, float y0, float x1, float y1,
+void wima_widget_node_wire_colored(WimaNvgInfo nvg, float x0, float y0, float x1, float y1,
                                  NVGcolor color0, NVGcolor color1)
 {
 	float length = wima_fmaxf(fabsf(x1 - x0), fabsf(y1 - y0));
 	float delta = length * (float) wg.theme.nodeTheme.noodleCurving / 10.0f;
 
-	nvgBeginPath(nvg);
+	nvgBeginPath(nvg.nvg);
 
-	nvgMoveTo(nvg, x0, y0);
-	nvgBezierTo(nvg, x0 + delta, y0, x1 - delta, y1, x1, y1);
+	nvgMoveTo(nvg.nvg, x0, y0);
+	nvgBezierTo(nvg.nvg, x0 + delta, y0, x1 - delta, y1, x1, y1);
 
 	NVGcolor colorw = wg.theme.nodeTheme.wiresColor;
 	colorw.a = (color0.a < color1.a) ? color0.a : color1.a;
 
-	nvgStrokeColor(nvg, colorw);
-	nvgStrokeWidth(nvg, WIMA_NODE_WIRE_OUTLINE_WIDTH);
-	nvgStroke(nvg);
+	nvgStrokeColor(nvg.nvg, colorw);
+	nvgStrokeWidth(nvg.nvg, WIMA_NODE_WIRE_OUTLINE_WIDTH);
+	nvgStroke(nvg.nvg);
 
-	NVGpaint paint = nvgLinearGradient(nvg, x0, y0, x1, y1, color0, color1);
-	nvgStrokePaint(nvg, paint);
-	nvgStrokeWidth(nvg, WIMA_NODE_WIRE_WIDTH);
-	nvgStroke(nvg);
+	NVGpaint paint = nvgLinearGradient(nvg.nvg, x0, y0, x1, y1, color0, color1);
+	nvgStrokePaint(nvg.nvg, paint);
+	nvgStrokeWidth(nvg.nvg, WIMA_NODE_WIRE_WIDTH);
+	nvgStroke(nvg.nvg);
 }
 
-void wima_widget_node_wire(NVGcontext* nvg, float x0, float y0, float x1, float y1,
+void wima_widget_node_wire(WimaNvgInfo nvg, float x0, float y0, float x1, float y1,
                          WimaItemState state0, WimaItemState state1)
 {
 	NVGcolor first = wima_color_node_wire(&wg.theme.nodeTheme, state0);
@@ -449,7 +449,7 @@ void wima_widget_node_wire(NVGcontext* nvg, float x0, float y0, float x1, float 
 	wima_widget_node_wire_colored(nvg, x0, y0, x1, y1, first, second);
 }
 
-void wima_widget_node_background(NVGcontext* nvg, float x, float y, float w, float h,
+void wima_widget_node_background(WimaNvgInfo nvg, float x, float y, float w, float h,
                                WimaItemState state, int iconid, const char *label,
                                NVGcolor titleColor)
 {
@@ -510,14 +510,14 @@ void wima_widget_node_background(NVGcontext* nvg, float x, float y, float w, flo
 	                      transparent);
 
 #if 0
-	bndNodeArrowDown(nvg, x + WIMA_NODE_MARGIN_SIDE, y + WIMA_NODE_TITLE_HEIGHT-4,
+	bndNodeArrowDown(nvg.nvg, x + WIMA_NODE_MARGIN_SIDE, y + WIMA_NODE_TITLE_HEIGHT-4,
 	                 WIMA_NODE_ARROW_SIZE, arrowColor);
 #endif
 
 	wima_widget_dropShadow(nvg, x, y, w, h, WIMA_NODE_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
 }
 
-void wima_widget_splitters(NVGcontext* nvg, float x, float y, float w, float h) {
+void wima_widget_splitters(WimaNvgInfo nvg, float x, float y, float w, float h) {
 
 	NVGcolor offsetLight = wima_color_offset(wg.theme.backgroundColor, WIMA_SPLITTER_SHADE);
 	NVGcolor insetLight = wima_color_transparent(offsetLight);
@@ -530,62 +530,62 @@ void wima_widget_splitters(NVGcontext* nvg, float x, float y, float w, float h) 
 	float x2 = x + w;
 	float y2 = y + h;
 
-	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, x,      y2 - 13);
-	nvgLineTo(nvg, x + 13, y2);
-	nvgMoveTo(nvg, x,      y2 - 9);
-	nvgLineTo(nvg, x + 9,  y2);
-	nvgMoveTo(nvg, x,      y2 - 5);
-	nvgLineTo(nvg, x + 5,  y2);
+	nvgBeginPath(nvg.nvg);
+	nvgMoveTo(nvg.nvg, x,      y2 - 13);
+	nvgLineTo(nvg.nvg, x + 13, y2);
+	nvgMoveTo(nvg.nvg, x,      y2 - 9);
+	nvgLineTo(nvg.nvg, x + 9,  y2);
+	nvgMoveTo(nvg.nvg, x,      y2 - 5);
+	nvgLineTo(nvg.nvg, x + 5,  y2);
 
-	nvgMoveTo(nvg, x2 - 11, y);
-	nvgLineTo(nvg, x2,      y + 11);
-	nvgMoveTo(nvg, x2 - 7,  y);
-	nvgLineTo(nvg, x2,      y + 7);
-	nvgMoveTo(nvg, x2 - 3,  y);
-	nvgLineTo(nvg, x2,      y + 3);
+	nvgMoveTo(nvg.nvg, x2 - 11, y);
+	nvgLineTo(nvg.nvg, x2,      y + 11);
+	nvgMoveTo(nvg.nvg, x2 - 7,  y);
+	nvgLineTo(nvg.nvg, x2,      y + 7);
+	nvgMoveTo(nvg.nvg, x2 - 3,  y);
+	nvgLineTo(nvg.nvg, x2,      y + 3);
 
-	nvgStrokeColor(nvg, insetDark);
-	nvgStroke(nvg);
+	nvgStrokeColor(nvg.nvg, insetDark);
+	nvgStroke(nvg.nvg);
 
-	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, x,      y2 - 11);
-	nvgLineTo(nvg, x + 11, y2);
-	nvgMoveTo(nvg, x,      y2 - 7);
-	nvgLineTo(nvg, x + 7,  y2);
-	nvgMoveTo(nvg, x,      y2 - 3);
-	nvgLineTo(nvg, x + 3,  y2);
+	nvgBeginPath(nvg.nvg);
+	nvgMoveTo(nvg.nvg, x,      y2 - 11);
+	nvgLineTo(nvg.nvg, x + 11, y2);
+	nvgMoveTo(nvg.nvg, x,      y2 - 7);
+	nvgLineTo(nvg.nvg, x + 7,  y2);
+	nvgMoveTo(nvg.nvg, x,      y2 - 3);
+	nvgLineTo(nvg.nvg, x + 3,  y2);
 
-	nvgMoveTo(nvg, x2 - 13, y);
-	nvgLineTo(nvg, x2,      y + 13);
-	nvgMoveTo(nvg, x2 - 9,  y);
-	nvgLineTo(nvg, x2,      y + 9);
-	nvgMoveTo(nvg, x2 - 5,  y);
-	nvgLineTo(nvg, x2,      y + 5);
+	nvgMoveTo(nvg.nvg, x2 - 13, y);
+	nvgLineTo(nvg.nvg, x2,      y + 13);
+	nvgMoveTo(nvg.nvg, x2 - 9,  y);
+	nvgLineTo(nvg.nvg, x2,      y + 9);
+	nvgMoveTo(nvg.nvg, x2 - 5,  y);
+	nvgLineTo(nvg.nvg, x2,      y + 5);
 
-	nvgStrokeColor(nvg, insetLight);
-	nvgStroke(nvg);
+	nvgStrokeColor(nvg.nvg, insetLight);
+	nvgStroke(nvg.nvg);
 
-	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, x,      y2 - 12);
-	nvgLineTo(nvg, x + 12, y2);
-	nvgMoveTo(nvg, x,      y2 - 8);
-	nvgLineTo(nvg, x + 8,  y2);
-	nvgMoveTo(nvg, x,      y2 - 4);
-	nvgLineTo(nvg, x + 4,  y2);
+	nvgBeginPath(nvg.nvg);
+	nvgMoveTo(nvg.nvg, x,      y2 - 12);
+	nvgLineTo(nvg.nvg, x + 12, y2);
+	nvgMoveTo(nvg.nvg, x,      y2 - 8);
+	nvgLineTo(nvg.nvg, x + 8,  y2);
+	nvgMoveTo(nvg.nvg, x,      y2 - 4);
+	nvgLineTo(nvg.nvg, x + 4,  y2);
 
-	nvgMoveTo(nvg, x2 - 12, y);
-	nvgLineTo(nvg, x2,      y + 12);
-	nvgMoveTo(nvg, x2 - 8,  y);
-	nvgLineTo(nvg, x2,      y + 8);
-	nvgMoveTo(nvg, x2 - 4,  y);
-	nvgLineTo(nvg, x2,      y + 4);
+	nvgMoveTo(nvg.nvg, x2 - 12, y);
+	nvgLineTo(nvg.nvg, x2,      y + 12);
+	nvgMoveTo(nvg.nvg, x2 - 8,  y);
+	nvgLineTo(nvg.nvg, x2,      y + 8);
+	nvgMoveTo(nvg.nvg, x2 - 4,  y);
+	nvgLineTo(nvg.nvg, x2,      y + 4);
 
-	nvgStrokeColor(nvg, inset);
-	nvgStroke(nvg);
+	nvgStrokeColor(nvg.nvg, inset);
+	nvgStroke(nvg.nvg);
 }
 
-void wima_widget_areaOverlay(NVGcontext* nvg, float x, float y, float w, float h, int vertical, int mirror) {
+void wima_widget_areaOverlay(WimaNvgInfo nvg, float x, float y, float w, float h, int vertical, int mirror) {
 
 	if (vertical) {
 		float u = w;
@@ -631,22 +631,22 @@ void wima_widget_areaOverlay(NVGcontext* nvg, float x, float y, float w, float h
 	    { x0,      yc - s8 }
 	};
 
-	nvgBeginPath(nvg);
+	nvgBeginPath(nvg.nvg);
 	int count = sizeof(points) / (sizeof(float) * 2);
 
-	nvgMoveTo(nvg, x + points[0][vertical & 1], y + points[0][(vertical & 1) ^ 1]);
+	nvgMoveTo(nvg.nvg, x + points[0][vertical & 1], y + points[0][(vertical & 1) ^ 1]);
 
 	for (int i = 1; i < count; ++i) {
-		nvgLineTo(nvg, x + points[i][vertical & 1], y + points[i][(vertical & 1) ^ 1]);
+		nvgLineTo(nvg.nvg, x + points[i][vertical & 1], y + points[i][(vertical & 1) ^ 1]);
 	}
 
-	nvgFillColor(nvg, nvgRGBAf(0, 0, 0, 0.3));
-	nvgFill(nvg);
+	nvgFillColor(nvg.nvg, nvgRGBAf(0, 0, 0, 0.3));
+	nvgFill(nvg.nvg);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-float wima_widget_label_estimateWidth(NVGcontext* nvg, int iconid, const char *label) {
+float wima_widget_label_estimateWidth(WimaNvgInfo nvg, int iconid, const char *label) {
 
 	int w = WIMA_PAD_LEFT + WIMA_PAD_RIGHT;
 
@@ -654,16 +654,16 @@ float wima_widget_label_estimateWidth(NVGcontext* nvg, int iconid, const char *l
 		w += WIMA_ICON_SHEET_RES;
 	}
 
-	if (label && (wg.font >= 0)) {
-		nvgFontFaceId(nvg, wg.font);
-		nvgFontSize(nvg, WIMA_LABEL_FONT_SIZE);
-		w += nvgTextBounds(nvg, 1, 1, label, NULL, NULL);
+	if (label && (nvg.font >= 0)) {
+		nvgFontFaceId(nvg.nvg, nvg.font);
+		nvgFontSize(nvg.nvg, WIMA_LABEL_FONT_SIZE);
+		w += nvgTextBounds(nvg.nvg, 1, 1, label, NULL, NULL);
 	}
 
 	return w;
 }
 
-float wima_widget_label_estimateHeight(NVGcontext* nvg, int iconid, const char *label, float width) {
+float wima_widget_label_estimateHeight(WimaNvgInfo nvg, int iconid, const char *label, float width) {
 
 	int h = WIMA_WIDGET_HEIGHT;
 
@@ -673,14 +673,14 @@ float wima_widget_label_estimateHeight(NVGcontext* nvg, int iconid, const char *
 		width -= WIMA_ICON_SHEET_RES;
 	}
 
-	if (label && (wg.font >= 0)) {
+	if (label && (nvg.font >= 0)) {
 
-		nvgFontFaceId(nvg, wg.font);
-		nvgFontSize(nvg, WIMA_LABEL_FONT_SIZE);
+		nvgFontFaceId(nvg.nvg, nvg.font);
+		nvgFontSize(nvg.nvg, WIMA_LABEL_FONT_SIZE);
 
 		float bounds[4];
 
-		nvgTextBoxBounds(nvg, 1, 1, width, label, NULL, bounds);
+		nvgTextBoxBounds(nvg.nvg, 1, 1, width, label, NULL, bounds);
 
 		int bh = (int) (bounds[3] - bounds[1]) + WIMA_TEXT_PAD_DOWN;
 
@@ -694,7 +694,7 @@ float wima_widget_label_estimateHeight(NVGcontext* nvg, int iconid, const char *
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void wima_widget_box_rounded(NVGcontext* nvg, float x, float y, float w, float h,
+void wima_widget_box_rounded(WimaNvgInfo nvg, float x, float y, float w, float h,
                            float cr0, float cr1, float cr2, float cr3)
 {
 	float d;
@@ -703,48 +703,48 @@ void wima_widget_box_rounded(NVGcontext* nvg, float x, float y, float w, float h
 	h = wima_fmaxf(0, h);
 	d = wima_fminf(w, h);
 
-	nvgMoveTo(nvg, x, y + h * 0.5f);
+	nvgMoveTo(nvg.nvg, x, y + h * 0.5f);
 
-	nvgArcTo(nvg, x, y, x + w, y, wima_fminf(cr0, d / 2));
-	nvgArcTo(nvg, x + w, y, x + w, y + h, wima_fminf(cr1, d / 2));
-	nvgArcTo(nvg, x + w, y + h, x, y + h, wima_fminf(cr2, d / 2));
-	nvgArcTo(nvg, x, y + h, x, y, wima_fminf(cr3, d / 2));
+	nvgArcTo(nvg.nvg, x, y, x + w, y, wima_fminf(cr0, d / 2));
+	nvgArcTo(nvg.nvg, x + w, y, x + w, y + h, wima_fminf(cr1, d / 2));
+	nvgArcTo(nvg.nvg, x + w, y + h, x, y + h, wima_fminf(cr2, d / 2));
+	nvgArcTo(nvg.nvg, x, y + h, x, y, wima_fminf(cr3, d / 2));
 
-	nvgClosePath(nvg);
+	nvgClosePath(nvg.nvg);
 }
 
-void wima_widget_bevel(NVGcontext* nvg, float x, float y, float w, float h) {
+void wima_widget_bevel(WimaNvgInfo nvg, float x, float y, float w, float h) {
 
-	nvgStrokeWidth(nvg, 1);
+	nvgStrokeWidth(nvg.nvg, 1);
 
 	x += 0.5f;
 	y += 0.5f;
 	w -= 1;
 	h -= 1;
 
-	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, x, y + h);
-	nvgLineTo(nvg, x + w, y + h);
-	nvgLineTo(nvg, x + w, y);
+	nvgBeginPath(nvg.nvg);
+	nvgMoveTo(nvg.nvg, x, y + h);
+	nvgLineTo(nvg.nvg, x + w, y + h);
+	nvgLineTo(nvg.nvg, x + w, y);
 
 	NVGcolor offset = wima_color_offset(wg.theme.backgroundColor, -WIMA_BEVEL_SHADE);
 	NVGcolor transparent = wima_color_transparent(offset);
 
-	nvgStrokeColor(nvg, transparent);
-	nvgStroke(nvg);
+	nvgStrokeColor(nvg.nvg, transparent);
+	nvgStroke(nvg.nvg);
 
-	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, x, y + h);
-	nvgLineTo(nvg, x, y);
-	nvgLineTo(nvg, x + w, y);
+	nvgBeginPath(nvg.nvg);
+	nvgMoveTo(nvg.nvg, x, y + h);
+	nvgLineTo(nvg.nvg, x, y);
+	nvgLineTo(nvg.nvg, x + w, y);
 
 	offset = wima_color_offset(wg.theme.backgroundColor, WIMA_BEVEL_SHADE);
 	transparent = wima_color_transparent(offset);
-	nvgStrokeColor(nvg, transparent);
-	nvgStroke(nvg);
+	nvgStrokeColor(nvg.nvg, transparent);
+	nvgStroke(nvg.nvg);
 }
 
-void wima_widget_inset(NVGcontext* nvg, float x, float y, float w, float h, float cr2, float cr3) {
+void wima_widget_inset(WimaNvgInfo nvg, float x, float y, float w, float h, float cr2, float cr3) {
 
 	float d;
 
@@ -753,85 +753,85 @@ void wima_widget_inset(NVGcontext* nvg, float x, float y, float w, float h, floa
 	cr2 = wima_fminf(cr2, d / 2);
 	cr3 = wima_fminf(cr3, d / 2);
 
-	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, x + w, y + h - cr2);
-	nvgArcTo(nvg, x + w, y + h, x,y + h, cr2);
-	nvgArcTo(nvg, x, y + h, x, y, cr3);
+	nvgBeginPath(nvg.nvg);
+	nvgMoveTo(nvg.nvg, x + w, y + h - cr2);
+	nvgArcTo(nvg.nvg, x + w, y + h, x,y + h, cr2);
+	nvgArcTo(nvg.nvg, x, y + h, x, y, cr3);
 
 	NVGcolor bevelColor = wima_color_offset(wg.theme.backgroundColor, WIMA_INSET_BEVEL_SHADE);
 
-	nvgStrokeWidth(nvg, 1);
+	nvgStrokeWidth(nvg.nvg, 1);
 
 	NVGcolor innerColor = nvgRGBAf(bevelColor.r, bevelColor.g, bevelColor.b, 0);
-	NVGpaint paint = nvgLinearGradient(nvg, x, y + h - wima_fmaxf(cr2,cr3) - 1,
+	NVGpaint paint = nvgLinearGradient(nvg.nvg, x, y + h - wima_fmaxf(cr2,cr3) - 1,
 	                                   x, y + h - 1, innerColor, bevelColor);
 
-	nvgStrokePaint(nvg, paint);
-	nvgStroke(nvg);
+	nvgStrokePaint(nvg.nvg, paint);
+	nvgStroke(nvg.nvg);
 }
 
-void wima_widget_background(NVGcontext* nvg, float x, float y, float w, float h) {
-	nvgBeginPath(nvg);
-	nvgRect(nvg, x, y, w, h);
-	nvgFillColor(nvg, wg.theme.backgroundColor);
-	nvgFill(nvg);
+void wima_widget_background(WimaNvgInfo nvg, float x, float y, float w, float h) {
+	nvgBeginPath(nvg.nvg);
+	nvgRect(nvg.nvg, x, y, w, h);
+	nvgFillColor(nvg.nvg, wg.theme.backgroundColor);
+	nvgFill(nvg.nvg);
 }
 
-void wima_widget_icon(NVGcontext* nvg, float x, float y, int iconid) {
+void wima_widget_icon(WimaNvgInfo nvg, float x, float y, int iconid) {
 
 	int ix, iy, u, v;
-	if (wg.icons < 0) return; // no icons loaded
+	if (nvg.icons < 0) return; // no icons loaded
 
 	ix = iconid & 0xff;
 	iy = (iconid >> 8) & 0xff;
 	u = WIMA_ICON_SHEET_OFFSET_X + ix * WIMA_ICON_SHEET_GRID;
 	v = WIMA_ICON_SHEET_OFFSET_Y + iy * WIMA_ICON_SHEET_GRID;
 
-	nvgBeginPath(nvg);
-	nvgRect(nvg, x, y, WIMA_ICON_SHEET_RES, WIMA_ICON_SHEET_RES);
+	nvgBeginPath(nvg.nvg);
+	nvgRect(nvg.nvg, x, y, WIMA_ICON_SHEET_RES, WIMA_ICON_SHEET_RES);
 
-	NVGpaint paint = nvgImagePattern(nvg, x - u, y - v,
+	NVGpaint paint = nvgImagePattern(nvg.nvg, x - u, y - v,
 	                                 WIMA_ICON_SHEET_WIDTH,
 	                                 WIMA_ICON_SHEET_HEIGHT,
-	                                 0, wg.icons, 1);
-	nvgFillPaint(nvg, paint);
-	nvgFill(nvg);
+	                                 0, nvg.icons, 1);
+	nvgFillPaint(nvg.nvg, paint);
+	nvgFill(nvg.nvg);
 }
 
-void wima_widget_dropShadow(NVGcontext* nvg, float x, float y, float w, float h,
+void wima_widget_dropShadow(WimaNvgInfo nvg, float x, float y, float w, float h,
     float r, float feather, float alpha)
 {
-	nvgBeginPath(nvg);
+	nvgBeginPath(nvg.nvg);
 	y += feather;
 	h -= feather;
 
-	nvgMoveTo(nvg, x - feather, y - feather);
-	nvgLineTo(nvg, x, y - feather);
-	nvgLineTo(nvg, x, y + h - feather);
-	nvgArcTo(nvg, x, y + h, x + r, y + h, r);
-	nvgArcTo(nvg, x + w, y + h, x + w, y + h - r, r);
-	nvgLineTo(nvg, x + w, y - feather);
-	nvgLineTo(nvg, x + w + feather, y - feather);
-	nvgLineTo(nvg, x + w + feather, y + h + feather);
-	nvgLineTo(nvg, x - feather, y + h + feather);
-	nvgClosePath(nvg);
+	nvgMoveTo(nvg.nvg, x - feather, y - feather);
+	nvgLineTo(nvg.nvg, x, y - feather);
+	nvgLineTo(nvg.nvg, x, y + h - feather);
+	nvgArcTo(nvg.nvg, x, y + h, x + r, y + h, r);
+	nvgArcTo(nvg.nvg, x + w, y + h, x + w, y + h - r, r);
+	nvgLineTo(nvg.nvg, x + w, y - feather);
+	nvgLineTo(nvg.nvg, x + w + feather, y - feather);
+	nvgLineTo(nvg.nvg, x + w + feather, y + h + feather);
+	nvgLineTo(nvg.nvg, x - feather, y + h + feather);
+	nvgClosePath(nvg.nvg);
 
 	NVGcolor innerColor = nvgRGBAf(0, 0, 0, alpha * alpha);
 	NVGcolor outerColor = nvgRGBAf(0, 0, 0, 0);
 
-	NVGpaint paint = nvgBoxGradient(nvg, x - feather * 0.5f, y - feather * 0.5f,
+	NVGpaint paint = nvgBoxGradient(nvg.nvg, x - feather * 0.5f, y - feather * 0.5f,
 	                                w + feather, h + feather, r + feather*0.5f, feather,
 	                                innerColor, outerColor);
 
-	nvgFillPaint(nvg, paint);
-	nvgFill(nvg);
+	nvgFillPaint(nvg.nvg, paint);
+	nvgFill(nvg.nvg);
 }
 
-void wima_widget_box_inner(NVGcontext* nvg, float x, float y, float w, float h,
+void wima_widget_box_inner(WimaNvgInfo nvg, float x, float y, float w, float h,
                          float cr0, float cr1, float cr2, float cr3,
                          NVGcolor shade_top, NVGcolor shade_down)
 {
-	nvgBeginPath(nvg);
+	nvgBeginPath(nvg.nvg);
 
 	wima_widget_box_rounded(nvg, x + 1, y + 1, w - 2, h - 3,
 	                      wima_fmaxf(0, cr0 - 1), wima_fmaxf(0, cr1 - 1),
@@ -839,25 +839,25 @@ void wima_widget_box_inner(NVGcontext* nvg, float x, float y, float w, float h,
 
 	NVGpaint paint;
 	if (h - 2 > w) {
-		paint = nvgLinearGradient(nvg, x, y, x + w, y, shade_top, shade_down);
+		paint = nvgLinearGradient(nvg.nvg, x, y, x + w, y, shade_top, shade_down);
 	}
 	else {
-		paint = nvgLinearGradient(nvg, x, y, x, y + h, shade_top, shade_down);
+		paint = nvgLinearGradient(nvg.nvg, x, y, x, y + h, shade_top, shade_down);
 	}
 
-	nvgFillPaint(nvg, paint);
-	nvgFill(nvg);
+	nvgFillPaint(nvg.nvg, paint);
+	nvgFill(nvg.nvg);
 }
 
-void wima_widget_box_outline(NVGcontext* nvg, float x, float y, float w, float h,
+void wima_widget_box_outline(WimaNvgInfo nvg, float x, float y, float w, float h,
                            float cr0, float cr1, float cr2, float cr3, NVGcolor color)
 {
-	nvgBeginPath(nvg);
+	nvgBeginPath(nvg.nvg);
 
 	wima_widget_box_rounded(nvg, x + 0.5f, y + 0.5f, w - 1, h - 2, cr0, cr1, cr2, cr3);
-	nvgStrokeColor(nvg,color);
-	nvgStrokeWidth(nvg,1);
-	nvgStroke(nvg);
+	nvgStrokeColor(nvg.nvg,color);
+	nvgStrokeWidth(nvg.nvg,1);
+	nvgStroke(nvg.nvg);
 }
 
 void wima_widget_corners_rounded(float* radiuses, float r, int flags) {
@@ -867,7 +867,7 @@ void wima_widget_corners_rounded(float* radiuses, float r, int flags) {
 	radiuses[3] = (flags & WIMA_CORNER_DOWN_LEFT) ? 0 : r;
 }
 
-void wima_widget_label_icon_value(NVGcontext* nvg, float x, float y, float w, float h,
+void wima_widget_label_icon_value(WimaNvgInfo nvg, float x, float y, float w, float h,
                                 int iconid, NVGcolor color, int align, float fontsize,
                                 const char *label, const char *value)
 {
@@ -880,26 +880,26 @@ void wima_widget_label_icon_value(NVGcontext* nvg, float x, float y, float w, fl
 			pleft += WIMA_ICON_SHEET_RES;
 		}
 
-		if (wg.font < 0) {
+		if (nvg.font < 0) {
 			return;
 		}
 
-		nvgFontFaceId(nvg, wg.font);
-		nvgFontSize(nvg, fontsize);
-		nvgBeginPath(nvg);
-		nvgFillColor(nvg, color);
+		nvgFontFaceId(nvg.nvg, nvg.font);
+		nvgFontSize(nvg.nvg, fontsize);
+		nvgBeginPath(nvg.nvg);
+		nvgFillColor(nvg.nvg, color);
 
 		if (value) {
 
-			float label_width = nvgTextBounds(nvg, 1, 1, label, NULL, NULL);
-			float sep_width = nvgTextBounds(nvg, 1, 1, WIMA_LABEL_SEPARATOR, NULL, NULL);
+			float label_width = nvgTextBounds(nvg.nvg, 1, 1, label, NULL, NULL);
+			float sep_width = nvgTextBounds(nvg.nvg, 1, 1, WIMA_LABEL_SEPARATOR, NULL, NULL);
 
-			nvgTextAlign(nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
+			nvgTextAlign(nvg.nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
 			x += pleft;
 
 			if (align == WIMA_CENTER) {
 
-				float textBounds = nvgTextBounds(nvg, 1, 1, value, NULL, NULL);
+				float textBounds = nvgTextBounds(nvg.nvg, 1, 1, value, NULL, NULL);
 
 				float width = label_width + sep_width + textBounds;
 
@@ -907,21 +907,21 @@ void wima_widget_label_icon_value(NVGcontext* nvg, float x, float y, float w, fl
 			}
 
 			y += WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN;
-			nvgText(nvg, x, y, label, NULL);
+			nvgText(nvg.nvg, x, y, label, NULL);
 
 			x += label_width;
-			nvgText(nvg, x, y, WIMA_LABEL_SEPARATOR, NULL);
+			nvgText(nvg.nvg, x, y, WIMA_LABEL_SEPARATOR, NULL);
 
 			x += sep_width;
-			nvgText(nvg, x, y, value, NULL);
+			nvgText(nvg.nvg, x, y, value, NULL);
 		}
 		else {
 			int textAlign = (align == WIMA_LEFT) ?
 			                    (NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE) :
 			                    (NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
-			nvgTextAlign(nvg, textAlign);
+			nvgTextAlign(nvg.nvg, textAlign);
 
-			nvgTextBox(nvg, x + pleft, y + WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN,
+			nvgTextBox(nvg.nvg, x + pleft, y + WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN,
 			           w - WIMA_PAD_RIGHT - pleft, label, NULL);
 		}
 	}
@@ -930,27 +930,27 @@ void wima_widget_label_icon_value(NVGcontext* nvg, float x, float y, float w, fl
 	}
 }
 
-void wima_widget_node_label_icon(NVGcontext* nvg, float x, float y, float w, float h,
+void wima_widget_node_label_icon(WimaNvgInfo nvg, float x, float y, float w, float h,
                                int iconid, NVGcolor color, NVGcolor shadowColor,
                                int align, float fontsize, const char *label)
 {
-	if (label && (wg.font >= 0)) {
+	if (label && (nvg.font >= 0)) {
 
-		nvgFontFaceId(nvg, wg.font);
-		nvgFontSize(nvg, fontsize);
+		nvgFontFaceId(nvg.nvg, nvg.font);
+		nvgFontSize(nvg.nvg, fontsize);
 
-		nvgBeginPath(nvg);
+		nvgBeginPath(nvg.nvg);
 
-		nvgTextAlign(nvg, NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE);
-		nvgFillColor(nvg, shadowColor);
-		nvgFontBlur(nvg, WIMA_NODE_TITLE_FEATHER);
+		nvgTextAlign(nvg.nvg, NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE);
+		nvgFillColor(nvg.nvg, shadowColor);
+		nvgFontBlur(nvg.nvg, WIMA_NODE_TITLE_FEATHER);
 
-		nvgTextBox(nvg, x + 1, y + h + 3 - WIMA_TEXT_PAD_DOWN, w, label, NULL);
+		nvgTextBox(nvg.nvg, x + 1, y + h + 3 - WIMA_TEXT_PAD_DOWN, w, label, NULL);
 
-		nvgFillColor(nvg, color);
-		nvgFontBlur(nvg, 0);
+		nvgFillColor(nvg.nvg, color);
+		nvgFontBlur(nvg.nvg, 0);
 
-		nvgTextBox(nvg, x, y + h + 2 - WIMA_TEXT_PAD_DOWN, w, label, NULL);
+		nvgTextBox(nvg.nvg, x, y + h + 2 - WIMA_TEXT_PAD_DOWN, w, label, NULL);
 	}
 
 	if (iconid >= 0) {
@@ -958,7 +958,7 @@ void wima_widget_node_label_icon(NVGcontext* nvg, float x, float y, float w, flo
 	}
 }
 
-int wima_label_text_pos(NVGcontext* nvg, float x, float y, float w, float h,
+int wima_label_text_pos(WimaNvgInfo nvg, float x, float y, float w, float h,
                        int iconid, float fontsize, const char *label,
                         int px, int py)
 {
@@ -974,30 +974,30 @@ int wima_label_text_pos(NVGcontext* nvg, float x, float y, float w, float h,
 		pleft += WIMA_ICON_SHEET_RES;
 	}
 
-	if (wg.font < 0) {
+	if (nvg.font < 0) {
 		return -1;
 	}
 
 	x += pleft;
 	y += WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN;
 
-	nvgFontFaceId(nvg, wg.font);
-	nvgFontSize(nvg, fontsize);
-	nvgTextAlign(nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
+	nvgFontFaceId(nvg.nvg, nvg.font);
+	nvgFontSize(nvg.nvg, fontsize);
+	nvgTextAlign(nvg.nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
 
 	w -= WIMA_TEXT_RADIUS + pleft;
 
 	float asc, desc, lh;
 	static NVGtextRow rows[WIMA_MAX_ROWS];
 
-	int nrows = nvgTextBreakLines(nvg, label, NULL, w, rows, WIMA_MAX_ROWS);
+	int nrows = nvgTextBreakLines(nvg.nvg, label, NULL, w, rows, WIMA_MAX_ROWS);
 
 	if (nrows == 0) {
 		return 0;
 	}
 
-	nvgTextBoxBounds(nvg, x, y, w, label, NULL, bounds);
-	nvgTextMetrics(nvg, &asc, &desc, &lh);
+	nvgTextBoxBounds(nvg.nvg, x, y, w, label, NULL, bounds);
+	nvgTextMetrics(nvg.nvg, &asc, &desc, &lh);
 
 	// Calculate vertical position.
 	int row = wima_clamp((int) ((float) (py - bounds[1]) / lh), 0, nrows - 1);
@@ -1005,7 +1005,7 @@ int wima_label_text_pos(NVGcontext* nvg, float x, float y, float w, float h,
 	// Search horizontal position.
 	static NVGglyphPosition glyphs[WIMA_MAX_GLYPHS];
 
-	int nglyphs = nvgTextGlyphPositions(nvg, x, y, rows[row].start, rows[row].end + 1,
+	int nglyphs = nvgTextGlyphPositions(nvg.nvg, x, y, rows[row].start, rows[row].end + 1,
 	                                    glyphs, WIMA_MAX_GLYPHS);
 
 	int col, p = 0;
@@ -1024,7 +1024,7 @@ int wima_label_text_pos(NVGcontext* nvg, float x, float y, float w, float h,
 	return p;
 }
 
-static void wima_widget_caret_pos(NVGcontext* nvg, float x, float y, float desc,
+static void wima_widget_caret_pos(WimaNvgInfo nvg, float x, float y, float desc,
                                 float lineHeight,    const char *caret,
                                 NVGtextRow *rows,    int nrows,
                                 int *cr, float *cx,  float *cy)
@@ -1044,7 +1044,7 @@ static void wima_widget_caret_pos(NVGcontext* nvg, float x, float y, float desc,
 
 	*cx = rows[r].minx;
 
-	nglyphs = nvgTextGlyphPositions(nvg, x, y, rows[r].start, rows[r].end + 1,
+	nglyphs = nvgTextGlyphPositions(nvg.nvg, x, y, rows[r].start, rows[r].end + 1,
 	                                glyphs, WIMA_MAX_GLYPHS);
 
 	for (int i=0; i < nglyphs; ++i) {
@@ -1057,7 +1057,7 @@ static void wima_widget_caret_pos(NVGcontext* nvg, float x, float y, float desc,
 	}
 }
 
-void wima_widget_label_caret(NVGcontext* nvg, float x, float y, float w, float h,
+void wima_widget_label_caret(WimaNvgInfo nvg, float x, float y, float w, float h,
                            int iconid, NVGcolor color, float fontsize,
                            const char *label, NVGcolor caretcolor,
                            int cbegin, int cend)
@@ -1073,16 +1073,16 @@ void wima_widget_label_caret(NVGcontext* nvg, float x, float y, float w, float h
 		pleft += WIMA_ICON_SHEET_RES;
 	}
 
-	if (wg.font < 0) {
+	if (nvg.font < 0) {
 		return;
 	}
 
 	x += pleft;
 	y += WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN;
 
-	nvgFontFaceId(nvg, wg.font);
-	nvgFontSize(nvg, fontsize);
-	nvgTextAlign(nvg, NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE);
+	nvgFontFaceId(nvg.nvg, nvg.font);
+	nvgFontSize(nvg.nvg, fontsize);
+	nvgTextAlign(nvg.nvg, NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE);
 
 	w -= WIMA_TEXT_RADIUS + pleft;
 
@@ -1094,114 +1094,114 @@ void wima_widget_label_caret(NVGcontext* nvg, float x, float y, float w, float h
 
 		static NVGtextRow rows[WIMA_MAX_ROWS];
 
-		int nrows = nvgTextBreakLines(nvg, label, label + cend + 1, w, rows, WIMA_MAX_ROWS);
-		nvgTextMetrics(nvg, NULL, &desc, &lh);
+		int nrows = nvgTextBreakLines(nvg.nvg, label, label + cend + 1, w, rows, WIMA_MAX_ROWS);
+		nvgTextMetrics(nvg.nvg, NULL, &desc, &lh);
 
 		wima_widget_caret_pos(nvg, x, y, desc, lh, label + cbegin, rows, nrows, &c0r, &c0x, &c0y);
 		wima_widget_caret_pos(nvg, x, y, desc, lh, label + cend,   rows, nrows, &c1r, &c1x, &c1y);
 
-		nvgBeginPath(nvg);
+		nvgBeginPath(nvg.nvg);
 		if (cbegin == cend) {
-			nvgFillColor(nvg, nvgRGBf(0.337,0.502,0.761));
-			nvgRect(nvg, c0x - 1, c0y, 2, lh + 1);
+			nvgFillColor(nvg.nvg, nvgRGBf(0.337,0.502,0.761));
+			nvgRect(nvg.nvg, c0x - 1, c0y, 2, lh + 1);
 		}
 		else {
 
-			nvgFillColor(nvg, caretcolor);
+			nvgFillColor(nvg.nvg, caretcolor);
 
 			if (c0r == c1r) {
-				nvgRect(nvg, c0x - 1, c0y, c1x - c0x + 1, lh + 1);
+				nvgRect(nvg.nvg, c0x - 1, c0y, c1x - c0x + 1, lh + 1);
 			}
 			else {
 
 				int blk=c1r-c0r- 1;
 
-				nvgRect(nvg, c0x - 1, c0y, x + w - c0x + 1, lh + 1);
-				nvgRect(nvg, x, c1y, c1x - x + 1, lh + 1);
+				nvgRect(nvg.nvg, c0x - 1, c0y, x + w - c0x + 1, lh + 1);
+				nvgRect(nvg.nvg, x, c1y, c1x - x + 1, lh + 1);
 
 				if (blk) {
-					nvgRect(nvg, x, c0y +lh, w, blk * lh + 1);
+					nvgRect(nvg.nvg, x, c0y +lh, w, blk * lh + 1);
 				}
 			}
 		}
-		nvgFill(nvg);
+		nvgFill(nvg.nvg);
 	}
 
-	nvgBeginPath(nvg);
-	nvgFillColor(nvg, color);
-	nvgTextBox(nvg, x, y, w, label, NULL);
+	nvgBeginPath(nvg.nvg);
+	nvgFillColor(nvg.nvg, color);
+	nvgTextBox(nvg.nvg, x, y, w, label, NULL);
 }
 
-void wima_widget_check(NVGcontext* nvg, float ox, float oy, NVGcolor color) {
+void wima_widget_check(WimaNvgInfo nvg, float ox, float oy, NVGcolor color) {
 
-	nvgBeginPath(nvg);
+	nvgBeginPath(nvg.nvg);
 
-	nvgStrokeWidth(nvg, 2);
-	nvgStrokeColor(nvg, color);
+	nvgStrokeWidth(nvg.nvg, 2);
+	nvgStrokeColor(nvg.nvg, color);
 
-	nvgLineCap(nvg, NVG_BUTT);
-	nvgLineJoin(nvg, NVG_MITER);
+	nvgLineCap(nvg.nvg, NVG_BUTT);
+	nvgLineJoin(nvg.nvg, NVG_MITER);
 
-	nvgMoveTo(nvg,ox + 4, oy + 5);
-	nvgLineTo(nvg,ox + 7, oy + 8);
-	nvgLineTo(nvg,ox + 14, oy + 1);
+	nvgMoveTo(nvg.nvg,ox + 4, oy + 5);
+	nvgLineTo(nvg.nvg,ox + 7, oy + 8);
+	nvgLineTo(nvg.nvg,ox + 14, oy + 1);
 
-	nvgStroke(nvg);
+	nvgStroke(nvg.nvg);
 }
 
-void wima_widget_arrow(NVGcontext* nvg, float x, float y, float s, NVGcolor color) {
+void wima_widget_arrow(WimaNvgInfo nvg, float x, float y, float s, NVGcolor color) {
 
-	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, x, y);
-	nvgLineTo(nvg,x - s, y + s);
-	nvgLineTo(nvg,x - s, y - s);
+	nvgBeginPath(nvg.nvg);
+	nvgMoveTo(nvg.nvg, x, y);
+	nvgLineTo(nvg.nvg,x - s, y + s);
+	nvgLineTo(nvg.nvg,x - s, y - s);
 
-	nvgClosePath(nvg);
+	nvgClosePath(nvg.nvg);
 
-	nvgFillColor(nvg, color);
-	nvgFill(nvg);
+	nvgFillColor(nvg.nvg, color);
+	nvgFill(nvg.nvg);
 }
 
-void wima_widget_arrow_upDown(NVGcontext* nvg, float x, float y, float s, NVGcolor color) {
+void wima_widget_arrow_upDown(WimaNvgInfo nvg, float x, float y, float s, NVGcolor color) {
 
 	float w;
 
-	nvgBeginPath(nvg);
+	nvgBeginPath(nvg.nvg);
 
 	w = 1.1f * s;
 
-	nvgMoveTo(nvg, x, y - 1);
-	nvgLineTo(nvg, x + 0.5 * w, y - s - 1);
-	nvgLineTo(nvg, x + w, y - 1);
+	nvgMoveTo(nvg.nvg, x, y - 1);
+	nvgLineTo(nvg.nvg, x + 0.5 * w, y - s - 1);
+	nvgLineTo(nvg.nvg, x + w, y - 1);
 
-	nvgClosePath(nvg);
+	nvgClosePath(nvg.nvg);
 
-	nvgMoveTo(nvg, x, y + 1);
-	nvgLineTo(nvg, x + 0.5 * w, y + s + 1);
-	nvgLineTo(nvg, x + w, y + 1);
+	nvgMoveTo(nvg.nvg, x, y + 1);
+	nvgLineTo(nvg.nvg, x + 0.5 * w, y + s + 1);
+	nvgLineTo(nvg.nvg, x + w, y + 1);
 
-	nvgClosePath(nvg);
+	nvgClosePath(nvg.nvg);
 
-	nvgFillColor(nvg, color);
-	nvgFill(nvg);
+	nvgFillColor(nvg.nvg, color);
+	nvgFill(nvg.nvg);
 }
 
-void wima_widget_node_arrow_down(NVGcontext* nvg, float x, float y, float s, NVGcolor color) {
+void wima_widget_node_arrow_down(WimaNvgInfo nvg, float x, float y, float s, NVGcolor color) {
 
 	float w;
 
-	nvgBeginPath(nvg);
+	nvgBeginPath(nvg.nvg);
 
 	w = 1.0f * s;
 
-	nvgMoveTo(nvg, x, y);
-	nvgLineTo(nvg, x + 0.5 * w, y - s);
-	nvgLineTo(nvg, x - 0.5 * w, y - s);
+	nvgMoveTo(nvg.nvg, x, y);
+	nvgLineTo(nvg.nvg, x + 0.5 * w, y - s);
+	nvgLineTo(nvg.nvg, x - 0.5 * w, y - s);
 
-	nvgClosePath(nvg);
+	nvgClosePath(nvg.nvg);
 
-	nvgFillColor(nvg, color);
-	nvgFill(nvg);
+	nvgFillColor(nvg.nvg, color);
+	nvgFill(nvg.nvg);
 }
 
 void wima_widget_scroll_handle_rect(float *x, float *y, float *w, float *h, float offset, float size) {

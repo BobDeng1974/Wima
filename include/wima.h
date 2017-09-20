@@ -642,6 +642,14 @@ typedef struct wima_context_menu {
 
 } WimaContextMenu;
 
+typedef struct wima_nvg_info {
+
+	NVGcontext* nvg;
+	int font;
+	int icons;
+
+} WimaNvgInfo;
+
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
@@ -677,7 +685,7 @@ typedef struct wima_region_funcs {
 
 } WimaRegionFuncs;
 
-typedef WimaStatus (*WimaDrawFunc)(WimaItemHandle, NVGcontext*);
+typedef WimaStatus (*WimaDrawFunc)(WimaItemHandle, WimaNvgInfo);
 typedef void (*WimaErrorFunc)(WimaStatus, const char*);
 typedef WimaStatus (*WimaWindowFileDropFunc)(WimaWindowHandle, int, const char**);
 typedef WimaStatus (*WimaWindowPosFunc)(WimaWindowHandle, WimaPos);
@@ -1119,7 +1127,8 @@ WimaItemHandle wima_window_focus(WimaWindowHandle wwh);
 
 WimaStatus wima_window_free(WimaWindowHandle win);
 
-WimaStatus wima_init(const char* name, WimaAppFuncs funcs);
+WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
+                     const char* fontPath, const char* iconSheetPath);
 GLFWcursor* wima_standardCursor(WimaCursor cursor);
 WimaStatus wima_main();
 void wima_exit();

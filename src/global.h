@@ -63,8 +63,8 @@ typedef struct wima_globals {
 
 	WimaTheme theme;
 
-	int icons;
-	int font;
+	DynaString fontPath;
+	DynaString iconSheetPath;
 
 	// Standard cursors.
 	GLFWcursor* cursors[6];

@@ -106,7 +106,7 @@ typedef struct wima_window {
 
 	GLFWcursor* cursor;
 
-	NVGcontext* nvg;
+	WimaNvgInfo nvg;
 	WimaWindowContext ctx;
 
 	WimaContextMenu* userMenu;
@@ -115,9 +115,9 @@ typedef struct wima_window {
 	WimaSize fbsize;
 	WimaSize winsize;
 
-	float pixelRatio;
-
 	WimaPos menuOffset;
+
+	float pixelRatio;
 
 	// For some reason, NanoVG has a bug where things
 	// are not drawn properly unless you draw twice.

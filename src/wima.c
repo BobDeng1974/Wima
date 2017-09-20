@@ -36,6 +36,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <jemalloc/jemalloc.h>
 
@@ -57,10 +58,20 @@ GLFWcursor* wima_standardCursor(WimaCursor cursor) {
 	return wg.cursors[cursor];
 }
 
-WimaStatus wima_init(const char* name, WimaAppFuncs funcs) {
-
+WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
+                     const char* fontPath, const char* iconSheetPath)
+{
 	if (!funcs.draw || !funcs.error) {
-		return WIMA_STATUS_INIT_ERR;
+		return WIMA_STATUS_INVALID_PARAM;
+	}
+
+	// Check that we can access the font and icon sheets.
+	if (!fontPath ||
+	    !iconSheetPath ||
+	    access(fontPath, F_OK|R_OK) == -1 ||
+	    access(iconSheetPath, F_OK|R_OK) == -1)
+	{
+		return WIMA_STATUS_INVALID_PARAM;
 	}
 
 	wg.draw = funcs.draw;
@@ -80,11 +91,24 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs) {
 	// Set the initial theme.
 	wg.theme = wima_initial_theme;
 
-	// Make sure these are cleared.
-	wg.font = -1;
-	wg.icons = -1;
+	// Clear before trying to set.
+	wg.fontPath = NULL;
+	wg.iconSheetPath = NULL;
 
-	DynaStatus dstatus = dstr_create(&(wg.name), name);
+	// Make sure these are set.
+	DynaStatus dstatus = dstr_create(&wg.fontPath, fontPath);
+	if (dstatus) {
+		wima_exit();
+		return WIMA_STATUS_INIT_ERR;
+	}
+
+	dstatus = dstr_create(&wg.iconSheetPath, iconSheetPath);
+	if (dstatus) {
+		wima_exit();
+		return WIMA_STATUS_INIT_ERR;
+	}
+
+	dstatus = dstr_create(&(wg.name), name);
 	if (dstatus) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
@@ -169,6 +193,14 @@ WimaStatus wima_main() {
 }
 
 void wima_exit() {
+
+	if (wg.fontPath) {
+		dstr_free(wg.fontPath);
+	}
+
+	if (wg.iconSheetPath) {
+		dstr_free(wg.iconSheetPath);
+	}
 
 	if (wg.name) {
 		dstr_free(wg.name);

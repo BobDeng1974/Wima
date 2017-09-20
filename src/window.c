@@ -170,17 +170,13 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 
 	WimaWin* window = dvec_get(wg.windows, idx);
 
-	window->nvg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+	window->nvg.nvg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 
-	// Load the font if not loaded already.
-	if (wg.font < 0) {
-		wg.font = wima_theme_loadFont(window->nvg, "system", "../res/DejaVuSans.ttf");
-	}
+	// Load the font.
+	window->nvg.font = wima_theme_loadFont(window->nvg.nvg, "default", dstr_str(wg.fontPath));
 
-	// Load the icons if not loaded already.
-	if (wg.icons < 0) {
-		wg.icons = wima_theme_loadIcons(window->nvg, "../res/blender_icons16.png");
-	}
+	// Load the icons.
+	window->nvg.icons = wima_theme_loadIcons(window->nvg.nvg, dstr_str(wg.iconSheetPath));
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -425,7 +421,7 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 
-	nvgBeginFrame(win->nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
+	nvgBeginFrame(win->nvg.nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 
 	bool drawTwice = win->drawTwice;
 
@@ -473,7 +469,7 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 		}
 	}
 
-	nvgEndFrame(win->nvg);
+	nvgEndFrame(win->nvg.nvg);
 
 	glDisable(GL_SCISSOR_TEST);
 
@@ -483,14 +479,14 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-static WimaContextMenu* wima_window_menu_contains(WimaWin* win, WimaContextMenu* menu, WimaPos pos) {
+static WimaContextMenu* wima_window_menu_contains(WimaContextMenu* menu, WimaPos pos) {
 
 	WimaContextMenu* result = wima_rect_contains(menu->rect, pos) ? menu : NULL;
 
 	WimaContextMenu* child;
 
 	if (menu->hasSubMenu) {
-		child = wima_window_menu_contains(win, menu->subMenu, pos);
+		child = wima_window_menu_contains(menu->subMenu, pos);
 	}
 	else {
 		child = NULL;
@@ -503,15 +499,13 @@ static WimaContextMenu* wima_window_menu_contains(WimaWin* win, WimaContextMenu*
 
 WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentWidth) {
 
-	NVGcontext* nvg = win->nvg;
-
 	// TODO: Handle sending events to menu items.
 
-	float width = wima_widget_label_estimateWidth(nvg, menu->icon, menu->title);
+	float width = wima_widget_label_estimateWidth(win->nvg, menu->icon, menu->title);
 
 	float w, h;
 
-	float arrowWidth = wima_widget_label_estimateWidth(nvg, WIMA_ICONID(28,2), NULL);
+	float arrowWidth = wima_widget_label_estimateWidth(win->nvg, WIMA_ICONID(28,2), NULL);
 
 	// Estimate width.
 	for (int i = 0; i < menu->numItems; ++i) {
@@ -519,7 +513,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 		WimaMenuItem item = menu->items[i];
 
 		if (item.label) {
-			w = wima_widget_label_estimateWidth(nvg, item.icon, item.label);
+			w = wima_widget_label_estimateWidth(win->nvg, item.icon, item.label);
 			w += item.hasSubMenu ? arrowWidth : 0;
 		}
 		else {
@@ -530,7 +524,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 		width = wima_max(width, w);
 	}
 
-	float titleHeight = wima_widget_label_estimateHeight(nvg, menu->icon, menu->title, width) + 5;
+	float titleHeight = wima_widget_label_estimateHeight(win->nvg, menu->icon, menu->title, width) + 5;
 	float height = titleHeight + WIMA_MENU_SEPARATOR_HEIGHT;
 
 	// Now estimate height.
@@ -539,7 +533,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 		WimaMenuItem item = menu->items[i];
 
 		if (item.label) {
-			h = wima_widget_label_estimateHeight(nvg, item.icon, item.label, width);
+			h = wima_widget_label_estimateHeight(win->nvg, item.icon, item.label, width);
 		}
 		else {
 			h = WIMA_MENU_SEPARATOR_HEIGHT;
@@ -596,19 +590,19 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 	}
 
 	// Set up NanoVG.
-	nvgResetTransform(nvg);
-	nvgResetScissor(nvg);
+	nvgResetTransform(win->nvg.nvg);
+	nvgResetScissor(win->nvg.nvg);
 
-	nvgTranslate(nvg, menu->rect.x, menu->rect.y);
-	nvgScissor(nvg, 0, 0, menu->rect.w, menu->rect.h);
+	nvgTranslate(win->nvg.nvg, menu->rect.x, menu->rect.y);
+	nvgScissor(win->nvg.nvg, 0, 0, menu->rect.w, menu->rect.h);
 
-	wima_widget_menu_background(nvg, 0, 0, menu->rect.w, menu->rect.h, WIMA_CORNER_NONE);
-	wima_widget_menu_label(nvg, 0, 5, width, titleHeight, menu->icon, menu->title);
-	wima_widget_menu_separator(nvg, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
+	wima_widget_menu_background(win->nvg, 0, 0, menu->rect.w, menu->rect.h, WIMA_CORNER_NONE);
+	wima_widget_menu_label(win->nvg, 0, 5, width, titleHeight, menu->icon, menu->title);
+	wima_widget_menu_separator(win->nvg, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
 
 	bool onItem = false;
 
-	WimaContextMenu* m = wima_window_menu_contains(win, menu, pos);
+	WimaContextMenu* m = wima_window_menu_contains(menu, pos);
 
 	for (int i = 0; i < menu->numItems; ++i) {
 
@@ -642,11 +636,11 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentW
 				item.state = contained ? WIMA_ITEM_HOVER : item.state;
 			}
 
-			wima_widget_menu_item(nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h,
+			wima_widget_menu_item(win->nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h,
 			                      item.state, item.icon, item.label, item.hasSubMenu);
 		}
 		else {
-			wima_widget_menu_separator(nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h);
+			wima_widget_menu_separator(win->nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h);
 		}
 	}
 
@@ -886,7 +880,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 
 		WimaPos pos = win->ctx.cursorPos;
 
-		WimaContextMenu* m = wima_window_menu_contains(win, menu, pos);
+		WimaContextMenu* m = wima_window_menu_contains(menu, pos);
 
 		if (e.action == WIMA_ACTION_RELEASE && m) {
 
@@ -1403,7 +1397,7 @@ WimaStatus wima_window_free(WimaWindowHandle wwh) {
 
 	dstr_free(win->name);
 
-	nvgDeleteGL3(win->nvg);
+	nvgDeleteGL3(win->nvg.nvg);
 
 	return wima_areas_free(win->areas);
 }
