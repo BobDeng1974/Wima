@@ -913,7 +913,7 @@ NVGcolor wima_color_offset(NVGcolor color, int delta);
 // BND_ACTIVE, the upper and lower colors will be swapped.
 void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
                       const WimaWidgetTheme* theme, WimaItemState state,
-                      int flipActive);
+                      bool flipActive);
 
 // computes the text color for a widget label from a widget theme and the
 // widgets state.

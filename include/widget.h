@@ -267,8 +267,7 @@ void wima_widget_corners_rounded(float *radiuses, float r, int flags);
 // and the handles offset and size.
 // offset is in the range 0..1 and defines the position of the scroll handle
 // size is in the range 0..1 and defines the size of the scroll handle
-void wima_widget_scroll_handle_rect(float *x, float *y, float *w, float *h,
-    float offset, float size);
+WimaRect wima_widget_scroll_handle_rect(float x, float y, float w, float h, float offset, float size);
 
 // Add a rounded box path at position (x,y) with size (w,h) and a separate
 // radius for each corner listed in clockwise order, so that cr0 = top left,

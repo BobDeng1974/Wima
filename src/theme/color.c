@@ -95,7 +95,7 @@ NVGcolor wima_color_offset(NVGcolor color, int delta) {
 
 void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
                       const WimaWidgetTheme* theme, WimaItemState state,
-                      int flipActive)
+                      bool flipActive)
 {
 	switch(state) {
 
