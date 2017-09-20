@@ -791,25 +791,11 @@ void wima_area_drawSplit(WimaAreaNode* area, NVGcontext* nvg) {
 	float split = (float) area->parent.spliti;
 
 	if (area->parent.vertical) {
-
-		// I don't know why I have to put these twice, but if I don't,
-		// the split line isn't drawn until the first event.
-		nvgMoveTo(nvg, split, 0.0f);
-		nvgLineTo(nvg, split, area->rect.h);
-		nvgStroke(nvg);
-
 		nvgMoveTo(nvg, split, 0.0f);
 		nvgLineTo(nvg, split, area->rect.h);
 		nvgStroke(nvg);
 	}
 	else {
-
-		// I don't know why I have to put these twice, but if I don't,
-		// the split line isn't drawn until the first event.
-		nvgMoveTo(nvg, 0.0f, split);
-		nvgLineTo(nvg, area->rect.w, split);
-		nvgStroke(nvg);
-
 		nvgMoveTo(nvg, 0.0f, split);
 		nvgLineTo(nvg, area->rect.w, split);
 		nvgStroke(nvg);
