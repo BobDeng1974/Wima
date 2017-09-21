@@ -813,7 +813,7 @@ void wima_callback_error(int error, const char* desc) {
 		case GLFW_API_UNAVAILABLE:
 		case GLFW_VERSION_UNAVAILABLE:
 		{
-			status = WIMA_STATUS_INIT_ERR;
+			status = WIMA_STATUS_OPENGL_ERR;
 			break;
 		}
 

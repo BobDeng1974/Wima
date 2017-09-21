@@ -348,32 +348,36 @@ typedef enum wima_status_codes {
 	// Returned when Wima is in an invalid state for the operation.
 	WIMA_STATUS_INVALID_STATE  = 130,
 
+	// Returned when there was an error with OpenGL
+	// (though not including context errors).
+	WIMA_STATUS_OPENGL_ERR     = 131,
+
 	// Returned when OpenGL does not have a context.
-	WIMA_STATUS_CONTEXT_ERR    = 131,
+	WIMA_STATUS_CONTEXT_ERR    = 132,
 
 	// Returned when Wima fails to initialize.
-	WIMA_STATUS_INIT_ERR       = 132,
+	WIMA_STATUS_INIT_ERR       = 133,
 
 	// Returned when Wima fails to create a window.
-	WIMA_STATUS_WINDOW_ERR     = 133,
+	WIMA_STATUS_WINDOW_ERR     = 134,
 
 	// Returned when Wima fails to create a workspace.
-	WIMA_STATUS_WORKSPACE_ERR  = 134,
+	WIMA_STATUS_WORKSPACE_ERR  = 135,
 
 	// Returned when Wima fails to start an area.
-	WIMA_STATUS_AREA_ERR       = 135,
+	WIMA_STATUS_AREA_ERR       = 136,
 
 	// Returned when Wima gets an invalid enum value.
-	WIMA_STATUS_INVALID_ENUM   = 136,
+	WIMA_STATUS_INVALID_ENUM   = 137,
 
 	// Returned when Wima gets an invalid parameter.
-	WIMA_STATUS_INVALID_PARAM  = 137,
+	WIMA_STATUS_INVALID_PARAM  = 138,
 
 	// Returned when the clipboard contents were invalid.
-	WIMA_STATUS_INVALID_CLIP   = 138,
+	WIMA_STATUS_INVALID_CLIP   = 139,
 
 	// Returned when an event is dropped.
-	WIMA_STATUS_EVENT_DROPPED  = 139,
+	WIMA_STATUS_EVENT_DROPPED  = 140,
 
 } WimaStatus;
 
