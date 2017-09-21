@@ -237,9 +237,6 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		return;
 	}
 
-	// TODO: Don't send mouse events to area when Wima has a menu.
-	// Clicking outside of the menu should just make it go away.
-
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	WimaItemHandle clickItem = wima_area_findItem(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN);

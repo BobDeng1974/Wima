@@ -382,8 +382,6 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 
 WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas) {
 
-	// TODO: Handle WimaUiContext.
-
 	WimaWin* window = dvec_get(wg.windows, wwh);
 
 	if (!window->areas) {
@@ -505,8 +503,6 @@ static WimaContextMenu* wima_window_menu_contains(WimaContextMenu* menu, WimaPos
 }
 
 WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentWidth) {
-
-	// TODO: Handle sending events to menu items.
 
 	float width = wima_widget_label_estimateWidth(win->nvg, menu->icon, menu->title);
 
