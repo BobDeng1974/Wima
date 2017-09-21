@@ -276,7 +276,7 @@ GLFWwindow* wima_window_glfw(WimaWindowHandle wwh) {
 }
 
 WimaStatus wima_window_close(WimaWindowHandle wwh) {
-	if (!wg.close || wg.close(wwh)) {
+	if (!wg.funcs.close || wg.funcs.close(wwh)) {
 		glfwSetWindowShouldClose(wima_window_glfw(wwh), 1);
 	}
 	return WIMA_STATUS_SUCCESS;
@@ -986,7 +986,7 @@ static WimaStatus wima_window_processFileDrop(WimaWindowHandle wwh, DynaVector f
 
 	WimaStatus status;
 
-	if (wg.file_drop) {
+	if (wg.funcs.file_drop) {
 
 		size_t len = dvec_len(files);
 
@@ -999,7 +999,7 @@ static WimaStatus wima_window_processFileDrop(WimaWindowHandle wwh, DynaVector f
 			names[i] = dstr_str(s);
 		}
 
-		status = wg.file_drop(wwh, len, names);
+		status = wg.funcs.file_drop(wwh, len, names);
 
 		for (int i = 0; i < len; ++i) {
 			DynaString s = dvec_get(files, i);
@@ -1142,9 +1142,9 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_WIN_POS:
 		{
-			if (wg.pos) {
+			if (wg.funcs.pos) {
 				WimaPos pos = e.pos;
-				status = wg.pos(wwh, pos);
+				status = wg.funcs.pos(wwh, pos);
 			}
 			else {
 				status = WIMA_STATUS_SUCCESS;
@@ -1155,9 +1155,9 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_FB_SIZE:
 		{
-			if (wg.fb_size) {
+			if (wg.funcs.fbsize) {
 				WimaSize size = e.size;
-				status = wg.fb_size(wwh, size);
+				status = wg.funcs.fbsize(wwh, size);
 			}
 			else {
 				status = WIMA_STATUS_SUCCESS;
@@ -1167,9 +1167,9 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_WIN_SIZE:
 		{
-			if (wg.win_size) {
+			if (wg.funcs.winsize) {
 				WimaSize size = e.size;
-				status = wg.win_size(wwh, size);
+				status = wg.funcs.winsize(wwh, size);
 			}
 			else {
 				status = WIMA_STATUS_SUCCESS;
@@ -1179,8 +1179,8 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_WIN_ENTER:
 		{
-			if (wg.enter) {
-				status = wg.enter(wwh, e.mouse_enter);
+			if (wg.funcs.enter) {
+				status = wg.funcs.enter(wwh, e.mouse_enter);
 			}
 			else {
 				status = WIMA_STATUS_SUCCESS;

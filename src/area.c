@@ -502,7 +502,7 @@ WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, D
 			item.window = area->window;
 
 			// Draw the area. The draw function is guaranteed to be non-null.
-			status = wg.draw(item, nvg);
+			status = wg.funcs.draw(item, nvg);
 		}
 
 		// Draw the border shading.

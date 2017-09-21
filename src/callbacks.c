@@ -171,7 +171,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 		{
 			WimaStatus status = wima_window_setModifier(wwh, wkey, wact);
 			if (status) {
-				wg.error(status, descs[status - 128]);
+				wg.funcs.error(status, descs[status - 128]);
 			}
 
 			return;
@@ -185,7 +185,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -225,7 +225,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -308,7 +308,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -368,7 +368,7 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -408,7 +408,7 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -441,7 +441,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -458,7 +458,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 	// Allocate a vector.
 	DynaVector strs;
 	if (dvec_createStringVec(&strs, filec)) {
-		wg.error(WIMA_STATUS_MALLOC_ERR, errorMsg);
+		wg.funcs.error(WIMA_STATUS_MALLOC_ERR, errorMsg);
 		return;
 	}
 
@@ -475,7 +475,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 
 			dvec_free(strs);
 
-			wg.error(WIMA_STATUS_MALLOC_ERR, errorMsg);
+			wg.funcs.error(WIMA_STATUS_MALLOC_ERR, errorMsg);
 
 			break;
 		}
@@ -497,7 +497,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -527,7 +527,7 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -563,7 +563,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	wwin->fbsize.w = width;
@@ -578,7 +578,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
 	WimaStatus status = wima_area_resize(wwin->areas, rect);
 	if (status) {
-		wg.error(status, descs[status - 128]);
+		wg.funcs.error(status, descs[status - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -612,7 +612,7 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
-		wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	wwin->winsize.w = width;
@@ -654,7 +654,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
-	WimaWindowCloseFunc close = wg.close;
+	WimaWindowCloseFunc close = wg.funcs.close;
 
 	if (!close || close(wwh)) {
 
@@ -667,7 +667,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 
 			WimaWin* wwin = dvec_get(wg.windows, wwh);
 			if (!wwin) {
-				wg.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+				wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 			}
 
 			memset(wwin, 0, sizeof(WimaWin));
@@ -712,5 +712,5 @@ void wima_callback_error(int error, const char* desc) {
 			break;
 	}
 
-	wg.error(status, desc);
+	wg.funcs.error(status, desc);
 }

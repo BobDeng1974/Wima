@@ -82,14 +82,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 		return WIMA_STATUS_INVALID_PARAM;
 	}
 
-	wg.draw = funcs.draw;
-	wg.error = funcs.error;
-	wg.file_drop = funcs.file_drop;
-	wg.enter = funcs.enter;
-	wg.pos = funcs.pos;
-	wg.fb_size = funcs.fbsize;
-	wg.win_size = funcs.winsize;
-	wg.close = funcs.close;
+	wg.funcs = funcs;
 
 	wg.regions = NULL;
 	wg.workspaces = NULL;
@@ -211,7 +204,7 @@ WimaStatus wima_main() {
 		// Render here.
 		WimaStatus status = wima_window_draw(wwh);
 		if (status) {
-			wg.error(status, "Wima encountered an error while rendering.");
+			wg.funcs.error(status, "Wima encountered an error while rendering.");
 		}
 
 		// Poll for events.
@@ -229,7 +222,7 @@ WimaStatus wima_main() {
 		// Process events and check for error.
 		status = wima_window_processEvents(wwh);
 		if (status) {
-			wg.error(status, "Wima encountered an error processing events.");
+			wg.funcs.error(status, "Wima encountered an error processing events.");
 		}
 	}
 
