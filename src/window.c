@@ -375,7 +375,7 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 	rect.w = window->fbsize.w;
 	rect.h = window->fbsize.h;
 
-	WimaStatus status = wima_area_node_init(wwh, window->areas, root, rect);
+	WimaStatus status = wima_area_init(wwh, window->areas, rect);
 
 	return status;
 }
