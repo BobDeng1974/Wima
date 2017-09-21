@@ -163,6 +163,9 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 
 	glfwMakeContextCurrent(win);
 
+	// Set the swap interval.
+	glfwSwapInterval(1);
+
 	if (!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
 		glfwTerminate();
 		return -1;
