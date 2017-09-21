@@ -280,9 +280,11 @@ GLFWwindow* wima_window_glfw(WimaWindowHandle wwh) {
 }
 
 WimaStatus wima_window_close(WimaWindowHandle wwh) {
+
 	if (!wg.funcs.close || wg.funcs.close(wwh)) {
 		glfwSetWindowShouldClose(wima_window_glfw(wwh), 1);
 	}
+
 	return WIMA_STATUS_SUCCESS;
 }
 
