@@ -110,6 +110,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	wwin.pixelRatio = (float) wwin.fbsize.w / wwin.winsize.w;
 
 	// Set all of the callbacks.
+	glfwSetKeyCallback(win, wima_callback_key);
 	glfwSetMouseButtonCallback(win, wima_callback_mouseBtn);
 	glfwSetCursorPosCallback(win, wima_callback_mousePos);
 	glfwSetScrollCallback(win, wima_callback_scroll);
@@ -120,8 +121,11 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	glfwSetWindowPosCallback(win, wima_callback_windowPos);
 	glfwSetFramebufferSizeCallback(win, wima_callback_framebufferSize);
 	glfwSetWindowSizeCallback(win, wima_callback_windowSize);
-	glfwSetKeyCallback(win, wima_callback_key);
+	glfwSetWindowIconifyCallback(win, wima_callback_windowIconify);
+	glfwSetWindowRefreshCallback(win, wima_callback_windowRefresh);
+	glfwSetWindowFocusCallback(win, wima_callback_windowFocus);
 	glfwSetWindowCloseCallback(win, wima_callback_windowClose);
+	glfwSetMonitorCallback(wima_callback_monitorConnected);
 
 	wwin.window = win;
 	WimaWindowHandle idx;
@@ -1181,6 +1185,30 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		{
 			if (wg.funcs.enter) {
 				status = wg.funcs.enter(wwh, e.mouse_enter);
+			}
+			else {
+				status = WIMA_STATUS_SUCCESS;
+			}
+
+			break;
+		}
+
+		case WIMA_EVENT_WIN_MINIMIZE:
+		{
+			if (wg.funcs.minimize) {
+				status = wg.funcs.minimize(wwh, e.minimized);
+			}
+			else {
+				status = WIMA_STATUS_SUCCESS;
+			}
+
+			break;
+		}
+
+		case WIMA_EVENT_WIN_FOCUS:
+		{
+			if (wg.funcs.focus) {
+				status = wg.funcs.focus(wwh, e.focused);
 			}
 			else {
 				status = WIMA_STATUS_SUCCESS;

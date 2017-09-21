@@ -646,29 +646,28 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	bool wasMinimized = minimized != 0;
-
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
-	WimaStatus status;
-
-	if (!wasMinimized) {
-
-		status = wima_window_draw(wwh);
-		if (status) {
-			wg.funcs.error(status, descs[status - 128]);
-		}
+	WimaWin* wwin = dvec_get(wg.windows, wwh);
+	if (!wwin) {
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
-	WimaWindowMinimizeFunc minimize = wg.funcs.minimize;
+	int numEvents = wwin->ctx.eventCount;
 
-	if (minimize) {
+	// If we've already reached our max.
+	if (numEvents >= WIMA_MAX_EVENTS) {
 
-		status = minimize(wwh, wasMinimized);
-		if (status) {
-			wg.funcs.error(status, descs[status - 128]);
-		}
+		// Drop the event.
+		return;
 	}
+
+	WimaEvent* event = wwin->ctx.events + numEvents;
+
+	event->type = WIMA_EVENT_WIN_FOCUS;
+	event->minimized = minimized != 0;
+
+	++(wwin->ctx.eventCount);
 }
 
 void wima_callback_windowRefresh(GLFWwindow* window) {
@@ -679,10 +678,12 @@ void wima_callback_windowRefresh(GLFWwindow* window) {
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
-	WimaStatus status = wima_window_draw(wwh);
-	if (status) {
-		wg.funcs.error(status, descs[status - 128]);
+	WimaWin* wwin = dvec_get(wg.windows, wwh);
+	if (!wwin) {
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
+
+	wwin->drawTwice = true;
 }
 
 void wima_callback_windowFocus(GLFWwindow* window, int focused) {
@@ -691,29 +692,31 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	bool hasFocus = focused != 0;
-
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
-	WimaStatus status;
-
-	if (hasFocus) {
-
-		status = wima_window_draw(wwh);
-		if (status) {
-			wg.funcs.error(status, descs[status - 128]);
-		}
+	WimaWin* wwin = dvec_get(wg.windows, wwh);
+	if (!wwin) {
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
-	WimaWindowFocusFunc focus = wg.funcs.focus;
+	int numEvents = wwin->ctx.eventCount;
 
-	if (focus) {
+	// If we've already reached our max.
+	if (numEvents >= WIMA_MAX_EVENTS) {
 
-		status = focus(wwh, hasFocus);
-		if (status) {
-			wg.funcs.error(status, descs[status - 128]);
-		}
+		// Drop the event.
+		return;
 	}
+
+	WimaEvent* event = wwin->ctx.events + numEvents;
+
+	event->type = WIMA_EVENT_WIN_FOCUS;
+	event->focused = focused != 0;
+
+	++(wwin->ctx.eventCount);
+
+	// Make sure to draw twice after this event.
+	wwin->drawTwice = true;
 }
 
 void wima_callback_windowClose(GLFWwindow* window) {
