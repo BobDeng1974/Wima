@@ -628,7 +628,8 @@ typedef struct wima_menu_item {
 
 typedef struct wima_menu {
 
-	WimaRect rect;
+	WimaPos pos;
+	WimaSize size;
 
 	union {
 		WimaMenu* subMenu;
