@@ -663,12 +663,18 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 		return;
 	}
 
+	bool wasMinimized = minimized != 0;
+
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_WIN_FOCUS;
-	event->minimized = minimized != 0;
+	event->minimized = wasMinimized;
 
 	++(wwin->ctx.eventCount);
+
+	if (!wasMinimized) {
+		wwin->drawTwice = true;
+	}
 }
 
 void wima_callback_windowRefresh(GLFWwindow* window) {
@@ -709,15 +715,19 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 		return;
 	}
 
+	bool hasFocus = focused != 0;
+
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_WIN_FOCUS;
-	event->focused = focused != 0;
+	event->focused = hasFocus;
 
 	++(wwin->ctx.eventCount);
 
 	// Make sure to draw twice after this event.
-	wwin->drawTwice = true;
+	if (hasFocus) {
+		wwin->drawTwice = true;
+	}
 }
 
 void wima_callback_windowClose(GLFWwindow* window) {
