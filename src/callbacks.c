@@ -779,31 +779,55 @@ void wima_callback_error(int error, const char* desc) {
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	switch (error) {
+
 		case GLFW_NOT_INITIALIZED:
+		{
 			status = WIMA_STATUS_INIT_ERR;
 			break;
+		}
+
 		case GLFW_NO_CURRENT_CONTEXT:
+		{
 			status = WIMA_STATUS_CONTEXT_ERR;
 			break;
+		}
+
 		case GLFW_INVALID_ENUM:
+		{
 			status = WIMA_STATUS_INVALID_ENUM;
 			break;
+		}
+
 		case GLFW_INVALID_VALUE:
+		{
 			status = WIMA_STATUS_INVALID_PARAM;
 			break;
+		}
+
 		case GLFW_OUT_OF_MEMORY:
+		{
 			status = WIMA_STATUS_MALLOC_ERR;
 			break;
+		}
+
 		case GLFW_API_UNAVAILABLE:
 		case GLFW_VERSION_UNAVAILABLE:
+		{
 			status = WIMA_STATUS_INIT_ERR;
 			break;
+		}
+
 		case GLFW_PLATFORM_ERROR:
+		{
 			status = WIMA_STATUS_PLATFORM_ERR;
 			break;
+		}
+
 		case GLFW_FORMAT_UNAVAILABLE:
+		{
 			status = WIMA_STATUS_INVALID_CLIP;
 			break;
+		}
 	}
 
 	wg.funcs.error(status, desc);
