@@ -168,19 +168,18 @@ WimaItemHandle wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags);
 WimaItemHandle wima_area_node_findItem(DynaTree areas, DynaNode node, WimaPos pos, uint32_t flags);
 
 WimaStatus wima_area_draw(WimaWindowHandle wwh, DynaVector stack, float ratio);
-WimaStatus wima_area_key(DynaTree areas, WimaKeyEvent info);
+WimaStatus wima_area_key(DynaTree areas, WimaAreaNodeHandle node, WimaKeyEvent e);
 WimaStatus wima_area_mouseBtn(DynaTree areas, WimaMouseBtnEvent e);
 WimaStatus wima_area_mousePos(DynaTree areas, WimaPos pos);
-WimaStatus wima_area_scroll(DynaTree areas, WimaScrollEvent info);
-WimaStatus wima_area_char(DynaTree areas, WimaCharEvent info);
+WimaStatus wima_area_scroll(DynaTree areas, WimaScrollEvent e);
+WimaStatus wima_area_char(DynaTree areas, WimaCharEvent e);
 WimaStatus wima_area_resize(DynaTree areas, WimaRect rect);
 bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos, WimaMouseSplitEvent* result);
 
 WimaStatus wima_area_node_draw(WimaNvgInfo ctx, DynaTree areas, DynaNode node, DynaVector stack, float ratio);
-WimaStatus wima_area_node_key(DynaTree areas, DynaNode node,  WimaKeyEvent info);
 WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtnEvent e);
 WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos);
-WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, WimaScrollEvent info);
+WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, WimaScrollEvent e);
 WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, WimaCharEvent info);
 WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect);
 bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, WimaMouseSplitEvent* result);

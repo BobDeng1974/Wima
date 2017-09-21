@@ -1058,7 +1058,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_KEY:
 		{
-			status = wima_area_key(win->areas, e.key);
+			status = wima_area_key(win->areas, wih.area, e.key);
 			break;
 		}
 

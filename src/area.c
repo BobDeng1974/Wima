@@ -447,8 +447,25 @@ WimaStatus wima_area_draw(WimaWindowHandle wwh, DynaVector stack, float ratio) {
 	return wima_area_node_draw(win->nvg, win->areas, dtree_root(), stack, ratio);
 }
 
-WimaStatus wima_area_key(DynaTree areas, WimaKeyEvent info) {
-	return wima_area_node_key(areas, dtree_root(), info);
+WimaStatus wima_area_key(DynaTree areas, WimaAreaNodeHandle node, WimaKeyEvent e) {
+
+	WimaStatus status;
+
+	WimaAreaNode* area = dtree_node(areas, node);
+	assert(area->type == WIMA_AREA_LEAF);
+
+	WimaRegion* region = dvec_get(wg.regions, area->area.type);
+
+	WimaAreaKeyFunc key_event = region->key_event;
+
+	if (key_event) {
+		status = key_event(wima_area_handle(area), e);
+	}
+	else {
+		status = WIMA_STATUS_SUCCESS;
+	}
+
+	return status;
 }
 
 WimaStatus wima_area_mouseBtn(DynaTree areas, WimaMouseBtnEvent e) {
@@ -459,12 +476,12 @@ WimaStatus wima_area_mousePos(DynaTree areas, WimaPos pos) {
 	return wima_area_node_mousePos(areas, dtree_root(), pos);
 }
 
-WimaStatus wima_area_scroll(DynaTree areas, WimaScrollEvent info) {
-	return wima_area_node_scroll(areas, dtree_root(), info);
+WimaStatus wima_area_scroll(DynaTree areas, WimaScrollEvent e) {
+	return wima_area_node_scroll(areas, dtree_root(), e);
 }
 
-WimaStatus wima_area_char(DynaTree areas, WimaCharEvent info) {
-	return wima_area_node_char(areas, dtree_root(), info);
+WimaStatus wima_area_char(DynaTree areas, WimaCharEvent e) {
+	return wima_area_node_char(areas, dtree_root(), e);
 }
 
 WimaStatus wima_area_resize(DynaTree areas, WimaRect rect) {
@@ -512,30 +529,6 @@ WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, D
 	wima_area_popViewport(nvg.nvg, stack);
 
 	return WIMA_STATUS_SUCCESS;
-}
-
-WimaStatus wima_area_node_key(DynaTree areas, DynaNode node, WimaKeyEvent e)
-{
-	WimaStatus status = WIMA_STATUS_SUCCESS;
-
-	WimaAreaNode* area = dtree_node(areas, node);
-
-	if (area->type == WIMA_AREA_PARENT) {
-
-		// TODO: Put code to ensure it goes to the right one.
-	}
-	else {
-
-		WimaRegion* region = dvec_get(wg.regions, area->area.type);
-
-		WimaAreaKeyFunc key_event = region->key_event;
-
-		if (key_event) {
-			status = key_event(wima_area_handle(area), e);
-		}
-	}
-
-	return status;
 }
 
 WimaStatus wima_area_node_mouseBtn(DynaTree areas, DynaNode node, WimaMouseBtnEvent e) {
@@ -596,7 +589,7 @@ WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos) {
 	return status;
 }
 
-WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, WimaScrollEvent info) {
+WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, WimaScrollEvent e) {
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
@@ -616,7 +609,7 @@ WimaStatus wima_area_node_scroll(DynaTree areas, DynaNode node, WimaScrollEvent 
 	return status;
 }
 
-WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, WimaCharEvent info) {
+WimaStatus wima_area_node_char(DynaTree areas, DynaNode node, WimaCharEvent e) {
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
