@@ -336,6 +336,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 		glfwSetCursor(wwin->window, wwin->cursor);
 	}
 	else {
+
 		wwin->ctx.split = split_event;
 
 		// Set the cursor.
