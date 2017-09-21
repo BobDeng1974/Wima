@@ -350,9 +350,7 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wksph));
 
-	DynaNode root = dtree_root();
-
-	if (!wima_area_node_valid(wksp, root)) {
+	if (!wima_area_valid(wksp)) {
 		return WIMA_STATUS_WINDOW_ERR;
 	}
 
@@ -394,9 +392,18 @@ WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas) {
 		}
 	}
 
-	if (dtree_copy(window->areas, areas)) {
-		return WIMA_STATUS_WINDOW_ERR;
-	}
+	window->areas = areas;
+
+	wima_window_context_create(&window->ctx);
+
+	WimaRect rect;
+
+	rect.x = 0;
+	rect.y = 0;
+	rect.w = window->fbsize.w;
+	rect.h = window->fbsize.h;
+
+	wima_area_resize(window->areas, rect);
 
 	return WIMA_STATUS_SUCCESS;
 }

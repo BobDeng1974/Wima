@@ -55,6 +55,10 @@
 
 extern WimaG wg;
 
+WimaStatus wima_area_init(WimaWindowHandle win, DynaTree areas, WimaRect rect) {
+	return wima_area_node_init(win, areas, dtree_root(), rect);
+}
+
 WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node, WimaRect rect) {
 
 	// Make sure this is clear.
@@ -123,6 +127,10 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 	}
 
 	return status;
+}
+
+bool wima_area_valid(DynaTree regions) {
+	return wima_area_node_valid(regions, dtree_root());
 }
 
 bool wima_area_node_valid(DynaTree regions, DynaNode node) {

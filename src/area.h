@@ -123,7 +123,10 @@ typedef struct wima_area_node {
 
 } WimaAreaNode;
 
+WimaStatus wima_area_init(WimaWindowHandle win, DynaTree areas, WimaRect rect);
 WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node, WimaRect rect);
+
+bool wima_area_valid(DynaTree regions);
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
 
 void wima_area_context_create(WimaAreaContext* ctx, int itemCap, int bufferCap);
