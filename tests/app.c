@@ -273,6 +273,8 @@ int main() {
 	appfuncs.fbsize = mouseCoordsResize;
 	appfuncs.winsize = NULL;
 	appfuncs.enter = mouseCoordsMenter;
+	appfuncs.minimize = NULL;
+	appfuncs.focus = NULL;
 	appfuncs.close = mouseCoordsClose;
 
 	// Initialize Wima and check for success.
