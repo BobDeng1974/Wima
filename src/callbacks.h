@@ -36,6 +36,7 @@
 
 #include <GLFW/glfw3.h>
 
+void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods);
 void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods);
 void wima_callback_mousePos(GLFWwindow* window, double x, double y);
 void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset);
@@ -48,5 +49,8 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered);
 void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos);
 void wima_callback_framebufferSize(GLFWwindow* window, int width, int height);
 void wima_callback_windowSize(GLFWwindow* window, int width, int height);
-void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods);
+void wima_callback_windowIconify(GLFWwindow* window, int minimized);
+void wima_callback_windowRefresh(GLFWwindow* window);
+void wima_callback_windowFocus(GLFWwindow* window, int focused);
 void wima_callback_windowClose(GLFWwindow* window);
+void wima_callback_monitorConnected(GLFWmonitor* monitor, int connected);

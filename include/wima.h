@@ -692,7 +692,10 @@ typedef WimaStatus (*WimaWindowPosFunc)(WimaWindowHandle, WimaPos);
 typedef WimaStatus (*WimaFramebufferSizeFunc)(WimaWindowHandle, WimaSize);
 typedef WimaStatus (*WimaWindowSizeFunc)(WimaWindowHandle, WimaSize);
 typedef WimaStatus (*WimaWindowMouseEnterFunc)(WimaWindowHandle, bool);
+typedef WimaStatus (*WimaWindowMinimizeFunc)(WimaWindowHandle, bool);
+typedef WimaStatus (*WimaWindowFocusFunc)(WimaWindowHandle, bool);
 typedef bool (*WimaWindowCloseFunc)(WimaWindowHandle);
+typedef WimaStatus (*WimaMonitorConnectedFunc)(GLFWmonitor*, bool);
 
 typedef struct wima_app_funcs {
 
@@ -703,7 +706,10 @@ typedef struct wima_app_funcs {
 	WimaFramebufferSizeFunc fbsize;
 	WimaWindowSizeFunc winsize;
 	WimaWindowMouseEnterFunc enter;
+	WimaWindowMinimizeFunc minimize;
+	WimaWindowFocusFunc focus;
 	WimaWindowCloseFunc close;
+	WimaMonitorConnectedFunc monitor;
 
 } WimaAppFuncs;
 

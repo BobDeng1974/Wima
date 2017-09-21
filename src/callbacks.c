@@ -640,6 +640,82 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 	wwin->drawTwice = true;
 }
 
+void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
+
+	if (!wg.name) {
+		exit(WIMA_STATUS_INVALID_STATE);
+	}
+
+	bool wasMinimized = minimized != 0;
+
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+
+	WimaStatus status;
+
+	if (!wasMinimized) {
+
+		status = wima_window_draw(wwh);
+		if (status) {
+			wg.funcs.error(status, descs[status - 128]);
+		}
+	}
+
+	WimaWindowMinimizeFunc minimize = wg.funcs.minimize;
+
+	if (minimize) {
+
+		status = minimize(wwh, wasMinimized);
+		if (status) {
+			wg.funcs.error(status, descs[status - 128]);
+		}
+	}
+}
+
+void wima_callback_windowRefresh(GLFWwindow* window) {
+
+	if (!wg.name) {
+		exit(WIMA_STATUS_INVALID_STATE);
+	}
+
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+
+	WimaStatus status = wima_window_draw(wwh);
+	if (status) {
+		wg.funcs.error(status, descs[status - 128]);
+	}
+}
+
+void wima_callback_windowFocus(GLFWwindow* window, int focused) {
+
+	if (!wg.name) {
+		exit(WIMA_STATUS_INVALID_STATE);
+	}
+
+	bool hasFocus = focused != 0;
+
+	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+
+	WimaStatus status;
+
+	if (hasFocus) {
+
+		status = wima_window_draw(wwh);
+		if (status) {
+			wg.funcs.error(status, descs[status - 128]);
+		}
+	}
+
+	WimaWindowFocusFunc focus = wg.funcs.focus;
+
+	if (focus) {
+
+		status = focus(wwh, hasFocus);
+		if (status) {
+			wg.funcs.error(status, descs[status - 128]);
+		}
+	}
+}
+
 void wima_callback_windowClose(GLFWwindow* window) {
 
 	// Note: Once we return from the callback, GLFW will destroy
@@ -675,6 +751,24 @@ void wima_callback_windowClose(GLFWwindow* window) {
 	}
 	else {
 		glfwSetWindowShouldClose(window, 0);
+	}
+}
+
+void wima_callback_monitorConnected(GLFWmonitor* monitor, int connected) {
+
+	if (!wg.name) {
+		exit(WIMA_STATUS_INVALID_STATE);
+	}
+
+	WimaMonitorConnectedFunc monitor_func = wg.funcs.monitor;
+
+	if (monitor_func) {
+
+		WimaStatus status = monitor_func(monitor, connected == GLFW_CONNECTED);
+
+		if (status) {
+			wg.funcs.error(status, descs[status - 128]);
+		}
 	}
 }
 
