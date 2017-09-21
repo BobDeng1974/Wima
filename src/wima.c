@@ -78,7 +78,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Check to make sure the icons are good.
-	if (numIcons < 0 || numIcons > WIMA_MAX_ICONS || (numIcons == 0 && !iconPaths)) {
+	if (numIcons < 0 || numIcons > WIMA_MAX_ICONS || (numIcons != 0 && !iconPaths)) {
 		return WIMA_STATUS_INVALID_PARAM;
 	}
 
