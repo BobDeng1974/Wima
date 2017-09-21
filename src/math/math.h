@@ -98,6 +98,8 @@ int wima_min(int a, int b);
 
 float wima_clamp(float v, float mn, float mx);
 
+WimaRect wima_rect(WimaPos pos, WimaSize size);
+
 bool wima_rect_contains(WimaRect r, WimaPos pos);
 
 #endif // WIMA_MATH_H

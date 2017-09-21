@@ -114,6 +114,18 @@ float wima_clamp(float v, float mn, float mx) {
 	return (v > mx) ? mx : ((v < mn) ? mn : v);
 }
 
+WimaRect wima_rect(WimaPos pos, WimaSize size) {
+
+	WimaRect r;
+
+	r.x = pos.x;
+	r.y = pos.y;
+	r.w = size.w;
+	r.h = size.h;
+
+	return r;
+}
+
 bool wima_rect_contains(WimaRect r, WimaPos pos) {
 
 	int x = pos.x - r.x;
