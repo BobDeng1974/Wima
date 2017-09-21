@@ -109,13 +109,13 @@ typedef struct wima_window {
 	WimaNvgInfo nvg;
 	WimaWindowContext ctx;
 
-	WimaContextMenu* userMenu;
-	WimaContextMenu* wimaMenu;
-
 	WimaSize fbsize;
 	WimaSize winsize;
 
+	WimaMenu* menu;
+	const char* menuTitle;
 	WimaPos menuOffset;
+	int menuIcon;
 
 	float pixelRatio;
 
@@ -123,14 +123,15 @@ typedef struct wima_window {
 	// are not drawn properly unless you draw twice.
 	bool drawTwice;
 
+	// Whether or not we have a user context menu and
+	// a wima-specific context menu, respectively.
+	bool haveMenu;
+
 	// We also need this to make sure that the mouse release
 	// after a menu appears does not click the menu.
 	bool menuHasReleased;
 
-	// Whether or not we have a user context menu and
-	// a wima-specific context menu, respectively.
-	bool haveUserMenu;
-	bool haveWimaMenu;
+	bool isContextMenu;
 
 } WimaWin;
 
@@ -161,8 +162,7 @@ void wima_window_context_clear(WimaWindowContext* ctx);
 // uiBeginLayout() must be followed by uiEndLayout()
 WimaStatus wima_window_draw(WimaWindowHandle win);
 
-void wima_window_setupMenu(WimaWin* win, WimaContextMenu* menu);
-WimaStatus wima_window_drawMenu(WimaWin* win, WimaContextMenu* menu, int parentWidth);
+WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth);
 
 WimaStatus wima_window_processEvents(WimaWindowHandle win);
 

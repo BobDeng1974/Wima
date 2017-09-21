@@ -603,7 +603,7 @@ typedef struct wima_char_event {
 
 } WimaCharEvent;
 
-typedef struct wima_context_menu WimaContextMenu;
+typedef struct wima_menu WimaMenu;
 
 typedef WimaStatus (*WimaMenuItemFunc)(WimaItemHandle);
 
@@ -612,7 +612,7 @@ typedef struct wima_menu_item {
 	const char* label;
 
 	union {
-		WimaContextMenu* subMenu;
+		WimaMenu* subMenu;
 		WimaMenuItemFunc func;
 	};
 
@@ -626,25 +626,21 @@ typedef struct wima_menu_item {
 
 } WimaMenuItem;
 
-typedef struct wima_context_menu {
-
-	const char* title;
+typedef struct wima_menu {
 
 	WimaRect rect;
 
 	union {
-		WimaContextMenu* subMenu;
+		WimaMenu* subMenu;
 		WimaMenuItemFunc func;
 	};
 
 	WimaMenuItem* items;
 	int numItems;
 
-	int icon;
-
 	bool hasSubMenu;
 
-} WimaContextMenu;
+} WimaMenu;
 
 typedef struct wima_nvg_info {
 
@@ -1103,9 +1099,12 @@ WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user);
 DynaTree wima_window_areas(WimaWindowHandle wwh);
 WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle wksp);
 WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas);
-WimaStatus wima_window_setContextMenu(WimaWindowHandle wwh, WimaContextMenu* menu);
-WimaStatus wima_window_removeContextMenu(WimaWindowHandle wwh);
-WimaContextMenu* wima_window_contextMenu(WimaWindowHandle wwh);
+WimaStatus wima_window_setContextMenu(WimaWindowHandle wwh, WimaMenu* menu, const char* title, int icon);
+WimaStatus wima_window_setMenu(WimaWindowHandle wwh, WimaMenu* menu);
+WimaMenu* wima_window_menu(WimaWindowHandle wwh);
+const char* wima_window_menuTitle(WimaWindowHandle wwh);
+int wima_window_menuIcon(WimaWindowHandle wwh);
+WimaStatus wima_window_removeMenu(WimaWindowHandle wwh);
 void wima_window_cursor_setType(WimaWindowHandle wwh, GLFWcursor* c);
 void wima_window_cursor_setStandardType(WimaWindowHandle wwh, WimaCursor c);
 GLFWcursor* wima_window_cursor_type(WimaWindowHandle wwh);
