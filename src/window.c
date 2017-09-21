@@ -181,6 +181,11 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	// Load the icons.
 	window->nvg.icons = wima_theme_loadIcons(window->nvg.nvg, dstr_str(wg.iconSheetPath));
 
+	// Load the app icon.
+	if (wg.numIcons) {
+		glfwSetWindowIcon(win, wg.numIcons, wg.icons);
+	}
+
 	return WIMA_STATUS_SUCCESS;
 }
 

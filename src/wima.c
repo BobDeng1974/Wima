@@ -43,6 +43,8 @@
 #include <dyna/dyna.h>
 #include <dyna/vector.h>
 
+#include <stb_image.h>
+
 #include <wima.h>
 
 #include "callbacks.h"
@@ -59,6 +61,7 @@ GLFWcursor* wima_standardCursor(WimaCursor cursor) {
 }
 
 WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
+                     int numIcons,         const char* iconPaths[],
                      const char* fontPath, const char* iconSheetPath)
 {
 	if (!funcs.draw || !funcs.error) {
@@ -71,6 +74,11 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	    access(fontPath, F_OK|R_OK) == -1 ||
 	    access(iconSheetPath, F_OK|R_OK) == -1)
 	{
+		return WIMA_STATUS_INVALID_PARAM;
+	}
+
+	// Check to make sure the icons are good.
+	if (numIcons < 0 || numIcons > WIMA_MAX_ICONS || (numIcons == 0 && !iconPaths)) {
 		return WIMA_STATUS_INVALID_PARAM;
 	}
 
@@ -144,6 +152,42 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 		wg.cursors[i] = glfwCreateStandardCursor(i + GLFW_ARROW_CURSOR);
 	}
 
+	// Need these for later.
+	int x;
+	int y;
+	int components;
+	uint8_t* data;
+
+	// Create the icon images.
+	for (int i = 0; i < numIcons; ++i) {
+
+		data = stbi_load(iconPaths[i], &x, &y, &components, 3);
+
+		if (data && components == 3) {
+
+			GLFWimage image;
+
+			image.pixels = data;
+			image.width = x;
+			image.height = y;
+
+			wg.icons[i] = image;
+		}
+		else {
+
+			if (data) {
+				stbi_image_free(data);
+			}
+
+			wg.numIcons = i;
+			wima_exit();
+
+			return WIMA_STATUS_INIT_ERR;
+		}
+	}
+
+	wg.numIcons = numIcons;
+
 	return WIMA_STATUS_SUCCESS;
 }
 
@@ -193,6 +237,13 @@ WimaStatus wima_main() {
 }
 
 void wima_exit() {
+
+	// Free the icon images.
+	if (wg.numIcons) {
+		for (int i = 0; i < wg.numIcons; ++i) {
+			stbi_image_free(wg.icons[i].pixels);
+		}
+	}
 
 	if (wg.fontPath) {
 		dstr_free(wg.fontPath);

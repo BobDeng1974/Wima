@@ -43,6 +43,8 @@
 #include <wima.h>
 #include <theme.h>
 
+#define WIMA_MAX_ICONS (16)
+
 typedef struct wima_globals {
 
 	DynaString name;
@@ -68,6 +70,10 @@ typedef struct wima_globals {
 
 	// Standard cursors.
 	GLFWcursor* cursors[6];
+
+	// Icons.
+	GLFWimage icons[WIMA_MAX_ICONS];
+	int numIcons;
 
 } WimaG;
 

@@ -1128,6 +1128,7 @@ WimaItemHandle wima_window_focus(WimaWindowHandle wwh);
 WimaStatus wima_window_free(WimaWindowHandle win);
 
 WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
+                     int numIcons,         const char* iconPaths[],
                      const char* fontPath, const char* iconSheetPath);
 GLFWcursor* wima_standardCursor(WimaCursor cursor);
 WimaStatus wima_main();

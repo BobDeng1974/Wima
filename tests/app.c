@@ -276,7 +276,9 @@ int main() {
 	appfuncs.close = mouseCoordsClose;
 
 	// Initialize Wima and check for success.
-	WimaStatus status = wima_init("Wima Test App", appfuncs, "../res/DejaVuSans.ttf", "../res/blender_icons16.png");
+	WimaStatus status = wima_init("Wima Test App", appfuncs, 0, NULL,
+	                              "../res/DejaVuSans.ttf",
+	                              "../res/blender_icons16.png");
 	if (status) {
 		return status;
 	}
