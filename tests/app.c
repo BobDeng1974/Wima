@@ -191,11 +191,13 @@ WimaStatus mouseCoordsMpos(WimaAreaHandle wah, WimaPos pos) {
 
 WimaStatus mouseCoordsMenterArea(WimaAreaHandle wah, bool entered) {
 
+	printf("Area[%d]: ", wah.area);
+
 	if (entered) {
-		printf("Mouse Enter Area\n");
+		printf("Mouse Enter\n");
 	}
 	else {
-		printf("Mouse Exit Area\n");
+		printf("Mouse Exit\n");
 	}
 
 	return WIMA_STATUS_SUCCESS;
