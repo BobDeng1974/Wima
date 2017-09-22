@@ -80,10 +80,7 @@
 typedef struct wima_item {
 
 	// Event functions.
-	WimaItemMouseEventFunc mouse_event;
-	WimaItemMouseEnterFunc mouse_enter;
-	WimaItemScrollFunc scroll;
-	WimaItemCharEvent char_event;
+	WimaItemFuncs funcs;
 
 	// Data handle.
 	void* handle;

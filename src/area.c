@@ -325,15 +325,44 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 		wima_window_validateItems(area->window);
 
-		//if (area->area.ctx.itemCount) {
-		    // Drawing routines may require this to be set already.
-		//	wima_window_updateHover(area->window);
-		//}
-
 		status = WIMA_STATUS_SUCCESS;
 	}
 
 	return status;
+}
+
+WimaAreaNodeHandle wima_area_containsMouse(DynaTree areas, WimaPos cursor) {
+	return wima_area_node_containsMouse(areas, dtree_node(areas, dtree_root()), cursor);
+}
+
+WimaAreaNodeHandle wima_area_node_containsMouse(DynaTree areas, WimaAreaNode* area, WimaPos cursor) {
+
+	assert(area);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		DynaNode leftNode = dtree_left(area->node);
+		WimaAreaNode* left = dtree_node(areas, leftNode);
+
+		if (wima_rect_contains(left->rect, cursor)) {
+			return wima_area_node_containsMouse(areas, left, cursor);
+		}
+		else {
+
+			DynaNode rightNode = dtree_right(area->node);
+			WimaAreaNode* right = dtree_node(areas, rightNode);
+
+			if (wima_rect_contains(right->rect, cursor)) {
+				return wima_area_node_containsMouse(areas, right, cursor);
+			}
+			else {
+				return WIMA_AREA_INVALID;
+			}
+		}
+	}
+	else {
+		return area->node;
+	}
 }
 
 WimaStatus wima_areas_free(DynaTree areas) {
@@ -474,6 +503,22 @@ WimaStatus wima_area_mouseBtn(DynaTree areas, WimaMouseBtnEvent e) {
 
 WimaStatus wima_area_mousePos(DynaTree areas, WimaPos pos) {
 	return wima_area_node_mousePos(areas, dtree_root(), pos);
+}
+
+WimaStatus wima_area_mouseEnter(WimaAreaNode*area, bool enter) {
+
+	assert(area);
+
+	WimaAreaHandle wah = wima_area_handle(area);
+
+	WimaRegion* region = dvec_get(wg.regions, wah.region);
+
+	if (region->mouse_enter) {
+		return region->mouse_enter(wah, enter);
+	}
+	else {
+		return WIMA_STATUS_SUCCESS;
+	}
 }
 
 WimaStatus wima_area_scroll(DynaTree areas, WimaScrollEvent e) {
@@ -838,6 +883,7 @@ WimaItemHandle wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags) {
 WimaItemHandle wima_area_node_findItem(DynaTree areas, DynaNode node, WimaPos pos, uint32_t flags) {
 
 	WimaAreaNode* area = dtree_node(areas, node);
+	assert(area);
 
 	if (area->type == WIMA_AREA_PARENT) {
 

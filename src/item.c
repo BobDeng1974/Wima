@@ -121,6 +121,7 @@ WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs) {
 	WimaItemHandle wih;
 	wih.area = wah.area;
 	wih.item = idx;
+	wih.window = wah.window;
 
 	WimaItem* item = wima_item_ptr(wih);
 
@@ -131,14 +132,10 @@ WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs) {
 
 	uint32_t flags = 0;
 	flags |= (funcs.mouse ? WIMA_EVENT_MOUSE_BTN : 0);
-	flags |= (funcs.enter ? WIMA_EVENT_ITEM_ENTER : 0);
 	flags |= (funcs.scroll ? WIMA_EVENT_SCROLL : 0);
 	flags |= (funcs.char_event ? WIMA_EVENT_CHAR : 0);
 
-	item->mouse_event = funcs.mouse;
-	item->mouse_enter = funcs.enter;
-	item->scroll = funcs.scroll;
-	item->char_event = funcs.char_event;
+	item->funcs = funcs;
 
 	item->flags |= flags;
 
@@ -521,25 +518,13 @@ WimaItemState wima_item_state(WimaItemHandle item) {
 		return WIMA_ITEM_FROZEN;
 	}
 
-	if (wima_item_isFocused(item)) {
-		//if (pitem->flags & (UI_KEY_DOWN|UI_CHAR|UI_KEY_UP)) return UI_ACTIVE;
+	if (wima_item_isFocused(item) && pitem->flags & WIMA_EVENT_CHAR) {
+		return WIMA_ITEM_ACTIVE;
 	}
 
 	if (wima_item_isActive(item)) {
-
-		//if (pitem->flags & (UI_BUTTON0_CAPTURE|UI_BUTTON0_UP)) {
-		//	return UI_ACTIVE;
-		//}
-
-		//if ((pitem->flags & UI_BUTTON0_HOT_UP) && wima_item_isHot(item)) {
-		//	return UI_ACTIVE;
-		//}
-
-		return WIMA_ITEM_DEFAULT;
-	}
-	else if (wima_item_isHovered(item)) {
-		return WIMA_ITEM_HOVER;
+		return pitem->flags & WIMA_EVENT_MOUSE_BTN ? WIMA_ITEM_ACTIVE : WIMA_ITEM_DEFAULT;
 	}
 
-	return WIMA_ITEM_DEFAULT;
+	return wima_item_isHovered(item) ? WIMA_ITEM_HOVER : WIMA_ITEM_DEFAULT;
 }

@@ -205,6 +205,8 @@ void wima_window_context_clear(WimaWindowContext* ctx) {
 
 	ctx->split.split = -1;
 
+	ctx->cursorArea = WIMA_AREA_INVALID;
+
 	memset(&ctx->active, -1, sizeof(WimaItemHandle));
 	memset(&ctx->focus, -1, sizeof(WimaItemHandle));
 	memset(&ctx->hover, -1, sizeof(WimaItemHandle));
@@ -831,7 +833,7 @@ void wima_window_updateHover(WimaWindowHandle wwh) {
 	WimaItemHandle item;
 	item.item = 0;
 
-	win->ctx.hover = wima_area_findItem(win->areas, win->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER);
+	win->ctx.hover = wima_area_findItem(win->areas, win->ctx.cursorPos, WIMA_ITEM_EVENT_MASK);
 }
 
 WimaStatus wima_window_setContextMenu(WimaWindowHandle wwh, WimaMenu* menu, const char* title, int icon) {
@@ -998,7 +1000,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 		WimaItem* pitem = wima_item_ptr(wih);
 
 		if (pitem->flags & WIMA_EVENT_MOUSE_BTN) {
-			status = pitem->mouse_event(wih, e);
+			status = pitem->funcs.mouse(wih, e);
 		}
 		else {
 			status = WIMA_STATUS_SUCCESS;
@@ -1070,6 +1072,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_MOUSE_POS:
 		{
+
 			// Set the cursor position.
 			win->ctx.cursorPos = e.pos;
 
@@ -1080,12 +1083,19 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 			else if (win->ctx.split.split >= 0) {
 
 				// TODO: Send the event to the area.
-
+				status = WIMA_STATUS_SUCCESS;
 			}
 			else {
 				status = wima_area_mousePos(win->areas, e.pos);
 			}
 
+			break;
+		}
+
+		case WIMA_EVENT_AREA_ENTER:
+		{
+			WimaAreaNode* area = dtree_node(win->areas, e.area_enter.area);
+			status = wima_area_mouseEnter(area, e.area_enter.enter);
 			break;
 		}
 
@@ -1103,38 +1113,18 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 			break;
 		}
 
-		case WIMA_EVENT_ITEM_ENTER:
+		case WIMA_EVENT_SCROLL:
 		{
 			if (wih.item >= 0) {
 
 				WimaItem* pitem = wima_item_ptr(wih);
 
 				if (pitem->flags & e.type) {
-					status = pitem->mouse_enter(wih, e.mouse_enter);
+					status = pitem->funcs.scroll(wih, e.scroll);
 				}
 				else {
 					status = WIMA_STATUS_SUCCESS;
 				}
-			}
-			else {
-				status = WIMA_STATUS_SUCCESS;
-			}
-		}
-
-		case WIMA_EVENT_SCROLL:
-		{
-			if (wih.item >= 0) {
-
-				// TODO: Send the event to the area.
-
-				//WimaItem* pitem = wima_item_ptr(wih);
-
-				//if (pitem->flags & e.type) {
-				//	status = pitem->scroll(wih, e.scroll);
-				//}
-				//else {
-				//	status = WIMA_SUCCESS;
-				//}
 			}
 			else {
 				status = WIMA_STATUS_SUCCESS;
@@ -1150,7 +1140,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 				WimaItem* pitem = wima_item_ptr(wih);
 
 				if (pitem->flags & e.type) {
-					status = pitem->char_event(wih, e.char_event);
+					status = pitem->funcs.char_event(wih, e.char_event);
 				}
 				else {
 					status = WIMA_STATUS_SUCCESS;

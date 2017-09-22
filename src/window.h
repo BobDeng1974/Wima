@@ -90,6 +90,8 @@ typedef struct wima_window_context {
 	WimaEvent events[WIMA_MAX_EVENTS];
 	WimaItemHandle eventItems[WIMA_MAX_EVENTS];
 
+	WimaAreaNodeHandle cursorArea;
+
 } WimaWindowContext;
 
 // The following was originally written for Wima.
@@ -119,12 +121,11 @@ typedef struct wima_window {
 
 	float pixelRatio;
 
-	// For some reason, NanoVG has a bug where things
-	// are not drawn properly unless you draw twice.
+	// For some reason, NanoVG has a bug where sometimes
+	// things aren't drawn properly unless you draw twice.
 	bool drawTwice;
 
-	// Whether or not we have a user context menu and
-	// a wima-specific context menu, respectively.
+	// Whether or not we have a menu.
 	bool haveMenu;
 
 	// We also need this to make sure that the mouse release

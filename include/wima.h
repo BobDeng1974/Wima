@@ -89,7 +89,7 @@ typedef enum wima_cursor {
 #define WIMA_ITEM_LAYOUT_MASK    0x0003E0
 
 // Bits 9-18.
-#define WIMA_ITEM_EVENT_MASK     (WIMA_EVENT_KEY | WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_ITEM_ENTER | WIMA_EVENT_SCROLL | WIMA_EVENT_CHAR)
+#define WIMA_ITEM_EVENT_MASK     (WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_SCROLL | WIMA_EVENT_CHAR)
 
 // Item is frozen (bit 19).
 #define WIMA_ITEM_FROZEN_BIT         0x080000
@@ -216,13 +216,13 @@ typedef enum wima_item_state {
 	WIMA_ITEM_DEFAULT = 0,
 
 	// The item is inactive, but the cursor is hovering over this item.
-	WIMA_ITEM_HOVER   = 1,
+	WIMA_ITEM_HOVER   = 1 << 0,
 
 	// The item is toggled, activated, focused (depends on item kind).
-	WIMA_ITEM_ACTIVE  = 2,
+	WIMA_ITEM_ACTIVE  = 1 << 1,
 
 	// The item is unresponsive.
-	WIMA_ITEM_FROZEN  = 3,
+	WIMA_ITEM_FROZEN  = 1 << 2,
 
 } WimaItemState;
 
@@ -655,14 +655,12 @@ typedef struct wima_nvg_info {
  *These typedefs are here to make the following procedures shorter to write.
  */
 typedef WimaStatus (*WimaItemMouseEventFunc)(WimaItemHandle, WimaMouseBtnEvent);
-typedef WimaStatus (*WimaItemMouseEnterFunc)(WimaItemHandle, bool);
 typedef WimaStatus (*WimaItemScrollFunc)(WimaItemHandle, WimaScrollEvent);
 typedef WimaStatus (*WimaItemCharEvent)(WimaItemHandle, WimaCharEvent);
 
 typedef struct wima_item_funcs {
 
 	WimaItemMouseEventFunc mouse;
-	WimaItemMouseEnterFunc enter;
 	WimaItemScrollFunc scroll;
 	WimaItemCharEvent char_event;
 

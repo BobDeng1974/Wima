@@ -88,6 +88,8 @@ typedef enum wima_area_node_type {
 
 #define WIMA_IS_VERTICAL(p) ((p.split < 0))
 
+#define WIMA_AREA_INVALID ((WimaAreaNodeHandle) -1)
+
 typedef struct wima_area_node {
 
 	union {
@@ -141,6 +143,8 @@ void wima_area_context_free(WimaAreaContext* ctx);
 // this is an O(N) operation for N = number of declared items.
 WimaStatus wima_area_layout(DynaTree areas);
 WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
+WimaAreaNodeHandle wima_area_containsMouse(DynaTree areas, WimaPos cursor);
+WimaAreaNodeHandle wima_area_node_containsMouse(DynaTree areas, WimaAreaNode* area, WimaPos cursor);
 
 WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 
@@ -171,6 +175,7 @@ WimaStatus wima_area_draw(WimaWindowHandle wwh, DynaVector stack, float ratio);
 WimaStatus wima_area_key(DynaTree areas, WimaAreaNodeHandle node, WimaKeyEvent e);
 WimaStatus wima_area_mouseBtn(DynaTree areas, WimaMouseBtnEvent e);
 WimaStatus wima_area_mousePos(DynaTree areas, WimaPos pos);
+WimaStatus wima_area_mouseEnter(WimaAreaNode* area, bool enter);
 WimaStatus wima_area_scroll(DynaTree areas, WimaScrollEvent e);
 WimaStatus wima_area_char(DynaTree areas, WimaCharEvent e);
 WimaStatus wima_area_resize(DynaTree areas, WimaRect rect);
