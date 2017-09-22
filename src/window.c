@@ -819,23 +819,6 @@ WimaItemHandle wima_window_hover(WimaWindowHandle wwh) {
 	return win->ctx.hover;
 }
 
-void wima_window_updateHover(WimaWindowHandle wwh) {
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	// TODO: Figure out which area the hover item is in.
-
-	//if (!win->ctx.itemCount) {
-	//	return;
-	//}
-
-	WimaItemHandle item;
-	item.item = 0;
-
-	win->ctx.hover = wima_area_findItem(win->areas, win->ctx.cursorPos, WIMA_ITEM_EVENT_MASK);
-}
-
 WimaStatus wima_window_setContextMenu(WimaWindowHandle wwh, WimaMenu* menu, const char* title, int icon) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
