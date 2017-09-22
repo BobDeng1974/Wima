@@ -197,10 +197,12 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_KEY;
-	event->key.key = wkey;
-	event->key.scancode = scancode;
-	event->key.action = wact;
-	event->key.mods = wmods;
+	event->area_key.key.key = wkey;
+	event->area_key.key.scancode = scancode;
+	event->area_key.key.action = wact;
+	event->area_key.key.mods = wmods;
+
+	event->area_key.area = wima_area_containsMouse(wwin->areas, wwin->ctx.cursorPos);
 
 	++(wwin->ctx.eventCount);
 }

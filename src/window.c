@@ -990,7 +990,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 		}
 	}
 	else {
-		status = wima_area_mouseBtn(win->areas, e);
+		status = WIMA_STATUS_SUCCESS;
 	}
 
 	return status;
@@ -1043,7 +1043,14 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_KEY:
 		{
-			status = wima_area_key(win->areas, wih.area, e.key);
+			if (e.area_key.area != WIMA_AREA_INVALID) {
+				WimaAreaNode* area = dtree_node(win->areas, e.area_key.area);
+				status = wima_area_key(area, e.area_key.key);
+			}
+			else {
+				status = WIMA_STATUS_SUCCESS;
+			}
+
 			break;
 		}
 
@@ -1055,7 +1062,6 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_MOUSE_POS:
 		{
-
 			// Set the cursor position.
 			win->ctx.cursorPos = e.pos;
 
@@ -1069,7 +1075,8 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 				status = WIMA_STATUS_SUCCESS;
 			}
 			else {
-				status = wima_area_mousePos(win->areas, e.pos);
+				WimaAreaNodeHandle node = wima_area_containsMouse(win->areas, e.pos);
+				status = wima_area_mousePos(dtree_node(win->areas, node), e.pos);
 			}
 
 			break;

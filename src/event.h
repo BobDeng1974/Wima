@@ -87,6 +87,13 @@ typedef struct wima_mouse_split_event {
 
 } WimaMouseSplitEvent;
 
+typedef struct wima_area_key_event {
+
+	WimaKeyEvent key;
+	WimaAreaNodeHandle area;
+
+} WimaAreaKeyEvent;
+
 typedef struct wima_area_enter_event {
 
 	WimaAreaNodeHandle area;
@@ -100,7 +107,7 @@ typedef struct wima_event {
 
 	union {
 
-		WimaKeyEvent key;
+		WimaAreaKeyEvent area_key;
 
 		WimaMouseBtnEvent mouse_btn;
 
