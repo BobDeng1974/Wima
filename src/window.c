@@ -623,8 +623,6 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 		wima_widget_menu_separator(win->nvg, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
 	}
 
-	bool onItem = false;
-
 	WimaMenu* m = wima_window_menu_contains(menu, pos);
 
 	for (int i = 0; i < menu->numItems; ++i) {
@@ -638,8 +636,6 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 				bool contained = wima_rect_contains(item.rect, cursor);
 
 				if (contained && m == menu) {
-
-					onItem = true;
 
 					menu->subMenu = item.subMenu;
 					menu->hasSubMenu = item.hasSubMenu;
@@ -666,13 +662,6 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 		else {
 			wima_widget_menu_separator(win->nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h);
 		}
-	}
-
-	// If we are not on an item with a submenu
-	// (and we are not on the submenu), then
-	// we should dismiss the submenu.
-	if (!onItem && (m == menu || !m)) {
-		menu->hasSubMenu = false;
 	}
 
 	if (menu->hasSubMenu) {
