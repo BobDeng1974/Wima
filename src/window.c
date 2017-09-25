@@ -1093,12 +1093,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		{
 			// TODO: Handle split.
 
-			if (e.split.move) {
-
-			}
-			else {
-				win->ctx.dragStart = win->ctx.cursorPos;
-			}
+			win->ctx.dragStart = win->ctx.cursorPos;
 
 			break;
 		}
