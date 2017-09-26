@@ -46,6 +46,8 @@
 #include <theme.h>
 
 WimaStatus cb_mouseBtn(WimaItemHandle wih, WimaMouseBtnEvent e);
+WimaStatus cb_scroll(WimaItemHandle wih, WimaScrollEvent e);
+WimaStatus cb_char(WimaItemHandle wih, WimaCharEvent e);
 
 /**
  * Prints a WimaAction to stdout.
@@ -123,9 +125,9 @@ WimaStatus cb_layout(WimaAreaHandle wah, WimaSize size) {
 
 	WimaItemFuncs funcs;
 
-	memset(&funcs, 0, sizeof(WimaItemFuncs));
-
 	funcs.mouse = cb_mouseBtn;
+	funcs.scroll = cb_scroll;
+	funcs.char_event = cb_char;
 
 	WimaItemHandle item = wima_item_new(wah, funcs);
 	wima_item_setSize(item, size);
@@ -210,7 +212,14 @@ WimaStatus cb_mouseEnterArea(WimaAreaHandle wah, bool entered) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_scroll(WimaAreaHandle wah, WimaScrollEvent e) {
+const float scales[17] = {
+    0.25f, 0.33333f, 0.5f, 0.66666f, 0.75f, 0.80f, 0.90f, 1.00f,
+    1.10f, 1.25f, 1.50f, 1.75f, 2.00f, 2.50f, 3.00f, 4.00f, 5.00f
+};
+
+WimaStatus cb_scroll(WimaItemHandle wih, WimaScrollEvent e) {
+
+	static int scaleIdx = 7;
 
 #if 0
 	printf("Scroll: { x: %4d; y: %4d; }\n", e.xoffset, e.yoffset);
@@ -218,10 +227,23 @@ WimaStatus cb_scroll(WimaAreaHandle wah, WimaScrollEvent e) {
 	printMods(e.mods);
 #endif
 
+	if (e.mods == WIMA_MOD_CTRL) {
+
+		int adjust = scaleIdx + e.yoffset;
+
+		scaleIdx = adjust >= 0 && adjust < 17 ? adjust : scaleIdx;
+
+		WimaAreaHandle wah = wima_item_area(wih);
+
+		printf("Scale: %f\n", scales[scaleIdx]);
+
+		wima_area_setScale(wah, scales[scaleIdx]);
+	}
+
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_char(WimaAreaHandle wah, WimaCharEvent e) {
+WimaStatus cb_char(WimaItemHandle wih, WimaCharEvent e) {
 
 #if 0
 	printf("Char: %lc; Mods: ", e.code);
