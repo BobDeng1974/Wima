@@ -372,10 +372,9 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 	WimaAreaNode* area = dtree_node(areas, node);
 	assert(area);
 
-	cursor.x -= area->rect.x;
-	cursor.y -= area->rect.y;
+	WimaPos pos = wima_area_translatePos(area, cursor);
 
-	area->parent.spliti = e.vertical ? cursor.x : cursor.y;
+	area->parent.spliti = e.vertical ? pos.x : pos.y;
 
 	float dim = (float) ((e.vertical ? area->rect.w : area->rect.h) - 1);
 
@@ -705,7 +704,7 @@ void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right
 	}
 }
 
-WimaPos wima_area_cursorPosition(WimaAreaNode* area, WimaPos pos) {
+WimaPos wima_area_translatePos(WimaAreaNode* area, WimaPos pos) {
 
 	WimaPos result;
 
@@ -821,8 +820,7 @@ WimaItemHandle wima_area_node_findItem(DynaTree areas, WimaAreaNode* area, WimaP
 		best_hit.item = -1;
 
 		// Translate the position to the area.
-		pos.x -= area->rect.x;
-		pos.y -= area->rect.y;
+		pos = wima_area_translatePos(area, pos);
 
 		while (item.item >= 0) {
 
