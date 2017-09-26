@@ -358,9 +358,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 					++(wwin->ctx.eventCount);
 				}
 
-				if (wwin->ctx.eventCount < WIMA_MAX_EVENTS &&
-				    area != WIMA_AREA_INVALID)
-				{
+				if (wwin->ctx.eventCount < WIMA_MAX_EVENTS && area != WIMA_AREA_INVALID) {
 					e = wwin->ctx.events + wwin->ctx.eventCount;
 
 					e->type = WIMA_EVENT_AREA_ENTER;
