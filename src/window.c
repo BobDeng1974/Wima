@@ -173,7 +173,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 
 	WimaWin* window = dvec_get(wg.windows, idx);
 
-	window->nvg.nvg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+	window->nvg.nvg = nvgCreateGL3(0);
 
 	// Load the font.
 	window->nvg.font = wima_theme_loadFont(window->nvg.nvg, "default", dstr_str(wg.fontPath));

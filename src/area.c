@@ -777,25 +777,26 @@ void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg) {
 	NVGcolor ltborder = nvgRGBAf(1.0f, 1.0f, 1.0f, 0.20f);
 	NVGcolor rbborder = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.50f);
 
+	float xend = area->rect.w;
+	float yend = area->rect.h - 1.0f;
+
+	nvgBeginPath(nvg);
+	nvgMoveTo(nvg, 1.0f, yend);
+	nvgLineTo(nvg, 1.0f, 0.0f);
+	nvgLineTo(nvg, xend, 0.0f);
+
 	nvgStrokeWidth(nvg, 1.0f);
 	nvgStrokeColor(nvg, ltborder);
 	nvgFillColor(nvg, nvgRGBA(0, 0, 0, 0));
-
-	float xend = area->rect.w;
-	float yend = area->rect.h;
-
-	nvgMoveTo(nvg, 0.0f, yend);
-	nvgLineTo(nvg, 0.0f, 0.0f);
-	nvgLineTo(nvg, xend, 0.0f);
 	nvgStroke(nvg);
 	nvgFill(nvg);
-
-	nvgStrokeColor(nvg, rbborder);
 
 	nvgBeginPath(nvg);
 	nvgMoveTo(nvg, xend, 0.0f);
 	nvgLineTo(nvg, xend, yend);
 	nvgLineTo(nvg, 0.0f, yend);
+
+	nvgStrokeColor(nvg, rbborder);
 	nvgStroke(nvg);
 	nvgFill(nvg);
 }
