@@ -204,14 +204,7 @@ WimaStatus cb_mousePos(WimaAreaHandle wah, WimaPos pos) {
 WimaStatus cb_mouseEnterArea(WimaAreaHandle wah, bool entered) {
 
 #if 0
-	printf("Area[%d]: ", wah.area);
-
-	if (entered) {
-		printf("Mouse Enter\n");
-	}
-	else {
-		printf("Mouse Exit\n");
-	}
+	printf("Area[%d] %s\n", wah.area, entered ? "Enter" : "Exit");
 #endif
 
 	return WIMA_STATUS_SUCCESS;
@@ -261,12 +254,7 @@ void cb_userPtrFree(void* ptr) {
 WimaStatus cb_mouseEnter(WimaWindowHandle wwh, bool entered) {
 
 #if 0
-	if (entered) {
-		printf("Mouse Enter\n");
-	}
-	else {
-		printf("Mouse Exit\n");
-	}
+	printf("Window[%d] %s\n", wwh, entered ? "Enter" : "Exit");
 #endif
 
 	return WIMA_STATUS_SUCCESS;
