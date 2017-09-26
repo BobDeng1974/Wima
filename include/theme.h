@@ -225,7 +225,7 @@ typedef struct wima_theme_loadTheme {
 } WimaTheme;
 
 // Default text size.
-#define WIMA_LABEL_FONT_SIZE 13
+#define WIMA_LABEL_FONT_SIZE 18
 
 // Default text padding in inner box.
 #define WIMA_PAD_LEFT 8
