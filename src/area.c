@@ -812,8 +812,8 @@ void wima_area_drawSplitWidgets(WimaAreaNode* area, NVGcontext* nvg) {
 
 	NVGcolor inset = wima_color_transparent(wg.theme.backgroundColor);
 
-	float x = (float) area->rect.x;
-	float y = (float) area->rect.y;
+	float x = 0.0f;
+	float y = 0.0f;
 	float w = (float) area->rect.w;
 	float h = (float) area->rect.h;
 
@@ -878,8 +878,8 @@ void wima_area_drawSplitWidgets(WimaAreaNode* area, NVGcontext* nvg) {
 
 void wima_area_drawJoinOverlay(WimaAreaNode* area, NVGcontext* nvg, bool vertical, bool mirror) {
 
-	float x = area->rect.x;
-	float y = area->rect.y;
+	float x = 0.0f;
+	float y = 0.0f;
 	float w = area->rect.w;
 	float h = area->rect.h;
 
