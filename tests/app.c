@@ -306,7 +306,11 @@ WimaStatus cb_focus(WimaWindowHandle wwh, bool focused) {
 }
 
 bool cb_close(WimaWindowHandle wwh) {
-	printf("Closing Window[%u]\n", wwh);
+
+#if 0
+	printf("Window[%u] Close\n", wwh);
+#endif
+
 	return true;
 }
 
