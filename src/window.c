@@ -203,8 +203,10 @@ void wima_window_context_create(WimaWindowContext* ctx) {
 void wima_window_context_clear(WimaWindowContext* ctx) {
 
 	ctx->split.split = -1;
+	ctx->dragStart.x = -1;
 
 	ctx->cursorArea = WIMA_AREA_INVALID;
+	ctx->movingSplit = false;
 
 	memset(&ctx->active, -1, sizeof(WimaItemHandle));
 	memset(&ctx->focus, -1, sizeof(WimaItemHandle));
@@ -944,6 +946,10 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 			win->haveMenu = false;
 		}
 	}
+	else if (win->ctx.split.split >= 0 && e.action == WIMA_ACTION_RELEASE) {
+		win->ctx.split.split = -1;
+		win->ctx.dragStart.x = -1;
+	}
 	else if (wih.item >= 0) {
 
 		WimaItem* pitem = wima_item_ptr(wih);
@@ -1035,14 +1041,22 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 			if (win->haveMenu) {
 				status = WIMA_STATUS_SUCCESS;
 			}
-			else if (win->ctx.split.split >= 0) {
+			else if (win->ctx.movingSplit) {
 
-				// TODO: Send the event to the area.
-				status = WIMA_STATUS_SUCCESS;
+				status = wima_area_moveSplit(win->areas, win->ctx.split.area,
+				                             win->ctx.split, win->ctx.cursorPos,
+				                             win->ctx.dragStart);
 			}
 			else {
+
 				WimaAreaNodeHandle node = wima_area_containsMouse(win->areas, e.pos);
-				status = wima_area_mousePos(dtree_node(win->areas, node), e.pos);
+
+				if (node != WIMA_AREA_INVALID) {
+					status = wima_area_mousePos(dtree_node(win->areas, node), e.pos);
+				}
+				else {
+					status = WIMA_STATUS_SUCCESS;
+				}
 			}
 
 			break;
@@ -1057,10 +1071,8 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 
 		case WIMA_EVENT_MOUSE_SPLIT:
 		{
-			// TODO: Handle split.
-
 			win->ctx.dragStart = win->ctx.cursorPos;
-
+			status = WIMA_STATUS_SUCCESS;
 			break;
 		}
 

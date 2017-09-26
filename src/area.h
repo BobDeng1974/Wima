@@ -145,6 +145,7 @@ WimaStatus wima_area_layout(DynaTree areas);
 WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
 WimaAreaNodeHandle wima_area_containsMouse(DynaTree areas, WimaPos cursor);
 WimaAreaNodeHandle wima_area_node_containsMouse(DynaTree areas, WimaAreaNode* area, WimaPos cursor);
+WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaPos cursor, WimaPos dragStart);
 
 WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 

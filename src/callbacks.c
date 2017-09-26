@@ -246,7 +246,9 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 			if (wbtn != WIMA_MOUSE_RIGHT) {
 
-				//Set up the event and send it.
+				wwin->ctx.movingSplit = true;
+
+				// Set up the event and send it.
 				event->type = WIMA_EVENT_MOUSE_SPLIT;
 				event->split = wwin->ctx.split;
 				++(wwin->ctx.eventCount);
@@ -276,6 +278,13 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		wwin->ctx.focus = clickItem;
 
 		++(wwin->ctx.clicks);
+	}
+	else if (wwin->ctx.movingSplit) {
+
+		wwin->ctx.movingSplit = false;
+
+		// Don't send an event.
+		return;
 	}
 
 	wwin->ctx.click_timestamp = ts;
@@ -316,78 +325,83 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 	wwin->ctx.cursorPos = pos;
 
-	WimaMouseSplitEvent split_event;
+	WimaMouseSplitEvent sevent;
 
-	if (wwin->haveMenu || !wima_area_mouseOnSplit(wwin->areas, wwin->ctx.cursorPos, &split_event)) {
+	if (!wwin->ctx.movingSplit) {
 
-		// Erase the split.
-		wwin->ctx.split.split = -1;
+		if (wwin->haveMenu || !wima_area_mouseOnSplit(wwin->areas, wwin->ctx.cursorPos, &sevent)) {
 
-		// Set the cursor.
-		glfwSetCursor(wwin->window, wwin->cursor);
+			// Erase the split.
+			wwin->ctx.split.split = -1;
 
-		WimaEvent* e;
+			// Set the cursor.
+			glfwSetCursor(wwin->window, wwin->cursor);
 
-		// Set the hover item.
-		wwin->ctx.hover = wima_area_findItem(wwin->areas, pos, WIMA_ITEM_EVENT_MASK);
+			WimaEvent* e;
 
-		// Find out if we switched areas.
-		WimaAreaNodeHandle area = wima_area_containsMouse(wwin->areas, pos);
-		if (area != wwin->ctx.cursorArea) {
+			// Set the hover item.
+			wwin->ctx.hover = wima_area_findItem(wwin->areas, pos, WIMA_ITEM_EVENT_MASK);
 
-			if (wwin->ctx.eventCount < WIMA_MAX_EVENTS && wwin->ctx.cursorArea != WIMA_AREA_INVALID) {
+			// Find out if we switched areas.
+			WimaAreaNodeHandle area = wima_area_containsMouse(wwin->areas, pos);
+			if (area != wwin->ctx.cursorArea) {
 
-				e = wwin->ctx.events + wwin->ctx.eventCount;
+				if (wwin->ctx.eventCount < WIMA_MAX_EVENTS &&
+				    wwin->ctx.cursorArea != WIMA_AREA_INVALID)
+				{
+					e = wwin->ctx.events + wwin->ctx.eventCount;
 
-				e->type = WIMA_EVENT_AREA_ENTER;
-				e->area_enter.area = wwin->ctx.cursorArea;
-				e->area_enter.enter = false;
+					e->type = WIMA_EVENT_AREA_ENTER;
+					e->area_enter.area = wwin->ctx.cursorArea;
+					e->area_enter.enter = false;
 
-				++(wwin->ctx.eventCount);
+					++(wwin->ctx.eventCount);
+				}
+
+				if (wwin->ctx.eventCount < WIMA_MAX_EVENTS &&
+				    area != WIMA_AREA_INVALID)
+				{
+					e = wwin->ctx.events + wwin->ctx.eventCount;
+
+					e->type = WIMA_EVENT_AREA_ENTER;
+					e->area_enter.area = area;
+					e->area_enter.enter = true;
+
+					++(wwin->ctx.eventCount);
+				}
+
+				wwin->ctx.cursorArea = area;
 			}
-
-			if (wwin->ctx.eventCount < WIMA_MAX_EVENTS && area != WIMA_AREA_INVALID) {
-
-				e = wwin->ctx.events + wwin->ctx.eventCount;
-
-				e->type = WIMA_EVENT_AREA_ENTER;
-				e->area_enter.area = area;
-				e->area_enter.enter = true;
-
-				++(wwin->ctx.eventCount);
-			}
-
-			wwin->ctx.cursorArea = area;
 		}
-	}
-	else {
+		else {
 
-		wwin->ctx.split = split_event;
+			wwin->ctx.split = sevent;
 
-		// Set the cursor.
-		WimaCursor c = wwin->ctx.split.vertical ? WIMA_CURSOR_HRESIZE : WIMA_CURSOR_VRESIZE;
-		glfwSetCursor(wwin->window, wg.cursors[c]);
+			// Set the cursor.
+			WimaCursor c = wwin->ctx.split.vertical ? WIMA_CURSOR_HRESIZE : WIMA_CURSOR_VRESIZE;
+			glfwSetCursor(wwin->window, wg.cursors[c]);
 
-		// Clear the area and send an exit area event.
-		if (wwin->ctx.cursorArea != WIMA_AREA_INVALID) {
+			// Clear the area and send an exit area event.
+			if (wwin->ctx.cursorArea != WIMA_AREA_INVALID) {
 
-			if (wwin->ctx.eventCount < WIMA_MAX_EVENTS) {
+				if (wwin->ctx.eventCount < WIMA_MAX_EVENTS) {
 
-				WimaEvent* e = wwin->ctx.events + wwin->ctx.eventCount;
+					WimaEvent* e = wwin->ctx.events + wwin->ctx.eventCount;
 
-				e->type = WIMA_EVENT_AREA_ENTER;
-				e->area_enter.area = wwin->ctx.cursorArea;
-				e->area_enter.enter = false;
+					e->type = WIMA_EVENT_AREA_ENTER;
+					e->area_enter.area = wwin->ctx.cursorArea;
+					e->area_enter.enter = false;
 
-				++(wwin->ctx.eventCount);
+					++(wwin->ctx.eventCount);
+				}
+
+				wwin->ctx.cursorArea = WIMA_AREA_INVALID;
 			}
 
-			wwin->ctx.cursorArea = WIMA_AREA_INVALID;
+			// Clear the items.
+			wwin->ctx.active.item = -1;
+			wwin->ctx.hover.item = -1;
 		}
-
-		// Clear the items.
-		wwin->ctx.active.item = -1;
-		wwin->ctx.hover.item = -1;
 	}
 
 	int numEvents = wwin->ctx.eventCount;

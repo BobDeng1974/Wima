@@ -365,6 +365,25 @@ WimaAreaNodeHandle wima_area_node_containsMouse(DynaTree areas, WimaAreaNode* ar
 	}
 }
 
+WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaPos cursor, WimaPos dragStart) {
+
+	// TODO: Finish this function.
+
+	WimaAreaNode* area = dtree_node(areas, node);
+	assert(area);
+
+	cursor.x -= area->rect.x;
+	cursor.y -= area->rect.y;
+
+	area->parent.spliti = e.vertical ? cursor.x : cursor.y;
+
+	float dim = (float) ((e.vertical ? area->rect.w : area->rect.h) - 1);
+
+	area->parent.split = (float) area->parent.spliti / dim;
+
+	return wima_area_node_resize(areas, node, area->rect);
+}
+
 WimaStatus wima_areas_free(DynaTree areas) {
 
 	DynaNode root = dtree_root();

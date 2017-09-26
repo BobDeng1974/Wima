@@ -92,6 +92,8 @@ typedef struct wima_window_context {
 
 	WimaAreaNodeHandle cursorArea;
 
+	bool movingSplit;
+
 } WimaWindowContext;
 
 // The following was originally written for Wima.
