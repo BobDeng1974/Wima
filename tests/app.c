@@ -100,7 +100,9 @@ WimaStatus cb_draw(WimaItemHandle item, WimaNvgInfo nvg) {
 
 	WimaRect r = wima_item_rect(item);
 
+#if 0
 	printf("Item[%s] Rect: { x: %d. y: %d, w: %d, h: %d }\n", buffer, r.x, r.y, r.w, r.h);
+#endif
 
 	wima_widget_label(nvg, r.x, r.y, r.w, r.h, WIMA_ICONID(0,0), buffer);
 
@@ -109,6 +111,7 @@ WimaStatus cb_draw(WimaItemHandle item, WimaNvgInfo nvg) {
 
 WimaStatus cb_layout(WimaAreaHandle wah, WimaSize size) {
 
+#if 0
 	printf("Layout: { handle: %4u, width: %4d; height: %4d }\n", wah.area, size.w, size.h);
 
 	WimaRect r = wima_area_rect(wah);
@@ -116,6 +119,7 @@ WimaStatus cb_layout(WimaAreaHandle wah, WimaSize size) {
 	printf("    Rect: { x: %4d, y: %4d, w: %4d, h: %4d }\n", r.x, r.y, r.w, r.h);
 
 	printf("    Size: { w: %4d, h: %4d }\n", size.w, size.h);
+#endif
 
 	WimaItemFuncs funcs;
 
@@ -132,6 +136,7 @@ WimaStatus cb_layout(WimaAreaHandle wah, WimaSize size) {
 
 WimaStatus cb_key(WimaAreaHandle wah, WimaKeyEvent e) {
 
+#if 0
 	printf("Key Event:\n    Key: %d\n", e.key);
 
 	printf("    Scancode: %d\n", e.scancode);
@@ -141,6 +146,7 @@ WimaStatus cb_key(WimaAreaHandle wah, WimaKeyEvent e) {
 
 	printf("    Mods: ");
 	printMods(e.mods);
+#endif
 
 	if (e.key == WIMA_KEY_ESCAPE && e.action == WIMA_ACTION_PRESS) {
 		wima_window_close(wah.window);
@@ -151,6 +157,7 @@ WimaStatus cb_key(WimaAreaHandle wah, WimaKeyEvent e) {
 
 WimaStatus cb_mouseBtn(WimaItemHandle wih, WimaMouseBtnEvent e) {
 
+#if 0
 	printf("Mouse Button Event:\n");
 
 	printf("    Item: %d\n", wih.item);
@@ -180,17 +187,23 @@ WimaStatus cb_mouseBtn(WimaItemHandle wih, WimaMouseBtnEvent e) {
 	printMods(e.mods);
 
 	printf("    Clicks: %d\n", e.clicks);
+#endif
 
 	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus cb_mousePos(WimaAreaHandle wah, WimaPos pos) {
+
+#if 0
 	printf("Area[%d] Pos: { x: %4d; y: %4d }\n", wah.area, pos.x, pos.y);
+#endif
+
 	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus cb_mouseEnterArea(WimaAreaHandle wah, bool entered) {
 
+#if 0
 	printf("Area[%d]: ", wah.area);
 
 	if (entered) {
@@ -199,33 +212,40 @@ WimaStatus cb_mouseEnterArea(WimaAreaHandle wah, bool entered) {
 	else {
 		printf("Mouse Exit\n");
 	}
+#endif
 
 	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus cb_scroll(WimaAreaHandle wah, WimaScrollEvent e) {
 
+#if 0
 	printf("Scroll: { x: %4d; y: %4d; }\n", e.xoffset, e.yoffset);
 	printf("    Mods: ");
 	printMods(e.mods);
+#endif
 
 	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus cb_char(WimaAreaHandle wah, WimaCharEvent e) {
 
+#if 0
 	printf("Char: %lc; Mods: ", e.code);
 	printMods(e.mods);
+#endif
 
 	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus cb_fileDrop(WimaWindowHandle wwh, int filec, const char* filev[]) {
 
+#if 0
 	printf("Window[%d] Dropped Files:\n", wwh);
 	for (int i = 0; i < filec; ++i) {
 		printf("    %s\n", filev[i]);
 	}
+#endif
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -240,18 +260,24 @@ void cb_userPtrFree(void* ptr) {
 
 WimaStatus cb_mouseEnter(WimaWindowHandle wwh, bool entered) {
 
+#if 0
 	if (entered) {
 		printf("Mouse Enter\n");
 	}
 	else {
 		printf("Mouse Exit\n");
 	}
+#endif
 
 	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus cb_resize(WimaWindowHandle wwh, WimaSize size) {
+
+#if 0
 	printf("Resize: { handle: %u; width: %4d; height: %4d }\n", wwh, size.w, size.h);
+#endif
+
 	return WIMA_STATUS_SUCCESS;
 }
 
