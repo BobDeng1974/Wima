@@ -102,7 +102,7 @@ WimaStatus cb_draw(WimaItemHandle item, WimaNvgInfo nvg) {
 
 	printf("Item[%s] Rect: { x: %d. y: %d, w: %d, h: %d }\n", buffer, r.x, r.y, r.w, r.h);
 
-	wima_widget_label(nvg, r.x, r.y, r.w, r.h, 6, buffer);
+	wima_widget_label(nvg, r.x, r.y, r.w, r.h, WIMA_ICONID(0,0), buffer);
 
 	return WIMA_STATUS_SUCCESS;
 }
