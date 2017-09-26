@@ -1050,6 +1050,8 @@ void wima_item_setFlags(WimaItemHandle item, uint32_t flags);
 // return the user-defined flags for an item as passed to uiSetFlags()
 uint32_t wima_item_flags(WimaItemHandle item);
 
+WimaAreaHandle wima_item_area(WimaItemHandle item);
+
 // returns 1 if an items absolute rectangle contains a given coordinate
 // otherwise 0
 bool wima_item_contains(WimaItemHandle item, WimaPos pos);

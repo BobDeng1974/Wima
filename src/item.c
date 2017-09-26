@@ -472,6 +472,11 @@ uint32_t wima_item_flags(WimaItemHandle item) {
 	return wima_item_ptr(item)->flags & WIMA_USERMASK;
 }
 
+WimaAreaHandle wima_item_area(WimaItemHandle item) {
+	WimaAreaNode* area = wima_area_area(item.window, item.area);
+	return wima_area_handle(area);
+}
+
 bool wima_item_contains(WimaItemHandle item, WimaPos pos) {
 
 	WimaRect rect = wima_item_rect(item);
