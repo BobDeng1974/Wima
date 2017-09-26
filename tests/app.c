@@ -260,10 +260,46 @@ WimaStatus cb_mouseEnter(WimaWindowHandle wwh, bool entered) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_resize(WimaWindowHandle wwh, WimaSize size) {
+WimaStatus cb_framebufferResize(WimaWindowHandle wwh, WimaSize size) {
 
 #if 0
-	printf("Resize: { handle: %u; width: %4d; height: %4d }\n", wwh, size.w, size.h);
+	printf("Framebuffer Resize: { handle: %u; width: %4d; height: %4d }\n", wwh, size.w, size.h);
+#endif
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus cb_windowSize(WimaWindowHandle wwh, WimaSize size) {
+
+#if 0
+	printf("Window Resize: { handle: %u; width: %4d; height: %4d }\n", wwh, size.w, size.h);
+#endif
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus cb_windowPos(WimaWindowHandle wwh, WimaPos pos) {
+
+#if 0
+	printf("Window[%d] moved to { %4d, %4d }\n", wwh, pos.x, pos.y);
+#endif
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus cb_minimize(WimaWindowHandle wwh, bool minimized) {
+
+#if 0
+	printf("Window[%d] %s\n", wwh, minimized ? "Minimized" : "Unminimized");
+#endif
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus cb_focus(WimaWindowHandle wwh, bool focused) {
+
+#if 0
+	printf("Window[%d] %s\n", wwh, focused ? "Focused" : "Unfocused");
 #endif
 
 	return WIMA_STATUS_SUCCESS;
@@ -285,12 +321,12 @@ int main() {
 	appfuncs.draw = cb_draw;
 	appfuncs.error = cb_error;
 	appfuncs.file_drop = cb_fileDrop;
-	appfuncs.pos = NULL;
-	appfuncs.fbsize = cb_resize;
-	appfuncs.winsize = NULL;
+	appfuncs.pos = cb_windowPos;
+	appfuncs.fbsize = cb_framebufferResize;
+	appfuncs.winsize = cb_windowSize;
 	appfuncs.enter = cb_mouseEnter;
-	appfuncs.minimize = NULL;
-	appfuncs.focus = NULL;
+	appfuncs.minimize = cb_minimize;
+	appfuncs.focus = cb_focus;
 	appfuncs.close = cb_close;
 
 	// Initialize Wima and check for success.
