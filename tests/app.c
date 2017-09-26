@@ -387,12 +387,21 @@ int main() {
 
 	// Cache these.
 	DynaNode root = dtree_root();
+
 	DynaNode left = dtree_left(root);
 	DynaNode right = dtree_right(root);
+
 	DynaNode leftUp = dtree_left(left);
 	DynaNode leftDown = dtree_right(left);
+
 	DynaNode rightUp = dtree_left(right);
 	DynaNode rightDown = dtree_right(right);
+
+	DynaNode leftUpUp = dtree_left(leftUp);
+	DynaNode leftUpDown = dtree_right(leftUp);
+
+	DynaNode leftDownLeft = dtree_left(leftDown);
+	DynaNode leftDownRight = dtree_right(leftDown);
 
 	// Add the node and regions to the workspace.
 	status = wima_workspace_addParent(wksp, root, 0.5f, true);
@@ -410,12 +419,32 @@ int main() {
 		return status;
 	}
 
-	status = wima_workspace_addRegion(wksp, leftUp, region);
+	status = wima_workspace_addParent(wksp, leftUp, 0.4f, false);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addRegion(wksp, leftDown, region);
+	status = wima_workspace_addRegion(wksp, leftUpUp, region);
+	if (status) {
+		return status;
+	}
+
+	status = wima_workspace_addRegion(wksp, leftUpDown, region);
+	if (status) {
+		return status;
+	}
+
+	status = wima_workspace_addParent(wksp, leftDown, 0.8f, true);
+	if (status) {
+		return status;
+	}
+
+	status = wima_workspace_addRegion(wksp, leftDownLeft, region);
+	if (status) {
+		return status;
+	}
+
+	status = wima_workspace_addRegion(wksp, leftDownRight, region);
 	if (status) {
 		return status;
 	}
