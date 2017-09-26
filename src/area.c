@@ -544,8 +544,6 @@ WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, D
 
 	if (area->type == WIMA_AREA_PARENT) {
 
-		wima_area_drawSplit(area, nvg.nvg);
-
 		wima_area_node_draw(nvg, areas, dtree_left(node), stack, ratio);
 		wima_area_node_draw(nvg, areas, dtree_right(node), stack, ratio);
 	}
@@ -725,25 +723,6 @@ void wima_area_popViewport(NVGcontext* nvg, DynaVector stack) {
 		// Set up NanoVG.
 		nvgTranslate(nvg, rect->x, rect->y);
 		nvgScissor(nvg, rect->x, rect->y, rect->w, rect->h);
-	}
-}
-
-void wima_area_drawSplit(WimaAreaNode* area, NVGcontext* nvg) {
-
-	nvgStrokeWidth(nvg, 7.0f);
-	nvgStrokeColor(nvg, nvgRGB(0, 0, 0));
-
-	float split = (float) area->parent.spliti;
-
-	if (area->parent.vertical) {
-		nvgMoveTo(nvg, split, 0.0f);
-		nvgLineTo(nvg, split, area->rect.h);
-		nvgStroke(nvg);
-	}
-	else {
-		nvgMoveTo(nvg, 0.0f, split);
-		nvgLineTo(nvg, area->rect.w, split);
-		nvgStroke(nvg);
 	}
 }
 

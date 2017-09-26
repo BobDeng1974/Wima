@@ -158,7 +158,6 @@ WimaPos wima_area_cursorPosition(WimaAreaNode* area, WimaPos cursor);
 void wima_area_pushViewport(NVGcontext* nvg, DynaVector stack, WimaRect viewport);
 void wima_area_popViewport(NVGcontext* nvg, DynaVector stack);
 
-void wima_area_drawSplit(WimaAreaNode* area, NVGcontext* nvg);
 void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg);
 
 // returns the topmost item containing absolute location (x,y), starting with
