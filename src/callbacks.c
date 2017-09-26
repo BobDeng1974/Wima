@@ -742,7 +742,7 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
-	event->type = WIMA_EVENT_WIN_FOCUS;
+	event->type = WIMA_EVENT_WIN_MINIMIZE;
 	event->minimized = minimized != 0;
 
 	++(wwin->ctx.eventCount);
