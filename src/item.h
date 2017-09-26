@@ -72,10 +72,20 @@
 // application, e.g. as item types, other event types, drop targets, etc.
 // They can be set and queried using wima_ui_item_setFlags() and
 // wima_ui_item_flags()
-#define WIMA_USERMASK 0xff000000
+#define WIMA_ITEM_USERMASK 0xff000000
 
 // A special mask passed to wima_ui_item_find().
-#define UI_ANY 0xffffffff
+#define WIMA_ITEM_ANY 0xffffffff
+
+// Limits.
+
+// Maximum size in bytes of a single data buffer passed to uiAllocData().
+#define WIMA_ITEM_MAX_DATASIZE 4096
+
+// Maximum depth of nested containers.
+#define WIMA_ITEM_MAX_DEPTH 64
+
+// End limits.
 
 typedef struct wima_item {
 

@@ -44,15 +44,7 @@
 #include "item.h"
 #include "window.h"
 
-// Limits.
-
-// Maximum size in bytes of a single data buffer passed to uiAllocData().
-#define UI_MAX_DATASIZE 4096
-
-// Maximum depth of nested containers.
-#define UI_MAX_DEPTH 64
-
-// End limits.
+#define WIMA_AREA_MIN_SIZE (26)
 
 typedef struct wima_area_context {
 
@@ -149,7 +141,7 @@ WimaAreaNodeHandle wima_area_containsMouse(DynaTree areas, WimaPos cursor);
 WimaAreaNodeHandle wima_area_node_containsMouse(DynaTree areas, WimaAreaNode* area, WimaPos cursor);
 WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaPos cursor, WimaPos dragStart);
 WimaStatus wima_area_node_moveSplit(WimaAreaNode* area, int diff, bool vertical);
-int wima_area_node_splitMoveLimit(WimaAreaNode* area, int diff, bool vertical);
+int wima_area_node_splitMoveLimit(DynaTree areas, WimaAreaNode* area, bool isLeft, bool vertical);
 
 WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 
@@ -159,7 +151,7 @@ WimaWin* wima_area_window(WimaAreaHandle wah);
 WimaAreaHandle wima_area_handle(WimaAreaNode* area);
 
 void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right);
-WimaPos wima_area_translatePos(WimaAreaNode* area, WimaPos cursor);
+WimaPos wima_area_translatePos(WimaAreaNode* area, WimaPos pos);
 void wima_area_pushViewport(NVGcontext* nvg, DynaVector stack, WimaRect viewport);
 void wima_area_popViewport(NVGcontext* nvg, DynaVector stack);
 

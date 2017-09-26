@@ -429,7 +429,7 @@ void* wima_item_allocHandle(WimaItemHandle item, uint32_t size) {
 	// Make sure to align on a eight-byte boundary.
 	size = (size + 7) & (~7);
 
-	assert((size > 0) && (size < UI_MAX_DATASIZE));
+	assert((size > 0) && (size < WIMA_ITEM_MAX_DATASIZE));
 
 	WimaItem *pitem = wima_item_ptr(item);
 
@@ -464,12 +464,12 @@ void wima_item_setFlags(WimaItemHandle item, uint32_t flags) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	pitem->flags &= ~WIMA_USERMASK;
-	pitem->flags |= flags & WIMA_USERMASK;
+	pitem->flags &= ~WIMA_ITEM_USERMASK;
+	pitem->flags |= flags & WIMA_ITEM_USERMASK;
 }
 
 uint32_t wima_item_flags(WimaItemHandle item) {
-	return wima_item_ptr(item)->flags & WIMA_USERMASK;
+	return wima_item_ptr(item)->flags & WIMA_ITEM_USERMASK;
 }
 
 WimaAreaHandle wima_item_area(WimaItemHandle item) {

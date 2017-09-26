@@ -35,6 +35,7 @@
  */
 
 #include <assert.h>
+#include <limits.h>
 #include <math.h>
 #include <string.h>
 
@@ -392,26 +393,59 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 	assert(area);
 
 	WimaPos pos = wima_area_translatePos(area, cursor);
+	WimaPos start = wima_area_translatePos(area, dragStart);
+
+	int diff = e.vertical ? pos.x - start.x : pos.y - start.y;
+
+	int limit = wima_area_node_splitMoveLimit(areas, area, diff < 0, e.vertical);
 
 	int split = area->parent.spliti;
 
-	area->parent.spliti = e.vertical ? pos.x : pos.y;
+	if (abs(diff) > limit) {
+		diff = diff < 0 ? -limit : limit;
+	}
+
+	return wima_area_node_moveSplit(area, diff, e.vertical);
+}
+
+WimaStatus wima_area_node_moveSplit(WimaAreaNode* area, int diff, bool vertical) {
+
+	// TODO: Finish this function.
+
+	area->parent.spliti += diff;
 
 	float dim = (float) ((e.vertical ? area->rect.w : area->rect.h) - 1);
 
 	area->parent.split = (float) area->parent.spliti / dim;
 
 	return wima_area_node_resize(areas, node, area->rect);
-}
-
-WimaStatus wima_area_node_moveSplit(WimaAreaNode* area, int diff, bool vertical) {
 
 	return WIMA_STATUS_SUCCESS;
 }
 
-int wima_area_node_splitMoveLimit(WimaAreaNode* area, int diff, bool vertical) {
+int wima_area_node_splitMoveLimit(DynaTree areas, WimaAreaNode* area, bool isLeft, bool vertical) {
 
-	return 0;
+	DynaNode childNode = isLeft ? dtree_left(area->node) : dtree_right(area->node);
+
+	WimaAreaNode* child = dtree_node(areas, childNode);
+
+	int limit;
+
+	if (child->type == WIMA_AREA_PARENT) {
+		limit = wima_area_node_splitMoveLimit(areas, child, isLeft, vertical);
+	}
+	else {
+
+		int dim = vertical ? child->rect.w : child->rect.h;
+
+		int min = (int) (ceilf(((float) WIMA_AREA_MIN_SIZE) * child->area.scale));
+
+		limit = dim - min;
+	}
+
+	printf("Area[%d] Limit: %d\n", area->node, limit);
+
+	return limit;
 }
 
 WimaStatus wima_areas_free(DynaTree areas) {
@@ -1012,7 +1046,7 @@ WimaItemHandle wima_area_node_findItem(DynaTree areas, WimaAreaNode* area, WimaP
 					break;
 				}
 
-				if (flags == UI_ANY || pitem->flags & flags) {
+				if (flags == WIMA_ITEM_ANY || pitem->flags & flags) {
 					best_hit = item;
 				}
 

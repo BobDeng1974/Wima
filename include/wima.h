@@ -111,7 +111,7 @@ typedef enum wima_cursor {
 
 // Which flag bits will be compared.
 #define WIMA_ITEM_COMPARE_MASK \
-	(WIMA_ITEM_BOX_MODEL_MASK | (WIMA_ITEM_LAYOUT_MASK & ~WIMA_LAYOUT_BREAK) | WIMA_ITEM_EVENT_MASK | WIMA_USERMASK)
+	(WIMA_ITEM_BOX_MODEL_MASK | (WIMA_ITEM_LAYOUT_MASK & ~WIMA_LAYOUT_BREAK) | WIMA_ITEM_EVENT_MASK | WIMA_ITEM_USERMASK)
 
 // Container flags to pass to uiSetBox().
 typedef enum wima_item_box {
