@@ -691,12 +691,12 @@ WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction
 	switch (action) {
 
 		case WIMA_ACTION_RELEASE:
-			win->ctx.mods |= mod;
+			win->ctx.mods &= ~(mod);
 			break;
 
 		case WIMA_ACTION_PRESS:
 		case WIMA_ACTION_REPEAT:
-			win->ctx.mods &= ~(mod);
+			win->ctx.mods |= mod;
 			break;
 	}
 
