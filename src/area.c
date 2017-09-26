@@ -608,7 +608,8 @@ WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, D
 			nvgTransform(nvg.nvg, curTx[0], curTx[1], curTx[2], curTx[3], curTx[4], curTx[5]);
 		}
 
-		// Draw the border shading.
+		// Draw the border shading and split widgets.
+		wima_area_drawSplitWidgets(area, nvg.nvg);
 		wima_area_drawBorders(area, nvg.nvg);
 	}
 
@@ -799,6 +800,80 @@ void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg) {
 	nvgStrokeColor(nvg, rbborder);
 	nvgStroke(nvg);
 	nvgFill(nvg);
+}
+
+void wima_area_drawSplitWidgets(WimaAreaNode* area, NVGcontext* nvg) {
+
+	NVGcolor offsetLight = wima_color_offset(wg.theme.backgroundColor, WIMA_SPLITTER_SHADE);
+	NVGcolor insetLight = wima_color_transparent(offsetLight);
+
+	NVGcolor offsetDark = wima_color_offset(wg.theme.backgroundColor, -WIMA_SPLITTER_SHADE);
+	NVGcolor insetDark = wima_color_transparent(offsetDark);
+
+	NVGcolor inset = wima_color_transparent(wg.theme.backgroundColor);
+
+	float x = (float) area->rect.x;
+	float y = (float) area->rect.y;
+	float w = (float) area->rect.w;
+	float h = (float) area->rect.h;
+
+	float x2 = x + w;
+	float y2 = y + h;
+
+	nvgBeginPath(nvg);
+	nvgMoveTo(nvg, x,      y2 - 13);
+	nvgLineTo(nvg, x + 13, y2);
+	nvgMoveTo(nvg, x,      y2 - 9);
+	nvgLineTo(nvg, x + 9,  y2);
+	nvgMoveTo(nvg, x,      y2 - 5);
+	nvgLineTo(nvg, x + 5,  y2);
+
+	nvgMoveTo(nvg, x2 - 11, y);
+	nvgLineTo(nvg, x2,      y + 11);
+	nvgMoveTo(nvg, x2 - 7,  y);
+	nvgLineTo(nvg, x2,      y + 7);
+	nvgMoveTo(nvg, x2 - 3,  y);
+	nvgLineTo(nvg, x2,      y + 3);
+
+	nvgStrokeWidth(nvg, 1.0f);
+	nvgStrokeColor(nvg, insetDark);
+	nvgStroke(nvg);
+
+	nvgBeginPath(nvg);
+	nvgMoveTo(nvg, x,      y2 - 11);
+	nvgLineTo(nvg, x + 11, y2);
+	nvgMoveTo(nvg, x,      y2 - 7);
+	nvgLineTo(nvg, x + 7,  y2);
+	nvgMoveTo(nvg, x,      y2 - 3);
+	nvgLineTo(nvg, x + 3,  y2);
+
+	nvgMoveTo(nvg, x2 - 13, y);
+	nvgLineTo(nvg, x2,      y + 13);
+	nvgMoveTo(nvg, x2 - 9,  y);
+	nvgLineTo(nvg, x2,      y + 9);
+	nvgMoveTo(nvg, x2 - 5,  y);
+	nvgLineTo(nvg, x2,      y + 5);
+
+	nvgStrokeColor(nvg, insetLight);
+	nvgStroke(nvg);
+
+	nvgBeginPath(nvg);
+	nvgMoveTo(nvg, x,      y2 - 12);
+	nvgLineTo(nvg, x + 12, y2);
+	nvgMoveTo(nvg, x,      y2 - 8);
+	nvgLineTo(nvg, x + 8,  y2);
+	nvgMoveTo(nvg, x,      y2 - 4);
+	nvgLineTo(nvg, x + 4,  y2);
+
+	nvgMoveTo(nvg, x2 - 12, y);
+	nvgLineTo(nvg, x2,      y + 12);
+	nvgMoveTo(nvg, x2 - 8,  y);
+	nvgLineTo(nvg, x2,      y + 8);
+	nvgMoveTo(nvg, x2 - 4,  y);
+	nvgLineTo(nvg, x2,      y + 4);
+
+	nvgStrokeColor(nvg, inset);
+	nvgStroke(nvg);
 }
 
 WimaItemHandle wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags) {

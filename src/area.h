@@ -163,6 +163,10 @@ void wima_area_popViewport(NVGcontext* nvg, DynaVector stack);
 
 void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg);
 
+// Draw a window with the upper right and lower left splitter widgets into
+// the rectangle at origin (x,y) and size (w, h)
+void wima_area_drawSplitWidgets(WimaAreaNode* area, NVGcontext* nvg);
+
 // returns the topmost item containing absolute location (x,y), starting with
 // item as parent, using a set of flags and masks as filter:
 // if both flags and mask are UI_ANY, the first topmost item is returned.
