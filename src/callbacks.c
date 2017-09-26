@@ -620,9 +620,6 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 	event->pos.y = ypos;
 
 	++(wwin->ctx.eventCount);
-
-	// Make sure to draw twice after this event.
-	wwin->drawTwice = true;
 }
 
 void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
@@ -672,9 +669,6 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	event->size.h = height;
 
 	++(wwin->ctx.eventCount);
-
-	// Make sure to draw twice after this event.
-	wwin->drawTwice = true;
 }
 
 void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
@@ -710,9 +704,6 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 	event->size.h = height;
 
 	++(wwin->ctx.eventCount);
-
-	// Make sure to draw twice after this event.
-	wwin->drawTwice = true;
 }
 
 void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
@@ -737,18 +728,12 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 		return;
 	}
 
-	bool wasMinimized = minimized != 0;
-
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_WIN_FOCUS;
-	event->minimized = wasMinimized;
+	event->minimized = minimized != 0;
 
 	++(wwin->ctx.eventCount);
-
-	if (!wasMinimized) {
-		wwin->drawTwice = true;
-	}
 }
 
 void wima_callback_windowRefresh(GLFWwindow* window) {
@@ -763,8 +748,6 @@ void wima_callback_windowRefresh(GLFWwindow* window) {
 	if (!wwin) {
 		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
-
-	wwin->drawTwice = true;
 }
 
 void wima_callback_windowFocus(GLFWwindow* window, int focused) {
@@ -789,19 +772,12 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 		return;
 	}
 
-	bool hasFocus = focused != 0;
-
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_WIN_FOCUS;
-	event->focused = hasFocus;
+	event->focused = focused != 0;
 
 	++(wwin->ctx.eventCount);
-
-	// Make sure to draw twice after this event.
-	if (hasFocus) {
-		wwin->drawTwice = true;
-	}
 }
 
 void wima_callback_windowClose(GLFWwindow* window) {

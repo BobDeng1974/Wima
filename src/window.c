@@ -76,9 +76,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	// Set the standard cursor as the cursor.
 	wwin.cursor = wg.cursors[WIMA_CURSOR_ARROW];
 
-	// Draw twice at the start.
-	wwin.drawTwice = true;
-
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -445,35 +442,18 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
 	nvgBeginFrame(win->nvg.nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 
-	bool drawTwice = win->drawTwice;
-
-	win->drawTwice = false;
-
 	status = wima_area_draw(wwh, win->scissorStack, win->pixelRatio);
 	if (status) {
+		nvgCancelFrame(win->nvg.nvg);
 		return status;
-	}
-
-	if (drawTwice) {
-
-		status = wima_area_draw(wwh, win->scissorStack, win->pixelRatio);
-		if (status) {
-			return status;
-		}
 	}
 
 	if (win->haveMenu) {
 
 		status = wima_window_drawMenu(win, win->menu, 0);
 		if (status) {
+			nvgCancelFrame(win->nvg.nvg);
 			return status;
-		}
-
-		if (drawTwice) {
-			status = wima_window_drawMenu(win, win->menu, 0);
-			if (status) {
-				return status;
-			}
 		}
 	}
 
@@ -651,9 +631,6 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 						// (that's what the minus 5.0f is).
 						menu->subMenu->pos.x = menu->pos.x + width;
 						menu->subMenu->pos.y = menu->pos.y + item.rect.y - 5.0f;
-
-						// We want to draw twice now.
-						win->drawTwice = true;
 					}
 				}
 
@@ -820,7 +797,6 @@ WimaStatus wima_window_setContextMenu(WimaWindowHandle wwh, WimaMenu* menu, cons
 	win->haveMenu = true;
 	win->menuHasReleased = false;
 	win->isContextMenu = true;
-	win->drawTwice = true;
 
 	// Set up the offset.
 	win->menuOffset = menu->pos;
@@ -846,7 +822,6 @@ WimaStatus wima_window_setMenu(WimaWindowHandle wwh, WimaMenu* menu) {
 	win->haveMenu = true;
 	win->menuHasReleased = false;
 	win->isContextMenu = false;
-	win->drawTwice = true;
 
 	// Set the menu.
 	win->menu = menu;
@@ -925,7 +900,6 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 
 					// Dismiss the menu.
 					win->haveMenu = false;
-					win->drawTwice = true;
 
 					// Set the new offsets for the menu. This
 					// is so the user can just click if they
@@ -968,7 +942,6 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 
 			// Dismiss the menu.
 			win->haveMenu = false;
-			win->drawTwice = true;
 		}
 	}
 	else if (wih.item >= 0) {

@@ -121,10 +121,6 @@ typedef struct wima_window {
 
 	float pixelRatio;
 
-	// For some reason, NanoVG has a bug where sometimes
-	// things aren't drawn properly unless you draw twice.
-	bool drawTwice;
-
 	// Whether or not we have a menu.
 	bool haveMenu;
 
