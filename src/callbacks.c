@@ -632,6 +632,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	}
 
 	glViewport(0, 0, width, height);
+	glScissor(0, 0, width, height);
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 

@@ -189,6 +189,8 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 		glfwSetWindowIcon(win, wg.numIcons, wg.icons);
 	}
 
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
 	return WIMA_STATUS_SUCCESS;
 }
 
@@ -476,6 +478,8 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 	}
 
 	nvgEndFrame(win->nvg.nvg);
+
+	glFlush();
 
 	glDisable(GL_SCISSOR_TEST);
 
