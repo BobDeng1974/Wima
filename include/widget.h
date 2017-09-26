@@ -226,13 +226,6 @@ void wima_widget_node_wire_colored(WimaNvgInfo nvg, float x0, float y0, float x1
 void wima_widget_node_background(WimaNvgInfo nvg, float x, float y, float w, float h,
     WimaItemState state, int iconid, const char *label, NVGcolor titleColor);
 
-// Draw the join area overlay stencil into the rectangle
-// at origin (x,y) and size (w,h)
-// vertical is 0 or 1 and designates the arrow orientation,
-// mirror is 0 or 1 and flips the arrow side
-void wima_widget_areaOverlay(WimaNvgInfo nvg, float x, float y, float w, float h,
-    int vertical, int mirror);
-
 ////////////////////////////////////////////////////////////////////////////////
 
 // Estimator Functions

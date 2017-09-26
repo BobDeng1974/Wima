@@ -167,6 +167,12 @@ void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg);
 // the rectangle at origin (x,y) and size (w, h)
 void wima_area_drawSplitWidgets(WimaAreaNode* area, NVGcontext* nvg);
 
+// Draw the join area overlay stencil into the rectangle
+// at origin (x,y) and size (w,h)
+// vertical is 0 or 1 and designates the arrow orientation,
+// mirror is 0 or 1 and flips the arrow side
+void wima_area_drawJoinOverlay(WimaAreaNode* area, NVGcontext* nvg, bool vertical, bool mirror);
+
 // returns the topmost item containing absolute location (x,y), starting with
 // item as parent, using a set of flags and masks as filter:
 // if both flags and mask are UI_ANY, the first topmost item is returned.

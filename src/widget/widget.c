@@ -518,65 +518,6 @@ void wima_widget_node_background(WimaNvgInfo nvg, float x, float y, float w, flo
 	wima_widget_dropShadow(nvg, x, y, w, h, WIMA_NODE_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
 }
 
-void wima_widget_areaOverlay(WimaNvgInfo nvg, float x, float y, float w, float h, int vertical, int mirror) {
-
-	if (vertical) {
-		float u = w;
-		w = h;
-		h = u;
-	}
-
-	float s = (w < h) ? w : h;
-
-	float x0, y0, x1, y1;
-
-	if (mirror) {
-		x0 = w;
-		y0 = h;
-		x1 = 0;
-		y1 = 0;
-		s = -s;
-	}
-	else {
-		x0 = 0;
-		y0 = 0;
-		x1 = w;
-		y1 = h;
-	}
-
-	float yc = (y0 + y1) * 0.5f;
-	float s2 = s / 2.0f;
-	float s4 = s / 4.0f;
-	float s8 = s / 8.0f;
-	float x4 = x0 + s4;
-
-	float points[][2] = {
-	    { x0,      y0 },
-	    { x1,      y0 },
-	    { x1,      y1 },
-	    { x0,      y1 },
-	    { x0,      yc + s8 },
-	    { x4,      yc + s8 },
-	    { x4,      yc + s4 },
-	    { x0 + s2, yc },
-	    { x4,      yc - s4 },
-	    { x4,      yc - s8 },
-	    { x0,      yc - s8 }
-	};
-
-	nvgBeginPath(nvg.nvg);
-	int count = sizeof(points) / (sizeof(float) * 2);
-
-	nvgMoveTo(nvg.nvg, x + points[0][vertical & 1], y + points[0][(vertical & 1) ^ 1]);
-
-	for (int i = 1; i < count; ++i) {
-		nvgLineTo(nvg.nvg, x + points[i][vertical & 1], y + points[i][(vertical & 1) ^ 1]);
-	}
-
-	nvgFillColor(nvg.nvg, nvgRGBAf(0, 0, 0, 0.3));
-	nvgFill(nvg.nvg);
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 
 float wima_widget_label_estimateWidth(WimaNvgInfo nvg, int iconid, const char *label) {
