@@ -97,6 +97,9 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 	}
 	else {
 
+		// Set the scale.
+		area->area.scale = 1.0f;
+
 		// Get the region handle.
 		WimaRegionHandle reg = area->area.type;
 
@@ -255,6 +258,22 @@ WimaRect wima_area_rect(WimaAreaHandle wah) {
 	assert(area);
 
 	return area->rect;
+}
+
+void wima_area_setScale(WimaAreaHandle wah, float scale) {
+
+	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
+	assert(area);
+
+	area->area.scale = wima_fmaxf(scale, 0.1f);
+}
+
+float wima_area_scale(WimaAreaHandle wah) {
+
+	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
+	assert(area);
+
+	return area->area.scale;
 }
 
 bool wima_area_contains(WimaAreaHandle wah, WimaPos pos) {
@@ -571,6 +590,12 @@ WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, D
 
 		if (area->area.ctx.itemCount > 0) {
 
+			float curTx[6];
+
+			nvgCurrentTransform(nvg.nvg, curTx);
+
+			nvgScale(nvg.nvg, area->area.scale, area->area.scale);
+
 			WimaItemHandle item;
 			item.item = 0;
 			item.area = node;
@@ -578,6 +603,9 @@ WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, D
 
 			// Draw the area. The draw function is guaranteed to be non-null.
 			status = wg.funcs.draw(item, nvg);
+
+			nvgResetTransform(nvg.nvg);
+			nvgTransform(nvg.nvg, curTx[0], curTx[1], curTx[2], curTx[3], curTx[4], curTx[5]);
 		}
 
 		// Draw the border shading.

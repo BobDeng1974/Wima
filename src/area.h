@@ -101,6 +101,8 @@ typedef struct wima_area_node {
 			void* user;
 			WimaRegionHandle type;
 
+			float scale;
+
 		} area;
 
 		struct wima_area_parent {

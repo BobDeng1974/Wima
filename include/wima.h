@@ -1073,6 +1073,8 @@ WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 
 void* wima_area_userPointer(WimaAreaHandle wah);
 WimaRect wima_area_rect(WimaAreaHandle wah);
+void wima_area_setScale(WimaAreaHandle wah, float scale);
+float wima_area_scale(WimaAreaHandle wah);
 WimaStatus wima_areas_free(DynaTree areas);
 
 // return the total number of allocated items
