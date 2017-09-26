@@ -393,6 +393,8 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 
 	WimaPos pos = wima_area_translatePos(area, cursor);
 
+	int split = area->parent.spliti;
+
 	area->parent.spliti = e.vertical ? pos.x : pos.y;
 
 	float dim = (float) ((e.vertical ? area->rect.w : area->rect.h) - 1);
@@ -400,6 +402,16 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 	area->parent.split = (float) area->parent.spliti / dim;
 
 	return wima_area_node_resize(areas, node, area->rect);
+}
+
+WimaStatus wima_area_node_moveSplit(WimaAreaNode* area, int diff, bool vertical) {
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+int wima_area_node_splitMoveLimit(WimaAreaNode* area, int diff, bool vertical) {
+
+	return 0;
 }
 
 WimaStatus wima_areas_free(DynaTree areas) {
