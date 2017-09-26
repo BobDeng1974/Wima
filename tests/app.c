@@ -77,7 +77,7 @@ void printMods(WimaMods mods) {
 	if (mods & WIMA_MOD_SHIFT) {
 		printf("|Shift");
 	}
-	if (mods & WIMA_MOD_CONTROL) {
+	if (mods & WIMA_MOD_CTRL) {
 		printf("|Ctrl");
 	}
 	if (mods & WIMA_MOD_ALT) {

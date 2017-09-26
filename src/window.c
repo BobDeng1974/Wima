@@ -670,7 +670,7 @@ WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction
 
 		case WIMA_KEY_LEFT_CONTROL:
 		case WIMA_KEY_RIGHT_CONTROL:
-			mod = WIMA_MOD_CONTROL;
+			mod = WIMA_MOD_CTRL;
 			break;
 
 		case WIMA_KEY_LEFT_ALT:
