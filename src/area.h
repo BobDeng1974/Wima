@@ -63,14 +63,6 @@ typedef struct wima_area_context {
 
 } WimaAreaContext;
 
-typedef enum wima_area_mousePosition {
-
-	WIMA_AREA_NONE   = 0,
-	WIMA_AREA_LEFT   = 1,
-	WIMA_AREA_RIGHT  = 2
-
-} WimaAreaMousePos;
-
 typedef enum wima_area_node_type {
 
 	WIMA_AREA_PARENT  = 1,
@@ -102,8 +94,6 @@ typedef struct wima_area_node {
 
 			float split;
 			int spliti;
-
-			WimaAreaMousePos mouse;
 
 			bool vertical;
 

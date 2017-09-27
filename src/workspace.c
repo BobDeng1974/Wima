@@ -82,7 +82,6 @@ WimaStatus wima_workspace_addParent(WimaWorkspaceHandle wwh, DynaNode node,
 	wan.type = WIMA_AREA_PARENT;
 	wan.rect.w = -1;
 	wan.rect.h = -1;
-	wan.parent.mouse = WIMA_AREA_NONE;
 
 	wan.parent.vertical = vertical;
 	wan.parent.split = fabs(split);
