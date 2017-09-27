@@ -95,6 +95,7 @@ WimaStatus wima_workspace_addParent(WimaWorkspaceHandle wwh, DynaNode node,
 }
 
 WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wwh, DynaNode node, WimaRegionHandle reg) {
+
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwh));
 	assert(wksp);
 
