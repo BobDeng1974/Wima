@@ -130,8 +130,8 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
 WimaAreaNodeHandle wima_area_containsMouse(DynaTree areas, WimaPos cursor);
 WimaAreaNodeHandle wima_area_node_containsMouse(DynaTree areas, WimaAreaNode* area, WimaPos cursor);
 WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaPos cursor, WimaPos dragStart);
-WimaStatus wima_area_node_moveSplit(DynaTree areas, WimaAreaNode* area, int diff, bool vertical);
-int wima_area_node_splitMoveLimit(DynaTree areas, WimaAreaNode* area, bool isLeft, bool vertical);
+WimaStatus wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bool isLeft, bool vertical);
+int wima_area_node_splitMoveLimit(DynaTree areas, DynaNode node, bool isLeft, bool vertical);
 
 WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 
@@ -175,7 +175,7 @@ bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos, WimaMouseSplitEvent* re
 
 WimaStatus wima_area_node_draw(WimaNvgInfo ctx, DynaTree areas, DynaNode node, DynaVector stack, float ratio);
 WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos);
-WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect);
+WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, bool adjustSplit);
 bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, WimaMouseSplitEvent* result);
 
 #endif // WIMA_AREA_H
