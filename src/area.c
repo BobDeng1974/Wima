@@ -1003,7 +1003,7 @@ WimaItemHandle wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags) {
 
 WimaItemHandle wima_area_node_findItem(DynaTree areas, WimaAreaNode* area, WimaPos pos, uint32_t flags) {
 
-	assert(area && area->type == WIMA_AREA_LEAF);
+	assert(area);
 
 	if (area->type == WIMA_AREA_PARENT) {
 
