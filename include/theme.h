@@ -313,6 +313,39 @@ typedef struct wima_theme_loadTheme {
 // Size of node title arrow.
 #define WIMA_NODE_ARROW_SIZE 9
 
+// Default widget height.
+#define WIMA_WIDGET_HEIGHT (27)
+// Default toolbutton width (if icon only).
+#define WIMA_TOOL_WIDTH (20)
+
+// Default radius of node ports.
+#define WIMA_NODE_PORT_RADIUS (5)
+// Top margin of node content.
+#define WIMA_NODE_MARGIN_TOP (25)
+// Bottom margin of node content.
+#define WIMA_NODE_MARGIN_DOWN (5)
+// Left and right margin of node content.
+#define WIMA_NODE_MARGIN_SIDE (10)
+// Height of node title bar.
+#define WIMA_NODE_TITLE_HEIGHT (20)
+// Width of node title arrow click area.
+#define WIMA_NODE_ARROW_AREA_WIDTH (20)
+
+// Size of splitter corner click area.
+#define WIMA_SPLITTER_AREA_SIZE (12)
+
+// Width of vertical scrollbar.
+#define WIMA_SCROLLBAR_WIDTH (13)
+// Height of horizontal scrollbar.
+#define WIMA_SCROLLBAR_HEIGHT (14)
+
+// Default vertical spacing.
+#define WIMA_VSPACING (1)
+// Default vertical spacing between groups.
+#define WIMA_VSPACING_GROUP (8)
+// Default horizontal spacing.
+#define WIMA_HSPACING (8)
+
 // How text on a control is aligned.
 typedef enum wima_text_alignment {
 
@@ -321,39 +354,40 @@ typedef enum wima_text_alignment {
 
 } WimaTextAlignment;
 
-// flags indicating which corners are sharp (for grouping widgets)
+// Flags indicating which corners are sharp (for grouping widgets).
 typedef enum WimaWidgetCorner {
 
-	// all corners are round
+	// All corners are round.
 	WIMA_CORNER_NONE = 0,
 
-	// sharp top left corner
+	// Sharp top left corner.
 	WIMA_CORNER_TOP_LEFT = 1,
 
-	// sharp top right corner
+	// Sharp top right corner.
 	WIMA_CORNER_TOP_RIGHT = 2,
 
-	// sharp bottom right corner
+	// Sharp bottom right corner.
 	WIMA_CORNER_DOWN_RIGHT = 4,
 
-	// sharp bottom left corner
+	// Sharp bottom left corner.
 	WIMA_CORNER_DOWN_LEFT = 8,
 
-	// all corners are sharp;
-	// you can invert a set of flags using ^= WIMA_CORNER_ALL
+	// All corners are sharp; you can invert a
+	// set of flags using ^= WIMA_CORNER_ALL.
 	WIMA_CORNER_ALL = 0xF,
 
-	// top border is sharp
+	// Top border is sharp.
 	WIMA_CORNER_TOP = 3,
 
-	// bottom border is sharp
+	// Bottom border is sharp.
 	WIMA_CORNER_DOWN = 0xC,
 
-	// left border is sharp
+	// Left border is sharp.
 	WIMA_CORNER_LEFT = 9,
 
-	// right border is sharp
+	// Right border is sharp.
 	WIMA_CORNER_RIGHT = 6
+
 } WimaWidgetCorner;
 
 // build an icon ID from two coordinates into the icon sheet, where
@@ -363,41 +397,6 @@ typedef enum WimaWidgetCorner {
 // alpha of disabled widget groups
 // can be used in conjunction with nvgGlobalAlpha()
 #define WIMA_DISABLED_ALPHA 0.5
-
-enum {
-	// default widget height
-	WIMA_WIDGET_HEIGHT = 27,
-	// default toolbutton width (if icon only)
-	WIMA_TOOL_WIDTH = 20,
-
-	// default radius of node ports
-	WIMA_NODE_PORT_RADIUS = 5,
-	// top margin of node content
-	WIMA_NODE_MARGIN_TOP = 25,
-	// bottom margin of node content
-	WIMA_NODE_MARGIN_DOWN = 5,
-	// left and right margin of node content
-	WIMA_NODE_MARGIN_SIDE = 10,
-	// height of node title bar
-	WIMA_NODE_TITLE_HEIGHT = 20,
-	// width of node title arrow click area
-	WIMA_NODE_ARROW_AREA_WIDTH = 20,
-
-	// size of splitter corner click area
-	WIMA_SPLITTER_AREA_SIZE = 12,
-
-	// width of vertical scrollbar
-	WIMA_SCROLLBAR_WIDTH = 13,
-	// height of horizontal scrollbar
-	WIMA_SCROLLBAR_HEIGHT = 14,
-
-	// default vertical spacing
-	WIMA_VSPACING = 1,
-	// default vertical spacing between groups
-	WIMA_VSPACING_GROUP = 8,
-	// default horizontal spacing
-	WIMA_HSPACING = 8,
-};
 
 typedef enum WimaIcon {
 	WIMA_ICON_NONE = WIMA_ICONID(0,29),
