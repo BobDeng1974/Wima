@@ -792,15 +792,17 @@ bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, Wim
 	bool vertical = area->parent.vertical;
 	int split = area->parent.spliti;
 
+	WimaPos tx = wima_area_translatePos(area, pos);
+
 	if (vertical) {
 
-		int x = pos.x - split;
+		int x = tx.x - split;
 
 		on = x >= -2 && x <= 2;
 	}
 	else {
 
-		int y = pos.y - split;
+		int y = tx.y - split;
 
 		on = y >= -2 && y <= 2;
 	}
@@ -838,6 +840,7 @@ void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right
 	assert(area && area->type == WIMA_AREA_PARENT);
 
 	int split = area->parent.spliti;
+	int splitPlus = split + 1;
 
 	left->x = area->rect.x;
 	left->y = area->rect.y;
@@ -850,8 +853,8 @@ void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right
 
 		left->w = split;
 
-		right->x = (split + 1);
-		right->w = area->rect.w - right->x;
+		right->x = splitPlus + area->rect.x;
+		right->w = area->rect.w - splitPlus;
 	}
 	else {
 
@@ -861,8 +864,8 @@ void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right
 
 		left->h = split;
 
-		right->y = (split + 1);
-		right->h = area->rect.h - right->y;
+		right->y = splitPlus + area->rect.y;
+		right->h = area->rect.h - splitPlus;
 	}
 }
 
