@@ -434,7 +434,7 @@ int main() {
 		return status;
 	}
 
-	status = wima_workspace_addParent(wksp, leftDown, 0.8f, true);
+	status = wima_workspace_addParent(wksp, leftDown, 0.2f, true);
 	if (status) {
 		return status;
 	}
@@ -444,7 +444,17 @@ int main() {
 		return status;
 	}
 
-	status = wima_workspace_addRegion(wksp, leftDownRight, region);
+	status = wima_workspace_addParent(wksp, leftDownRight, 0.5f, true);
+	if (status) {
+		return status;
+	}
+
+	status = wima_workspace_addRegion(wksp, dtree_left(leftDownRight), region);
+	if (status) {
+		return status;
+	}
+
+	status = wima_workspace_addRegion(wksp, dtree_right(leftDownRight), region);
 	if (status) {
 		return status;
 	}
