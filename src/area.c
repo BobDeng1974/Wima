@@ -176,17 +176,17 @@ void wima_area_context_create(WimaAreaNode* area, int itemCap, int bufferCap) {
 
 	size_t size = nallocx(sizeof(WimaItem) * itemCap, 0);
 
-	area->area.items = (WimaItem*) mallocx(size, 0);
-	area->area.last_items = (WimaItem*) mallocx(size, 0);
-	area->area.itemMap = (int*) mallocx(size, MALLOCX_ZERO);
+	area->area.ctx.items = (WimaItem*) mallocx(size, 0);
+	area->area.ctx.last_items = (WimaItem*) mallocx(size, 0);
+	area->area.ctx.itemMap = (int*) mallocx(size, MALLOCX_ZERO);
 
 	itemCap = size / sizeof(WimaItem);
-	area->area.itemCap = itemCap;
+	area->area.ctx.itemCap = itemCap;
 
 	if (bufferCap) {
 		bufferCap = nallocx(bufferCap, 0);
-		area->area.data = mallocx(bufferCap, MALLOCX_ZERO);
-		area->area.bufferCap = bufferCap;
+		area->area.ctx.data = mallocx(bufferCap, MALLOCX_ZERO);
+		area->area.ctx.bufferCap = bufferCap;
 	}
 }
 
@@ -204,17 +204,17 @@ void wima_area_node_context_clear(DynaTree areas, DynaNode node) {
 	}
 	else {
 
-		area->area.lastItemCount = area->area.itemCount;
-		area->area.itemCount = 0;
-		area->area.datasize = 0;
+		area->area.ctx.lastItemCount = area->area.ctx.itemCount;
+		area->area.ctx.itemCount = 0;
+		area->area.ctx.datasize = 0;
 
 		// swap buffers
-		WimaItem *items = area->area.items;
-		area->area.items = area->area.last_items;
-		area->area.last_items = items;
+		WimaItem *items = area->area.ctx.items;
+		area->area.ctx.items = area->area.ctx.last_items;
+		area->area.ctx.last_items = items;
 
-		for (int i = 0; i < area->area.lastItemCount; ++i) {
-			area->area.itemMap[i] = -1;
+		for (int i = 0; i < area->area.ctx.lastItemCount; ++i) {
+			area->area.ctx.itemMap[i] = -1;
 		}
 	}
 }
@@ -224,7 +224,7 @@ int wima_area_itemCount(WimaAreaHandle wah) {
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
 
-	return area->area.itemCount;
+	return area->area.ctx.itemCount;
 }
 
 int wima_area_lastItemCount(WimaAreaHandle wah) {
@@ -232,7 +232,7 @@ int wima_area_lastItemCount(WimaAreaHandle wah) {
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
 
-	return area->area.lastItemCount;
+	return area->area.ctx.lastItemCount;
 }
 
 uint32_t wima_area_allocSize(WimaAreaHandle wah) {
@@ -240,7 +240,7 @@ uint32_t wima_area_allocSize(WimaAreaHandle wah) {
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
 
-	return area->area.datasize;
+	return area->area.ctx.datasize;
 }
 
 void* wima_area_userPointer(WimaAreaHandle wah) {
@@ -322,7 +322,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 			return status;
 		}
 
-		if (area->area.itemCount) {
+		if (area->area.ctx.itemCount) {
 
 			WimaItemHandle zero;
 			zero.item = 0;
@@ -334,7 +334,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 			wima_layout_computeSize(zero, 1);
 			wima_layout_arrange(zero, 1);
 
-			if (area->area.lastItemCount) {
+			if (area->area.ctx.lastItemCount) {
 
 				// Map old item id to new item id.
 				wima_item_map(zero, zero);
@@ -516,13 +516,13 @@ WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 	else {
 
 		// Free the items arrays.
-		dallocx(area->area.items, 0);
-		dallocx(area->area.last_items, 0);
-		dallocx(area->area.itemMap, 0);
+		dallocx(area->area.ctx.items, 0);
+		dallocx(area->area.ctx.last_items, 0);
+		dallocx(area->area.ctx.itemMap, 0);
 
 		// Free the buffer.
-		if (area->area.data) {
-			dallocx(area->area.data, 0);
+		if (area->area.ctx.data) {
+			dallocx(area->area.ctx.data, 0);
 		}
 
 		// If the user didn't allocate anything, just return.
@@ -665,7 +665,7 @@ WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, D
 
 		wima_widget_background(nvg, 0, 0, area->rect.w, area->rect.h);
 
-		if (area->area.itemCount > 0) {
+		if (area->area.ctx.itemCount > 0) {
 
 			float curTx[6];
 
