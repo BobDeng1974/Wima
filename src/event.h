@@ -61,17 +61,16 @@ typedef enum wima_event_type {
 	WIMA_EVENT_MOUSE_BTN     = 1 << 11,
 	WIMA_EVENT_MOUSE_POS     = 1 << 12,
 	WIMA_EVENT_AREA_ENTER    = 1 << 13,
-	WIMA_EVENT_MOUSE_SPLIT   = 1 << 14,
-	WIMA_EVENT_SCROLL        = 1 << 15,
-	WIMA_EVENT_CHAR          = 1 << 16,
+	WIMA_EVENT_SCROLL        = 1 << 14,
+	WIMA_EVENT_CHAR          = 1 << 15,
 
-	WIMA_EVENT_FILE_DROP     = 1 << 17,
-	WIMA_EVENT_WIN_POS       = 1 << 18,
-	WIMA_EVENT_FB_SIZE       = 1 << 19,
-	WIMA_EVENT_WIN_SIZE      = 1 << 20,
-	WIMA_EVENT_WIN_ENTER     = 1 << 21,
-	WIMA_EVENT_WIN_MINIMIZE  = 1 << 22,
-	WIMA_EVENT_WIN_FOCUS     = 1 << 23
+	WIMA_EVENT_FILE_DROP     = 1 << 16,
+	WIMA_EVENT_WIN_POS       = 1 << 17,
+	WIMA_EVENT_FB_SIZE       = 1 << 18,
+	WIMA_EVENT_WIN_SIZE      = 1 << 19,
+	WIMA_EVENT_WIN_ENTER     = 1 << 20,
+	WIMA_EVENT_WIN_MINIMIZE  = 1 << 21,
+	WIMA_EVENT_WIN_FOCUS     = 1 << 22
 
 } WimaEventType;
 

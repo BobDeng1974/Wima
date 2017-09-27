@@ -1038,8 +1038,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 			else if (win->ctx.movingSplit) {
 
 				status = wima_area_moveSplit(win->areas, win->ctx.split.area,
-				                             win->ctx.split, win->ctx.cursorPos,
-				                             win->ctx.dragStart);
+				                             win->ctx.split, win->ctx.cursorPos);
 			}
 			else {
 
@@ -1060,13 +1059,6 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 		{
 			WimaAreaNode* area = dtree_node(win->areas, e.area_enter.area);
 			status = wima_area_mouseEnter(area, e.area_enter.enter);
-			break;
-		}
-
-		case WIMA_EVENT_MOUSE_SPLIT:
-		{
-			win->ctx.dragStart = win->ctx.cursorPos;
-			status = WIMA_STATUS_SUCCESS;
 			break;
 		}
 

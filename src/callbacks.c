@@ -245,13 +245,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		if (wwin->ctx.split.split >= 0) {
 
 			if (wbtn != WIMA_MOUSE_RIGHT) {
-
 				wwin->ctx.movingSplit = true;
-
-				// Set up the event and send it.
-				event->type = WIMA_EVENT_MOUSE_SPLIT;
-				event->split = wwin->ctx.split;
-				++(wwin->ctx.eventCount);
 			}
 			else {
 

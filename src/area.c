@@ -383,9 +383,7 @@ WimaAreaNodeHandle wima_area_node_containsMouse(DynaTree areas, WimaAreaNode* ar
 	}
 }
 
-WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaPos cursor, WimaPos dragStart) {
-
-	// TODO: Finish this function.
+WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaPos cursor) {
 
 	WimaAreaNode* area = dtree_node(areas, node);
 	assert(area);
