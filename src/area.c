@@ -531,13 +531,8 @@ void wima_area_context_free(WimaAreaContext* ctx) {
 	}
 }
 
-DynaTree wima_area_areas(WimaWindowHandle win) {
-	WimaWin* window = dvec_get(wg.windows, win);
-	return window->areas;
-}
-
 WimaAreaNode* wima_area_area(WimaWindowHandle win, WimaAreaNodeHandle node) {
-	return dtree_node(wima_area_areas(win), node);
+	return dtree_node(wima_window_areas(win), node);
 }
 
 WimaAreaHandle wima_area_handle(WimaAreaNode* area) {

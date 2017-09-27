@@ -145,7 +145,6 @@ int wima_area_node_splitMoveLimit(DynaTree areas, WimaAreaNode* area, bool isLef
 
 WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 
-DynaTree wima_area_areas(WimaWindowHandle win);
 WimaAreaNode* wima_area_area(WimaWindowHandle win, WimaAreaNodeHandle node);
 WimaWin* wima_area_window(WimaAreaHandle wah);
 WimaAreaHandle wima_area_handle(WimaAreaNode* area);
