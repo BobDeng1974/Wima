@@ -46,23 +46,6 @@
 
 #define WIMA_AREA_MIN_SIZE (26)
 
-typedef struct wima_area_context {
-
-	WimaItem *items;
-	unsigned char *data;
-	WimaItem *last_items;
-	int *itemMap;
-
-	// Capacities.
-	unsigned int itemCap;
-	unsigned int bufferCap;
-
-	uint32_t itemCount;
-	uint32_t lastItemCount;
-	uint32_t datasize;
-
-} WimaAreaContext;
-
 typedef enum wima_area_mousePosition {
 
 	WIMA_AREA_NONE   = 0,
@@ -88,12 +71,24 @@ typedef struct wima_area_node {
 
 		struct wima_area {
 
-			WimaAreaContext ctx;
-
 			void* user;
-			WimaRegionHandle type;
+
+			WimaItem *items;
+			unsigned char *data;
+			WimaItem *last_items;
+			int *itemMap;
+
+			// Capacities.
+			uint32_t itemCap;
+			uint32_t bufferCap;
+
+			uint32_t itemCount;
+			uint32_t lastItemCount;
+			uint32_t datasize;
 
 			float scale;
+
+			WimaRegionHandle type;
 
 		} area;
 
@@ -125,10 +120,9 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 bool wima_area_valid(DynaTree regions);
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
 
-void wima_area_context_create(WimaAreaContext* ctx, int itemCap, int bufferCap);
+void wima_area_context_create(WimaAreaNode* area, int itemCap, int bufferCap);
 void wima_area_context_clear(DynaTree areas);
 void wima_area_node_context_clear(DynaTree areas, DynaNode node);
-void wima_area_context_free(WimaAreaContext* ctx);
 
 // layout all added items starting from the root item 0.
 // after calling uiEndLayout(), no further modifications to the item tree should

@@ -225,7 +225,7 @@ WimaStatus wima_window_setHover(WimaWindowHandle wwh, WimaItemHandle wih) {
 
 	assert(area->type == WIMA_AREA_LEAF);
 
-	if (area->area.ctx.itemCount < wih.item) {
+	if (area->area.itemCount < wih.item) {
 		win->ctx.hover = wih;
 		return WIMA_STATUS_SUCCESS;
 	}
@@ -246,7 +246,7 @@ WimaStatus wima_window_setActive(WimaWindowHandle wwh, WimaItemHandle wih) {
 
 	assert(area->type == WIMA_AREA_LEAF);
 
-	if (area->area.ctx.itemCount < wih.item) {
+	if (area->area.itemCount < wih.item) {
 		win->ctx.active = wih;
 		return WIMA_STATUS_SUCCESS;
 	}
@@ -267,7 +267,7 @@ WimaStatus wima_window_setFocus(WimaWindowHandle wwh, WimaItemHandle wih) {
 
 	assert(area->type == WIMA_AREA_LEAF);
 
-	if (area->area.ctx.itemCount < wih.item) {
+	if (area->area.itemCount < wih.item) {
 		win->ctx.focus = wih;
 		return WIMA_STATUS_SUCCESS;
 	}
