@@ -750,7 +750,7 @@ void wima_widget_label_icon_value(WimaNvgInfo nvg, float x, float y, float w, fl
 	if (label) {
 
 		if (iconid >= 0) {
-			wima_widget_icon(nvg, x + 4, y + 2, iconid);
+			wima_widget_icon(nvg, x + 4, y + 5, iconid);
 			pleft += WIMA_ICON_SHEET_RES;
 		}
 
@@ -800,7 +800,7 @@ void wima_widget_label_icon_value(WimaNvgInfo nvg, float x, float y, float w, fl
 		}
 	}
 	else if (iconid >= 0) {
-		wima_widget_icon(nvg, x + 2, y + 2, iconid);
+		wima_widget_icon(nvg, x + 4, y + 5, iconid);
 	}
 }
 

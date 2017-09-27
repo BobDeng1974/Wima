@@ -366,7 +366,7 @@ typedef enum WimaWidgetCorner {
 
 enum {
 	// default widget height
-	WIMA_WIDGET_HEIGHT = 21,
+	WIMA_WIDGET_HEIGHT = 27,
 	// default toolbutton width (if icon only)
 	WIMA_TOOL_WIDTH = 20,
 
