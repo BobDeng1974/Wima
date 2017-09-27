@@ -71,7 +71,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	wwin.winsize.w = 0;
 	wwin.winsize.h = 0;
 
-	wwin.haveMenu = false;
+	wwin.menuFlags = 0;
 
 	// Set the standard cursor as the cursor.
 	wwin.cursor = wg.cursors[WIMA_CURSOR_ARROW];
@@ -450,7 +450,7 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 		return status;
 	}
 
-	if (win->haveMenu) {
+	if (WIMA_WINDOW_HAS_MENU(win)) {
 
 		status = wima_window_drawMenu(win, win->menu, 0);
 		if (status) {
@@ -495,7 +495,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 
 	// Cache these. If parentWidth is 0, that means
 	// that this is the highest level menu.
-	bool isTopAndContext = win->isContextMenu && parentWidth == 0;
+	bool isTopAndContext = WIMA_WINDOW_MENU_IS_CONTEXT(win) && parentWidth == 0;
 	bool hasTitle = isTopAndContext && (win->menuTitle || win->menuIcon >= 0);
 
 	if (hasTitle) {
@@ -796,9 +796,7 @@ WimaStatus wima_window_setContextMenu(WimaWindowHandle wwh, WimaMenu* menu, cons
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
-	win->haveMenu = true;
-	win->menuHasReleased = false;
-	win->isContextMenu = true;
+	win->menuFlags = (WIMA_WINDOW_MENU_BIT | WIMA_WINDOW_MENU_CONTEXT_BIT);
 
 	// Set up the offset.
 	win->menuOffset = menu->pos;
@@ -821,9 +819,7 @@ WimaStatus wima_window_setMenu(WimaWindowHandle wwh, WimaMenu* menu) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
-	win->haveMenu = true;
-	win->menuHasReleased = false;
-	win->isContextMenu = false;
+	win->menuFlags = WIMA_WINDOW_MENU_BIT;
 
 	// Set the menu.
 	win->menu = menu;
@@ -842,8 +838,7 @@ WimaMenu* wima_window_menu(WimaWindowHandle wwh) {
 const char* wima_window_menuTitle(WimaWindowHandle wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-	assert(win->isContextMenu);
+	assert(win && WIMA_WINDOW_MENU_IS_CONTEXT(win));
 
 	return win->menuTitle;
 }
@@ -851,8 +846,7 @@ const char* wima_window_menuTitle(WimaWindowHandle wwh) {
 int wima_window_menuIcon(WimaWindowHandle wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-	assert(win->isContextMenu);
+	assert(win && WIMA_WINDOW_MENU_IS_CONTEXT(win));
 
 	return win->menuIcon;
 }
@@ -862,7 +856,7 @@ WimaStatus wima_window_removeMenu(WimaWindowHandle wwh) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
-	win->haveMenu = false;
+	win->menuFlags = 0;
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -871,7 +865,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
-	if (win->haveMenu) {
+	if (WIMA_WINDOW_HAS_MENU(win)) {
 
 		WimaMenu* menu = win->menu;
 
@@ -884,8 +878,8 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 			// If the mouse button hasn't been released yet,
 			// set it to released and return because we don't
 			// need to do anything else.
-			if (!win->menuHasReleased) {
-				win->menuHasReleased = true;
+			if (!WIMA_WINDOW_MENU_RELEASED(win)) {
+				win->menuFlags |= WIMA_WINDOW_MENU_RELEASED_BIT;
 				return WIMA_STATUS_SUCCESS;
 			}
 
@@ -901,7 +895,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 				if (!item.hasSubMenu && wima_rect_contains(item.rect, pos) && item.func) {
 
 					// Dismiss the menu.
-					win->haveMenu = false;
+					win->menuFlags = 0;
 
 					// Set the new offsets for the menu. This
 					// is so the user can just click if they
@@ -943,7 +937,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 			menu->pos = win->menuOffset;
 
 			// Dismiss the menu.
-			win->haveMenu = false;
+			win->menuFlags = 0;
 		}
 	}
 	else if (win->ctx.split.split >= 0 && e.action == WIMA_ACTION_RELEASE) {
@@ -1038,7 +1032,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 			win->ctx.cursorPos = e.pos;
 
 			// Don't do anything if we have a menu up.
-			if (win->haveMenu) {
+			if (WIMA_WINDOW_HAS_MENU(win)) {
 				status = WIMA_STATUS_SUCCESS;
 			}
 			else if (win->ctx.movingSplit) {

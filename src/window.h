@@ -52,10 +52,16 @@
 
 #define WIMA_MIN_AREA_DIM (26)
 
-// The following was originally written for OUI.
-
 // Consecutive click threshold in ms.
 #define WIMA_CLICK_THRESHOLD 250
+
+#define WIMA_WINDOW_MENU_BIT (0x01)
+#define WIMA_WINDOW_MENU_RELEASED_BIT (0x02)
+#define WIMA_WINDOW_MENU_CONTEXT_BIT (0x04)
+
+#define WIMA_WINDOW_HAS_MENU(win)        (((win)->menuFlags) & WIMA_WINDOW_MENU_BIT)
+#define WIMA_WINDOW_MENU_RELEASED(win)   (((win)->menuFlags) & WIMA_WINDOW_MENU_RELEASED_BIT)
+#define WIMA_WINDOW_MENU_IS_CONTEXT(win) (((win)->menuFlags) & WIMA_WINDOW_MENU_CONTEXT_BIT)
 
 typedef struct wima_window_context {
 
@@ -96,8 +102,6 @@ typedef struct wima_window_context {
 
 } WimaWindowContext;
 
-// The following was originally written for Wima.
-
 typedef struct wima_window {
 
 	GLFWwindow* window;
@@ -123,14 +127,8 @@ typedef struct wima_window {
 
 	float pixelRatio;
 
-	// Whether or not we have a menu.
-	bool haveMenu;
-
-	// We also need this to make sure that the mouse release
-	// after a menu appears does not click the menu.
-	bool menuHasReleased;
-
-	bool isContextMenu;
+	// Bits set when we have a menu.
+	uint8_t menuFlags;
 
 } WimaWin;
 

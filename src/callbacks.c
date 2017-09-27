@@ -329,7 +329,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 	if (!wwin->ctx.movingSplit) {
 
-		if (wwin->haveMenu || !wima_area_mouseOnSplit(wwin->areas, wwin->ctx.cursorPos, &sevent)) {
+		if (WIMA_WINDOW_HAS_MENU(wwin) || !wima_area_mouseOnSplit(wwin->areas, wwin->ctx.cursorPos, &sevent)) {
 
 			// Erase the split.
 			wwin->ctx.split.split = -1;
