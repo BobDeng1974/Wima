@@ -403,22 +403,55 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 		diff = diff < 0 ? -limit : limit;
 	}
 
-	return wima_area_node_moveSplit(area, diff, e.vertical);
-}
-
-WimaStatus wima_area_node_moveSplit(WimaAreaNode* area, int diff, bool vertical) {
-
-	// TODO: Finish this function.
+	// TODO: Do parent plus diff, child (below) minus diff.
 
 	area->parent.spliti += diff;
 
-	float dim = (float) ((e.vertical ? area->rect.w : area->rect.h) - 1);
+	WimaStatus status = wima_area_node_moveSplit(areas, area, diff, e.vertical);
+	if (status) {
+		return status;
+	}
 
-	area->parent.split = (float) area->parent.spliti / dim;
+	status = wima_area_node_resize(areas, node, area->rect);
 
-	return wima_area_node_resize(areas, node, area->rect);
+	return status;
+}
 
-	return WIMA_STATUS_SUCCESS;
+WimaStatus wima_area_node_moveSplit(DynaTree areas, WimaAreaNode* area, int diff, bool vertical) {
+
+	// TODO: Finish this function.
+
+	WimaStatus status;
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		if (!vertical == !area->parent.vertical) {
+
+			area->parent.spliti += diff;
+
+			float dim = (float) ((vertical ? area->rect.w : area->rect.h) - 1);
+
+			area->parent.split = (float) area->parent.spliti / dim;
+		}
+
+		DynaNode leftNode = dtree_left(area->node);
+		DynaNode rightNode = dtree_right(area->node);
+
+		WimaAreaNode* left = dtree_node(areas, leftNode);
+		WimaAreaNode* right = dtree_node(areas, rightNode);
+
+		status = wima_area_node_moveSplit(areas, left, diff, vertical);
+		if (status) {
+			return status;
+		}
+
+		status = wima_area_node_moveSplit(areas, right, diff, vertical);
+	}
+	else {
+		status = WIMA_STATUS_SUCCESS;
+	}
+
+	return status;
 }
 
 int wima_area_node_splitMoveLimit(DynaTree areas, WimaAreaNode* area, bool isLeft, bool vertical) {

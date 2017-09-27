@@ -46,6 +46,23 @@
 
 #define WIMA_AREA_MIN_SIZE (26)
 
+typedef struct wima_area_context {
+
+	WimaItem* items;
+	unsigned char *data;
+	WimaItem* last_items;
+	int* itemMap;
+
+	// Capacities.
+	uint32_t itemCap;
+	uint32_t bufferCap;
+
+	uint32_t itemCount;
+	uint32_t lastItemCount;
+	uint32_t datasize;
+
+} WimaAreaContext;
+
 typedef enum wima_area_mousePosition {
 
 	WIMA_AREA_NONE   = 0,
@@ -73,18 +90,7 @@ typedef struct wima_area_node {
 
 			void* user;
 
-			WimaItem *items;
-			unsigned char *data;
-			WimaItem *last_items;
-			int *itemMap;
-
-			// Capacities.
-			uint32_t itemCap;
-			uint32_t bufferCap;
-
-			uint32_t itemCount;
-			uint32_t lastItemCount;
-			uint32_t datasize;
+			WimaAreaContext ctx;
 
 			float scale;
 
@@ -134,7 +140,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
 WimaAreaNodeHandle wima_area_containsMouse(DynaTree areas, WimaPos cursor);
 WimaAreaNodeHandle wima_area_node_containsMouse(DynaTree areas, WimaAreaNode* area, WimaPos cursor);
 WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaPos cursor, WimaPos dragStart);
-WimaStatus wima_area_node_moveSplit(WimaAreaNode* area, int diff, bool vertical);
+WimaStatus wima_area_node_moveSplit(DynaTree areas, WimaAreaNode* area, int diff, bool vertical);
 int wima_area_node_splitMoveLimit(DynaTree areas, WimaAreaNode* area, bool isLeft, bool vertical);
 
 WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
