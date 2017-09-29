@@ -87,11 +87,6 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 		return WIMA_STATUS_WINDOW_ERR;
 	}
 
-	if (dvec_create(&wwin.scissorStack, NULL, 16, sizeof(WimaRect))) {
-		dstr_free(wwin.name);
-		return WIMA_STATUS_WINDOW_ERR;
-	}
-
 	GLFWwindow* win = glfwCreateWindow(640, 480, name, NULL, NULL);
 
 	if (!win) {
@@ -444,7 +439,7 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
 	nvgBeginFrame(win->nvg.nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 
-	status = wima_area_draw(wwh, win->scissorStack, win->pixelRatio);
+	status = wima_area_draw(wwh, win->pixelRatio);
 	if (status) {
 		nvgCancelFrame(win->nvg.nvg);
 		return status;

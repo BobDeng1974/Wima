@@ -110,7 +110,6 @@ typedef struct wima_window {
 	void* user;
 
 	DynaTree areas;
-	DynaVector scissorStack;
 
 	GLFWcursor* cursor;
 

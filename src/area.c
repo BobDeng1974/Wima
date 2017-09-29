@@ -620,12 +620,12 @@ WimaAreaHandle wima_area_handle(WimaAreaNode* area) {
 	return wah;
 }
 
-WimaStatus wima_area_draw(WimaWindowHandle wwh, DynaVector stack, float ratio) {
+WimaStatus wima_area_draw(WimaWindowHandle wwh, float ratio) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
-	return wima_area_node_draw(win->nvg, win->areas, dtree_root(), stack, ratio);
+	return wima_area_node_draw(win->nvg, win->areas, dtree_root(), ratio);
 }
 
 WimaStatus wima_area_key(WimaAreaNode* area, WimaKeyEvent e) {
@@ -696,28 +696,26 @@ bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos, WimaMouseSplitEvent* re
 	return wima_area_node_mouseOnSplit(areas, dtree_root(), pos, result);
 }
 
-WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, DynaVector stack, float ratio) {
+WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, float ratio) {
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	WimaAreaNode* area = dtree_node(areas, node);
 
-	wima_area_pushViewport(nvg.nvg, stack, area->rect);
-
 	if (area->type == WIMA_AREA_PARENT) {
 
-		wima_area_node_draw(nvg, areas, dtree_left(node), stack, ratio);
-		wima_area_node_draw(nvg, areas, dtree_right(node), stack, ratio);
+		wima_area_node_draw(nvg, areas, dtree_left(node), ratio);
+		wima_area_node_draw(nvg, areas, dtree_right(node), ratio);
 	}
 	else {
+
+		wima_area_pushViewport(nvg.nvg, area->rect);
 
 		wima_widget_background(nvg, 0, 0, area->rect.w, area->rect.h);
 
 		if (area->area.ctx.itemCount > 0) {
 
-			float curTx[6];
-
-			nvgCurrentTransform(nvg.nvg, curTx);
+			nvgSave(nvg.nvg);
 
 			nvgScale(nvg.nvg, area->area.scale, area->area.scale);
 
@@ -729,16 +727,15 @@ WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, D
 			// Draw the area. The draw function is guaranteed to be non-null.
 			status = wg.funcs.draw(item, nvg);
 
-			nvgResetTransform(nvg.nvg);
-			nvgTransform(nvg.nvg, curTx[0], curTx[1], curTx[2], curTx[3], curTx[4], curTx[5]);
+			nvgRestore(nvg.nvg);
 		}
 
 		// Draw the border shading and split widgets.
 		wima_area_drawSplitWidgets(area, nvg.nvg);
 		wima_area_drawBorders(area, nvg.nvg);
-	}
 
-	wima_area_popViewport(nvg.nvg, stack);
+		wima_area_popViewport(nvg.nvg);
+	}
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -877,34 +874,17 @@ WimaPos wima_area_translatePos(WimaAreaNode* area, WimaPos pos) {
 	return result;
 }
 
-void wima_area_pushViewport(NVGcontext* nvg, DynaVector stack, WimaRect viewport) {
+void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport) {
 
 	// Set up NanoVG.
-	nvgResetScissor(nvg);
-	nvgResetTransform(nvg);
 	nvgScissor(nvg, viewport.x, viewport.y, viewport.w, viewport.h);
 	nvgTranslate(nvg, viewport.x, viewport.y);
-
-	dvec_push(stack, &viewport);
 }
 
-void wima_area_popViewport(NVGcontext* nvg, DynaVector stack) {
-
-	dvec_pop(stack);
-
-	int idx = dvec_len(stack) - 1;
+void wima_area_popViewport(NVGcontext* nvg) {
 
 	nvgResetTransform(nvg);
 	nvgResetScissor(nvg);
-
-	if (idx >= 0) {
-
-		WimaRect* rect = dvec_get(stack, idx);
-
-		// Set up NanoVG.
-		nvgTranslate(nvg, rect->x, rect->y);
-		nvgScissor(nvg, rect->x, rect->y, rect->w, rect->h);
-	}
 }
 
 void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg) {

@@ -141,8 +141,8 @@ WimaAreaHandle wima_area_handle(WimaAreaNode* area);
 
 void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right);
 WimaPos wima_area_translatePos(WimaAreaNode* area, WimaPos pos);
-void wima_area_pushViewport(NVGcontext* nvg, DynaVector stack, WimaRect viewport);
-void wima_area_popViewport(NVGcontext* nvg, DynaVector stack);
+void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport);
+void wima_area_popViewport(NVGcontext* nvg);
 
 void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg);
 
@@ -166,14 +166,14 @@ void wima_area_drawJoinOverlay(WimaAreaNode* area, NVGcontext* nvg, bool vertica
 WimaItemHandle wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags);
 WimaItemHandle wima_area_node_findItem(DynaTree areas, WimaAreaNode* area, WimaPos pos, uint32_t flags);
 
-WimaStatus wima_area_draw(WimaWindowHandle wwh, DynaVector stack, float ratio);
+WimaStatus wima_area_draw(WimaWindowHandle wwh, float ratio);
 WimaStatus wima_area_key(WimaAreaNode* area, WimaKeyEvent e);
 WimaStatus wima_area_mousePos(WimaAreaNode* area, WimaPos pos);
 WimaStatus wima_area_mouseEnter(WimaAreaNode* area, bool enter);
 WimaStatus wima_area_resize(DynaTree areas, WimaRect rect);
 bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos, WimaMouseSplitEvent* result);
 
-WimaStatus wima_area_node_draw(WimaNvgInfo ctx, DynaTree areas, DynaNode node, DynaVector stack, float ratio);
+WimaStatus wima_area_node_draw(WimaNvgInfo ctx, DynaTree areas, DynaNode node, float ratio);
 WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos);
 WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, bool adjustSplit);
 bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, WimaMouseSplitEvent* result);
