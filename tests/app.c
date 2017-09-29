@@ -227,7 +227,7 @@ WimaStatus cb_scroll(WimaItemHandle wih, WimaScrollEvent e) {
 	printMods(e.mods);
 #endif
 
-	if (e.mods == WIMA_MOD_CTRL) {
+	if (e.mods == WIMA_MOD_ALT) {
 
 		int adjust = scaleIdx + e.yoffset;
 
@@ -235,7 +235,9 @@ WimaStatus cb_scroll(WimaItemHandle wih, WimaScrollEvent e) {
 
 		WimaAreaHandle wah = wima_item_area(wih);
 
-		printf("Scale: %f\n", scales[scaleIdx]);
+#if 0
+		printf("Scale[%d]: %f\n", wih.area, scales[scaleIdx]);
+#endif
 
 		wima_area_setScale(wah, scales[scaleIdx]);
 	}
