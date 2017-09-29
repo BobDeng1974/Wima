@@ -915,11 +915,11 @@ void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg) {
 	NVGcolor rbborder = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.50f);
 
 	float xend = area->rect.w;
-	float yend = area->rect.h - 1.0f;
+	float yend = area->rect.h;
 
 	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, 1.0f, yend);
-	nvgLineTo(nvg, 1.0f, 0.0f);
+	nvgMoveTo(nvg, 0.0f, yend);
+	nvgLineTo(nvg, 0.0f, 0.0f);
 	nvgLineTo(nvg, xend, 0.0f);
 
 	nvgStrokeWidth(nvg, 1.0f);
