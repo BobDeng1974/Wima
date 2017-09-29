@@ -605,8 +605,9 @@ WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaAreaNode* wima_area_area(WimaWindowHandle win, WimaAreaNodeHandle node) {
-	return dtree_node(wima_window_areas(win), node);
+WimaAreaNode* wima_area_area(WimaWindowHandle wwh, WimaAreaNodeHandle node) {
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	return dtree_node(win->areas, node);
 }
 
 WimaAreaHandle wima_area_handle(WimaAreaNode* area) {
