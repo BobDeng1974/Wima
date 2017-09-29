@@ -46,14 +46,12 @@
 
 extern WimaG wg;
 
-WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs,
-                                uint32_t itemCapacity, uint32_t bufferCapacity)
-{
+WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs, uint32_t itemCapacity) {
+
 	WimaRegion reg;
 
 	assert(funcs.layout);
 	assert(itemCapacity);
-	assert(bufferCapacity);
 
 	reg.user = NULL;
 
@@ -65,7 +63,6 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs,
 	reg.mouse_enter = funcs.enter;
 
 	reg.itemCap = itemCapacity;
-	reg.bufferCap = bufferCapacity;
 
 	size_t idx = dvec_len(wg.regions);
 

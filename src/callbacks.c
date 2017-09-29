@@ -563,6 +563,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
 		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		return;
 	}
 
 	// Send an exit area event.
@@ -608,6 +609,12 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
 		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		return;
+	}
+
+	WimaStatus status = wima_window_setDirty(wwin);
+	if (status) {
+		wg.funcs.error(status, descs[status - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -642,6 +649,12 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
 		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		return;
+	}
+
+	WimaStatus status = wima_window_setDirty(wwin);
+	if (status) {
+		wg.funcs.error(status, descs[status - 128]);
 	}
 
 	wwin->fbsize.w = width;
@@ -654,7 +667,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	rect.w = width;
 	rect.h = height;
 
-	WimaStatus status = wima_area_resize(wwin->areas, rect);
+	status = wima_area_resize(wwin->areas, rect);
 	if (status) {
 		wg.funcs.error(status, descs[status - 128]);
 	}
@@ -688,6 +701,12 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
 		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		return;
+	}
+
+	WimaStatus status = wima_window_setDirty(wwin);
+	if (status) {
+		wg.funcs.error(status, descs[status - 128]);
 	}
 
 	wwin->winsize.w = width;
@@ -723,6 +742,17 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
 		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		return;
+	}
+
+	bool isMinimized = minimized != 0;
+
+	if (!isMinimized) {
+
+		WimaStatus status = wima_window_setDirty(wwin);
+		if (status) {
+			wg.funcs.error(status, descs[status - 128]);
+		}
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -737,7 +767,7 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_WIN_MINIMIZE;
-	event->minimized = minimized != 0;
+	event->minimized = isMinimized;
 
 	++(wwin->ctx.eventCount);
 }
@@ -753,6 +783,12 @@ void wima_callback_windowRefresh(GLFWwindow* window) {
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
 		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		return;
+	}
+
+	WimaStatus status = wima_window_setDirty(wwin);
+	if (status) {
+		wg.funcs.error(status, descs[status - 128]);
 	}
 }
 
@@ -767,6 +803,16 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
 		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+		return;
+	}
+
+	bool hasFocus = focused != 0;
+
+	if (hasFocus) {
+		WimaStatus status = wima_window_setDirty(wwin);
+		if (status) {
+			wg.funcs.error(status, descs[status - 128]);
+		}
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -781,7 +827,7 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_WIN_FOCUS;
-	event->focused = focused != 0;
+	event->focused = hasFocus;
 
 	++(wwin->ctx.eventCount);
 }
@@ -814,6 +860,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 			WimaWin* wwin = dvec_get(wg.windows, wwh);
 			if (!wwin) {
 				wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+				return;
 			}
 
 			memset(wwin, 0, sizeof(WimaWin));

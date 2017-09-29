@@ -50,6 +50,5 @@ typedef struct wima_region {
 	WimaAreaMouseEnterFunc mouse_enter;
 
 	uint32_t itemCap;
-	uint32_t bufferCap;
 
 } WimaRegion;

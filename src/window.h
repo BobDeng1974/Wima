@@ -55,13 +55,16 @@
 // Consecutive click threshold in ms.
 #define WIMA_CLICK_THRESHOLD 250
 
+#define WIMA_WINDOW_DIRTY_BIT (0x80)
+#define WIMA_WINDOW_IS_DIRTY(win)  (((win)->flags) & WIMA_WINDOW_DIRTY_BIT)
+
 #define WIMA_WINDOW_MENU_BIT (0x01)
 #define WIMA_WINDOW_MENU_RELEASED_BIT (0x02)
 #define WIMA_WINDOW_MENU_CONTEXT_BIT (0x04)
 
-#define WIMA_WINDOW_HAS_MENU(win)        (((win)->menuFlags) & WIMA_WINDOW_MENU_BIT)
-#define WIMA_WINDOW_MENU_RELEASED(win)   (((win)->menuFlags) & WIMA_WINDOW_MENU_RELEASED_BIT)
-#define WIMA_WINDOW_MENU_IS_CONTEXT(win) (((win)->menuFlags) & WIMA_WINDOW_MENU_CONTEXT_BIT)
+#define WIMA_WINDOW_HAS_MENU(win)        (((win)->flags) & WIMA_WINDOW_MENU_BIT)
+#define WIMA_WINDOW_MENU_RELEASED(win)   (((win)->flags) & WIMA_WINDOW_MENU_RELEASED_BIT)
+#define WIMA_WINDOW_MENU_IS_CONTEXT(win) (((win)->flags) & WIMA_WINDOW_MENU_CONTEXT_BIT)
 
 typedef struct wima_window_context {
 
@@ -127,7 +130,7 @@ typedef struct wima_window {
 	float pixelRatio;
 
 	// Bits set when we have a menu.
-	uint8_t menuFlags;
+	uint8_t flags;
 
 } WimaWin;
 
@@ -149,6 +152,8 @@ void wima_window_context_create(WimaWindowContext* ctx);
 // a re-declaration of the UI changes the item indices, to avoid state
 // related glitches because item identities have changed.
 void wima_window_context_clear(WimaWindowContext* ctx);
+
+WimaStatus wima_window_setDirty(WimaWin* win);
 
 // clear the item buffers and draw all areas; uiBeginLayout() should be called
 // before the first UI declaration for this frame to avoid concatenation of the

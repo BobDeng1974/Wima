@@ -71,7 +71,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	wwin.winsize.w = 0;
 	wwin.winsize.h = 0;
 
-	wwin.menuFlags = 0;
+	wwin.flags = WIMA_WINDOW_DIRTY_BIT;
 
 	// Set the standard cursor as the cursor.
 	wwin.cursor = wg.cursors[WIMA_CURSOR_ARROW];
@@ -168,7 +168,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 
 	WimaWin* window = dvec_get(wg.windows, idx);
 
-	window->nvg.nvg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+	window->nvg.nvg = nvgCreateGL3(NVG_ANTIALIAS);
 
 	// Load the font.
 	window->nvg.font = wima_theme_loadFont(window->nvg.nvg, "default", dstr_str(wg.fontPath));
@@ -206,6 +206,11 @@ void wima_window_context_clear(WimaWindowContext* ctx) {
 	memset(&ctx->active, -1, sizeof(WimaItemHandle));
 	memset(&ctx->focus, -1, sizeof(WimaItemHandle));
 	memset(&ctx->hover, -1, sizeof(WimaItemHandle));
+}
+
+WimaStatus wima_window_setDirty(WimaWin* win) {
+	win->flags |= WIMA_WINDOW_DIRTY_BIT;
+	return wima_area_requireRefresh(win->areas);
 }
 
 WimaStatus wima_window_setHover(WimaWindowHandle wwh, WimaItemHandle wih) {
@@ -425,43 +430,47 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 	// Must run uiEndLayout() and uiProcess() first.
 	assert(win->ctx.stage == WIMA_UI_STAGE_PROCESS);
 
-	wima_area_context_clear(win->areas);
+	if (WIMA_WINDOW_IS_DIRTY(win)) {
 
-	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
+		win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 
-	WimaStatus status = wima_area_layout(win->areas);
+		WimaStatus status = wima_area_layout(win->areas);
+		if (status) {
+			return status;
+		}
 
-	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
+		glEnable(GL_SCISSOR_TEST);
 
-	glEnable(GL_SCISSOR_TEST);
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+		nvgBeginFrame(win->nvg.nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 
-	nvgBeginFrame(win->nvg.nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
-
-	status = wima_area_draw(wwh, win->pixelRatio);
-	if (status) {
-		nvgCancelFrame(win->nvg.nvg);
-		return status;
-	}
-
-	if (WIMA_WINDOW_HAS_MENU(win)) {
-
-		status = wima_window_drawMenu(win, win->menu, 0);
+		status = wima_area_draw(wwh, win->pixelRatio);
 		if (status) {
 			nvgCancelFrame(win->nvg.nvg);
 			return status;
 		}
+
+		if (WIMA_WINDOW_HAS_MENU(win)) {
+
+			status = wima_window_drawMenu(win, win->menu, 0);
+			if (status) {
+				nvgCancelFrame(win->nvg.nvg);
+				return status;
+			}
+		}
+
+		nvgEndFrame(win->nvg.nvg);
+
+		glFlush();
+
+		glDisable(GL_SCISSOR_TEST);
+
+		// Swap front and back buffers.
+		glfwSwapBuffers(win->window);
 	}
 
-	nvgEndFrame(win->nvg.nvg);
-
-	glFlush();
-
-	glDisable(GL_SCISSOR_TEST);
-
-	// Swap front and back buffers.
-	glfwSwapBuffers(win->window);
+	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -752,24 +761,6 @@ WimaPos wima_window_scroll(WimaWindowHandle wwh) {
 	return win->ctx.scroll;
 }
 
-void wima_window_validateItems(WimaWindowHandle wwh) {
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	if (win->ctx.hover.item >= 0) {
-		win->ctx.hover = wima_item_recover(win->ctx.hover);
-	}
-
-	if (win->ctx.active.item >= 0) {
-		win->ctx.active = wima_item_recover(win->ctx.active);
-	}
-
-	if (win->ctx.focus.item >= 0) {
-		win->ctx.focus = wima_item_recover(win->ctx.focus);
-	}
-}
-
 WimaItemHandle wima_window_focus(WimaWindowHandle wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
@@ -791,7 +782,7 @@ WimaStatus wima_window_setContextMenu(WimaWindowHandle wwh, WimaMenu* menu, cons
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
-	win->menuFlags = (WIMA_WINDOW_MENU_BIT | WIMA_WINDOW_MENU_CONTEXT_BIT);
+	win->flags = (WIMA_WINDOW_MENU_BIT | WIMA_WINDOW_MENU_CONTEXT_BIT);
 
 	// Set up the offset.
 	win->menuOffset = menu->pos;
@@ -814,7 +805,7 @@ WimaStatus wima_window_setMenu(WimaWindowHandle wwh, WimaMenu* menu) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
-	win->menuFlags = WIMA_WINDOW_MENU_BIT;
+	win->flags = WIMA_WINDOW_MENU_BIT;
 
 	// Set the menu.
 	win->menu = menu;
@@ -851,7 +842,7 @@ WimaStatus wima_window_removeMenu(WimaWindowHandle wwh) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
-	win->menuFlags = 0;
+	win->flags = 0;
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -874,7 +865,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 			// set it to released and return because we don't
 			// need to do anything else.
 			if (!WIMA_WINDOW_MENU_RELEASED(win)) {
-				win->menuFlags |= WIMA_WINDOW_MENU_RELEASED_BIT;
+				win->flags |= WIMA_WINDOW_MENU_RELEASED_BIT;
 				return WIMA_STATUS_SUCCESS;
 			}
 
@@ -890,7 +881,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 				if (!item.hasSubMenu && wima_rect_contains(item.rect, pos) && item.func) {
 
 					// Dismiss the menu.
-					win->menuFlags = 0;
+					win->flags = 0;
 
 					// Set the new offsets for the menu. This
 					// is so the user can just click if they
@@ -932,7 +923,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 			menu->pos = win->menuOffset;
 
 			// Dismiss the menu.
-			win->menuFlags = 0;
+			win->flags = 0;
 		}
 	}
 	else if (win->ctx.split.split >= 0 && e.action == WIMA_ACTION_RELEASE) {
@@ -1191,10 +1182,6 @@ WimaStatus wima_window_processEvents(WimaWindowHandle wwh) {
 	assert(win->ctx.stage != WIMA_UI_STAGE_LAYOUT);
 
 	win->ctx.stage = WIMA_UI_STAGE_PROCESS;
-
-	WimaItemHandle hover = win->ctx.hover;
-	WimaItemHandle active = win->ctx.active;
-	WimaItemHandle focus = win->ctx.focus;
 
 	WimaEvent* events = win->ctx.events;
 	WimaItemHandle* handles = win->ctx.eventItems;

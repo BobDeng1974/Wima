@@ -997,22 +997,6 @@ short wima_item_marginRight(WimaItemHandle item);
 
 // return the bottom margin of the item as set with uiSetMargins()
 short wima_item_marginDown(WimaItemHandle item);
-bool wima_item_map(WimaItemHandle item1, WimaItemHandle item2);
-
-// when uiBeginLayout() is called, the most recently declared items are retained.
-// when uiEndLayout() completes, it matches the old item hierarchy to the new one
-// and attempts to map old items to new items as well as possible.
-// when passed an item Id from the previous frame, uiRecoverItem() returns the
-// items new assumed Id, or -1 if the item could not be mapped.
-// it is valid to pass -1 as item.
-WimaItemHandle wima_item_recover(WimaItemHandle olditem);
-
-// in cases where it is important to recover old state over changes in
-// the view, and the built-in remapping fails, the UI declaration can manually
-// remap old items to new IDs in cases where e.g. the previous item ID has been
-// temporarily saved; uiRemapItem() would then be called after creating the
-// new item using uiItem().
-void wima_item_remap(WimaItemHandle olditem, WimaItemHandle newitem);
 
 // returns the items layout rectangle in absolute coordinates. If
 // uiGetRect() is called before uiEndLayout(), the values of the returned
@@ -1027,12 +1011,6 @@ WimaItemHandle wima_item_firstChild(WimaItemHandle item);
 // returns an items next sibling in the list of the parent containers children.
 // if item is 0 or the item is the last child item, -1 will be returned.
 WimaItemHandle wima_item_nextSibling(WimaItemHandle item);
-
-// allocate space for application-dependent context data and assign it
-// as the handle to the item.
-// The memory of the pointer is managed by the UI context and released
-// upon the next call to uiBeginLayout()
-void* wima_item_allocHandle(WimaItemHandle item, uint32_t size);
 
 // set the application-dependent handle of an item.
 // handle is an application defined 64-bit handle. If handle is NULL, the item
@@ -1066,8 +1044,7 @@ bool wima_item_isFocused(WimaItemHandle item);
 // WIMA_ITEM_ACTIVE, WIMA_ITEM_FROZEN.
 WimaItemState wima_item_state(WimaItemHandle item);
 
-WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs,
-                                uint32_t itemCapacity, uint32_t bufferCapacity);
+WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs, uint32_t itemCapacity);
 void* wima_region_userPointer(WimaRegionHandle reg);
 WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
 
@@ -1075,18 +1052,19 @@ void* wima_area_userPointer(WimaAreaHandle wah);
 WimaRect wima_area_rect(WimaAreaHandle wah);
 void wima_area_setScale(WimaAreaHandle wah, float scale);
 float wima_area_scale(WimaAreaHandle wah);
-WimaStatus wima_areas_free(DynaTree areas);
+
+void wima_area_requestRefresh(WimaAreaHandle wah);
+void wima_area_requestNoRefresh(WimaAreaHandle wah);
+bool wima_area_needsRefresh(WimaAreaHandle wah);
+void wima_area_requestLayout(WimaAreaHandle wah);
+void wima_area_requestNoLayout(WimaAreaHandle wah);
+bool wima_area_needsLayout(WimaAreaHandle wah);
 
 // return the total number of allocated items
 int wima_area_itemCount(WimaAreaHandle wah);
 
-// returns the number if items that have been allocated in the last frame
-int wima_area_lastItemCount(WimaAreaHandle wah);
-
-// return the total bytes that have been allocated by uiAllocHandle()
-unsigned int wima_area_allocSize(WimaAreaHandle wah);
-
 bool wima_area_contains(WimaAreaHandle wah, WimaPos pos);
+WimaStatus wima_areas_free(DynaTree areas);
 
 WimaStatus wima_workspace_register(WimaWorkspaceHandle* type);
 WimaStatus wima_workspace_addParent(WimaWorkspaceHandle wksp, DynaNode node, float split, bool vertical);

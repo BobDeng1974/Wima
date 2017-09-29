@@ -117,9 +117,6 @@ typedef struct wima_item {
 
 WimaItem* wima_item_ptr(WimaItemHandle wih);
 
-WimaItem* wima_item_lastPtr(WimaItemHandle wih);
-
-void wima_window_validateItems(WimaWindowHandle wwh);
 bool wima_item_compare(WimaItem *item1, WimaItem *item2);
 
 #endif // WIMA_ITEM_H
