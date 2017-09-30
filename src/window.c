@@ -432,6 +432,8 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
 	if (WIMA_WINDOW_IS_DIRTY(win)) {
 
+		win->flags &= ~(WIMA_WINDOW_DIRTY_BIT);
+
 		win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 
 		WimaStatus status = wima_area_layout(win->areas);
