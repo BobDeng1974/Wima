@@ -71,7 +71,7 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	wwin.winsize.w = 0;
 	wwin.winsize.h = 0;
 
-	wwin.flags = WIMA_WINDOW_DIRTY_BIT;
+	wwin.flags = WIMA_WINDOW_DIRTY_BIT | WIMA_WINDOW_LAYOUT_BIT;
 
 	// Set the standard cursor as the cursor.
 	wwin.cursor = wg.cursors[WIMA_CURSOR_ARROW];
@@ -208,9 +208,45 @@ void wima_window_context_clear(WimaWindowContext* ctx) {
 	memset(&ctx->hover, -1, sizeof(WimaItemHandle));
 }
 
-WimaStatus wima_window_setDirty(WimaWin* win) {
+void wima_window_setDirty(WimaWin* win, bool layout) {
+
 	win->flags |= WIMA_WINDOW_DIRTY_BIT;
-	return wima_area_requireRefresh(win->areas);
+
+	if (layout) {
+		win->flags |= WIMA_WINDOW_LAYOUT_BIT;
+	}
+}
+
+void wima_window_requestRefresh(WimaWindowHandle wwh) {
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->flags |= WIMA_WINDOW_DIRTY_BIT;
+}
+
+bool wima_window_needsRefresh(WimaWindowHandle wwh) {
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return WIMA_WINDOW_IS_DIRTY(win);
+}
+
+void wima_window_requestLayout(WimaWindowHandle wwh) {
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->flags |= WIMA_WINDOW_LAYOUT_BIT;
+}
+
+bool wima_window_needsLayout(WimaWindowHandle wwh) {
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return WIMA_WINDOW_NEEDS_LAYOUT(win);
 }
 
 WimaStatus wima_window_setHover(WimaWindowHandle wwh, WimaItemHandle wih) {
@@ -424,26 +460,28 @@ WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas) {
 
 WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
+	WimaStatus status;
+
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
 	// Must run uiEndLayout() and uiProcess() first.
 	assert(win->ctx.stage == WIMA_UI_STAGE_PROCESS);
 
-	if (WIMA_WINDOW_IS_DIRTY(win)) {
+	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 
-		win->flags &= ~(WIMA_WINDOW_DIRTY_BIT);
+	if (WIMA_WINDOW_NEEDS_LAYOUT(win)) {
 
-		win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
-
-		WimaStatus status = wima_area_layout(win->areas);
+		status = wima_area_layout(win->areas);
 		if (status) {
 			return status;
 		}
+	}
+
+	if (WIMA_WINDOW_IS_DIRTY(win)) {
 
 		glEnable(GL_SCISSOR_TEST);
-
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 
 		nvgBeginFrame(win->nvg.nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 
@@ -470,6 +508,8 @@ WimaStatus wima_window_draw(WimaWindowHandle wwh) {
 
 		// Swap front and back buffers.
 		glfwSwapBuffers(win->window);
+
+		win->flags &= ~(WIMA_WINDOW_DIRTY_BIT | WIMA_WINDOW_LAYOUT_BIT);
 	}
 
 	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
@@ -902,6 +942,9 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaItemHandle 
 
 					// Call the item's function.
 					status = item.func(wih);
+
+					// Clear the window and redraw.
+					wima_window_setDirty(win, true);
 
 					break;
 				}

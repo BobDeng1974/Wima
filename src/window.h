@@ -58,6 +58,9 @@
 #define WIMA_WINDOW_DIRTY_BIT (0x80)
 #define WIMA_WINDOW_IS_DIRTY(win)  (((win)->flags) & WIMA_WINDOW_DIRTY_BIT)
 
+#define WIMA_WINDOW_LAYOUT_BIT (0x40)
+#define WIMA_WINDOW_NEEDS_LAYOUT(win)  (((win)->flags) & WIMA_WINDOW_LAYOUT_BIT)
+
 #define WIMA_WINDOW_MENU_BIT (0x01)
 #define WIMA_WINDOW_MENU_RELEASED_BIT (0x02)
 #define WIMA_WINDOW_MENU_CONTEXT_BIT (0x04)
@@ -153,7 +156,7 @@ void wima_window_context_create(WimaWindowContext* ctx);
 // related glitches because item identities have changed.
 void wima_window_context_clear(WimaWindowContext* ctx);
 
-WimaStatus wima_window_setDirty(WimaWin* win);
+void wima_window_setDirty(WimaWin* win, bool layout);
 
 // clear the item buffers and draw all areas; uiBeginLayout() should be called
 // before the first UI declaration for this frame to avoid concatenation of the

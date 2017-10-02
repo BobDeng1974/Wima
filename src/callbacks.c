@@ -202,6 +202,8 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	event->area_key.key.action = wact;
 	event->area_key.key.mods = wmods;
 
+	wima_window_setDirty(wwin, false);
+
 	event->area_key.area = wima_area_containsMouse(wwin->areas, wwin->ctx.cursorPos);
 
 	++(wwin->ctx.eventCount);
@@ -240,6 +242,8 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	WimaItemHandle clickItem = wima_area_findItem(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN);
 
+	wima_window_setDirty(wwin, false);
+
 	if (wact == WIMA_ACTION_PRESS) {
 
 		if (wwin->ctx.split.split >= 0) {
@@ -257,6 +261,9 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 				// Make sure the sub sub menu won't be drawn.
 				splitSub.hasSubMenu = false;
+
+				// Make sure the dirty bit for the window is set.
+				wima_window_setDirty(wwin, false);
 			}
 
 			return;
@@ -325,6 +332,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 		if (WIMA_WINDOW_HAS_MENU(wwin) || !wima_area_mouseOnSplit(wwin->areas, wwin->ctx.cursorPos, &sevent)) {
 
+			wima_window_setDirty(wwin, false);
+
 			// Erase the split.
 			wwin->ctx.split.split = -1;
 
@@ -340,9 +349,10 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			WimaAreaNodeHandle area = wima_area_containsMouse(wwin->areas, pos);
 			if (area != wwin->ctx.cursorArea) {
 
-				if (wwin->ctx.eventCount < WIMA_MAX_EVENTS &&
-				    wwin->ctx.cursorArea != WIMA_AREA_INVALID)
-				{
+				// Send the events.
+
+				if (wwin->ctx.cursorArea != WIMA_AREA_INVALID && wwin->ctx.eventCount < WIMA_MAX_EVENTS) {
+
 					e = wwin->ctx.events + wwin->ctx.eventCount;
 
 					e->type = WIMA_EVENT_AREA_ENTER;
@@ -352,7 +362,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 					++(wwin->ctx.eventCount);
 				}
 
-				if (wwin->ctx.eventCount < WIMA_MAX_EVENTS && area != WIMA_AREA_INVALID) {
+				if (area != WIMA_AREA_INVALID && wwin->ctx.eventCount < WIMA_MAX_EVENTS) {
+
 					e = wwin->ctx.events + wwin->ctx.eventCount;
 
 					e->type = WIMA_EVENT_AREA_ENTER;
@@ -366,6 +377,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			}
 		}
 		else {
+
+			wima_window_setDirty(wwin, false);
 
 			wwin->ctx.split = sevent;
 
@@ -394,6 +407,9 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			wwin->ctx.active.item = -1;
 			wwin->ctx.hover.item = -1;
 		}
+	}
+	else {
+		wima_window_setDirty(wwin, true);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -441,7 +457,9 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 		return;
 	}
 
-	wwin->ctx.eventItems[numEvents] = wima_area_findItem(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_SCROLL);
+	WimaItemHandle wih = wima_area_findItem(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_SCROLL);
+
+	wwin->ctx.eventItems[numEvents] = wih;
 
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
@@ -518,6 +536,8 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 		return;
 	}
 
+	WimaAreaNodeHandle node = wima_area_containsMouse(wwin->areas, wwin->ctx.cursorPos);
+
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	// Allocate a vector.
@@ -566,6 +586,8 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 		return;
 	}
 
+	wima_window_setDirty(wwin, false);
+
 	// Send an exit area event.
 	if (wwin->ctx.eventCount < WIMA_MAX_EVENTS && wwin->ctx.cursorArea != WIMA_AREA_INVALID) {
 
@@ -612,10 +634,7 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 		return;
 	}
 
-	WimaStatus status = wima_window_setDirty(wwin);
-	if (status) {
-		wg.funcs.error(status, descs[status - 128]);
-	}
+	wima_window_setDirty(wwin, false);
 
 	int numEvents = wwin->ctx.eventCount;
 
@@ -652,10 +671,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 		return;
 	}
 
-	WimaStatus status = wima_window_setDirty(wwin);
-	if (status) {
-		wg.funcs.error(status, descs[status - 128]);
-	}
+	wima_window_setDirty(wwin, true);
 
 	wwin->fbsize.w = width;
 	wwin->fbsize.h = height;
@@ -667,7 +683,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	rect.w = width;
 	rect.h = height;
 
-	status = wima_area_resize(wwin->areas, rect);
+	WimaStatus status = wima_area_resize(wwin->areas, rect);
 	if (status) {
 		wg.funcs.error(status, descs[status - 128]);
 	}
@@ -704,10 +720,7 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 		return;
 	}
 
-	WimaStatus status = wima_window_setDirty(wwin);
-	if (status) {
-		wg.funcs.error(status, descs[status - 128]);
-	}
+	wima_window_setDirty(wwin, true);
 
 	wwin->winsize.w = width;
 	wwin->winsize.h = height;
@@ -748,11 +761,7 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 	bool isMinimized = minimized != 0;
 
 	if (!isMinimized) {
-
-		WimaStatus status = wima_window_setDirty(wwin);
-		if (status) {
-			wg.funcs.error(status, descs[status - 128]);
-		}
+		wima_window_setDirty(wwin, true);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -786,10 +795,7 @@ void wima_callback_windowRefresh(GLFWwindow* window) {
 		return;
 	}
 
-	WimaStatus status = wima_window_setDirty(wwin);
-	if (status) {
-		wg.funcs.error(status, descs[status - 128]);
-	}
+	wima_window_setDirty(wwin, false);
 }
 
 void wima_callback_windowFocus(GLFWwindow* window, int focused) {
@@ -809,10 +815,7 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 	bool hasFocus = focused != 0;
 
 	if (hasFocus) {
-		WimaStatus status = wima_window_setDirty(wwin);
-		if (status) {
-			wg.funcs.error(status, descs[status - 128]);
-		}
+		wima_window_setDirty(wwin, false);
 	}
 
 	int numEvents = wwin->ctx.eventCount;

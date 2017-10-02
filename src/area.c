@@ -97,9 +97,6 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 		// Set the scale.
 		area->area.scale = 1.0f;
 
-		// Layout and draw on first pass.
-		area->area.flags = (WIMA_AREA_DIRTY_BIT | WIMA_AREA_LAYOUT_BIT);
-
 		// Get the region handle.
 		WimaRegionHandle reg = area->area.type;
 
@@ -233,84 +230,6 @@ float wima_area_scale(WimaAreaHandle wah) {
 	return area->area.scale;
 }
 
-void wima_area_requestRefresh(WimaAreaHandle wah) {
-
-	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
-
-	area->area.flags |= WIMA_AREA_DIRTY_BIT;
-}
-
-void wima_area_requestNoRefresh(WimaAreaHandle wah) {
-
-	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
-
-	area->area.flags &= ~(WIMA_AREA_DIRTY_BIT);
-}
-
-bool wima_area_needsRefresh(WimaAreaHandle wah) {
-
-	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
-
-	return WIMA_AREA_IS_DIRTY(area);
-}
-
-void wima_area_requestLayout(WimaAreaHandle wah) {
-
-	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
-
-	area->area.flags |= (WIMA_AREA_LAYOUT_BIT | WIMA_AREA_DIRTY_BIT);
-}
-
-void wima_area_requestNoLayout(WimaAreaHandle wah) {
-
-	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
-
-	area->area.flags &= ~(WIMA_AREA_LAYOUT_BIT);
-}
-
-bool wima_area_needsLayout(WimaAreaHandle wah) {
-
-	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
-
-	return WIMA_AREA_NEEDS_LAYOUT(area);
-}
-
-WimaStatus wima_area_requireRefresh(DynaTree areas) {
-	return wima_area_node_requireRefresh(areas, dtree_root());
-}
-
-WimaStatus wima_area_node_requireRefresh(DynaTree areas, DynaNode node) {
-
-	WimaStatus status;
-
-	WimaAreaNode* area = dtree_node(areas, node);
-	assert(area);
-
-	if (area->type == WIMA_AREA_PARENT) {
-
-		status = wima_area_node_requireRefresh(areas, dtree_left(node));
-		if (status) {
-			return status;
-		}
-
-		status = wima_area_node_requireRefresh(areas, dtree_right(node));
-	}
-	else {
-
-		area->area.flags |= (WIMA_AREA_DIRTY_BIT | WIMA_AREA_LAYOUT_BIT);
-
-		status = WIMA_STATUS_SUCCESS;
-	}
-
-	return status;
-}
-
 bool wima_area_contains(WimaAreaHandle wah, WimaPos pos) {
 
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
@@ -339,9 +258,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 		status = wima_area_node_layout(areas, dtree_right(node));
 	}
-	else if (WIMA_AREA_NEEDS_LAYOUT(area)) {
-
-		area->area.flags &= ~(WIMA_AREA_LAYOUT_BIT);
+	else {
 
 		wima_area_context_clear(area);
 
@@ -639,6 +556,8 @@ WimaAreaHandle wima_area_handle(WimaAreaNode* area) {
 
 	WimaAreaHandle wah;
 
+	assert(area && area->type == WIMA_AREA_LEAF);
+
 	wah.area = (WimaAreaNodeHandle) area->node;
 	wah.window = area->window;
 	wah.region = area->area.type;
@@ -737,10 +656,7 @@ WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, f
 
 		status = wima_area_node_draw(nvg, areas, dtree_right(node), ratio);
 	}
-	else if (WIMA_AREA_IS_DIRTY(area)) {
-
-		// Unset the dirty bit.
-		area->area.flags &= ~(WIMA_AREA_DIRTY_BIT);
+	else {
 
 		wima_area_pushViewport(nvg.nvg, area->rect);
 

@@ -1053,13 +1053,6 @@ WimaRect wima_area_rect(WimaAreaHandle wah);
 void wima_area_setScale(WimaAreaHandle wah, float scale);
 float wima_area_scale(WimaAreaHandle wah);
 
-void wima_area_requestRefresh(WimaAreaHandle wah);
-void wima_area_requestNoRefresh(WimaAreaHandle wah);
-bool wima_area_needsRefresh(WimaAreaHandle wah);
-void wima_area_requestLayout(WimaAreaHandle wah);
-void wima_area_requestNoLayout(WimaAreaHandle wah);
-bool wima_area_needsLayout(WimaAreaHandle wah);
-
 // return the total number of allocated items
 int wima_area_itemCount(WimaAreaHandle wah);
 
@@ -1099,6 +1092,11 @@ int wima_window_clicks(WimaWindowHandle wwh);
 // returns the currently accumulated scroll wheel offsets for this frame
 WimaPos wima_window_scroll(WimaWindowHandle wwh);
 WimaStatus wima_window_setHover(WimaWindowHandle wwh, WimaItemHandle wih);
+
+void wima_window_requestRefresh(WimaWindowHandle wwh);
+bool wima_window_needsRefresh(WimaWindowHandle wwh);
+void wima_window_requestLayout(WimaWindowHandle wwh);
+bool wima_window_needsLayout(WimaWindowHandle wwh);
 
 WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction action);
 void wima_window_clearEvents(WimaWindowHandle wwh);

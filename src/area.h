@@ -48,12 +48,6 @@
 
 #define WIMA_AREA_MIN_SIZE (26)
 
-#define WIMA_AREA_DIRTY_BIT  (0x01)
-#define WIMA_AREA_LAYOUT_BIT (0x02)
-
-#define WIMA_AREA_IS_DIRTY(area)     ((area)->area.flags & WIMA_AREA_DIRTY_BIT)
-#define WIMA_AREA_NEEDS_LAYOUT(area) ((area)->area.flags & WIMA_AREA_LAYOUT_BIT)
-
 typedef struct wima_area_context {
 
 	WimaItem* items;
@@ -85,8 +79,6 @@ typedef struct wima_area_node {
 			float scale;
 
 			WimaRegionHandle type;
-
-			uint8_t flags;
 
 		} area;
 
@@ -126,8 +118,6 @@ void wima_area_context_clear(WimaAreaNode* area);
 // this is an O(N) operation for N = number of declared items.
 WimaStatus wima_area_layout(DynaTree areas);
 WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
-WimaStatus wima_area_requireRefresh(DynaTree areas);
-WimaStatus wima_area_node_requireRefresh(DynaTree areas, DynaNode node);
 WimaAreaNodeHandle wima_area_containsMouse(DynaTree areas, WimaPos cursor);
 WimaAreaNodeHandle wima_area_node_containsMouse(DynaTree areas, WimaAreaNode* area, WimaPos cursor);
 WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaPos cursor);
