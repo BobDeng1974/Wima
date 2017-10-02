@@ -58,6 +58,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <string.h>
+
 #include <theme.h>
 
 #include "../math/math.h"
@@ -529,9 +531,27 @@ float wima_widget_label_estimateWidth(WimaNvgInfo nvg, int iconid, const char *l
 	}
 
 	if (label && (nvg.font >= 0)) {
+
+		// Set up NanoVG.
 		nvgFontFaceId(nvg.nvg, nvg.font);
 		nvgFontSize(nvg.nvg, WIMA_LABEL_FONT_SIZE);
-		w += nvgTextBounds(nvg.nvg, 1, 1, label, NULL, NULL);
+
+		float max = 0.0f;
+		float width;
+		const char* start = label;
+		char* end = strchr(start, '\n');
+
+		while (end) {
+			width = nvgTextBounds(nvg.nvg, 1, 1, start, end, NULL);
+			max = max > width ? max : width;
+			start = end + 1;
+			end = strchr(start, '\n');
+		}
+
+		width = nvgTextBounds(nvg.nvg, 1, 1, start, NULL, NULL);
+		max = max > width ? max : width;
+
+		w += max;
 	}
 
 	return w;

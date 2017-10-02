@@ -300,7 +300,7 @@ typedef struct wima_theme_loadTheme {
 #define WIMA_MAX_ROWS 32
 
 // Text distance from bottom.
-#define WIMA_TEXT_PAD_DOWN 7
+#define WIMA_TEXT_PAD_DOWN 9
 
 // Stroke width of wire outline.
 #define WIMA_NODE_WIRE_OUTLINE_WIDTH 4
