@@ -955,13 +955,11 @@ void wima_area_drawSplitWidgets(WimaAreaNode* area, NVGcontext* nvg) {
 
 	assert(area && area->type == WIMA_AREA_LEAF);
 
-	NVGcolor offsetLight = wima_color_offset(wg.theme.backgroundColor, WIMA_SPLITTER_SHADE);
-	NVGcolor insetLight = wima_color_transparent(offsetLight);
+	NVGcolor dark = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.5882f);
+	NVGcolor light = nvgRGBAf(1.0f, 1.0f, 1.0f, 0.2900f);
 
-	NVGcolor offsetDark = wima_color_offset(wg.theme.backgroundColor, -WIMA_SPLITTER_SHADE);
-	NVGcolor insetDark = wima_color_transparent(offsetDark);
-
-	NVGcolor inset = wima_color_transparent(wg.theme.backgroundColor);
+	NVGcolor insetLight;
+	NVGcolor insetDark;
 
 	float x = 0.0f;
 	float y = 0.0f;
@@ -971,60 +969,64 @@ void wima_area_drawSplitWidgets(WimaAreaNode* area, NVGcontext* nvg) {
 	float x2 = x + w;
 	float y2 = y + h;
 
-	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, x,      y2 - 13);
-	nvgLineTo(nvg, x + 13, y2);
-	nvgMoveTo(nvg, x,      y2 - 9);
-	nvgLineTo(nvg, x + 9,  y2);
-	nvgMoveTo(nvg, x,      y2 - 5);
-	nvgLineTo(nvg, x + 5,  y2);
-
-	nvgMoveTo(nvg, x2 - 11, y);
-	nvgLineTo(nvg, x2,      y + 11);
-	nvgMoveTo(nvg, x2 - 7,  y);
-	nvgLineTo(nvg, x2,      y + 7);
-	nvgMoveTo(nvg, x2 - 3,  y);
-	nvgLineTo(nvg, x2,      y + 3);
-
+	nvgShapeAntiAlias(nvg, 0);
 	nvgStrokeWidth(nvg, 1.0f);
-	nvgStrokeColor(nvg, insetDark);
-	nvgStroke(nvg);
 
-	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, x,      y2 - 11);
-	nvgLineTo(nvg, x + 11, y2);
-	nvgMoveTo(nvg, x,      y2 - 7);
-	nvgLineTo(nvg, x + 7,  y2);
-	nvgMoveTo(nvg, x,      y2 - 3);
-	nvgLineTo(nvg, x + 3,  y2);
+	float lightOffset = 1.0f;
+	float darkOffset = 1.0f;
+	float darkInsetOffset = 2.0f;
+	float lightInsetOffset = -1.0f;
 
-	nvgMoveTo(nvg, x2 - 13, y);
-	nvgLineTo(nvg, x2,      y + 13);
-	nvgMoveTo(nvg, x2 - 9,  y);
-	nvgLineTo(nvg, x2,      y + 9);
-	nvgMoveTo(nvg, x2 - 5,  y);
-	nvgLineTo(nvg, x2,      y + 5);
+	for (int i = 0; i < 3; ++i) {
 
-	nvgStrokeColor(nvg, insetLight);
-	nvgStroke(nvg);
+		lightOffset += 4.0f;
 
-	nvgBeginPath(nvg);
-	nvgMoveTo(nvg, x,      y2 - 12);
-	nvgLineTo(nvg, x + 12, y2);
-	nvgMoveTo(nvg, x,      y2 - 8);
-	nvgLineTo(nvg, x + 8,  y2);
-	nvgMoveTo(nvg, x,      y2 - 4);
-	nvgLineTo(nvg, x + 4,  y2);
+		nvgBeginPath(nvg);
 
-	nvgMoveTo(nvg, x2 - 12, y);
-	nvgLineTo(nvg, x2,      y + 12);
-	nvgMoveTo(nvg, x2 - 8,  y);
-	nvgLineTo(nvg, x2,      y + 8);
-	nvgMoveTo(nvg, x2 - 4,  y);
-	nvgLineTo(nvg, x2,      y + 4);
+		nvgMoveTo(nvg, x, y2 - lightOffset);
+		nvgLineTo(nvg, x + lightOffset, y2);
+		nvgMoveTo(nvg, x2 - lightOffset, y);
+		nvgLineTo(nvg, x2, y + lightOffset);
+		nvgStrokeColor(nvg, light);
 
-	nvgStrokeColor(nvg, inset);
-	nvgStroke(nvg);
+		nvgStroke(nvg);
+
+		nvgBeginPath(nvg);
+
+		nvgMoveTo(nvg, x, y2 - lightOffset - darkOffset);
+		nvgLineTo(nvg, x + lightOffset + darkOffset, y2);
+		nvgMoveTo(nvg, x2 - lightOffset + darkOffset, y);
+		nvgLineTo(nvg, x2, y + lightOffset - darkOffset);
+		nvgStrokeColor(nvg, dark);
+
+		nvgStroke(nvg);
+
+		insetLight = nvgLerpRGBA(light, dark, 0.333f);
+		insetDark = nvgLerpRGBA(light, dark, 0.667f);
+
+		nvgBeginPath(nvg);
+		nvgMoveTo(nvg, x, y2 - lightOffset - lightInsetOffset);
+		nvgLineTo(nvg, x + lightOffset + lightInsetOffset, y2);
+		nvgMoveTo(nvg, x2 - lightOffset + lightInsetOffset, y);
+		nvgLineTo(nvg, x2, y + lightOffset - lightInsetOffset);
+		nvgStrokeColor(nvg, insetLight);
+
+		nvgStroke(nvg);
+
+		nvgBeginPath(nvg);
+		nvgMoveTo(nvg, x, y2 - lightOffset - darkInsetOffset);
+		nvgLineTo(nvg, x + lightOffset + darkInsetOffset, y2);
+		nvgMoveTo(nvg, x2 - lightOffset + darkInsetOffset, y);
+		nvgLineTo(nvg, x2, y + lightOffset - darkInsetOffset);
+		nvgStrokeColor(nvg, insetDark);
+
+		nvgStroke(nvg);
+
+		light.a += 0.1961f;
+		dark.a += 0.1961f;
+	}
+
+	nvgShapeAntiAlias(nvg, 1);
 }
 
 void wima_area_drawJoinOverlay(WimaAreaNode* area, NVGcontext* nvg, bool vertical, bool mirror) {
