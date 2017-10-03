@@ -28,6 +28,9 @@ set("WIMA_INC"
 
 	# Add headers here.
 	"wima.h"
+	"theme.h"
+	"widget.h"
+	"layout.h"
 )
 
 # Install the header files.
