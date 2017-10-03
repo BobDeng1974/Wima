@@ -46,7 +46,7 @@
 #include <wima.h>
 
 #include "event.h"
-#include "layout.h"
+#include "old_layout.h"
 
 #include "workspace.h"
 
