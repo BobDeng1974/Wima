@@ -152,8 +152,16 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
 
+	WimaWin* wwin = dvec_get(wg.windows, wwh);
+	if (!wwin) {
+		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
+	}
+
 	WimaKey wkey = (WimaKey) key;
 	WimaAction wact = (WimaAction) action;
+	WimaMods wmods = (WimaMods) mods;
+
+	wwin->ctx.mods = mods;
 
 	switch(wkey) {
 
@@ -176,13 +184,6 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 		default:
 			break;
-	}
-
-	WimaMods wmods = (WimaMods) mods;
-
-	WimaWin* wwin = dvec_get(wg.windows, wwh);
-	if (!wwin) {
-		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
@@ -228,6 +229,8 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	if (!wwin) {
 		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
+
+	wwin->ctx.mods = wmods;
 
 	int numEvents = wwin->ctx.eventCount;
 
@@ -492,6 +495,10 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 		wg.funcs.error(WIMA_STATUS_INVALID_STATE, descs[WIMA_STATUS_INVALID_STATE - 128]);
 	}
 
+	WimaMods wmods = (WimaMods) mods;
+
+	wwin->ctx.mods = wmods;
+
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
@@ -507,7 +514,7 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
 	event->type = WIMA_EVENT_CHAR;
 	event->char_event.code = code;
-	event->char_event.mods = mods;
+	event->char_event.mods = wmods;
 
 	++(wwin->ctx.eventCount);
 }
