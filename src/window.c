@@ -238,7 +238,7 @@ void wima_window_requestLayout(WimaWindowHandle wwh) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
-	win->flags |= WIMA_WINDOW_LAYOUT_BIT;
+	win->flags |= (WIMA_WINDOW_LAYOUT_BIT | WIMA_WINDOW_DIRTY_BIT);
 }
 
 bool wima_window_needsLayout(WimaWindowHandle wwh) {

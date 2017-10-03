@@ -1052,6 +1052,8 @@ void* wima_area_userPointer(WimaAreaHandle wah);
 WimaRect wima_area_rect(WimaAreaHandle wah);
 void wima_area_setScale(WimaAreaHandle wah, float scale);
 float wima_area_scale(WimaAreaHandle wah);
+void wima_area_setType(WimaAreaHandle wah, WimaRegionHandle type);
+WimaRegionHandle wima_area_type(WimaAreaHandle wah);
 
 // return the total number of allocated items
 int wima_area_itemCount(WimaAreaHandle wah);

@@ -230,6 +230,24 @@ float wima_area_scale(WimaAreaHandle wah) {
 	return area->area.scale;
 }
 
+void wima_area_setType(WimaAreaHandle wah, WimaRegionHandle type) {
+
+	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
+	assert(area && area->type == WIMA_AREA_LEAF);
+
+	area->area.type = type;
+
+	wima_window_requestLayout(wah.window);
+}
+
+WimaRegionHandle wima_area_type(WimaAreaHandle wah) {
+
+	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
+	assert(area && area->type == WIMA_AREA_LEAF);
+
+	return area->area.type;
+}
+
 bool wima_area_contains(WimaAreaHandle wah, WimaPos pos) {
 
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
