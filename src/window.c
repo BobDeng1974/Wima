@@ -1057,6 +1057,26 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 			break;
 		}
 
+		case WIMA_EVENT_MOUSE_CLICK:
+		{
+			if (wih.item >= 0) {
+
+				WimaItem* pitem = wima_item_ptr(wih);
+
+				if (pitem->flags & e.type) {
+					status = pitem->funcs.click(wih, e.click);
+				}
+				else {
+					status = WIMA_STATUS_SUCCESS;
+				}
+			}
+			else {
+				status = WIMA_STATUS_SUCCESS;
+			}
+
+			break;
+		}
+
 		case WIMA_EVENT_MOUSE_POS:
 		{
 			// Set the cursor position.
@@ -1081,6 +1101,28 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindowHandle wwh, W
 				else {
 					status = WIMA_STATUS_SUCCESS;
 				}
+			}
+
+			break;
+		}
+
+		case WIMA_EVENT_MOUSE_DRAG:
+		{
+			if (wih.item >= 0) {
+
+				WimaLayoutItem* pitem = (WimaLayoutItem*) wima_item_ptr(wih);
+
+				assert(pitem && pitem->type == WIMA_LAYOUT_ITEM);
+
+				if (pitem->item.flags & e.type) {
+					status = pitem->item.funcs.drag(wih, e.drag);
+				}
+				else {
+					status = WIMA_STATUS_SUCCESS;
+				}
+			}
+			else {
+				status = WIMA_STATUS_SUCCESS;
 			}
 
 			break;
