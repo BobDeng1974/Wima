@@ -61,6 +61,11 @@
 #ifndef WIMA_ITEM_H
 #define WIMA_ITEM_H
 
+/* For C++ compatibility. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <assert.h>
 #include <string.h>
 
@@ -159,5 +164,9 @@ typedef struct wima_item {
 WimaItem* wima_item_ptr(WimaItemHandle wih);
 
 bool wima_item_compare(WimaItem *item1, WimaItem *item2);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // WIMA_ITEM_H

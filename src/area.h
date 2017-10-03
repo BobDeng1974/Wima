@@ -37,6 +37,11 @@
 #ifndef WIMA_AREA_H
 #define WIMA_AREA_H
 
+/* For C++ compatibility. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <nanovg.h>
 
 #include <wima.h>
@@ -168,5 +173,9 @@ WimaStatus wima_area_node_draw(WimaNvgInfo ctx, DynaTree areas, DynaNode node, f
 WimaStatus wima_area_node_mousePos(DynaTree areas, DynaNode node, WimaPos pos);
 WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, bool adjustSplit);
 bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, WimaMouseSplitEvent* result);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // WIMA_AREA_H

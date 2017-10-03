@@ -58,8 +58,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#ifndef WIMA_LAYOUT_H
-#define WIMA_LAYOUT_H
+#ifndef WIMA_OLD_LAYOUT_H
+#define WIMA_OLD_LAYOUT_H
 
 #include <wima.h>
 
@@ -75,4 +75,4 @@ void wima_layout_computeSize(WimaItemHandle item, int dim);
 
 void wima_layout_arrange(WimaItemHandle item, int dim);
 
-#endif // WIMA_LAYOUT_H
+#endif // WIMA_OLD_LAYOUT_H
