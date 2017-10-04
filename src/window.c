@@ -361,9 +361,7 @@ WimaStatus wima_window_setUserPointer(WimaWindowHandle wwh, void* user) {
 		return WIMA_STATUS_INVALID_STATE;
 	}
 
-	if (wwh >= dvec_len(wg.windows)) {
-		return WIMA_STATUS_INVALID_PARAM;
-	}
+	assert(wwh < dvec_len(wg.windows));
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
