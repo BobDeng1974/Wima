@@ -121,7 +121,7 @@ WimaStatus cb_draw(WimaItemHandle item, WimaNvgInfo nvg) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_layout(WimaAreaHandle wah, WimaSize size) {
+WimaStatus cb_layout(WimaAreaHandle wah, WimaLayoutHandle wlh, WimaSize size) {
 
 #if 0
 	printf("Layout: { handle: %4u, width: %4d; height: %4d }\n", wah.area, size.w, size.h);
@@ -136,12 +136,16 @@ WimaStatus cb_layout(WimaAreaHandle wah, WimaSize size) {
 	WimaItemFuncs funcs;
 
 	funcs.mouse = cb_mouseBtn;
+	funcs.click = NULL;
+	funcs.drag = NULL;
 	funcs.scroll = cb_scroll;
 	funcs.char_event = cb_char;
 
+#if 0
 	WimaItemHandle item = wima_item_new(wah, funcs);
 	wima_item_setSize(item, size);
 	wima_item_setLayout(item, WIMA_LAYOUT_FILL | WIMA_LAYOUT_CENTER);
+#endif
 
 	return WIMA_STATUS_SUCCESS;
 }
