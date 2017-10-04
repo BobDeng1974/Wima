@@ -74,7 +74,7 @@ WimaItem* wima_item_ptr(WimaItemHandle wih) {
 	WimaAreaNode* area = wima_area_area(wih.window, wih.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
 
-	assert((wih.item >= 0) && (wih.item < area->area.ctx.itemCount));
+	assert(wih.item < area->area.ctx.itemCount);
 
 	return area->area.ctx.items + wih.item;
 }
@@ -87,7 +87,7 @@ void wima_item_setFocus(WimaItemHandle wih) {
 	WimaAreaNode* area = dtree_node(win->areas, wih.area);
 	assert(area);
 
-	assert((wih.item >= -1) && (wih.item < area->area.ctx.itemCount));
+	assert(wih.item < area->area.ctx.itemCount);
 	assert(win->ctx.stage != WIMA_UI_STAGE_LAYOUT);
 
 	win->ctx.focus = wih;

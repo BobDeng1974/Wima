@@ -286,7 +286,7 @@ typedef struct wima_area_handle_struct {
  */
 typedef struct wima_item_handle {
 
-	int32_t item;
+	uint16_t item;
 
 	WimaAreaNodeHandle area;
 	WimaWindowHandle window;
