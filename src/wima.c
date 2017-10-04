@@ -51,6 +51,7 @@
 #include "region.h"
 #include "area.h"
 #include "window.h"
+#include "prop.h"
 #include "global.h"
 
 extern WimaG wg;
@@ -84,9 +85,11 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 
 	wg.funcs = funcs;
 
+	// Clear before trying to set.
 	wg.regions = NULL;
 	wg.workspaces = NULL;
 	wg.name = NULL;
+	wg.props = NULL;
 	wg.windows = NULL;
 
 	// Set the initial theme.
@@ -116,6 +119,12 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	dstatus = dvec_create(&wg.windows, NULL, 0, sizeof(WimaWin));
+	if (dstatus) {
+		wima_exit();
+		return WIMA_STATUS_INIT_ERR;
+	}
+
+	dstatus = dvec_create(&wg.props, NULL, 0, sizeof(WimaProp));
 	if (dstatus) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
@@ -256,6 +265,17 @@ void wima_exit() {
 
 	if (wg.workspaces) {
 		dvec_free(wg.workspaces);
+	}
+
+	if (wg.props) {
+
+		size_t len = dvec_len(wg.props);
+
+		for (size_t i = 0; i < len; ++i) {
+			wima_prop_free(i);
+		}
+
+		dvec_free(wg.props);
 	}
 
 	if (wg.windows) {
