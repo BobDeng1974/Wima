@@ -46,6 +46,8 @@ extern "C" {
 
 #define WIMA_PROP_INVALID ((WimaPropHandle) -1)
 
+#define WIMA_PROP_SEED (0xdeadbeef0ddba11)
+
 typedef enum wima_prop_type {
 
 	WIMA_PROP_BOOL,
@@ -103,6 +105,8 @@ typedef struct wima_prop {
 	const char* name;
 
 	const char* desc;
+
+	uint64_t hash;
 
 	WimaPropHandle idx;
 

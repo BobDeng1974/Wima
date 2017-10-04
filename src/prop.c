@@ -37,7 +37,9 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
+#include <dyna/hash.h>
 #include <dyna/vector.h>
 #include <dyna/string.h>
 
@@ -238,12 +240,27 @@ static WimaProp* wima_prop_register(const char* name, const char* desc, WimaProp
 
 	assert(name);
 
+	size_t slen = strlen(name);
+
+	uint64_t hash = dyna_hash64(name, slen, WIMA_PROP_SEED);
+
 	size_t idx = dvec_len(wg.props);
+
+	WimaProp* props = dvec_get(wg.props, 0);
+
+	for (size_t i = 0; i < idx; ++i) {
+
+		if (hash == props[i].hash && !strcmp(name, props[i].name)) {
+			assert(type == props[i].type);
+			return props + i;
+		}
+	}
 
 	WimaProp prop;
 
 	prop.name = name;
 	prop.desc = desc;
+	prop.hash = hash;
 	prop.idx = idx;
 	prop.type = type;
 
