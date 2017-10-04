@@ -60,6 +60,8 @@ float wima_prop_get_float(WimaPropHandle wph);
 void wima_prop_set_percent(WimaPropHandle wph, int percent);
 int wima_prop_get_percent(WimaPropHandle wph);
 DynaString wima_prop_get_string(WimaPropHandle wph);
+void wima_prop_set_enum(WimaPropHandle wph, uint32_t idx);
+uint32_t wima_prop_get_enum(WimaPropHandle wph);
 DynaVector wima_prop_get_list(WimaPropHandle wph);
 void wima_prop_set_color(WimaPropHandle wph, NVGcolor color);
 NVGcolor wima_prop_get_color(WimaPropHandle wph);
@@ -70,7 +72,7 @@ WimaPropHandle wima_prop_register_int(const char* name, const char* desc, int in
 WimaPropHandle wima_prop_register_float(const char* name, const char* desc, float initial, float min, float max);
 WimaPropHandle wima_prop_register_percent(const char* name, const char* desc, int initial);
 WimaPropHandle wima_prop_register_string(const char* name, const char* desc, DynaString str);
-WimaPropHandle wima_prop_register_enum(const char* name, const char* desc, const char* names,
+WimaPropHandle wima_prop_register_enum(const char* name, const char* desc, const char* names[],
                                        const uint32_t* vals, uint32_t nvals, uint32_t initalIdx);
 WimaPropHandle wima_prop_register_list(const char* name, const char* desc, DynaVector list);
 WimaPropHandle wima_prop_register_color(const char* name, const char* desc, NVGcolor initial);

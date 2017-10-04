@@ -173,6 +173,27 @@ DynaString wima_prop_get_string(WimaPropHandle wph) {
 	return prop->_str;
 }
 
+void wima_prop_set_enum(WimaPropHandle wph, uint32_t idx) {
+
+	assert(wph < dvec_len(wg.props));
+
+	WimaProp* prop = dvec_get(wg.props, wph);
+	assert(prop && prop->type == WIMA_PROP_ENUM);
+	assert(idx < prop->_enum.numVals);
+
+	prop->_enum.idx = idx;
+}
+
+uint32_t wima_prop_get_enum(WimaPropHandle wph) {
+
+	assert(wph < dvec_len(wg.props));
+
+	WimaProp* prop = dvec_get(wg.props, wph);
+	assert(prop && prop->type == WIMA_PROP_ENUM);
+
+	return prop->_enum.vals ? prop->_enum.vals[prop->_enum.idx] : prop->_enum.idx;
+}
+
 DynaVector wima_prop_get_list(WimaPropHandle wph) {
 
 	assert(wph < dvec_len(wg.props));
@@ -271,6 +292,8 @@ WimaPropHandle wima_prop_register_percent(const char* name, const char* desc, in
 
 WimaPropHandle wima_prop_register_string(const char* name, const char* desc, DynaString str) {
 
+	assert(str);
+
 	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_STRING);
 	assert(prop && prop->type == WIMA_PROP_STRING);
 
@@ -279,9 +302,11 @@ WimaPropHandle wima_prop_register_string(const char* name, const char* desc, Dyn
 	return prop->idx;
 }
 
-WimaPropHandle wima_prop_register_enum(const char* name, const char* desc, const char* names,
+WimaPropHandle wima_prop_register_enum(const char* name, const char* desc, const char* names[],
                                        const uint32_t* vals, uint32_t nvals, uint32_t initalIdx)
 {
+	assert(names);
+
 	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_ENUM);
 	assert(prop && prop->type == WIMA_PROP_ENUM);
 
@@ -294,6 +319,8 @@ WimaPropHandle wima_prop_register_enum(const char* name, const char* desc, const
 }
 
 WimaPropHandle wima_prop_register_list(const char* name, const char* desc, DynaVector list) {
+
+	assert(list);
 
 	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_BOOL);
 	assert(prop && prop->type == WIMA_PROP_LIST);
@@ -316,7 +343,7 @@ WimaPropHandle wima_prop_register_color(const char* name, const char* desc, NVGc
 WimaPropHandle wima_prop_register_ptr(const char* name, const char* desc, void* ptr,
                                       WimaPropDrawFunc draw, WimaPropFreePtrFunc free)
 {
-	assert(draw);
+	assert(draw && ptr);
 
 	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_PTR);
 	assert(prop && prop->type == WIMA_PROP_PTR);

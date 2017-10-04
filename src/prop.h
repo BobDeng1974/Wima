@@ -80,7 +80,7 @@ typedef struct wima_prop_float {
 
 typedef struct wima_prop_enum {
 
-	const char* names;
+	const char** names;
 
 	const uint32_t* vals;
 	uint32_t numVals;
