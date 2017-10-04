@@ -104,6 +104,16 @@ WimaStatus cb_draw(WimaItemHandle item, WimaNvgInfo nvg) {
 
 #if 0
 	printf("Item[%s] Rect: { x: %d. y: %d, w: %d, h: %d }\n", buffer, r.x, r.y, r.w, r.h);
+
+	const char* stuff = "This has 2 lines.\nIt's a test.";
+
+	float width = wima_widget_label_estimateWidth(nvg, WIMA_ICONID(0,0), stuff);
+	float height = wima_widget_label_estimateHeight(nvg, WIMA_ICONID(0,0), stuff, width);
+
+	wima_widget_choiceBtn(nvg, r.x, r.y, r.w, r.h, 0, WIMA_ITEM_DEFAULT, -1, "Stuff");
+
+	wima_widget_tooltip_background(nvg, r.x + 2, r.y + 2, width, height);
+	wima_widget_label(nvg, r.x + 2, r.y + 2, width, height, WIMA_ICONID(0,0), stuff);
 #endif
 
 	wima_widget_label(nvg, r.x, r.y, r.w, r.h, WIMA_ICONID(0,0), buffer);
