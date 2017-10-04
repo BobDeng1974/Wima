@@ -278,7 +278,6 @@ typedef struct wima_area_handle_struct {
 	WimaAreaNodeHandle area;
 
 	WimaWindowHandle window;
-	WimaRegionHandle region;
 
 } WimaAreaHandle;
 
@@ -1018,6 +1017,8 @@ void wima_area_setScale(WimaAreaHandle wah, float scale);
 float wima_area_scale(WimaAreaHandle wah);
 void wima_area_setType(WimaAreaHandle wah, WimaRegionHandle type);
 WimaRegionHandle wima_area_type(WimaAreaHandle wah);
+
+WimaAreaHandle wima_area_handle(WimaWindowHandle wwh, WimaAreaNodeHandle node);
 
 // return the total number of allocated items
 int wima_area_itemCount(WimaAreaHandle wah);

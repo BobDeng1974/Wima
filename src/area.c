@@ -118,7 +118,7 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 
 		// Get all of the area handle
 		// (to pass to the user function).
-		WimaAreaHandle wah = wima_area_handle(area);
+		WimaAreaHandle wah = wima_area_handle(win, node);
 
 		// Call the user function.
 		area->area.user = get_user_ptr(wah);
@@ -282,14 +282,13 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 		WimaAreaHandle wah;
 		wah.area = node;
-		wah.region = area->area.type;
 		wah.window = area->window;
 
 		WimaSize size;
 		size.w = area->rect.w;
 		size.h = area->rect.h;
 
-		WimaRegion* region = dvec_get(wg.regions, wah.region);
+		WimaRegion* region = dvec_get(wg.regions, area->area.type);
 		WimaAreaLayoutFunc layout = region->layout;
 
 		// Do the layout. The layout function is guaranteed to be non-null.
@@ -570,15 +569,12 @@ WimaAreaNode* wima_area_area(WimaWindowHandle wwh, WimaAreaNodeHandle node) {
 	return dtree_node(win->areas, node);
 }
 
-WimaAreaHandle wima_area_handle(WimaAreaNode* area) {
+WimaAreaHandle wima_area_handle(WimaWindowHandle wwh, WimaAreaNodeHandle node) {
 
 	WimaAreaHandle wah;
 
-	assert(area && area->type == WIMA_AREA_LEAF);
-
-	wah.area = (WimaAreaNodeHandle) area->node;
-	wah.window = area->window;
-	wah.region = area->area.type;
+	wah.area = node;
+	wah.window = wwh;
 
 	return wah;
 }
@@ -637,9 +633,9 @@ WimaStatus wima_area_mouseEnter(WimaAreaNode*area, bool enter) {
 
 	assert(area && area->type == WIMA_AREA_LEAF);
 
-	WimaAreaHandle wah = wima_area_handle(area);
+	WimaAreaHandle wah = wima_area_handle(area->window, area->node);
 
-	WimaRegion* region = dvec_get(wg.regions, wah.region);
+	WimaRegion* region = dvec_get(wg.regions, wima_area_type(wah));
 
 	if (region->mouse_enter) {
 		status = region->mouse_enter(wah, enter);

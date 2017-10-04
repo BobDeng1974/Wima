@@ -133,7 +133,6 @@ WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 
 WimaAreaNode* wima_area_area(WimaWindowHandle wwh, WimaAreaNodeHandle node);
 WimaWin* wima_area_window(WimaAreaHandle wah);
-WimaAreaHandle wima_area_handle(WimaAreaNode* area);
 
 void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right);
 WimaPos wima_area_translatePos(WimaAreaNode* area, WimaPos pos);
