@@ -76,7 +76,7 @@ WimaItem* wima_item_ptr(WimaItemHandle wih) {
 
 	assert(wih.item < area->area.ctx.itemCount);
 
-	return area->area.ctx.items + wih.item;
+	return (WimaItem*) area->area.ctx.items + wih.item;
 }
 
 void wima_item_setFocus(WimaItemHandle wih) {
@@ -106,28 +106,27 @@ WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs) {
 	 // Must run between uiBeginLayout() and uiEndLayout().
 	assert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT);
 
-	int idx = (area->area.ctx.itemCount)++;
+	uint32_t idx = (area->area.ctx.itemCount)++;
 
 	WimaItemHandle wih;
 	wih.area = wah.area;
 	wih.item = idx;
 	wih.window = wah.window;
 
-	WimaItem* item = wima_item_ptr(wih);
+	WimaLayoutItem* item = (WimaLayoutItem*) wima_item_ptr(wih);
 
-	memset(item, 0, sizeof(WimaItem));
-
-	item->firstkid = -1;
-	item->nextSibling = -1;
+	memset(item, 0, sizeof(WimaLayoutItem));
 
 	uint32_t flags = 0;
 	flags |= (funcs.mouse ? WIMA_EVENT_MOUSE_BTN : 0);
+	flags |= (funcs.click ? WIMA_EVENT_MOUSE_CLICK : 0);
+	flags |= (funcs.drag ? WIMA_EVENT_MOUSE_DRAG : 0);
 	flags |= (funcs.scroll ? WIMA_EVENT_SCROLL : 0);
 	flags |= (funcs.char_event ? WIMA_EVENT_CHAR : 0);
 
-	item->funcs = funcs;
+	item->item.funcs = funcs;
 
-	item->flags |= flags;
+	item->item.flags |= flags;
 
 	return wih;
 }
@@ -161,9 +160,9 @@ WimaItemHandle wima_item_append(WimaItemHandle item, WimaItemHandle sibling) {
 
 	assert(!(psibling->flags & WIMA_ITEM_INSERTED));
 
-	psibling->nextSibling = pitem->nextSibling;
+//	psibling->nextSibling = pitem->nextSibling;
 	psibling->flags |= WIMA_ITEM_INSERTED;
-	pitem->nextSibling = sibling.item;
+//	pitem->nextSibling = sibling.item;
 
 	return sibling;
 }
@@ -177,6 +176,7 @@ WimaItemHandle wima_item_insert(WimaAreaHandle wah, WimaItemHandle item, WimaIte
 
 	assert(!(pchild->flags & WIMA_ITEM_INSERTED));
 
+#if 0
 	if (pparent->firstkid < 0) {
 		pparent->firstkid = child.item;
 		pchild->flags |= WIMA_ITEM_INSERTED;
@@ -184,6 +184,7 @@ WimaItemHandle wima_item_insert(WimaAreaHandle wah, WimaItemHandle item, WimaIte
 	else {
 		wima_item_append(wima_item_lastChild(item), child);
 	}
+#endif
 
 	return child;
 }
@@ -197,8 +198,10 @@ WimaItemHandle wima_item_insertBack(WimaItemHandle item, WimaItemHandle child) {
 
 	assert(!(pchild->flags & WIMA_ITEM_INSERTED));
 
+#if 0
 	pchild->nextSibling = pparent->firstkid;
 	pparent->firstkid = child.item;
+#endif
 	pchild->flags |= WIMA_ITEM_INSERTED;
 
 	return child;
@@ -218,31 +221,32 @@ void wima_item_setFrozen(WimaItemHandle item, bool enable) {
 
 void wima_item_setSize(WimaItemHandle item, WimaSize size) {
 
-	WimaItem *pitem = wima_item_ptr(item);
+	WimaLayoutItem* pitem = (WimaLayoutItem*) wima_item_ptr(item);
 
-	pitem->size = size;
+	pitem->rect.w = size.w;
+	pitem->rect.h = size.h;
 
 	if (!size.w) {
-		pitem->flags &= ~WIMA_ITEM_HFIXED;
+		pitem->item.flags &= ~WIMA_ITEM_HFIXED;
 	}
 	else {
-		pitem->flags |= WIMA_ITEM_HFIXED;
+		pitem->item.flags |= WIMA_ITEM_HFIXED;
 	}
 
 	if (!size.h) {
-		pitem->flags &= ~WIMA_ITEM_VFIXED;
+		pitem->item.flags &= ~WIMA_ITEM_VFIXED;
 	}
 	else {
-		pitem->flags |= WIMA_ITEM_VFIXED;
+		pitem->item.flags |= WIMA_ITEM_VFIXED;
 	}
 }
 
 int wima_item_width(WimaItemHandle item) {
-	return wima_item_ptr(item)->size.v[0];
+	return ((WimaLayoutItem*) wima_item_ptr(item))->rect.w;
 }
 
 int wima_item_height(WimaItemHandle item) {
-	return wima_item_ptr(item)->size.v[1];
+	return ((WimaLayoutItem*) wima_item_ptr(item))->rect.h;
 }
 
 void wima_item_setLayout(WimaItemHandle item, uint32_t flags) {
@@ -304,10 +308,10 @@ WimaRect wima_item_rect(WimaItemHandle item) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	WimaRect rc = {{{
-	        pitem->margins[0], pitem->margins[1],
-	        pitem->size.v[0], pitem->size.v[1]
-	}}};
+	WimaRect rc;/* = {{{
+			pitem->margins[0], pitem->margins[1],
+			pitem->size.v[0], pitem->size.v[1]
+	}}};*/
 
 	return rc;
 }
@@ -316,7 +320,7 @@ WimaItemHandle wima_item_firstChild(WimaItemHandle item) {
 
 	WimaItemHandle result;
 
-	result.item = wima_item_ptr(item)->firstkid;
+//	result.item = wima_item_ptr(item)->firstkid;
 	result.area = item.area;
 
 	return result;
@@ -326,7 +330,7 @@ WimaItemHandle wima_item_nextSibling(WimaItemHandle item) {
 
 	WimaItemHandle result;
 
-	result.item = wima_item_ptr(item)->nextSibling;
+//	result.item = wima_item_ptr(item)->nextSibling;
 	result.area = item.area;
 
 	return result;

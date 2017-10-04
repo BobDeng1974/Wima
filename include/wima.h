@@ -293,6 +293,15 @@ typedef struct wima_item_handle {
 
 } WimaItemHandle;
 
+typedef struct wima_layout_handle {
+
+	uint16_t layout;
+
+	WimaAreaNodeHandle area;
+	WimaWindowHandle window;
+
+} WimaLayoutHandle;
+
 /**
  * The possible status codes that Wima can return after
  * every operation.
@@ -647,7 +656,7 @@ typedef struct wima_item_funcs {
 
 typedef void* (*WimaAreaGenUserPointerFunc)(WimaAreaHandle);
 typedef void (*WimaAreaFreeUserPointerFunc)(void*);
-typedef WimaStatus (*WimaAreaLayoutFunc)(WimaAreaHandle, WimaSize);
+typedef WimaStatus (*WimaAreaLayoutFunc)(WimaAreaHandle, WimaLayoutHandle, WimaSize);
 typedef WimaStatus (*WimaAreaKeyFunc)(WimaAreaHandle, WimaKeyEvent);
 typedef WimaStatus (*WimaAreaMousePosFunc)(WimaAreaHandle, WimaPos);
 typedef WimaStatus (*WimaAreaMouseEnterFunc)(WimaAreaHandle, bool);
@@ -903,24 +912,6 @@ void layout_window(int w, int h) {
 	uiSetLayout(item, UI_HFILL);
 }
  */
-
-// create a new UI item and return the new items ID.
-WimaItemHandle wima_item_new(WimaAreaHandle wah, WimaItemFuncs funcs);
-WimaItemHandle wima_item_lastChild(WimaItemHandle item);
-
-// assign an item to the same container as another item
-// sibling is inserted after item.
-WimaItemHandle wima_item_append(WimaItemHandle item, WimaItemHandle sibling);
-
-// assign an item to a container.
-// an item ID of 0 refers to the root item.
-// the function returns the child item ID
-// if the container has already added items, the function searches
-// for the last item and calls uiAppend() on it, which is an
-// O(N) operation for N siblings.
-// it is usually more efficient to call uiInsert() for the first child,
-// then chain additional siblings using uiAppend().
-WimaItemHandle wima_item_insert(WimaAreaHandle wah, WimaItemHandle item, WimaItemHandle child);
 
 // insert child into container item like uiInsert(), but prepend
 // it to the first child item, effectively putting it in

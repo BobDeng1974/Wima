@@ -47,6 +47,7 @@ extern "C" {
 #include <wima.h>
 
 #include "item.h"
+#include "layout.h"
 #include "window.h"
 
 #define WIMA_AREA_INVALID ((WimaAreaNodeHandle) -1)
@@ -55,7 +56,7 @@ extern "C" {
 
 typedef struct wima_area_context {
 
-	WimaItem* items;
+	WimaLayoutItem* items;
 
 	// Capacities.
 	uint16_t itemCap;

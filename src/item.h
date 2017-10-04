@@ -147,20 +147,10 @@ typedef struct wima_item {
 	// About 27 bits worth of flags.
 	uint32_t flags;
 
-	// Index of first kid.
-	// If old item: index of equivalent new item.
-	int firstkid;
-
-	// Index of next sibling with same parent.
-	int nextSibling;
-
 	// Margin offsets, interpretation depends on flags.
 	// After layouting, the first two components are
 	// absolute coordinates.
 	int16_t margins[4];
-
-	// Size.
-	WimaSize size;
 
 } WimaItem;
 

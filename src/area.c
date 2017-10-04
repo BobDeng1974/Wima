@@ -172,7 +172,7 @@ WimaStatus wima_area_context_create(WimaAreaNode* area, int itemCap) {
 
 	size_t size = nallocx(sizeof(WimaItem) * itemCap, 0);
 
-	area->area.ctx.items = (WimaItem*) mallocx(size, 0);
+	area->area.ctx.items = (WimaLayoutItem*) mallocx(size, 0);
 	if (!area->area.ctx.items) {
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -288,11 +288,20 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 		size.w = area->rect.w;
 		size.h = area->rect.h;
 
+		WimaLayoutHandle parent;
+		parent.area = node;
+		parent.window = area->window;
+		parent.layout = WIMA_ITEM_INVALID;
+
+		uint16_t flags = wima_layout_setExpandFlags(0, true, true);
+
+		WimaLayoutHandle wlh = wima_layout_new(parent, flags, 0.0f);
+
 		WimaRegion* region = dvec_get(wg.regions, area->area.type);
 		WimaAreaLayoutFunc layout = region->layout;
 
 		// Do the layout. The layout function is guaranteed to be non-null.
-		status = layout(wah, size);
+		status = layout(wah, wlh, size);
 
 		// Check for error.
 		if (status) {
@@ -306,10 +315,12 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 			zero.area = node;
 			zero.window = area->window;
 
+#if 0
 			wima_layout_computeSize(zero, 0);
 			wima_layout_arrange(zero, 0);
 			wima_layout_computeSize(zero, 1);
 			wima_layout_arrange(zero, 1);
+#endif
 		}
 	}
 
@@ -1062,7 +1073,7 @@ WimaItemHandle wima_area_node_findItem(DynaTree areas, WimaAreaNode* area, WimaP
 	}
 	else {
 
-		WimaItem *pitem;
+		WimaLayoutItem *pitem;
 
 		WimaItemHandle item;
 		item.item = 0;
@@ -1070,26 +1081,29 @@ WimaItemHandle wima_area_node_findItem(DynaTree areas, WimaAreaNode* area, WimaP
 		item.window = area->window;
 
 		WimaItemHandle best_hit = item;
-		best_hit.item = -1;
+		best_hit.item = WIMA_ITEM_INVALID;
+
+		// TODO: Remove this.
+		return best_hit;
 
 		// Translate the position to the area.
 		pos = wima_area_translatePos(area, pos);
 
 		while (item.item >= 0) {
 
-			pitem = wima_item_ptr(item);
+			pitem = (WimaLayoutItem*) wima_item_ptr(item);
 
 			if (wima_item_contains(item, pos)) {
 
-				if (pitem->flags & WIMA_ITEM_FROZEN) {
+				if (!(pitem->layout.flags & WIMA_LAYOUT_ENABLE)) {
 					break;
 				}
 
-				if (flags == WIMA_ITEM_ANY || pitem->flags & flags) {
+				if (flags == WIMA_ITEM_ANY || pitem->item.flags & flags) {
 					best_hit = item;
 				}
 
-				item.item = pitem->firstkid;
+				item.item = pitem->layout.firstKid;
 			}
 			else {
 				item.item = pitem->nextSibling;

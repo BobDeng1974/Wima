@@ -34,3 +34,207 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <layout.h>
+
+#include "global.h"
+#include "layout.h"
+#include "item.h"
+#include "area.h"
+
+extern WimaG wg;
+
+uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical) {
+
+	flags |= horizontal ? WIMA_LAYOUT_EXPAND_HOR : 0;
+	flags |= vertical ? WIMA_LAYOUT_EXPAND_VER : 0;
+
+	return flags;
+}
+
+uint16_t wima_layout_clearExpandFlags(uint16_t flags) {
+
+	flags &= ~(WIMA_LAYOUT_EXPAND_HOR | WIMA_LAYOUT_EXPAND_VER);
+
+	return flags;
+}
+
+uint16_t wima_layout_setScrollFlags(uint16_t flags, bool horizontal, bool vertical) {
+
+	flags |= horizontal ? WIMA_LAYOUT_SCROLL_HOR : 0;
+	flags |= vertical ? WIMA_LAYOUT_SCROLL_VER : 0;
+
+	return flags;
+}
+
+uint16_t wima_layout_clearScrollFlags(uint16_t flags) {
+
+	flags &= ~(WIMA_LAYOUT_SCROLL_HOR | WIMA_LAYOUT_SCROLL_VER);
+
+	return flags;
+}
+
+uint16_t wima_layout_setSeparationFlag(uint16_t flags) {
+
+	flags |= WIMA_LAYOUT_SEP;
+
+	return flags;
+}
+
+uint16_t wima_layout_clearSeparationFlag(uint16_t flags) {
+
+	flags &= ~(WIMA_LAYOUT_SEP);
+
+	return flags;
+}
+
+uint16_t wima_layout_setBoxFlag(uint16_t flags) {
+
+	flags |= WIMA_LAYOUT_BOX;
+
+	return flags;
+}
+
+uint16_t wima_layout_clearBoxFlag(uint16_t flags) {
+
+	flags &= ~(WIMA_LAYOUT_BOX);
+
+	return flags;
+}
+
+WimaLayoutItem* wima_layout_ptr(WimaLayoutHandle wlh) {
+
+	WimaAreaNode* area = wima_area_area(wlh.window, wlh.area);
+	assert(area && area->type == WIMA_AREA_LEAF);
+
+	assert(wlh.layout < area->area.ctx.itemCount);
+
+	return area->area.ctx.items + wlh.layout;
+}
+
+WimaLayoutHandle wima_layout_new(WimaLayoutHandle parent, uint16_t flags, float split) {
+
+	WimaWin* win = dvec_get(wg.windows, parent.window);
+	assert(win);
+
+	WimaAreaNode* area = dtree_node(win->areas, parent.area);
+	assert(area);
+
+	assert(area->area.ctx.itemCount < (int) area->area.ctx.itemCap);
+
+	// Must run between uiBeginLayout() and uiEndLayout().
+	assert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT);
+
+	uint32_t idx = (area->area.ctx.itemCount)++;
+
+	WimaLayoutHandle wlh;
+	wlh.layout = idx;
+	wlh.area = parent.area;
+	wlh.window = parent.window;
+
+	if (parent.layout != WIMA_LAYOUT_INVALID) {
+
+		WimaLayoutItem* pparent = wima_layout_ptr(parent);
+		assert(pparent && pparent->type == WIMA_LAYOUT_LAYOUT);
+
+		if (pparent->layout.lastKid != WIMA_LAYOUT_INVALID) {
+
+			WimaLayoutItem* pkid = area->area.ctx.items + pparent->layout.lastKid;
+
+			pkid->nextSibling = idx;
+			pparent->layout.lastKid = idx;
+		}
+		else {
+			pparent->layout.firstKid = idx;
+			pparent->layout.lastKid = idx;
+		}
+	}
+
+	WimaLayoutItem* playout = area->area.ctx.items + idx;
+
+	memset(playout, 0, sizeof(WimaLayoutItem));
+
+	playout->type = WIMA_LAYOUT_LAYOUT;
+
+	playout->parent = parent.layout;
+	playout->nextSibling = WIMA_ITEM_INVALID;
+	playout->area = parent.area;
+	playout->window = parent.window;
+
+	playout->layout.bgcolor = wg.theme.backgroundColor;
+	playout->layout.split = split;
+	playout->layout.firstKid = WIMA_ITEM_INVALID;
+	playout->layout.lastKid = WIMA_LAYOUT_INVALID;
+	playout->layout.flags = flags;
+
+	return wlh;
+}
+
+void wima_layout_setBackgroundColor(WimaLayoutHandle wlh, NVGcolor color) {
+
+	WimaWin* win = dvec_get(wg.windows, wlh.window);
+	assert(win);
+
+	WimaAreaNode* area = dtree_node(win->areas, wlh.area);
+	assert(area);
+
+	assert(wlh.layout < area->area.ctx.itemCount);
+
+	WimaLayoutItem* layout = area->area.ctx.items + wlh.layout;
+
+	layout->layout.bgcolor = color;
+}
+
+NVGcolor wima_layout_backgroundColor(WimaLayoutHandle wlh) {
+
+	WimaWin* win = dvec_get(wg.windows, wlh.window);
+	assert(win);
+
+	WimaAreaNode* area = dtree_node(win->areas, wlh.area);
+	assert(area);
+
+	assert(wlh.layout < area->area.ctx.itemCount);
+
+	WimaLayoutItem* layout = area->area.ctx.items + wlh.layout;
+
+	return layout->layout.bgcolor;
+}
+
+WimaLayoutHandle wima_layout_row(WimaLayoutHandle parent, uint16_t flags) {
+
+	flags |= WIMA_LAYOUT_ROW;
+	flags &= ~(WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID);
+
+	return wima_layout_new(parent, flags, 0.0f);
+}
+
+WimaLayoutHandle wima_layout_col(WimaLayoutHandle parent, uint16_t flags) {
+
+	flags |= WIMA_LAYOUT_COL;
+	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID);
+
+	return wima_layout_new(parent, flags, 0.0f);
+}
+
+WimaLayoutHandle wima_layout_split(WimaLayoutHandle parent, uint16_t flags, float split) {
+
+	flags |= WIMA_LAYOUT_SPLIT;
+	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID);
+
+	return wima_layout_new(parent, flags, split);
+}
+
+WimaLayoutHandle wima_layout_list(WimaLayoutHandle parent, uint16_t flags) {
+
+	flags |= WIMA_LAYOUT_LIST;
+	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_GRID);
+
+	return wima_layout_new(parent, flags, 0.0f);
+}
+
+WimaLayoutHandle wima_layout_grid(WimaLayoutHandle parent, uint16_t flags) {
+
+	flags |= WIMA_LAYOUT_GRID;
+	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST);
+
+	return wima_layout_new(parent, flags, 0.0f);
+}
