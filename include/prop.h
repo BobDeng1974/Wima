@@ -51,34 +51,34 @@ typedef uint32_t WimaPropHandle;
 typedef WimaStatus (*WimaPropDrawFunc)(WimaItemHandle, void*);
 typedef void (*WimaPropFreePtrFunc)(void*);
 
-void wima_prop_set_bool(WimaPropHandle wph, bool val);
-bool wima_prop_get_bool(WimaPropHandle wph);
-void wima_prop_set_int(WimaPropHandle wph, int val);
-int wima_prop_get_int(WimaPropHandle wph);
-void wima_prop_set_float(WimaPropHandle wph, float val);
-float wima_prop_get_float(WimaPropHandle wph);
-void wima_prop_set_percent(WimaPropHandle wph, int percent);
-int wima_prop_get_percent(WimaPropHandle wph);
-DynaString wima_prop_get_string(WimaPropHandle wph);
-void wima_prop_set_enum(WimaPropHandle wph, uint32_t idx);
-uint32_t wima_prop_get_enum(WimaPropHandle wph);
-DynaVector wima_prop_get_list(WimaPropHandle wph);
-void wima_prop_set_color(WimaPropHandle wph, NVGcolor color);
-NVGcolor wima_prop_get_color(WimaPropHandle wph);
-void* wima_prop_get_ptr(WimaPropHandle wph);
+void wima_prop_setBool(WimaPropHandle wph, bool val);
+bool wima_prop_bool(WimaPropHandle wph);
+void wima_prop_setInt(WimaPropHandle wph, int val);
+int wima_prop_int(WimaPropHandle wph);
+void wima_prop_setFloat(WimaPropHandle wph, float val);
+float wima_prop_float(WimaPropHandle wph);
+void wima_prop_setPercent(WimaPropHandle wph, int percent);
+int wima_prop_percent(WimaPropHandle wph);
+DynaString wima_prop_string(WimaPropHandle wph);
+void wima_prop_setEnumIdx(WimaPropHandle wph, uint32_t idx);
+uint32_t wima_prop_enum(WimaPropHandle wph);
+DynaVector wima_prop_list(WimaPropHandle wph);
+void wima_prop_setColor(WimaPropHandle wph, NVGcolor color);
+NVGcolor wima_prop_color(WimaPropHandle wph);
+void* wima_prop_ptr(WimaPropHandle wph);
 
-WimaPropHandle wima_prop_register_bool(const char* name, const char* desc, bool initial);
-WimaPropHandle wima_prop_register_int(const char* name, const char* desc, int initial, int min, int max);
-WimaPropHandle wima_prop_register_float(const char* name, const char* desc, float initial, float min, float max);
-WimaPropHandle wima_prop_register_percent(const char* name, const char* desc, int initial);
-WimaPropHandle wima_prop_register_string(const char* name, const char* desc, DynaString str);
-WimaPropHandle wima_prop_register_enum(const char* name, const char* desc, const char* names[],
+WimaPropHandle wima_prop_registerBool(const char* name, const char* desc, bool initial);
+WimaPropHandle wima_prop_registerInt(const char* name, const char* desc, int initial, int min, int max);
+WimaPropHandle wima_prop_registerFloat(const char* name, const char* desc, float initial, float min, float max);
+WimaPropHandle wima_prop_registerPercent(const char* name, const char* desc, int initial);
+WimaPropHandle wima_prop_registerString(const char* name, const char* desc, DynaString str);
+WimaPropHandle wima_prop_registerEnum(const char* name, const char* desc, const char* names[],
                                        const uint32_t* vals, uint32_t nvals, uint32_t initalIdx);
-WimaPropHandle wima_prop_register_list(const char* name, const char* desc, DynaVector list);
-WimaPropHandle wima_prop_register_color(const char* name, const char* desc, NVGcolor initial);
-WimaPropHandle wima_prop_register_ptr(const char* name, const char* desc, void* ptr,
+WimaPropHandle wima_prop_registerList(const char* name, const char* desc, DynaVector list);
+WimaPropHandle wima_prop_registerColor(const char* name, const char* desc, NVGcolor initial);
+WimaPropHandle wima_prop_registerPtr(const char* name, const char* desc, void* ptr,
                                       WimaPropDrawFunc draw, WimaPropFreePtrFunc free);
-WimaPropHandle wima_prop_register_operator(const char* name, const char* desc, WimaItemMouseClickFunc op);
+WimaPropHandle wima_prop_registerOperator(const char* name, const char* desc, WimaItemMouseClickFunc op);
 
 #ifdef __cplusplus
 }
