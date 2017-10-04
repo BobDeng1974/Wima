@@ -58,9 +58,9 @@ typedef struct wima_area_context {
 	WimaItem* items;
 
 	// Capacities.
-	uint32_t itemCap;
+	uint16_t itemCap;
 
-	uint32_t itemCount;
+	uint16_t itemCount;
 
 } WimaAreaContext;
 
