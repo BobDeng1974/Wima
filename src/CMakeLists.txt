@@ -43,6 +43,7 @@ create_pic_library("${WIMA_GLOBAL}" "${WIMA_GLOBAL}" "${WIMA_GLOBAL_SRC}" YES
 set(WIMA_SRC
 
 	# Put all source files here.
+	"prop.c"
 	"item.c"
 	"layout.c"
 	"callbacks.c"

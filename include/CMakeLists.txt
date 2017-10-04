@@ -31,6 +31,7 @@ set("WIMA_INC"
 	"theme.h"
 	"widget.h"
 	"layout.h"
+	"prop.h"
 )
 
 # Install the header files.
