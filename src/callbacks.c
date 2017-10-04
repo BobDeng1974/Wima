@@ -245,6 +245,9 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	WimaItemHandle clickItem = wima_area_findItem(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN);
 
+	wwin->ctx.active = clickItem;
+	wwin->ctx.focus = clickItem;
+
 	wima_window_setDirty(wwin, false);
 
 	if (wact == WIMA_ACTION_PRESS) {
@@ -277,11 +280,10 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		{
 			wwin->ctx.clicks = 0;
 		}
+		else {
 
-		wwin->ctx.active = clickItem;
-		wwin->ctx.focus = clickItem;
-
-		++(wwin->ctx.clicks);
+			++(wwin->ctx.clicks);
+		}
 	}
 	else if (wwin->ctx.movingSplit) {
 
@@ -297,14 +299,25 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	wwin->ctx.eventItems[numEvents] = clickItem;
 
-	event->type = WIMA_EVENT_MOUSE_BTN;
-	event->mouse_btn.timestamp = ts;
-	event->mouse_btn.button = wbtn;
-	event->mouse_btn.action = wact;
-	event->mouse_btn.mods = wmods;
-	event->mouse_btn.clicks = wwin->ctx.clicks;
+	if (wwin->ctx.clicks) {
 
-	++(wwin->ctx.eventCount);
+		event->type = WIMA_EVENT_MOUSE_CLICK;
+		event->click.timestamp = ts;
+		event->click.mods = wmods;
+		event->click.clicks = wwin->ctx.clicks;
+
+		++(wwin->ctx.eventCount);
+	}
+
+	if (wwin->ctx.eventCount < WIMA_MAX_EVENTS) {
+
+		event->type = WIMA_EVENT_MOUSE_BTN;
+		event->mouse_btn.button = wbtn;
+		event->mouse_btn.action = wact;
+		event->mouse_btn.mods = wmods;
+
+		++(wwin->ctx.eventCount);
+	}
 }
 
 void wima_callback_mousePos(GLFWwindow* window, double x, double y) {

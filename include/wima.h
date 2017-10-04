@@ -540,15 +540,27 @@ typedef struct wima_key_event {
 
 typedef struct wima_mouse_btn_event {
 
-	uint32_t timestamp;
-
 	WimaMouseBtn button;
 	WimaAction action;
 	WimaMods mods;
 
-	uint16_t clicks;
-
 } WimaMouseBtnEvent;
+
+typedef struct wima_mouse_click_event {
+
+	uint32_t timestamp;
+	uint16_t clicks;
+	WimaMods mods;
+
+} WimaMouseClickEvent;
+
+typedef struct wima_mouse_drag_event {
+
+		WimaMouseBtn button;
+		WimaMods mods;
+		WimaPos pos;
+
+} WimaMouseDragEvent;
 
 typedef struct wima_scroll_event {
 
@@ -617,13 +629,17 @@ typedef struct wima_nvg_info {
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
-typedef WimaStatus (*WimaItemMouseEventFunc)(WimaItemHandle, WimaMouseBtnEvent);
+typedef WimaStatus (*WimaItemMouseBtnFunc)(WimaItemHandle, WimaMouseBtnEvent);
+typedef WimaStatus (*WimaItemMouseClickFunc)(WimaItemHandle, WimaMouseClickEvent);
+typedef WimaStatus (*WimaItemMouseDragFunc)(WimaItemHandle, WimaMouseDragEvent);
 typedef WimaStatus (*WimaItemScrollFunc)(WimaItemHandle, WimaScrollEvent);
 typedef WimaStatus (*WimaItemCharEvent)(WimaItemHandle, WimaCharEvent);
 
 typedef struct wima_item_funcs {
 
-	WimaItemMouseEventFunc mouse;
+	WimaItemMouseBtnFunc mouse;
+	WimaItemMouseClickFunc click;
+	WimaItemMouseDragFunc drag;
 	WimaItemScrollFunc scroll;
 	WimaItemCharEvent char_event;
 

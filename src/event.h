@@ -59,18 +59,20 @@ typedef enum wima_event_type {
 
 	WIMA_EVENT_KEY           = 1 << 10,
 	WIMA_EVENT_MOUSE_BTN     = 1 << 11,
-	WIMA_EVENT_MOUSE_POS     = 1 << 12,
-	WIMA_EVENT_AREA_ENTER    = 1 << 13,
-	WIMA_EVENT_SCROLL        = 1 << 14,
-	WIMA_EVENT_CHAR          = 1 << 15,
+	WIMA_EVENT_MOUSE_CLICK   = 1 << 12,
+	WIMA_EVENT_MOUSE_POS     = 1 << 13,
+	WIMA_EVENT_MOUSE_DRAG    = 1 << 14,
+	WIMA_EVENT_SCROLL        = 1 << 15,
+	WIMA_EVENT_CHAR          = 1 << 16,
+	WIMA_EVENT_AREA_ENTER    = 1 << 17,
 
-	WIMA_EVENT_FILE_DROP     = 1 << 16,
-	WIMA_EVENT_WIN_POS       = 1 << 17,
-	WIMA_EVENT_FB_SIZE       = 1 << 18,
-	WIMA_EVENT_WIN_SIZE      = 1 << 19,
-	WIMA_EVENT_WIN_ENTER     = 1 << 20,
-	WIMA_EVENT_WIN_MINIMIZE  = 1 << 21,
-	WIMA_EVENT_WIN_FOCUS     = 1 << 22
+	WIMA_EVENT_FILE_DROP     = 1 << 18,
+	WIMA_EVENT_WIN_POS       = 1 << 19,
+	WIMA_EVENT_FB_SIZE       = 1 << 20,
+	WIMA_EVENT_WIN_SIZE      = 1 << 21,
+	WIMA_EVENT_WIN_ENTER     = 1 << 22,
+	WIMA_EVENT_WIN_MINIMIZE  = 1 << 23,
+	WIMA_EVENT_WIN_FOCUS     = 1 << 24
 
 } WimaEventType;
 
@@ -109,17 +111,21 @@ typedef struct wima_event {
 
 		WimaMouseBtnEvent mouse_btn;
 
-		WimaMouseSplitEvent split;
-
-		WimaAreaEnterEvent area_enter;
+		WimaMouseClickEvent click;
 
 		WimaPos pos;
+
+		WimaMouseDragEvent drag;
 
 		WimaScrollEvent scroll;
 
 		WimaCharEvent char_event;
 
 		DynaVector file_drop;
+
+		WimaMouseSplitEvent split;
+
+		WimaAreaEnterEvent area_enter;
 
 		WimaSize size;
 
