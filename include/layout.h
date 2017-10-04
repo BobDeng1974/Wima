@@ -62,6 +62,8 @@ NVGcolor wima_layout_backgroundColor(WimaLayoutHandle wlh);
 WimaLayoutHandle wima_layout_row(WimaLayoutHandle parent, uint16_t flags);
 WimaLayoutHandle wima_layout_col(WimaLayoutHandle parent, uint16_t flags);
 WimaLayoutHandle wima_layout_split(WimaLayoutHandle parent, uint16_t flags, float split);
+WimaLayoutHandle wima_layout_list(WimaLayoutHandle parent, uint16_t flags);
+WimaLayoutHandle wima_layout_grid(WimaLayoutHandle parent, uint16_t flags);
 
 #ifdef __cplusplus
 }
