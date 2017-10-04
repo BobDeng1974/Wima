@@ -171,7 +171,7 @@ typedef struct wima_node_theme {
 } WimaNodeTheme;
 
 // The theme used to draw widgets.
-typedef struct wima_theme_loadTheme {
+typedef struct wima_theme_theme {
 
 	// The background color of panels and windows.
 	NVGcolor backgroundColor;
