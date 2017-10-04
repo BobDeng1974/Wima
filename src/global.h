@@ -53,6 +53,8 @@ typedef struct wima_globals {
 
 	DynaVector windows;
 
+	DynaVector props;
+
 	DynaVector workspaces;
 	DynaVector regions;
 
