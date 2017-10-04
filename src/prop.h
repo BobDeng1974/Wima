@@ -100,7 +100,9 @@ typedef struct wima_prop_ptr {
 
 typedef struct wima_prop {
 
-	DynaString name;
+	const char* name;
+
+	const char* desc;
 
 	WimaPropHandle idx;
 

@@ -213,31 +213,27 @@ void* wima_prop_get_ptr(WimaPropHandle wph) {
 	return prop->_ptr.ptr;
 }
 
-static WimaProp* wima_prop_register(const char* name, WimaPropType type) {
+static WimaProp* wima_prop_register(const char* name, const char* desc, WimaPropType type) {
+
+	assert(name);
 
 	size_t idx = dvec_len(wg.props);
 
 	WimaProp prop;
 
-	DynaStatus status = dstr_create(&prop.name, name);
-	if (status) {
-		return NULL;
-	}
-
+	prop.name = name;
+	prop.desc = desc;
 	prop.idx = idx;
 	prop.type = type;
 
-	status = dvec_push(wg.props, &prop);
-	if (status) {
-		return NULL;
-	}
+	DynaStatus status = dvec_push(wg.props, &prop);
 
-	return wg.props + idx;
+	return status ? NULL : wg.props + idx;
 }
 
-WimaPropHandle wima_prop_register_bool(const char* name, bool initial) {
+WimaPropHandle wima_prop_register_bool(const char* name, const char* desc, bool initial) {
 
-	WimaProp* prop = wima_prop_register(name, WIMA_PROP_BOOL);
+	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_BOOL);
 	assert(prop);
 
 	prop->_bool = initial;
@@ -245,9 +241,9 @@ WimaPropHandle wima_prop_register_bool(const char* name, bool initial) {
 	return prop->idx;
 }
 
-WimaPropHandle wima_prop_register_int(const char* name, int initial, int min, int max) {
+WimaPropHandle wima_prop_register_int(const char* name, const char* desc, int initial, int min, int max) {
 
-	WimaProp* prop = wima_prop_register(name, WIMA_PROP_INT);
+	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_INT);
 	assert(prop && prop->type == WIMA_PROP_INT);
 
 	prop->_int.val = initial;
@@ -257,9 +253,9 @@ WimaPropHandle wima_prop_register_int(const char* name, int initial, int min, in
 	return prop->idx;
 }
 
-WimaPropHandle wima_prop_register_float(const char* name, float initial, float min, float max) {
+WimaPropHandle wima_prop_register_float(const char* name, const char* desc, float initial, float min, float max) {
 
-	WimaProp* prop = wima_prop_register(name, WIMA_PROP_FLOAT);
+	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_FLOAT);
 	assert(prop && prop->type == WIMA_PROP_FLOAT);
 
 	prop->_float.val = initial;
@@ -269,13 +265,13 @@ WimaPropHandle wima_prop_register_float(const char* name, float initial, float m
 	return prop->idx;
 }
 
-WimaPropHandle wima_prop_register_percent(const char* name, int initial) {
-	return wima_prop_register_int(name, initial, 0, 100);
+WimaPropHandle wima_prop_register_percent(const char* name, const char* desc, int initial) {
+	return wima_prop_register_int(name, desc, initial, 0, 100);
 }
 
-WimaPropHandle wima_prop_register_string(const char* name, DynaString str) {
+WimaPropHandle wima_prop_register_string(const char* name, const char* desc, DynaString str) {
 
-	WimaProp* prop = wima_prop_register(name, WIMA_PROP_STRING);
+	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_STRING);
 	assert(prop && prop->type == WIMA_PROP_STRING);
 
 	prop->_str = str;
@@ -283,11 +279,10 @@ WimaPropHandle wima_prop_register_string(const char* name, DynaString str) {
 	return prop->idx;
 }
 
-WimaPropHandle wima_prop_register_enum(const char* name,     const char* names,
-                                       const uint32_t* vals, uint32_t nvals,
-                                       uint32_t initalIdx)
+WimaPropHandle wima_prop_register_enum(const char* name, const char* desc, const char* names,
+                                       const uint32_t* vals, uint32_t nvals, uint32_t initalIdx)
 {
-	WimaProp* prop = wima_prop_register(name, WIMA_PROP_ENUM);
+	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_ENUM);
 	assert(prop && prop->type == WIMA_PROP_ENUM);
 
 	prop->_enum.names = names;
@@ -298,9 +293,9 @@ WimaPropHandle wima_prop_register_enum(const char* name,     const char* names,
 	return prop->idx;
 }
 
-WimaPropHandle wima_prop_register_list(const char* name, DynaVector list) {
+WimaPropHandle wima_prop_register_list(const char* name, const char* desc, DynaVector list) {
 
-	WimaProp* prop = wima_prop_register(name, WIMA_PROP_BOOL);
+	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_BOOL);
 	assert(prop && prop->type == WIMA_PROP_LIST);
 
 	prop->_list = list;
@@ -308,9 +303,9 @@ WimaPropHandle wima_prop_register_list(const char* name, DynaVector list) {
 	return prop->idx;
 }
 
-WimaPropHandle wima_prop_register_color(const char* name, NVGcolor initial) {
+WimaPropHandle wima_prop_register_color(const char* name, const char* desc, NVGcolor initial) {
 
-	WimaProp* prop = wima_prop_register(name, WIMA_PROP_COLOR);
+	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_COLOR);
 	assert(prop && prop->type == WIMA_PROP_COLOR);
 
 	prop->_color = initial;
@@ -318,13 +313,12 @@ WimaPropHandle wima_prop_register_color(const char* name, NVGcolor initial) {
 	return prop->idx;
 }
 
-WimaPropHandle wima_prop_register_ptr(const char* name, void* ptr,
-                                      WimaPropDrawFunc draw,
-                                      WimaPropFreePtrFunc free)
+WimaPropHandle wima_prop_register_ptr(const char* name, const char* desc, void* ptr,
+                                      WimaPropDrawFunc draw, WimaPropFreePtrFunc free)
 {
 	assert(draw);
 
-	WimaProp* prop = wima_prop_register(name, WIMA_PROP_PTR);
+	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_PTR);
 	assert(prop && prop->type == WIMA_PROP_PTR);
 
 	prop->_ptr.draw = draw;
@@ -334,11 +328,12 @@ WimaPropHandle wima_prop_register_ptr(const char* name, void* ptr,
 	return prop->idx;
 }
 
-WimaPropHandle wima_prop_register_operator(const char* name, WimaItemMouseClickFunc op) {
+WimaPropHandle wima_prop_register_operator(const char* name, const char* desc, WimaItemMouseClickFunc op) {
 
-	WimaProp* prop = wima_prop_register(name, WIMA_PROP_OPERATOR);
+	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_OPERATOR);
 	assert(prop && prop->type == WIMA_PROP_OPERATOR);
 
+	prop->_op = op;
 
 	return prop->idx;
 }

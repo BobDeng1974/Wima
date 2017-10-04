@@ -65,20 +65,18 @@ void wima_prop_set_color(WimaPropHandle wph, NVGcolor color);
 NVGcolor wima_prop_get_color(WimaPropHandle wph);
 void* wima_prop_get_ptr(WimaPropHandle wph);
 
-WimaPropHandle wima_prop_register_bool(const char* name, bool initial);
-WimaPropHandle wima_prop_register_int(const char* name, int initial, int min, int max);
-WimaPropHandle wima_prop_register_float(const char* name, float initial, float min, float max);
-WimaPropHandle wima_prop_register_percent(const char* name, int initial);
-WimaPropHandle wima_prop_register_string(const char* name, DynaString str);
-WimaPropHandle wima_prop_register_enum(const char* name,     const char* names,
-                                       const uint32_t* vals, uint32_t nvals,
-                                       uint32_t initalIdx);
-WimaPropHandle wima_prop_register_list(const char* name, DynaVector list);
-WimaPropHandle wima_prop_register_color(const char* name, NVGcolor initial);
-WimaPropHandle wima_prop_register_ptr(const char* name, void* ptr,
-                                      WimaPropDrawFunc draw,
-                                      WimaPropFreePtrFunc free);
-WimaPropHandle wima_prop_register_operator(const char* name, WimaItemMouseClickFunc op);
+WimaPropHandle wima_prop_register_bool(const char* name, const char* desc, bool initial);
+WimaPropHandle wima_prop_register_int(const char* name, const char* desc, int initial, int min, int max);
+WimaPropHandle wima_prop_register_float(const char* name, const char* desc, float initial, float min, float max);
+WimaPropHandle wima_prop_register_percent(const char* name, const char* desc, int initial);
+WimaPropHandle wima_prop_register_string(const char* name, const char* desc, DynaString str);
+WimaPropHandle wima_prop_register_enum(const char* name, const char* desc, const char* names,
+                                       const uint32_t* vals, uint32_t nvals, uint32_t initalIdx);
+WimaPropHandle wima_prop_register_list(const char* name, const char* desc, DynaVector list);
+WimaPropHandle wima_prop_register_color(const char* name, const char* desc, NVGcolor initial);
+WimaPropHandle wima_prop_register_ptr(const char* name, const char* desc, void* ptr,
+                                      WimaPropDrawFunc draw, WimaPropFreePtrFunc free);
+WimaPropHandle wima_prop_register_operator(const char* name, const char* desc, WimaItemMouseClickFunc op);
 
 #ifdef __cplusplus
 }
