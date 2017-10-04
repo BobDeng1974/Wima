@@ -290,12 +290,15 @@ void wima_item_setMargins(WimaItemHandle item, short l, short t, short r, short 
 short wima_item_marginLeft(WimaItemHandle item) {
 	return wima_item_ptr(item)->margins[0];
 }
+
 short wima_item_marginTop(WimaItemHandle item) {
 	return wima_item_ptr(item)->margins[1];
 }
+
 short wima_item_marginRight(WimaItemHandle item) {
 	return wima_item_ptr(item)->margins[2];
 }
+
 short wima_item_marginDown(WimaItemHandle item) {
 	return wima_item_ptr(item)->margins[3];
 }
