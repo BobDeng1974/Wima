@@ -598,7 +598,7 @@ WimaStatus wima_area_key(WimaAreaNode* area, WimaKeyEvent e) {
 	WimaAreaKeyFunc key_event = region->key_event;
 
 	if (key_event) {
-		status = key_event(wima_area_handle(area), e);
+		status = key_event(wima_area_handle(area->window, area->node), e);
 	}
 	else {
 		status = WIMA_STATUS_SUCCESS;
@@ -618,7 +618,7 @@ WimaStatus wima_area_mousePos(WimaAreaNode* area, WimaPos pos) {
 	WimaAreaMousePosFunc mouse_pos = region->mouse_pos;
 
 	if (mouse_pos) {
-		status = mouse_pos(wima_area_handle(area), pos);
+		status = mouse_pos(wima_area_handle(area->window, area->node), pos);
 	}
 	else {
 		status = WIMA_STATUS_SUCCESS;

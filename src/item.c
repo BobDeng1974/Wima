@@ -362,8 +362,7 @@ uint32_t wima_item_flags(WimaItemHandle item) {
 }
 
 WimaAreaHandle wima_item_area(WimaItemHandle item) {
-	WimaAreaNode* area = wima_area_area(item.window, item.area);
-	return wima_area_handle(area);
+	return wima_area_handle(item.window, item.area);
 }
 
 bool wima_item_contains(WimaItemHandle item, WimaPos pos) {
