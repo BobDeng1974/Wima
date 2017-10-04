@@ -250,7 +250,7 @@ static WimaProp* wima_prop_register(const char* name, const char* desc, WimaProp
 
 	for (size_t i = 0; i < idx; ++i) {
 
-		if (hash == props[i].hash && !strcmp(name, props[i].name)) {
+		if (hash == props[i].hash && !strcmp(name, dstr_str(props[i].name))) {
 			assert(type == props[i].type);
 			return props + i;
 		}
@@ -258,13 +258,22 @@ static WimaProp* wima_prop_register(const char* name, const char* desc, WimaProp
 
 	WimaProp prop;
 
-	prop.name = name;
-	prop.desc = desc;
+	DynaStatus status = dstr_create(&prop.name, name);
+	if (status) {
+		return NULL;
+	}
+
+	status = dstr_create(&prop.desc, desc);
+	if (status) {
+		dstr_free(prop.name);
+		return NULL;
+	}
+
 	prop.hash = hash;
 	prop.idx = idx;
 	prop.type = type;
 
-	DynaStatus status = dvec_push(wg.props, &prop);
+	status = dvec_push(wg.props, &prop);
 
 	return status ? NULL : wg.props + idx;
 }

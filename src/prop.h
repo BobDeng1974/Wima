@@ -102,9 +102,9 @@ typedef struct wima_prop_ptr {
 
 typedef struct wima_prop {
 
-	const char* name;
+	DynaString name;
 
-	const char* desc;
+	DynaString desc;
 
 	uint64_t hash;
 
