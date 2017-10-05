@@ -58,6 +58,10 @@ void wima_prop_free(WimaPropHandle wph) {
 
 	WimaProp* prop = dvec_get(wg.props, wph);
 
+	if (prop->idx == WIMA_PROP_INVALID) {
+		return;
+	}
+
 	switch (prop->type) {
 
 		case WIMA_PROP_BOOL:
@@ -91,6 +95,8 @@ void wima_prop_free(WimaPropHandle wph) {
 		case WIMA_PROP_OPERATOR:
 			break;
 	}
+
+	prop->idx = WIMA_PROP_INVALID;
 }
 
 WimaPropType wima_prop_type(WimaPropHandle wph) {
@@ -101,6 +107,28 @@ WimaPropType wima_prop_type(WimaPropHandle wph) {
 	assert(prop);
 
 	return prop->type;
+}
+
+WimaPropHandle wima_prop_find(const char* name) {
+
+	size_t slen = strlen(name);
+
+	uint64_t hash = dyna_hash64(name, slen, WIMA_PROP_SEED);
+
+	size_t len = dvec_len(wg.props);
+	WimaProp* props = dvec_get(wg.props, 0);
+
+	for (size_t i = 0; i < len; ++i) {
+
+		if (props[i].idx == i &&
+		    hash == props[i].hash &&
+		    !strcmp(name, dstr_str(props[i].name)))
+		{
+			return (WimaPropHandle) i;
+		}
+	}
+
+	return WIMA_PROP_INVALID;
 }
 
 void wima_prop_setBool(WimaPropHandle wph, bool val) {
@@ -250,13 +278,25 @@ static WimaProp* wima_prop_register(const char* name, const char* desc, WimaProp
 
 	WimaProp* props = dvec_get(wg.props, 0);
 
+	size_t earlyIdx = 0;
+	bool early = false;
+
 	for (size_t i = 0; i < idx; ++i) {
 
-		if (hash == props[i].hash && !strcmp(name, dstr_str(props[i].name))) {
+		if (props[i].idx == WIMA_PROP_INVALID) {
+
+			if (!early) {
+				early = true;
+				earlyIdx = i;
+			}
+		}
+		else if (hash == props[i].hash && !strcmp(name, dstr_str(props[i].name))) {
 			assert(type == props[i].type);
 			return props + i;
 		}
 	}
+
+	idx = early ? earlyIdx : idx;
 
 	WimaProp prop;
 
@@ -391,4 +431,16 @@ WimaPropHandle wima_prop_registerOperator(const char* name, const char* desc, Wi
 	prop->_op = op;
 
 	return prop->idx;
+}
+
+void wima_prop_unregister(WimaPropHandle wph) {
+
+	assert(wph < dvec_len(wg.props));
+
+	WimaProp* prop = dvec_get(wg.props, wph);
+	assert(prop);
+
+	if (prop->idx != WIMA_PROP_INVALID) {
+		wima_prop_free(wph);
+	}
 }

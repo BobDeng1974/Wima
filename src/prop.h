@@ -44,8 +44,6 @@ extern "C" {
 
 #include <prop.h>
 
-#define WIMA_PROP_INVALID ((WimaPropHandle) -1)
-
 #define WIMA_PROP_SEED (0xdeadbeef0ddba11)
 
 typedef struct wima_prop_int {

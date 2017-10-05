@@ -46,6 +46,8 @@ extern "C" {
 
 #include <wima.h>
 
+#define WIMA_PROP_INVALID ((WimaPropHandle) -1)
+
 typedef enum wima_prop_type_struct {
 
 	WIMA_PROP_PROPLIST,
@@ -67,6 +69,8 @@ typedef WimaStatus (*WimaPropDrawFunc)(WimaItemHandle, void*);
 typedef void (*WimaPropFreePtrFunc)(void*);
 
 WimaPropType wima_prop_type(WimaPropHandle wph);
+
+WimaPropHandle wima_prop_find(const char* name);
 
 void wima_prop_setBool(WimaPropHandle wph, bool val);
 bool wima_prop_bool(WimaPropHandle wph);
@@ -95,6 +99,8 @@ WimaPropHandle wima_prop_registerColor(const char* name, const char* desc, NVGco
 WimaPropHandle wima_prop_registerPtr(const char* name, const char* desc, void* ptr,
                                       WimaPropDrawFunc draw, WimaPropFreePtrFunc free);
 WimaPropHandle wima_prop_registerOperator(const char* name, const char* desc, WimaItemMouseClickFunc op);
+
+void wima_prop_unregister(WimaPropHandle wph);
 
 #ifdef __cplusplus
 }
