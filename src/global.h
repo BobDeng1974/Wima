@@ -58,8 +58,6 @@ typedef struct wima_globals {
 	DynaVector workspaces;
 	DynaVector regions;
 
-	WimaTheme theme;
-
 	DynaString fontPath;
 	DynaString iconSheetPath;
 
