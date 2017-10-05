@@ -55,6 +55,8 @@ typedef struct wima_prop_int {
 	int min;
 	int max;
 
+	uint32_t step;
+
 } WimaPropInt;
 
 typedef struct wima_prop_float {
@@ -63,6 +65,8 @@ typedef struct wima_prop_float {
 
 	float min;
 	float max;
+
+	uint32_t step;
 
 } WimaPropFloat;
 

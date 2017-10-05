@@ -290,26 +290,30 @@ WimaPropHandle wima_prop_registerBool(const char* name, const char* desc, bool i
 	return prop->idx;
 }
 
-WimaPropHandle wima_prop_registerInt(const char* name, const char* desc, int initial, int min, int max) {
-
+WimaPropHandle wima_prop_registerInt(const char* name, const char* desc, int initial,
+                                     int min, int max, uint32_t step)
+{
 	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_INT);
 	assert(prop && prop->type == WIMA_PROP_INT);
 
 	prop->_int.val = initial;
 	prop->_int.min = min;
 	prop->_int.max = max;
+	prop->_int.step = step;
 
 	return prop->idx;
 }
 
-WimaPropHandle wima_prop_registerFloat(const char* name, const char* desc, float initial, float min, float max) {
-
+WimaPropHandle wima_prop_registerFloat(const char* name, const char* desc, float initial,
+                                       float min, float max, uint32_t step)
+{
 	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_FLOAT);
 	assert(prop && prop->type == WIMA_PROP_FLOAT);
 
 	prop->_float.val = initial;
 	prop->_float.min = min;
 	prop->_float.max = max;
+	prop->_float.step = step;
 
 	return prop->idx;
 }
