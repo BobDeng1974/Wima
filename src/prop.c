@@ -93,6 +93,16 @@ void wima_prop_free(WimaPropHandle wph) {
 	}
 }
 
+WimaPropType wima_prop_type(WimaPropHandle wph) {
+
+	assert(wph < dvec_len(wg.props));
+
+	WimaProp* prop = dvec_get(wg.props, wph);
+	assert(prop);
+
+	return prop->type;
+}
+
 void wima_prop_setBool(WimaPropHandle wph, bool val) {
 
 	assert(wph < dvec_len(wg.props));

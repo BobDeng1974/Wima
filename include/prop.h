@@ -46,10 +46,27 @@ extern "C" {
 
 #include <wima.h>
 
+typedef enum wima_prop_type_struct {
+
+	WIMA_PROP_PROPLIST,
+	WIMA_PROP_BOOL,
+	WIMA_PROP_INT,
+	WIMA_PROP_FLOAT,
+	WIMA_PROP_STRING,
+	WIMA_PROP_ENUM,
+	WIMA_PROP_LIST,
+	WIMA_PROP_COLOR,
+	WIMA_PROP_PTR,
+	WIMA_PROP_OPERATOR
+
+} WimaPropType;
+
 typedef uint32_t WimaPropHandle;
 
 typedef WimaStatus (*WimaPropDrawFunc)(WimaItemHandle, void*);
 typedef void (*WimaPropFreePtrFunc)(void*);
+
+WimaPropType wima_prop_type(WimaPropHandle wph);
 
 void wima_prop_setBool(WimaPropHandle wph, bool val);
 bool wima_prop_bool(WimaPropHandle wph);

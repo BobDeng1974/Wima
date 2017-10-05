@@ -48,20 +48,6 @@ extern "C" {
 
 #define WIMA_PROP_SEED (0xdeadbeef0ddba11)
 
-typedef enum wima_prop_type {
-
-	WIMA_PROP_BOOL,
-	WIMA_PROP_INT,
-	WIMA_PROP_FLOAT,
-	WIMA_PROP_STRING,
-	WIMA_PROP_ENUM,
-	WIMA_PROP_LIST,
-	WIMA_PROP_COLOR,
-	WIMA_PROP_PTR,
-	WIMA_PROP_OPERATOR
-
-} WimaPropType;
-
 typedef struct wima_prop_int {
 
 	int val;
