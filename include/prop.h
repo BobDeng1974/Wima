@@ -57,8 +57,6 @@ void wima_prop_setInt(WimaPropHandle wph, int val);
 int wima_prop_int(WimaPropHandle wph);
 void wima_prop_setFloat(WimaPropHandle wph, float val);
 float wima_prop_float(WimaPropHandle wph);
-void wima_prop_setPercent(WimaPropHandle wph, int percent);
-int wima_prop_percent(WimaPropHandle wph);
 DynaString wima_prop_string(WimaPropHandle wph);
 void wima_prop_setEnumIdx(WimaPropHandle wph, uint32_t idx);
 uint32_t wima_prop_enum(WimaPropHandle wph);
@@ -70,7 +68,6 @@ void* wima_prop_ptr(WimaPropHandle wph);
 WimaPropHandle wima_prop_registerBool(const char* name, const char* desc, bool initial);
 WimaPropHandle wima_prop_registerInt(const char* name, const char* desc, int initial, int min, int max);
 WimaPropHandle wima_prop_registerFloat(const char* name, const char* desc, float initial, float min, float max);
-WimaPropHandle wima_prop_registerPercent(const char* name, const char* desc, int initial);
 WimaPropHandle wima_prop_registerString(const char* name, const char* desc, DynaString str);
 WimaPropHandle wima_prop_registerEnum(const char* name, const char* desc, const char* names[],
                                        const uint32_t* vals, uint32_t nvals, uint32_t initalIdx);

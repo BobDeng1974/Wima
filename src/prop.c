@@ -157,14 +157,6 @@ float wima_prop_float(WimaPropHandle wph) {
 	return prop->_float.val;
 }
 
-void wima_prop_setPercent(WimaPropHandle wph, int percent) {
-	wima_prop_setInt(wph, percent);
-}
-
-int wima_prop_percent(WimaPropHandle wph) {
-	return wima_prop_int(wph);
-}
-
 DynaString wima_prop_string(WimaPropHandle wph) {
 
 	assert(wph < dvec_len(wg.props));
@@ -310,10 +302,6 @@ WimaPropHandle wima_prop_registerFloat(const char* name, const char* desc, float
 	prop->_float.max = max;
 
 	return prop->idx;
-}
-
-WimaPropHandle wima_prop_registerPercent(const char* name, const char* desc, int initial) {
-	return wima_prop_registerInt(name, desc, initial, 0, 100);
 }
 
 WimaPropHandle wima_prop_registerString(const char* name, const char* desc, DynaString str) {
