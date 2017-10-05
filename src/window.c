@@ -172,10 +172,10 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 	window->nvg.nvg = nvgCreateGL3(NVG_ANTIALIAS);
 
 	// Load the font.
-	window->nvg.font = wima_theme_loadFont(window->nvg.nvg, "default", dstr_str(wg.fontPath));
+	window->nvg.font = nvgCreateFont(window->nvg.nvg, "default", dstr_str(wg.fontPath));
 
 	// Load the icons.
-	window->nvg.icons = wima_theme_loadIcons(window->nvg.nvg, dstr_str(wg.iconSheetPath));
+	window->nvg.icons = nvgCreateImage(window->nvg.nvg, dstr_str(wg.iconSheetPath), 0);
 
 	// Load the app icon.
 	if (wg.numIcons) {
