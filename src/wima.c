@@ -55,7 +55,6 @@
 #include "global.h"
 
 extern WimaG wg;
-extern const WimaTheme wima_initial_theme;
 
 GLFWcursor* wima_standardCursor(WimaCursor cursor) {
 	return wg.cursors[cursor];
@@ -93,7 +92,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.windows = NULL;
 
 	// Set the initial theme.
-	wg.theme = wima_initial_theme;
+	wg.theme = WIMA_PROP_INVALID;
 
 	// Clear before trying to set.
 	wg.fontPath = NULL;
@@ -194,6 +193,9 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 }
 
 WimaStatus wima_main() {
+
+	// The user must have loaded a theme somehow.
+	assert(wg.theme != WIMA_PROP_INVALID);
 
 	GLFWwindow* win = glfwGetCurrentContext();
 	if (!win) {

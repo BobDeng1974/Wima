@@ -42,6 +42,7 @@
 
 #include <wima.h>
 #include <theme.h>
+#include <prop.h>
 
 #define WIMA_MAX_ICONS (16)
 
@@ -67,6 +68,9 @@ typedef struct wima_globals {
 	// Icons.
 	GLFWimage icons[WIMA_MAX_ICONS];
 	int numIcons;
+
+	// Handle to the theme prop group.
+	WimaPropHandle theme;
 
 } WimaG;
 
