@@ -199,7 +199,6 @@ DynaVector wima_prop_propList(WimaPropHandle wph) {
 	return prop->_list;
 }
 
-
 void wima_prop_setBool(WimaPropHandle wph, bool val) {
 
 	assert(wph < dvec_len(wg.props));
