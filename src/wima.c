@@ -100,44 +100,44 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.iconSheetPath = NULL;
 
 	// Make sure these are set.
-	DynaStatus dstatus = dstr_create(&wg.fontPath, fontPath);
-	if (dstatus) {
+	wg.fontPath = dstr_create(fontPath);
+	if (!wg.fontPath) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
-	dstatus = dstr_create(&wg.iconSheetPath, iconSheetPath);
-	if (dstatus) {
+	wg.iconSheetPath = dstr_create(iconSheetPath);
+	if (!wg.iconSheetPath) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
-	dstatus = dstr_create(&(wg.name), name);
-	if (dstatus) {
+	wg.name = dstr_create(name);
+	if (!wg.name) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
-	dstatus = dvec_create(&wg.windows, NULL, 0, sizeof(WimaWin));
-	if (dstatus) {
+	wg.windows = dvec_create(NULL, 0, sizeof(WimaWin));
+	if (!wg.windows) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
-	dstatus = dvec_create(&wg.props, NULL, 0, sizeof(WimaProp));
-	if (dstatus) {
+	wg.props = dvec_create(NULL, 0, sizeof(WimaProp));
+	if (!wg.props) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
-	dstatus = dvec_create(&wg.regions, NULL, 0, sizeof(WimaRegion));
-	if (dstatus) {
+	wg.regions = dvec_create(NULL, 0, sizeof(WimaRegion));
+	if (!wg.regions) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
-	dstatus = dvec_create(&wg.workspaces, NULL, 0, sizeof(WimaWksp));
-	if (dstatus) {
+	wg.workspaces = dvec_create(NULL, 0, sizeof(WimaWksp));
+	if (!wg.workspaces) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}

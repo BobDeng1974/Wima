@@ -561,8 +561,8 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	// Allocate a vector.
-	DynaVector strs;
-	if (dvec_createStringVec(&strs, filec)) {
+	DynaVector strs = dvec_createStringVec(filec);
+	if (!strs) {
 		wg.funcs.error(WIMA_STATUS_MALLOC_ERR, errorMsg);
 		return;
 	}

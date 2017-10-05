@@ -49,16 +49,14 @@ extern WimaG wg;
 
 WimaStatus wima_workspace_register(WimaWorkspaceHandle* wth) {
 
-	WimaWksp wksp;
-
-	DynaStatus status = dtree_create(&wksp, NULL, 0, sizeof(WimaAreaNode));
-	if (status) {
+	WimaWksp wksp = dtree_create(NULL, 0, sizeof(WimaAreaNode));
+	if (!wksp) {
 		return WIMA_STATUS_WORKSPACE_ERR;
 	}
 
 	size_t len = dvec_len(wg.workspaces);
 
-	status = dvec_push(wg.workspaces, &wksp);
+	DynaStatus status = dvec_push(wg.workspaces, &wksp);
 	if (status) {
 		return WIMA_STATUS_WORKSPACE_ERR;
 	}

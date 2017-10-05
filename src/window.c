@@ -83,7 +83,8 @@ WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph) 
 
 	const char* name = dstr_str(wg.name);
 
-	if (dstr_create(&wwin.name, name)) {
+	wwin.name = dstr_create(name);
+	if (!wwin.name) {
 		return WIMA_STATUS_WINDOW_ERR;
 	}
 
@@ -372,14 +373,13 @@ WimaStatus wima_window_setUserPointer(WimaWindowHandle wwh, void* user) {
 
 DynaTree wima_window_areas(WimaWindowHandle wwh) {
 
-	DynaTree areas;
-
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	DynaTree winareas = win->areas;
 
 	int nodes = dtree_nodes(winareas);
 
-	if (dtree_create(&areas, NULL, nodes, sizeof(WimaAreaNode))) {
+	DynaTree areas = dtree_create(NULL, nodes, sizeof(WimaAreaNode));
+	if (!areas) {
 		return NULL;
 	}
 
@@ -407,7 +407,10 @@ WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle w
 	WimaWin* window = dvec_get(wg.windows, wwh);
 
 	if (!window->areas) {
-		if (dtree_create(&window->areas, NULL, dtree_nodes(wksp), sizeof(WimaAreaNode))) {
+
+		window->areas = dtree_create(NULL, dtree_nodes(wksp), sizeof(WimaAreaNode));
+
+		if (!window->areas) {
 			return WIMA_STATUS_WINDOW_ERR;
 		}
 	}
@@ -435,7 +438,10 @@ WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas) {
 	WimaWin* window = dvec_get(wg.windows, wwh);
 
 	if (!window->areas) {
-		if (dtree_create(&window->areas, NULL, dtree_nodes(areas), sizeof(WimaAreaNode))) {
+
+		window->areas = dtree_create(NULL, dtree_nodes(areas), sizeof(WimaAreaNode));
+
+		if (!window->areas) {
 			return WIMA_STATUS_WINDOW_ERR;
 		}
 	}
