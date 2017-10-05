@@ -50,7 +50,7 @@ extern "C" {
 
 typedef enum wima_prop_type_struct {
 
-	WIMA_PROP_PROPLIST,
+	WIMA_PROP_GROUP,
 	WIMA_PROP_BOOL,
 	WIMA_PROP_INT,
 	WIMA_PROP_FLOAT,

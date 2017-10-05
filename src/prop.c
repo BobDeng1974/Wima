@@ -64,7 +64,7 @@ void wima_prop_free(WimaPropHandle wph) {
 
 	switch (prop->type) {
 
-		case WIMA_PROP_PROPLIST:
+		case WIMA_PROP_GROUP:
 		{
 			size_t len = dvec_len(prop->_list);
 
@@ -151,7 +151,7 @@ void wima_prop_linkProp(WimaPropHandle parent, WimaPropHandle child) {
 	assert(parent < dvec_len(wg.props));
 
 	WimaProp* prop = dvec_get(wg.props, parent);
-	assert(prop && prop->type == WIMA_PROP_PROPLIST);
+	assert(prop && prop->type == WIMA_PROP_GROUP);
 
 	size_t len = dvec_len(prop->_list);
 	WimaPropHandle* handles = dvec_get(prop->_list, 0);
@@ -172,7 +172,7 @@ void wima_prop_unlinkProp(WimaPropHandle parent, WimaPropHandle child) {
 	assert(parent < dvec_len(wg.props));
 
 	WimaProp* prop = dvec_get(wg.props, parent);
-	assert(prop && prop->type == WIMA_PROP_PROPLIST);
+	assert(prop && prop->type == WIMA_PROP_GROUP);
 
 	size_t len = dvec_len(prop->_list);
 	WimaPropHandle* handles = dvec_get(prop->_list, 0);
@@ -194,7 +194,7 @@ DynaVector wima_prop_propList(WimaPropHandle wph) {
 	assert(wph < dvec_len(wg.props));
 
 	WimaProp* prop = dvec_get(wg.props, wph);
-	assert(prop && prop->type == WIMA_PROP_PROPLIST);
+	assert(prop && prop->type == WIMA_PROP_GROUP);
 
 	return prop->_list;
 }
@@ -391,7 +391,7 @@ static WimaProp* wima_prop_register(const char* name, const char* desc, WimaProp
 WimaPropHandle wima_prop_registerPropList(const char* name, const char* desc) {
 
 	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_BOOL);
-	assert(prop && prop->type == WIMA_PROP_PROPLIST);
+	assert(prop && prop->type == WIMA_PROP_GROUP);
 
 	prop->_list = dvec_create(NULL, 0, sizeof(WimaPropHandle));
 	assert(prop->_list);
