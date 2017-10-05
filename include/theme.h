@@ -325,9 +325,6 @@ typedef struct wima_theme_theme {
 // Width of node title arrow click area.
 #define WIMA_NODE_ARROW_AREA_WIDTH (20)
 
-// Size of splitter corner click area.
-#define WIMA_SPLITTER_AREA_SIZE (12)
-
 // Width of vertical scrollbar.
 #define WIMA_SCROLLBAR_WIDTH (13)
 // Height of horizontal scrollbar.
