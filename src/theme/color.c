@@ -93,61 +93,98 @@ NVGcolor wima_color_offset(NVGcolor color, int delta) {
 	return result;
 }
 
-void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
-                      const WimaWidgetTheme* theme, WimaItemState state,
-                      bool flipActive)
+void wima_color_inner(NVGcolor *shade_top, NVGcolor *shade_down, NVGcolor inner, NVGcolor innerSelected,
+                      int shadeTop, int shadeBottom, bool shaded, WimaItemState state, bool flipActive)
+{
+	if (shaded) {
+
+		switch(state) {
+
+			default:
+
+			case WIMA_ITEM_DEFAULT:
+			{
+				*shade_top = wima_color_offset(inner, shadeTop);
+				*shade_down = wima_color_offset(inner, shadeBottom);
+
+				break;
+			}
+
+			case WIMA_ITEM_HOVER:
+			{
+				NVGcolor color = wima_color_offset(inner, WIMA_HOVER_SHADE);
+
+				*shade_top = wima_color_offset(color, shadeTop);
+				*shade_down = wima_color_offset(color, shadeBottom);
+
+				break;
+			}
+
+			case WIMA_ITEM_ACTIVE:
+			{
+				int delta = flipActive ? shadeBottom : shadeTop;
+				*shade_top = wima_color_offset(innerSelected, delta);
+
+				delta = flipActive ? shadeTop : shadeBottom;
+				*shade_down = wima_color_offset(innerSelected, delta);
+
+				break;
+			}
+		}
+	}
+	else {
+
+		switch(state) {
+
+			default:
+
+			case WIMA_ITEM_DEFAULT:
+			{
+				*shade_top = inner;
+				*shade_down = inner;
+
+				break;
+			}
+
+			case WIMA_ITEM_HOVER:
+			{
+				NVGcolor color = wima_color_offset(inner, WIMA_HOVER_SHADE);
+
+				*shade_top = color;
+				*shade_down = color;
+
+				break;
+			}
+
+			case WIMA_ITEM_ACTIVE:
+			{
+				*shade_top = innerSelected;
+				*shade_down = innerSelected;
+
+				break;
+			}
+		}
+	}
+}
+
+NVGcolor wima_color_text(NVGcolor textColor, NVGcolor textSelectedColor, WimaItemState state) {
+	return (state == WIMA_ITEM_ACTIVE) ? textSelectedColor : textColor;
+}
+
+NVGcolor wima_color_node_wire(NVGcolor wireColor, NVGcolor nodeActiveColor,
+                              NVGcolor wireSelectedColor, WimaItemState state)
 {
 	switch(state) {
 
 		default:
 
 		case WIMA_ITEM_DEFAULT:
-		{
-			*shade_top = wima_color_offset(theme->inner, theme->shadeTop);
-			*shade_down = wima_color_offset(theme->inner, theme->shadeBottom);
-
-			break;
-		}
+			return wireColor;
 
 		case WIMA_ITEM_HOVER:
-		{
-			NVGcolor color = wima_color_offset(theme->inner, WIMA_HOVER_SHADE);
-
-			*shade_top = wima_color_offset(color, theme->shadeTop);
-			*shade_down = wima_color_offset(color, theme->shadeBottom);
-
-			break;
-		}
+			return wireSelectedColor;
 
 		case WIMA_ITEM_ACTIVE:
-		{
-			int delta = flipActive ? theme->shadeBottom : theme->shadeTop;
-			*shade_top = wima_color_offset(theme->innerSelected, delta);
-
-			delta = flipActive ? theme->shadeTop : theme->shadeBottom;
-			*shade_down = wima_color_offset(theme->innerSelected, delta);
-
-			break;
-		}
-	}
-}
-
-NVGcolor wima_color_text(const WimaWidgetTheme* theme, WimaItemState state) {
-	return (state == WIMA_ITEM_ACTIVE) ? theme->textSelected : theme->text;
-}
-
-NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, WimaItemState state) {
-
-	switch(state) {
-		default:
-
-		case WIMA_ITEM_DEFAULT:
-			return nvgRGBf(0.5f,0.5f,0.5f);
-
-		case WIMA_ITEM_HOVER:
-			return theme->wireSelected;
-
-		case WIMA_ITEM_ACTIVE:
-			return theme->nodeActive;
+			return nodeActiveColor;
 	}
 }

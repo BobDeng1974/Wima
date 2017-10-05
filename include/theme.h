@@ -796,18 +796,18 @@ NVGcolor wima_color_offset(NVGcolor color, int delta);
 // computes the upper and lower gradient colors for the inner box from a widget
 // theme and the widgets state. If flipActive is set and the state is
 // BND_ACTIVE, the upper and lower colors will be swapped.
-void wima_color_inner(NVGcolor *shade_top,          NVGcolor *shade_down,
-                      const WimaWidgetTheme* theme, WimaItemState state,
-                      bool flipActive);
+void wima_color_inner(NVGcolor *shade_top, NVGcolor *shade_down, NVGcolor inner, NVGcolor innerSelected,
+                      int shadeTop, int shadeBottom, bool shaded, WimaItemState state, bool flipActive);
 
 // computes the text color for a widget label from a widget theme and the
 // widgets state.
-NVGcolor wima_color_text(const WimaWidgetTheme *theme, WimaItemState state);
+NVGcolor wima_color_text(NVGcolor textColor, NVGcolor textSelectedColor, WimaItemState state);
 
 // return the color of a node wire based on state
 // BND_HOVER indicates selected state,
 // BND_ACTIVE indicates dragged state
-NVGcolor wima_color_node_wire(const WimaNodeTheme *theme, WimaItemState state);
+NVGcolor wima_color_node_wire(NVGcolor wireColor, NVGcolor nodeActiveColor,
+                              NVGcolor wireSelectedColor, WimaItemState state);
 
 #ifdef __cplusplus
 }
