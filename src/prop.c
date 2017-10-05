@@ -283,7 +283,7 @@ static WimaProp* wima_prop_register(const char* name, const char* desc, WimaProp
 WimaPropHandle wima_prop_registerBool(const char* name, const char* desc, bool initial) {
 
 	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_BOOL);
-	assert(prop);
+	assert(prop && prop->type == WIMA_PROP_BOOL);
 
 	prop->_bool = initial;
 
@@ -350,7 +350,7 @@ WimaPropHandle wima_prop_registerList(const char* name, const char* desc, DynaVe
 
 	assert(list);
 
-	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_BOOL);
+	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_LIST);
 	assert(prop && prop->type == WIMA_PROP_LIST);
 
 	prop->_list = list;
