@@ -72,6 +72,9 @@ WimaPropType wima_prop_type(WimaPropHandle wph);
 
 WimaPropHandle wima_prop_find(const char* name);
 
+void wima_prop_linkProp(WimaPropHandle parent, WimaPropHandle child);
+void wima_prop_unlinkProp(WimaPropHandle parent, WimaPropHandle child);
+DynaVector wima_prop_propList(WimaPropHandle wph);
 void wima_prop_setBool(WimaPropHandle wph, bool val);
 bool wima_prop_bool(WimaPropHandle wph);
 void wima_prop_setInt(WimaPropHandle wph, int val);

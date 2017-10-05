@@ -64,6 +64,21 @@ void wima_prop_free(WimaPropHandle wph) {
 
 	switch (prop->type) {
 
+		case WIMA_PROP_PROPLIST:
+		{
+			size_t len = dvec_len(prop->_list);
+
+			WimaPropHandle* handles = dvec_get(prop->_list, 0);
+
+			for (size_t i = 0; i < len; i ++) {
+				wima_prop_free(handles[i]);
+			}
+
+			dvec_free(prop->_list);
+
+			break;
+		}
+
 		case WIMA_PROP_BOOL:
 		case WIMA_PROP_INT:
 		case WIMA_PROP_FLOAT:
@@ -130,6 +145,60 @@ WimaPropHandle wima_prop_find(const char* name) {
 
 	return WIMA_PROP_INVALID;
 }
+
+void wima_prop_linkProp(WimaPropHandle parent, WimaPropHandle child) {
+
+	assert(parent < dvec_len(wg.props));
+
+	WimaProp* prop = dvec_get(wg.props, parent);
+	assert(prop && prop->type == WIMA_PROP_PROPLIST);
+
+	size_t len = dvec_len(prop->_list);
+	WimaPropHandle* handles = dvec_get(prop->_list, 0);
+
+	for (size_t i = 0; i < len; ++i) {
+
+		if (handles[i] == child) {
+			return;
+		}
+	}
+
+	DynaStatus status = dvec_push(prop->_list, &child);
+	assert(status == DYNA_STATUS_SUCCESS);
+}
+
+void wima_prop_unlinkProp(WimaPropHandle parent, WimaPropHandle child) {
+
+	assert(parent < dvec_len(wg.props));
+
+	WimaProp* prop = dvec_get(wg.props, parent);
+	assert(prop && prop->type == WIMA_PROP_PROPLIST);
+
+	size_t len = dvec_len(prop->_list);
+	WimaPropHandle* handles = dvec_get(prop->_list, 0);
+
+	for (size_t i = 0; i < len; ++i) {
+
+		if (handles[i] == child) {
+
+			DynaStatus status = dvec_remove(prop->_list, i);
+			assert(status == WIMA_STATUS_SUCCESS);
+
+			return;
+		}
+	}
+}
+
+DynaVector wima_prop_propList(WimaPropHandle wph) {
+
+	assert(wph < dvec_len(wg.props));
+
+	WimaProp* prop = dvec_get(wg.props, wph);
+	assert(prop && prop->type == WIMA_PROP_PROPLIST);
+
+	return prop->_list;
+}
+
 
 void wima_prop_setBool(WimaPropHandle wph, bool val) {
 
@@ -318,6 +387,17 @@ static WimaProp* wima_prop_register(const char* name, const char* desc, WimaProp
 	status = dvec_push(wg.props, &prop);
 
 	return status ? NULL : wg.props + idx;
+}
+
+WimaPropHandle wima_prop_registerPropList(const char* name, const char* desc) {
+
+	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_BOOL);
+	assert(prop && prop->type == WIMA_PROP_PROPLIST);
+
+	DynaStatus status = dvec_create(&prop->_list, NULL, 0, sizeof(WimaPropHandle));
+	assert(status == DYNA_STATUS_SUCCESS);
+
+	return prop->idx;
 }
 
 WimaPropHandle wima_prop_registerBool(const char* name, const char* desc, bool initial) {
