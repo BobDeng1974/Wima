@@ -211,6 +211,8 @@ WimaStatus wima_main() {
 	// Main event loop.
 	while (true) {
 
+		double time = glfwGetTime();
+
 		// Get the window handle.
 		WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(win);
 
@@ -237,6 +239,10 @@ WimaStatus wima_main() {
 		if (status) {
 			wg.funcs.error(status, "Wima encountered an error processing events.");
 		}
+
+		time -= glfwGetTime();
+
+		printf("Loop: %f ms\n", time * 1000.0f);
 	}
 
 	return WIMA_STATUS_SUCCESS;
