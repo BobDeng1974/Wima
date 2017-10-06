@@ -240,7 +240,7 @@ WimaStatus wima_main() {
 			wg.funcs.error(status, "Wima encountered an error processing events.");
 		}
 
-		time -= glfwGetTime();
+		time = glfwGetTime() - time;
 
 		printf("Loop: %f ms\n", time * 1000.0f);
 	}
