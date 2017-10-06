@@ -920,7 +920,7 @@ NVGcolor wima_color_text(WimaWidgetTheme* theme, WimaItemState state);
 NVGcolor wima_color_node_wire(WimaNodeTheme* theme, WimaItemState state);
 
 void wima_theme_load(WimaTheme* theme);
-void wima_theme_loadDefault();
+WimaTheme* wima_theme();
 
 #ifdef __cplusplus
 }

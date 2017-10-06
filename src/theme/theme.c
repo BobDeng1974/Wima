@@ -452,3 +452,7 @@ void wima_theme_load(WimaTheme* theme) {
 	assert(theme);
 	wg.theme = theme;
 }
+
+WimaTheme* wima_theme() {
+	return wg.theme;
+}
