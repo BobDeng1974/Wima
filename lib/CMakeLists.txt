@@ -38,7 +38,7 @@ set(YC_SRC
 )
 include_directories("yc/include")
 
-create_pic_library("${YC}" "${YC}" "${YC_SRC}" YES)
+create_pic_library("${YC}" "${YC}" "${YC_SRC}" NO)
 
 set(NANOVG "nanovg")
 set(NANOVG "${NANOVG}" PARENT_SCOPE)
@@ -57,7 +57,7 @@ set(NANOVG_SRC
 )
 
 create_pic_library(
-	"${NANOVG}" "${NANOVG}" "${NANOVG_SRC}" YES
+	"${NANOVG}" "${NANOVG}" "${NANOVG_SRC}" NO
 
 	# Add necessary libraries here.
 	"${WIMA_GLAD}"
