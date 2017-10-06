@@ -189,7 +189,7 @@ void wima_prop_unlink(WimaPropHandle parent, WimaPropHandle child) {
 	}
 }
 
-DynaVector wima_prop_propList(WimaPropHandle wph) {
+DynaVector wima_prop_group(WimaPropHandle wph) {
 
 	assert(wph < dvec_len(wg.props));
 
