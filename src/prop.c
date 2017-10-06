@@ -388,7 +388,7 @@ static WimaProp* wima_prop_register(const char* name, const char* desc, WimaProp
 	return status ? NULL : wg.props + idx;
 }
 
-WimaPropHandle wima_prop_registerPropList(const char* name, const char* desc) {
+WimaPropHandle wima_prop_registerGroup(const char* name, const char* desc) {
 
 	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_BOOL);
 	assert(prop && prop->type == WIMA_PROP_GROUP);

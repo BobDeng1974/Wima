@@ -89,6 +89,7 @@ void wima_prop_setColor(WimaPropHandle wph, NVGcolor color);
 NVGcolor wima_prop_color(WimaPropHandle wph);
 void* wima_prop_ptr(WimaPropHandle wph);
 
+WimaPropHandle wima_prop_registerGroup(const char* name, const char* desc);
 WimaPropHandle wima_prop_registerBool(const char* name, const char* desc, bool initial);
 WimaPropHandle wima_prop_registerInt(const char* name, const char* desc, int initial,
                                      int min, int max, uint32_t step);
