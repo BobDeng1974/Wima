@@ -82,7 +82,7 @@ typedef struct wima_prop_enum {
 typedef struct wima_prop_ptr {
 
 	WimaPropDrawFunc draw;
-	WimaPropFreePtrFunc free;
+	WimaPropFreeFunc free;
 
 	void* ptr;
 
@@ -96,7 +96,7 @@ typedef struct wima_prop {
 
 	uint64_t hash;
 
-	WimaPropHandle idx;
+	WimaProperty idx;
 
 	WimaPropType type;
 
@@ -124,7 +124,7 @@ typedef struct wima_prop {
 
 } WimaProp;
 
-void wima_prop_free(WimaPropHandle wph);
+void wima_prop_free(WimaProperty wph);
 
 #ifdef __cplusplus
 }
