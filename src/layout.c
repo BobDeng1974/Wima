@@ -45,15 +45,15 @@ extern WimaG wg;
 
 uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical) {
 
-	flags |= horizontal ? WIMA_LAYOUT_EXPAND_HOR : 0;
-	flags |= vertical ? WIMA_LAYOUT_EXPAND_VER : 0;
+	flags |= horizontal ? WIMA_LAYOUT_FILL_HOR : 0;
+	flags |= vertical ? WIMA_LAYOUT_FILL_VER : 0;
 
 	return flags;
 }
 
 uint16_t wima_layout_clearExpandFlags(uint16_t flags) {
 
-	flags &= ~(WIMA_LAYOUT_EXPAND_HOR | WIMA_LAYOUT_EXPAND_VER);
+	flags &= ~(WIMA_LAYOUT_FILL_HOR | WIMA_LAYOUT_FILL_VER);
 
 	return flags;
 }
