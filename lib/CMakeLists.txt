@@ -53,7 +53,7 @@ set(NANOVG_SRC
 
 	# Add source files here.
 	"${NANOVG_SRC_DIR}/nanovg.c"
-	"${NANOVG_SRC_DIR}/nanovg_pick.c"
+	#"${NANOVG_SRC_DIR}/nanovg_pick.c"
 )
 
 create_pic_library(
