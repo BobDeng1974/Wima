@@ -210,7 +210,7 @@ WimaStatus wima_main() {
 	// Main event loop.
 	while (true) {
 
-#ifdef __DEBUG__
+#ifndef NDEBUG
 		double time = glfwGetTime();
 #endif
 
@@ -241,7 +241,7 @@ WimaStatus wima_main() {
 			wg.funcs.error(status, "Wima encountered an error processing events.");
 		}
 
-#ifdef __DEBUG__
+#ifndef NDEBUG
 		time = glfwGetTime() - time;
 		printf("Loop: %f ms\n", time * 1000.0f);
 #endif

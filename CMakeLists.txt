@@ -32,8 +32,6 @@ project(wima C)
 set(ignoreMe "${QT_QMAKE_EXECUTABLE}")
 set(ignoreMe "${CMAKE_CXX_COMPILER}")
 
-set(CMAKE_C_FLAGS_DEBUG "-D__DEBUG__")
-
 enable_testing()
 
 find_package(X11 REQUIRED)
