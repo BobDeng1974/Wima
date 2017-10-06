@@ -111,6 +111,12 @@ void wima_prop_free(WimaProperty wph) {
 			break;
 	}
 
+	dstr_free(prop->name);
+
+	if (prop->desc) {
+		dstr_free(prop->desc);
+	}
+
 	prop->idx = WIMA_PROP_INVALID;
 }
 
@@ -373,10 +379,17 @@ static WimaProp* wima_prop_register(const char* name, const char* desc, WimaProp
 		return NULL;
 	}
 
-	prop.desc = dstr_create(desc);
-	if (!prop.desc) {
-		dstr_free(prop.name);
-		return NULL;
+	if (desc) {
+
+		prop.desc = dstr_create(desc);
+
+		if (!prop.desc) {
+			dstr_free(prop.name);
+			return NULL;
+		}
+	}
+	else {
+		prop.desc = NULL;
 	}
 
 	prop.hash = hash;
