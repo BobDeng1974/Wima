@@ -59,6 +59,8 @@ typedef struct wima_globals {
 	DynaVector workspaces;
 	DynaVector regions;
 
+	WimaTheme* theme;
+
 	DynaString fontPath;
 	DynaString iconSheetPath;
 
@@ -68,9 +70,6 @@ typedef struct wima_globals {
 	// Icons.
 	GLFWimage icons[WIMA_MAX_ICONS];
 	int numIcons;
-
-	// Handle to the theme prop group.
-	WimaPropHandle theme;
 
 } WimaG;
 

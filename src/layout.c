@@ -160,7 +160,7 @@ WimaLayoutHandle wima_layout_new(WimaLayoutHandle parent, uint16_t flags, float 
 	playout->area = parent.area;
 	playout->window = parent.window;
 
-	playout->layout.bgcolor = wg.theme.backgroundColor;
+	playout->layout.bgcolor = wg.theme->backgroundColor;
 	playout->layout.split = split;
 	playout->layout.firstKid = WIMA_ITEM_INVALID;
 	playout->layout.lastKid = WIMA_LAYOUT_INVALID;

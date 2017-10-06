@@ -779,53 +779,122 @@ typedef enum WimaIcon {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef enum wima_theme_type {
+// The theme used to draw a single widget or widget box; these values
+// correspond to the same values that can be retrieved from the Theme
+// panel in the Blender preferences.
+typedef struct wima_widget_theme {
 
-	WIMA_THEME_BG,
-	WIMA_THEME_REGULAR,
-	WIMA_THEME_TOOL,
-	WIMA_THEME_RADIO,
-	WIMA_THEME_TEXTFIELD,
-	WIMA_THEME_OPTION,
-	WIMA_THEME_CHOICE,
-	WIMA_THEME_NUMFIELD,
-	WIMA_THEME_SLIDER,
-	WIMA_THEME_SCROLLBAR,
-	WIMA_THEME_MENU,
-	WIMA_THEME_MENU_ITEM,
-	WIMA_THEME_TOOLTIP,
-	WIMA_THEME_NODE,
+	// Color of widget box outline.
+	NVGcolor outline;
 
-} WimaThemeType;
+	// Color of widget item (meaning changes depending on class).
+	NVGcolor item;
 
-typedef enum wima_item_theme_type {
+	// Fill color of widget box.
+	NVGcolor inner;
 
-	WIMA_THEME_ITEM_OUTLINE,
-	WIMA_THEME_ITEM_ITEM,
-	WIMA_THEME_ITEM_INNER,
-	WIMA_THEME_ITEM_INNER_SELECTED,
-	WIMA_THEME_ITEM_TEXT,
-	WIMA_THEME_ITEM_TEXT_SELECTED,
-	WIMA_THEME_ITEM_SHADE_TOP,
-	WIMA_THEME_ITEM_SHADE_BOTTOM,
-	WIMA_THEME_ITEM_SHADED
+	// Fill color of widget box when active.
+	NVGcolor innerSelected;
 
-} WimaItemThemeType;
+	// Color of text label.
+	NVGcolor text;
 
-typedef enum wima_node_theme_type {
+	// Color of text label when active.
+	NVGcolor textSelected;
 
-	WIMA_THEME_NODE_OUTLINE,
-	WIMA_THEME_NODE_OUTLINE_SELECTED,
-	WIMA_THEME_NODE_OUTLINE_ACTIVE,
-	WIMA_THEME_NODE_BG,
-	WIMA_THEME_NODE_TEXT,
-	WIMA_THEME_NODE_TEXT_SELECTED,
-	WIMA_THEME_NODE_WIRE,
-	WIMA_THEME_NODE_WIRE_OUTLINE,
-	WIMA_THEME_NODE_WIRE_SELECTED,
-	WIMA_THEME_NODE_WIRE_CURVING
+	// Delta modifier for upper part of gradient (-100 to 100).
+	int shadeTop;
 
-} WimaNodeThemeType;
+	// Delta modifier for lower part of gradient (-100 to 100).
+	int shadeBottom;
+
+	// Whether to use shading or not.
+	bool shaded;
+
+} WimaWidgetTheme;
+
+// The theme used to draw nodes.
+typedef struct wima_node_theme {
+
+	// Outline color of default node.
+	NVGcolor outline;
+
+	// Outline color of selected node (and downarrow).
+	NVGcolor nodeSelected;
+
+	// Outline color of active node (and dragged wire).
+	NVGcolor nodeActive;
+
+	// Color of background of node.
+	NVGcolor nodeBackdrop;
+
+	// Color of text label.
+	NVGcolor text;
+
+	// Color of text label when active.
+	NVGcolor textSelected;
+
+	// Normal color of wires.
+	NVGcolor wire;
+
+	// Outline of wires.
+	NVGcolor wireOutline;
+
+	// Color of selected wire.
+	NVGcolor wireSelected;
+
+	// How much a noodle curves (0 to 10).
+	int noodleCurving;
+
+} WimaNodeTheme;
+
+// The theme used to draw widgets.
+typedef struct wima_theme {
+
+	// The background color of panels and windows.
+	NVGcolor backgroundColor;
+
+	// Theme for labels.
+	WimaWidgetTheme regular;
+
+	// Theme for tool buttons.
+	WimaWidgetTheme tool;
+
+	// Theme for radio buttons.
+	WimaWidgetTheme radio;
+
+	// Theme for text fields.
+	WimaWidgetTheme textField;
+
+	// Theme for option buttons (checkboxes).
+	WimaWidgetTheme option;
+
+	// Theme for choice buttons (comboboxes).
+	// Blender calls them "menu buttons."
+	WimaWidgetTheme choice;
+
+	// Theme for number fields.
+	WimaWidgetTheme numField;
+
+	// Theme for slider controls.
+	WimaWidgetTheme slider;
+
+	// Theme for scrollbars.
+	WimaWidgetTheme scrollBar;
+
+	// Theme for menu backgrounds.
+	WimaWidgetTheme menu;
+
+	// Theme for menu items.
+	WimaWidgetTheme menuItem;
+
+	// Theme for tooltips.
+	WimaWidgetTheme tooltip;
+
+	// Theme for nodes.
+	WimaNodeTheme node;
+
+} WimaTheme;
 
 // Color functions.
 
@@ -838,96 +907,20 @@ NVGcolor wima_color_offset(NVGcolor color, int delta);
 // computes the upper and lower gradient colors for the inner box from a widget
 // theme and the widgets state. If flipActive is set and the state is
 // BND_ACTIVE, the upper and lower colors will be swapped.
-void wima_color_inner(NVGcolor *shade_top, NVGcolor *shade_down, NVGcolor inner, NVGcolor innerSelected,
-                      int shadeTop, int shadeBottom, bool shaded, WimaItemState state, bool flipActive);
+void wima_color_inner(NVGcolor *shade_top, NVGcolor *shade_down, WimaWidgetTheme* theme,
+                      WimaItemState state, bool flipActive);
 
 // computes the text color for a widget label from a widget theme and the
 // widgets state.
-NVGcolor wima_color_text(NVGcolor textColor, NVGcolor textSelectedColor, WimaItemState state);
+NVGcolor wima_color_text(WimaWidgetTheme* theme, WimaItemState state);
 
 // return the color of a node wire based on state
 // BND_HOVER indicates selected state,
 // BND_ACTIVE indicates dragged state
-NVGcolor wima_color_node_wire(NVGcolor wireColor, NVGcolor nodeActiveColor,
-                              NVGcolor wireSelectedColor, WimaItemState state);
+NVGcolor wima_color_node_wire(WimaNodeTheme* theme, WimaItemState state);
 
-bool wima_theme_valid();
-
-WimaPropHandle wima_theme_loadDefault();
-WimaPropHandle wima_theme_loadBackgroundDefault();
-WimaPropHandle wima_theme_loadItemDefault(WimaThemeType type);
-WimaPropHandle wima_theme_loadNodeDefault();
-
-WimaPropHandle wima_theme_create();
-WimaPropHandle wima_theme_createBackground(WimaPropHandle theme, NVGcolor bg);
-WimaPropHandle wima_theme_createItem(WimaPropHandle theme, WimaThemeType type,
-                                     NVGcolor outline, NVGcolor item, NVGcolor inner,
-                                     NVGcolor innerSel, NVGcolor text, NVGcolor textSel,
-                                     int shadeTop, int shadeBtm, bool shaded);
-WimaPropHandle wima_theme_createNode(WimaPropHandle theme, NVGcolor outline, NVGcolor outlineSel,
-                                     NVGcolor outlineActv, NVGcolor nodeBg, NVGcolor text,
-                                     NVGcolor textSel, NVGcolor wire, NVGcolor wireOutline,
-                                     NVGcolor wireSel, int curving);
-
-void wima_theme_setBackground(NVGcolor bg);
-NVGcolor wima_theme_background();
-
-void wima_theme_item_setOutline(WimaThemeType type, NVGcolor color);
-NVGcolor wima_theme_item_outline(WimaThemeType type);
-
-void wima_theme_item_setItem(WimaThemeType type, NVGcolor color);
-NVGcolor wima_theme_item_item(WimaThemeType type);
-
-void wima_theme_item_setInner(WimaThemeType type, NVGcolor color);
-NVGcolor wima_theme_item_inner(WimaThemeType type);
-
-void wima_theme_item_setInnerSelected(WimaThemeType type, NVGcolor color);
-NVGcolor wima_theme_item_innerSelected(WimaThemeType type);
-
-void wima_theme_item_setText(WimaThemeType type, NVGcolor color);
-NVGcolor wima_theme_item_text(WimaThemeType type);
-
-void wima_theme_item_setTextSelected(WimaThemeType type, NVGcolor color);
-NVGcolor wima_theme_item_textSelected(WimaThemeType type);
-
-void wima_theme_item_setShadeTop(WimaThemeType type, int delta);
-int wima_theme_item_shadeTop(WimaThemeType type);
-
-void wima_theme_item_setShadeBottom(WimaThemeType type, int delta);
-int wima_theme_item_shadeBottom(WimaThemeType type);
-
-void wima_theme_item_setShaded(WimaThemeType type, bool shaded);
-bool wima_theme_item_shaded(WimaThemeType type);
-
-void wima_theme_node_setOutline(NVGcolor color);
-NVGcolor wima_theme_node_outline();
-
-void wima_theme_node_setOutlineSelected(NVGcolor color);
-NVGcolor wima_theme_node_outlineSelected();
-
-void wima_theme_node_setOutlineActive(NVGcolor color);
-NVGcolor wima_theme_node_outlineActive();
-
-void wima_theme_node_setBackground(NVGcolor color);
-NVGcolor wima_theme_node_background();
-
-void wima_theme_node_setText(NVGcolor color);
-NVGcolor wima_theme_node_text();
-
-void wima_theme_node_setTextSelected(NVGcolor color);
-NVGcolor wima_theme_node_textSelected();
-
-void wima_theme_node_setWire(NVGcolor color);
-NVGcolor wima_theme_node_wire();
-
-void wima_theme_node_setWireOutline(NVGcolor color);
-NVGcolor wima_theme_node_wireOutline();
-
-void wima_theme_node_setWireSelected(NVGcolor color);
-NVGcolor wima_theme_node_wireSelected();
-
-void wima_theme_node_setWireCurving(int curving);
-int wima_theme_node_wireCurving();
+void wima_theme_load(WimaTheme* theme);
+void wima_theme_loadDefault();
 
 #ifdef __cplusplus
 }
