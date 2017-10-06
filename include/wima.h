@@ -267,15 +267,15 @@ typedef uint8_t WimaWorkspace;
  * sure that nothing will go over the limit, so I feel
  * comfortable doing this.
  */
-typedef uint16_t WimaAreaNodeHandle;
+typedef uint16_t WimaAreaNode;
 
 /**
  * A handle to a area.
  */
-typedef struct wima_area {
+typedef struct wima_area_struct {
 
 	// Put this first because it's bigger.
-	WimaAreaNodeHandle area;
+	WimaAreaNode area;
 
 	WimaWindow window;
 
@@ -288,7 +288,7 @@ typedef struct wima_widget {
 
 	uint16_t item;
 
-	WimaAreaNodeHandle area;
+	WimaAreaNode area;
 	WimaWindow window;
 
 } WimaWidget;
@@ -297,7 +297,7 @@ typedef struct wima_layout {
 
 	uint16_t layout;
 
-	WimaAreaNodeHandle area;
+	WimaAreaNode area;
 	WimaWindow window;
 
 } WimaLayout;
@@ -1025,7 +1025,7 @@ float wima_area_scale(WimaArea wah);
 void wima_area_setType(WimaArea wah, WimaRegion type);
 WimaRegion wima_area_type(WimaArea wah);
 
-WimaArea wima_area_handle(WimaWindow wwh, WimaAreaNodeHandle node);
+WimaArea wima_area(WimaWindow wwh, WimaAreaNode node);
 
 // return the total number of allocated items
 int wima_area_itemCount(WimaArea wah);

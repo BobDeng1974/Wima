@@ -50,7 +50,7 @@ extern "C" {
 #include "layout.h"
 #include "window.h"
 
-#define WIMA_AREA_INVALID ((WimaAreaNodeHandle) -1)
+#define WIMA_AREA_INVALID ((WimaAreaNode) -1)
 
 #define WIMA_AREA_MIN_SIZE (26)
 
@@ -65,14 +65,14 @@ typedef struct wima_area_context {
 
 } WimaAreaContext;
 
-typedef enum wima_area_node_type {
+typedef enum wima_area_type {
 
 	WIMA_AREA_PARENT  = 1,
 	WIMA_AREA_LEAF    = 2
 
-} WimaAreaNodeType;
+} WimaAreaType;
 
-typedef struct wima_area_node {
+typedef struct wima_ar {
 
 	union {
 
@@ -101,12 +101,12 @@ typedef struct wima_area_node {
 
 	WimaRect rect;
 
-	WimaAreaNodeType type;
+	WimaAreaType type;
 
 	WimaWindow window;
-	WimaAreaNodeHandle node;
+	WimaAreaNode node;
 
-} WimaAreaNode;
+} WimaAr;
 
 WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect);
 WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect);
@@ -114,8 +114,8 @@ WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, Wi
 bool wima_area_valid(DynaTree regions);
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
 
-WimaStatus wima_area_context_create(WimaAreaNode* area, int itemCap);
-void wima_area_context_clear(WimaAreaNode* area);
+WimaStatus wima_area_context_create(WimaAr* area, int itemCap);
+void wima_area_context_clear(WimaAr* area);
 
 // layout all added items starting from the root item 0.
 // after calling uiEndLayout(), no further modifications to the item tree should
@@ -124,33 +124,33 @@ void wima_area_context_clear(WimaAreaNode* area);
 // this is an O(N) operation for N = number of declared items.
 WimaStatus wima_area_layout(DynaTree areas);
 WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
-WimaAreaNodeHandle wima_area_containsMouse(DynaTree areas, WimaPos cursor);
-WimaAreaNodeHandle wima_area_node_containsMouse(DynaTree areas, WimaAreaNode* area, WimaPos cursor);
+WimaAreaNode wima_area_containsMouse(DynaTree areas, WimaPos cursor);
+WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaPos cursor);
 WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaPos cursor);
 WimaStatus wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bool isLeft, bool vertical);
 int wima_area_node_splitMoveLimit(DynaTree areas, DynaNode node, bool isLeft, bool vertical);
 
 WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 
-WimaAreaNode* wima_area_area(WimaWindow wwh, WimaAreaNodeHandle node);
+WimaAr* wima_area_area(WimaWindow wwh, WimaAreaNode node);
 WimaWin* wima_area_window(WimaArea wah);
 
-void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right);
-WimaPos wima_area_translatePos(WimaAreaNode* area, WimaPos pos);
+void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* right);
+WimaPos wima_area_translatePos(WimaAr* area, WimaPos pos);
 void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport);
 void wima_area_popViewport(NVGcontext* nvg);
 
-void wima_area_drawBorders(WimaAreaNode* area, NVGcontext* nvg);
+void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg);
 
 // Draw a window with the upper right and lower left splitter widgets into
 // the rectangle at origin (x,y) and size (w, h)
-void wima_area_drawSplitWidgets(WimaAreaNode* area, NVGcontext* nvg);
+void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg);
 
 // Draw the join area overlay stencil into the rectangle
 // at origin (x,y) and size (w,h)
 // vertical is 0 or 1 and designates the arrow orientation,
 // mirror is 0 or 1 and flips the arrow side
-void wima_area_drawJoinOverlay(WimaAreaNode* area, NVGcontext* nvg, bool vertical, bool mirror);
+void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertical, bool mirror);
 
 // returns the topmost item containing absolute location (x,y), starting with
 // item as parent, using a set of flags and masks as filter:
@@ -160,12 +160,12 @@ void wima_area_drawJoinOverlay(WimaAreaNode* area, NVGcontext* nvg, bool vertica
 // you may combine box, layout, event and user flags.
 // frozen items will always be ignored.
 WimaWidget wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags);
-WimaWidget wima_area_node_findItem(DynaTree areas, WimaAreaNode* area, WimaPos pos, uint32_t flags);
+WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos pos, uint32_t flags);
 
 WimaStatus wima_area_draw(WimaWindow wwh, float ratio);
-WimaStatus wima_area_key(WimaAreaNode* area, WimaKeyEvent e);
-WimaStatus wima_area_mousePos(WimaAreaNode* area, WimaPos pos);
-WimaStatus wima_area_mouseEnter(WimaAreaNode* area, bool enter);
+WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e);
+WimaStatus wima_area_mousePos(WimaAr* area, WimaPos pos);
+WimaStatus wima_area_mouseEnter(WimaAr* area, bool enter);
 WimaStatus wima_area_resize(DynaTree areas, WimaRect rect);
 bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos, WimaMouseSplitEvent* result);
 

@@ -103,7 +103,7 @@ uint16_t wima_layout_clearBoxFlag(uint16_t flags) {
 
 WimaLayoutItem* wima_layout_ptr(WimaLayout wlh) {
 
-	WimaAreaNode* area = wima_area_area(wlh.window, wlh.area);
+	WimaAr* area = wima_area_area(wlh.window, wlh.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
 
 	assert(wlh.layout < area->area.ctx.itemCount);
@@ -116,7 +116,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 	WimaWin* win = dvec_get(wg.windows, parent.window);
 	assert(win);
 
-	WimaAreaNode* area = dtree_node(win->areas, parent.area);
+	WimaAr* area = dtree_node(win->areas, parent.area);
 	assert(area);
 
 	assert(area->area.ctx.itemCount < (int) area->area.ctx.itemCap);
@@ -174,7 +174,7 @@ void wima_layout_setBackgroundColor(WimaLayout wlh, NVGcolor color) {
 	WimaWin* win = dvec_get(wg.windows, wlh.window);
 	assert(win);
 
-	WimaAreaNode* area = dtree_node(win->areas, wlh.area);
+	WimaAr* area = dtree_node(win->areas, wlh.area);
 	assert(area);
 
 	assert(wlh.layout < area->area.ctx.itemCount);
@@ -189,7 +189,7 @@ NVGcolor wima_layout_backgroundColor(WimaLayout wlh) {
 	WimaWin* win = dvec_get(wg.windows, wlh.window);
 	assert(win);
 
-	WimaAreaNode* area = dtree_node(win->areas, wlh.area);
+	WimaAr* area = dtree_node(win->areas, wlh.area);
 	assert(area);
 
 	assert(wlh.layout < area->area.ctx.itemCount);

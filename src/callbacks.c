@@ -362,7 +362,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			wwin->ctx.hover = wima_area_findItem(wwin->areas, pos, WIMA_ITEM_EVENT_MASK);
 
 			// Find out if we switched areas.
-			WimaAreaNodeHandle area = wima_area_containsMouse(wwin->areas, pos);
+			WimaAreaNode area = wima_area_containsMouse(wwin->areas, pos);
 			if (area != wwin->ctx.cursorArea) {
 
 				// Send the events.
@@ -556,7 +556,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 		return;
 	}
 
-	WimaAreaNodeHandle node = wima_area_containsMouse(wwin->areas, wwin->ctx.cursorPos);
+	WimaAreaNode node = wima_area_containsMouse(wwin->areas, wwin->ctx.cursorPos);
 
 	WimaEvent* event = wwin->ctx.events + numEvents;
 

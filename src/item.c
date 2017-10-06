@@ -71,7 +71,7 @@ extern WimaG wg;
 
 WimaItem* wima_item_ptr(WimaWidget wih) {
 
-	WimaAreaNode* area = wima_area_area(wih.window, wih.area);
+	WimaAr* area = wima_area_area(wih.window, wih.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
 
 	assert(wih.item < area->area.ctx.itemCount);
@@ -84,7 +84,7 @@ void wima_item_setFocus(WimaWidget wih) {
 	WimaWin* win = dvec_get(wg.windows, wih.window);
 	assert(win);
 
-	WimaAreaNode* area = dtree_node(win->areas, wih.area);
+	WimaAr* area = dtree_node(win->areas, wih.area);
 	assert(area);
 
 	assert(wih.item < area->area.ctx.itemCount);
@@ -98,7 +98,7 @@ WimaWidget wima_item_new(WimaArea wah, WimaItemFuncs funcs) {
 	WimaWin* win = dvec_get(wg.windows, wah.window);
 	assert(win);
 
-	WimaAreaNode* area = dtree_node(win->areas, wah.area);
+	WimaAr* area = dtree_node(win->areas, wah.area);
 	assert(area);
 
 	assert(area->area.ctx.itemCount < (int) area->area.ctx.itemCap);
@@ -369,7 +369,7 @@ uint32_t wima_item_flags(WimaWidget item) {
 }
 
 WimaArea wima_item_area(WimaWidget item) {
-	return wima_area_handle(item.window, item.area);
+	return wima_area(item.window, item.area);
 }
 
 bool wima_item_contains(WimaWidget item, WimaPos pos) {

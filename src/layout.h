@@ -109,7 +109,7 @@ typedef struct wima_layout_item {
 
 	WimaRect rect;
 
-	WimaAreaNodeHandle area;
+	WimaAreaNode area;
 	WimaWindow window;
 
 } WimaLayoutItem;

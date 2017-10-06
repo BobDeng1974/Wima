@@ -258,7 +258,7 @@ WimaStatus wima_window_setHover(WimaWindow wwh, WimaWidget wih) {
 
 	assert(dtree_exists(win->areas, wih.area));
 
-	WimaAreaNode* area = dtree_node(win->areas, wih.area);
+	WimaAr* area = dtree_node(win->areas, wih.area);
 
 	assert(area->type == WIMA_AREA_LEAF);
 
@@ -279,7 +279,7 @@ WimaStatus wima_window_setActive(WimaWindow wwh, WimaWidget wih) {
 
 	assert(dtree_exists(win->areas, wih.area));
 
-	WimaAreaNode* area = dtree_node(win->areas, wih.area);
+	WimaAr* area = dtree_node(win->areas, wih.area);
 
 	assert(area->type == WIMA_AREA_LEAF);
 
@@ -300,7 +300,7 @@ WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih) {
 
 	assert(dtree_exists(win->areas, wih.area));
 
-	WimaAreaNode* area = dtree_node(win->areas, wih.area);
+	WimaAr* area = dtree_node(win->areas, wih.area);
 
 	assert(area->type == WIMA_AREA_LEAF);
 
@@ -378,7 +378,7 @@ DynaTree wima_window_areas(WimaWindow wwh) {
 
 	int nodes = dtree_nodes(winareas);
 
-	DynaTree areas = dtree_create(NULL, nodes, sizeof(WimaAreaNode));
+	DynaTree areas = dtree_create(NULL, nodes, sizeof(WimaAr));
 	if (!areas) {
 		return NULL;
 	}
@@ -408,7 +408,7 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 
 	if (!window->areas) {
 
-		window->areas = dtree_create(NULL, dtree_nodes(wksp), sizeof(WimaAreaNode));
+		window->areas = dtree_create(NULL, dtree_nodes(wksp), sizeof(WimaAr));
 
 		if (!window->areas) {
 			return WIMA_STATUS_WINDOW_ERR;
@@ -439,7 +439,7 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 
 	if (!window->areas) {
 
-		window->areas = dtree_create(NULL, dtree_nodes(areas), sizeof(WimaAreaNode));
+		window->areas = dtree_create(NULL, dtree_nodes(areas), sizeof(WimaAr));
 
 		if (!window->areas) {
 			return WIMA_STATUS_WINDOW_ERR;
@@ -1045,7 +1045,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		case WIMA_EVENT_KEY:
 		{
 			if (e.area_key.area != WIMA_AREA_INVALID) {
-				WimaAreaNode* area = dtree_node(win->areas, e.area_key.area);
+				WimaAr* area = dtree_node(win->areas, e.area_key.area);
 				status = wima_area_key(area, e.area_key.key);
 			}
 			else {
@@ -1097,7 +1097,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 			}
 			else {
 
-				WimaAreaNodeHandle node = wima_area_containsMouse(win->areas, e.pos);
+				WimaAreaNode node = wima_area_containsMouse(win->areas, e.pos);
 
 				if (node != WIMA_AREA_INVALID) {
 					status = wima_area_mousePos(dtree_node(win->areas, node), e.pos);
@@ -1134,7 +1134,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 
 		case WIMA_EVENT_AREA_ENTER:
 		{
-			WimaAreaNode* area = dtree_node(win->areas, e.area_enter.area);
+			WimaAr* area = dtree_node(win->areas, e.area_enter.area);
 			status = wima_area_mouseEnter(area, e.area_enter.enter);
 			break;
 		}

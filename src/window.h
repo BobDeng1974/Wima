@@ -102,7 +102,7 @@ typedef struct wima_window_context {
 	WimaEvent events[WIMA_MAX_EVENTS];
 	WimaWidget eventItems[WIMA_MAX_EVENTS];
 
-	WimaAreaNodeHandle cursorArea;
+	WimaAreaNode cursorArea;
 
 	bool movingSplit;
 

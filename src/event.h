@@ -80,7 +80,7 @@ typedef struct wima_mouse_split_event {
 
 	int split;
 
-	WimaAreaNodeHandle area;
+	WimaAreaNode area;
 	WimaWindow window;
 
 	bool vertical;
@@ -90,13 +90,13 @@ typedef struct wima_mouse_split_event {
 typedef struct wima_area_key_event {
 
 	WimaKeyEvent key;
-	WimaAreaNodeHandle area;
+	WimaAreaNode area;
 
 } WimaAreaKeyEvent;
 
 typedef struct wima_area_enter_event {
 
-	WimaAreaNodeHandle area;
+	WimaAreaNode area;
 	bool enter;
 
 } WimaAreaEnterEvent;
