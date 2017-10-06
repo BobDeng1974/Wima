@@ -46,9 +46,9 @@
 
 extern WimaG wg;
 
-WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs, uint32_t itemCapacity) {
+WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t itemCapacity) {
 
-	WimaRegion reg;
+	WimaReg reg;
 
 	assert(funcs.layout);
 	assert(itemCapacity);
@@ -76,22 +76,22 @@ WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs, ui
 	return WIMA_STATUS_SUCCESS;
 }
 
-void* wima_region_userPointer(WimaRegionHandle reg) {
+void* wima_region_userPointer(WimaRegion reg) {
 
 	assert(wg.windows);
 	assert(reg >= dvec_len(wg.regions));
 
-	WimaRegion* region = dvec_get(wg.regions, reg);
+	WimaReg* region = dvec_get(wg.regions, reg);
 
 	return region->user;
 }
 
-WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr) {
+WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr) {
 
 	assert(wg.windows);
 	assert(reg < dvec_len(wg.regions));
 
-	WimaRegion* region = dvec_get(wg.regions, reg);
+	WimaReg* region = dvec_get(wg.regions, reg);
 
 	region->user = ptr;
 

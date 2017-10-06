@@ -56,14 +56,14 @@ uint16_t wima_layout_clearSeparationFlag(uint16_t flags);
 uint16_t wima_layout_setBoxFlag(uint16_t flags);
 uint16_t wima_layout_clearBoxFlag(uint16_t flags);
 
-void wima_layout_setBackgroundColor(WimaLayoutHandle wlh, NVGcolor color);
-NVGcolor wima_layout_backgroundColor(WimaLayoutHandle wlh);
+void wima_layout_setBackgroundColor(WimaLayout wlh, NVGcolor color);
+NVGcolor wima_layout_backgroundColor(WimaLayout wlh);
 
-WimaLayoutHandle wima_layout_row(WimaLayoutHandle parent, uint16_t flags);
-WimaLayoutHandle wima_layout_col(WimaLayoutHandle parent, uint16_t flags);
-WimaLayoutHandle wima_layout_split(WimaLayoutHandle parent, uint16_t flags, float split);
-WimaLayoutHandle wima_layout_list(WimaLayoutHandle parent, uint16_t flags);
-WimaLayoutHandle wima_layout_grid(WimaLayoutHandle parent, uint16_t flags);
+WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags);
+WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags);
+WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split);
+WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags);
+WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags);
 
 #ifdef __cplusplus
 }

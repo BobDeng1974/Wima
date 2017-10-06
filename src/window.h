@@ -80,11 +80,11 @@ typedef struct wima_window_context {
 	// Accumulated scroll wheel offsets.
 	WimaPos scroll;
 
-	WimaItemHandle active;
-	WimaItemHandle focus;
-	WimaItemHandle hover;
+	WimaWidget active;
+	WimaWidget focus;
+	WimaWidget hover;
 
-	WimaItemHandle click_item;
+	WimaWidget click_item;
 	WimaMouseBtn click_button;
 	uint32_t click_timestamp;
 	uint32_t clicks;
@@ -100,7 +100,7 @@ typedef struct wima_window_context {
 
 	uint32_t eventCount;
 	WimaEvent events[WIMA_MAX_EVENTS];
-	WimaItemHandle eventItems[WIMA_MAX_EVENTS];
+	WimaWidget eventItems[WIMA_MAX_EVENTS];
 
 	WimaAreaNodeHandle cursorArea;
 
@@ -164,14 +164,14 @@ void wima_window_setDirty(WimaWin* win, bool layout);
 // After the call, all previously declared item IDs are invalid, and all
 // application dependent context data has been freed.
 // uiBeginLayout() must be followed by uiEndLayout()
-WimaStatus wima_window_draw(WimaWindowHandle win);
+WimaStatus wima_window_draw(WimaWindow win);
 
 WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth);
 
-WimaStatus wima_window_processEvents(WimaWindowHandle win);
+WimaStatus wima_window_processEvents(WimaWindow win);
 
-void wima_window_updateHover(WimaWindowHandle wwh);
+void wima_window_updateHover(WimaWindow wwh);
 
-#define WIMA_WINDOW_HANDLE(win) ((WimaWindowHandle) (long) glfwGetWindowUserPointer(win))
+#define WIMA_WINDOW(win) ((WimaWindow) (long) glfwGetWindowUserPointer(win))
 
 #endif // WIMA_WINDOW_H

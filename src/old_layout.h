@@ -71,8 +71,8 @@ typedef enum wima_layout_stage {
 
 } WimaLayoutStage;
 
-void wima_layout_computeSize(WimaItemHandle item, int dim);
+void wima_layout_computeSize(WimaWidget item, int dim);
 
-void wima_layout_arrange(WimaItemHandle item, int dim);
+void wima_layout_arrange(WimaWidget item, int dim);
 
 #endif // WIMA_OLD_LAYOUT_H

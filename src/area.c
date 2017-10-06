@@ -56,11 +56,11 @@
 
 extern WimaG wg;
 
-WimaStatus wima_area_init(WimaWindowHandle win, DynaTree areas, WimaRect rect) {
+WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect) {
 	return wima_area_node_init(win, areas, dtree_root(), rect);
 }
 
-WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node, WimaRect rect) {
+WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect) {
 
 	WimaStatus status;
 
@@ -98,7 +98,7 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 		area->area.scale = 1.0f;
 
 		// Get the region handle.
-		WimaRegionHandle reg = area->area.type;
+		WimaRegion reg = area->area.type;
 
 		// Check that the region handle is valid.
 		if (reg >= dvec_len(wg.regions)) {
@@ -106,7 +106,7 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 		}
 
 		// Get the region pointer.
-		WimaRegion* region = dvec_get(wg.regions, reg);
+		WimaReg* region = dvec_get(wg.regions, reg);
 
 		// Get the particular user function setter.
 		WimaAreaGenUserPointerFunc get_user_ptr = region->gen_ptr;
@@ -118,7 +118,7 @@ WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode no
 
 		// Get all of the area handle
 		// (to pass to the user function).
-		WimaAreaHandle wah = wima_area_handle(win, node);
+		WimaArea wah = wima_area_handle(win, node);
 
 		// Call the user function.
 		area->area.user = get_user_ptr(wah);
@@ -190,7 +190,7 @@ void wima_area_context_clear(WimaAreaNode* area) {
 	area->area.ctx.itemCount = 0;
 }
 
-int wima_area_itemCount(WimaAreaHandle wah) {
+int wima_area_itemCount(WimaArea wah) {
 
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
@@ -198,7 +198,7 @@ int wima_area_itemCount(WimaAreaHandle wah) {
 	return area->area.ctx.itemCount;
 }
 
-void* wima_area_userPointer(WimaAreaHandle wah) {
+void* wima_area_userPointer(WimaArea wah) {
 
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
@@ -206,7 +206,7 @@ void* wima_area_userPointer(WimaAreaHandle wah) {
 	return area->area.user;
 }
 
-WimaRect wima_area_rect(WimaAreaHandle wah) {
+WimaRect wima_area_rect(WimaArea wah) {
 
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
@@ -214,7 +214,7 @@ WimaRect wima_area_rect(WimaAreaHandle wah) {
 	return area->rect;
 }
 
-void wima_area_setScale(WimaAreaHandle wah, float scale) {
+void wima_area_setScale(WimaArea wah, float scale) {
 
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
@@ -222,7 +222,7 @@ void wima_area_setScale(WimaAreaHandle wah, float scale) {
 	area->area.scale = wima_fmaxf(scale, 0.1f);
 }
 
-float wima_area_scale(WimaAreaHandle wah) {
+float wima_area_scale(WimaArea wah) {
 
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
@@ -230,7 +230,7 @@ float wima_area_scale(WimaAreaHandle wah) {
 	return area->area.scale;
 }
 
-void wima_area_setType(WimaAreaHandle wah, WimaRegionHandle type) {
+void wima_area_setType(WimaArea wah, WimaRegion type) {
 
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
@@ -240,7 +240,7 @@ void wima_area_setType(WimaAreaHandle wah, WimaRegionHandle type) {
 	wima_window_requestLayout(wah.window);
 }
 
-WimaRegionHandle wima_area_type(WimaAreaHandle wah) {
+WimaRegion wima_area_type(WimaArea wah) {
 
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
@@ -248,7 +248,7 @@ WimaRegionHandle wima_area_type(WimaAreaHandle wah) {
 	return area->area.type;
 }
 
-bool wima_area_contains(WimaAreaHandle wah, WimaPos pos) {
+bool wima_area_contains(WimaArea wah, WimaPos pos) {
 
 	WimaAreaNode* area = wima_area_area(wah.window, wah.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
@@ -280,7 +280,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 		wima_area_context_clear(area);
 
-		WimaAreaHandle wah;
+		WimaArea wah;
 		wah.area = node;
 		wah.window = area->window;
 
@@ -288,16 +288,16 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 		size.w = area->rect.w;
 		size.h = area->rect.h;
 
-		WimaLayoutHandle parent;
+		WimaLayout parent;
 		parent.area = node;
 		parent.window = area->window;
 		parent.layout = WIMA_ITEM_INVALID;
 
 		uint16_t flags = wima_layout_setExpandFlags(0, true, true);
 
-		WimaLayoutHandle wlh = wima_layout_new(parent, flags, 0.0f);
+		WimaLayout wlh = wima_layout_new(parent, flags, 0.0f);
 
-		WimaRegion* region = dvec_get(wg.regions, area->area.type);
+		WimaReg* region = dvec_get(wg.regions, area->area.type);
 		WimaAreaLayoutFunc layout = region->layout;
 
 		// Do the layout. The layout function is guaranteed to be non-null.
@@ -310,7 +310,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 		if (area->area.ctx.itemCount) {
 
-			WimaItemHandle zero;
+			WimaWidget zero;
 			zero.item = 0;
 			zero.area = node;
 			zero.window = area->window;
@@ -550,7 +550,7 @@ WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 		}
 
 		// Get the region handle.
-		WimaRegionHandle reg = area->area.type;
+		WimaRegion reg = area->area.type;
 
 		// Check that the region handle is valid.
 		if (reg >= dvec_len(wg.regions)) {
@@ -558,7 +558,7 @@ WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 		}
 
 		// Get the list of regions.
-		WimaRegion* region = dvec_get(wg.regions, reg);
+		WimaReg* region = dvec_get(wg.regions, reg);
 
 		// Get the particular user function setter.
 		WimaAreaFreeUserPointerFunc free_user_ptr = region->free_ptr;
@@ -575,14 +575,14 @@ WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaAreaNode* wima_area_area(WimaWindowHandle wwh, WimaAreaNodeHandle node) {
+WimaAreaNode* wima_area_area(WimaWindow wwh, WimaAreaNodeHandle node) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	return dtree_node(win->areas, node);
 }
 
-WimaAreaHandle wima_area_handle(WimaWindowHandle wwh, WimaAreaNodeHandle node) {
+WimaArea wima_area_handle(WimaWindow wwh, WimaAreaNodeHandle node) {
 
-	WimaAreaHandle wah;
+	WimaArea wah;
 
 	wah.area = node;
 	wah.window = wwh;
@@ -590,7 +590,7 @@ WimaAreaHandle wima_area_handle(WimaWindowHandle wwh, WimaAreaNodeHandle node) {
 	return wah;
 }
 
-WimaStatus wima_area_draw(WimaWindowHandle wwh, float ratio) {
+WimaStatus wima_area_draw(WimaWindow wwh, float ratio) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
@@ -604,7 +604,7 @@ WimaStatus wima_area_key(WimaAreaNode* area, WimaKeyEvent e) {
 
 	assert(area && area->type == WIMA_AREA_LEAF);
 
-	WimaRegion* region = dvec_get(wg.regions, area->area.type);
+	WimaReg* region = dvec_get(wg.regions, area->area.type);
 
 	WimaAreaKeyFunc key_event = region->key_event;
 
@@ -624,7 +624,7 @@ WimaStatus wima_area_mousePos(WimaAreaNode* area, WimaPos pos) {
 
 	assert(area && area->type == WIMA_AREA_LEAF);
 
-	WimaRegion* region = dvec_get(wg.regions, area->area.type);
+	WimaReg* region = dvec_get(wg.regions, area->area.type);
 
 	WimaAreaMousePosFunc mouse_pos = region->mouse_pos;
 
@@ -644,9 +644,9 @@ WimaStatus wima_area_mouseEnter(WimaAreaNode*area, bool enter) {
 
 	assert(area && area->type == WIMA_AREA_LEAF);
 
-	WimaAreaHandle wah = wima_area_handle(area->window, area->node);
+	WimaArea wah = wima_area_handle(area->window, area->node);
 
-	WimaRegion* region = dvec_get(wg.regions, wima_area_type(wah));
+	WimaReg* region = dvec_get(wg.regions, wima_area_type(wah));
 
 	if (region->mouse_enter) {
 		status = region->mouse_enter(wah, enter);
@@ -693,7 +693,7 @@ WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, f
 
 			nvgScale(nvg.nvg, area->area.scale, area->area.scale);
 
-			WimaItemHandle item;
+			WimaWidget item;
 			item.item = 0;
 			item.area = node;
 			item.window = area->window;
@@ -1036,11 +1036,11 @@ void wima_area_drawJoinOverlay(WimaAreaNode* area, NVGcontext* nvg, bool vertica
 	nvgFill(nvg);
 }
 
-WimaItemHandle wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags) {
+WimaWidget wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags) {
 	return wima_area_node_findItem(areas, dtree_node(areas, dtree_root()), pos, flags);
 }
 
-WimaItemHandle wima_area_node_findItem(DynaTree areas, WimaAreaNode* area, WimaPos pos, uint32_t flags) {
+WimaWidget wima_area_node_findItem(DynaTree areas, WimaAreaNode* area, WimaPos pos, uint32_t flags) {
 
 	assert(area);
 
@@ -1049,7 +1049,7 @@ WimaItemHandle wima_area_node_findItem(DynaTree areas, WimaAreaNode* area, WimaP
 		DynaNode leftNode = dtree_left(area->node);
 		WimaAreaNode* left = dtree_node(areas, leftNode);
 
-		WimaItemHandle item;
+		WimaWidget item;
 
 		if (wima_rect_contains(left->rect, pos)) {
 			item = wima_area_node_findItem(areas, left, pos, flags);
@@ -1075,12 +1075,12 @@ WimaItemHandle wima_area_node_findItem(DynaTree areas, WimaAreaNode* area, WimaP
 
 		WimaLayoutItem *pitem;
 
-		WimaItemHandle item;
+		WimaWidget item;
 		item.item = 0;
 		item.area = area->node;
 		item.window = area->window;
 
-		WimaItemHandle best_hit = item;
+		WimaWidget best_hit = item;
 		best_hit.item = WIMA_ITEM_INVALID;
 
 		// TODO: Remove this.

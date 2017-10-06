@@ -49,32 +49,32 @@
 
 extern WimaG wg;
 
-WimaStatus joinItemClick(WimaItemHandle wih) {
+WimaStatus joinItemClick(WimaWidget wih) {
 	printf("Join clicked!\n");
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus splitSub1Click(WimaItemHandle wih) {
+WimaStatus splitSub1Click(WimaWidget wih) {
 	printf("Split sub 1 clicked!\n");
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus splitSub3Click(WimaItemHandle wih) {
+WimaStatus splitSub3Click(WimaWidget wih) {
 	printf("Split sub 3 clicked!\n");
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus splitSub4Click(WimaItemHandle wih) {
+WimaStatus splitSub4Click(WimaWidget wih) {
 	printf("Split sub 4 clicked!\n");
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus splitSub5Click(WimaItemHandle wih) {
+WimaStatus splitSub5Click(WimaWidget wih) {
 	printf("Split sub 5 clicked!\n");
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus splitSubSub1Click(WimaItemHandle wih) {
+WimaStatus splitSubSub1Click(WimaWidget wih) {
 	printf("Split sub sub 1 clicked!\n");
 	return WIMA_STATUS_SUCCESS;
 }
@@ -150,7 +150,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -219,7 +219,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	WimaMouseBtn wbtn = (WimaMouseBtn) btn;
 	WimaMods wmods = (WimaMods) mods;
@@ -243,7 +243,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
-	WimaItemHandle clickItem = wima_area_findItem(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN);
+	WimaWidget clickItem = wima_area_findItem(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN);
 
 	wwin->ctx.active = clickItem;
 	wwin->ctx.focus = clickItem;
@@ -326,7 +326,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
@@ -451,7 +451,7 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
@@ -473,7 +473,7 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 		return;
 	}
 
-	WimaItemHandle wih = wima_area_findItem(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_SCROLL);
+	WimaWidget wih = wima_area_findItem(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_SCROLL);
 
 	wwin->ctx.eventItems[numEvents] = wih;
 
@@ -501,7 +501,7 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -540,7 +540,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -598,7 +598,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -646,7 +646,7 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -683,7 +683,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 	glScissor(0, 0, width, height);
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -732,7 +732,7 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -770,7 +770,7 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -807,7 +807,7 @@ void wima_callback_windowRefresh(GLFWwindow* window) {
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -824,7 +824,7 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -867,7 +867,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 		exit(WIMA_STATUS_INVALID_STATE);
 	}
 
-	WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(window);
+	WimaWindow wwh = WIMA_WINDOW(window);
 
 	WimaWindowCloseFunc close = wg.funcs.close;
 

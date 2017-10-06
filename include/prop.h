@@ -65,7 +65,7 @@ typedef enum wima_prop_type_enum {
 
 typedef uint32_t WimaPropHandle;
 
-typedef WimaStatus (*WimaPropDrawFunc)(WimaItemHandle, void*);
+typedef WimaStatus (*WimaPropDrawFunc)(WimaWidget, void*);
 typedef void (*WimaPropFreePtrFunc)(void*);
 
 WimaPropType wima_prop_type(WimaPropHandle wph);

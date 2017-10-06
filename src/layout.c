@@ -101,7 +101,7 @@ uint16_t wima_layout_clearBoxFlag(uint16_t flags) {
 	return flags;
 }
 
-WimaLayoutItem* wima_layout_ptr(WimaLayoutHandle wlh) {
+WimaLayoutItem* wima_layout_ptr(WimaLayout wlh) {
 
 	WimaAreaNode* area = wima_area_area(wlh.window, wlh.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
@@ -111,7 +111,7 @@ WimaLayoutItem* wima_layout_ptr(WimaLayoutHandle wlh) {
 	return area->area.ctx.items + wlh.layout;
 }
 
-WimaLayoutHandle wima_layout_new(WimaLayoutHandle parent, uint16_t flags, float split) {
+WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 
 	WimaWin* win = dvec_get(wg.windows, parent.window);
 	assert(win);
@@ -126,7 +126,7 @@ WimaLayoutHandle wima_layout_new(WimaLayoutHandle parent, uint16_t flags, float 
 
 	uint32_t idx = (area->area.ctx.itemCount)++;
 
-	WimaLayoutHandle wlh;
+	WimaLayout wlh;
 	wlh.layout = idx;
 	wlh.area = parent.area;
 	wlh.window = parent.window;
@@ -169,7 +169,7 @@ WimaLayoutHandle wima_layout_new(WimaLayoutHandle parent, uint16_t flags, float 
 	return wlh;
 }
 
-void wima_layout_setBackgroundColor(WimaLayoutHandle wlh, NVGcolor color) {
+void wima_layout_setBackgroundColor(WimaLayout wlh, NVGcolor color) {
 
 	WimaWin* win = dvec_get(wg.windows, wlh.window);
 	assert(win);
@@ -184,7 +184,7 @@ void wima_layout_setBackgroundColor(WimaLayoutHandle wlh, NVGcolor color) {
 	layout->layout.bgcolor = color;
 }
 
-NVGcolor wima_layout_backgroundColor(WimaLayoutHandle wlh) {
+NVGcolor wima_layout_backgroundColor(WimaLayout wlh) {
 
 	WimaWin* win = dvec_get(wg.windows, wlh.window);
 	assert(win);
@@ -199,7 +199,7 @@ NVGcolor wima_layout_backgroundColor(WimaLayoutHandle wlh) {
 	return layout->layout.bgcolor;
 }
 
-WimaLayoutHandle wima_layout_row(WimaLayoutHandle parent, uint16_t flags) {
+WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags) {
 
 	flags |= WIMA_LAYOUT_ROW;
 	flags &= ~(WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID);
@@ -207,7 +207,7 @@ WimaLayoutHandle wima_layout_row(WimaLayoutHandle parent, uint16_t flags) {
 	return wima_layout_new(parent, flags, 0.0f);
 }
 
-WimaLayoutHandle wima_layout_col(WimaLayoutHandle parent, uint16_t flags) {
+WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags) {
 
 	flags |= WIMA_LAYOUT_COL;
 	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID);
@@ -215,7 +215,7 @@ WimaLayoutHandle wima_layout_col(WimaLayoutHandle parent, uint16_t flags) {
 	return wima_layout_new(parent, flags, 0.0f);
 }
 
-WimaLayoutHandle wima_layout_split(WimaLayoutHandle parent, uint16_t flags, float split) {
+WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split) {
 
 	flags |= WIMA_LAYOUT_SPLIT;
 	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID);
@@ -223,7 +223,7 @@ WimaLayoutHandle wima_layout_split(WimaLayoutHandle parent, uint16_t flags, floa
 	return wima_layout_new(parent, flags, split);
 }
 
-WimaLayoutHandle wima_layout_list(WimaLayoutHandle parent, uint16_t flags) {
+WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags) {
 
 	flags |= WIMA_LAYOUT_LIST;
 	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_GRID);
@@ -231,7 +231,7 @@ WimaLayoutHandle wima_layout_list(WimaLayoutHandle parent, uint16_t flags) {
 	return wima_layout_new(parent, flags, 0.0f);
 }
 
-WimaLayoutHandle wima_layout_grid(WimaLayoutHandle parent, uint16_t flags) {
+WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags) {
 
 	flags |= WIMA_LAYOUT_GRID;
 	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST);

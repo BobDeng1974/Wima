@@ -249,17 +249,17 @@ typedef struct WimaRect {
 /**
  * A handle to a region (area template) type.
  */
-typedef uint8_t WimaRegionHandle;
+typedef uint8_t WimaRegion;
 
 /**
  * A handle to a window.
  */
-typedef uint8_t WimaWindowHandle;
+typedef uint8_t WimaWindow;
 
 /**
  * A handle to a workspace (window template) type.
  */
-typedef uint8_t WimaWorkspaceHandle;
+typedef uint8_t WimaWorkspace;
 
 /**
  * A handle to a node. This is to make the node size
@@ -272,35 +272,35 @@ typedef uint16_t WimaAreaNodeHandle;
 /**
  * A handle to a area.
  */
-typedef struct wima_area_handle_struct {
+typedef struct wima_area {
 
 	// Put this first because it's bigger.
 	WimaAreaNodeHandle area;
 
-	WimaWindowHandle window;
+	WimaWindow window;
 
-} WimaAreaHandle;
+} WimaArea;
 
 /**
  * A handle to a UI item.
  */
-typedef struct wima_item_handle {
+typedef struct wima_widget {
 
 	uint16_t item;
 
 	WimaAreaNodeHandle area;
-	WimaWindowHandle window;
+	WimaWindow window;
 
-} WimaItemHandle;
+} WimaWidget;
 
-typedef struct wima_layout_handle {
+typedef struct wima_layout {
 
 	uint16_t layout;
 
 	WimaAreaNodeHandle area;
-	WimaWindowHandle window;
+	WimaWindow window;
 
-} WimaLayoutHandle;
+} WimaLayout;
 
 /**
  * The possible status codes that Wima can return after
@@ -589,7 +589,7 @@ typedef struct wima_char_event {
 
 typedef struct wima_menu WimaMenu;
 
-typedef WimaStatus (*WimaMenuItemFunc)(WimaItemHandle);
+typedef WimaStatus (*WimaMenuItemFunc)(WimaWidget);
 
 typedef struct wima_menu_item {
 
@@ -638,11 +638,11 @@ typedef struct wima_nvg_info {
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
-typedef WimaStatus (*WimaItemMouseBtnFunc)(WimaItemHandle, WimaMouseBtnEvent);
-typedef WimaStatus (*WimaItemMouseClickFunc)(WimaItemHandle, WimaMouseClickEvent);
-typedef WimaStatus (*WimaItemMouseDragFunc)(WimaItemHandle, WimaMouseDragEvent);
-typedef WimaStatus (*WimaItemScrollFunc)(WimaItemHandle, WimaScrollEvent);
-typedef WimaStatus (*WimaItemCharEvent)(WimaItemHandle, WimaCharEvent);
+typedef WimaStatus (*WimaItemMouseBtnFunc)(WimaWidget, WimaMouseBtnEvent);
+typedef WimaStatus (*WimaItemMouseClickFunc)(WimaWidget, WimaMouseClickEvent);
+typedef WimaStatus (*WimaItemMouseDragFunc)(WimaWidget, WimaMouseDragEvent);
+typedef WimaStatus (*WimaItemScrollFunc)(WimaWidget, WimaScrollEvent);
+typedef WimaStatus (*WimaItemCharEvent)(WimaWidget, WimaCharEvent);
 
 typedef struct wima_item_funcs {
 
@@ -654,12 +654,12 @@ typedef struct wima_item_funcs {
 
 } WimaItemFuncs;
 
-typedef void* (*WimaAreaGenUserPointerFunc)(WimaAreaHandle);
+typedef void* (*WimaAreaGenUserPointerFunc)(WimaArea);
 typedef void (*WimaAreaFreeUserPointerFunc)(void*);
-typedef WimaStatus (*WimaAreaLayoutFunc)(WimaAreaHandle, WimaLayoutHandle, WimaSize);
-typedef WimaStatus (*WimaAreaKeyFunc)(WimaAreaHandle, WimaKeyEvent);
-typedef WimaStatus (*WimaAreaMousePosFunc)(WimaAreaHandle, WimaPos);
-typedef WimaStatus (*WimaAreaMouseEnterFunc)(WimaAreaHandle, bool);
+typedef WimaStatus (*WimaAreaLayoutFunc)(WimaArea, WimaLayout, WimaSize);
+typedef WimaStatus (*WimaAreaKeyFunc)(WimaArea, WimaKeyEvent);
+typedef WimaStatus (*WimaAreaMousePosFunc)(WimaArea, WimaPos);
+typedef WimaStatus (*WimaAreaMouseEnterFunc)(WimaArea, bool);
 
 typedef struct wima_region_funcs {
 
@@ -672,16 +672,16 @@ typedef struct wima_region_funcs {
 
 } WimaRegionFuncs;
 
-typedef WimaStatus (*WimaDrawFunc)(WimaItemHandle, WimaNvgInfo);
+typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaNvgInfo);
 typedef void (*WimaErrorFunc)(WimaStatus, const char*);
-typedef WimaStatus (*WimaWindowFileDropFunc)(WimaWindowHandle, int, const char**);
-typedef WimaStatus (*WimaWindowPosFunc)(WimaWindowHandle, WimaPos);
-typedef WimaStatus (*WimaFramebufferSizeFunc)(WimaWindowHandle, WimaSize);
-typedef WimaStatus (*WimaWindowSizeFunc)(WimaWindowHandle, WimaSize);
-typedef WimaStatus (*WimaWindowMouseEnterFunc)(WimaWindowHandle, bool);
-typedef WimaStatus (*WimaWindowMinimizeFunc)(WimaWindowHandle, bool);
-typedef WimaStatus (*WimaWindowFocusFunc)(WimaWindowHandle, bool);
-typedef bool (*WimaWindowCloseFunc)(WimaWindowHandle);
+typedef WimaStatus (*WimaWindowFileDropFunc)(WimaWindow, int, const char**);
+typedef WimaStatus (*WimaWindowPosFunc)(WimaWindow, WimaPos);
+typedef WimaStatus (*WimaFramebufferSizeFunc)(WimaWindow, WimaSize);
+typedef WimaStatus (*WimaWindowSizeFunc)(WimaWindow, WimaSize);
+typedef WimaStatus (*WimaWindowMouseEnterFunc)(WimaWindow, bool);
+typedef WimaStatus (*WimaWindowMinimizeFunc)(WimaWindow, bool);
+typedef WimaStatus (*WimaWindowFocusFunc)(WimaWindow, bool);
+typedef bool (*WimaWindowCloseFunc)(WimaWindow);
 typedef WimaStatus (*WimaMonitorConnectedFunc)(GLFWmonitor*, bool);
 
 typedef struct wima_app_funcs {
@@ -918,7 +918,7 @@ void layout_window(int w, int h) {
 // the background.
 // it is efficient to call uiInsertBack() repeatedly
 // in cases where drawing or layout order doesn't matter.
-WimaItemHandle wima_item_insertBack(WimaItemHandle item, WimaItemHandle child);
+WimaWidget wima_item_insertBack(WimaWidget item, WimaWidget child);
 
 // set an items state to frozen; the UI will not recurse into frozen items
 // when searching for hover or active items; subsequently, frozen items and
@@ -927,167 +927,167 @@ WimaItemHandle wima_item_insertBack(WimaItemHandle item, WimaItemHandle child);
 // UI_COLD for child items. Upon encountering a frozen item, the drawing
 // routine needs to handle rendering of child items appropriately.
 // see example.cpp for a demonstration.
-void wima_item_setFrozen(WimaItemHandle item, bool enable);
+void wima_item_setFrozen(WimaWidget item, bool enable);
 
 // set the size of the item; a size of 0 indicates the dimension to be
 // dynamic; if the size is set, the item can not expand beyond that size.
-void wima_item_setSize(WimaItemHandle item, WimaSize size);
+void wima_item_setSize(WimaWidget item, WimaSize size);
 
 // return the width of the item as set by uiSetSize()
-int wima_item_width(WimaItemHandle item);
+int wima_item_width(WimaWidget item);
 
 // return the height of the item as set by uiSetSize()
-int wima_item_height(WimaItemHandle item);
+int wima_item_height(WimaWidget item);
 
 // set the anchoring behavior of the item to one or multiple UIlayoutFlags
-void wima_item_setLayout(WimaItemHandle item, uint32_t flags);
+void wima_item_setLayout(WimaWidget item, uint32_t flags);
 
 // return the anchoring behavior as set by uiSetLayout()
-uint32_t wima_item_layout(WimaItemHandle item);
+uint32_t wima_item_layout(WimaWidget item);
 
 // set the box model behavior of the item to one or multiple UIboxFlags
-void wima_item_setBox(WimaItemHandle item, uint32_t flags);
+void wima_item_setBox(WimaWidget item, uint32_t flags);
 
 // return the box model as set by uiSetBox()
-uint32_t wima_item_box(WimaItemHandle item);
+uint32_t wima_item_box(WimaWidget item);
 
 // set the left, top, right and bottom margins of an item; when the item is
 // anchored to the parent or another item, the margin controls the distance
 // from the neighboring element.
-void wima_item_setMargins(WimaItemHandle item, short l, short t, short r, short b);
+void wima_item_setMargins(WimaWidget item, short l, short t, short r, short b);
 
 // return the left margin of the item as set with uiSetMargins()
-short wima_item_marginLeft(WimaItemHandle item);
+short wima_item_marginLeft(WimaWidget item);
 
 // return the top margin of the item as set with uiSetMargins()
-short wima_item_marginTop(WimaItemHandle item);
+short wima_item_marginTop(WimaWidget item);
 
 // return the right margin of the item as set with uiSetMargins()
-short wima_item_marginRight(WimaItemHandle item);
+short wima_item_marginRight(WimaWidget item);
 
 // return the bottom margin of the item as set with uiSetMargins()
-short wima_item_marginDown(WimaItemHandle item);
+short wima_item_marginDown(WimaWidget item);
 
 // returns the items layout rectangle in absolute coordinates. If
 // uiGetRect() is called before uiEndLayout(), the values of the returned
 // rectangle are undefined.
-WimaRect wima_item_rect(WimaItemHandle item);
+WimaRect wima_item_rect(WimaWidget item);
 
 // returns the first child item of a container item. If the item is not
 // a container or does not contain any items, -1 is returned.
 // if item is 0, the first child item of the root item will be returned.
-WimaItemHandle wima_item_firstChild(WimaItemHandle item);
+WimaWidget wima_item_firstChild(WimaWidget item);
 
 // returns an items next sibling in the list of the parent containers children.
 // if item is 0 or the item is the last child item, -1 will be returned.
-WimaItemHandle wima_item_nextSibling(WimaItemHandle item);
+WimaWidget wima_item_nextSibling(WimaWidget item);
 
 // set the application-dependent handle of an item.
 // handle is an application defined 64-bit handle. If handle is NULL, the item
 // will not be interactive.
-void wima_item_setHandle(WimaItemHandle item, void* handle);
+void wima_item_setHandle(WimaWidget item, void* handle);
 
 // return the application-dependent handle of the item as passed to uiSetHandle()
 // or uiAllocHandle().
-void* wima_item_handle(WimaItemHandle item);
-uint32_t wima_item_events(WimaItemHandle item);
+void* wima_widget(WimaWidget item);
+uint32_t wima_item_events(WimaWidget item);
 
 // flags is a user-defined set of flags defined by UI_USERMASK.
-void wima_item_setFlags(WimaItemHandle item, uint32_t flags);
+void wima_item_setFlags(WimaWidget item, uint32_t flags);
 
 // return the user-defined flags for an item as passed to uiSetFlags()
-uint32_t wima_item_flags(WimaItemHandle item);
+uint32_t wima_item_flags(WimaWidget item);
 
-WimaAreaHandle wima_item_area(WimaItemHandle item);
+WimaArea wima_item_area(WimaWidget item);
 
 // returns 1 if an items absolute rectangle contains a given coordinate
 // otherwise 0
-bool wima_item_contains(WimaItemHandle item, WimaPos pos);
-bool wima_item_compareHandles(WimaItemHandle item1, WimaItemHandle item2);
-bool wima_item_isActive(WimaItemHandle item);
-bool wima_item_isHovered(WimaItemHandle item);
-bool wima_item_isFocused(WimaItemHandle item);
+bool wima_item_contains(WimaWidget item, WimaPos pos);
+bool wima_item_compareHandles(WimaWidget item1, WimaWidget item2);
+bool wima_item_isActive(WimaWidget item);
+bool wima_item_isHovered(WimaWidget item);
+bool wima_item_isFocused(WimaWidget item);
 
 // return the current state of the item. This state is only valid after
 // a call to uiProcess().
 // The returned value is one of WIMA_ITEM_DEFAULT, WIMA_ITEM_HOVER,
 // WIMA_ITEM_ACTIVE, WIMA_ITEM_FROZEN.
-WimaItemState wima_item_state(WimaItemHandle item);
+WimaItemState wima_item_state(WimaWidget item);
 
-WimaStatus wima_region_register(WimaRegionHandle* wrh, WimaRegionFuncs funcs, uint32_t itemCapacity);
-void* wima_region_userPointer(WimaRegionHandle reg);
-WimaStatus wima_region_setUserPointer(WimaRegionHandle reg, void* ptr);
+WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t itemCapacity);
+void* wima_region_userPointer(WimaRegion reg);
+WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr);
 
-void* wima_area_userPointer(WimaAreaHandle wah);
-WimaRect wima_area_rect(WimaAreaHandle wah);
-void wima_area_setScale(WimaAreaHandle wah, float scale);
-float wima_area_scale(WimaAreaHandle wah);
-void wima_area_setType(WimaAreaHandle wah, WimaRegionHandle type);
-WimaRegionHandle wima_area_type(WimaAreaHandle wah);
+void* wima_area_userPointer(WimaArea wah);
+WimaRect wima_area_rect(WimaArea wah);
+void wima_area_setScale(WimaArea wah, float scale);
+float wima_area_scale(WimaArea wah);
+void wima_area_setType(WimaArea wah, WimaRegion type);
+WimaRegion wima_area_type(WimaArea wah);
 
-WimaAreaHandle wima_area_handle(WimaWindowHandle wwh, WimaAreaNodeHandle node);
+WimaArea wima_area_handle(WimaWindow wwh, WimaAreaNodeHandle node);
 
 // return the total number of allocated items
-int wima_area_itemCount(WimaAreaHandle wah);
+int wima_area_itemCount(WimaArea wah);
 
-bool wima_area_contains(WimaAreaHandle wah, WimaPos pos);
+bool wima_area_contains(WimaArea wah, WimaPos pos);
 WimaStatus wima_areas_free(DynaTree areas);
 
-WimaStatus wima_workspace_register(WimaWorkspaceHandle* type);
-WimaStatus wima_workspace_addParent(WimaWorkspaceHandle wksp, DynaNode node, float split, bool vertical);
-WimaStatus wima_workspace_addRegion(WimaWorkspaceHandle wwh, DynaNode node, WimaRegionHandle reg);
+WimaStatus wima_workspace_register(WimaWorkspace* type);
+WimaStatus wima_workspace_addParent(WimaWorkspace wksp, DynaNode node, float split, bool vertical);
+WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion reg);
 
-WimaStatus wima_window_create(WimaWindowHandle* wwh, WimaWorkspaceHandle wksph);
-GLFWwindow* wima_window_glfw(WimaWindowHandle wwh);
-WimaStatus wima_window_close(WimaWindowHandle wwh);
-DynaString wima_window_title(WimaWindowHandle wwh);
-WimaStatus wima_window_setTitle(WimaWindowHandle wwh, const char* title);
-void* wima_window_userPointer(WimaWindowHandle win);
-WimaStatus wima_window_setUserPointer(WimaWindowHandle win, void* user);
-DynaTree wima_window_areas(WimaWindowHandle wwh);
-WimaStatus wima_window_areas_replace(WimaWindowHandle wwh, WimaWorkspaceHandle wksp);
-WimaStatus wima_window_areas_restore(WimaWindowHandle wwh, DynaTree areas);
-WimaStatus wima_window_setContextMenu(WimaWindowHandle wwh, WimaMenu* menu, const char* title, int icon);
-WimaStatus wima_window_setMenu(WimaWindowHandle wwh, WimaMenu* menu);
-WimaMenu* wima_window_menu(WimaWindowHandle wwh);
-const char* wima_window_menuTitle(WimaWindowHandle wwh);
-int wima_window_menuIcon(WimaWindowHandle wwh);
-WimaStatus wima_window_removeMenu(WimaWindowHandle wwh);
-void wima_window_cursor_setType(WimaWindowHandle wwh, GLFWcursor* c);
-void wima_window_cursor_setStandardType(WimaWindowHandle wwh, WimaCursor c);
-GLFWcursor* wima_window_cursor_type(WimaWindowHandle wwh);
+WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph);
+GLFWwindow* wima_window_glfw(WimaWindow wwh);
+WimaStatus wima_window_close(WimaWindow wwh);
+DynaString wima_window_title(WimaWindow wwh);
+WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title);
+void* wima_window_userPointer(WimaWindow win);
+WimaStatus wima_window_setUserPointer(WimaWindow win, void* user);
+DynaTree wima_window_areas(WimaWindow wwh);
+WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksp);
+WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas);
+WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon);
+WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu);
+WimaMenu* wima_window_menu(WimaWindow wwh);
+const char* wima_window_menuTitle(WimaWindow wwh);
+int wima_window_menuIcon(WimaWindow wwh);
+WimaStatus wima_window_removeMenu(WimaWindow wwh);
+void wima_window_cursor_setType(WimaWindow wwh, GLFWcursor* c);
+void wima_window_cursor_setStandardType(WimaWindow wwh, WimaCursor c);
+GLFWcursor* wima_window_cursor_type(WimaWindow wwh);
 // Returns the offset of the cursor relative to the last call to uiProcess()
-WimaPos wima_window_cursor_delta(WimaWindowHandle wwh);
+WimaPos wima_window_cursor_delta(WimaWindow wwh);
 // Returns the beginning point of a drag operation.
-WimaPos wima_window_cursor_start(WimaWindowHandle wwh);
+WimaPos wima_window_cursor_start(WimaWindow wwh);
 // Returns the number of chained clicks; 1 is a single click,
 // 2 is a double click, etc.
-int wima_window_clicks(WimaWindowHandle wwh);
+int wima_window_clicks(WimaWindow wwh);
 // returns the currently accumulated scroll wheel offsets for this frame
-WimaPos wima_window_scroll(WimaWindowHandle wwh);
-WimaStatus wima_window_setHover(WimaWindowHandle wwh, WimaItemHandle wih);
+WimaPos wima_window_scroll(WimaWindow wwh);
+WimaStatus wima_window_setHover(WimaWindow wwh, WimaWidget wih);
 
-void wima_window_requestRefresh(WimaWindowHandle wwh);
-bool wima_window_needsRefresh(WimaWindowHandle wwh);
-void wima_window_requestLayout(WimaWindowHandle wwh);
-bool wima_window_needsLayout(WimaWindowHandle wwh);
+void wima_window_requestRefresh(WimaWindow wwh);
+bool wima_window_needsRefresh(WimaWindow wwh);
+void wima_window_requestLayout(WimaWindow wwh);
+bool wima_window_needsLayout(WimaWindow wwh);
 
-WimaStatus wima_window_setModifier(WimaWindowHandle wwh, WimaKey key, WimaAction action);
-void wima_window_clearEvents(WimaWindowHandle wwh);
+WimaStatus wima_window_setModifier(WimaWindow wwh, WimaKey key, WimaAction action);
+void wima_window_clearEvents(WimaWindow wwh);
 
 // return the item that is currently under the cursor or -1 for none
-WimaItemHandle wima_window_hover(WimaWindowHandle wwh);
+WimaWidget wima_window_hover(WimaWindow wwh);
 
-WimaStatus wima_window_setActive(WimaWindowHandle wwh, WimaItemHandle wih);
+WimaStatus wima_window_setActive(WimaWindow wwh, WimaWidget wih);
 
 // set item as recipient of all keyboard events; if item is -1, no item will
 // be focused.
-WimaStatus wima_window_setFocus(WimaWindowHandle wwh, WimaItemHandle wih);
+WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih);
 
 // return the item that is currently focused or -1 for none
-WimaItemHandle wima_window_focus(WimaWindowHandle wwh);
+WimaWidget wima_window_focus(WimaWindow wwh);
 
-WimaStatus wima_window_free(WimaWindowHandle win);
+WimaStatus wima_window_free(WimaWindow win);
 
 WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
                      int numIcons,         const char* iconPaths[],

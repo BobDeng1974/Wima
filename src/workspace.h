@@ -44,6 +44,6 @@
  */
 typedef DynaTree WimaWksp;
 
-bool wima_workspace_nodeValid(WimaWorkspaceHandle wwh, DynaNode n);
+bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n);
 
 #endif // WIMA_WORKSPACE_H

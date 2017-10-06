@@ -36,7 +36,7 @@
 
 #include <wima.h>
 
-typedef struct wima_region {
+typedef struct wima_reg {
 
 	void* user;
 
@@ -51,4 +51,4 @@ typedef struct wima_region {
 
 	uint32_t itemCap;
 
-} WimaRegion;
+} WimaReg;

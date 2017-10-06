@@ -76,7 +76,7 @@ typedef struct wima_area_node {
 
 	union {
 
-		struct wima_area {
+		struct wima_area_leaf {
 
 			void* user;
 
@@ -84,7 +84,7 @@ typedef struct wima_area_node {
 
 			float scale;
 
-			WimaRegionHandle type;
+			WimaRegion type;
 
 		} area;
 
@@ -103,13 +103,13 @@ typedef struct wima_area_node {
 
 	WimaAreaNodeType type;
 
-	WimaWindowHandle window;
+	WimaWindow window;
 	WimaAreaNodeHandle node;
 
 } WimaAreaNode;
 
-WimaStatus wima_area_init(WimaWindowHandle win, DynaTree areas, WimaRect rect);
-WimaStatus wima_area_node_init(WimaWindowHandle win, DynaTree areas, DynaNode node, WimaRect rect);
+WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect);
+WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect);
 
 bool wima_area_valid(DynaTree regions);
 bool wima_area_node_valid(DynaTree regions, DynaNode node);
@@ -132,8 +132,8 @@ int wima_area_node_splitMoveLimit(DynaTree areas, DynaNode node, bool isLeft, bo
 
 WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 
-WimaAreaNode* wima_area_area(WimaWindowHandle wwh, WimaAreaNodeHandle node);
-WimaWin* wima_area_window(WimaAreaHandle wah);
+WimaAreaNode* wima_area_area(WimaWindow wwh, WimaAreaNodeHandle node);
+WimaWin* wima_area_window(WimaArea wah);
 
 void wima_area_childrenRects(WimaAreaNode* area, WimaRect* left, WimaRect* right);
 WimaPos wima_area_translatePos(WimaAreaNode* area, WimaPos pos);
@@ -159,10 +159,10 @@ void wima_area_drawJoinOverlay(WimaAreaNode* area, NVGcontext* nvg, bool vertica
 // otherwise the first item matching (item.flags & flags) == mask is returned.
 // you may combine box, layout, event and user flags.
 // frozen items will always be ignored.
-WimaItemHandle wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags);
-WimaItemHandle wima_area_node_findItem(DynaTree areas, WimaAreaNode* area, WimaPos pos, uint32_t flags);
+WimaWidget wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags);
+WimaWidget wima_area_node_findItem(DynaTree areas, WimaAreaNode* area, WimaPos pos, uint32_t flags);
 
-WimaStatus wima_area_draw(WimaWindowHandle wwh, float ratio);
+WimaStatus wima_area_draw(WimaWindow wwh, float ratio);
 WimaStatus wima_area_key(WimaAreaNode* area, WimaKeyEvent e);
 WimaStatus wima_area_mousePos(WimaAreaNode* area, WimaPos pos);
 WimaStatus wima_area_mouseEnter(WimaAreaNode* area, bool enter);

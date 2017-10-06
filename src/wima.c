@@ -133,7 +133,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 		return WIMA_STATUS_INIT_ERR;
 	}
 
-	wg.regions = dvec_create(NULL, 0, sizeof(WimaRegion));
+	wg.regions = dvec_create(NULL, 0, sizeof(WimaReg));
 	if (!wg.regions) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
@@ -213,7 +213,7 @@ WimaStatus wima_main() {
 		double time = glfwGetTime();
 
 		// Get the window handle.
-		WimaWindowHandle wwh = WIMA_WINDOW_HANDLE(win);
+		WimaWindow wwh = WIMA_WINDOW(win);
 
 		// Render here.
 		WimaStatus status = wima_window_draw(wwh);
@@ -231,7 +231,7 @@ WimaStatus wima_main() {
 		}
 
 		// Get the window handle.
-		wwh = WIMA_WINDOW_HANDLE(win);
+		wwh = WIMA_WINDOW(win);
 
 		// Process events and check for error.
 		status = wima_window_processEvents(wwh);

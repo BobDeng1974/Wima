@@ -154,7 +154,7 @@ typedef struct wima_item {
 
 } WimaItem;
 
-WimaItem* wima_item_ptr(WimaItemHandle wih);
+WimaItem* wima_item_ptr(WimaWidget wih);
 
 bool wima_item_compare(WimaItem *item1, WimaItem *item2);
 
