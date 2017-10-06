@@ -1213,7 +1213,7 @@ bool wima_theme_item_shaded(WimaThemeType type) {
 }
 
 void wima_theme_node_setOutline(NVGcolor color) {
-
+	wima_theme_setNodeColor(WIMA_THEME_NODE_OUTLINE, color);
 }
 
 NVGcolor wima_theme_node_outline() {
@@ -1221,7 +1221,7 @@ NVGcolor wima_theme_node_outline() {
 }
 
 void wima_theme_node_setOutlineSelected(NVGcolor color) {
-
+	wima_theme_setNodeColor(WIMA_THEME_NODE_OUTLINE_SELECTED, color);
 }
 
 NVGcolor wima_theme_node_outlineSelected() {
@@ -1229,7 +1229,7 @@ NVGcolor wima_theme_node_outlineSelected() {
 }
 
 void wima_theme_node_setOutlineActive(NVGcolor color) {
-
+	wima_theme_setNodeColor(WIMA_THEME_NODE_OUTLINE_ACTIVE, color);
 }
 
 NVGcolor wima_theme_node_outlineActive() {
@@ -1237,7 +1237,7 @@ NVGcolor wima_theme_node_outlineActive() {
 }
 
 void wima_theme_node_setBackground(NVGcolor color) {
-
+	wima_theme_setNodeColor(WIMA_THEME_NODE_BG, color);
 }
 
 NVGcolor wima_theme_node_background() {
@@ -1246,7 +1246,7 @@ NVGcolor wima_theme_node_background() {
 }
 
 void wima_theme_node_setText(NVGcolor color) {
-
+	wima_theme_setNodeColor(WIMA_THEME_NODE_TEXT, color);
 }
 
 NVGcolor wima_theme_node_text() {
@@ -1254,7 +1254,7 @@ NVGcolor wima_theme_node_text() {
 }
 
 void wima_theme_node_setTextSelected(NVGcolor color) {
-
+	wima_theme_setNodeColor(WIMA_THEME_NODE_TEXT_SELECTED, color);
 }
 
 NVGcolor wima_theme_node_textSelected() {
@@ -1262,7 +1262,7 @@ NVGcolor wima_theme_node_textSelected() {
 }
 
 void wima_theme_node_setWire(NVGcolor color) {
-
+	wima_theme_setNodeColor(WIMA_THEME_NODE_WIRE, color);
 }
 
 NVGcolor wima_theme_node_wire() {
@@ -1270,7 +1270,7 @@ NVGcolor wima_theme_node_wire() {
 }
 
 void wima_theme_node_setWireOutline(NVGcolor color) {
-
+	wima_theme_setNodeColor(WIMA_THEME_NODE_WIRE_OUTLINE, color);
 }
 
 NVGcolor wima_theme_node_wireOutline() {
@@ -1278,7 +1278,7 @@ NVGcolor wima_theme_node_wireOutline() {
 }
 
 void wima_theme_node_setWireSelected(NVGcolor color) {
-
+	wima_theme_setNodeColor(WIMA_THEME_NODE_WIRE_SELECTED, color);
 }
 
 NVGcolor wima_theme_node_wireSelected() {
