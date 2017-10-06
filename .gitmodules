@@ -5,3 +5,7 @@
 [submodule "lib/nanovg"]
 	path = lib/nanovg
 	url = git@github.com:gavinhoward/nanovg.git
+[submodule "lib/yc"]
+	path = lib/yc
+	url = git@github.com:ProjectLFyre/Yc.git
+	branch = master
