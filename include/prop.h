@@ -46,7 +46,7 @@ extern "C" {
 
 #include <wima.h>
 
-#define WIMA_PROP_INVALID ((WimaPropHandle) -1)
+#define WIMA_PROP_INVALID ((WimaProperty) -1)
 
 typedef enum wima_prop_type_enum {
 
