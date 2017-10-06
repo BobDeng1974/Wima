@@ -210,7 +210,9 @@ WimaStatus wima_main() {
 	// Main event loop.
 	while (true) {
 
+#ifdef __DEBUG__
 		double time = glfwGetTime();
+#endif
 
 		// Get the window handle.
 		WimaWindow wwh = WIMA_WINDOW(win);
@@ -239,9 +241,10 @@ WimaStatus wima_main() {
 			wg.funcs.error(status, "Wima encountered an error processing events.");
 		}
 
+#ifdef __DEBUG__
 		time = glfwGetTime() - time;
-
 		printf("Loop: %f ms\n", time * 1000.0f);
+#endif
 	}
 
 	return WIMA_STATUS_SUCCESS;
