@@ -54,6 +54,8 @@
 #include "prop.h"
 #include "global.h"
 
+#include "theme/theme.h"
+
 extern WimaG wg;
 
 GLFWcursor* wima_standardCursor(WimaCursor cursor) {
@@ -195,7 +197,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 WimaStatus wima_main() {
 
 	// The user must have loaded a theme somehow.
-	assert(wg.theme != WIMA_PROP_INVALID);
+	assert(wima_theme_valid());
 
 	GLFWwindow* win = glfwGetCurrentContext();
 	if (!win) {

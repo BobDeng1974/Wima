@@ -60,6 +60,8 @@
 
 #include "../math/math.h"
 
+#include <theme.h>
+
 #include "theme.h"
 
 // Low Level Color Functions

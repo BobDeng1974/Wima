@@ -69,6 +69,7 @@ extern "C" {
 #include <nanovg.h>
 
 #include <wima.h>
+#include <prop.h>
 
 /*
 
@@ -105,13 +106,6 @@ Support for label truncation is missing. Text rendering breaks when widgets are
 too short to contain their labels.
 
 */
-
-// Default text color.
-#define WIMA_COLOR_TEXT {{{ 0,0,0,1 }}}
-// Default highlighted text color.
-#define WIMA_COLOR_TEXT_SELECTED {{{ 1,1,1,1 }}}
-// Menu separator color.
-#define WIMA_COLOR_MENU_SEPARATOR {{{ 0.21568627451f, 0.21568627451f, 0.21568627451f, 1.0f}}}
 
 // Default text size.
 #define WIMA_LABEL_FONT_SIZE 16
@@ -785,6 +779,54 @@ typedef enum WimaIcon {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+typedef enum wima_theme_type {
+
+	WIMA_THEME_BG,
+	WIMA_THEME_REGULAR,
+	WIMA_THEME_TOOL,
+	WIMA_THEME_RADIO,
+	WIMA_THEME_TEXTFIELD,
+	WIMA_THEME_OPTION,
+	WIMA_THEME_CHOICE,
+	WIMA_THEME_NUMFIELD,
+	WIMA_THEME_SLIDER,
+	WIMA_THEME_SCROLLBAR,
+	WIMA_THEME_MENU,
+	WIMA_THEME_MENU_ITEM,
+	WIMA_THEME_TOOLTIP,
+	WIMA_THEME_NODE,
+
+} WimaThemeType;
+
+typedef enum wima_item_theme_type {
+
+	WIMA_THEME_ITEM_OUTLINE,
+	WIMA_THEME_ITEM_ITEM,
+	WIMA_THEME_ITEM_INNER,
+	WIMA_THEME_ITEM_INNER_SELECTED,
+	WIMA_THEME_ITEM_TEXT,
+	WIMA_THEME_ITEM_TEXT_SELECTED,
+	WIMA_THEME_ITEM_SHADE_TOP,
+	WIMA_THEME_ITEM_SHADE_BOTTOM,
+	WIMA_THEME_ITEM_SHADED
+
+} WimaItemThemeType;
+
+typedef enum wima_node_theme_type {
+
+	WIMA_THEME_NODE_OUTLINE,
+	WIMA_THEME_NODE_OUTLINE_SELECTED,
+	WIMA_THEME_NODE_OUTLINE_ACTIVE,
+	WIMA_THEME_NODE_BG,
+	WIMA_THEME_NODE_TEXT,
+	WIMA_THEME_NODE_TEXT_SELECTED,
+	WIMA_THEME_NODE_WIRE,
+	WIMA_THEME_NODE_WIRE_OUTLINE,
+	WIMA_THEME_NODE_WIRE_SELECTED,
+	WIMA_THEME_NODE_WIRE_CURVING
+
+} WimaNodeThemeType;
+
 // Color functions.
 
 // make color transparent using the default alpha value
@@ -808,6 +850,84 @@ NVGcolor wima_color_text(NVGcolor textColor, NVGcolor textSelectedColor, WimaIte
 // BND_ACTIVE indicates dragged state
 NVGcolor wima_color_node_wire(NVGcolor wireColor, NVGcolor nodeActiveColor,
                               NVGcolor wireSelectedColor, WimaItemState state);
+
+bool wima_theme_valid();
+
+WimaPropHandle wima_theme_loadDefault();
+WimaPropHandle wima_theme_loadBackgroundDefault();
+WimaPropHandle wima_theme_loadItemDefault(WimaThemeType type);
+WimaPropHandle wima_theme_loadNodeDefault();
+
+WimaPropHandle wima_theme_create();
+WimaPropHandle wima_theme_createBackground(WimaPropHandle theme, NVGcolor bg);
+WimaPropHandle wima_theme_createItem(WimaPropHandle theme, WimaThemeType type,
+                                     NVGcolor outline, NVGcolor item, NVGcolor inner,
+                                     NVGcolor innerSel, NVGcolor text, NVGcolor textSel,
+                                     int shadeTop, int shadeBtm, bool shaded);
+WimaPropHandle wima_theme_createNode(WimaPropHandle theme, NVGcolor outline, NVGcolor outlineSel,
+                                     NVGcolor outlineActv, NVGcolor nodeBg, NVGcolor text,
+                                     NVGcolor textSel, NVGcolor wire, NVGcolor wireOutline,
+                                     NVGcolor wireSel, int curving);
+
+void wima_theme_setBackground(NVGcolor bg);
+NVGcolor wima_theme_background();
+
+void wima_theme_item_setOutline(WimaThemeType type, NVGcolor color);
+NVGcolor wima_theme_item_outline(WimaThemeType type);
+
+void wima_theme_item_setItem(WimaThemeType type, NVGcolor color);
+NVGcolor wima_theme_item_item(WimaThemeType type);
+
+void wima_theme_item_setInner(WimaThemeType type, NVGcolor color);
+NVGcolor wima_theme_item_inner(WimaThemeType type);
+
+void wima_theme_item_setInnerSelected(WimaThemeType type, NVGcolor color);
+NVGcolor wima_theme_item_innerSelected(WimaThemeType type);
+
+void wima_theme_item_setText(WimaThemeType type, NVGcolor color);
+NVGcolor wima_theme_item_text(WimaThemeType type);
+
+void wima_theme_item_setTextSelected(WimaThemeType type, NVGcolor color);
+NVGcolor wima_theme_item_textSelected(WimaThemeType type);
+
+void wima_theme_item_setShadeTop(WimaThemeType type, int delta);
+int wima_theme_item_shadeTop(WimaThemeType type);
+
+void wima_theme_item_setShadeBottom(WimaThemeType type, int delta);
+int wima_theme_item_shadeBottom(WimaThemeType type);
+
+void wima_theme_item_setShaded(WimaThemeType type, bool shaded);
+bool wima_theme_item_shaded(WimaThemeType type);
+
+void wima_theme_node_setOutline(NVGcolor color);
+NVGcolor wima_theme_node_outline();
+
+void wima_theme_node_setOutlineSelected(NVGcolor color);
+NVGcolor wima_theme_node_outlineSelected();
+
+void wima_theme_node_setOutlineActive(NVGcolor color);
+NVGcolor wima_theme_node_outlineActive();
+
+void wima_theme_node_setBackground(NVGcolor color);
+NVGcolor wima_theme_node_background();
+
+void wima_theme_node_setText(NVGcolor color);
+NVGcolor wima_theme_node_text();
+
+void wima_theme_node_setTextSelected(NVGcolor color);
+NVGcolor wima_theme_node_textSelected();
+
+void wima_theme_node_setWire(NVGcolor color);
+NVGcolor wima_theme_node_wire();
+
+void wima_theme_node_setWireOutline(NVGcolor color);
+NVGcolor wima_theme_node_wireOutline();
+
+void wima_theme_node_setWireSelected(NVGcolor color);
+NVGcolor wima_theme_node_wireSelected();
+
+void wima_theme_node_setWireCurving(int curving);
+int wima_theme_node_wireCurving();
 
 #ifdef __cplusplus
 }
