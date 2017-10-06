@@ -146,7 +146,7 @@ WimaPropHandle wima_prop_find(const char* name) {
 	return WIMA_PROP_INVALID;
 }
 
-void wima_prop_linkProp(WimaPropHandle parent, WimaPropHandle child) {
+void wima_prop_link(WimaPropHandle parent, WimaPropHandle child) {
 
 	assert(parent < dvec_len(wg.props));
 
@@ -167,7 +167,7 @@ void wima_prop_linkProp(WimaPropHandle parent, WimaPropHandle child) {
 	assert(status == DYNA_STATUS_SUCCESS);
 }
 
-void wima_prop_unlinkProp(WimaPropHandle parent, WimaPropHandle child) {
+void wima_prop_unlink(WimaPropHandle parent, WimaPropHandle child) {
 
 	assert(parent < dvec_len(wg.props));
 
