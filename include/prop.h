@@ -89,20 +89,22 @@ void wima_prop_setColor(WimaProperty wph, NVGcolor color);
 NVGcolor wima_prop_color(WimaProperty wph);
 void* wima_prop_ptr(WimaProperty wph);
 
-WimaProperty wima_prop_registerGroup(const char* name, const char* desc);
-WimaProperty wima_prop_registerBool(const char* name, const char* desc, bool initial);
-WimaProperty wima_prop_registerInt(const char* name, const char* desc, int initial,
-                                     int min, int max, uint32_t step);
-WimaProperty wima_prop_registerFloat(const char* name, const char* desc, float initial,
-                                       float min, float max, uint32_t step);
-WimaProperty wima_prop_registerString(const char* name, const char* desc, DynaString str);
-WimaProperty wima_prop_registerEnum(const char* name, const char* desc, const char* names[],
-                                       const uint32_t* vals, uint32_t nvals, uint32_t initalIdx);
-WimaProperty wima_prop_registerList(const char* name, const char* desc, DynaVector list);
-WimaProperty wima_prop_registerColor(const char* name, const char* desc, NVGcolor initial);
-WimaProperty wima_prop_registerPtr(const char* name, const char* desc, void* ptr,
-                                      WimaPropDrawFunc draw, WimaPropFreeFunc free);
-WimaProperty wima_prop_registerOperator(const char* name, const char* desc, WimaItemMouseClickFunc op);
+WimaProperty wima_prop_registerGroup(const char* name, const char* label, const char* desc);
+WimaProperty wima_prop_registerBool(const char* name, const char* label, const char* desc, bool initial);
+WimaProperty wima_prop_registerInt(const char* name, const char* label, const char* desc,
+                                   int initial, int min, int max, uint32_t step);
+WimaProperty wima_prop_registerFloat(const char* name, const char* label, const char* desc,
+                                     float initial, float min, float max, uint32_t step);
+WimaProperty wima_prop_registerString(const char* name, const char* label, const char* desc, DynaString str);
+WimaProperty wima_prop_registerEnum(const char* name, const char* label, const char* desc,
+                                    const char* names[], const uint32_t* vals,
+                                    uint32_t nvals, uint32_t initalIdx);
+WimaProperty wima_prop_registerList(const char* name, const char* label, const char* desc, DynaVector list);
+WimaProperty wima_prop_registerColor(const char* name, const char* label, const char* desc, NVGcolor initial);
+WimaProperty wima_prop_registerPtr(const char* name, const char* label, const char* desc,
+                                   void* ptr, WimaPropDrawFunc draw, WimaPropFreeFunc free);
+WimaProperty wima_prop_registerOperator(const char* name, const char* label,
+                                        const char* desc, WimaItemMouseClickFunc op);
 
 void wima_prop_unregister(WimaProperty wph);
 

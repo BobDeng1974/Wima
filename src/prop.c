@@ -340,7 +340,7 @@ void* wima_prop_ptr(WimaProperty wph) {
 	return prop->_ptr.ptr;
 }
 
-static WimaProp* wima_prop_register(const char* name, const char* desc, WimaPropType type) {
+static WimaProp* wima_prop_register(const char* name, const char* label, const char* desc, WimaPropType type) {
 
 	assert(name);
 
@@ -379,11 +379,25 @@ static WimaProp* wima_prop_register(const char* name, const char* desc, WimaProp
 		return NULL;
 	}
 
+	if (label) {
+
+		prop.label = dstr_create(label);
+
+		if (!prop.label) {
+			dstr_free(prop.name);
+			return NULL;
+		}
+	}
+	else {
+		prop.label = NULL;
+	}
+
 	if (desc) {
 
 		prop.desc = dstr_create(desc);
 
 		if (!prop.desc) {
+			dstr_free(prop.label);
 			dstr_free(prop.name);
 			return NULL;
 		}
@@ -401,9 +415,9 @@ static WimaProp* wima_prop_register(const char* name, const char* desc, WimaProp
 	return status ? NULL : wg.props + idx;
 }
 
-WimaProperty wima_prop_registerGroup(const char* name, const char* desc) {
+WimaProperty wima_prop_registerGroup(const char* name, const char* label, const char* desc) {
 
-	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_BOOL);
+	WimaProp* prop = wima_prop_register(name, label, desc, WIMA_PROP_BOOL);
 	assert(prop && prop->type == WIMA_PROP_GROUP);
 
 	prop->_list = dvec_create(NULL, 0, sizeof(WimaProperty));
@@ -412,9 +426,9 @@ WimaProperty wima_prop_registerGroup(const char* name, const char* desc) {
 	return prop->idx;
 }
 
-WimaProperty wima_prop_registerBool(const char* name, const char* desc, bool initial) {
+WimaProperty wima_prop_registerBool(const char* name, const char* label, const char* desc, bool initial) {
 
-	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_BOOL);
+	WimaProp* prop = wima_prop_register(name, label, desc, WIMA_PROP_BOOL);
 	assert(prop && prop->type == WIMA_PROP_BOOL);
 
 	prop->_bool = initial;
@@ -422,10 +436,10 @@ WimaProperty wima_prop_registerBool(const char* name, const char* desc, bool ini
 	return prop->idx;
 }
 
-WimaProperty wima_prop_registerInt(const char* name, const char* desc, int initial,
-                                     int min, int max, uint32_t step)
+WimaProperty wima_prop_registerInt(const char* name, const char* label, const char* desc,
+                                   int initial, int min, int max, uint32_t step)
 {
-	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_INT);
+	WimaProp* prop = wima_prop_register(name, label, desc, WIMA_PROP_INT);
 	assert(prop && prop->type == WIMA_PROP_INT);
 
 	prop->_int.val = initial;
@@ -436,10 +450,10 @@ WimaProperty wima_prop_registerInt(const char* name, const char* desc, int initi
 	return prop->idx;
 }
 
-WimaProperty wima_prop_registerFloat(const char* name, const char* desc, float initial,
-                                       float min, float max, uint32_t step)
+WimaProperty wima_prop_registerFloat(const char* name, const char* label, const char* desc,
+                                     float initial, float min, float max, uint32_t step)
 {
-	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_FLOAT);
+	WimaProp* prop = wima_prop_register(name, label, desc, WIMA_PROP_FLOAT);
 	assert(prop && prop->type == WIMA_PROP_FLOAT);
 
 	prop->_float.val = initial;
@@ -450,11 +464,11 @@ WimaProperty wima_prop_registerFloat(const char* name, const char* desc, float i
 	return prop->idx;
 }
 
-WimaProperty wima_prop_registerString(const char* name, const char* desc, DynaString str) {
+WimaProperty wima_prop_registerString(const char* name, const char* label, const char* desc, DynaString str) {
 
 	assert(str);
 
-	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_STRING);
+	WimaProp* prop = wima_prop_register(name, label, desc, WIMA_PROP_STRING);
 	assert(prop && prop->type == WIMA_PROP_STRING);
 
 	prop->_str = str;
@@ -462,12 +476,13 @@ WimaProperty wima_prop_registerString(const char* name, const char* desc, DynaSt
 	return prop->idx;
 }
 
-WimaProperty wima_prop_registerEnum(const char* name, const char* desc, const char* names[],
-                                       const uint32_t* vals, uint32_t nvals, uint32_t initalIdx)
+WimaProperty wima_prop_registerEnum(const char* name, const char* label, const char* desc,
+                                    const char* names[], const uint32_t* vals,
+                                    uint32_t nvals, uint32_t initalIdx)
 {
 	assert(names);
 
-	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_ENUM);
+	WimaProp* prop = wima_prop_register(name, label, desc, WIMA_PROP_ENUM);
 	assert(prop && prop->type == WIMA_PROP_ENUM);
 
 	prop->_enum.names = names;
@@ -478,11 +493,11 @@ WimaProperty wima_prop_registerEnum(const char* name, const char* desc, const ch
 	return prop->idx;
 }
 
-WimaProperty wima_prop_registerList(const char* name, const char* desc, DynaVector list) {
+WimaProperty wima_prop_registerList(const char* name, const char* label, const char* desc, DynaVector list) {
 
 	assert(list);
 
-	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_LIST);
+	WimaProp* prop = wima_prop_register(name, label, desc, WIMA_PROP_LIST);
 	assert(prop && prop->type == WIMA_PROP_LIST);
 
 	prop->_list = list;
@@ -490,9 +505,9 @@ WimaProperty wima_prop_registerList(const char* name, const char* desc, DynaVect
 	return prop->idx;
 }
 
-WimaProperty wima_prop_registerColor(const char* name, const char* desc, NVGcolor initial) {
+WimaProperty wima_prop_registerColor(const char* name, const char* label, const char* desc, NVGcolor initial) {
 
-	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_COLOR);
+	WimaProp* prop = wima_prop_register(name, label, desc, WIMA_PROP_COLOR);
 	assert(prop && prop->type == WIMA_PROP_COLOR);
 
 	prop->_color = initial;
@@ -500,12 +515,12 @@ WimaProperty wima_prop_registerColor(const char* name, const char* desc, NVGcolo
 	return prop->idx;
 }
 
-WimaProperty wima_prop_registerPtr(const char* name, const char* desc, void* ptr,
-                                   WimaPropDrawFunc draw, WimaPropFreeFunc free)
+WimaProperty wima_prop_registerPtr(const char* name, const char* label, const char* desc,
+                                   void* ptr, WimaPropDrawFunc draw, WimaPropFreeFunc free)
 {
 	assert(draw && ptr);
 
-	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_PTR);
+	WimaProp* prop = wima_prop_register(name, label, desc, WIMA_PROP_PTR);
 	assert(prop && prop->type == WIMA_PROP_PTR);
 
 	prop->_ptr.draw = draw;
@@ -515,9 +530,10 @@ WimaProperty wima_prop_registerPtr(const char* name, const char* desc, void* ptr
 	return prop->idx;
 }
 
-WimaProperty wima_prop_registerOperator(const char* name, const char* desc, WimaItemMouseClickFunc op) {
-
-	WimaProp* prop = wima_prop_register(name, desc, WIMA_PROP_OPERATOR);
+WimaProperty wima_prop_registerOperator(const char* name, const char* label,
+                                        const char* desc, WimaItemMouseClickFunc op)
+{
+	WimaProp* prop = wima_prop_register(name, label, desc, WIMA_PROP_OPERATOR);
 	assert(prop && prop->type == WIMA_PROP_OPERATOR);
 
 	prop->_op = op;

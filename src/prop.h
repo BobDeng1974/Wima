@@ -92,6 +92,8 @@ typedef struct wima_prop {
 
 	DynaString name;
 
+	DynaString label;
+
 	DynaString desc;
 
 	uint64_t hash;
