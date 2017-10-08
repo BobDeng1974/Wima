@@ -48,6 +48,8 @@
 
 extern WimaG wg;
 
+const char* wkspInvalidMsg = "Provided WimaWorkspace is not a valid workspace";
+
 WimaStatus wima_workspace_register(WimaWorkspace* wth) {
 
 	WimaWksp wksp = dtree_create(NULL, 0, sizeof(WimaAr));
@@ -67,13 +69,14 @@ WimaStatus wima_workspace_register(WimaWorkspace* wth) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus wima_workspace_addParent(WimaWorkspace wwh, DynaNode node,
+WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
                                     float split,             bool vertical)
 {
-	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwh));
-	assert(wksp);
+	yassert(wwksp < dvec_len(wg.workspaces), wkspInvalidMsg);
 
-	if (!wima_workspace_nodeValid(wwh, node)) {
+	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwksp));
+
+	if (!wima_workspace_nodeValid(wwksp, node)) {
 		return WIMA_STATUS_INVALID_PARAM;
 	}
 
@@ -95,8 +98,9 @@ WimaStatus wima_workspace_addParent(WimaWorkspace wwh, DynaNode node,
 
 WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion reg) {
 
+	yassert(wwh < dvec_len(wg.workspaces), wkspInvalidMsg);
+
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwh));
-	assert(wksp);
 
 	if (!wima_workspace_nodeValid(wwh, node)) {
 		return WIMA_STATUS_INVALID_PARAM;

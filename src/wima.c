@@ -58,34 +58,33 @@
 #include "theme/theme.h"
 
 extern WimaG wg;
+extern const char* assertMsgs[];
 
 extern WimaTheme wima_initial_theme;
 
 GLFWcursor* wima_standardCursor(WimaCursor cursor) {
+	yassert_wima_init;
 	return wg.cursors[cursor];
 }
 
 WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
-                     int numIcons,         const char* iconPaths[],
+                     uint32_t numIcons,    const char* iconPaths[],
                      const char* fontPath, const char* iconSheetPath)
 {
-	if (!funcs.draw || !funcs.error) {
-		return WIMA_STATUS_INVALID_PARAM;
-	}
+	yassert(name != NULL, assertMsgs[WIMA_ASSERT_APP_NAME]);
+
+	yassert(funcs.draw != NULL && funcs.error != NULL, "Draw and error functions must not be null");
 
 	// Check that we can access the font and icon sheets.
-	if (!fontPath ||
-	    !iconSheetPath ||
-	    access(fontPath, F_OK|R_OK) == -1 ||
-	    access(iconSheetPath, F_OK|R_OK) == -1)
-	{
-		return WIMA_STATUS_INVALID_PARAM;
-	}
+	yassert(fontPath != NULL && iconSheetPath != NULL, "Font and icon sheet paths must not be null");
+	yassert(access(fontPath, F_OK|R_OK) != -1 && access(iconSheetPath, F_OK|R_OK) != -1,
+	         "Wima must be able to read the font and icon sheet files");
+
+	char buffer[257];
 
 	// Check to make sure the icons are good.
-	if (numIcons < 0 || numIcons > WIMA_MAX_ICONS || (numIcons != 0 && !iconPaths)) {
-		return WIMA_STATUS_INVALID_PARAM;
-	}
+	sprintf(buffer, "There must not be more than %d icons", WIMA_MAX_ICONS);
+	yassert(numIcons <= WIMA_MAX_ICONS, buffer);
 
 	wg.funcs = funcs;
 
@@ -199,6 +198,8 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 
 WimaStatus wima_main() {
 
+	yassert_wima_init;
+
 	GLFWwindow* win = glfwGetCurrentContext();
 	if (!win) {
 		return WIMA_STATUS_INVALID_STATE;
@@ -252,6 +253,8 @@ WimaStatus wima_main() {
 }
 
 void wima_exit() {
+
+	yassert_wima_init;
 
 	// Free the icon images.
 	if (wg.numIcons) {

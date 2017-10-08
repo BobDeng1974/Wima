@@ -36,6 +36,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <yc/assert.h>
+
 #include <dyna/dyna.h>
 #include <dyna/vector.h>
 #include <dyna/string.h>
@@ -44,3 +46,14 @@
 #include "global.h"
 
 WimaG wg;
+
+const char* assertMsgs[] = {
+#ifdef __YASSERT__
+    "Wima must be initialized before calling this function",
+    "App name must not be null",
+    "Window must be created before calling this function",
+    "WimaRegion must be valid",
+    "Region layout function must not be null",
+    "Region item capacity must be greater than 0",
+#endif
+};

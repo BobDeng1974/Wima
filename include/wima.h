@@ -1034,7 +1034,7 @@ bool wima_area_contains(WimaArea wah, WimaPos pos);
 WimaStatus wima_areas_free(DynaTree areas);
 
 WimaStatus wima_workspace_register(WimaWorkspace* type);
-WimaStatus wima_workspace_addParent(WimaWorkspace wksp, DynaNode node, float split, bool vertical);
+WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node, float split, bool vertical);
 WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion reg);
 
 WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph);
@@ -1090,7 +1090,7 @@ WimaWidget wima_window_focus(WimaWindow wwh);
 WimaStatus wima_window_free(WimaWindow win);
 
 WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
-                     int numIcons,         const char* iconPaths[],
+                     uint32_t numIcons,    const char* iconPaths[],
                      const char* fontPath, const char* iconSheetPath);
 GLFWcursor* wima_standardCursor(WimaCursor cursor);
 WimaStatus wima_main();

@@ -37,6 +37,8 @@
 #ifndef WIMA_GLOBAL_H
 #define WIMA_GLOBAL_H
 
+#include <yc/assert.h>
+
 #include <dyna/vector.h>
 #include <dyna/string.h>
 
@@ -72,5 +74,18 @@ typedef struct wima_globals {
 	int numIcons;
 
 } WimaG;
+
+typedef enum wima_assert_type {
+
+	WIMA_ASSERT_INIT,
+	WIMA_ASSERT_APP_NAME,
+	WIMA_ASSERT_WINDOW,
+	WIMA_ASSERT_REG_VALID,
+	WIMA_ASSERT_REG_LAYOUT,
+	WIMA_ASSERT_REG_ITEM_CAP
+
+} WimaAssertType;
+
+#define yassert_wima_init yassert(wg.name != NULL, assertMsgs[WIMA_ASSERT_INIT])
 
 #endif // WIMA_GLOBAL_H
