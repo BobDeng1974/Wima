@@ -34,9 +34,10 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <assert.h>
 #include <math.h>
 #include <stdbool.h>
+
+#include <yc/assert.h>
 
 #include <wima.h>
 

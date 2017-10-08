@@ -62,6 +62,8 @@
 #include <math.h>
 #include <string.h>
 
+#include <yc/assert.h>
+
 #include <nanovg.h>
 
 #include <prop.h>
@@ -449,7 +451,8 @@ const WimaTheme wima_initial_theme = {
 };
 
 void wima_theme_load(WimaTheme* theme) {
-	assert(theme);
+
+	yassert(theme != NULL, "Theme must not be null");
 	wg.theme = theme;
 }
 

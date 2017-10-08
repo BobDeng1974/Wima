@@ -26,6 +26,7 @@
 
 # We use the nanovg includes, so we need this.
 include_directories("../../lib/nanovg/src")
+include_directories("../../lib/yc/include")
 
 set(WIMA_GLOBAL "${PROJECT_NAME}_global")
 set(WIMA_MATH_PIC "${PROJECT_NAME}_math")
@@ -44,6 +45,10 @@ create_pic_library(
 	"${WIMA_THEME}" "${WIMA_THEME}" "${WIMA_THEME_SRC}" YES
 
 	# Add libraries here.
+	"${YC_LIB}"
+	"${JEMALLOC_LIB}"
+	"${DL_LIB}"
+	"${PTHREAD_LIB}"
 	"${WIMA_GLOBAL}"
 	"${NANOVG_PIC}"
 	"${WIMA_MATH_PIC}"

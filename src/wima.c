@@ -38,7 +38,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include <jemalloc/jemalloc.h>
+#include <yc/assert.h>
+#include <yc/mem.h>
 
 #include <dyna/dyna.h>
 #include <dyna/vector.h>

@@ -24,8 +24,9 @@
 #
 #	****** END LICENSE BLOCK ******
 
-# We use the nanovg includes, so we need this.
+# We use the nanovg and yc includes, so we need this.
 include_directories("../lib/nanovg/src")
+include_directories("../lib/yc/include")
 
 set(WIMA_GLOBAL_SRC
 
@@ -38,6 +39,10 @@ create_pic_library("${WIMA_GLOBAL}" "${WIMA_GLOBAL}" "${WIMA_GLOBAL_SRC}" YES
 
 	# Add libraries here.
 	"${DYNA_LIB}"
+	"${YC_LIB}"
+	"${JEMALLOC_LIB}"
+	"${PTHREAD_LIB}"
+	"${DL_LIB}"
 )
 
 set(WIMA_SRC
@@ -72,6 +77,7 @@ create_pic_library(
 	"${NANOVG_PIC}"
 	"${WIMA_MATH}"
 	"${DYNA_LIB}"
+	"${YC_LIB}"
 	"${GLFW_LIB}"
 	"${WIMA_GLAD}"
 	"${JEMALLOC_LIB}"

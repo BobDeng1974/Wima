@@ -43,7 +43,13 @@ create_pic_library("${YC}" "${YC}" "${YC_SRC}" NO)
 set(NANOVG "nanovg")
 set(NANOVG "${NANOVG}" PARENT_SCOPE)
 
-add_definitions(-DNANOVG_GL3_IMPLEMENTATION -DNANOVG_GL_IMPLEMENTATION)
+add_definitions(
+	-DNANOVG_GL3_IMPLEMENTATION
+	-DNANOVG_GL_IMPLEMENTATION
+	-DSTBI_MALLOC=ymalloc
+	-DSTBI_REALLOC=yrealloc
+	-DSTBI_FREE=yfree
+)
 
 set(NANOVG_SRC_DIR "nanovg/src")
 
@@ -62,4 +68,8 @@ create_pic_library(
 	# Add necessary libraries here.
 	"${WIMA_GLAD}"
 	"${MATH_LIB}"
+	"${YC_LIB}"
+	"${JEMALLOC_LIB}"
+	"${PTHREAD_LIB}"
+	"${DL_LIB}"
 )
