@@ -122,7 +122,7 @@ WimaLayoutItem* wima_layout_ptr(WimaLayout wlh) {
 
 	yassert_wima_init;
 
-	WimaAr* area = wima_area_area(wlh.window, wlh.area);
+	WimaAr* area = wima_area_ptr(wlh.window, wlh.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
 
 	assert(wlh.layout < area->area.ctx.itemCount);

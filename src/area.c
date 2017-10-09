@@ -39,7 +39,8 @@
 #include <math.h>
 #include <string.h>
 
-#include <jemalloc/jemalloc.h>
+#include <yc/assert.h>
+#include <yc/mem.h>
 
 #include <wima.h>
 #include <widget.h>
@@ -57,14 +58,152 @@
 extern WimaG wg;
 extern const char* wima_assert_msgs[];
 
+////////////////////////////////////////////////////////////////////////////////
+// Public functions.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaArea wima_area(WimaWindow wwh, WimaAreaNode node) {
+
+	yassert_wima_init;
+
+	WimaArea wah;
+
+	wah.area = node;
+	wah.window = wwh;
+
+	return wah;
+}
+
+void* wima_area_userPointer(WimaArea wah) {
+
+	yassert_wima_init;
+
+	WimaAr* area = wima_area_ptr(wah.window, wah.area);
+	assert(area && area->type == WIMA_AREA_LEAF);
+
+	return area->area.user;
+}
+
+WimaRect wima_area_rect(WimaArea wah) {
+
+	yassert_wima_init;
+
+	WimaAr* area = wima_area_ptr(wah.window, wah.area);
+	assert(area && area->type == WIMA_AREA_LEAF);
+
+	return area->rect;
+}
+
+void wima_area_setScale(WimaArea wah, float scale) {
+
+	yassert_wima_init;
+
+	WimaAr* area = wima_area_ptr(wah.window, wah.area);
+	assert(area && area->type == WIMA_AREA_LEAF);
+
+	area->area.scale = wima_fmaxf(scale, 0.1f);
+}
+
+float wima_area_scale(WimaArea wah) {
+
+	yassert_wima_init;
+
+	WimaAr* area = wima_area_ptr(wah.window, wah.area);
+	assert(area && area->type == WIMA_AREA_LEAF);
+
+	return area->area.scale;
+}
+
+void wima_area_setType(WimaArea wah, WimaRegion type) {
+
+	yassert_wima_init;
+
+	WimaAr* area = wima_area_ptr(wah.window, wah.area);
+	assert(area && area->type == WIMA_AREA_LEAF);
+
+	area->area.type = type;
+
+	wima_window_requestLayout(wah.window);
+}
+
+WimaRegion wima_area_type(WimaArea wah) {
+
+	yassert_wima_init;
+
+	WimaAr* area = wima_area_ptr(wah.window, wah.area);
+	assert(area && area->type == WIMA_AREA_LEAF);
+
+	return area->area.type;
+}
+
+int wima_area_itemCount(WimaArea wah) {
+
+	yassert_wima_init;
+
+	WimaAr* area = wima_area_ptr(wah.window, wah.area);
+	assert(area && area->type == WIMA_AREA_LEAF);
+
+	return area->area.ctx.itemCount;
+}
+
+bool wima_area_contains(WimaArea wah, WimaPos pos) {
+
+	yassert_wima_init;
+
+	WimaAr* area = wima_area_ptr(wah.window, wah.area);
+	assert(area && area->type == WIMA_AREA_LEAF);
+
+	return wima_rect_contains(area->rect, pos);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// Declarations for all functions that only this file should have access to.
+////////////////////////////////////////////////////////////////////////////////
+
+static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect);
+static bool wima_area_node_valid(DynaTree regions, DynaNode node);
+static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
+
+static WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, float ratio);
+static WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, bool adjustSplit);
+static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
+static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaPos cursor);
+static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, WimaMouseSplitEvent* result);
+static WimaStatus wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bool isLeft, bool vertical);
+static int wima_area_node_moveSplitLimit(DynaTree areas, DynaNode node, bool isLeft, bool vertical);
+static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos pos, uint32_t flags);
+
+static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* right);
+static WimaPos wima_area_translatePos(WimaAr* area, WimaPos pos);
+static void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport);
+static void wima_area_popViewport(NVGcontext* nvg);
+static void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg);
+static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg);
+static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertical, bool mirror);
+
+////////////////////////////////////////////////////////////////////////////////
+// Private functions.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node) {
+	yassert_wima_init;
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	yassert(dtree_exists(win->areas, node), wima_assert_msgs[WIMA_ASSERT_AREA]);
+	return dtree_node(win->areas, node);
+}
+
+WimaWin* wima_area_window(WimaArea wah) {
+	yassert_wima_init;
+	yassert(wah.window < dvec_len(wg.windows), wima_assert_msgs[WIMA_ASSERT_WINDOW]);
+	return dvec_get(wg.windows, wah.window);
+}
+
 WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect) {
 	yassert_wima_init;
 	return wima_area_node_init(win, areas, dtree_root(), rect);
 }
 
-WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect) {
-
-	yassert_wima_init;
+static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect) {
 
 	WimaStatus status;
 
@@ -127,7 +266,16 @@ WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, Wi
 		// Call the user function.
 		area->area.user = get_user_ptr(wah);
 
-		status = wima_area_context_create(area, region->itemCap);
+		size_t size = ynalloc(sizeof(WimaItem) * region->itemCap);
+
+		area->area.ctx.items = (WimaLayoutItem*) ymalloc(size);
+		if (!area->area.ctx.items) {
+			return WIMA_STATUS_MALLOC_ERR;
+		}
+
+		area->area.ctx.itemCap = size / sizeof(WimaItem);
+
+		area->area.ctx.itemCount = 0;
 	}
 
 	return status;
@@ -138,9 +286,7 @@ bool wima_area_valid(DynaTree regions) {
 	return wima_area_node_valid(regions, dtree_root());
 }
 
-bool wima_area_node_valid(DynaTree regions, DynaNode node) {
-
-	yassert_wima_init;
+static bool wima_area_node_valid(DynaTree regions, DynaNode node) {
 
 	// Make sure this is clear.
 	bool result = true;
@@ -175,112 +321,241 @@ bool wima_area_node_valid(DynaTree regions, DynaNode node) {
 	return result;
 }
 
-WimaStatus wima_area_context_create(WimaAr* area, int itemCap) {
+WimaStatus wima_area_free(DynaTree areas) {
 
 	yassert_wima_init;
 
-	size_t size = nallocx(sizeof(WimaItem) * itemCap, 0);
+	DynaNode root = dtree_root();
 
-	area->area.ctx.items = (WimaLayoutItem*) mallocx(size, 0);
-	if (!area->area.ctx.items) {
-		return WIMA_STATUS_MALLOC_ERR;
+	WimaStatus status = wima_area_node_free(areas, root);
+
+	dtree_free(areas);
+
+	return status;
+}
+
+static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
+
+	// Make sure this is clear.
+	WimaStatus status = WIMA_STATUS_SUCCESS;
+
+	// Get the particular area that we care about.
+	WimaAr* area = dtree_node(areas, node);
+
+	// We do something different depending on what type of node it is.
+	if (area->type == WIMA_AREA_PARENT) {
+
+		// Set the left child user pointer and check for error.
+		status = wima_area_node_free(areas, dtree_left(node));
+		if (status) {
+			return status;
+		}
+
+		// Set the right child user pointer and check for error.
+		status = wima_area_node_free(areas, dtree_right(node));
+		if (status) {
+			return status;
+		}
 	}
+	else {
 
-	itemCap = size / sizeof(WimaItem);
-	area->area.ctx.itemCap = itemCap;
+		// Free the items arrays.
+		dallocx(area->area.ctx.items, 0);
+
+		// If the user didn't allocate anything, just return.
+		if (!area->area.user) {
+			return WIMA_STATUS_SUCCESS;
+		}
+
+		// Get the region handle.
+		WimaRegion reg = area->area.type;
+
+		// Check that the region handle is valid.
+		if (reg >= dvec_len(wg.regions)) {
+			return WIMA_STATUS_WINDOW_ERR;
+		}
+
+		// Get the list of regions.
+		WimaReg* region = dvec_get(wg.regions, reg);
+
+		// Get the particular user function setter.
+		WimaAreaFreeUserPointerFunc free_user_ptr = region->free_ptr;
+
+		// If the user didn't specify one, don't call it.
+		if (!free_user_ptr) {
+			return WIMA_STATUS_SUCCESS;
+		}
+
+		// Call the user function.
+		free_user_ptr(area->area.user);
+	}
 
 	return WIMA_STATUS_SUCCESS;
 }
 
-void wima_area_context_clear(WimaAr* area) {
+WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e) {
 
 	yassert_wima_init;
 
+	WimaStatus status;
+
 	assert(area && area->type == WIMA_AREA_LEAF);
 
-	area->area.ctx.itemCount = 0;
+	WimaReg* region = dvec_get(wg.regions, area->area.type);
+
+	WimaAreaKeyFunc key_event = region->key_event;
+
+	if (key_event) {
+		status = key_event(wima_area(area->window, area->node), e);
+	}
+	else {
+		status = WIMA_STATUS_SUCCESS;
+	}
+
+	return status;
 }
 
-int wima_area_itemCount(WimaArea wah) {
+WimaStatus wima_area_mousePos(WimaAr* area, WimaPos pos) {
 
 	yassert_wima_init;
 
-	WimaAr* area = wima_area_area(wah.window, wah.area);
+	WimaStatus status;
+
 	assert(area && area->type == WIMA_AREA_LEAF);
 
-	return area->area.ctx.itemCount;
+	WimaReg* region = dvec_get(wg.regions, area->area.type);
+
+	WimaAreaMousePosFunc mouse_pos = region->mouse_pos;
+
+	if (mouse_pos) {
+		status = mouse_pos(wima_area(area->window, area->node), pos);
+	}
+	else {
+		status = WIMA_STATUS_SUCCESS;
+	}
+
+	return status;
 }
 
-void* wima_area_userPointer(WimaArea wah) {
+WimaStatus wima_area_mouseEnter(WimaAr* area, bool enter) {
 
 	yassert_wima_init;
 
-	WimaAr* area = wima_area_area(wah.window, wah.area);
+	WimaStatus status;
+
 	assert(area && area->type == WIMA_AREA_LEAF);
 
-	return area->area.user;
+	WimaArea wah = wima_area(area->window, area->node);
+
+	WimaReg* region = dvec_get(wg.regions, wima_area_type(wah));
+
+	if (region->mouse_enter) {
+		status = region->mouse_enter(wah, enter);
+	}
+	else {
+		status = WIMA_STATUS_SUCCESS;
+	}
+
+	return status;
 }
 
-WimaRect wima_area_rect(WimaArea wah) {
+WimaStatus wima_area_draw(WimaWindow wwh, float ratio) {
 
 	yassert_wima_init;
 
-	WimaAr* area = wima_area_area(wah.window, wah.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
 
-	return area->rect;
+	return wima_area_node_draw(win->nvg, win->areas, dtree_root(), ratio);
 }
 
-void wima_area_setScale(WimaArea wah, float scale) {
+static WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, float ratio) {
 
 	yassert_wima_init;
 
-	WimaAr* area = wima_area_area(wah.window, wah.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 
-	area->area.scale = wima_fmaxf(scale, 0.1f);
+	WimaAr* area = dtree_node(areas, node);
+
+	if (area->type == WIMA_AREA_PARENT) {
+
+		status = wima_area_node_draw(nvg, areas, dtree_left(node), ratio);
+		if (status) {
+			return status;
+		}
+
+		status = wima_area_node_draw(nvg, areas, dtree_right(node), ratio);
+	}
+	else {
+
+		wima_area_pushViewport(nvg.nvg, area->rect);
+
+		wima_widget_background(nvg, 0, 0, area->rect.w, area->rect.h);
+
+		if (area->area.ctx.itemCount > 0) {
+
+			nvgSave(nvg.nvg);
+
+			nvgScale(nvg.nvg, area->area.scale, area->area.scale);
+
+			WimaWidget item;
+			item.item = 0;
+			item.area = node;
+			item.window = area->window;
+
+			// Draw the area. The draw function is guaranteed to be non-null.
+			status = wg.funcs.draw(item, nvg);
+
+			nvgRestore(nvg.nvg);
+		}
+
+		// Draw the border shading and split widgets.
+		wima_area_drawSplitWidgets(area, nvg.nvg);
+		wima_area_drawBorders(area, nvg.nvg);
+
+		wima_area_popViewport(nvg.nvg);
+	}
+
+	return status;
 }
 
-float wima_area_scale(WimaArea wah) {
-
+WimaStatus wima_area_resize(DynaTree areas, WimaRect rect) {
 	yassert_wima_init;
-
-	WimaAr* area = wima_area_area(wah.window, wah.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
-
-	return area->area.scale;
+	return wima_area_node_resize(areas, dtree_root(), rect, true);
 }
 
-void wima_area_setType(WimaArea wah, WimaRegion type) {
+static WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, bool adjustSplit) {
 
-	yassert_wima_init;
+	WimaAr* area = dtree_node(areas, node);
 
-	WimaAr* area = wima_area_area(wah.window, wah.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
+	area->rect = rect;
 
-	area->area.type = type;
+	if (area->type == WIMA_AREA_LEAF) {
+		return WIMA_STATUS_SUCCESS;
+	}
 
-	wima_window_requestLayout(wah.window);
-}
+	int dim = (area->parent.vertical ? rect.w : rect.h) - 1;
 
-WimaRegion wima_area_type(WimaArea wah) {
+	if (adjustSplit) {
+		area->parent.spliti = (int) (area->parent.split * dim);
+	}
+	else {
+		area->parent.split = ((float) area->parent.spliti) / ((float) dim);
+	}
 
-	yassert_wima_init;
+	WimaRect left;
+	WimaRect right;
 
-	WimaAr* area = wima_area_area(wah.window, wah.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
+	wima_area_childrenRects(area, &left, &right);
 
-	return area->area.type;
-}
+	WimaStatus status = wima_area_node_resize(areas, dtree_left(node), left, adjustSplit);
+	if (status) {
+		return status;
+	}
 
-bool wima_area_contains(WimaArea wah, WimaPos pos) {
+	status = wima_area_node_resize(areas, dtree_right(node), right, adjustSplit);
 
-	yassert_wima_init;
-
-	WimaAr* area = wima_area_area(wah.window, wah.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
-
-	return wima_rect_contains(area->rect, pos);
+	return status;
 }
 
 WimaStatus wima_area_layout(DynaTree areas) {
@@ -288,9 +563,7 @@ WimaStatus wima_area_layout(DynaTree areas) {
 	return wima_area_node_layout(areas, dtree_root());
 }
 
-WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
-
-	yassert_wima_init;
+static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 	WimaAr* area = dtree_node(areas, node);
 	assert(area);
@@ -308,7 +581,7 @@ WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 	}
 	else {
 
-		wima_area_context_clear(area);
+		area->area.ctx.itemCount = 0;
 
 		WimaArea wah;
 		wah.area = node;
@@ -362,9 +635,7 @@ WimaAreaNode wima_area_containsMouse(DynaTree areas, WimaPos cursor) {
 	return wima_area_node_containsMouse(areas, dtree_node(areas, dtree_root()), cursor);
 }
 
-WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaPos cursor) {
-
-	yassert_wima_init;
+static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaPos cursor) {
 
 	assert(area);
 
@@ -394,6 +665,67 @@ WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaPos 
 	}
 }
 
+bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos, WimaMouseSplitEvent* result) {
+	yassert_wima_init;
+	return wima_area_node_mouseOnSplit(areas, dtree_root(), pos, result);
+}
+
+static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, WimaMouseSplitEvent* result) {
+
+	WimaAr* area = dtree_node(areas, node);
+
+	if (area->type == WIMA_AREA_LEAF) {
+		return false;
+	}
+
+	bool on;
+
+	bool vertical = area->parent.vertical;
+	int split = area->parent.spliti;
+
+	WimaPos tx = wima_area_translatePos(area, pos);
+
+	if (vertical) {
+
+		int x = tx.x - split;
+
+		on = x >= -2 && x <= 2;
+	}
+	else {
+
+		int y = tx.y - split;
+
+		on = y >= -2 && y <= 2;
+	}
+
+	if (!on) {
+
+		DynaNode leftNode = dtree_left(node);
+		WimaAr* left = dtree_node(areas, leftNode);
+
+		if (wima_rect_contains(left->rect, pos)) {
+			on = wima_area_node_mouseOnSplit(areas, leftNode, pos, result);
+		}
+		else {
+
+			DynaNode rightNode = dtree_right(node);
+			WimaAr* right = dtree_node(areas, rightNode);
+
+			if (wima_rect_contains(right->rect, pos)) {
+				on = wima_area_node_mouseOnSplit(areas, rightNode, pos, result);
+			}
+		}
+	}
+	else {
+		result->split = split;
+		result->area = node;
+		result->window = area->window;
+		result->vertical = vertical;
+	}
+
+	return on;
+}
+
 WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaPos cursor) {
 
 	yassert_wima_init;
@@ -409,7 +741,7 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 
 	DynaNode child = isLeft ? dtree_left(node) : dtree_right(node);
 
-	int limit = wima_area_node_splitMoveLimit(areas, child, diff < 0, e.vertical);
+	int limit = wima_area_node_moveSplitLimit(areas, child, diff < 0, e.vertical);
 
 	limit = isLeft && limit != 0 ? -limit : limit;
 
@@ -445,7 +777,7 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 	return status;
 }
 
-WimaStatus wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bool isLeft, bool vertical) {
+static WimaStatus wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bool isLeft, bool vertical) {
 
 	yassert_wima_init;
 
@@ -508,7 +840,7 @@ WimaStatus wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, boo
 	return status;
 }
 
-int wima_area_node_splitMoveLimit(DynaTree areas, DynaNode node, bool isLeft, bool vertical) {
+static int wima_area_node_moveSplitLimit(DynaTree areas, DynaNode node, bool isLeft, bool vertical) {
 
 	yassert_wima_init;
 
@@ -521,13 +853,13 @@ int wima_area_node_splitMoveLimit(DynaTree areas, DynaNode node, bool isLeft, bo
 
 		DynaNode childNode = isLeft ? dtree_right(area->node) : dtree_left(area->node);
 
-		limit = wima_area_node_splitMoveLimit(areas, childNode, isLeft, vertical);
+		limit = wima_area_node_moveSplitLimit(areas, childNode, isLeft, vertical);
 
 		if (!vertical != !area->parent.vertical) {
 
 			childNode = isLeft ? dtree_left(area->node) : dtree_right(area->node);
 
-			int lim = wima_area_node_splitMoveLimit(areas, childNode, isLeft, vertical);
+			int lim = wima_area_node_moveSplitLimit(areas, childNode, isLeft, vertical);
 
 			limit = wima_min(limit, lim);
 		}
@@ -544,329 +876,88 @@ int wima_area_node_splitMoveLimit(DynaTree areas, DynaNode node, bool isLeft, bo
 	return limit;
 }
 
-WimaStatus wima_areas_free(DynaTree areas) {
-
+WimaWidget wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags) {
 	yassert_wima_init;
-
-	DynaNode root = dtree_root();
-
-	WimaStatus status = wima_area_node_free(areas, root);
-
-	dtree_free(areas);
-
-	return status;
+	return wima_area_node_findItem(areas, dtree_node(areas, dtree_root()), pos, flags);
 }
 
-WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
+static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos pos, uint32_t flags) {
 
 	yassert_wima_init;
 
-	// Make sure this is clear.
-	WimaStatus status = WIMA_STATUS_SUCCESS;
-
-	// Get the particular area that we care about.
-	WimaAr* area = dtree_node(areas, node);
-
-	// We do something different depending on what type of node it is.
-	if (area->type == WIMA_AREA_PARENT) {
-
-		// Set the left child user pointer and check for error.
-		status = wima_area_node_free(areas, dtree_left(node));
-		if (status) {
-			return status;
-		}
-
-		// Set the right child user pointer and check for error.
-		status = wima_area_node_free(areas, dtree_right(node));
-		if (status) {
-			return status;
-		}
-	}
-	else {
-
-		// Free the items arrays.
-		dallocx(area->area.ctx.items, 0);
-
-		// If the user didn't allocate anything, just return.
-		if (!area->area.user) {
-			return WIMA_STATUS_SUCCESS;
-		}
-
-		// Get the region handle.
-		WimaRegion reg = area->area.type;
-
-		// Check that the region handle is valid.
-		if (reg >= dvec_len(wg.regions)) {
-			return WIMA_STATUS_WINDOW_ERR;
-		}
-
-		// Get the list of regions.
-		WimaReg* region = dvec_get(wg.regions, reg);
-
-		// Get the particular user function setter.
-		WimaAreaFreeUserPointerFunc free_user_ptr = region->free_ptr;
-
-		// If the user didn't specify one, don't call it.
-		if (!free_user_ptr) {
-			return WIMA_STATUS_SUCCESS;
-		}
-
-		// Call the user function.
-		free_user_ptr(area->area.user);
-	}
-
-	return WIMA_STATUS_SUCCESS;
-}
-
-WimaAr* wima_area_area(WimaWindow wwh, WimaAreaNode node) {
-	yassert_wima_init;
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	return dtree_node(win->areas, node);
-}
-
-WimaArea wima_area(WimaWindow wwh, WimaAreaNode node) {
-
-	yassert_wima_init;
-
-	WimaArea wah;
-
-	wah.area = node;
-	wah.window = wwh;
-
-	return wah;
-}
-
-WimaStatus wima_area_draw(WimaWindow wwh, float ratio) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	return wima_area_node_draw(win->nvg, win->areas, dtree_root(), ratio);
-}
-
-WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e) {
-
-	yassert_wima_init;
-
-	WimaStatus status;
-
-	assert(area && area->type == WIMA_AREA_LEAF);
-
-	WimaReg* region = dvec_get(wg.regions, area->area.type);
-
-	WimaAreaKeyFunc key_event = region->key_event;
-
-	if (key_event) {
-		status = key_event(wima_area(area->window, area->node), e);
-	}
-	else {
-		status = WIMA_STATUS_SUCCESS;
-	}
-
-	return status;
-}
-
-WimaStatus wima_area_mousePos(WimaAr* area, WimaPos pos) {
-
-	yassert_wima_init;
-
-	WimaStatus status;
-
-	assert(area && area->type == WIMA_AREA_LEAF);
-
-	WimaReg* region = dvec_get(wg.regions, area->area.type);
-
-	WimaAreaMousePosFunc mouse_pos = region->mouse_pos;
-
-	if (mouse_pos) {
-		status = mouse_pos(wima_area(area->window, area->node), pos);
-	}
-	else {
-		status = WIMA_STATUS_SUCCESS;
-	}
-
-	return status;
-}
-
-WimaStatus wima_area_mouseEnter(WimaAr*area, bool enter) {
-
-	yassert_wima_init;
-
-	WimaStatus status;
-
-	assert(area && area->type == WIMA_AREA_LEAF);
-
-	WimaArea wah = wima_area(area->window, area->node);
-
-	WimaReg* region = dvec_get(wg.regions, wima_area_type(wah));
-
-	if (region->mouse_enter) {
-		status = region->mouse_enter(wah, enter);
-	}
-	else {
-		status = WIMA_STATUS_SUCCESS;
-	}
-
-	return status;
-}
-
-WimaStatus wima_area_resize(DynaTree areas, WimaRect rect) {
-	yassert_wima_init;
-	return wima_area_node_resize(areas, dtree_root(), rect, true);
-}
-
-bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos, WimaMouseSplitEvent* result) {
-	yassert_wima_init;
-	return wima_area_node_mouseOnSplit(areas, dtree_root(), pos, result);
-}
-
-WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, float ratio) {
-
-	yassert_wima_init;
-
-	WimaStatus status = WIMA_STATUS_SUCCESS;
-
-	WimaAr* area = dtree_node(areas, node);
+	assert(area);
 
 	if (area->type == WIMA_AREA_PARENT) {
 
-		status = wima_area_node_draw(nvg, areas, dtree_left(node), ratio);
-		if (status) {
-			return status;
-		}
-
-		status = wima_area_node_draw(nvg, areas, dtree_right(node), ratio);
-	}
-	else {
-
-		wima_area_pushViewport(nvg.nvg, area->rect);
-
-		wima_widget_background(nvg, 0, 0, area->rect.w, area->rect.h);
-
-		if (area->area.ctx.itemCount > 0) {
-
-			nvgSave(nvg.nvg);
-
-			nvgScale(nvg.nvg, area->area.scale, area->area.scale);
-
-			WimaWidget item;
-			item.item = 0;
-			item.area = node;
-			item.window = area->window;
-
-			// Draw the area. The draw function is guaranteed to be non-null.
-			status = wg.funcs.draw(item, nvg);
-
-			nvgRestore(nvg.nvg);
-		}
-
-		// Draw the border shading and split widgets.
-		wima_area_drawSplitWidgets(area, nvg.nvg);
-		wima_area_drawBorders(area, nvg.nvg);
-
-		wima_area_popViewport(nvg.nvg);
-	}
-
-	return status;
-}
-
-WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, bool adjustSplit) {
-
-	yassert_wima_init;
-
-	WimaAr* area = dtree_node(areas, node);
-
-	area->rect = rect;
-
-	if (area->type == WIMA_AREA_LEAF) {
-		return WIMA_STATUS_SUCCESS;
-	}
-
-	int dim = (area->parent.vertical ? rect.w : rect.h) - 1;
-
-	if (adjustSplit) {
-		area->parent.spliti = (int) (area->parent.split * dim);
-	}
-	else {
-		area->parent.split = ((float) area->parent.spliti) / ((float) dim);
-	}
-
-	WimaRect left;
-	WimaRect right;
-
-	wima_area_childrenRects(area, &left, &right);
-
-	WimaStatus status = wima_area_node_resize(areas, dtree_left(node), left, adjustSplit);
-	if (status) {
-		return status;
-	}
-
-	status = wima_area_node_resize(areas, dtree_right(node), right, adjustSplit);
-
-	return status;
-}
-
-bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, WimaMouseSplitEvent* result) {
-
-	yassert_wima_init;
-
-	WimaAr* area = dtree_node(areas, node);
-
-	if (area->type == WIMA_AREA_LEAF) {
-		return false;
-	}
-
-	bool on;
-
-	bool vertical = area->parent.vertical;
-	int split = area->parent.spliti;
-
-	WimaPos tx = wima_area_translatePos(area, pos);
-
-	if (vertical) {
-
-		int x = tx.x - split;
-
-		on = x >= -2 && x <= 2;
-	}
-	else {
-
-		int y = tx.y - split;
-
-		on = y >= -2 && y <= 2;
-	}
-
-	if (!on) {
-
-		DynaNode leftNode = dtree_left(node);
+		DynaNode leftNode = dtree_left(area->node);
 		WimaAr* left = dtree_node(areas, leftNode);
 
+		WimaWidget item;
+
 		if (wima_rect_contains(left->rect, pos)) {
-			on = wima_area_node_mouseOnSplit(areas, leftNode, pos, result);
+			item = wima_area_node_findItem(areas, left, pos, flags);
 		}
 		else {
 
-			DynaNode rightNode = dtree_right(node);
+			DynaNode rightNode = dtree_right(area->node);
 			WimaAr* right = dtree_node(areas, rightNode);
 
 			if (wima_rect_contains(right->rect, pos)) {
-				on = wima_area_node_mouseOnSplit(areas, rightNode, pos, result);
+				item = wima_area_node_findItem(areas, right, pos, flags);
+			}
+			else {
+				item.item = -1;
+				item.area = area->node;
+				item.window = area->window;
 			}
 		}
+
+		return item;
 	}
 	else {
-		result->split = split;
-		result->area = node;
-		result->window = area->window;
-		result->vertical = vertical;
-	}
 
-	return on;
+		WimaLayoutItem *pitem;
+
+		WimaWidget item;
+		item.item = 0;
+		item.area = area->node;
+		item.window = area->window;
+
+		WimaWidget best_hit = item;
+		best_hit.item = WIMA_ITEM_INVALID;
+
+		// TODO: Remove this.
+		return best_hit;
+
+		// Translate the position to the area.
+		pos = wima_area_translatePos(area, pos);
+
+		while (item.item >= 0) {
+
+			pitem = (WimaLayoutItem*) wima_item_ptr(item);
+
+			if (wima_item_contains(item, pos)) {
+
+				if (!(pitem->layout.flags & WIMA_LAYOUT_ENABLE)) {
+					break;
+				}
+
+				if (flags == WIMA_ITEM_ANY || pitem->item.flags & flags) {
+					best_hit = item;
+				}
+
+				item.item = pitem->layout.firstKid;
+			}
+			else {
+				item.item = pitem->nextSibling;
+			}
+		}
+
+		return best_hit;
+	}
 }
 
-void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* right) {
+static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* right) {
 
 	yassert_wima_init;
 
@@ -902,7 +993,7 @@ void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* right) {
 	}
 }
 
-WimaPos wima_area_translatePos(WimaAr* area, WimaPos pos) {
+static WimaPos wima_area_translatePos(WimaAr* area, WimaPos pos) {
 
 	yassert_wima_init;
 
@@ -914,7 +1005,7 @@ WimaPos wima_area_translatePos(WimaAr* area, WimaPos pos) {
 	return result;
 }
 
-void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport) {
+static void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport) {
 
 	yassert_wima_init;
 
@@ -923,13 +1014,13 @@ void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport) {
 	nvgTranslate(nvg, viewport.x, viewport.y);
 }
 
-void wima_area_popViewport(NVGcontext* nvg) {
+static void wima_area_popViewport(NVGcontext* nvg) {
 
 	nvgResetTransform(nvg);
 	nvgResetScissor(nvg);
 }
 
-void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg) {
+static void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg) {
 
 	yassert_wima_init;
 
@@ -962,7 +1053,7 @@ void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg) {
 	nvgFill(nvg);
 }
 
-void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg) {
+static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg) {
 
 	yassert_wima_init;
 
@@ -1042,7 +1133,7 @@ void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg) {
 	nvgShapeAntiAlias(nvg, 1);
 }
 
-void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertical, bool mirror) {
+static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertical, bool mirror) {
 
 	yassert_wima_init;
 
@@ -1108,85 +1199,4 @@ void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertical, boo
 
 	nvgFillColor(nvg, nvgRGBAf(0, 0, 0, 0.3));
 	nvgFill(nvg);
-}
-
-WimaWidget wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags) {
-	yassert_wima_init;
-	return wima_area_node_findItem(areas, dtree_node(areas, dtree_root()), pos, flags);
-}
-
-WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos pos, uint32_t flags) {
-
-	yassert_wima_init;
-
-	assert(area);
-
-	if (area->type == WIMA_AREA_PARENT) {
-
-		DynaNode leftNode = dtree_left(area->node);
-		WimaAr* left = dtree_node(areas, leftNode);
-
-		WimaWidget item;
-
-		if (wima_rect_contains(left->rect, pos)) {
-			item = wima_area_node_findItem(areas, left, pos, flags);
-		}
-		else {
-
-			DynaNode rightNode = dtree_right(area->node);
-			WimaAr* right = dtree_node(areas, rightNode);
-
-			if (wima_rect_contains(right->rect, pos)) {
-				item = wima_area_node_findItem(areas, right, pos, flags);
-			}
-			else {
-				item.item = -1;
-				item.area = area->node;
-				item.window = area->window;
-			}
-		}
-
-		return item;
-	}
-	else {
-
-		WimaLayoutItem *pitem;
-
-		WimaWidget item;
-		item.item = 0;
-		item.area = area->node;
-		item.window = area->window;
-
-		WimaWidget best_hit = item;
-		best_hit.item = WIMA_ITEM_INVALID;
-
-		// TODO: Remove this.
-		return best_hit;
-
-		// Translate the position to the area.
-		pos = wima_area_translatePos(area, pos);
-
-		while (item.item >= 0) {
-
-			pitem = (WimaLayoutItem*) wima_item_ptr(item);
-
-			if (wima_item_contains(item, pos)) {
-
-				if (!(pitem->layout.flags & WIMA_LAYOUT_ENABLE)) {
-					break;
-				}
-
-				if (flags == WIMA_ITEM_ANY || pitem->item.flags & flags) {
-					best_hit = item;
-				}
-
-				item.item = pitem->layout.firstKid;
-			}
-			else {
-				item.item = pitem->nextSibling;
-			}
-		}
-
-		return best_hit;
-	}
 }

@@ -1374,5 +1374,5 @@ WimaStatus wima_window_free(WimaWindow wwh) {
 
 	nvgDeleteGL3(win->nvg.nvg);
 
-	return wima_areas_free(win->areas);
+	return wima_area_free(win->areas);
 }

@@ -74,7 +74,7 @@ WimaItem* wima_item_ptr(WimaWidget wih) {
 
 	yassert_wima_init;
 
-	WimaAr* area = wima_area_area(wih.window, wih.area);
+	WimaAr* area = wima_area_ptr(wih.window, wih.area);
 	assert(area && area->type == WIMA_AREA_LEAF);
 
 	assert(wih.item < area->area.ctx.itemCount);

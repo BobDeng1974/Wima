@@ -1018,6 +1018,8 @@ WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t
 void* wima_region_userPointer(WimaRegion reg);
 WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr);
 
+WimaArea wima_area(WimaWindow wwh, WimaAreaNode node);
+
 void* wima_area_userPointer(WimaArea wah);
 WimaRect wima_area_rect(WimaArea wah);
 void wima_area_setScale(WimaArea wah, float scale);
@@ -1025,13 +1027,10 @@ float wima_area_scale(WimaArea wah);
 void wima_area_setType(WimaArea wah, WimaRegion type);
 WimaRegion wima_area_type(WimaArea wah);
 
-WimaArea wima_area(WimaWindow wwh, WimaAreaNode node);
-
 // return the total number of allocated items
 int wima_area_itemCount(WimaArea wah);
 
 bool wima_area_contains(WimaArea wah, WimaPos pos);
-WimaStatus wima_areas_free(DynaTree areas);
 
 WimaStatus wima_workspace_register(WimaWorkspace* type);
 WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node, float split, bool vertical);
