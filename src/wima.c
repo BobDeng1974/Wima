@@ -62,11 +62,6 @@ extern const char* wima_assert_msgs[];
 
 extern WimaTheme wima_initial_theme;
 
-GLFWcursor* wima_standardCursor(WimaCursor cursor) {
-	yassert_wima_init;
-	return wg.cursors[cursor];
-}
-
 WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
                      uint32_t numIcons,    const char* iconPaths[],
                      const char* fontPath, const char* iconSheetPath)

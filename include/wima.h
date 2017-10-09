@@ -1111,8 +1111,6 @@ WimaStatus wima_window_free(WimaWindow win);
 // Wima global functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-GLFWcursor* wima_standardCursor(WimaCursor cursor);
-
 WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
                      uint32_t numIcons,    const char* iconPaths[],
                      const char* fontPath, const char* iconSheetPath);
