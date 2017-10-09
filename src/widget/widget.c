@@ -69,8 +69,10 @@
 #include "widget.h"
 
 extern WimaG wg;
+extern const char* wima_assert_msgs[];
 
 void wima_widget_label(WimaNvgInfo nvg, float x, float y, float w, float h, int iconid, const char *label) {
+	yassert_wima_init;
 	wima_widget_label_icon_value(nvg, x, y, w, h, iconid, wg.theme->regular.text,
 	                             WIMA_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
@@ -78,6 +80,8 @@ void wima_widget_label(WimaNvgInfo nvg, float x, float y, float w, float h, int 
 void wima_widget_toolBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
                          WimaItemState state, int iconid, const char *label)
 {
+	yassert_wima_init;
+
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
@@ -98,6 +102,8 @@ void wima_widget_toolBtn(WimaNvgInfo nvg, float x, float y, float w, float h, in
 void wima_widget_radioBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
                           WimaItemState state, int iconid, const char *label)
 {
+	yassert_wima_init;
+
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
@@ -119,6 +125,7 @@ void wima_widget_radioBtn(WimaNvgInfo nvg, float x, float y, float w, float h, i
 int wima_widget_textField_pos(WimaNvgInfo nvg, float x, float y, float w, float h,
                             int iconid, const char *text, int px, int py)
 {
+	yassert_wima_init;
 	return wima_label_text_pos(nvg, x, y, w, h, iconid, WIMA_LABEL_FONT_SIZE, text, px, py);
 }
 
@@ -126,6 +133,8 @@ void wima_widget_textField(WimaNvgInfo nvg, float x, float y, float w, float h,
                            int flags, WimaItemState state, int iconid, const char *text,
                            int cbegin, int cend)
 {
+	yassert_wima_init;
+
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
@@ -151,6 +160,8 @@ void wima_widget_textField(WimaNvgInfo nvg, float x, float y, float w, float h,
 void wima_widget_optionBtn(WimaNvgInfo nvg, float x, float y, float w, float h,
                          WimaItemState state, const char *label)
 {
+	yassert_wima_init;
+
 	float ox, oy;
 	NVGcolor shade_top, shade_down;
 
@@ -188,6 +199,8 @@ void wima_widget_optionBtn(WimaNvgInfo nvg, float x, float y, float w, float h,
 void wima_widget_choiceBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
                            WimaItemState state, int iconid, const char *label)
 {
+	yassert_wima_init;
+
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
@@ -211,6 +224,8 @@ void wima_widget_choiceBtn(WimaNvgInfo nvg, float x, float y, float w, float h, 
 
 void wima_widget_colorBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int flags, NVGcolor color) {
 
+	yassert_wima_init;
+
 	float cr[4];
 
 	wima_widget_corners_rounded(cr, WIMA_TOOL_RADIUS, flags);
@@ -225,6 +240,8 @@ void wima_widget_colorBtn(WimaNvgInfo nvg, float x, float y, float w, float h, i
 void wima_widget_numField(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
                           WimaItemState state, const char *label, const char *value)
 {
+	yassert_wima_init;
+
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
@@ -252,6 +269,8 @@ void wima_widget_slider(WimaNvgInfo nvg, float x, float y, float w, float h,
                         int flags, WimaItemState state, float progress,
                         const char *label, const char *value)
 {
+	yassert_wima_init;
+
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
@@ -286,6 +305,8 @@ void wima_widget_slider(WimaNvgInfo nvg, float x, float y, float w, float h,
 void wima_widget_scrollbar(WimaNvgInfo nvg,float x, float y, float w, float h,
                            WimaItemState state, float offset, float size)
 {
+	yassert_wima_init;
+
 	wima_widget_inset(nvg, x, y, w, h, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS);
 
 	NVGcolor top = wima_color_offset(wg.theme->scrollBar.inner, 3 * wg.theme->scrollBar.shadeBottom);
@@ -323,6 +344,8 @@ void wima_widget_scrollbar(WimaNvgInfo nvg,float x, float y, float w, float h,
 
 void wima_widget_menu_background(WimaNvgInfo nvg, float x, float y, float w, float h, int flags) {
 
+	yassert_wima_init;
+
 	float cr[4];
 	NVGcolor shade_top, shade_down;
 
@@ -337,6 +360,8 @@ void wima_widget_menu_background(WimaNvgInfo nvg, float x, float y, float w, flo
 }
 
 void wima_widget_tooltip_background(WimaNvgInfo nvg, float x, float y, float w, float h) {
+
+	yassert_wima_init;
 
 	NVGcolor shade_top, shade_down;
 
@@ -357,6 +382,7 @@ void wima_widget_tooltip_background(WimaNvgInfo nvg, float x, float y, float w, 
 }
 
 void wima_widget_menu_label(WimaNvgInfo nvg, float x, float y, float w, float h, int iconid, const char *label) {
+	yassert_wima_init;
 	wima_widget_label_icon_value(nvg, x, y, w, h, iconid, wg.theme->menu.text,
 	                             WIMA_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
@@ -380,6 +406,8 @@ void wima_widget_menu_item(WimaNvgInfo nvg, float x, float y, float w, float h,
                            WimaItemState state, int iconid, const char *label,
                            bool hasSubMenu)
 {
+	yassert_wima_init;
+
 	if (state != WIMA_ITEM_DEFAULT) {
 
 		NVGcolor shadeTop = wima_color_offset(wg.theme->menuItem.innerSelected,
@@ -403,6 +431,8 @@ void wima_widget_menu_item(WimaNvgInfo nvg, float x, float y, float w, float h,
 
 void wima_widget_node_port(WimaNvgInfo nvg, float x, float y, WimaItemState state, NVGcolor color) {
 
+	yassert_wima_init;
+
 	nvgBeginPath(nvg.nvg);
 
 	nvgCircle(nvg.nvg, x, y, WIMA_NODE_PORT_RADIUS);
@@ -418,6 +448,8 @@ void wima_widget_node_port(WimaNvgInfo nvg, float x, float y, WimaItemState stat
 void wima_widget_node_wire_colored(WimaNvgInfo nvg, float x0, float y0, float x1, float y1,
                                    NVGcolor color0, NVGcolor color1)
 {
+	yassert_wima_init;
+
 	float length = wima_fmaxf(fabsf(x1 - x0), fabsf(y1 - y0));
 	float delta = length * (float) wg.theme->node.noodleCurving / 10.0f;
 
@@ -442,6 +474,8 @@ void wima_widget_node_wire_colored(WimaNvgInfo nvg, float x0, float y0, float x1
 void wima_widget_node_wire(WimaNvgInfo nvg, float x0, float y0, float x1, float y1,
                            WimaItemState state0, WimaItemState state1)
 {
+	yassert_wima_init;
+
 	NVGcolor first = wima_color_node_wire(&wg.theme->node, state0);
 	NVGcolor second = wima_color_node_wire(&wg.theme->node, state1);
 
@@ -452,6 +486,8 @@ void wima_widget_node_background(WimaNvgInfo nvg, float x, float y, float w, flo
                                  WimaItemState state, int iconid, const char *label,
                                  NVGcolor titleColor)
 {
+	yassert_wima_init;
+
 	NVGcolor top = wima_color_transparent(wima_color_offset(titleColor, WIMA_BEVEL_SHADE));
 	NVGcolor bottom = wima_color_transparent(titleColor);
 
@@ -520,6 +556,8 @@ void wima_widget_node_background(WimaNvgInfo nvg, float x, float y, float w, flo
 
 float wima_widget_label_estimateWidth(WimaNvgInfo nvg, int iconid, const char *label) {
 
+	yassert_wima_init;
+
 	int w = WIMA_PAD_LEFT + WIMA_PAD_RIGHT;
 
 	if (iconid >= 0) {
@@ -555,6 +593,8 @@ float wima_widget_label_estimateWidth(WimaNvgInfo nvg, int iconid, const char *l
 
 float wima_widget_label_estimateHeight(WimaNvgInfo nvg, int iconid, const char *label, float width) {
 
+	yassert_wima_init;
+
 	int h = WIMA_WIDGET_HEIGHT;
 
 	width -= WIMA_TEXT_RADIUS * 2;
@@ -587,6 +627,8 @@ float wima_widget_label_estimateHeight(WimaNvgInfo nvg, int iconid, const char *
 void wima_widget_box_rounded(WimaNvgInfo nvg, float x, float y, float w, float h,
                              float cr0, float cr1, float cr2, float cr3)
 {
+	yassert_wima_init;
+
 	float d;
 
 	w = wima_fmaxf(0, w);
@@ -604,6 +646,8 @@ void wima_widget_box_rounded(WimaNvgInfo nvg, float x, float y, float w, float h
 }
 
 void wima_widget_bevel(WimaNvgInfo nvg, float x, float y, float w, float h) {
+
+	yassert_wima_init;
 
 	nvgStrokeWidth(nvg.nvg, 1);
 
@@ -636,6 +680,8 @@ void wima_widget_bevel(WimaNvgInfo nvg, float x, float y, float w, float h) {
 
 void wima_widget_inset(WimaNvgInfo nvg, float x, float y, float w, float h, float cr2, float cr3) {
 
+	yassert_wima_init;
+
 	float d;
 
 	y -= 0.5f;
@@ -661,6 +707,9 @@ void wima_widget_inset(WimaNvgInfo nvg, float x, float y, float w, float h, floa
 }
 
 void wima_widget_background(WimaNvgInfo nvg, float x, float y, float w, float h) {
+
+	yassert_wima_init;
+
 	nvgBeginPath(nvg.nvg);
 	nvgRect(nvg.nvg, x, y, w, h);
 	nvgFillColor(nvg.nvg, wg.theme->backgroundColor);
@@ -668,6 +717,8 @@ void wima_widget_background(WimaNvgInfo nvg, float x, float y, float w, float h)
 }
 
 void wima_widget_icon(WimaNvgInfo nvg, float x, float y, int iconid) {
+
+	yassert_wima_init;
 
 	int ix, iy, u, v;
 	if (nvg.icons < 0) return; // no icons loaded
@@ -691,6 +742,8 @@ void wima_widget_icon(WimaNvgInfo nvg, float x, float y, int iconid) {
 void wima_widget_dropShadow(WimaNvgInfo nvg, float x, float y, float w, float h,
                             float r, float feather, float alpha)
 {
+	yassert_wima_init;
+
 	nvgBeginPath(nvg.nvg);
 	y += feather;
 	h -= feather;
@@ -721,6 +774,8 @@ void wima_widget_box_inner(WimaNvgInfo nvg, float x, float y, float w, float h,
                            float cr0, float cr1, float cr2, float cr3,
                            NVGcolor shade_top, NVGcolor shade_down)
 {
+	yassert_wima_init;
+
 	nvgBeginPath(nvg.nvg);
 
 	wima_widget_box_rounded(nvg, x + 1, y + 1, w - 2, h - 3,
@@ -742,6 +797,8 @@ void wima_widget_box_inner(WimaNvgInfo nvg, float x, float y, float w, float h,
 void wima_widget_box_outline(WimaNvgInfo nvg, float x, float y, float w, float h,
                            float cr0, float cr1, float cr2, float cr3, NVGcolor color)
 {
+	yassert_wima_init;
+
 	nvgBeginPath(nvg.nvg);
 
 	wima_widget_box_rounded(nvg, x + 0.5f, y + 0.5f, w - 1, h - 2, cr0, cr1, cr2, cr3);
@@ -751,6 +808,9 @@ void wima_widget_box_outline(WimaNvgInfo nvg, float x, float y, float w, float h
 }
 
 void wima_widget_corners_rounded(float* radiuses, float r, int flags) {
+
+	yassert_wima_init;
+
 	radiuses[0] = (flags & WIMA_CORNER_TOP_LEFT) ? 0 : r;
 	radiuses[1] = (flags & WIMA_CORNER_TOP_RIGHT) ? 0 : r;
 	radiuses[2] = (flags & WIMA_CORNER_DOWN_RIGHT) ? 0 : r;
@@ -761,6 +821,8 @@ void wima_widget_label_icon_value(WimaNvgInfo nvg, float x, float y, float w, fl
                                   int iconid, NVGcolor color, int align, float fontsize,
                                   const char *label, const char *value)
 {
+	yassert_wima_init;
+
 	float pleft = WIMA_PAD_LEFT;
 
 	if (label) {
@@ -824,6 +886,8 @@ void wima_widget_node_label_icon(WimaNvgInfo nvg, float x, float y, float w, flo
                                int iconid, NVGcolor color, NVGcolor shadowColor,
                                int align, float fontsize, const char *label)
 {
+	yassert_wima_init;
+
 	if (label && (nvg.font >= 0)) {
 
 		nvgFontFaceId(nvg.nvg, nvg.font);
@@ -852,6 +916,8 @@ int wima_label_text_pos(WimaNvgInfo nvg, float x, float y, float w, float h,
                         int iconid, float fontsize, const char *label,
                         int px, int py)
 {
+	yassert_wima_init;
+
 	float bounds[4];
 
 	float pleft = WIMA_TEXT_RADIUS;
@@ -917,6 +983,8 @@ static void wima_widget_caret_pos(WimaNvgInfo nvg, float x, float y, float desc,
                                   NVGtextRow *rows,    int nrows,
                                   int *cr, float *cx,  float *cy)
 {
+	yassert_wima_init;
+
 	static NVGglyphPosition glyphs[WIMA_MAX_GLYPHS];
 	int r, nglyphs;
 
@@ -950,6 +1018,8 @@ void wima_widget_label_caret(WimaNvgInfo nvg, float x, float y, float w, float h
                              const char *label, NVGcolor caretcolor,
                              int cbegin, int cend)
 {
+	yassert_wima_init;
+
 	float pleft = WIMA_TEXT_RADIUS;
 
 	if (!label) {
@@ -1022,6 +1092,8 @@ void wima_widget_label_caret(WimaNvgInfo nvg, float x, float y, float w, float h
 
 void wima_widget_check(WimaNvgInfo nvg, float ox, float oy, NVGcolor color) {
 
+	yassert_wima_init;
+
 	nvgBeginPath(nvg.nvg);
 
 	nvgStrokeWidth(nvg.nvg, 2);
@@ -1039,6 +1111,8 @@ void wima_widget_check(WimaNvgInfo nvg, float ox, float oy, NVGcolor color) {
 
 void wima_widget_arrow(WimaNvgInfo nvg, float x, float y, float s, NVGcolor color) {
 
+	yassert_wima_init;
+
 	nvgBeginPath(nvg.nvg);
 	nvgMoveTo(nvg.nvg, x, y);
 	nvgLineTo(nvg.nvg,x - s, y + s);
@@ -1051,6 +1125,8 @@ void wima_widget_arrow(WimaNvgInfo nvg, float x, float y, float s, NVGcolor colo
 }
 
 void wima_widget_arrow_upDown(WimaNvgInfo nvg, float x, float y, float s, NVGcolor color) {
+
+	yassert_wima_init;
 
 	float w;
 
@@ -1076,6 +1152,8 @@ void wima_widget_arrow_upDown(WimaNvgInfo nvg, float x, float y, float s, NVGcol
 
 void wima_widget_node_arrow_down(WimaNvgInfo nvg, float x, float y, float s, NVGcolor color) {
 
+	yassert_wima_init;
+
 	float w;
 
 	nvgBeginPath(nvg.nvg);
@@ -1093,6 +1171,8 @@ void wima_widget_node_arrow_down(WimaNvgInfo nvg, float x, float y, float s, NVG
 }
 
 WimaRect wima_widget_scroll_handle_rect(float x, float y, float w, float h, float offset, float size) {
+
+	yassert_wima_init;
 
 	WimaRect result;
 

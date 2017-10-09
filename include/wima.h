@@ -1038,7 +1038,6 @@ WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node, float sp
 WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion reg);
 
 WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph);
-GLFWwindow* wima_window_glfw(WimaWindow wwh);
 WimaStatus wima_window_close(WimaWindow wwh);
 DynaString wima_window_title(WimaWindow wwh);
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title);

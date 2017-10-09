@@ -75,6 +75,7 @@
 #include "theme.h"
 
 extern WimaG wg;
+extern const char* wima_assert_msgs[];
 
 #ifdef _MSC_VER
 
@@ -452,10 +453,13 @@ const WimaTheme wima_initial_theme = {
 
 void wima_theme_load(WimaTheme* theme) {
 
+	yassert_wima_init;
 	yassert(theme != NULL, "Theme must not be null");
+
 	wg.theme = theme;
 }
 
 WimaTheme* wima_theme() {
+	yassert_wima_init;
 	return wg.theme;
 }

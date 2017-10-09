@@ -307,7 +307,11 @@ void wima_exit() {
 	}
 
 	if (wg.name) {
+
 		dstr_free(wg.name);
+
+		// Clear this so we know Wima is not initialized.
+		wg.name = NULL;
 	}
 
 	glfwTerminate();

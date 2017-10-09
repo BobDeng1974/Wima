@@ -48,6 +48,7 @@
 #include "global.h"
 
 extern WimaG wg;
+extern const char* wima_assert_msgs[];
 
 WimaStatus joinItemClick(WimaWidget wih) {
 	printf("Join clicked!\n");
@@ -146,9 +147,7 @@ WimaMenu areaOptionMenu = {
 
 void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	yassert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -212,12 +211,10 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
+	yassert_wima_init;
+
 	double time = glfwGetTime();
 	uint32_t ts = (uint32_t) (time * 1000);
-
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -322,9 +319,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	yassert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -447,9 +442,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	yassert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -497,9 +490,7 @@ void wima_callback_char(GLFWwindow* window, unsigned int code) {
 
 void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	yassert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -534,11 +525,9 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
 void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) {
 
-	const char* errorMsg = "Could not allocate a file name";
+	yassert_wima_init;
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	const char* errorMsg = "Could not allocate a file name";
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -594,9 +583,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 
 void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	yassert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -642,9 +629,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	yassert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -676,9 +661,7 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 
 void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	yassert_wima_init;
 
 	glViewport(0, 0, width, height);
 	glScissor(0, 0, width, height);
@@ -728,9 +711,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
 void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	yassert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -766,9 +747,7 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
 void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	yassert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -803,9 +782,7 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 
 void wima_callback_windowRefresh(GLFWwindow* window) {
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	yassert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -820,9 +797,7 @@ void wima_callback_windowRefresh(GLFWwindow* window) {
 
 void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	yassert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -863,9 +838,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 	// we just do all of the checks and close. Otherwise, we
 	// could get a segfault.
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	yassert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -896,9 +869,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 
 void wima_callback_monitorConnected(GLFWmonitor* monitor, int connected) {
 
-	if (!wg.name) {
-		exit(WIMA_STATUS_INVALID_STATE);
-	}
+	yassert_wima_init;
 
 	WimaMonitorConnectedFunc monitor_func = wg.funcs.monitor;
 
