@@ -29,7 +29,8 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	<Put description here>
+ *	Hijack header file for NanoVG that allows Wima to declare Yc
+ *	memory management functions into NanoVG.
  *
  *	******** END FILE DESCRIPTION ********
  */
