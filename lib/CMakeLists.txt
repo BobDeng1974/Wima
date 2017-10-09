@@ -28,18 +28,6 @@ add_subdirectory(glad)
 
 set(WIMA_GLAD "${WIMA_GLAD}" PARENT_SCOPE)
 
-set(YC "yc")
-set(YC "${YC}" PARENT_SCOPE)
-set(YC_SRC_DIR "yc/src")
-set(YC_SRC
-
-	# Add source files here.
-	"${YC_SRC_DIR}/yc.c"
-)
-include_directories("yc/include")
-
-create_pic_library("${YC}" "${YC}" "${YC_SRC}" NO)
-
 set(NANOVG "nanovg")
 set(NANOVG "${NANOVG}" PARENT_SCOPE)
 
