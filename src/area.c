@@ -170,7 +170,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
 static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaPos cursor);
 static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, WimaMouseSplitEvent* result);
 static WimaStatus wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bool isLeft, bool vertical);
-static int wima_area_node_moveSplitLimit(DynaTree areas, DynaNode node, bool isLeft, bool vertical);
+static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool isLeft, bool vertical);
 static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos pos, uint32_t flags);
 
 static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* right);
@@ -741,7 +741,7 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 
 	DynaNode child = isLeft ? dtree_left(node) : dtree_right(node);
 
-	int limit = wima_area_node_moveSplitLimit(areas, child, diff < 0, e.vertical);
+	int limit = wima_area_node_moveSplit_limit(areas, child, diff < 0, e.vertical);
 
 	limit = isLeft && limit != 0 ? -limit : limit;
 
@@ -840,7 +840,7 @@ static WimaStatus wima_area_node_moveSplit(DynaTree areas, DynaNode node, int di
 	return status;
 }
 
-static int wima_area_node_moveSplitLimit(DynaTree areas, DynaNode node, bool isLeft, bool vertical) {
+static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool isLeft, bool vertical) {
 
 	yassert_wima_init;
 
@@ -853,13 +853,13 @@ static int wima_area_node_moveSplitLimit(DynaTree areas, DynaNode node, bool isL
 
 		DynaNode childNode = isLeft ? dtree_right(area->node) : dtree_left(area->node);
 
-		limit = wima_area_node_moveSplitLimit(areas, childNode, isLeft, vertical);
+		limit = wima_area_node_moveSplit_limit(areas, childNode, isLeft, vertical);
 
 		if (!vertical != !area->parent.vertical) {
 
 			childNode = isLeft ? dtree_left(area->node) : dtree_right(area->node);
 
-			int lim = wima_area_node_moveSplitLimit(areas, childNode, isLeft, vertical);
+			int lim = wima_area_node_moveSplit_limit(areas, childNode, isLeft, vertical);
 
 			limit = wima_min(limit, lim);
 		}
