@@ -58,7 +58,7 @@
 #include "theme/theme.h"
 
 extern WimaG wg;
-extern const char* assertMsgs[];
+extern const char* wima_assert_msgs[];
 
 extern WimaTheme wima_initial_theme;
 
@@ -71,7 +71,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
                      uint32_t numIcons,    const char* iconPaths[],
                      const char* fontPath, const char* iconSheetPath)
 {
-	yassert(name != NULL, assertMsgs[WIMA_ASSERT_APP_NAME]);
+	yassert(name != NULL, wima_assert_msgs[WIMA_ASSERT_APP_NAME]);
 
 	yassert(funcs.draw != NULL && funcs.error != NULL, "Draw and error functions must not be null");
 

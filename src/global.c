@@ -47,7 +47,7 @@
 
 WimaG wg;
 
-const char* assertMsgs[] = {
+const char* wima_assert_msgs[] = {
 #ifdef __YASSERT__
     "Wima must be initialized before calling this function",
     "App name must not be null",
