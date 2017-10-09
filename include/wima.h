@@ -913,6 +913,10 @@ void layout_window(int w, int h) {
 }
  */
 
+////////////////////////////////////////////////////////////////////////////////
+// Widget functions.
+////////////////////////////////////////////////////////////////////////////////
+
 // insert child into container item like uiInsert(), but prepend
 // it to the first child item, effectively putting it in
 // the background.
@@ -1014,9 +1018,17 @@ bool wima_item_isFocused(WimaWidget item);
 // WIMA_ITEM_ACTIVE, WIMA_ITEM_FROZEN.
 WimaItemState wima_item_state(WimaWidget item);
 
+////////////////////////////////////////////////////////////////////////////////
+// Region functions.
+////////////////////////////////////////////////////////////////////////////////
+
 WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t itemCapacity);
 void* wima_region_userPointer(WimaRegion reg);
 WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr);
+
+////////////////////////////////////////////////////////////////////////////////
+// Area functions.
+////////////////////////////////////////////////////////////////////////////////
 
 WimaArea wima_area(WimaWindow wwh, WimaAreaNode node);
 
@@ -1032,9 +1044,17 @@ int wima_area_itemCount(WimaArea wah);
 
 bool wima_area_contains(WimaArea wah, WimaPos pos);
 
+////////////////////////////////////////////////////////////////////////////////
+// Workspace functions.
+////////////////////////////////////////////////////////////////////////////////
+
 WimaStatus wima_workspace_register(WimaWorkspace* type);
 WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node, float split, bool vertical);
 WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion reg);
+
+////////////////////////////////////////////////////////////////////////////////
+// Window functions.
+////////////////////////////////////////////////////////////////////////////////
 
 WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph);
 WimaStatus wima_window_close(WimaWindow wwh);
@@ -1087,10 +1107,15 @@ WimaWidget wima_window_focus(WimaWindow wwh);
 
 WimaStatus wima_window_free(WimaWindow win);
 
+////////////////////////////////////////////////////////////////////////////////
+// Wima global functions.
+////////////////////////////////////////////////////////////////////////////////
+
+GLFWcursor* wima_standardCursor(WimaCursor cursor);
+
 WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
                      uint32_t numIcons,    const char* iconPaths[],
                      const char* fontPath, const char* iconSheetPath);
-GLFWcursor* wima_standardCursor(WimaCursor cursor);
 WimaStatus wima_main();
 void wima_exit();
 
