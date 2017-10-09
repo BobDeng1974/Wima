@@ -479,7 +479,7 @@ void wima_widget_node_background(WimaNvgInfo nvg, float x, float y, float w, flo
 
 		case WIMA_ITEM_DEFAULT:
 		{
-			borderColor = nvgRGBf(0,0,0);
+			borderColor = wg.theme->node.outline;
 			arrowColor = wima_color_offset(titleColor, -WIMA_BEVEL_SHADE);
 
 			break;
@@ -507,8 +507,6 @@ void wima_widget_node_background(WimaNvgInfo nvg, float x, float y, float w, flo
 	                        WIMA_NODE_RADIUS, WIMA_NODE_RADIUS,
 	                        WIMA_NODE_RADIUS, WIMA_NODE_RADIUS,
 	                        transparent);
-
-
 
 #if 0
 	wima_widget_node_arrow_down(nvg, x + WIMA_NODE_MARGIN_SIDE, y + WIMA_NODE_TITLE_HEIGHT - 4,
