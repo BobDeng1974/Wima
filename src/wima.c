@@ -271,10 +271,6 @@ void wima_exit() {
 		dstr_free(wg.iconSheetPath);
 	}
 
-	if (wg.name) {
-		dstr_free(wg.name);
-	}
-
 	if (wg.regions) {
 		dvec_free(wg.regions);
 	}
@@ -308,6 +304,10 @@ void wima_exit() {
 		}
 
 		dvec_free(wg.windows);
+	}
+
+	if (wg.name) {
+		dstr_free(wg.name);
 	}
 
 	glfwTerminate();
