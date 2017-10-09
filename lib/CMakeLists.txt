@@ -41,6 +41,8 @@ add_definitions(
 
 set(NANOVG_SRC_DIR "nanovg/src")
 
+include_directories(".")
+
 include_directories("${NANOVG_SRC_DIR}")
 
 set(NANOVG_SRC
