@@ -57,8 +57,8 @@ WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t
 
 	WimaReg reg;
 
-	yassert(funcs.layout != NULL, wima_assert_msgs[WIMA_ASSERT_REG_LAYOUT]);
-	yassert(itemCapacity > 0, wima_assert_msgs[WIMA_ASSERT_REG_ITEM_CAP]);
+	wassert(funcs.layout != NULL, WIMA_ASSERT_REG_LAYOUT);
+	wassert(itemCapacity > 0, WIMA_ASSERT_REG_ITEM_CAP);
 
 	reg.user = NULL;
 
@@ -87,7 +87,7 @@ WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr) {
 
 	assert_init;
 
-	yassert(reg < dvec_len(wg.regions), wima_assert_msgs[WIMA_ASSERT_REG_VALID]);
+	wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG_VALID);
 
 	WimaReg* region = dvec_get(wg.regions, reg);
 
@@ -100,7 +100,7 @@ void* wima_region_userPointer(WimaRegion reg) {
 
 	assert_init;
 
-	yassert(reg < dvec_len(wg.regions), wima_assert_msgs[WIMA_ASSERT_REG_VALID]);
+	wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG_VALID);
 
 	WimaReg* region = dvec_get(wg.regions, reg);
 

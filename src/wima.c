@@ -70,20 +70,20 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
                      uint32_t numIcons,    const char* iconPaths[],
                      const char* fontPath, const char* iconSheetPath)
 {
-	yassert(name != NULL, wima_assert_msgs[WIMA_ASSERT_APP_NAME]);
+	wassert(name != NULL, WIMA_ASSERT_APP_NAME);
 
-	yassert(funcs.draw != NULL && funcs.error != NULL, "Draw and error functions must not be null");
+	wassert(funcs.draw != NULL, WIMA_ASSERT_APP_DRAW_FUNC);
+	wassert(funcs.error != NULL, WIMA_ASSERT_APP_ERROR_FUNC);
 
 	// Check that we can access the font and icon sheets.
-	yassert(fontPath != NULL && iconSheetPath != NULL, "Font and icon sheet paths must not be null");
-	yassert(access(fontPath, F_OK|R_OK) != -1 && access(iconSheetPath, F_OK|R_OK) != -1,
-	         "Wima must be able to read the font and icon sheet files");
+	wassert(fontPath != NULL, WIMA_ASSERT_APP_FONT_PATH);
+	wassert(iconSheetPath != NULL, WIMA_ASSERT_APP_ICON_SHEET_PATH);
 
-	char buffer[257];
+	wassert(access(fontPath, F_OK|R_OK) != -1, WIMA_ASSERT_APP_FONT_READ);
+	wassert(access(iconSheetPath, F_OK|R_OK) != -1, WIMA_ASSERT_APP_ICON_SHEET_READ);
 
 	// Check to make sure the icons are good.
-	sprintf(buffer, "There must not be more than %d icons", WIMA_MAX_ICONS);
-	yassert(numIcons <= WIMA_MAX_ICONS, buffer);
+	wassert(numIcons <= WIMA_MAX_ICONS, WIMA_ASSERT_APP_NUM_ICONS);
 
 	wg.funcs = funcs;
 

@@ -51,7 +51,15 @@ const char* wima_assert_msgs[] = {
 #ifdef __YASSERT__
 
     "wima must be initialized before calling this function",
+
     "app name must not be null",
+    "app draw function must not be null",
+    "app error function must not be null",
+    "app font path must not be null",
+    "app icon sheet path must not be null",
+    "wima must be able to read the app font file",
+    "wima must be able to read the icon sheet file",
+    "app can only have up to 16 icons",
 
     "window must be valid",
     "window must match item",

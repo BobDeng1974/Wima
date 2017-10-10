@@ -235,7 +235,7 @@ WimaStatus wima_window_setUserPointer(WimaWindow wwh, void* user) {
 
 	assert_init;
 
-	yassert(wwh < dvec_len(wg.windows), wima_assert_msgs[WIMA_ASSERT_WINDOW]);
+	wassert(wwh < dvec_len(wg.windows), WIMA_ASSERT_WINDOW);
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
