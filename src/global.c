@@ -49,15 +49,21 @@ WimaG wg;
 
 const char* wima_assert_msgs[] = {
 #ifdef __YASSERT__
+
     "wima must be initialized before calling this function",
     "app name must not be null",
+
     "window must be valid",
     "window must match item",
+
     "workspace must be valid",
+
     "area must be valid",
     "area must be a leaf, not a parent",
+
     "region must be valid",
     "region layout function must not be null",
     "region item capacity must be greater than 0",
+
 #endif
 };
