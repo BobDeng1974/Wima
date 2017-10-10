@@ -46,7 +46,12 @@
 #include <theme.h>
 #include <prop.h>
 
+#include <GLFW/glfw3.h>
+
 #define WIMA_MAX_ICONS (16)
+
+typedef struct GLFWcursor wima_cursor;
+typedef struct GLFWmonitor wima_monitor;
 
 typedef struct wima_globals {
 

@@ -42,20 +42,23 @@
 extern "C" {
 #endif
 
+#ifdef _glfw3_h_
+#error GLFW header included; remove this include; user code should only interact with Wima
+#endif
+
 #include <stdbool.h>
 #include <stddef.h>
 
 #include <glad/glad.h>
 #include <KHR/khrplatform.h>
 
-#include <GLFW/glfw3.h>
 #include <nanovg.h>
 
 #include <dyna/vector.h>
 #include <dyna/string.h>
 #include <dyna/tree.h>
 
-typedef enum wima_cursor {
+typedef enum wima_cursor_type {
 
 	// Standard arrow cursor.
 	WIMA_CURSOR_ARROW		= 0,
@@ -75,7 +78,7 @@ typedef enum wima_cursor {
 	// Vertical resize cursor.
 	WIMA_CURSOR_VRESIZE
 
-} WimaCursor;
+} WimaCursorType;
 
 // Container flags to pass to uiSetBox().
 typedef enum wima_item_box {
@@ -672,6 +675,8 @@ typedef struct wima_region_funcs {
 
 } WimaRegionFuncs;
 
+typedef struct wima_monitor WimaMonitor;
+
 typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaNvgInfo);
 typedef void (*WimaErrorFunc)(WimaStatus, const char*);
 typedef WimaStatus (*WimaWindowFileDropFunc)(WimaWindow, int, const char**);
@@ -682,7 +687,7 @@ typedef WimaStatus (*WimaWindowMouseEnterFunc)(WimaWindow, bool);
 typedef WimaStatus (*WimaWindowMinimizeFunc)(WimaWindow, bool);
 typedef WimaStatus (*WimaWindowFocusFunc)(WimaWindow, bool);
 typedef bool (*WimaWindowCloseFunc)(WimaWindow);
-typedef WimaStatus (*WimaMonitorConnectedFunc)(GLFWmonitor*, bool);
+typedef WimaStatus (*WimaMonitorConnectedFunc)(WimaMonitor*, bool);
 
 typedef struct wima_app_funcs {
 
@@ -1053,8 +1058,11 @@ WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node, float sp
 WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion reg);
 
 ////////////////////////////////////////////////////////////////////////////////
-// Window functions.
+// Window functions and definitions.
 ////////////////////////////////////////////////////////////////////////////////
+
+// Opaque struct type;
+typedef struct wima_cursor WimaCursor;
 
 WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph);
 WimaStatus wima_window_close(WimaWindow wwh);
@@ -1071,9 +1079,11 @@ WimaMenu* wima_window_menu(WimaWindow wwh);
 const char* wima_window_menuTitle(WimaWindow wwh);
 int wima_window_menuIcon(WimaWindow wwh);
 WimaStatus wima_window_removeMenu(WimaWindow wwh);
-void wima_window_cursor_setType(WimaWindow wwh, GLFWcursor* c);
-void wima_window_cursor_setStandardType(WimaWindow wwh, WimaCursor c);
-GLFWcursor* wima_window_cursor_type(WimaWindow wwh);
+
+void wima_window_cursor_setType(WimaWindow wwh, WimaCursor* c);
+void wima_window_cursor_setStandardType(WimaWindow wwh, WimaCursorType c);
+WimaCursor* wima_window_cursor_type(WimaWindow wwh);
+
 // Returns the offset of the cursor relative to the last call to uiProcess()
 WimaPos wima_window_cursor_delta(WimaWindow wwh);
 // Returns the beginning point of a drag operation.

@@ -394,7 +394,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			wwin->ctx.split = sevent;
 
 			// Set the cursor.
-			WimaCursor c = wwin->ctx.split.vertical ? WIMA_CURSOR_HRESIZE : WIMA_CURSOR_VRESIZE;
+			WimaCursorType c = wwin->ctx.split.vertical ? WIMA_CURSOR_HRESIZE : WIMA_CURSOR_VRESIZE;
 			glfwSetCursor(wwin->window, wg.cursors[c]);
 
 			// Clear the area and send an exit area event.
@@ -875,7 +875,7 @@ void wima_callback_monitorConnected(GLFWmonitor* monitor, int connected) {
 
 	if (monitor_func) {
 
-		WimaStatus status = monitor_func(monitor, connected == GLFW_CONNECTED);
+		WimaStatus status = monitor_func((WimaMonitor*) monitor, connected == GLFW_CONNECTED);
 
 		if (status) {
 			wg.funcs.error(status, descs[status - 128]);

@@ -781,18 +781,20 @@ WimaStatus wima_window_setModifier(WimaWindow wwh, WimaKey key, WimaAction actio
 	return WIMA_STATUS_SUCCESS;
 }
 
-void wima_window_cursor_setType(WimaWindow wwh, GLFWcursor* c) {
+void wima_window_cursor_setType(WimaWindow wwh, WimaCursor* cursor) {
 
 	yassert_wima_init;
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
+	GLFWcursor* c =(GLFWcursor*) cursor;
+
 	win->cursor = c;
 	glfwSetCursor(win->window, c);
 }
 
-void wima_window_cursor_setStandardType(WimaWindow wwh, WimaCursor c) {
+void wima_window_cursor_setStandardType(WimaWindow wwh, WimaCursorType c) {
 
 	yassert_wima_init;
 
@@ -803,14 +805,14 @@ void wima_window_cursor_setStandardType(WimaWindow wwh, WimaCursor c) {
 	glfwSetCursor(win->window, wg.cursors[c]);
 }
 
-GLFWcursor* wima_window_cursor_type(WimaWindow wwh) {
+WimaCursor* wima_window_cursor_type(WimaWindow wwh) {
 
 	yassert_wima_init;
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	assert(win);
 
-	return win->cursor;
+	return (WimaCursor*) win->cursor;
 }
 
 WimaPos wima_window_cursor_start(WimaWindow wwh) {
