@@ -46,12 +46,15 @@ find_library(GLFW_LIB glfw PATHS "/usr/lib" "/usr/local/lib")
 find_library(YC_LIB NAMES libyc_pic.a yc PATHS "/usr/lib" "/usr/local/lib")
 find_library(DYNA_LIB NAMES libdyna_pic.a dyna PATHS "/usr/lib" "/usr/local/lib")
 
+set("WIMA_DOCS_DIR" "docs")
 set("WIMA_INCLUDE_DIR" "include")
 set("WIMA_LIB_DIR" "lib")
 set("WIMA_SRC_DIR" "src")
 set("WIMA_RES_DIR" "res")
 
 add_subdirectory("cmake")
+
+add_subdirectory("${WIMA_DOCS_DIR}")
 
 include_directories("${WIMA_INCLUDE_DIR}")
 add_subdirectory("${WIMA_INCLUDE_DIR}")
