@@ -34,16 +34,16 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#ifdef _glfw3_h_
+#error GLFW header included; remove this include; user code should only interact with Wima
+#endif
+
 #ifndef WIMA_H
 #define WIMA_H
 
 /* For C++ compatibility */
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#ifdef _glfw3_h_
-#error GLFW header included; remove this include; user code should only interact with Wima
 #endif
 
 #include <stdbool.h>
