@@ -65,5 +65,7 @@ const char* wima_assert_msgs[] = {
     "region layout function must not be null",
     "region item capacity must be greater than 0",
 
+    "theme must not be null"
+
 #endif
 };

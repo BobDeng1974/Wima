@@ -454,7 +454,7 @@ const WimaTheme wima_initial_theme = {
 void wima_theme_load(WimaTheme* theme) {
 
 	assert_wima_init;
-	yassert(theme != NULL, "Theme must not be null");
+	wassert(theme != NULL, WIMA_ASSERT_THEME);
 
 	wg.theme = theme;
 }
