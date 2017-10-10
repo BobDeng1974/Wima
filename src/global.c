@@ -62,6 +62,7 @@ const char* wima_assert_msgs[] = {
     "app can only have up to 16 icons",
 
     "window must be valid",
+    "window area tree must not be null",
     "window must match item",
 
     "workspace must be valid",
