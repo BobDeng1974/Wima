@@ -1066,13 +1066,11 @@ typedef struct wima_cursor WimaCursor;
 
 WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph);
 WimaStatus wima_window_close(WimaWindow wwh);
-DynaString wima_window_title(WimaWindow wwh);
+
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title);
-void* wima_window_userPointer(WimaWindow win);
+DynaString wima_window_title(WimaWindow wwh);
 WimaStatus wima_window_setUserPointer(WimaWindow win, void* user);
-DynaTree wima_window_areas(WimaWindow wwh);
-WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksp);
-WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas);
+void* wima_window_userPointer(WimaWindow win);
 WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon);
 WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu);
 WimaMenu* wima_window_menu(WimaWindow wwh);
@@ -1093,29 +1091,24 @@ WimaPos wima_window_cursor_start(WimaWindow wwh);
 int wima_window_clicks(WimaWindow wwh);
 // returns the currently accumulated scroll wheel offsets for this frame
 WimaPos wima_window_scroll(WimaWindow wwh);
+
 WimaStatus wima_window_setHover(WimaWindow wwh, WimaWidget wih);
+WimaWidget wima_window_hover(WimaWindow wwh);
+WimaStatus wima_window_setActive(WimaWindow wwh, WimaWidget wih);
+WimaWidget wima_window_actve(WimaWindow wwh);
+WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih);
+WimaWidget wima_window_focus(WimaWindow wwh);
+
+DynaTree wima_window_areas(WimaWindow wwh);
+WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksp);
+WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas);
 
 void wima_window_requestRefresh(WimaWindow wwh);
 bool wima_window_needsRefresh(WimaWindow wwh);
 void wima_window_requestLayout(WimaWindow wwh);
 bool wima_window_needsLayout(WimaWindow wwh);
 
-WimaStatus wima_window_setModifier(WimaWindow wwh, WimaKey key, WimaAction action);
 void wima_window_clearEvents(WimaWindow wwh);
-
-// return the item that is currently under the cursor or -1 for none
-WimaWidget wima_window_hover(WimaWindow wwh);
-
-WimaStatus wima_window_setActive(WimaWindow wwh, WimaWidget wih);
-
-// set item as recipient of all keyboard events; if item is -1, no item will
-// be focused.
-WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih);
-
-// return the item that is currently focused or -1 for none
-WimaWidget wima_window_focus(WimaWindow wwh);
-
-WimaStatus wima_window_free(WimaWindow win);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Wima global functions.

@@ -38,8 +38,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <jemalloc/jemalloc.h>
-
 #include <dyna/dyna.h>
 #include <dyna/tree.h>
 
@@ -60,6 +58,16 @@
 
 extern WimaG wg;
 extern const char* wima_assert_msgs[];
+
+////////////////////////////////////////////////////////////////////////////////
+// These are all the static functions that the public functions need.
+////////////////////////////////////////////////////////////////////////////////
+
+static void wima_window_clearContext(WimaWindowContext* ctx);
+
+////////////////////////////////////////////////////////////////////////////////
+// Public functions.
+////////////////////////////////////////////////////////////////////////////////
 
 WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph) {
 
@@ -190,16 +198,74 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-void wima_window_context_create(WimaWindowContext* ctx) {
+WimaStatus wima_window_close(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	if (!wg.funcs.close || wg.funcs.close(wwh)) {
+		WimaWin* win = dvec_get(wg.windows, wwh);
+		glfwSetWindowShouldClose(win->window, 1);
+	}
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwSetWindowTitle(win->window, title);
+
+	if (dstr_set(win->name, title)) {
+		return WIMA_STATUS_WINDOW_ERR;
+	}
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+DynaString wima_window_title(WimaWindow wwh) {
+	yassert_wima_init;
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	return win->name;
+}
+
+WimaStatus wima_window_setUserPointer(WimaWindow wwh, void* user) {
+
+	yassert_wima_init;
+
+	yassert(wwh < dvec_len(wg.windows), wima_assert_msgs[WIMA_ASSERT_WINDOW]);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	win->user = user;
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+void* wima_window_userPointer(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	if (wwh >= dvec_len(wg.windows)) {
+		return NULL;
+	}
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return win->user;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Private functions.
+////////////////////////////////////////////////////////////////////////////////
+
+static void wima_window_clearContext(WimaWindowContext* ctx) {
 
 	memset(ctx, 0, sizeof(WimaWindowContext));
 
 	ctx->stage = WIMA_UI_STAGE_PROCESS;
-
-	wima_window_context_clear(ctx);
-}
-
-void wima_window_context_clear(WimaWindowContext* ctx) {
 
 	ctx->split.split = -1;
 	ctx->dragStart.x = -1;
@@ -332,65 +398,6 @@ WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih) {
 	}
 }
 
-WimaStatus wima_window_close(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	if (!wg.funcs.close || wg.funcs.close(wwh)) {
-		WimaWin* win = dvec_get(wg.windows, wwh);
-		glfwSetWindowShouldClose(win->window, 1);
-	}
-
-	return WIMA_STATUS_SUCCESS;
-}
-
-DynaString wima_window_title(WimaWindow wwh) {
-	yassert_wima_init;
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	return win->name;
-}
-
-WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	glfwSetWindowTitle(win->window, title);
-
-	if (dstr_set(win->name, title)) {
-		return WIMA_STATUS_WINDOW_ERR;
-	}
-
-	return WIMA_STATUS_SUCCESS;
-}
-
-void* wima_window_userPointer(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	if (wwh >= dvec_len(wg.windows)) {
-		return NULL;
-	}
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	return win->user;
-}
-
-WimaStatus wima_window_setUserPointer(WimaWindow wwh, void* user) {
-
-	yassert_wima_init;
-
-	yassert(wwh < dvec_len(wg.windows), wima_assert_msgs[WIMA_ASSERT_WINDOW]);
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	win->user = user;
-
-	return WIMA_STATUS_SUCCESS;
-}
-
 DynaTree wima_window_areas(WimaWindow wwh) {
 
 	yassert_wima_init;
@@ -443,7 +450,7 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 		return WIMA_STATUS_WINDOW_ERR;
 	}
 
-	wima_window_context_create(&window->ctx);
+	wima_window_clearContext(&window->ctx);
 
 	WimaRect rect;
 
@@ -474,7 +481,7 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 
 	window->areas = areas;
 
-	wima_window_context_create(&window->ctx);
+	wima_window_clearContext(&window->ctx);
 
 	WimaRect rect;
 
@@ -867,6 +874,38 @@ WimaWidget wima_window_hover(WimaWindow wwh) {
 	assert(win);
 
 	return win->ctx.hover;
+}
+
+WimaWidget wima_window_actve(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.active;
+}
+
+WimaStatus wima_window_setMods(WimaWindow wwh, WimaMods mods) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->ctx.mods = mods;
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaMods wima_window_mods(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.mods;
 }
 
 WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) {
@@ -1366,11 +1405,9 @@ void wima_window_clearEvents(WimaWindow wwh) {
 	win->ctx.scroll.y = 0;
 }
 
-WimaStatus wima_window_free(WimaWindow wwh) {
+WimaStatus wima_window_free(WimaWin* win) {
 
 	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	dstr_free(win->name);
 

@@ -140,21 +140,9 @@ typedef struct wima_window {
 // Context Management
 // ------------------
 
-/**
- * Create a new UI context. As a reference, 4096 and (1<<20) are good
- * starting values for itemCap and bufferCap, respectively.
- * @param ui		A pointer to the context to initialize.
- * @param itemCap	The maximum of number of items that can be declared.
- * @param bufferCap	The maximum total size of bytes that can be allocated
- *					using wima_ui_item_allocHandle(); you may pass 0 if
- *					you don't need to allocate handles.
- */
-void wima_window_context_create(WimaWindowContext* ctx);
+WimaStatus wima_window_free(WimaWin* win);
 
-// reset the currently stored hover/active etc. handles; this should be called when
-// a re-declaration of the UI changes the item indices, to avoid state
-// related glitches because item identities have changed.
-void wima_window_context_clear(WimaWindowContext* ctx);
+WimaStatus wima_window_setModifier(WimaWindow wwh, WimaKey key, WimaAction action);
 
 void wima_window_setDirty(WimaWin* win, bool layout);
 

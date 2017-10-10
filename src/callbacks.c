@@ -846,7 +846,9 @@ void wima_callback_windowClose(GLFWwindow* window) {
 
 	if (!close || close(wwh)) {
 
-		wima_window_free(wwh);
+		WimaWin* wwin = dvec_get(wg.windows, wwh);
+
+		wima_window_free(wwin);
 
 		if (wwh == dvec_len(wg.windows) - 1) {
 			dvec_pop(wg.windows);

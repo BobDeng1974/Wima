@@ -294,7 +294,7 @@ void wima_exit() {
 			WimaWin* win = dvec_get(wg.windows, i);
 
 			if (win->window) {
-				wima_window_free(i);
+				wima_window_free(win);
 			}
 		}
 
