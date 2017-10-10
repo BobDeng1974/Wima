@@ -247,7 +247,7 @@ WimaStatus cb_scroll(WimaWidget wih, WimaScrollEvent e) {
 
 		scaleIdx = adjust >= 0 && adjust < 17 ? adjust : scaleIdx;
 
-		WimaArea wah = wima_item_area(wih);
+		WimaArea wah = wima_area(wih.window, wih.area);
 
 #if 0
 		printf("Scale[%d]: %f\n", wih.area, scales[scaleIdx]);

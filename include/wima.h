@@ -705,12 +705,28 @@ typedef struct WimaAppFuncs {
 // Widget functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-// insert child into container item like uiInsert(), but prepend
-// it to the first child item, effectively putting it in
-// the background.
-// it is efficient to call uiInsertBack() repeatedly
-// in cases where drawing or layout order doesn't matter.
-WimaWidget wima_item_insertBack(WimaWidget item, WimaWidget child);
+WimaWidget wima_item_new(WimaArea wah, WimaItemFuncs funcs);
+
+// returns the items layout rectangle in absolute coordinates. If
+// uiGetRect() is called before uiEndLayout(), the values of the returned
+// rectangle are undefined.
+WimaRect wima_item_rect(WimaWidget item);
+
+uint32_t wima_item_events(WimaWidget item);
+
+// return the current state of the item. This state is only valid after
+// a call to uiProcess().
+// The returned value is one of WIMA_ITEM_DEFAULT, WIMA_ITEM_HOVER,
+// WIMA_ITEM_ACTIVE, WIMA_ITEM_FROZEN.
+WimaItemState wima_item_state(WimaWidget item);
+
+// returns 1 if an items absolute rectangle contains a given coordinate
+// otherwise 0
+bool wima_item_contains(WimaWidget item, WimaPos pos);
+bool wima_item_compareHandles(WimaWidget item1, WimaWidget item2);
+bool wima_item_isActive(WimaWidget item);
+bool wima_item_isHovered(WimaWidget item);
+bool wima_item_isFocused(WimaWidget item);
 
 // set an items state to frozen; the UI will not recurse into frozen items
 // when searching for hover or active items; subsequently, frozen items and
@@ -720,6 +736,7 @@ WimaWidget wima_item_insertBack(WimaWidget item, WimaWidget child);
 // routine needs to handle rendering of child items appropriately.
 // see example.cpp for a demonstration.
 void wima_item_setFrozen(WimaWidget item, bool enable);
+bool wima_item_frozen(WimaWidget item);
 
 // set the size of the item; a size of 0 indicates the dimension to be
 // dynamic; if the size is set, the item can not expand beyond that size.
@@ -760,51 +777,20 @@ short wima_item_marginRight(WimaWidget item);
 // return the bottom margin of the item as set with uiSetMargins()
 short wima_item_marginDown(WimaWidget item);
 
-// returns the items layout rectangle in absolute coordinates. If
-// uiGetRect() is called before uiEndLayout(), the values of the returned
-// rectangle are undefined.
-WimaRect wima_item_rect(WimaWidget item);
-
-// returns the first child item of a container item. If the item is not
-// a container or does not contain any items, -1 is returned.
-// if item is 0, the first child item of the root item will be returned.
-WimaWidget wima_item_firstChild(WimaWidget item);
-
-// returns an items next sibling in the list of the parent containers children.
-// if item is 0 or the item is the last child item, -1 will be returned.
-WimaWidget wima_item_nextSibling(WimaWidget item);
-
 // set the application-dependent handle of an item.
 // handle is an application defined 64-bit handle. If handle is NULL, the item
 // will not be interactive.
-void wima_item_setHandle(WimaWidget item, void* handle);
+void wima_item_setUserPointer(WimaWidget item, void* handle);
 
 // return the application-dependent handle of the item as passed to uiSetHandle()
 // or uiAllocHandle().
 void* wima_widget_userPointer(WimaWidget item);
-uint32_t wima_item_events(WimaWidget item);
 
 // flags is a user-defined set of flags defined by UI_USERMASK.
 void wima_item_setFlags(WimaWidget item, uint32_t flags);
 
 // return the user-defined flags for an item as passed to uiSetFlags()
 uint32_t wima_item_flags(WimaWidget item);
-
-WimaArea wima_item_area(WimaWidget item);
-
-// returns 1 if an items absolute rectangle contains a given coordinate
-// otherwise 0
-bool wima_item_contains(WimaWidget item, WimaPos pos);
-bool wima_item_compareHandles(WimaWidget item1, WimaWidget item2);
-bool wima_item_isActive(WimaWidget item);
-bool wima_item_isHovered(WimaWidget item);
-bool wima_item_isFocused(WimaWidget item);
-
-// return the current state of the item. This state is only valid after
-// a call to uiProcess().
-// The returned value is one of WIMA_ITEM_DEFAULT, WIMA_ITEM_HOVER,
-// WIMA_ITEM_ACTIVE, WIMA_ITEM_FROZEN.
-WimaItemState wima_item_state(WimaWidget item);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Region functions.
