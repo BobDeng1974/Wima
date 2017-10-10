@@ -1,4 +1,4 @@
-/**
+/*
  *	***** BEGIN LICENSE BLOCK *****
  *
  *	OUI - A minimal semi-immediate GUI handling and layouting library

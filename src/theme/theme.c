@@ -1,4 +1,4 @@
-/**
+/*
  *	***** BEGIN LICENSE BLOCK *****
  *
  *	Blendish - Blender 2.5 UI based theming functions for NanoVG

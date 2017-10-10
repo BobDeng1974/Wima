@@ -1,4 +1,4 @@
-/**
+/*
  *	***** BEGIN LICENSE BLOCK *****
  *
  *	Copyright 2017 Project LFyre
