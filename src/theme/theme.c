@@ -453,13 +453,13 @@ const WimaTheme wima_initial_theme = {
 
 void wima_theme_load(WimaTheme* theme) {
 
-	assert_wima_init;
+	assert_init;
 	wassert(theme != NULL, WIMA_ASSERT_THEME);
 
 	wg.theme = theme;
 }
 
 WimaTheme* wima_theme() {
-	assert_wima_init;
+	assert_init;
 	return wg.theme;
 }

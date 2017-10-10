@@ -197,7 +197,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 
 WimaStatus wima_main() {
 
-	assert_wima_init;
+	assert_init;
 
 	GLFWwindow* win = glfwGetCurrentContext();
 	if (!win) {
@@ -253,7 +253,7 @@ WimaStatus wima_main() {
 
 void wima_exit() {
 
-	assert_wima_init;
+	assert_init;
 
 	// Free the icon images.
 	if (wg.numIcons) {
