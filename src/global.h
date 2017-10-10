@@ -93,6 +93,12 @@ typedef enum WimaAssertType {
 
 } WimaAssertType;
 
-#define yassert_wima_init yassert(wg.name != NULL, wima_assert_msgs[WIMA_ASSERT_INIT])
+#define global_decl extern WimaG wg
+
+#define assert_msg(idx) wima_assert_msgs[(idx)]
+
+#define assert_msgs_decl extern const char* wima_assert_msgs[]
+
+#define yassert_wima_init yassert(wg.name != NULL, assert_msg(WIMA_ASSERT_INIT))
 
 #endif // WIMA_GLOBAL_H
