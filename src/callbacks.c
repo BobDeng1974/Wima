@@ -269,7 +269,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		}
 		else if (ts - WIMA_CLICK_THRESHOLD > wwin->ctx.click_timestamp ||
 		         wwin->ctx.click_button != wbtn ||
-		         !wima_item_compareHandles(clickItem, wwin->ctx.click_item))
+		         !wima_item_compare(clickItem, wwin->ctx.click_item))
 		{
 			wwin->ctx.clicks = 0;
 		}

@@ -786,7 +786,7 @@ WimaItemState wima_item_state(WimaWidget item);
 // returns 1 if an items absolute rectangle contains a given coordinate
 // otherwise 0
 bool wima_item_contains(WimaWidget item, WimaPos pos);
-bool wima_item_compareHandles(WimaWidget item1, WimaWidget item2);
+bool wima_item_compare(WimaWidget item1, WimaWidget item2);
 bool wima_item_isActive(WimaWidget item);
 bool wima_item_isHovered(WimaWidget item);
 bool wima_item_isFocused(WimaWidget item);
