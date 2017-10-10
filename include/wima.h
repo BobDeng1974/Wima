@@ -797,8 +797,8 @@ bool wima_item_isFocused(WimaWidget item);
 ////////////////////////////////////////////////////////////////////////////////
 
 WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t itemCapacity);
-void* wima_region_userPointer(WimaRegion reg);
 WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr);
+void* wima_region_userPointer(WimaRegion reg);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Area functions.

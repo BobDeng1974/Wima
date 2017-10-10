@@ -51,77 +51,15 @@
 extern WimaG wg;
 extern const char* wima_assert_msgs[];
 
-void wima_prop_free(WimaProperty wph) {
+////////////////////////////////////////////////////////////////////////////////
+// Static functions needed by the public functions.
+////////////////////////////////////////////////////////////////////////////////
 
-	yassert_wima_init;
+static WimaProp* wima_prop_register(const char* name, const char* label, const char* desc, WimaPropType type);
 
-	size_t len = dvec_len(wg.props);
-
-	assert(wph < len);
-
-	WimaProp* prop = dvec_get(wg.props, wph);
-
-	if (prop->idx == WIMA_PROP_INVALID) {
-		return;
-	}
-
-	switch (prop->type) {
-
-		case WIMA_PROP_GROUP:
-		{
-			size_t len = dvec_len(prop->_list);
-
-			WimaProperty* handles = dvec_get(prop->_list, 0);
-
-			for (size_t i = 0; i < len; i ++) {
-				wima_prop_free(handles[i]);
-			}
-
-			dvec_free(prop->_list);
-
-			break;
-		}
-
-		case WIMA_PROP_BOOL:
-		case WIMA_PROP_INT:
-		case WIMA_PROP_FLOAT:
-			break;
-
-		case WIMA_PROP_STRING:
-			dstr_free(prop->_str);
-			break;
-
-		case WIMA_PROP_ENUM:
-			break;
-
-		case WIMA_PROP_LIST:
-			dvec_free(prop->_list);
-			break;
-
-		case WIMA_PROP_COLOR:
-			break;
-
-		case WIMA_PROP_PTR:
-		{
-			if (prop->_ptr.free) {
-				prop->_ptr.free(prop->_ptr.ptr);
-			}
-
-			break;
-		}
-
-		case WIMA_PROP_OPERATOR:
-			break;
-	}
-
-	dstr_free(prop->name);
-
-	if (prop->desc) {
-		dstr_free(prop->desc);
-	}
-
-	prop->idx = WIMA_PROP_INVALID;
-}
+////////////////////////////////////////////////////////////////////////////////
+// Public functions.
+////////////////////////////////////////////////////////////////////////////////
 
 WimaPropType wima_prop_type(WimaProperty wph) {
 
@@ -379,81 +317,6 @@ void* wima_prop_ptr(WimaProperty wph) {
 	return prop->_ptr.ptr;
 }
 
-static WimaProp* wima_prop_register(const char* name, const char* label, const char* desc, WimaPropType type) {
-
-	assert(name);
-
-	size_t slen = strlen(name);
-
-	uint64_t hash = dyna_hash64(name, slen, WIMA_PROP_SEED);
-
-	size_t idx = dvec_len(wg.props);
-
-	WimaProp* props = dvec_get(wg.props, 0);
-
-	size_t earlyIdx = 0;
-	bool early = false;
-
-	for (size_t i = 0; i < idx; ++i) {
-
-		if (props[i].idx == WIMA_PROP_INVALID) {
-
-			if (!early) {
-				early = true;
-				earlyIdx = i;
-			}
-		}
-		else if (hash == props[i].hash && !strcmp(name, dstr_str(props[i].name))) {
-			assert(type == props[i].type);
-			return props + i;
-		}
-	}
-
-	idx = early ? earlyIdx : idx;
-
-	WimaProp prop;
-
-	prop.name = dstr_create(name);
-	if (!prop.name) {
-		return NULL;
-	}
-
-	if (label) {
-
-		prop.label = dstr_create(label);
-
-		if (!prop.label) {
-			dstr_free(prop.name);
-			return NULL;
-		}
-	}
-	else {
-		prop.label = NULL;
-	}
-
-	if (desc) {
-
-		prop.desc = dstr_create(desc);
-
-		if (!prop.desc) {
-			dstr_free(prop.label);
-			dstr_free(prop.name);
-			return NULL;
-		}
-	}
-	else {
-		prop.desc = NULL;
-	}
-
-	prop.hash = hash;
-	prop.idx = idx;
-	prop.type = type;
-
-	DynaStatus status = dvec_push(wg.props, &prop);
-
-	return status ? NULL : wg.props + idx;
-}
-
 WimaProperty wima_prop_registerGroup(const char* name, const char* label, const char* desc) {
 
 	yassert_wima_init;
@@ -612,4 +475,155 @@ void wima_prop_unregister(WimaProperty wph) {
 	if (prop->idx != WIMA_PROP_INVALID) {
 		wima_prop_free(wph);
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Private functions.
+////////////////////////////////////////////////////////////////////////////////
+
+void wima_prop_free(WimaProperty wph) {
+
+	yassert_wima_init;
+
+	size_t len = dvec_len(wg.props);
+
+	assert(wph < len);
+
+	WimaProp* prop = dvec_get(wg.props, wph);
+
+	if (prop->idx == WIMA_PROP_INVALID) {
+		return;
+	}
+
+	switch (prop->type) {
+
+		case WIMA_PROP_GROUP:
+		{
+			size_t len = dvec_len(prop->_list);
+
+			WimaProperty* handles = dvec_get(prop->_list, 0);
+
+			for (size_t i = 0; i < len; i ++) {
+				wima_prop_free(handles[i]);
+			}
+
+			dvec_free(prop->_list);
+
+			break;
+		}
+
+		case WIMA_PROP_BOOL:
+		case WIMA_PROP_INT:
+		case WIMA_PROP_FLOAT:
+			break;
+
+		case WIMA_PROP_STRING:
+			dstr_free(prop->_str);
+			break;
+
+		case WIMA_PROP_ENUM:
+			break;
+
+		case WIMA_PROP_LIST:
+			dvec_free(prop->_list);
+			break;
+
+		case WIMA_PROP_COLOR:
+			break;
+
+		case WIMA_PROP_PTR:
+		{
+			if (prop->_ptr.free) {
+				prop->_ptr.free(prop->_ptr.ptr);
+			}
+
+			break;
+		}
+
+		case WIMA_PROP_OPERATOR:
+			break;
+	}
+
+	dstr_free(prop->name);
+
+	if (prop->desc) {
+		dstr_free(prop->desc);
+	}
+
+	prop->idx = WIMA_PROP_INVALID;
+}
+
+static WimaProp* wima_prop_register(const char* name, const char* label, const char* desc, WimaPropType type) {
+
+	assert(name);
+
+	size_t slen = strlen(name);
+
+	uint64_t hash = dyna_hash64(name, slen, WIMA_PROP_SEED);
+
+	size_t idx = dvec_len(wg.props);
+
+	WimaProp* props = dvec_get(wg.props, 0);
+
+	size_t earlyIdx = 0;
+	bool early = false;
+
+	for (size_t i = 0; i < idx; ++i) {
+
+		if (props[i].idx == WIMA_PROP_INVALID) {
+
+			if (!early) {
+				early = true;
+				earlyIdx = i;
+			}
+		}
+		else if (hash == props[i].hash && !strcmp(name, dstr_str(props[i].name))) {
+			assert(type == props[i].type);
+			return props + i;
+		}
+	}
+
+	idx = early ? earlyIdx : idx;
+
+	WimaProp prop;
+
+	prop.name = dstr_create(name);
+	if (!prop.name) {
+		return NULL;
+	}
+
+	if (label) {
+
+		prop.label = dstr_create(label);
+
+		if (!prop.label) {
+			dstr_free(prop.name);
+			return NULL;
+		}
+	}
+	else {
+		prop.label = NULL;
+	}
+
+	if (desc) {
+
+		prop.desc = dstr_create(desc);
+
+		if (!prop.desc) {
+			dstr_free(prop.label);
+			dstr_free(prop.name);
+			return NULL;
+		}
+	}
+	else {
+		prop.desc = NULL;
+	}
+
+	prop.hash = hash;
+	prop.idx = idx;
+	prop.type = type;
+
+	DynaStatus status = dvec_push(wg.props, &prop);
+
+	return status ? NULL : wg.props + idx;
 }

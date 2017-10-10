@@ -62,6 +62,10 @@ extern const char* wima_assert_msgs[];
 
 extern WimaTheme wima_initial_theme;
 
+////////////////////////////////////////////////////////////////////////////////
+// Public functions.
+////////////////////////////////////////////////////////////////////////////////
+
 WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
                      uint32_t numIcons,    const char* iconPaths[],
                      const char* fontPath, const char* iconSheetPath)
