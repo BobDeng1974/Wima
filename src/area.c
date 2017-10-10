@@ -186,16 +186,15 @@ static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertic
 ////////////////////////////////////////////////////////////////////////////////
 
 WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node) {
-	assert_init;
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	yassert(dtree_exists(win->areas, node), wima_assert_msgs[WIMA_ASSERT_AREA]);
-	return dtree_node(win->areas, node);
-}
 
-WimaWin* wima_area_window(WimaArea wah) {
 	assert_init;
-	yassert(wah.window < dvec_len(wg.windows), wima_assert_msgs[WIMA_ASSERT_WINDOW]);
-	return dvec_get(wg.windows, wah.window);
+	wassert(wwh < dvec_len(wg.windows), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	wassert(dtree_exists(win->areas, node), WIMA_ASSERT_AREA);
+
+	return dtree_node(win->areas, node);
 }
 
 WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect) {

@@ -109,7 +109,6 @@ typedef struct WimaAr {
 } WimaAr;
 
 WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node);
-WimaWin* wima_area_window(WimaArea wah);
 
 WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect);
 bool wima_area_valid(DynaTree regions);
