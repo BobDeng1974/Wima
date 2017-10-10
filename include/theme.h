@@ -270,14 +270,16 @@ typedef enum WimaWidgetCorner {
 
 } WimaWidgetCorner;
 
-// build an icon ID from two coordinates into the icon sheet, where
-// (0,0) designates the upper-leftmost icon, (1,0) the one right next to it,
-// and so on.
-#define WIMA_ICONID(x,y) ((x)|((y)<<8))
 // alpha of disabled widget groups
 // can be used in conjunction with nvgGlobalAlpha()
 #define WIMA_DISABLED_ALPHA 0.5
 
+// TODO: Get rid of these icon things when scalable icons come.
+
+// build an icon ID from two coordinates into the icon sheet, where
+// (0,0) designates the upper-leftmost icon, (1,0) the one right next to it,
+// and so on.
+#define WIMA_ICONID(x,y) ((x)|((y)<<8))
 typedef enum WimaIcon {
 	WIMA_ICON_NONE = WIMA_ICONID(0,29),
 	WIMA_ICON_QUESTION = WIMA_ICONID(1,29),
