@@ -147,7 +147,7 @@ WimaMenu areaOptionMenu = {
 
 void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -207,7 +207,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	double time = glfwGetTime();
 	uint32_t ts = (uint32_t) (time * 1000);
@@ -315,7 +315,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -438,7 +438,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -486,7 +486,7 @@ void wima_callback_char(GLFWwindow* window, unsigned int code) {
 
 void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -521,7 +521,7 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
 void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	const char* errorMsg = "Could not allocate a file name";
 
@@ -579,7 +579,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 
 void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -625,7 +625,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -657,7 +657,7 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 
 void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	glViewport(0, 0, width, height);
 	glScissor(0, 0, width, height);
@@ -707,7 +707,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
 void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -743,7 +743,7 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
 void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -778,7 +778,7 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 
 void wima_callback_windowRefresh(GLFWwindow* window) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -793,7 +793,7 @@ void wima_callback_windowRefresh(GLFWwindow* window) {
 
 void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -834,7 +834,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 	// we just do all of the checks and close. Otherwise, we
 	// could get a segfault.
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	WimaWindow wwh = WIMA_WINDOW(window);
 
@@ -867,7 +867,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 
 void wima_callback_monitorConnected(GLFWmonitor* monitor, int connected) {
 
-	yassert_wima_init;
+	assert_wima_init;
 
 	WimaMonitorConnectedFunc monitor_func = wg.funcs.monitor;
 
