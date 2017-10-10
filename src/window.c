@@ -257,36 +257,157 @@ void* wima_window_userPointer(WimaWindow wwh) {
 	return win->user;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Private functions.
-////////////////////////////////////////////////////////////////////////////////
-
-static void wima_window_clearContext(WimaWinCtx* ctx) {
-
-	memset(ctx, 0, sizeof(WimaWinCtx));
-
-	ctx->stage = WIMA_UI_STAGE_PROCESS;
-
-	ctx->split.split = -1;
-	ctx->dragStart.x = -1;
-
-	ctx->cursorArea = WIMA_AREA_INVALID;
-	ctx->movingSplit = false;
-
-	memset(&ctx->active, -1, sizeof(WimaWidget));
-	memset(&ctx->focus, -1, sizeof(WimaWidget));
-	memset(&ctx->hover, -1, sizeof(WimaWidget));
-}
-
-void wima_window_setDirty(WimaWin* win, bool layout) {
+WimaStatus wima_window_setMods(WimaWindow wwh, WimaMods mods) {
 
 	yassert_wima_init;
 
-	win->flags |= WIMA_WINDOW_DIRTY_BIT;
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
 
-	if (layout) {
-		win->flags |= WIMA_WINDOW_LAYOUT_BIT;
+	win->ctx.mods = mods;
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaMods wima_window_mods(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.mods;
+}
+
+WimaPos wima_window_scroll(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.scroll;
+}
+
+uint32_t wima_window_clicks(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.clicks;
+}
+
+WimaStatus wima_window_setHover(WimaWindow wwh, WimaWidget wih) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+	assert(wih.window == wwh);
+
+	assert(dtree_exists(win->areas, wih.area));
+
+	WimaAr* area = dtree_node(win->areas, wih.area);
+
+	assert(area->type == WIMA_AREA_LEAF);
+
+	if (area->area.ctx.itemCount < wih.item) {
+		win->ctx.hover = wih;
+		return WIMA_STATUS_SUCCESS;
 	}
+	else {
+		return WIMA_STATUS_WINDOW_ERR;
+	}
+}
+
+WimaWidget wima_window_hover(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.hover;
+}
+
+WimaStatus wima_window_setActive(WimaWindow wwh, WimaWidget wih) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+	assert(wih.window == wwh);
+
+	assert(dtree_exists(win->areas, wih.area));
+
+	WimaAr* area = dtree_node(win->areas, wih.area);
+
+	assert(area->type == WIMA_AREA_LEAF);
+
+	if (area->area.ctx.itemCount < wih.item) {
+		win->ctx.active = wih;
+		return WIMA_STATUS_SUCCESS;
+	}
+	else {
+		return WIMA_STATUS_WINDOW_ERR;
+	}
+}
+
+WimaWidget wima_window_actve(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.active;
+}
+
+WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+	assert(wih.window == wwh);
+
+	assert(dtree_exists(win->areas, wih.area));
+
+	WimaAr* area = dtree_node(win->areas, wih.area);
+
+	assert(area->type == WIMA_AREA_LEAF);
+
+	if (area->area.ctx.itemCount < wih.item) {
+		win->ctx.focus = wih;
+		return WIMA_STATUS_SUCCESS;
+	}
+	else {
+		return WIMA_STATUS_WINDOW_ERR;
+	}
+}
+
+WimaWidget wima_window_focus(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.focus;
+}
+
+void wima_window_clearEvents(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->ctx.eventCount = 0;
+	win->ctx.scroll.x = 0;
+	win->ctx.scroll.y = 0;
 }
 
 void wima_window_requestRefresh(WimaWindow wwh) {
@@ -327,75 +448,6 @@ bool wima_window_needsLayout(WimaWindow wwh) {
 	assert(win);
 
 	return WIMA_WINDOW_NEEDS_LAYOUT(win);
-}
-
-WimaStatus wima_window_setHover(WimaWindow wwh, WimaWidget wih) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-	assert(wih.window == wwh);
-
-	assert(dtree_exists(win->areas, wih.area));
-
-	WimaAr* area = dtree_node(win->areas, wih.area);
-
-	assert(area->type == WIMA_AREA_LEAF);
-
-	if (area->area.ctx.itemCount < wih.item) {
-		win->ctx.hover = wih;
-		return WIMA_STATUS_SUCCESS;
-	}
-	else {
-		return WIMA_STATUS_WINDOW_ERR;
-	}
-}
-
-WimaStatus wima_window_setActive(WimaWindow wwh, WimaWidget wih) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-	assert(wih.window == wwh);
-
-	assert(dtree_exists(win->areas, wih.area));
-
-	WimaAr* area = dtree_node(win->areas, wih.area);
-
-	assert(area->type == WIMA_AREA_LEAF);
-
-	if (area->area.ctx.itemCount < wih.item) {
-		win->ctx.active = wih;
-		return WIMA_STATUS_SUCCESS;
-	}
-	else {
-		return WIMA_STATUS_WINDOW_ERR;
-	}
-}
-
-WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-	assert(wih.window == wwh);
-
-	assert(dtree_exists(win->areas, wih.area));
-
-	WimaAr* area = dtree_node(win->areas, wih.area);
-
-	assert(area->type == WIMA_AREA_LEAF);
-
-	if (area->area.ctx.itemCount < wih.item) {
-		win->ctx.focus = wih;
-		return WIMA_STATUS_SUCCESS;
-	}
-	else {
-		return WIMA_STATUS_WINDOW_ERR;
-	}
 }
 
 DynaTree wima_window_areas(WimaWindow wwh) {
@@ -495,6 +547,230 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 	return WIMA_STATUS_SUCCESS;
 }
 
+WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->flags = (WIMA_WINDOW_MENU_BIT | WIMA_WINDOW_MENU_CONTEXT_BIT);
+
+	// Set up the offset.
+	win->menuOffset = menu->pos;
+
+	// Make sure the menu pops up at the right place.
+	menu->pos.x = win->ctx.cursorPos.x - menu->pos.x;
+	menu->pos.y = win->ctx.cursorPos.y - menu->pos.y;
+
+	win->menuTitle = title;
+	win->menuIcon = icon;
+
+	// Set the menu.
+	win->menu = menu;
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->flags = WIMA_WINDOW_MENU_BIT;
+
+	// Set the menu.
+	win->menu = menu;
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaMenu* wima_window_menu(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->menu;
+}
+
+const char* wima_window_menuTitle(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win && WIMA_WINDOW_MENU_IS_CONTEXT(win));
+
+	return win->menuTitle;
+}
+
+int wima_window_menuIcon(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win && WIMA_WINDOW_MENU_IS_CONTEXT(win));
+
+	return win->menuIcon;
+}
+
+WimaStatus wima_window_removeMenu(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->flags = 0;
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+void wima_window_cursor_setType(WimaWindow wwh, WimaCursor* cursor) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	GLFWcursor* c =(GLFWcursor*) cursor;
+
+	win->cursor = c;
+	glfwSetCursor(win->window, c);
+}
+
+void wima_window_cursor_setStandardType(WimaWindow wwh, WimaCursorType c) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	win->cursor = wg.cursors[c];
+	glfwSetCursor(win->window, wg.cursors[c]);
+}
+
+WimaCursor* wima_window_cursor_type(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return (WimaCursor*) win->cursor;
+}
+
+WimaPos wima_window_cursor_start(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	return win->ctx.last_cursor;
+}
+
+WimaPos wima_window_cursor_delta(WimaWindow wwh) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	WimaPos result = {{{
+	        win->ctx.cursorPos.x - win->ctx.last_cursor.x,
+	        win->ctx.cursorPos.y - win->ctx.last_cursor.y
+	}}};
+	return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Static functions needed for private functions.
+////////////////////////////////////////////////////////////////////////////////
+
+static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaPos pos);
+static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wih, WimaEvent e);
+static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaMouseBtnEvent e);
+static WimaStatus wima_window_processFileDrop(WimaWindow wwh, DynaVector files);
+
+////////////////////////////////////////////////////////////////////////////////
+// Private functions.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaStatus wima_window_free(WimaWin* win) {
+
+	yassert_wima_init;
+
+	dstr_free(win->name);
+
+	nvgDeleteGL3(win->nvg.nvg);
+
+	return wima_area_free(win->areas);
+}
+
+void wima_window_setDirty(WimaWin* win, bool layout) {
+
+	yassert_wima_init;
+
+	win->flags |= WIMA_WINDOW_DIRTY_BIT;
+
+	if (layout) {
+		win->flags |= WIMA_WINDOW_LAYOUT_BIT;
+	}
+}
+
+void wima_window_setModifier(WimaWindow wwh, WimaKey key, WimaAction action) {
+
+	yassert_wima_init;
+
+	WimaMods mod;
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
+
+	switch (key) {
+
+		case WIMA_KEY_LEFT_SHIFT:
+		case WIMA_KEY_RIGHT_SHIFT:
+			mod = WIMA_MOD_SHIFT;
+			break;
+
+		case WIMA_KEY_LEFT_CONTROL:
+		case WIMA_KEY_RIGHT_CONTROL:
+			mod = WIMA_MOD_CTRL;
+			break;
+
+		case WIMA_KEY_LEFT_ALT:
+		case WIMA_KEY_RIGHT_ALT:
+			mod = WIMA_MOD_ALT;
+			break;
+
+		case WIMA_KEY_LEFT_SUPER:
+		case WIMA_KEY_RIGHT_SUPER:
+			mod = WIMA_MOD_SUPER;
+			break;
+
+		default:
+			mod = WIMA_MOD_NONE;
+			break;
+	}
+
+	switch (action) {
+
+		case WIMA_ACTION_RELEASE:
+			win->ctx.mods &= ~(mod);
+			break;
+
+		case WIMA_ACTION_PRESS:
+		case WIMA_ACTION_REPEAT:
+			win->ctx.mods |= mod;
+			break;
+	}
+}
+
 WimaStatus wima_window_draw(WimaWindow wwh) {
 
 	WimaStatus status;
@@ -552,24 +828,6 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
 
 	return WIMA_STATUS_SUCCESS;
-}
-
-static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaPos pos) {
-
-	WimaMenu* result = wima_rect_contains(wima_rect(menu->pos, menu->size), pos) ? menu : NULL;
-
-	WimaMenu* child;
-
-	if (menu->hasSubMenu) {
-		child = wima_window_menu_contains(menu->subMenu, pos);
-	}
-	else {
-		child = NULL;
-	}
-
-	result = child ? child : result;
-
-	return result;
 }
 
 WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
@@ -737,392 +995,54 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus wima_window_setModifier(WimaWindow wwh, WimaKey key, WimaAction action) {
+static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaPos pos) {
 
-	yassert_wima_init;
+	WimaMenu* result = wima_rect_contains(wima_rect(menu->pos, menu->size), pos) ? menu : NULL;
 
-	WimaMods mod;
+	WimaMenu* child;
 
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	switch (key) {
-
-		case WIMA_KEY_LEFT_SHIFT:
-		case WIMA_KEY_RIGHT_SHIFT:
-			mod = WIMA_MOD_SHIFT;
-			break;
-
-		case WIMA_KEY_LEFT_CONTROL:
-		case WIMA_KEY_RIGHT_CONTROL:
-			mod = WIMA_MOD_CTRL;
-			break;
-
-		case WIMA_KEY_LEFT_ALT:
-		case WIMA_KEY_RIGHT_ALT:
-			mod = WIMA_MOD_ALT;
-			break;
-
-		case WIMA_KEY_LEFT_SUPER:
-		case WIMA_KEY_RIGHT_SUPER:
-			mod = WIMA_MOD_SUPER;
-			break;
-
-		default:
-			mod = WIMA_MOD_NONE;
-			break;
+	if (menu->hasSubMenu) {
+		child = wima_window_menu_contains(menu->subMenu, pos);
+	}
+	else {
+		child = NULL;
 	}
 
-	switch (action) {
+	result = child ? child : result;
 
-		case WIMA_ACTION_RELEASE:
-			win->ctx.mods &= ~(mod);
-			break;
-
-		case WIMA_ACTION_PRESS:
-		case WIMA_ACTION_REPEAT:
-			win->ctx.mods |= mod;
-			break;
-	}
-
-	return WIMA_STATUS_SUCCESS;
-}
-
-void wima_window_cursor_setType(WimaWindow wwh, WimaCursor* cursor) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	GLFWcursor* c =(GLFWcursor*) cursor;
-
-	win->cursor = c;
-	glfwSetCursor(win->window, c);
-}
-
-void wima_window_cursor_setStandardType(WimaWindow wwh, WimaCursorType c) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	win->cursor = wg.cursors[c];
-	glfwSetCursor(win->window, wg.cursors[c]);
-}
-
-WimaCursor* wima_window_cursor_type(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	return (WimaCursor*) win->cursor;
-}
-
-WimaPos wima_window_cursor_start(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	return win->ctx.last_cursor;
-}
-
-WimaPos wima_window_cursor_delta(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	WimaPos result = {{{
-	        win->ctx.cursorPos.x - win->ctx.last_cursor.x,
-	        win->ctx.cursorPos.y - win->ctx.last_cursor.y
-	}}};
 	return result;
 }
 
-WimaPos wima_window_scroll(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	return win->ctx.scroll;
-}
-
-WimaWidget wima_window_focus(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	return win->ctx.focus;
-}
-
-WimaWidget wima_window_hover(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	return win->ctx.hover;
-}
-
-WimaWidget wima_window_actve(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	return win->ctx.active;
-}
-
-WimaStatus wima_window_setMods(WimaWindow wwh, WimaMods mods) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	win->ctx.mods = mods;
-
-	return WIMA_STATUS_SUCCESS;
-}
-
-WimaMods wima_window_mods(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	return win->ctx.mods;
-}
-
-WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	win->flags = (WIMA_WINDOW_MENU_BIT | WIMA_WINDOW_MENU_CONTEXT_BIT);
-
-	// Set up the offset.
-	win->menuOffset = menu->pos;
-
-	// Make sure the menu pops up at the right place.
-	menu->pos.x = win->ctx.cursorPos.x - menu->pos.x;
-	menu->pos.y = win->ctx.cursorPos.y - menu->pos.y;
-
-	win->menuTitle = title;
-	win->menuIcon = icon;
-
-	// Set the menu.
-	win->menu = menu;
-
-	return WIMA_STATUS_SUCCESS;
-}
-
-WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	win->flags = WIMA_WINDOW_MENU_BIT;
-
-	// Set the menu.
-	win->menu = menu;
-
-	return WIMA_STATUS_SUCCESS;
-}
-
-WimaMenu* wima_window_menu(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	return win->menu;
-}
-
-const char* wima_window_menuTitle(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win && WIMA_WINDOW_MENU_IS_CONTEXT(win));
-
-	return win->menuTitle;
-}
-
-int wima_window_menuIcon(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win && WIMA_WINDOW_MENU_IS_CONTEXT(win));
-
-	return win->menuIcon;
-}
-
-WimaStatus wima_window_removeMenu(WimaWindow wwh) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
-
-	win->flags = 0;
-
-	return WIMA_STATUS_SUCCESS;
-}
-
-static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaMouseBtnEvent e) {
+WimaStatus wima_window_processEvents(WimaWindow wwh) {
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
-	if (WIMA_WINDOW_HAS_MENU(win)) {
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	assert(win);
 
-		WimaMenu* menu = win->menu;
+	// Must run uiBeginLayout(), uiEndLayout() first.
+	assert(win->ctx.stage != WIMA_UI_STAGE_LAYOUT);
 
-		WimaPos pos = win->ctx.cursorPos;
+	win->ctx.stage = WIMA_UI_STAGE_PROCESS;
 
-		WimaMenu* m = wima_window_menu_contains(menu, pos);
+	WimaEvent* events = win->ctx.events;
+	WimaWidget* handles = win->ctx.eventItems;
+	int numEvents = win->ctx.eventCount;
 
-		if (e.action == WIMA_ACTION_RELEASE && m) {
+	win->ctx.cursorPos = win->ctx.last_cursor;
 
-			// If the mouse button hasn't been released yet,
-			// set it to released and return because we don't
-			// need to do anything else.
-			if (!WIMA_WINDOW_MENU_RELEASED(win)) {
-				win->flags |= WIMA_WINDOW_MENU_RELEASED_BIT;
-				return WIMA_STATUS_SUCCESS;
-			}
+	for (int i = 0; i < numEvents; ++i) {
 
-			// Send event to menu item.
+		status = wima_window_processEvent(win, wwh, handles[i], events[i]);
 
-			pos.x -= m->pos.x;
-			pos.y -= m->pos.y;
-
-			for (int i = 0; i < m->numItems; ++i) {
-
-				WimaMenuItem item = m->items[i];
-
-				if (!item.hasSubMenu && wima_rect_contains(item.rect, pos) && item.func) {
-
-					// Dismiss the menu.
-					win->flags = 0;
-
-					// Set the new offsets for the menu. This
-					// is so the user can just click if they
-					// want the same thing as last time.
-					m->pos = pos;
-
-					// If the two menus are not equal, set
-					// the menu offsets for the first.
-					if (m != menu) {
-
-						menu->pos = win->menuOffset;
-
-						// Also clear the sub menu.
-						menu->hasSubMenu = false;
-					}
-
-					// Call the item's function.
-					status = item.func(wih);
-
-					// Clear the window and redraw.
-					wima_window_setDirty(win, true);
-
-					break;
-				}
-			}
-
-			if (m->hasSubMenu) {
-
-				// Dismiss sub menus.
-				WimaMenu* subMenu = m->subMenu;
-				while (subMenu && subMenu->hasSubMenu) {
-					subMenu->hasSubMenu = false;
-					subMenu = subMenu->subMenu;
-				}
-
-				m->hasSubMenu = false;
-			}
-		}
-		else if (e.action == WIMA_ACTION_PRESS && !m) {
-
-			// Set the menu's offsets.
-			menu->pos = win->menuOffset;
-
-			// Dismiss the menu.
-			win->flags = 0;
+		if (status) {
+			break;
 		}
 	}
-	else if (win->ctx.split.split >= 0 && e.action == WIMA_ACTION_RELEASE) {
-		win->ctx.split.split = -1;
-		win->ctx.dragStart.x = -1;
-	}
-	else if (wih.item >= 0) {
 
-		WimaItem* pitem = wima_item_ptr(wih);
+	win->ctx.eventCount = 0;
 
-		if (pitem->flags & WIMA_EVENT_MOUSE_BTN) {
-			status = pitem->funcs.mouse(wih, e);
-		}
-		else {
-			status = WIMA_STATUS_SUCCESS;
-		}
-	}
-	else {
-		status = WIMA_STATUS_SUCCESS;
-	}
-
-	return status;
-}
-
-static WimaStatus wima_window_processFileDrop(WimaWindow wwh, DynaVector files) {
-
-	WimaStatus status;
-
-	if (wg.funcs.file_drop) {
-
-		size_t len = dvec_len(files);
-
-		const char** names = malloc(len * sizeof(char*));
-
-		for (int i = 0; i < len; ++i) {
-
-			DynaString s = dvec_get(files, i);
-
-			names[i] = dstr_str(s);
-		}
-
-		status = wg.funcs.file_drop(wwh, len, names);
-
-		for (int i = 0; i < len; ++i) {
-			DynaString s = dvec_get(files, i);
-			dstr_free(s);
-		}
-
-		dvec_free(files);
-	}
-	else {
-		status = WIMA_STATUS_SUCCESS;
-	}
+	win->ctx.last_cursor = win->ctx.cursorPos;
 
 	return status;
 }
@@ -1359,59 +1279,156 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 	return status;
 }
 
-WimaStatus wima_window_processEvents(WimaWindow wwh) {
+static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaMouseBtnEvent e) {
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
+	if (WIMA_WINDOW_HAS_MENU(win)) {
 
-	// Must run uiBeginLayout(), uiEndLayout() first.
-	assert(win->ctx.stage != WIMA_UI_STAGE_LAYOUT);
+		WimaMenu* menu = win->menu;
 
-	win->ctx.stage = WIMA_UI_STAGE_PROCESS;
+		WimaPos pos = win->ctx.cursorPos;
 
-	WimaEvent* events = win->ctx.events;
-	WimaWidget* handles = win->ctx.eventItems;
-	int numEvents = win->ctx.eventCount;
+		WimaMenu* m = wima_window_menu_contains(menu, pos);
 
-	win->ctx.cursorPos = win->ctx.last_cursor;
+		if (e.action == WIMA_ACTION_RELEASE && m) {
 
-	for (int i = 0; i < numEvents; ++i) {
+			// If the mouse button hasn't been released yet,
+			// set it to released and return because we don't
+			// need to do anything else.
+			if (!WIMA_WINDOW_MENU_RELEASED(win)) {
+				win->flags |= WIMA_WINDOW_MENU_RELEASED_BIT;
+				return WIMA_STATUS_SUCCESS;
+			}
 
-		status = wima_window_processEvent(win, wwh, handles[i], events[i]);
+			// Send event to menu item.
 
-		if (status) {
-			break;
+			pos.x -= m->pos.x;
+			pos.y -= m->pos.y;
+
+			for (int i = 0; i < m->numItems; ++i) {
+
+				WimaMenuItem item = m->items[i];
+
+				if (!item.hasSubMenu && wima_rect_contains(item.rect, pos) && item.func) {
+
+					// Dismiss the menu.
+					win->flags = 0;
+
+					// Set the new offsets for the menu. This
+					// is so the user can just click if they
+					// want the same thing as last time.
+					m->pos = pos;
+
+					// If the two menus are not equal, set
+					// the menu offsets for the first.
+					if (m != menu) {
+
+						menu->pos = win->menuOffset;
+
+						// Also clear the sub menu.
+						menu->hasSubMenu = false;
+					}
+
+					// Call the item's function.
+					status = item.func(wih);
+
+					// Clear the window and redraw.
+					wima_window_setDirty(win, true);
+
+					break;
+				}
+			}
+
+			if (m->hasSubMenu) {
+
+				// Dismiss sub menus.
+				WimaMenu* subMenu = m->subMenu;
+				while (subMenu && subMenu->hasSubMenu) {
+					subMenu->hasSubMenu = false;
+					subMenu = subMenu->subMenu;
+				}
+
+				m->hasSubMenu = false;
+			}
+		}
+		else if (e.action == WIMA_ACTION_PRESS && !m) {
+
+			// Set the menu's offsets.
+			menu->pos = win->menuOffset;
+
+			// Dismiss the menu.
+			win->flags = 0;
 		}
 	}
+	else if (win->ctx.split.split >= 0 && e.action == WIMA_ACTION_RELEASE) {
+		win->ctx.split.split = -1;
+		win->ctx.dragStart.x = -1;
+	}
+	else if (wih.item >= 0) {
 
-	win->ctx.eventCount = 0;
+		WimaItem* pitem = wima_item_ptr(wih);
 
-	win->ctx.last_cursor = win->ctx.cursorPos;
+		if (pitem->flags & WIMA_EVENT_MOUSE_BTN) {
+			status = pitem->funcs.mouse(wih, e);
+		}
+		else {
+			status = WIMA_STATUS_SUCCESS;
+		}
+	}
+	else {
+		status = WIMA_STATUS_SUCCESS;
+	}
 
 	return status;
 }
 
-void wima_window_clearEvents(WimaWindow wwh) {
+static WimaStatus wima_window_processFileDrop(WimaWindow wwh, DynaVector files) {
 
-	yassert_wima_init;
+	WimaStatus status;
 
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	assert(win);
+	if (wg.funcs.file_drop) {
 
-	win->ctx.eventCount = 0;
-	win->ctx.scroll.x = 0;
-	win->ctx.scroll.y = 0;
+		size_t len = dvec_len(files);
+
+		const char** names = malloc(len * sizeof(char*));
+
+		for (int i = 0; i < len; ++i) {
+
+			DynaString s = dvec_get(files, i);
+
+			names[i] = dstr_str(s);
+		}
+
+		status = wg.funcs.file_drop(wwh, len, names);
+
+		for (int i = 0; i < len; ++i) {
+			DynaString s = dvec_get(files, i);
+			dstr_free(s);
+		}
+
+		dvec_free(files);
+	}
+	else {
+		status = WIMA_STATUS_SUCCESS;
+	}
+
+	return status;
 }
 
-WimaStatus wima_window_free(WimaWin* win) {
+static void wima_window_clearContext(WimaWinCtx* ctx) {
 
-	yassert_wima_init;
+	memset(ctx, 0, sizeof(WimaWinCtx));
 
-	dstr_free(win->name);
+	ctx->stage = WIMA_UI_STAGE_PROCESS;
 
-	nvgDeleteGL3(win->nvg.nvg);
+	ctx->split.split = -1;
+	ctx->dragStart.x = -1;
 
-	return wima_area_free(win->areas);
+	ctx->cursorArea = WIMA_AREA_INVALID;
+	ctx->movingSplit = false;
+
+	memset(&ctx->active, -1, sizeof(WimaWidget));
+	memset(&ctx->focus, -1, sizeof(WimaWidget));
+	memset(&ctx->hover, -1, sizeof(WimaWidget));
 }

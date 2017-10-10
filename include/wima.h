@@ -854,6 +854,30 @@ WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title);
 DynaString wima_window_title(WimaWindow wwh);
 WimaStatus wima_window_setUserPointer(WimaWindow win, void* user);
 void* wima_window_userPointer(WimaWindow win);
+
+WimaStatus wima_window_setMods(WimaWindow wwh, WimaMods mods);
+WimaMods wima_window_mods(WimaWindow wwh);
+WimaPos wima_window_scroll(WimaWindow wwh);
+uint32_t wima_window_clicks(WimaWindow wwh);
+
+WimaStatus wima_window_setHover(WimaWindow wwh, WimaWidget wih);
+WimaWidget wima_window_hover(WimaWindow wwh);
+WimaStatus wima_window_setActive(WimaWindow wwh, WimaWidget wih);
+WimaWidget wima_window_actve(WimaWindow wwh);
+WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih);
+WimaWidget wima_window_focus(WimaWindow wwh);
+
+void wima_window_clearEvents(WimaWindow wwh);
+
+void wima_window_requestRefresh(WimaWindow wwh);
+bool wima_window_needsRefresh(WimaWindow wwh);
+void wima_window_requestLayout(WimaWindow wwh);
+bool wima_window_needsLayout(WimaWindow wwh);
+
+DynaTree wima_window_areas(WimaWindow wwh);
+WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksp);
+WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas);
+
 WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon);
 WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu);
 WimaMenu* wima_window_menu(WimaWindow wwh);
@@ -864,34 +888,8 @@ WimaStatus wima_window_removeMenu(WimaWindow wwh);
 void wima_window_cursor_setType(WimaWindow wwh, WimaCursor* c);
 void wima_window_cursor_setStandardType(WimaWindow wwh, WimaCursorType c);
 WimaCursor* wima_window_cursor_type(WimaWindow wwh);
-
-// Returns the offset of the cursor relative to the last call to uiProcess()
-WimaPos wima_window_cursor_delta(WimaWindow wwh);
-// Returns the beginning point of a drag operation.
 WimaPos wima_window_cursor_start(WimaWindow wwh);
-// Returns the number of chained clicks; 1 is a single click,
-// 2 is a double click, etc.
-int wima_window_clicks(WimaWindow wwh);
-// returns the currently accumulated scroll wheel offsets for this frame
-WimaPos wima_window_scroll(WimaWindow wwh);
-
-WimaStatus wima_window_setHover(WimaWindow wwh, WimaWidget wih);
-WimaWidget wima_window_hover(WimaWindow wwh);
-WimaStatus wima_window_setActive(WimaWindow wwh, WimaWidget wih);
-WimaWidget wima_window_actve(WimaWindow wwh);
-WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih);
-WimaWidget wima_window_focus(WimaWindow wwh);
-
-DynaTree wima_window_areas(WimaWindow wwh);
-WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksp);
-WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas);
-
-void wima_window_requestRefresh(WimaWindow wwh);
-bool wima_window_needsRefresh(WimaWindow wwh);
-void wima_window_requestLayout(WimaWindow wwh);
-bool wima_window_needsLayout(WimaWindow wwh);
-
-void wima_window_clearEvents(WimaWindow wwh);
+WimaPos wima_window_cursor_delta(WimaWindow wwh);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Wima global functions.

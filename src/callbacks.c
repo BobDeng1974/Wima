@@ -173,11 +173,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 		case WIMA_KEY_RIGHT_ALT:
 		case WIMA_KEY_RIGHT_SUPER:
 		{
-			WimaStatus status = wima_window_setModifier(wwh, wkey, wact);
-			if (status) {
-				wg.funcs.error(status, descs[status - 128]);
-			}
-
+			wima_window_setModifier(wwh, wkey, wact);
 			return;
 		}
 
