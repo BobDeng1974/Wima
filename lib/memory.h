@@ -43,6 +43,8 @@
 extern "C" {
 #endif
 
+#include <jemalloc/jemalloc.h>
+
 #include <memory.h>
 
 #include <yc/mem.h>
