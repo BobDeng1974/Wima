@@ -114,93 +114,6 @@ WimaWidget wima_item_new(WimaArea wah, WimaItemFuncs funcs) {
 	return wih;
 }
 
-WimaRect wima_item_rect(WimaWidget item) {
-
-	yassert_wima_init;
-
-	WimaItem *pitem = wima_item_ptr(item);
-
-	WimaRect rc;/* = {{{
-			pitem->margins[0], pitem->margins[1],
-			pitem->size.v[0], pitem->size.v[1]
-	}}};*/
-
-	return rc;
-}
-
-uint32_t wima_item_events(WimaWidget item) {
-	yassert_wima_init;
-	return wima_item_ptr(item)->flags & WIMA_ITEM_EVENT_MASK;
-}
-
-WimaItemState wima_item_state(WimaWidget item) {
-
-	yassert_wima_init;
-
-	WimaItem *pitem = wima_item_ptr(item);
-
-	if (pitem->flags & WIMA_ITEM_FROZEN) {
-		return WIMA_ITEM_FROZEN;
-	}
-
-	if (wima_item_isFocused(item) && pitem->flags & WIMA_EVENT_CHAR) {
-		return WIMA_ITEM_ACTIVE;
-	}
-
-	if (wima_item_isActive(item)) {
-		return pitem->flags & WIMA_EVENT_MOUSE_BTN ? WIMA_ITEM_ACTIVE : WIMA_ITEM_DEFAULT;
-	}
-
-	return wima_item_isHovered(item) ? WIMA_ITEM_HOVER : WIMA_ITEM_DEFAULT;
-}
-
-bool wima_item_contains(WimaWidget item, WimaPos pos) {
-
-	yassert_wima_init;
-
-	WimaRect rect = wima_item_rect(item);
-
-	int x = pos.x - rect.x;
-	int y = pos.y - rect.y;
-
-	return x >= 0 && y >= 0 && x < rect.w && y < rect.h;
-}
-
-bool wima_item_compareHandles(WimaWidget item1, WimaWidget item2) {
-	yassert_wima_init;
-	return (item1.item == item2.item && item1.area == item2.area && item1.window == item2.window);
-}
-
-bool wima_item_isActive(WimaWidget item) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, item.window);
-	assert(win);
-
-	return wima_item_compareHandles(win->ctx.active, item);
-}
-
-bool wima_item_isHovered(WimaWidget item) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, item.window);
-	assert(win);
-
-	return wima_item_compareHandles(win->ctx.hover, item);
-}
-
-bool wima_item_isFocused(WimaWidget item) {
-
-	yassert_wima_init;
-
-	WimaWin* win = dvec_get(wg.windows, item.window);
-	assert(win);
-
-	return wima_item_compareHandles(win->ctx.focus, item);
-}
-
 void wima_item_setFrozen(WimaWidget item, bool enable) {
 
 	yassert_wima_init;
@@ -355,6 +268,93 @@ uint32_t wima_item_flags(WimaWidget item) {
 	return wima_item_ptr(item)->flags & WIMA_ITEM_USERMASK;
 }
 
+WimaRect wima_item_rect(WimaWidget item) {
+
+	yassert_wima_init;
+
+	WimaItem *pitem = wima_item_ptr(item);
+
+	WimaRect rc;/* = {{{
+			pitem->margins[0], pitem->margins[1],
+			pitem->size.v[0], pitem->size.v[1]
+	}}};*/
+
+	return rc;
+}
+
+uint32_t wima_item_events(WimaWidget item) {
+	yassert_wima_init;
+	return wima_item_ptr(item)->flags & WIMA_ITEM_EVENT_MASK;
+}
+
+WimaItemState wima_item_state(WimaWidget item) {
+
+	yassert_wima_init;
+
+	WimaItem *pitem = wima_item_ptr(item);
+
+	if (pitem->flags & WIMA_ITEM_FROZEN) {
+		return WIMA_ITEM_FROZEN;
+	}
+
+	if (wima_item_isFocused(item) && pitem->flags & WIMA_EVENT_CHAR) {
+		return WIMA_ITEM_ACTIVE;
+	}
+
+	if (wima_item_isActive(item)) {
+		return pitem->flags & WIMA_EVENT_MOUSE_BTN ? WIMA_ITEM_ACTIVE : WIMA_ITEM_DEFAULT;
+	}
+
+	return wima_item_isHovered(item) ? WIMA_ITEM_HOVER : WIMA_ITEM_DEFAULT;
+}
+
+bool wima_item_contains(WimaWidget item, WimaPos pos) {
+
+	yassert_wima_init;
+
+	WimaRect rect = wima_item_rect(item);
+
+	int x = pos.x - rect.x;
+	int y = pos.y - rect.y;
+
+	return x >= 0 && y >= 0 && x < rect.w && y < rect.h;
+}
+
+bool wima_item_compareHandles(WimaWidget item1, WimaWidget item2) {
+	yassert_wima_init;
+	return (item1.item == item2.item && item1.area == item2.area && item1.window == item2.window);
+}
+
+bool wima_item_isActive(WimaWidget item) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, item.window);
+	assert(win);
+
+	return wima_item_compareHandles(win->ctx.active, item);
+}
+
+bool wima_item_isHovered(WimaWidget item) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, item.window);
+	assert(win);
+
+	return wima_item_compareHandles(win->ctx.hover, item);
+}
+
+bool wima_item_isFocused(WimaWidget item) {
+
+	yassert_wima_init;
+
+	WimaWin* win = dvec_get(wg.windows, item.window);
+	assert(win);
+
+	return wima_item_compareHandles(win->ctx.focus, item);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -369,9 +369,4 @@ WimaItem* wima_item_ptr(WimaWidget wih) {
 	assert(wih.item < area->area.ctx.itemCount);
 
 	return (WimaItem*) area->area.ctx.items + wih.item;
-}
-
-bool wima_item_compare(WimaItem *item1, WimaItem *item2) {
-	yassert_wima_init;
-	return ((item1->flags & WIMA_ITEM_COMPARE_MASK) == (item2->flags & WIMA_ITEM_COMPARE_MASK));
 }

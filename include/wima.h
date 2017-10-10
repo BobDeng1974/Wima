@@ -706,28 +706,6 @@ typedef struct WimaAppFuncs {
 ////////////////////////////////////////////////////////////////////////////////
 
 WimaWidget wima_item_new(WimaArea wah, WimaItemFuncs funcs);
-
-// returns the items layout rectangle in absolute coordinates. If
-// uiGetRect() is called before uiEndLayout(), the values of the returned
-// rectangle are undefined.
-WimaRect wima_item_rect(WimaWidget item);
-
-uint32_t wima_item_events(WimaWidget item);
-
-// return the current state of the item. This state is only valid after
-// a call to uiProcess().
-// The returned value is one of WIMA_ITEM_DEFAULT, WIMA_ITEM_HOVER,
-// WIMA_ITEM_ACTIVE, WIMA_ITEM_FROZEN.
-WimaItemState wima_item_state(WimaWidget item);
-
-// returns 1 if an items absolute rectangle contains a given coordinate
-// otherwise 0
-bool wima_item_contains(WimaWidget item, WimaPos pos);
-bool wima_item_compareHandles(WimaWidget item1, WimaWidget item2);
-bool wima_item_isActive(WimaWidget item);
-bool wima_item_isHovered(WimaWidget item);
-bool wima_item_isFocused(WimaWidget item);
-
 // set an items state to frozen; the UI will not recurse into frozen items
 // when searching for hover or active items; subsequently, frozen items and
 // their child items will not cause mouse event notifications.
@@ -791,6 +769,28 @@ void wima_item_setFlags(WimaWidget item, uint32_t flags);
 
 // return the user-defined flags for an item as passed to uiSetFlags()
 uint32_t wima_item_flags(WimaWidget item);
+
+// returns the items layout rectangle in absolute coordinates. If
+// uiGetRect() is called before uiEndLayout(), the values of the returned
+// rectangle are undefined.
+WimaRect wima_item_rect(WimaWidget item);
+
+uint32_t wima_item_events(WimaWidget item);
+
+// return the current state of the item. This state is only valid after
+// a call to uiProcess().
+// The returned value is one of WIMA_ITEM_DEFAULT, WIMA_ITEM_HOVER,
+// WIMA_ITEM_ACTIVE, WIMA_ITEM_FROZEN.
+WimaItemState wima_item_state(WimaWidget item);
+
+// returns 1 if an items absolute rectangle contains a given coordinate
+// otherwise 0
+bool wima_item_contains(WimaWidget item, WimaPos pos);
+bool wima_item_compareHandles(WimaWidget item1, WimaWidget item2);
+bool wima_item_isActive(WimaWidget item);
+bool wima_item_isHovered(WimaWidget item);
+bool wima_item_isFocused(WimaWidget item);
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Region functions.
