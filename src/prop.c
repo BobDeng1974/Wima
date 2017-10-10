@@ -48,8 +48,8 @@
 #include "global.h"
 #include "prop.h"
 
-extern WimaG wg;
-extern const char* wima_assert_msgs[];
+global_decl;
+assert_msgs_decl;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions needed by the public functions.

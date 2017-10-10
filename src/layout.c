@@ -41,8 +41,8 @@
 #include "item.h"
 #include "area.h"
 
-extern WimaG wg;
-extern const char* wima_assert_msgs[];
+global_decl;
+assert_msgs_decl;
 
 uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical) {
 

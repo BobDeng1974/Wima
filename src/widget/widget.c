@@ -68,8 +68,8 @@
 
 #include "widget.h"
 
-extern WimaG wg;
-extern const char* wima_assert_msgs[];
+global_decl;
+assert_msgs_decl;
 
 void wima_widget_label(WimaNvgInfo nvg, float x, float y, float w, float h, int iconid, const char *label) {
 	yassert_wima_init;
