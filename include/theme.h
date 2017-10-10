@@ -107,6 +107,8 @@ too short to contain their labels.
 
 */
 
+// TODO: Move these to private header?
+
 // Default text size.
 #define WIMA_LABEL_FONT_SIZE 16
 
@@ -227,7 +229,7 @@ too short to contain their labels.
 #define WIMA_HSPACING (8)
 
 // How text on a control is aligned.
-typedef enum wima_text_alignment {
+typedef enum WimaTextAlignment {
 
 	WIMA_LEFT = 0,
 	WIMA_CENTER,
@@ -784,7 +786,7 @@ typedef enum WimaIcon {
 // The theme used to draw a single widget or widget box; these values
 // correspond to the same values that can be retrieved from the Theme
 // panel in the Blender preferences.
-typedef struct wima_widget_theme {
+typedef struct WimaWidgetTheme {
 
 	// Color of widget box outline.
 	NVGcolor outline;
@@ -816,7 +818,7 @@ typedef struct wima_widget_theme {
 } WimaWidgetTheme;
 
 // The theme used to draw nodes.
-typedef struct wima_node_theme {
+typedef struct WimaNodeTheme {
 
 	// Outline color of default node.
 	NVGcolor outline;
@@ -851,7 +853,7 @@ typedef struct wima_node_theme {
 } WimaNodeTheme;
 
 // The theme used to draw widgets.
-typedef struct wima_theme {
+typedef struct WimaTheme {
 
 	// The background color of panels and windows.
 	NVGcolor backgroundColor;

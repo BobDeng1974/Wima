@@ -63,7 +63,7 @@ extern const char* wima_assert_msgs[];
 // These are all the static functions that the public functions need.
 ////////////////////////////////////////////////////////////////////////////////
 
-static void wima_window_clearContext(WimaWindowContext* ctx);
+static void wima_window_clearContext(WimaWinCtx* ctx);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
@@ -261,9 +261,9 @@ void* wima_window_userPointer(WimaWindow wwh) {
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-static void wima_window_clearContext(WimaWindowContext* ctx) {
+static void wima_window_clearContext(WimaWinCtx* ctx) {
 
-	memset(ctx, 0, sizeof(WimaWindowContext));
+	memset(ctx, 0, sizeof(WimaWinCtx));
 
 	ctx->stage = WIMA_UI_STAGE_PROCESS;
 

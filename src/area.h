@@ -54,7 +54,7 @@ extern "C" {
 
 #define WIMA_AREA_MIN_SIZE (26)
 
-typedef struct wima_area_context {
+typedef struct WimaArCtx {
 
 	WimaLayoutItem* items;
 
@@ -63,16 +63,16 @@ typedef struct wima_area_context {
 
 	uint16_t itemCount;
 
-} WimaAreaContext;
+} WimaArCtx;
 
-typedef enum wima_area_type {
+typedef enum WimaAreaType {
 
 	WIMA_AREA_PARENT  = 1,
 	WIMA_AREA_LEAF    = 2
 
 } WimaAreaType;
 
-typedef struct wima_ar {
+typedef struct WimaAr {
 
 	union {
 
@@ -80,7 +80,7 @@ typedef struct wima_ar {
 
 			void* user;
 
-			WimaAreaContext ctx;
+			WimaArCtx ctx;
 
 			float scale;
 

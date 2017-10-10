@@ -36,7 +36,7 @@
 
 #include <wima.h>
 
-typedef struct wima_reg {
+typedef struct WimaReg {
 
 	void* user;
 

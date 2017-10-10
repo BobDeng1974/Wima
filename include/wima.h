@@ -58,7 +58,7 @@ extern "C" {
 #include <dyna/string.h>
 #include <dyna/tree.h>
 
-typedef enum wima_cursor_type {
+typedef enum WimaCursorType {
 
 	// Standard arrow cursor.
 	WIMA_CURSOR_ARROW		= 0,
@@ -81,7 +81,7 @@ typedef enum wima_cursor_type {
 } WimaCursorType;
 
 // Container flags to pass to uiSetBox().
-typedef enum wima_item_box {
+typedef enum WimaItemBox {
 
 	// Flex direction (bit 0+1).
 
@@ -133,7 +133,7 @@ typedef enum wima_item_box {
 } WimaItemBox;
 
 // Child layout flags to pass to uiSetLayout().
-typedef enum wima_item_layout_flags {
+typedef enum WimaItemLayoutFlags {
 
 	// Attachments (bit 5-8):
 	// Fully valid when parent uses UI_LAYOUT model
@@ -177,7 +177,7 @@ typedef enum wima_item_layout_flags {
 } WimaItemLayout;
 
 // Item states as returned by uiGetState().
-typedef enum wima_item_state {
+typedef enum WimaItemState {
 
 	// The item is inactive.
 	WIMA_ITEM_DEFAULT = 0,
@@ -194,7 +194,7 @@ typedef enum wima_item_state {
 } WimaItemState;
 
 // For cursor positions, mainly.
-typedef struct wima_pos {
+typedef struct WimaPos {
 
 	union {
 
@@ -212,7 +212,7 @@ typedef struct wima_pos {
 } WimaPos;
 
 // For cursor positions, mainly.
-typedef struct wima_size {
+typedef struct WimaSize {
 
 	union {
 
@@ -275,7 +275,7 @@ typedef uint16_t WimaAreaNode;
 /**
  * A handle to a area.
  */
-typedef struct wima_area_struct {
+typedef struct WimaArea {
 
 	// Put this first because it's bigger.
 	WimaAreaNode area;
@@ -287,7 +287,7 @@ typedef struct wima_area_struct {
 /**
  * A handle to a UI item.
  */
-typedef struct wima_widget {
+typedef struct WimaWidget {
 
 	uint16_t item;
 
@@ -296,7 +296,7 @@ typedef struct wima_widget {
 
 } WimaWidget;
 
-typedef struct wima_layout {
+typedef struct WimaLayout {
 
 	uint16_t layout;
 
@@ -309,7 +309,7 @@ typedef struct wima_layout {
  * The possible status codes that Wima can return after
  * every operation.
  */
-typedef enum wima_status_codes {
+typedef enum WimaStatus {
 
 	// Success.
 	WIMA_STATUS_SUCCESS        = 0,
@@ -356,7 +356,7 @@ typedef enum wima_status_codes {
 
 } WimaStatus;
 
-typedef enum wima_mouse_button {
+typedef enum WimaMouseBtn {
 
 	WIMA_MOUSE_1       = 0,
 	WIMA_MOUSE_2       = 1,
@@ -380,7 +380,7 @@ typedef enum wima_mouse_button {
 
 } WimaMouseBtn;
 
-typedef enum wima_key {
+typedef enum WimaKey {
 
 	WIMA_KEY_UNKNOWN     = -1,
 
@@ -520,7 +520,7 @@ typedef enum wima_key {
 
 } WimaKey;
 
-typedef enum wima_modifier_keys {
+typedef enum WimaMods {
 
 	WIMA_MOD_NONE     = 0,
 
@@ -531,7 +531,7 @@ typedef enum wima_modifier_keys {
 
 } WimaMods;
 
-typedef enum wima_action {
+typedef enum WimaAction {
 
 	WIMA_ACTION_RELEASE  = 0,
 	WIMA_ACTION_PRESS    = 1,
@@ -539,7 +539,7 @@ typedef enum wima_action {
 
 } WimaAction;
 
-typedef struct wima_key_event {
+typedef struct WimaKeyEvent {
 
 	// This might be bigger than the others.
 	int scancode;
@@ -550,7 +550,7 @@ typedef struct wima_key_event {
 
 } WimaKeyEvent;
 
-typedef struct wima_mouse_btn_event {
+typedef struct WimaMouseBtnEvent {
 
 	WimaMouseBtn button;
 	WimaAction action;
@@ -558,7 +558,7 @@ typedef struct wima_mouse_btn_event {
 
 } WimaMouseBtnEvent;
 
-typedef struct wima_mouse_click_event {
+typedef struct WimaMouseClickEvent {
 
 	uint32_t timestamp;
 	uint16_t clicks;
@@ -566,15 +566,15 @@ typedef struct wima_mouse_click_event {
 
 } WimaMouseClickEvent;
 
-typedef struct wima_mouse_drag_event {
+typedef struct WimaMouseDragEvent {
 
-		WimaMouseBtn button;
-		WimaMods mods;
-		WimaPos pos;
+	WimaMouseBtn button;
+	WimaMods mods;
+	WimaPos pos;
 
 } WimaMouseDragEvent;
 
-typedef struct wima_scroll_event {
+typedef struct WimaScrollEvent {
 
 	int xoffset;
 	int yoffset;
@@ -583,18 +583,18 @@ typedef struct wima_scroll_event {
 
 } WimaScrollEvent;
 
-typedef struct wima_char_event {
+typedef struct WimaCharEvent {
 
 	uint32_t code;
 	WimaMods mods;
 
 } WimaCharEvent;
 
-typedef struct wima_menu WimaMenu;
+typedef struct WimaMenu WimaMenu;
 
 typedef WimaStatus (*WimaMenuItemFunc)(WimaWidget);
 
-typedef struct wima_menu_item {
+typedef struct WimaMenuItem {
 
 	const char* label;
 
@@ -613,7 +613,7 @@ typedef struct wima_menu_item {
 
 } WimaMenuItem;
 
-typedef struct wima_menu {
+typedef struct WimaMenu {
 
 	WimaPos pos;
 	WimaSize size;
@@ -630,7 +630,7 @@ typedef struct wima_menu {
 
 } WimaMenu;
 
-typedef struct wima_nvg_info {
+typedef struct WimaNvgInfo {
 
 	NVGcontext* nvg;
 	int font;
@@ -647,7 +647,7 @@ typedef WimaStatus (*WimaItemMouseDragFunc)(WimaWidget, WimaMouseDragEvent);
 typedef WimaStatus (*WimaItemScrollFunc)(WimaWidget, WimaScrollEvent);
 typedef WimaStatus (*WimaItemCharEvent)(WimaWidget, WimaCharEvent);
 
-typedef struct wima_item_funcs {
+typedef struct WimaItemFuncs {
 
 	WimaItemMouseBtnFunc mouse;
 	WimaItemMouseClickFunc click;
@@ -664,7 +664,7 @@ typedef WimaStatus (*WimaAreaKeyFunc)(WimaArea, WimaKeyEvent);
 typedef WimaStatus (*WimaAreaMousePosFunc)(WimaArea, WimaPos);
 typedef WimaStatus (*WimaAreaMouseEnterFunc)(WimaArea, bool);
 
-typedef struct wima_region_funcs {
+typedef struct WimaRegionFuncs {
 
 	WimaAreaGenUserPointerFunc gen_ptr;
 	WimaAreaFreeUserPointerFunc free_ptr;
@@ -675,7 +675,7 @@ typedef struct wima_region_funcs {
 
 } WimaRegionFuncs;
 
-typedef struct wima_monitor WimaMonitor;
+typedef struct WimaMonitor WimaMonitor;
 
 typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaNvgInfo);
 typedef void (*WimaErrorFunc)(WimaStatus, const char*);
@@ -689,7 +689,7 @@ typedef WimaStatus (*WimaWindowFocusFunc)(WimaWindow, bool);
 typedef bool (*WimaWindowCloseFunc)(WimaWindow);
 typedef WimaStatus (*WimaMonitorConnectedFunc)(WimaMonitor*, bool);
 
-typedef struct wima_app_funcs {
+typedef struct WimaAppFuncs {
 
 	WimaDrawFunc draw;
 	WimaErrorFunc error;
@@ -785,7 +785,7 @@ void wima_item_setHandle(WimaWidget item, void* handle);
 
 // return the application-dependent handle of the item as passed to uiSetHandle()
 // or uiAllocHandle().
-void* wima_widget(WimaWidget item);
+void* wima_widget_userPointer(WimaWidget item);
 uint32_t wima_item_events(WimaWidget item);
 
 // flags is a user-defined set of flags defined by UI_USERMASK.
@@ -849,7 +849,7 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion
 ////////////////////////////////////////////////////////////////////////////////
 
 // Opaque struct type;
-typedef struct wima_cursor WimaCursor;
+typedef struct WimaCursor WimaCursor;
 
 WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph);
 WimaStatus wima_window_close(WimaWindow wwh);

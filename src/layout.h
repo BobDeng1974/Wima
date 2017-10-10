@@ -66,7 +66,7 @@ extern "C" {
 //#define WIMA_LAYOUT_ROW_FLOW    (0x1000)
 //#define WIMA_LAYOUT_COL_FLOW    (0x2000)
 
-typedef struct wima_layout_struct {
+typedef struct WimaLayoutInfo {
 
 	NVGcolor bgcolor;
 
@@ -84,14 +84,14 @@ typedef struct wima_layout_struct {
 
 } WimaLayoutInfo;
 
-typedef enum wima_layout_item_type {
+typedef enum WimaLayoutItemType {
 
 	WIMA_LAYOUT_LAYOUT = 0,
 	WIMA_LAYOUT_ITEM
 
 } WimaLayoutItemType;
 
-typedef struct wima_layout_item {
+typedef struct WimaLayoutItem {
 
 	WimaLayoutItemType type;
 

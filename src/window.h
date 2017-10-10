@@ -69,7 +69,7 @@
 #define WIMA_WINDOW_MENU_RELEASED(win)   (((win)->flags) & WIMA_WINDOW_MENU_RELEASED_BIT)
 #define WIMA_WINDOW_MENU_IS_CONTEXT(win) (((win)->flags) & WIMA_WINDOW_MENU_CONTEXT_BIT)
 
-typedef struct wima_window_context {
+typedef struct WimaWinCtx {
 
 	// Where the cursor was last frame.
 	WimaPos last_cursor;
@@ -106,9 +106,9 @@ typedef struct wima_window_context {
 
 	bool movingSplit;
 
-} WimaWindowContext;
+} WimaWinCtx;
 
-typedef struct wima_window {
+typedef struct WimaWin {
 
 	GLFWwindow* window;
 	DynaString name;
@@ -120,7 +120,7 @@ typedef struct wima_window {
 	GLFWcursor* cursor;
 
 	WimaNvgInfo nvg;
-	WimaWindowContext ctx;
+	WimaWinCtx ctx;
 
 	WimaSize fbsize;
 	WimaSize winsize;

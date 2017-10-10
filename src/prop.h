@@ -46,7 +46,7 @@ extern "C" {
 
 #define WIMA_PROP_SEED (0xdeadbeef0ddba11)
 
-typedef struct wima_prop_int {
+typedef struct WimaPropInt {
 
 	int val;
 
@@ -57,7 +57,7 @@ typedef struct wima_prop_int {
 
 } WimaPropInt;
 
-typedef struct wima_prop_float {
+typedef struct WimaPropFloat {
 
 	float val;
 
@@ -68,7 +68,7 @@ typedef struct wima_prop_float {
 
 } WimaPropFloat;
 
-typedef struct wima_prop_enum {
+typedef struct WimaPropEnum {
 
 	const char** names;
 
@@ -79,7 +79,7 @@ typedef struct wima_prop_enum {
 
 } WimaPropEnum;
 
-typedef struct wima_prop_ptr {
+typedef struct WimaPropPtr {
 
 	WimaPropDrawFunc draw;
 	WimaPropFreeFunc free;
@@ -88,7 +88,7 @@ typedef struct wima_prop_ptr {
 
 } WimaPropPtr;
 
-typedef struct wima_prop {
+typedef struct WimaProp {
 
 	DynaString name;
 

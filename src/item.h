@@ -136,7 +136,7 @@ extern "C" {
 
 // End limits.
 
-typedef struct wima_item {
+typedef struct WimaItem {
 
 	// Event functions.
 	WimaItemFuncs funcs;

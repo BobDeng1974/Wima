@@ -53,7 +53,7 @@
 typedef struct GLFWcursor wima_cursor;
 typedef struct GLFWmonitor wima_monitor;
 
-typedef struct wima_globals {
+typedef struct WimaG {
 
 	DynaString name;
 
@@ -80,7 +80,7 @@ typedef struct wima_globals {
 
 } WimaG;
 
-typedef enum wima_assert_type {
+typedef enum WimaAssertType {
 
 	WIMA_ASSERT_INIT,
 	WIMA_ASSERT_APP_NAME,

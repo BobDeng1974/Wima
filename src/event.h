@@ -46,14 +46,14 @@
 
 // End limits.
 
-typedef enum wima_event_state {
+typedef enum WimaEventState {
 
 	WIMA_UI_STATE_IDLE     = 0,
 	WIMA_UI_STATE_CAPTURE  = 1,
 
 } WimaEventState;
 
-typedef enum wima_event_type {
+typedef enum WimaEventType {
 
 	WIMA_EVENT_NONE          = 0,
 
@@ -76,7 +76,7 @@ typedef enum wima_event_type {
 
 } WimaEventType;
 
-typedef struct wima_mouse_split_event {
+typedef struct WimaMouseSplitEvent {
 
 	int split;
 
@@ -87,21 +87,21 @@ typedef struct wima_mouse_split_event {
 
 } WimaMouseSplitEvent;
 
-typedef struct wima_area_key_event {
+typedef struct WimaAreaKeyEvent {
 
 	WimaKeyEvent key;
 	WimaAreaNode area;
 
 } WimaAreaKeyEvent;
 
-typedef struct wima_area_enter_event {
+typedef struct WimaAreaEnterEvent {
 
 	WimaAreaNode area;
 	bool enter;
 
 } WimaAreaEnterEvent;
 
-typedef struct wima_event {
+typedef struct WimaEvent {
 
 	WimaEventType type;
 

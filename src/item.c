@@ -390,7 +390,7 @@ void wima_item_setHandle(WimaWidget item, void* handle) {
 	pitem->handle = handle;
 }
 
-void* wima_widget(WimaWidget item) {
+void* wima_item_userPointer(WimaWidget item) {
 	yassert_wima_init;
 	return wima_item_ptr(item)->handle;
 }

@@ -48,7 +48,7 @@ extern "C" {
 
 #define WIMA_PROP_INVALID ((WimaProperty) -1)
 
-typedef enum wima_prop_type_enum {
+typedef enum WimaPropType {
 
 	WIMA_PROP_GROUP,
 	WIMA_PROP_BOOL,
