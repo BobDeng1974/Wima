@@ -833,7 +833,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 	if (WIMA_WINDOW_IS_DIRTY(win)) {
 
 		glEnable(GL_SCISSOR_TEST);
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		nvgBeginFrame(win->nvg.nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 

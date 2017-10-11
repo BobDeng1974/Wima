@@ -895,7 +895,7 @@ void wima_widget_node_label_icon(WimaNvgInfo nvg, float x, float y, float w, flo
 
 		nvgBeginPath(nvg.nvg);
 
-		nvgTextAlign(nvg.nvg, NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE);
+		nvgTextAlign(nvg.nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
 		nvgFillColor(nvg.nvg, shadowColor);
 		nvgFontBlur(nvg.nvg, WIMA_NODE_TITLE_FEATHER);
 
@@ -1040,7 +1040,7 @@ void wima_widget_label_caret(WimaNvgInfo nvg, float x, float y, float w, float h
 
 	nvgFontFaceId(nvg.nvg, nvg.font);
 	nvgFontSize(nvg.nvg, fontsize);
-	nvgTextAlign(nvg.nvg, NVG_ALIGN_LEFT|NVG_ALIGN_BASELINE);
+	nvgTextAlign(nvg.nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
 
 	w -= WIMA_TEXT_RADIUS + pleft;
 
