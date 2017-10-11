@@ -62,7 +62,10 @@
 
 #include <theme.h>
 
+#include "../global.h"
 #include "theme.h"
+
+assert_msgs_decl;
 
 // Low Level Color Functions
 // -------------------
@@ -174,6 +177,8 @@ NVGcolor wima_color_text(WimaWidgetTheme* theme, WimaItemState state) {
 }
 
 NVGcolor wima_color_node_wire(WimaNodeTheme* theme, WimaItemState state) {
+
+	wassert(theme != NULL, WIMA_ASSERT_THEME);
 
 	switch(state) {
 
