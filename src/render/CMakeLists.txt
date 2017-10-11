@@ -31,18 +31,18 @@ include_directories("../../lib/yc/include")
 set(WIMA_GLOBAL "${PROJECT_NAME}_global")
 set(WIMA_MATH_PIC "${PROJECT_NAME}_math")
 
-set(WIMA_THEME_SRC
+set(WIMA_RENDER_SRC
 
 	#Put source files here.
 	"color.c"
 	"theme.c"
 )
 
-set(WIMA_THEME "wima_theme")
-set(WIMA_THEME "${WIMA_THEME}" PARENT_SCOPE)
+set(WIMA_RENDER "${PROJECT_NAME}_render")
+set(WIMA_RENDER "${WIMA_RENDER}" PARENT_SCOPE)
 
 create_pic_library(
-	"${WIMA_THEME}" "${WIMA_THEME}" "${WIMA_THEME_SRC}" YES
+	"${WIMA_RENDER}" "${WIMA_RENDER}" "${WIMA_RENDER_SRC}" YES
 
 	# Add libraries here.
 	"${YC_LIB}"

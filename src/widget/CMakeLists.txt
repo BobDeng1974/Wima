@@ -33,14 +33,14 @@ set(WIMA_WIDGET_SRC
 	"widget.c"
 )
 
-set(WIMA_THEME "${PROJECT_NAME}_theme")
+set(WIMA_RENDER "${PROJECT_NAME}_render")
 set(WIMA_MATH "${PROJECT_NAME}_math")
 
 create_pic_library(
 	"${WIMA_WIDGET}" "${WIMA_WIDGET}" "${WIMA_WIDGET_SRC}" YES
 
 	# Add libraries here.
-	"${WIMA_THEME}"
+	"${WIMA_RENDER}"
 	"${WIMA_UI}"
 	"${WIMA_MATH}"
 )
