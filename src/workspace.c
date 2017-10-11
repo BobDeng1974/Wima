@@ -79,7 +79,7 @@ WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
 {
 	assert_init;
 
-	wassert(wwksp < dvec_len(wg.workspaces), WIMA_ASSERT_WORKSPACE);
+	wassert(wwksp < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
 
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwksp));
 
@@ -107,7 +107,7 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion
 
 	assert_init;
 
-	wassert(wwh < dvec_len(wg.workspaces), WIMA_ASSERT_WORKSPACE);
+	wassert(wwh < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
 
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwh));
 
