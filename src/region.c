@@ -87,7 +87,7 @@ WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr) {
 
 	assert_init;
 
-	wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG_VALID);
+	wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
 
 	WimaReg* region = dvec_get(wg.regions, reg);
 
@@ -100,7 +100,7 @@ void* wima_region_userPointer(WimaRegion reg) {
 
 	assert_init;
 
-	wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG_VALID);
+	wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
 
 	WimaReg* region = dvec_get(wg.regions, reg);
 
