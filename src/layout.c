@@ -146,8 +146,6 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 
 	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_OVER_MAX);
 
-	wassert(parent.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
-
 	// Must run between uiBeginLayout() and uiEndLayout().
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 
@@ -159,6 +157,8 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 	wlh.window = parent.window;
 
 	if (parent.layout != WIMA_LAYOUT_INVALID) {
+
+		wassert(parent.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
 
 		WimaLayoutItem* pparent = area->area.ctx.items + parent.layout;
 
