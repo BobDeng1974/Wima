@@ -84,35 +84,31 @@ typedef struct WimaLayoutInfo {
 
 } WimaLayoutInfo;
 
-typedef enum WimaLayoutItemType {
-
-	WIMA_LAYOUT_LAYOUT = 0,
-	WIMA_LAYOUT_ITEM
-
-} WimaLayoutItemType;
-
 typedef struct WimaLayoutItem {
-
-	WimaLayoutItemType type;
 
 	union {
 
 		WimaLayoutInfo layout;
-		WimaItem item;
+		WimaItem widget;
 
 	};
+
+	WimaRect rect;
 
 	uint16_t parent;
 
 	// Index of next sibling with same parent.
 	uint16_t nextSibling;
 
-	WimaRect rect;
-
 	WimaAreaNode area;
 	WimaWindow window;
 
+	bool isLayout;
+
 } WimaLayoutItem;
+
+#define WIMA_ITEM_IS_LAYOUT(item)  ((item)->isLayout)
+#define WIMA_ITEM_IS_WIDGET(item)  (!((item)->isLayout))
 
 WimaLayoutItem* wima_layout_ptr(WimaLayout wlh);
 WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split);

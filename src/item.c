@@ -109,9 +109,9 @@ WimaWidget wima_item_new(WimaArea wah, WimaItemFuncs funcs) {
 	flags |= (funcs.scroll ? WIMA_EVENT_SCROLL : 0);
 	flags |= (funcs.char_event ? WIMA_EVENT_CHAR : 0);
 
-	item->item.funcs = funcs;
+	item->widget.funcs = funcs;
 
-	item->item.flags |= flags;
+	item->widget.flags |= flags;
 
 	return wih;
 }
@@ -149,17 +149,17 @@ void wima_item_setSize(WimaWidget item, WimaSize size) {
 	pitem->rect.h = size.h;
 
 	if (!size.w) {
-		pitem->item.flags &= ~WIMA_ITEM_HFIXED;
+		pitem->widget.flags &= ~WIMA_ITEM_HFIXED;
 	}
 	else {
-		pitem->item.flags |= WIMA_ITEM_HFIXED;
+		pitem->widget.flags |= WIMA_ITEM_HFIXED;
 	}
 
 	if (!size.h) {
-		pitem->item.flags &= ~WIMA_ITEM_VFIXED;
+		pitem->widget.flags &= ~WIMA_ITEM_VFIXED;
 	}
 	else {
-		pitem->item.flags |= WIMA_ITEM_VFIXED;
+		pitem->widget.flags |= WIMA_ITEM_VFIXED;
 	}
 }
 
@@ -369,7 +369,7 @@ WimaItem* wima_item_ptr(WimaWidget wih) {
 	assert_init;
 
 	WimaAr* area = wima_area_ptr(wih.window, wih.area);
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	wassert(wih.item < area->area.ctx.itemCount, WIMA_ASSERT_WIDGET);
 

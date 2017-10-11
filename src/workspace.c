@@ -88,7 +88,7 @@ WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
 	}
 
 	WimaAr wan;
-	wan.type = WIMA_AREA_PARENT;
+	wan.isParent = true;
 	wan.rect.w = -1;
 	wan.rect.h = -1;
 
@@ -116,7 +116,7 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion
 	}
 
 	WimaAr wan;
-	wan.type = WIMA_AREA_LEAF;
+	wan.isParent = false;
 	wan.rect.w = -1;
 	wan.rect.h = -1;
 	wan.area.type = reg;
@@ -144,5 +144,5 @@ bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n) {
 
 	WimaAr* area = dtree_node(wksp, p);
 
-	return root || (dtree_exists(wksp, p) && area->type == WIMA_AREA_PARENT);
+	return root || (dtree_exists(wksp, p) && WIMA_AREA_IS_PARENT(area));
 }

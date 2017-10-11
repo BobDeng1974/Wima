@@ -65,13 +65,6 @@ typedef struct WimaArCtx {
 
 } WimaArCtx;
 
-typedef enum WimaAreaType {
-
-	WIMA_AREA_PARENT  = 1,
-	WIMA_AREA_LEAF    = 2
-
-} WimaAreaType;
-
 typedef struct WimaAr {
 
 	union {
@@ -101,12 +94,15 @@ typedef struct WimaAr {
 
 	WimaRect rect;
 
-	WimaAreaType type;
-
 	WimaWindow window;
 	WimaAreaNode node;
 
+	bool isParent;
+
 } WimaAr;
+
+#define WIMA_AREA_IS_LEAF(area)    (!((area)->isParent))
+#define WIMA_AREA_IS_PARENT(area)  ((area)->isParent)
 
 WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node);
 

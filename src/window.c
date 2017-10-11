@@ -315,7 +315,7 @@ WimaStatus wima_window_setHover(WimaWindow wwh, WimaWidget wih) {
 
 	WimaAr* area = dtree_node(win->areas, wih.area);
 
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	if (area->area.ctx.itemCount < wih.item) {
 		win->ctx.hover = wih;
@@ -351,7 +351,7 @@ WimaStatus wima_window_setActive(WimaWindow wwh, WimaWidget wih) {
 
 	WimaAr* area = dtree_node(win->areas, wih.area);
 
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	if (area->area.ctx.itemCount < wih.item) {
 		win->ctx.active = wih;
@@ -387,7 +387,7 @@ WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih) {
 
 	WimaAr* area = dtree_node(win->areas, wih.area);
 
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	if (area->area.ctx.itemCount < wih.item) {
 		win->ctx.focus = wih;
@@ -1176,10 +1176,10 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 
 				WimaLayoutItem* pitem = (WimaLayoutItem*) wima_item_ptr(wih);
 
-				wassert(pitem->type == WIMA_LAYOUT_ITEM, WIMA_ASSERT_ITEM_WIDGET);
+				wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
 
-				if (pitem->item.flags & e.type) {
-					status = pitem->item.funcs.drag(wih, e.drag);
+				if (pitem->widget.flags & e.type) {
+					status = pitem->widget.funcs.drag(wih, e.drag);
 				}
 				else {
 					status = WIMA_STATUS_SUCCESS;

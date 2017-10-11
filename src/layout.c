@@ -123,7 +123,7 @@ WimaLayoutItem* wima_layout_ptr(WimaLayout wlh) {
 	assert_init;
 
 	WimaAr* area = wima_area_ptr(wlh.window, wlh.area);
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
 
@@ -142,7 +142,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 
 	WimaAr* area = dtree_node(win->areas, parent.area);
 
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_OVER_MAX);
 
@@ -162,7 +162,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 
 		WimaLayoutItem* pparent = area->area.ctx.items + parent.layout;
 
-		wassert(pparent->type == WIMA_LAYOUT_LAYOUT, WIMA_ASSERT_ITEM_LAYOUT);
+		wassert(WIMA_ITEM_IS_LAYOUT(pparent), WIMA_ASSERT_ITEM_LAYOUT);
 
 		if (pparent->layout.lastKid != WIMA_LAYOUT_INVALID) {
 
@@ -181,7 +181,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 
 	memset(playout, 0, sizeof(WimaLayoutItem));
 
-	playout->type = WIMA_LAYOUT_LAYOUT;
+	playout->isLayout = true;
 
 	playout->parent = parent.layout;
 	playout->nextSibling = WIMA_ITEM_INVALID;
@@ -209,7 +209,7 @@ void wima_layout_setBackgroundColor(WimaLayout wlh, NVGcolor color) {
 
 	WimaAr* area = dtree_node(win->areas, wlh.area);
 
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
 
@@ -230,7 +230,7 @@ NVGcolor wima_layout_backgroundColor(WimaLayout wlh) {
 
 	WimaAr* area = dtree_node(win->areas, wlh.area);
 
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
 

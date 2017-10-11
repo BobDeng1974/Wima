@@ -79,7 +79,7 @@ void* wima_area_userPointer(WimaArea wah) {
 	assert_init;
 
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	return area->area.user;
 }
@@ -89,7 +89,7 @@ WimaRect wima_area_rect(WimaArea wah) {
 	assert_init;
 
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	return area->rect;
 }
@@ -99,7 +99,7 @@ void wima_area_setScale(WimaArea wah, float scale) {
 	assert_init;
 
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	area->area.scale = wima_fmaxf(scale, 0.1f);
 }
@@ -109,7 +109,7 @@ float wima_area_scale(WimaArea wah) {
 	assert_init;
 
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	return area->area.scale;
 }
@@ -119,7 +119,7 @@ void wima_area_setType(WimaArea wah, WimaRegion type) {
 	assert_init;
 
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	area->area.type = type;
 
@@ -131,7 +131,7 @@ WimaRegion wima_area_type(WimaArea wah) {
 	assert_init;
 
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	return area->area.type;
 }
@@ -141,7 +141,7 @@ int wima_area_itemCount(WimaArea wah) {
 	assert_init;
 
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	return area->area.ctx.itemCount;
 }
@@ -151,7 +151,7 @@ bool wima_area_contains(WimaArea wah, WimaPos pos) {
 	assert_init;
 
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	return wima_rect_contains(area->rect, pos);
 }
@@ -215,7 +215,7 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 	area->window = win;
 
 	// We do something different depending on what type of node it is.
-	if (area->type == WIMA_AREA_PARENT) {
+	if (WIMA_AREA_IS_PARENT(area)) {
 
 		int dim = (area->parent.vertical ? rect.w : rect.h) - 1;
 		area->parent.spliti = (int) (area->parent.split * dim);
@@ -294,7 +294,7 @@ static bool wima_area_node_valid(DynaTree regions, DynaNode node) {
 	WimaAr* area = dtree_node(regions, node);
 
 	// We do something different depending on what type of node it is.
-	if (area->type == WIMA_AREA_PARENT) {
+	if (WIMA_AREA_IS_PARENT(area)) {
 
 		// Make sure a parent has both left and right children.
 		// A parent ***MUST*** have both children because otherwise
@@ -342,7 +342,7 @@ static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 	WimaAr* area = dtree_node(areas, node);
 
 	// We do something different depending on what type of node it is.
-	if (area->type == WIMA_AREA_PARENT) {
+	if (WIMA_AREA_IS_PARENT(area)) {
 
 		// Set the left child user pointer and check for error.
 		status = wima_area_node_free(areas, dtree_left(node));
@@ -398,7 +398,7 @@ WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e) {
 
 	WimaStatus status;
 
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	WimaReg* region = dvec_get(wg.regions, area->area.type);
 
@@ -420,7 +420,7 @@ WimaStatus wima_area_mousePos(WimaAr* area, WimaPos pos) {
 
 	WimaStatus status;
 
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	WimaReg* region = dvec_get(wg.regions, area->area.type);
 
@@ -442,7 +442,7 @@ WimaStatus wima_area_mouseEnter(WimaAr* area, bool enter) {
 
 	WimaStatus status;
 
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	WimaArea wah = wima_area(area->window, area->node);
 
@@ -477,7 +477,7 @@ static WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode 
 
 	WimaAr* area = dtree_node(areas, node);
 
-	if (area->type == WIMA_AREA_PARENT) {
+	if (WIMA_AREA_IS_PARENT(area)) {
 
 		status = wima_area_node_draw(nvg, areas, dtree_left(node), ratio);
 		if (status) {
@@ -530,7 +530,7 @@ static WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect 
 
 	area->rect = rect;
 
-	if (area->type == WIMA_AREA_LEAF) {
+	if (WIMA_AREA_IS_LEAF(area)) {
 		return WIMA_STATUS_SUCCESS;
 	}
 
@@ -572,7 +572,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
-	if (area->type == WIMA_AREA_PARENT) {
+	if (WIMA_AREA_IS_PARENT(area)) {
 
 		status = wima_area_node_layout(areas, dtree_left(node));
 		if (status) {
@@ -648,7 +648,7 @@ static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, W
 
 	WimaAreaNode result;
 
-	if (area->type == WIMA_AREA_PARENT) {
+	if (WIMA_AREA_IS_PARENT(area)) {
 
 		DynaNode leftNode = dtree_left(area->node);
 
@@ -694,7 +694,7 @@ static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos p
 
 	WimaAr* area = dtree_node(areas, node);
 
-	if (area->type == WIMA_AREA_LEAF) {
+	if (WIMA_AREA_IS_LEAF(area)) {
 		return false;
 	}
 
@@ -827,7 +827,7 @@ static WimaStatus wima_area_node_moveSplit(DynaTree areas, DynaNode node, int di
 
 	WimaStatus status;
 
-	if (area->type == WIMA_AREA_PARENT) {
+	if (WIMA_AREA_IS_PARENT(area)) {
 
 		DynaNode child;
 
@@ -872,7 +872,7 @@ static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool is
 
 	int limit;
 
-	if (area->type == WIMA_AREA_PARENT) {
+	if (WIMA_AREA_IS_PARENT(area)) {
 
 		DynaNode childNode = isLeft ? dtree_right(area->node) : dtree_left(area->node);
 
@@ -914,7 +914,7 @@ static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos 
 
 	assert_init;
 
-	if (area->type == WIMA_AREA_PARENT) {
+	if (WIMA_AREA_IS_PARENT(area)) {
 
 		DynaNode leftNode = dtree_left(area->node);
 
@@ -975,7 +975,7 @@ static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos 
 					break;
 				}
 
-				if (flags == WIMA_ITEM_ANY || pitem->item.flags & flags) {
+				if (flags == WIMA_ITEM_ANY || pitem->widget.flags & flags) {
 					best_hit = item;
 				}
 
@@ -994,7 +994,7 @@ static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* righ
 
 	assert_init;
 
-	wassert(area->type == WIMA_AREA_PARENT, WIMA_ASSERT_AREA_PARENT);
+	wassert(WIMA_AREA_IS_PARENT(area), WIMA_ASSERT_AREA_PARENT);
 
 	int split = area->parent.spliti;
 	int splitPlus = split + 1;
@@ -1057,7 +1057,7 @@ static void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg) {
 
 	assert_init;
 
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	NVGcolor ltborder = nvgRGBAf(0.67f, 0.67f, 0.67f, 0.67f);
 	NVGcolor rbborder = nvgRGBAf(0.25f, 0.25f, 0.25f, 0.67f);
@@ -1090,7 +1090,7 @@ static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg) {
 
 	assert_init;
 
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	NVGcolor dark = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.5882f);
 	NVGcolor light = nvgRGBAf(1.0f, 1.0f, 1.0f, 0.2900f);
@@ -1170,7 +1170,7 @@ static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertic
 
 	assert_init;
 
-	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	float x = 0.0f;
 	float y = 0.0f;
