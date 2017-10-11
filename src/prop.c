@@ -503,7 +503,7 @@ void wima_prop_free(WimaProperty wph) {
 
 			WimaProperty* handles = dvec_get(prop->_list, 0);
 
-			for (size_t i = 0; i < len; i ++) {
+			for (size_t i = 0; i < len; i++) {
 				wima_prop_free(handles[i]);
 			}
 
@@ -548,6 +548,10 @@ void wima_prop_free(WimaProperty wph) {
 
 	if (prop->desc) {
 		dstr_free(prop->desc);
+	}
+
+	if (prop->label) {
+		dstr_free(prop->label);
 	}
 
 	prop->idx = WIMA_PROP_INVALID;
