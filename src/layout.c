@@ -123,9 +123,9 @@ WimaLayoutItem* wima_layout_ptr(WimaLayout wlh) {
 	assert_init;
 
 	WimaAr* area = wima_area_ptr(wlh.window, wlh.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
+	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
 
-	assert(wlh.layout < area->area.ctx.itemCount);
+	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
 
 	return area->area.ctx.items + wlh.layout;
 }
@@ -134,16 +134,22 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 
 	assert_init;
 
+	wassert(parent.window < dvec_len(wg.windows), WIMA_ASSERT_WINDOW);
+
 	WimaWin* win = dvec_get(wg.windows, parent.window);
-	assert(win);
+
+	wassert(dtree_exists(win->areas, parent.area), WIMA_ASSERT_AREA);
 
 	WimaAr* area = dtree_node(win->areas, parent.area);
-	assert(area);
 
-	assert(area->area.ctx.itemCount < (int) area->area.ctx.itemCap);
+	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+
+	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_OVER_MAX);
+
+	wassert(parent.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
 
 	// Must run between uiBeginLayout() and uiEndLayout().
-	assert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT);
+	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 
 	uint32_t idx = (area->area.ctx.itemCount)++;
 
@@ -154,8 +160,9 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 
 	if (parent.layout != WIMA_LAYOUT_INVALID) {
 
-		WimaLayoutItem* pparent = wima_layout_ptr(parent);
-		assert(pparent && pparent->type == WIMA_LAYOUT_LAYOUT);
+		WimaLayoutItem* pparent = area->area.ctx.items + parent.layout;
+
+		wassert(pparent->type == WIMA_LAYOUT_LAYOUT, WIMA_ASSERT_ITEM_LAYOUT);
 
 		if (pparent->layout.lastKid != WIMA_LAYOUT_INVALID) {
 
@@ -194,13 +201,17 @@ void wima_layout_setBackgroundColor(WimaLayout wlh, NVGcolor color) {
 
 	assert_init;
 
+	wassert(wlh.window < dvec_len(wg.windows), WIMA_ASSERT_WINDOW);
+
 	WimaWin* win = dvec_get(wg.windows, wlh.window);
-	assert(win);
+
+	wassert(dtree_exists(win->areas, wlh.area), WIMA_ASSERT_AREA);
 
 	WimaAr* area = dtree_node(win->areas, wlh.area);
-	assert(area);
 
-	assert(wlh.layout < area->area.ctx.itemCount);
+	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+
+	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
 
 	WimaLayoutItem* layout = area->area.ctx.items + wlh.layout;
 
@@ -211,13 +222,17 @@ NVGcolor wima_layout_backgroundColor(WimaLayout wlh) {
 
 	assert_init;
 
+	wassert(wlh.window < dvec_len(wg.windows), WIMA_ASSERT_WINDOW);
+
 	WimaWin* win = dvec_get(wg.windows, wlh.window);
-	assert(win);
+
+	wassert(dtree_exists(win->areas, wlh.area), WIMA_ASSERT_AREA);
 
 	WimaAr* area = dtree_node(win->areas, wlh.area);
-	assert(area);
 
-	assert(wlh.layout < area->area.ctx.itemCount);
+	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
+
+	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
 
 	WimaLayoutItem* layout = area->area.ctx.items + wlh.layout;
 

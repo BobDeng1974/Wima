@@ -750,8 +750,9 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 
 	assert_init;
 
+	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
+
 	WimaAr* area = dtree_node(areas, node);
-	assert(area);
 
 	WimaPos pos = wima_area_translatePos(area, cursor);
 
@@ -801,8 +802,9 @@ static WimaStatus wima_area_node_moveSplit(DynaTree areas, DynaNode node, int di
 
 	assert_init;
 
+	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
+
 	WimaAr* area = dtree_node(areas, node);
-	assert(area);
 
 	if (vertical) {
 		if (isLeft) {
@@ -864,8 +866,9 @@ static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool is
 
 	assert_init;
 
+	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
+
 	WimaAr* area = dtree_node(areas, node);
-	assert(area);
 
 	int limit;
 
@@ -897,19 +900,26 @@ static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool is
 }
 
 WimaWidget wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags) {
+
 	assert_init;
-	return wima_area_node_findItem(areas, dtree_node(areas, dtree_root()), pos, flags);
+
+	DynaNode root = dtree_root();
+
+	wassert(dtree_exists(areas, root), WIMA_ASSERT_AREA);
+
+	return wima_area_node_findItem(areas, dtree_node(areas, root), pos, flags);
 }
 
 static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos pos, uint32_t flags) {
 
 	assert_init;
 
-	assert(area);
-
 	if (area->type == WIMA_AREA_PARENT) {
 
 		DynaNode leftNode = dtree_left(area->node);
+
+		wassert(dtree_exists(areas, leftNode), WIMA_ASSERT_AREA);
+
 		WimaAr* left = dtree_node(areas, leftNode);
 
 		WimaWidget item;
@@ -920,6 +930,9 @@ static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos 
 		else {
 
 			DynaNode rightNode = dtree_right(area->node);
+
+			wassert(dtree_exists(areas, rightNode), WIMA_ASSERT_AREA);
+
 			WimaAr* right = dtree_node(areas, rightNode);
 
 			if (wima_rect_contains(right->rect, pos)) {
@@ -981,7 +994,7 @@ static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* righ
 
 	assert_init;
 
-	assert(area && area->type == WIMA_AREA_PARENT);
+	wassert(area->type == WIMA_AREA_PARENT, WIMA_ASSERT_AREA_PARENT);
 
 	int split = area->parent.spliti;
 	int splitPlus = split + 1;
@@ -1044,7 +1057,7 @@ static void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg) {
 
 	assert_init;
 
-	assert(area && area->type == WIMA_AREA_LEAF);
+	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
 
 	NVGcolor ltborder = nvgRGBAf(0.67f, 0.67f, 0.67f, 0.67f);
 	NVGcolor rbborder = nvgRGBAf(0.25f, 0.25f, 0.25f, 0.67f);
@@ -1077,7 +1090,7 @@ static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg) {
 
 	assert_init;
 
-	assert(area && area->type == WIMA_AREA_LEAF);
+	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
 
 	NVGcolor dark = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.5882f);
 	NVGcolor light = nvgRGBAf(1.0f, 1.0f, 1.0f, 0.2900f);
@@ -1157,7 +1170,7 @@ static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertic
 
 	assert_init;
 
-	assert(area && area->type == WIMA_AREA_LEAF);
+	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
 
 	float x = 0.0f;
 	float y = 0.0f;

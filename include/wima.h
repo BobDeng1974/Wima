@@ -338,17 +338,20 @@ typedef enum WimaStatus {
 	// Returned when Wima fails to start an area.
 	WIMA_STATUS_AREA_ERR       = 136,
 
+	// Returned when a property error occurs.
+	WIMA_STATUS_PROP_ERR       = 137,
+
 	// Returned when Wima gets an invalid enum value.
-	WIMA_STATUS_INVALID_ENUM   = 137,
+	WIMA_STATUS_INVALID_ENUM   = 138,
 
 	// Returned when Wima gets an invalid parameter.
-	WIMA_STATUS_INVALID_PARAM  = 138,
+	WIMA_STATUS_INVALID_PARAM  = 139,
 
 	// Returned when the clipboard contents were invalid.
-	WIMA_STATUS_INVALID_CLIP   = 139,
+	WIMA_STATUS_INVALID_CLIP   = 140,
 
 	// Returned when an event is dropped.
-	WIMA_STATUS_EVENT_DROPPED  = 140,
+	WIMA_STATUS_EVENT_DROPPED  = 141,
 
 } WimaStatus;
 

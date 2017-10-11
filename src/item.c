@@ -78,16 +78,18 @@ WimaWidget wima_item_new(WimaArea wah, WimaItemFuncs funcs) {
 
 	assert_init;
 
+	wassert(wah.window < dvec_len(wg.windows), WIMA_ASSERT_WINDOW);
+
 	WimaWin* win = dvec_get(wg.windows, wah.window);
-	assert(win);
+
+	wassert(dtree_exists(win->areas, wah.area), WIMA_ASSERT_AREA);
 
 	WimaAr* area = dtree_node(win->areas, wah.area);
-	assert(area);
 
-	assert(area->area.ctx.itemCount < (int) area->area.ctx.itemCap);
+	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_OVER_MAX);
 
 	 // Must run between uiBeginLayout() and uiEndLayout().
-	assert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT);
+	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 
 	uint32_t idx = (area->area.ctx.itemCount)++;
 
@@ -177,7 +179,7 @@ void wima_item_setLayout(WimaWidget item, uint32_t flags) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	assert((flags & WIMA_ITEM_LAYOUT_MASK) == flags);
+	wassert((flags & WIMA_ITEM_LAYOUT_MASK) == flags, WIMA_ASSERT_WIDGET_LAYOUT_FLAGS);
 
 	pitem->flags &= ~WIMA_ITEM_LAYOUT_MASK;
 	pitem->flags |= flags & WIMA_ITEM_LAYOUT_MASK;
@@ -194,7 +196,7 @@ void wima_item_setBox(WimaWidget item, uint32_t flags) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	assert((flags & WIMA_ITEM_BOX_MASK) == (unsigned int)flags);
+	wassert((flags & WIMA_ITEM_BOX_MASK) == flags, WIMA_ASSERT_WIDGET_BOX_FLAGS);
 
 	pitem->flags &= ~WIMA_ITEM_BOX_MASK;
 	pitem->flags |= flags & WIMA_ITEM_BOX_MASK;
@@ -243,7 +245,7 @@ void wima_item_setUserPointer(WimaWidget item, void* handle) {
 
 	WimaItem *pitem = wima_item_ptr(item);
 
-	assert(pitem->handle == NULL);
+	wassert(pitem->handle == NULL, WIMA_ASSERT_WIDGET_USER_PTR_NOT_NULL);
 
 	pitem->handle = handle;
 }
@@ -329,8 +331,9 @@ bool wima_item_isActive(WimaWidget item) {
 
 	assert_init;
 
+	wassert(item.window < dvec_len(wg.windows), WIMA_ASSERT_WINDOW);
+
 	WimaWin* win = dvec_get(wg.windows, item.window);
-	assert(win);
 
 	return wima_item_compare(win->ctx.active, item);
 }
@@ -339,8 +342,9 @@ bool wima_item_isHovered(WimaWidget item) {
 
 	assert_init;
 
+	wassert(item.window < dvec_len(wg.windows), WIMA_ASSERT_WINDOW);
+
 	WimaWin* win = dvec_get(wg.windows, item.window);
-	assert(win);
 
 	return wima_item_compare(win->ctx.hover, item);
 }
@@ -349,8 +353,9 @@ bool wima_item_isFocused(WimaWidget item) {
 
 	assert_init;
 
+	wassert(item.window < dvec_len(wg.windows), WIMA_ASSERT_WINDOW);
+
 	WimaWin* win = dvec_get(wg.windows, item.window);
-	assert(win);
 
 	return wima_item_compare(win->ctx.focus, item);
 }
@@ -364,9 +369,9 @@ WimaItem* wima_item_ptr(WimaWidget wih) {
 	assert_init;
 
 	WimaAr* area = wima_area_ptr(wih.window, wih.area);
-	assert(area && area->type == WIMA_AREA_LEAF);
+	wassert(area->type == WIMA_AREA_LEAF, WIMA_ASSERT_AREA_LEAF);
 
-	assert(wih.item < area->area.ctx.itemCount);
+	wassert(wih.item < area->area.ctx.itemCount, WIMA_ASSERT_WIDGET);
 
 	return (WimaItem*) area->area.ctx.items + wih.item;
 }

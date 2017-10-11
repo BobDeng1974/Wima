@@ -72,8 +72,8 @@ WimaPropType wima_prop_type(WimaProperty wph);
 
 WimaProperty wima_prop_find(const char* name);
 
-void wima_prop_link(WimaProperty parent, WimaProperty child);
-void wima_prop_unlink(WimaProperty parent, WimaProperty child);
+WimaStatus wima_prop_link(WimaProperty parent, WimaProperty child);
+WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child);
 DynaVector wima_prop_group(WimaProperty wph);
 void wima_prop_setBool(WimaProperty wph, bool val);
 bool wima_prop_bool(WimaProperty wph);
