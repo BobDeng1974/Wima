@@ -188,7 +188,7 @@ static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertic
 WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node) {
 
 	assert_init;
-	wassert(wwh < dvec_len(wg.windows), WIMA_ASSERT_WINDOW);
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
@@ -462,7 +462,7 @@ WimaStatus wima_area_draw(WimaWindow wwh, float ratio) {
 
 	assert_init;
 
-	wassert(wwh < dvec_len(wg.windows), WIMA_ASSERT_WINDOW);
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 

@@ -173,7 +173,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 		case WIMA_KEY_RIGHT_ALT:
 		case WIMA_KEY_RIGHT_SUPER:
 		{
-			wima_window_setModifier(wwh, wkey, wact);
+			wima_window_setModifier(wwin, wkey, wact);
 			return;
 		}
 

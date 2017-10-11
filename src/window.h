@@ -39,6 +39,8 @@
 
 #include <stdbool.h>
 
+#include <yc/assert.h>
+
 #include <GLFW/glfw3.h>
 
 #include <nanovg.h>
@@ -143,7 +145,7 @@ typedef struct WimaWin {
 WimaStatus wima_window_free(WimaWin* win);
 
 void wima_window_setDirty(WimaWin* win, bool layout);
-void wima_window_setModifier(WimaWindow wwh, WimaKey key, WimaAction action);
+void wima_window_setModifier(WimaWin* win, WimaKey key, WimaAction action);
 
 // clear the item buffers and draw all areas; uiBeginLayout() should be called
 // before the first UI declaration for this frame to avoid concatenation of the
@@ -156,6 +158,10 @@ WimaStatus wima_window_draw(WimaWindow win);
 WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth);
 
 WimaStatus wima_window_processEvents(WimaWindow win);
+
+#ifdef __YASSERT__
+bool wima_window_valid(WimaWindow wwh);
+#endif
 
 #define WIMA_WINDOW(win) ((WimaWindow) (long) glfwGetWindowUserPointer(win))
 
