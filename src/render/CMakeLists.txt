@@ -36,6 +36,7 @@ set(WIMA_RENDER_SRC
 	#Put source files here.
 	"color.c"
 	"theme.c"
+	"render.c"
 )
 
 set(WIMA_RENDER "${PROJECT_NAME}_render")
