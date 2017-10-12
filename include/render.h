@@ -176,7 +176,7 @@ NVGcolor nvgTransRGBA(NVGcolor c0, unsigned char a);
 
 // Sets transparency of a color value.
 NVGcolor nvgTransRGBAf(NVGcolor c0, float a);
-git
+
 // Returns color value specified by hue, saturation and lightness.
 // HSL values are all in range [0..1], alpha will be set to 255.
 NVGcolor nvgHSL(float h, float s, float l);
