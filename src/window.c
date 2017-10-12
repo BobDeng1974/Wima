@@ -1176,7 +1176,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		{
 			if (wih.item >= 0) {
 
-				WimaLayoutItem* pitem = (WimaLayoutItem*) wima_widget_ptr(wih);
+				WimaLayoutItem* pitem = wima_widget_ptr(wih);
 
 				wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
 

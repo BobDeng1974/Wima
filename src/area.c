@@ -267,7 +267,7 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 
 		size_t size = ynalloc(sizeof(WimaLayoutItem) * region->itemCap);
 
-		area->area.ctx.items = (WimaLayoutItem*) ymalloc(size);
+		area->area.ctx.items = ymalloc(size);
 		if (!area->area.ctx.items) {
 			return WIMA_STATUS_MALLOC_ERR;
 		}
@@ -967,7 +967,7 @@ static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos 
 
 		while (item.item >= 0) {
 
-			pitem = (WimaLayoutItem*) wima_widget_ptr(item);
+			pitem = wima_widget_ptr(item);
 
 			if (wima_widget_contains(item, pos)) {
 
