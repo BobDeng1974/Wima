@@ -63,7 +63,7 @@ include_directories("${X11_INCLUDE_DIR}" "${OPENGL_INCLUDE_DIR}")
 
 add_subdirectory(math)
 
-add_subdirectory(render)
+add_subdirectory(theme)
 add_subdirectory(widget)
 
 set(WIMA_GLAD "${PROJECT_NAME}_glad")
@@ -72,7 +72,7 @@ create_pic_library(
 	"${PROJECT_NAME}" "${PROJECT_NAME}" "${WIMA_SRC}" "YES"
 
 	# Put the needed libraries here.
-	"${WIMA_RENDER}"
+	"${WIMA_THEME}"
 	"${WIMA_GLOBAL}"
 	"${NANOVG_PIC}"
 	"${WIMA_MATH}"
