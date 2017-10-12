@@ -84,7 +84,7 @@ typedef struct WimaLayoutInfo {
 
 } WimaLayoutInfo;
 
-typedef struct WimaLayoutItem {
+typedef struct WimaItem {
 
 	union {
 
@@ -105,12 +105,12 @@ typedef struct WimaLayoutItem {
 
 	bool isLayout;
 
-} WimaLayoutItem;
+} WimaItem;
 
 #define WIMA_ITEM_IS_LAYOUT(item)  ((item)->isLayout)
 #define WIMA_ITEM_IS_WIDGET(item)  (!((item)->isLayout))
 
-WimaLayoutItem* wima_layout_ptr(WimaLayout wlh);
+WimaItem* wima_layout_ptr(WimaLayout wlh);
 WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split);
 
 #ifdef __cplusplus

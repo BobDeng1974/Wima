@@ -118,7 +118,7 @@ uint16_t wima_layout_clearBoxFlag(uint16_t flags) {
 	return flags;
 }
 
-WimaLayoutItem* wima_layout_ptr(WimaLayout wlh) {
+WimaItem* wima_layout_ptr(WimaLayout wlh) {
 
 	assert_init;
 
@@ -160,13 +160,13 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 
 		wassert(parent.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
 
-		WimaLayoutItem* pparent = area->area.ctx.items + parent.layout;
+		WimaItem* pparent = area->area.ctx.items + parent.layout;
 
 		wassert(WIMA_ITEM_IS_LAYOUT(pparent), WIMA_ASSERT_ITEM_LAYOUT);
 
 		if (pparent->layout.lastKid != WIMA_LAYOUT_INVALID) {
 
-			WimaLayoutItem* pkid = area->area.ctx.items + pparent->layout.lastKid;
+			WimaItem* pkid = area->area.ctx.items + pparent->layout.lastKid;
 
 			pkid->nextSibling = idx;
 			pparent->layout.lastKid = idx;
@@ -177,9 +177,9 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 		}
 	}
 
-	WimaLayoutItem* playout = area->area.ctx.items + idx;
+	WimaItem* playout = area->area.ctx.items + idx;
 
-	memset(playout, 0, sizeof(WimaLayoutItem));
+	memset(playout, 0, sizeof(WimaItem));
 
 	playout->isLayout = true;
 
@@ -213,7 +213,7 @@ void wima_layout_setBackgroundColor(WimaLayout wlh, NVGcolor color) {
 
 	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
 
-	WimaLayoutItem* layout = area->area.ctx.items + wlh.layout;
+	WimaItem* layout = area->area.ctx.items + wlh.layout;
 
 	layout->layout.bgcolor = color;
 }
@@ -234,7 +234,7 @@ NVGcolor wima_layout_backgroundColor(WimaLayout wlh) {
 
 	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
 
-	WimaLayoutItem* layout = area->area.ctx.items + wlh.layout;
+	WimaItem* layout = area->area.ctx.items + wlh.layout;
 
 	return layout->layout.bgcolor;
 }

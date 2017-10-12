@@ -1127,7 +1127,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		{
 			if (wih.item >= 0) {
 
-				WimaLayoutItem* pitem = wima_widget_ptr(wih);
+				WimaItem* pitem = wima_widget_ptr(wih);
 
 				if (pitem->widget.flags & e.type) {
 					status = pitem->widget.funcs.click(wih, e.click);
@@ -1176,7 +1176,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		{
 			if (wih.item >= 0) {
 
-				WimaLayoutItem* pitem = wima_widget_ptr(wih);
+				WimaItem* pitem = wima_widget_ptr(wih);
 
 				wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
 
@@ -1205,7 +1205,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		{
 			if (wih.item >= 0) {
 
-				WimaLayoutItem* pitem = wima_widget_ptr(wih);
+				WimaItem* pitem = wima_widget_ptr(wih);
 
 				if (pitem->widget.flags & e.type) {
 					status = pitem->widget.funcs.scroll(wih, e.scroll);
@@ -1225,7 +1225,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		{
 			if (wih.item >= 0) {
 
-				WimaLayoutItem* pitem = wima_widget_ptr(wih);
+				WimaItem* pitem = wima_widget_ptr(wih);
 
 				if (pitem->widget.flags & e.type) {
 					status = pitem->widget.funcs.char_event(wih, e.char_event);
@@ -1412,7 +1412,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih,
 	}
 	else if (wih.item >= 0) {
 
-		WimaLayoutItem* pitem = wima_widget_ptr(wih);
+		WimaItem* pitem = wima_widget_ptr(wih);
 
 		if (pitem->widget.flags & WIMA_EVENT_MOUSE_BTN) {
 			status = pitem->widget.funcs.mouse(wih, e);

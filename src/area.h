@@ -56,7 +56,7 @@ extern "C" {
 
 typedef struct WimaArCtx {
 
-	WimaLayoutItem* items;
+	WimaItem* items;
 
 	// Capacities.
 	uint16_t itemCap;

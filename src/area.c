@@ -265,14 +265,14 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 		// Call the user function.
 		area->area.user = get_user_ptr(wah);
 
-		size_t size = ynalloc(sizeof(WimaLayoutItem) * region->itemCap);
+		size_t size = ynalloc(sizeof(WimaItem) * region->itemCap);
 
 		area->area.ctx.items = ymalloc(size);
 		if (!area->area.ctx.items) {
 			return WIMA_STATUS_MALLOC_ERR;
 		}
 
-		area->area.ctx.itemCap = size / sizeof(WimaLayoutItem);
+		area->area.ctx.itemCap = size / sizeof(WimaItem);
 
 		area->area.ctx.itemCount = 0;
 	}
@@ -949,7 +949,7 @@ static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos 
 	}
 	else {
 
-		WimaLayoutItem *pitem;
+		WimaItem *pitem;
 
 		WimaWidget item;
 		item.item = 0;
