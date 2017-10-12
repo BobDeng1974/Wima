@@ -64,7 +64,6 @@ add_subdirectory("cmake")
 
 add_subdirectory("${WIMA_DOCS_DIR}")
 
-include_directories("${WIMA_INCLUDE_DIR}")
 add_subdirectory("${WIMA_INCLUDE_DIR}")
 
 add_subdirectory("${WIMA_LIB_DIR}")

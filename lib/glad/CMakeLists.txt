@@ -24,6 +24,8 @@
 #
 #	****** END LICENSE BLOCK ******
 
+include_directories("../../include")
+
 set(WIMA_GLAD_SRC "glad.c")
 
 set(WIMA_GLAD "${PROJECT_NAME}_glad")

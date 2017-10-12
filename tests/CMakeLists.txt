@@ -24,6 +24,8 @@
 #
 #	****** END LICENSE BLOCK ******
 
+include_directories("../include")
+
 # We need to include NanoVG's headers.
 include_directories("../lib/nanovg/src")
 

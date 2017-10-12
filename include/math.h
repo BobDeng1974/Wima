@@ -137,6 +137,6 @@ WimaTransform wima_transform_premultiply(WimaTransform src1, WimaTransform src2)
 WimaTransform wima_transform_inverse(WimaTransform src);
 
 // Transform a point by given transform.
-WimaPos wima_transform_point(WimaTransform transform, WimaPos pos);
+WimaPosf wima_transform_point(WimaTransform transform, WimaPosf pos);
 
 #endif // WIMA_MATH_H

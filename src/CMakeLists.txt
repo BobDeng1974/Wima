@@ -60,6 +60,7 @@ set(WIMA_SRC
 )
 
 include_directories("${X11_INCLUDE_DIR}" "${OPENGL_INCLUDE_DIR}")
+include_directories("../include")
 
 add_subdirectory(math)
 
