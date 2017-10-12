@@ -1127,10 +1127,10 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		{
 			if (wih.item >= 0) {
 
-				WimaItem* pitem = wima_widget_ptr(wih);
+				WimaLayoutItem* pitem = wima_widget_ptr(wih);
 
-				if (pitem->flags & e.type) {
-					status = pitem->funcs.click(wih, e.click);
+				if (pitem->widget.flags & e.type) {
+					status = pitem->widget.funcs.click(wih, e.click);
 				}
 				else {
 					status = WIMA_STATUS_SUCCESS;
@@ -1205,10 +1205,10 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		{
 			if (wih.item >= 0) {
 
-				WimaItem* pitem = wima_widget_ptr(wih);
+				WimaLayoutItem* pitem = wima_widget_ptr(wih);
 
-				if (pitem->flags & e.type) {
-					status = pitem->funcs.scroll(wih, e.scroll);
+				if (pitem->widget.flags & e.type) {
+					status = pitem->widget.funcs.scroll(wih, e.scroll);
 				}
 				else {
 					status = WIMA_STATUS_SUCCESS;
@@ -1225,10 +1225,10 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		{
 			if (wih.item >= 0) {
 
-				WimaItem* pitem = wima_widget_ptr(wih);
+				WimaLayoutItem* pitem = wima_widget_ptr(wih);
 
-				if (pitem->flags & e.type) {
-					status = pitem->funcs.char_event(wih, e.char_event);
+				if (pitem->widget.flags & e.type) {
+					status = pitem->widget.funcs.char_event(wih, e.char_event);
 				}
 				else {
 					status = WIMA_STATUS_SUCCESS;
@@ -1412,10 +1412,10 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih,
 	}
 	else if (wih.item >= 0) {
 
-		WimaItem* pitem = wima_widget_ptr(wih);
+		WimaLayoutItem* pitem = wima_widget_ptr(wih);
 
-		if (pitem->flags & WIMA_EVENT_MOUSE_BTN) {
-			status = pitem->funcs.mouse(wih, e);
+		if (pitem->widget.flags & WIMA_EVENT_MOUSE_BTN) {
+			status = pitem->widget.funcs.mouse(wih, e);
 		}
 		else {
 			status = WIMA_STATUS_SUCCESS;

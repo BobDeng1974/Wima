@@ -154,7 +154,9 @@ typedef struct WimaItem {
 
 } WimaItem;
 
-WimaItem* wima_widget_ptr(WimaWidget wih);
+typedef struct WimaLayoutItem WimaLayoutItem;
+
+WimaLayoutItem* wima_widget_ptr(WimaWidget wih);
 
 #ifdef __cplusplus
 }
