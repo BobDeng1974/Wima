@@ -275,6 +275,8 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 		area->area.ctx.itemCap = size / sizeof(WimaItem);
 
 		area->area.ctx.itemCount = 0;
+
+		status = WIMA_STATUS_SUCCESS;
 	}
 
 	return status;
