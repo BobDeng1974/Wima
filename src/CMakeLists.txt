@@ -72,7 +72,7 @@ create_pic_library(
 	"${PROJECT_NAME}" "${PROJECT_NAME}" "${WIMA_SRC}" "YES"
 
 	# Put the needed libraries here.
-	"${WIMA_THEME}"
+	"${WIMA_RENDER}"
 	"${WIMA_GLOBAL}"
 	"${NANOVG_PIC}"
 	"${WIMA_MATH}"
