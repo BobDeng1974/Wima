@@ -490,7 +490,7 @@ static WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode 
 
 		wima_area_pushViewport(nvg.nvg, area->rect);
 
-		wima_widget_background(nvg, 0, 0, area->rect.w, area->rect.h);
+		wima_draw_background(nvg, 0, 0, area->rect.w, area->rect.h);
 
 		if (area->area.ctx.itemCount > 0) {
 

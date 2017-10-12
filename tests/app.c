@@ -116,7 +116,7 @@ WimaStatus cb_draw(WimaWidget item, WimaNvgInfo nvg) {
 	wima_widget_label(nvg, r.x + 2, r.y + 2, width, height, WIMA_ICONID(0,0), stuff);
 #endif
 
-	wima_widget_label(nvg, r.x, r.y, r.w, r.h, WIMA_ICONID(0,0), buffer);
+	wima_draw_label(nvg, r.x, r.y, r.w, r.h, WIMA_ICONID(0,0), buffer);
 
 	return WIMA_STATUS_SUCCESS;
 }
