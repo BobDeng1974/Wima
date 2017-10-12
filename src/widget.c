@@ -98,7 +98,7 @@ WimaWidget wima_widget_new(WimaArea wah, WimaItemFuncs funcs) {
 	wih.item = idx;
 	wih.window = wah.window;
 
-	WimaLayoutItem* item = (WimaLayoutItem*) wima_widget_ptr(wih);
+	WimaLayoutItem* item = wima_widget_ptr(wih);
 
 	memset(item, 0, sizeof(WimaLayoutItem));
 
@@ -165,12 +165,12 @@ void wima_widget_setSize(WimaWidget item, WimaSize size) {
 
 int wima_widget_width(WimaWidget item) {
 	assert_init;
-	return ((WimaLayoutItem*) wima_widget_ptr(item))->rect.w;
+	return wima_widget_ptr(item)->rect.w;
 }
 
 int wima_widget_height(WimaWidget item) {
 	assert_init;
-	return ((WimaLayoutItem*) wima_widget_ptr(item))->rect.h;
+	return wima_widget_ptr(item)->rect.h;
 }
 
 void wima_widget_setLayout(WimaWidget item, uint32_t flags) {
@@ -373,5 +373,5 @@ WimaLayoutItem* wima_widget_ptr(WimaWidget wih) {
 
 	wassert(wih.item < area->area.ctx.itemCount, WIMA_ASSERT_WIDGET);
 
-	return (WimaLayoutItem*) area->area.ctx.items + wih.item;
+	return area->area.ctx.items + wih.item;
 }
