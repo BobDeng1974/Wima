@@ -42,7 +42,7 @@
 extern "C" {
 #endif
 
-#include <theme.h>
+#include <render.h>
 
 // TODO: Put these in the theme.
 

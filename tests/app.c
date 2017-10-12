@@ -43,7 +43,7 @@
 
 #include <wima.h>
 #include <draw.h>
-#include <theme.h>
+#include <render.h>
 
 WimaStatus cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e);
 WimaStatus cb_scroll(WimaWidget wih, WimaScrollEvent e);

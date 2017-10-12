@@ -67,7 +67,7 @@
 #include <nanovg.h>
 
 #include <prop.h>
-#include <theme.h>
+#include <render.h>
 
 #include "../math/math.h"
 #include "../global.h"

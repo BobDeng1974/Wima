@@ -64,6 +64,7 @@
 #include <nanovg.h>
 
 #include <wima.h>
+#include <render.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -142,7 +143,7 @@ void wima_draw_choiceBtn(WimaNvgInfo nvg,
 // the widgets current UI state.
 // widget looks best when height is WIMA_WIDGET_HEIGHT
 void wima_draw_colorBtn(WimaNvgInfo nvg,
-    float x, float y, float w, float h, int flags, NVGcolor color);
+    float x, float y, float w, float h, int flags, WimaColor color);
 
 // Draw a number field with its lower left origin at (x,y) and size of (w,h),
 // where flags is one or multiple flags from BNDcornerFlags and state denotes
@@ -206,7 +207,7 @@ void wima_draw_tooltip_background(WimaNvgInfo nvg, float x, float y, float w, fl
 
 // Draw a node port at the given position filled with the given color
 void wima_draw_node_port(WimaNvgInfo nvg, float x, float y, WimaWidgetState state,
-    NVGcolor color);
+    WimaColor color);
 
 // Draw a node wire originating at (x0,y0) and floating to (x1,y1), with
 // a colored gradient based on the states state0 and state1:
@@ -219,12 +220,12 @@ void wima_draw_node_wire(WimaNvgInfo nvg, float x0, float y0, float x1, float y1
 // Draw a node wire originating at (x0,y0) and floating to (x1,y1), with
 // a colored gradient based on the two colors color0 and color1
 void wima_draw_node_wire_colored(WimaNvgInfo nvg, float x0, float y0, float x1, float y1,
-    NVGcolor color0, NVGcolor color1);
+    WimaColor color0, WimaColor color1);
 
 // Draw a node background with its upper left origin at (x,y) and size of (w,h)
 // where titleColor provides the base color for the title bar
 void wima_draw_node_background(WimaNvgInfo nvg, float x, float y, float w, float h,
-    WimaWidgetState state, int iconid, const char *label, NVGcolor titleColor);
+    WimaWidgetState state, int iconid, const char *label, WimaColor titleColor);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -296,11 +297,11 @@ void wima_draw_dropShadow(WimaNvgInfo nvg, float x, float y, float w, float h,
 // vertical.
 void wima_draw_box_inner(WimaNvgInfo nvg, float x, float y, float w, float h,
     float cr0, float cr1, float cr2, float cr3,
-    NVGcolor shade_top, NVGcolor shade_down);
+    WimaColor shade_top, WimaColor shade_down);
 
 // Draw the outline part of a widget box with the given color
 void wima_draw_box_outline(WimaNvgInfo nvg, float x, float y, float w, float h,
-    float cr0, float cr1, float cr2, float cr3, NVGcolor color);
+    float cr0, float cr1, float cr2, float cr3, WimaColor color);
 
 // Draw an optional icon specified by <iconid> and an optional label with
 // given alignment (BNDtextAlignment), fontsize and color within a widget box.
@@ -311,7 +312,7 @@ void wima_draw_box_outline(WimaNvgInfo nvg, float x, float y, float w, float h,
 // if value is not NULL, label and value will be drawn with a ":" separator
 // inbetween.
 void wima_draw_label_icon_value(WimaNvgInfo nvg, float x, float y, float w, float h,
-    int iconid, NVGcolor color, int align, float fontsize, const char *label,
+    int iconid, WimaColor color, int align, float fontsize, const char *label,
     const char *value);
 
 // Draw an optional icon specified by <iconid> and an optional label with
@@ -320,7 +321,7 @@ void wima_draw_label_icon_value(WimaNvgInfo nvg, float x, float y, float w, floa
 // if label is not NULL, it will be drawn with the specified alignment, fontsize
 // and color.
 void wima_draw_node_label_icon(WimaNvgInfo nvg, float x, float y, float w, float h,
-    int iconid, NVGcolor color, NVGcolor shadowColor, int align,
+    int iconid, WimaColor color, WimaColor shadowColor, int align,
     float fontsize, const char *label);
 
 // Calculate the corresponding text position for given coordinates px/py
@@ -339,22 +340,22 @@ int wima_label_text_pos(WimaNvgInfo nvg, float x, float y, float w, float h,
 // cend must be >= cbegin and <= strlen(text) and denotes the end of the caret
 // if cend < cbegin, then no caret will be drawn
 void wima_draw_label_caret(WimaNvgInfo nvg, float x, float y, float w, float h,
-    int iconid, NVGcolor color, float fontsize, const char *label,
-    NVGcolor caretcolor, int cbegin, int cend);
+    int iconid, WimaColor color, float fontsize, const char *label,
+    WimaColor caretColor, int cbegin, int cend);
 
 // Draw a checkmark for an option box with the given upper left coordinates
 // (ox,oy) with the specified color.
-void wima_draw_check(WimaNvgInfo nvg, float ox, float oy, NVGcolor color);
+void wima_draw_check(WimaNvgInfo nvg, float ox, float oy, WimaColor color);
 
 // Draw a horizontal arrow for a number field with its center at (x,y) and
 // size s; if s is negative, the arrow points to the left.
-void wima_draw_arrow(WimaNvgInfo nvg, float x, float y, float s, NVGcolor color);
+void wima_draw_arrow(WimaNvgInfo nvg, float x, float y, float s, WimaColor color);
 
 // Draw an up/down arrow for a choice box with its center at (x,y) and size s
-void wima_draw_arrow_upDown(WimaNvgInfo nvg, float x, float y, float s, NVGcolor color);
+void wima_draw_arrow_upDown(WimaNvgInfo nvg, float x, float y, float s, WimaColor color);
 
 // Draw a node down-arrow with its tip at (x,y) and size s
-void wima_draw_node_arrow_down(WimaNvgInfo nvg, float x, float y, float s, NVGcolor color);
+void wima_draw_node_arrow_down(WimaNvgInfo nvg, float x, float y, float s, WimaColor color);
 
 ////////////////////////////////////////////////////////////////////////////////
 

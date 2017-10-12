@@ -43,7 +43,7 @@
 #include <dyna/string.h>
 
 #include <wima.h>
-#include <theme.h>
+#include <render.h>
 #include <prop.h>
 
 #include <GLFW/glfw3.h>

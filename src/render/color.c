@@ -60,7 +60,7 @@
 
 #include "../math/math.h"
 
-#include <theme.h>
+#include <render.h>
 
 #include "../global.h"
 #include "theme.h"
@@ -72,16 +72,16 @@ assert_msgs_decl;
 // these are part of the implementation detail and can be used to theme
 // new kinds of controls in a similar fashion.
 
-NVGcolor wima_color_makeMoreTransparent(NVGcolor color) {
+WimaColor wima_color_multiplyTransparent(WimaColor color) {
 	color.a *= WIMA_TRANSPARENT_ALPHA;
 	return color;
 }
 
-NVGcolor wima_color_offset(NVGcolor color, int delta) {
+WimaColor wima_color_offset(WimaColor color, int delta) {
 
 	float offset = (float) delta / 255.0f;
 
-	NVGcolor result;
+	WimaColor result;
 
 	if (delta != 0) {
 
@@ -89,7 +89,7 @@ NVGcolor wima_color_offset(NVGcolor color, int delta) {
 		float g = wima_clamp(color.g + offset, 0, 1);
 		float b = wima_clamp(color.b + offset, 0, 1);
 
-		result = nvgRGBAf(r, g, b, color.a);
+		result = wima_color_rgbaf(r, g, b, color.a);
 	}
 	else {
 		result = color;
@@ -117,7 +117,7 @@ void wima_color_inner(WimaColor *shade_top, WimaColor *shade_down, WimaWidgetThe
 
 			case WIMA_ITEM_HOVER:
 			{
-				NVGcolor color = wima_color_offset(theme->inner, WIMA_HOVER_SHADE);
+				WimaColor color = wima_color_offset(theme->inner, WIMA_HOVER_SHADE);
 
 				*shade_top = wima_color_offset(color, theme->shadeTop);
 				*shade_down = wima_color_offset(color, theme->shadeBottom);
@@ -153,7 +153,7 @@ void wima_color_inner(WimaColor *shade_top, WimaColor *shade_down, WimaWidgetThe
 
 			case WIMA_ITEM_HOVER:
 			{
-				NVGcolor color = wima_color_offset(theme->inner, WIMA_HOVER_SHADE);
+				WimaColor color = wima_color_offset(theme->inner, WIMA_HOVER_SHADE);
 
 				*shade_top = color;
 				*shade_down = color;

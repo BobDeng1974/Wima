@@ -218,7 +218,7 @@ void wima_layout_setBackgroundColor(WimaLayout wlh, WimaColor color) {
 	layout->layout.bgcolor = color;
 }
 
-NVGcolor wima_layout_backgroundColor(WimaLayout wlh) {
+WimaColor wima_layout_backgroundColor(WimaLayout wlh) {
 
 	assert_init;
 

@@ -46,6 +46,7 @@ extern "C" {
 #include <stdint.h>
 
 #include <wima.h>
+#include <render.h>
 
 uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical);
 uint16_t wima_layout_clearExpandFlags(uint16_t flags);
@@ -56,8 +57,8 @@ uint16_t wima_layout_clearSeparationFlag(uint16_t flags);
 uint16_t wima_layout_setBoxFlag(uint16_t flags);
 uint16_t wima_layout_clearBoxFlag(uint16_t flags);
 
-void wima_layout_setBackgroundColor(WimaLayout wlh, NVGcolor color);
-NVGcolor wima_layout_backgroundColor(WimaLayout wlh);
+void wima_layout_setBackgroundColor(WimaLayout wlh, WimaColor color);
+WimaColor wima_layout_backgroundColor(WimaLayout wlh);
 
 WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags);
 WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags);

@@ -42,6 +42,7 @@
 extern "C" {
 #endif
 
+#include <render.h>
 #include <layout.h>
 
 #include "old_layout.h"
@@ -68,7 +69,7 @@ extern "C" {
 
 typedef struct WimaLayoutInfo {
 
-	NVGcolor bgcolor;
+	WimaColor bgcolor;
 
 	float split;
 
