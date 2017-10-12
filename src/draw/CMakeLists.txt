@@ -24,23 +24,23 @@
 #
 #	****** END LICENSE BLOCK ******
 
-set(WIMA_WIDGET "${PROJECT_NAME}_widget")
-set(WIMA_WIDGET "${WIMA_WIDGET}" PARENT_SCOPE)
+set(WIMA_DRAW "${PROJECT_NAME}_draw")
+set(WIMA_DRAW "${WIMA_DRAW}" PARENT_SCOPE)
 
-set(WIMA_WIDGET_SRC
+set(WIMA_DRAW_SRC
 
 	# Add source files here.
-	"widget.c"
+	"draw.c"
 )
 
-set(WIMA_RENDER "${PROJECT_NAME}_render")
+set(WIMA_THEME "${PROJECT_NAME}_theme")
 set(WIMA_MATH "${PROJECT_NAME}_math")
 
 create_pic_library(
-	"${WIMA_WIDGET}" "${WIMA_WIDGET}" "${WIMA_WIDGET_SRC}" YES
+	"${WIMA_DRAW}" "${WIMA_DRAW}" "${WIMA_DRAW_SRC}" YES
 
 	# Add libraries here.
-	"${WIMA_RENDER}"
+	"${WIMA_THEME}"
 	"${WIMA_UI}"
 	"${WIMA_MATH}"
 )

@@ -38,7 +38,7 @@ set(WIMA_THEME_SRC
 	"theme.c"
 )
 
-set(WIMA_THEME "${PROJECT_NAME}_render")
+set(WIMA_THEME "${PROJECT_NAME}_theme")
 set(WIMA_THEME "${WIMA_THEME}" PARENT_SCOPE)
 
 create_pic_library(
