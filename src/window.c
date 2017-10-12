@@ -884,12 +884,12 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	bool hasTitle = isTopAndContext && (win->menuTitle || win->menuIcon >= 0);
 
 	if (hasTitle) {
-		width = wima_draw_label_estimateWidth(win->nvg, win->menuIcon, win->menuTitle);
+		width = wima_render_label_estimateWidth(win->nvg, win->menuIcon, win->menuTitle);
 	}
 
 	float w, h;
 
-	float arrowWidth = wima_draw_label_estimateWidth(win->nvg, WIMA_ICONID(28,2), NULL);
+	float arrowWidth = wima_render_label_estimateWidth(win->nvg, WIMA_ICONID(28,2), NULL);
 
 	// Estimate width.
 	for (int i = 0; i < menu->numItems; ++i) {
@@ -897,7 +897,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 		WimaMenuItem item = menu->items[i];
 
 		if (item.label) {
-			w = wima_draw_label_estimateWidth(win->nvg, item.icon, item.label);
+			w = wima_render_label_estimateWidth(win->nvg, item.icon, item.label);
 			w += item.hasSubMenu ? arrowWidth : 0;
 		}
 		else {
@@ -912,7 +912,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	float height = 0.0f;
 
 	if (hasTitle) {
-		titleHeight = wima_draw_label_estimateHeight(win->nvg, win->menuIcon, win->menuTitle, width) + 5;
+		titleHeight = wima_render_label_estimateHeight(win->nvg, win->menuIcon, win->menuTitle, width) + 5;
 		height = titleHeight + WIMA_MENU_SEPARATOR_HEIGHT;
 	}
 	else {
@@ -925,7 +925,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 		WimaMenuItem item = menu->items[i];
 
 		if (item.label) {
-			h = wima_draw_label_estimateHeight(win->nvg, item.icon, item.label, width);
+			h = wima_render_label_estimateHeight(win->nvg, item.icon, item.label, width);
 		}
 		else {
 			h = WIMA_MENU_SEPARATOR_HEIGHT;
@@ -987,11 +987,11 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	nvgTranslate(win->nvg.nvg, menu->pos.x, menu->pos.y);
 	nvgScissor(win->nvg.nvg, 0, 0, menu->size.w, menu->size.h);
 
-	wima_draw_menu_background(win->nvg, 0, 0, menu->size.w, menu->size.h, WIMA_CORNER_NONE);
+	wima_render_menu_background(win->nvg, 0, 0, menu->size.w, menu->size.h, WIMA_CORNER_NONE);
 
 	if (hasTitle) {
-		wima_draw_menu_label(win->nvg, 0, 5, width, titleHeight, win->menuIcon, win->menuTitle);
-		wima_draw_menu_separator(win->nvg, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
+		wima_render_menu_label(win->nvg, 0, 5, width, titleHeight, win->menuIcon, win->menuTitle);
+		wima_render_menu_separator(win->nvg, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
 	}
 
 	WimaMenu* m = wima_window_menu_contains(menu, pos);
@@ -1024,11 +1024,11 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 				item.state = contained ? WIMA_ITEM_HOVER : item.state;
 			}
 
-			wima_draw_menu_item(win->nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h,
+			wima_render_menu_item(win->nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h,
 			                      item.state, item.icon, item.label, item.hasSubMenu);
 		}
 		else {
-			wima_draw_menu_separator(win->nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h);
+			wima_render_menu_separator(win->nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h);
 		}
 	}
 
