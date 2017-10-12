@@ -312,7 +312,7 @@ void wima_draw_box_outline(WimaNvgInfo nvg, float x, float y, float w, float h,
 // if value is not NULL, label and value will be drawn with a ":" separator
 // inbetween.
 void wima_draw_label_icon_value(WimaNvgInfo nvg, float x, float y, float w, float h,
-    int iconid, WimaColor color, int align, float fontsize, const char *label,
+    int iconid, WimaColor color, WimaTextAlign align, float fontsize, const char *label,
     const char *value);
 
 // Draw an optional icon specified by <iconid> and an optional label with
@@ -321,7 +321,7 @@ void wima_draw_label_icon_value(WimaNvgInfo nvg, float x, float y, float w, floa
 // if label is not NULL, it will be drawn with the specified alignment, fontsize
 // and color.
 void wima_draw_node_label_icon(WimaNvgInfo nvg, float x, float y, float w, float h,
-    int iconid, WimaColor color, WimaColor shadowColor, int align,
+    int iconid, WimaColor color, WimaColor shadowColor, WimaTextAlign align,
     float fontsize, const char *label);
 
 // Calculate the corresponding text position for given coordinates px/py

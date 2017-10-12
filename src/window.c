@@ -50,7 +50,7 @@
 
 #include "math/math.h"
 
-#include "render/theme.h"
+#include "draw/theme.h"
 
 #include "callbacks.h"
 #include "region.h"

@@ -34,7 +34,7 @@ set(WIMA_GLAD "${PROJECT_NAME}_glad")
 set(WIMA_RENDER "${PROJECT_NAME}_render")
 set(NANOVG "nanovg")
 
-create_test(app "${PROJECT_NAME}" "${DYNA_LIB}" "${WIMA_GLAD}" "${NANOVG}" "${WIMA_DRAW}" "${WIMA_RENDER}")
+create_test(app "${PROJECT_NAME}" "${DYNA_LIB}" "${WIMA_GLAD}" "${NANOVG}" "${WIMA_RENDER}" "${WIMA_DRAW}")
 
 # Temporarily disable this test while refactoring Blendish/OUI.
 #create_test(bnd_oui_demo "${WIMA_OUI_PIC}" "${WIMA_THEME_PIC}" "${WIMA_GLOBAL}" "${GLFW_LIB}")

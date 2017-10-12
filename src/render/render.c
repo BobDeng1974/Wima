@@ -63,8 +63,8 @@
 #include <render.h>
 #include <draw.h>
 
-#include "../render/theme.h"
-#include "../render/color.h"
+#include "../draw/theme.h"
+#include "../draw/color.h"
 #include "../math/math.h"
 #include "../global.h"
 #include "../window.h"
@@ -75,7 +75,7 @@ assert_msgs_decl;
 void wima_draw_label(WimaNvgInfo nvg, float x, float y, float w, float h, int iconid, const char *label) {
 	assert_init;
 	wima_draw_label_icon_value(nvg, x, y, w, h, iconid, wg.theme->regular.text,
-	                             WIMA_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
+	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
 void wima_draw_toolBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
@@ -96,7 +96,7 @@ void wima_draw_toolBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int 
 	wima_draw_box_outline(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 
 	WimaColor textColor = wima_color_text(&wg.theme->tool, state);
-	wima_draw_label_icon_value(nvg, x, y, w, h, iconid, textColor, WIMA_CENTER,
+	wima_draw_label_icon_value(nvg, x, y, w, h, iconid, textColor, WIMA_ALIGN_CENTER,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
@@ -119,7 +119,7 @@ void wima_draw_radioBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int
 	wima_draw_box_outline(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 
 	WimaColor textColor = wima_color_text(&wg.theme->radio, state);
-	wima_draw_label_icon_value(nvg, x, y, w, h, iconid, textColor, WIMA_CENTER,
+	wima_draw_label_icon_value(nvg, x, y, w, h, iconid, textColor, WIMA_ALIGN_CENTER,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
@@ -194,7 +194,7 @@ void wima_draw_optionBtn(WimaNvgInfo nvg, float x, float y, float w, float h,
 
 	WimaColor textColor = wima_color_text(&wg.theme->option, state);
 	wima_draw_label_icon_value(nvg, x + 12, y, w - 12, h, -1, textColor,
-	                             WIMA_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
+	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
 void wima_draw_choiceBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
@@ -217,7 +217,7 @@ void wima_draw_choiceBtn(WimaNvgInfo nvg, float x, float y, float w, float h, in
 
 	WimaColor textColor = wima_color_text(&wg.theme->choice, state);
 	wima_draw_label_icon_value(nvg, x, y, w, h, iconid, textColor,
-	                             WIMA_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
+	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 
 	WimaColor arrowTrans = wima_color_multiplyTransparent(wg.theme->choice.item);
 	wima_draw_arrow_upDown(nvg, x + w - 10, y + 10, 5, arrowTrans);
@@ -258,7 +258,7 @@ void wima_draw_numField(WimaNvgInfo nvg, float x, float y, float w, float h, int
 
 	WimaColor textColor = wima_color_text(&wg.theme->numField, state);
 	wima_draw_label_icon_value(nvg, x, y, w, h, -1, textColor,
-	                             WIMA_CENTER, WIMA_LABEL_FONT_SIZE, label, value);
+	                             WIMA_ALIGN_CENTER, WIMA_LABEL_FONT_SIZE, label, value);
 
 	WimaColor arrowTrans = wima_color_multiplyTransparent(wg.theme->numField.item);
 
@@ -299,7 +299,7 @@ void wima_draw_slider(WimaNvgInfo nvg, float x, float y, float w, float h,
 	wima_draw_box_outline(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 
 	WimaColor textColor = wima_color_text(&wg.theme->slider, state);
-	wima_draw_label_icon_value(nvg, x, y, w, h, -1, textColor, WIMA_CENTER,
+	wima_draw_label_icon_value(nvg, x, y, w, h, -1, textColor, WIMA_ALIGN_CENTER,
 	                             WIMA_LABEL_FONT_SIZE, label, value);
 }
 
@@ -385,7 +385,7 @@ void wima_draw_tooltip_background(WimaNvgInfo nvg, float x, float y, float w, fl
 void wima_draw_menu_label(WimaNvgInfo nvg, float x, float y, float w, float h, int iconid, const char *label) {
 	assert_init;
 	wima_draw_label_icon_value(nvg, x, y, w, h, iconid, wg.theme->menu.text,
-	                             WIMA_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
+	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
 void wima_draw_menu_separator(WimaNvgInfo nvg, float x, float y, float w, float h) {
@@ -422,7 +422,7 @@ void wima_draw_menu_item(WimaNvgInfo nvg, float x, float y, float w, float h,
 	}
 
 	WimaColor textColor = wima_color_text(&wg.theme->menuItem, state);
-	wima_draw_label_icon_value(nvg, x, y, w, h, iconid, textColor, WIMA_LEFT,
+	wima_draw_label_icon_value(nvg, x, y, w, h, iconid, textColor, WIMA_ALIGN_LEFT,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
 
 	if (hasSubMenu) {
@@ -517,7 +517,7 @@ void wima_draw_node_background(WimaNvgInfo nvg, float x, float y, float w, float
 	wima_draw_node_label_icon(nvg, x + WIMA_NODE_ARROW_AREA_WIDTH, y,
 	                            w - WIMA_NODE_ARROW_AREA_WIDTH - WIMA_NODE_MARGIN_SIDE,
 	                            WIMA_NODE_TITLE_HEIGHT, iconid, wg.theme->regular.text,
-	                            shadow, WIMA_LEFT, WIMA_LABEL_FONT_SIZE, label);
+	                            shadow, WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label);
 
 	WimaColor arrowColor;
 	WimaColor borderColor;
@@ -845,7 +845,7 @@ void wima_draw_corners_rounded(float* radiuses, float r, int flags) {
 }
 
 void wima_draw_label_icon_value(WimaNvgInfo nvg, float x, float y, float w, float h,
-                                  int iconid, WimaColor color, int align, float fontsize,
+                                  int iconid, WimaColor color, WimaTextAlign align, float fontsize,
                                   const char *label, const char *value)
 {
 	assert_init;
@@ -879,7 +879,7 @@ void wima_draw_label_icon_value(WimaNvgInfo nvg, float x, float y, float w, floa
 			nvgTextAlign(nvg.nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
 			x += pleft;
 
-			if (align == WIMA_CENTER) {
+			if (align == WIMA_ALIGN_CENTER) {
 
 				float textBounds = nvgTextBounds(nvg.nvg, 1, 1, value, NULL, NULL);
 
@@ -898,7 +898,7 @@ void wima_draw_label_icon_value(WimaNvgInfo nvg, float x, float y, float w, floa
 			nvgText(nvg.nvg, x, y, value, NULL);
 		}
 		else {
-			int textAlign = (align == WIMA_LEFT) ?
+			int textAlign = (align == WIMA_ALIGN_LEFT) ?
 			                    (NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE) :
 			                    (NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
 			nvgTextAlign(nvg.nvg, textAlign);
@@ -914,7 +914,7 @@ void wima_draw_label_icon_value(WimaNvgInfo nvg, float x, float y, float w, floa
 
 void wima_draw_node_label_icon(WimaNvgInfo nvg, float x, float y, float w, float h,
                                int iconid, WimaColor color, WimaColor shadowColor,
-                               int align, float fontsize, const char *label)
+                               WimaTextAlign align, float fontsize, const char *label)
 {
 	assert_init;
 

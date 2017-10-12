@@ -24,23 +24,33 @@
 #
 #	****** END LICENSE BLOCK ******
 
-set(WIMA_DRAW "${PROJECT_NAME}_draw")
-set(WIMA_DRAW "${WIMA_DRAW}" PARENT_SCOPE)
+# We use the nanovg includes, so we need this.
+include_directories("../../lib/nanovg/src")
+include_directories("../../lib/yc/include")
+
+set(WIMA_GLOBAL "${PROJECT_NAME}_global")
+set(WIMA_MATH_PIC "${PROJECT_NAME}_math")
 
 set(WIMA_DRAW_SRC
 
-	# Add source files here.
-	"draw.c"
+	#Put source files here.
+	"color.c"
+	"theme.c"
 )
 
-set(WIMA_RENDER "${PROJECT_NAME}_render")
-set(WIMA_MATH "${PROJECT_NAME}_math")
+set(WIMA_DRAW "${PROJECT_NAME}_draw")
+set(WIMA_DRAW "${WIMA_DRAW}" PARENT_SCOPE)
 
 create_pic_library(
 	"${WIMA_DRAW}" "${WIMA_DRAW}" "${WIMA_DRAW_SRC}" YES
 
 	# Add libraries here.
-	"${WIMA_RENDER}"
-	"${WIMA_UI}"
-	"${WIMA_MATH}"
+	"${YC_LIB}"
+	"${JEMALLOC_LIB}"
+	"${DL_LIB}"
+	"${PTHREAD_LIB}"
+	"${WIMA_GLOBAL}"
+	"${NANOVG_PIC}"
+	"${WIMA_MATH_PIC}"
+	"${JEMALLOC_PIC}"
 )
