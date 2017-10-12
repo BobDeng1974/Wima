@@ -91,7 +91,7 @@ void wima_draw_toolBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int 
 
 	wima_draw_box_inner(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
 
-	NVGcolor transparent = wima_color_transparent(wg.theme->tool.outline);
+	NVGcolor transparent = wima_color_makeMoreTransparent(wg.theme->tool.outline);
 	wima_draw_box_outline(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 
 	NVGcolor textColor = wima_color_text(&wg.theme->tool, state);
@@ -114,7 +114,7 @@ void wima_draw_radioBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int
 
 	wima_draw_box_inner(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
 
-	NVGcolor transparent = wima_color_transparent(wg.theme->radio.outline);
+	NVGcolor transparent = wima_color_makeMoreTransparent(wg.theme->radio.outline);
 	wima_draw_box_outline(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 
 	NVGcolor textColor = wima_color_text(&wg.theme->radio, state);
@@ -145,7 +145,7 @@ void wima_draw_textField(WimaNvgInfo nvg, float x, float y, float w, float h,
 
 	wima_draw_box_inner(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
 
-	NVGcolor transparent = wima_color_transparent(wg.theme->textField.outline);
+	NVGcolor transparent = wima_color_makeMoreTransparent(wg.theme->textField.outline);
 	wima_draw_box_outline(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 
 	if (state != WIMA_ITEM_ACTIVE) {
@@ -180,7 +180,7 @@ void wima_draw_optionBtn(WimaNvgInfo nvg, float x, float y, float w, float h,
 	                      WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS,
 	                      shade_top, shade_down);
 
-	NVGcolor transparent = wima_color_transparent(wg.theme->option.outline);
+	NVGcolor transparent = wima_color_makeMoreTransparent(wg.theme->option.outline);
 	wima_draw_box_outline(nvg, ox, oy,
 	                        WIMA_OPTION_WIDTH,  WIMA_OPTION_HEIGHT,
 	                        WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS,
@@ -188,7 +188,7 @@ void wima_draw_optionBtn(WimaNvgInfo nvg, float x, float y, float w, float h,
 	                        transparent);
 
 	if (state == WIMA_ITEM_ACTIVE) {
-		wima_draw_check(nvg, ox, oy, wima_color_transparent(wg.theme->option.item));
+		wima_draw_check(nvg, ox, oy, wima_color_makeMoreTransparent(wg.theme->option.item));
 	}
 
 	NVGcolor textColor = wima_color_text(&wg.theme->option, state);
@@ -211,14 +211,14 @@ void wima_draw_choiceBtn(WimaNvgInfo nvg, float x, float y, float w, float h, in
 
 	wima_draw_box_inner(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
 
-	NVGcolor boxTrans = wima_color_transparent(wg.theme->choice.outline);
+	NVGcolor boxTrans = wima_color_makeMoreTransparent(wg.theme->choice.outline);
 	wima_draw_box_outline(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], boxTrans);
 
 	NVGcolor textColor = wima_color_text(&wg.theme->choice, state);
 	wima_draw_label_icon_value(nvg, x, y, w, h, iconid, textColor,
 	                             WIMA_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 
-	NVGcolor arrowTrans = wima_color_transparent(wg.theme->choice.item);
+	NVGcolor arrowTrans = wima_color_makeMoreTransparent(wg.theme->choice.item);
 	wima_draw_arrow_upDown(nvg, x + w - 10, y + 10, 5, arrowTrans);
 }
 
@@ -233,7 +233,7 @@ void wima_draw_colorBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int
 
 	wima_draw_box_inner(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], color, color);
 
-	NVGcolor transparent = wima_color_transparent(wg.theme->tool.outline);
+	NVGcolor transparent = wima_color_makeMoreTransparent(wg.theme->tool.outline);
 	wima_draw_box_outline(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 }
 
@@ -252,14 +252,14 @@ void wima_draw_numField(WimaNvgInfo nvg, float x, float y, float w, float h, int
 
 	wima_draw_box_inner(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
 
-	NVGcolor boxTrans = wima_color_transparent(wg.theme->numField.outline);
+	NVGcolor boxTrans = wima_color_makeMoreTransparent(wg.theme->numField.outline);
 	wima_draw_box_outline(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], boxTrans);
 
 	NVGcolor textColor = wima_color_text(&wg.theme->numField, state);
 	wima_draw_label_icon_value(nvg, x, y, w, h, -1, textColor,
 	                             WIMA_CENTER, WIMA_LABEL_FONT_SIZE, label, value);
 
-	NVGcolor arrowTrans = wima_color_transparent(wg.theme->numField.item);
+	NVGcolor arrowTrans = wima_color_makeMoreTransparent(wg.theme->numField.item);
 
 	wima_draw_arrow(nvg, x + 8, y + 10, -WIMA_NUMBER_ARROW_SIZE, arrowTrans);
 	wima_draw_arrow(nvg, x + w - 8, y + 10, WIMA_NUMBER_ARROW_SIZE, arrowTrans);
@@ -294,7 +294,7 @@ void wima_draw_slider(WimaNvgInfo nvg, float x, float y, float w, float h,
 	wima_draw_box_inner(nvg, x, y, w, h, cr[0], cr[1], cr[2],cr[3], shade_top, shade_down);
 	nvgResetScissor(nvg.nvg);
 
-	NVGcolor transparent = wima_color_transparent(wg.theme->slider.outline);
+	NVGcolor transparent = wima_color_makeMoreTransparent(wg.theme->slider.outline);
 	wima_draw_box_outline(nvg, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 
 	NVGcolor textColor = wima_color_text(&wg.theme->slider, state);
@@ -316,7 +316,7 @@ void wima_draw_scrollbar(WimaNvgInfo nvg,float x, float y, float w, float h,
 	                      WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
 	                      top, bottom);
 
-	NVGcolor transparent = wima_color_transparent(wg.theme->scrollBar.outline);
+	NVGcolor transparent = wima_color_makeMoreTransparent(wg.theme->scrollBar.outline);
 
 	wima_draw_box_outline(nvg,x,y,w,h,
 	                        WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
@@ -354,7 +354,7 @@ void wima_draw_menu_background(WimaNvgInfo nvg, float x, float y, float w, float
 	wima_color_inner(&shade_top, &shade_down, &wg.theme->menu, WIMA_ITEM_DEFAULT, 0);
 	wima_draw_box_inner(nvg, x, y, w, h + 1, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
 
-	NVGcolor color = wima_color_transparent(wg.theme->menu.outline);
+	NVGcolor color = wima_color_makeMoreTransparent(wg.theme->menu.outline);
 	wima_draw_box_outline(nvg, x, y, w, h + 1, cr[0], cr[1], cr[2], cr[3], color);
 	wima_draw_dropShadow(nvg, x, y, w, h, WIMA_MENU_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
 }
@@ -372,7 +372,7 @@ void wima_draw_tooltip_background(WimaNvgInfo nvg, float x, float y, float w, fl
 	                      WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
 	                      shade_top, shade_down);
 
-	NVGcolor transparent = wima_color_transparent(wg.theme->tooltip.outline);
+	NVGcolor transparent = wima_color_makeMoreTransparent(wg.theme->tooltip.outline);
 	wima_draw_box_outline(nvg, x, y, w, h + 1,
 	                        WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
 	                        WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
@@ -488,15 +488,15 @@ void wima_draw_node_background(WimaNvgInfo nvg, float x, float y, float w, float
 {
 	assert_init;
 
-	NVGcolor top = wima_color_transparent(wima_color_offset(titleColor, WIMA_BEVEL_SHADE));
-	NVGcolor bottom = wima_color_transparent(titleColor);
+	NVGcolor top = wima_color_makeMoreTransparent(wima_color_offset(titleColor, WIMA_BEVEL_SHADE));
+	NVGcolor bottom = wima_color_makeMoreTransparent(titleColor);
 
 	wima_draw_box_inner(nvg, x, y, w, WIMA_NODE_TITLE_HEIGHT + 2,
 	                      WIMA_NODE_RADIUS, WIMA_NODE_RADIUS, 0, 0,
 	                      top, bottom);
 
-	NVGcolor shadeTop = wima_color_transparent(wg.theme->node.nodeBackdrop);
-	NVGcolor shadeBottom = wima_color_transparent(wg.theme->node.nodeBackdrop);
+	NVGcolor shadeTop = wima_color_makeMoreTransparent(wg.theme->node.nodeBackdrop);
+	NVGcolor shadeBottom = wima_color_makeMoreTransparent(wg.theme->node.nodeBackdrop);
 	wima_draw_box_inner(nvg, x, y + WIMA_NODE_TITLE_HEIGHT - 1, w, h + 2 - WIMA_NODE_TITLE_HEIGHT,
 	                      0, 0, WIMA_NODE_RADIUS, WIMA_NODE_RADIUS, shadeTop, shadeBottom);
 
@@ -538,7 +538,7 @@ void wima_draw_node_background(WimaNvgInfo nvg, float x, float y, float w, float
 		}
 	}
 
-	NVGcolor transparent = wima_color_transparent(borderColor);
+	NVGcolor transparent = wima_color_makeMoreTransparent(borderColor);
 	wima_draw_box_outline(nvg, x, y, w, h + 1,
 	                        WIMA_NODE_RADIUS, WIMA_NODE_RADIUS,
 	                        WIMA_NODE_RADIUS, WIMA_NODE_RADIUS,
@@ -662,7 +662,7 @@ void wima_draw_bevel(WimaNvgInfo nvg, float x, float y, float w, float h) {
 	nvgLineTo(nvg.nvg, x + w, y);
 
 	NVGcolor offset = wima_color_offset(wg.theme->backgroundColor, -WIMA_BEVEL_SHADE);
-	NVGcolor transparent = wima_color_transparent(offset);
+	NVGcolor transparent = wima_color_makeMoreTransparent(offset);
 
 	nvgStrokeColor(nvg.nvg, transparent);
 	nvgStroke(nvg.nvg);
@@ -673,7 +673,7 @@ void wima_draw_bevel(WimaNvgInfo nvg, float x, float y, float w, float h) {
 	nvgLineTo(nvg.nvg, x + w, y);
 
 	offset = wima_color_offset(wg.theme->backgroundColor, WIMA_BEVEL_SHADE);
-	transparent = wima_color_transparent(offset);
+	transparent = wima_color_makeMoreTransparent(offset);
 	nvgStrokeColor(nvg.nvg, transparent);
 	nvgStroke(nvg.nvg);
 }

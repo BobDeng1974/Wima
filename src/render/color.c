@@ -72,7 +72,7 @@ assert_msgs_decl;
 // these are part of the implementation detail and can be used to theme
 // new kinds of controls in a similar fashion.
 
-NVGcolor wima_color_transparent(NVGcolor color) {
+NVGcolor wima_color_makeMoreTransparent(NVGcolor color) {
 	color.a *= WIMA_TRANSPARENT_ALPHA;
 	return color;
 }

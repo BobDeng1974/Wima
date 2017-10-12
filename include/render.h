@@ -158,32 +158,32 @@ typedef enum WimaBlend {
 WimaColor wima_color_rgb(unsigned char r, unsigned char g, unsigned char b);
 
 // Returns a color value from red, green, blue values. Alpha will be set to 1.0f.
-NVGcolor nvgRGBf(float r, float g, float b);
+WimaColor wima_color_rgbf(float r, float g, float b);
 
 
 // Returns a color value from red, green, blue and alpha values.
-NVGcolor nvgRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+WimaColor wima_color_rgba(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 
 // Returns a color value from red, green, blue and alpha values.
-NVGcolor nvgRGBAf(float r, float g, float b, float a);
+WimaColor wima_color_rgbaf(float r, float g, float b, float a);
 
 
 // Linearly interpolates from color c0 to c1, and returns resulting color value.
-NVGcolor nvgLerpRGBA(NVGcolor c0, NVGcolor c1, float u);
+WimaColor wima_color_lerp(WimaColor c0, WimaColor c1, float u);
 
 // Sets transparency of a color value.
-NVGcolor nvgTransRGBA(NVGcolor c0, unsigned char a);
+WimaColor wima_color_setAlpha(WimaColor c0, unsigned char a);
 
 // Sets transparency of a color value.
-NVGcolor nvgTransRGBAf(NVGcolor c0, float a);
+WimaColor wima_setAlphaf(WimaColor c0, float a);
 
 // Returns color value specified by hue, saturation and lightness.
 // HSL values are all in range [0..1], alpha will be set to 255.
-NVGcolor nvgHSL(float h, float s, float l);
+WimaColor wima_color_hsl(float h, float s, float l);
 
 // Returns color value specified by hue, saturation and lightness and alpha.
 // HSL values are all in range [0..1], alpha in range [0..255]
-NVGcolor nvgHSLA(float h, float s, float l, unsigned char a);
+WimaColor wima_color_hsla(float h, float s, float l, unsigned char a);
 
 #ifdef __cplusplus
 }

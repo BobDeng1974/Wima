@@ -50,6 +50,8 @@
 
 #include "math/math.h"
 
+#include "render/theme.h"
+
 #include "callbacks.h"
 #include "region.h"
 #include "area.h"

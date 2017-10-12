@@ -44,6 +44,127 @@ extern "C" {
 
 #include <theme.h>
 
+// TODO: Put these in the theme.
+
+// Default text size.
+#define WIMA_LABEL_FONT_SIZE 16
+
+// Default text padding in inner box.
+#define WIMA_PAD_LEFT 8
+#define WIMA_PAD_RIGHT 8
+
+// Label: value separator string.
+#define WIMA_LABEL_SEPARATOR ": "
+
+// The height of a menu separator.
+#define WIMA_MENU_SEPARATOR_HEIGHT (9)
+
+// Alpha intensity of transparent items (0xa4).
+#define WIMA_TRANSPARENT_ALPHA 0.643
+
+// Shade intensity of beveled panels.
+#define WIMA_BEVEL_SHADE 30
+// Shade intensity of beveled insets.
+#define WIMA_INSET_BEVEL_SHADE 30
+// Shade intensity of hovered inner boxes.
+#define WIMA_HOVER_SHADE 15
+// Shade intensity of splitter bevels.
+#define WIMA_SPLITTER_SHADE 100
+
+// Width of icon sheet.
+#define WIMA_ICON_SHEET_WIDTH 602
+// Height of icon sheet.
+#define WIMA_ICON_SHEET_HEIGHT 640
+// Gridsize of icon sheet in both dimensions.
+#define WIMA_ICON_SHEET_GRID 21
+// Offset of first icon tile relative to left border.
+#define WIMA_ICON_SHEET_OFFSET_X 5
+// Offset of first icon tile relative to top border.
+#define WIMA_ICON_SHEET_OFFSET_Y 10
+// Resolution of single icon.
+#define WIMA_ICON_SHEET_RES 16
+
+// Size of number field arrow.
+#define WIMA_NUMBER_ARROW_SIZE 4
+
+// Radius of tool button.
+#define WIMA_TOOL_RADIUS 4
+
+// Radius of option button.
+#define WIMA_OPTION_RADIUS 4
+// Width of option button checkbox.
+#define WIMA_OPTION_WIDTH 14
+// Height of option button checkbox.
+#define WIMA_OPTION_HEIGHT 15
+
+// Radius of text field.
+#define WIMA_TEXT_RADIUS 4
+
+// Radius of number button.
+#define WIMA_NUMBER_RADIUS 10
+
+// Radius of menu popup.
+#define WIMA_MENU_RADIUS 3
+// Feather of menu popup shadow.
+#define WIMA_SHADOW_FEATHER 12
+// Alpha of menu popup shadow.
+#define WIMA_SHADOW_ALPHA 0.5
+
+// Radius of scrollbar.
+#define WIMA_SCROLLBAR_RADIUS 7
+// Shade intensity of active scrollbar.
+#define WIMA_SCROLLBAR_ACTIVE_SHADE 15
+
+// Max glyphs for position testing.
+#define WIMA_MAX_GLYPHS 1024
+
+// Max rows for position testing.
+#define WIMA_MAX_ROWS 32
+
+// Text distance from bottom.
+#define WIMA_TEXT_PAD_DOWN 9
+
+// Stroke width of wire outline.
+#define WIMA_NODE_WIRE_OUTLINE_WIDTH 4
+// Stroke width of wire.
+#define WIMA_NODE_WIRE_WIDTH 2
+// Radius of node box.
+#define WIMA_NODE_RADIUS 8
+// Feather of node title text.
+#define WIMA_NODE_TITLE_FEATHER 1
+// Size of node title arrow.
+#define WIMA_NODE_ARROW_SIZE 9
+
+// Default widget height.
+#define WIMA_WIDGET_HEIGHT (27)
+// Default toolbutton width (if icon only).
+#define WIMA_TOOL_WIDTH (20)
+
+// Default radius of node ports.
+#define WIMA_NODE_PORT_RADIUS (5)
+// Top margin of node content.
+#define WIMA_NODE_MARGIN_TOP (25)
+// Bottom margin of node content.
+#define WIMA_NODE_MARGIN_DOWN (5)
+// Left and right margin of node content.
+#define WIMA_NODE_MARGIN_SIDE (10)
+// Height of node title bar.
+#define WIMA_NODE_TITLE_HEIGHT (20)
+// Width of node title arrow click area.
+#define WIMA_NODE_ARROW_AREA_WIDTH (20)
+
+// Width of vertical scrollbar.
+#define WIMA_SCROLLBAR_WIDTH (13)
+// Height of horizontal scrollbar.
+#define WIMA_SCROLLBAR_HEIGHT (14)
+
+// Default vertical spacing.
+#define WIMA_VSPACING (1)
+// Default vertical spacing between groups.
+#define WIMA_VSPACING_GROUP (8)
+// Default horizontal spacing.
+#define WIMA_HSPACING (8)
+
 // Default text color.
 #define WIMA_THEME_DEF_TEXT                      {{{ 0.000f, 0.000f, 0.000f, 1.000f }}}
 // Default highlighted text color.
