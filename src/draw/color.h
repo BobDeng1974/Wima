@@ -44,7 +44,7 @@ extern "C" {
 
 #include <nanovg.h>
 
-#include <render.h>
+#include <wima/render.h>
 
 typedef union WimaCol {
 

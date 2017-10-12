@@ -63,8 +63,8 @@
 
 #include <nanovg.h>
 
-#include <wima.h>
-#include <draw.h>
+#include <wima/wima.h>
+#include <wima/draw.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 

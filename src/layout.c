@@ -34,7 +34,7 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <layout.h>
+#include <wima/layout.h>
 
 #include "global.h"
 #include "layout.h"

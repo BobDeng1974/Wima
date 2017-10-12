@@ -45,8 +45,8 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 
-#include <wima.h>
-#include <render.h>
+#include <wima/wima.h>
+#include <wima/render.h>
 
 uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical);
 uint16_t wima_layout_clearExpandFlags(uint16_t flags);

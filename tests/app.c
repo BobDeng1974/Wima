@@ -41,9 +41,9 @@
 #include <glad/glad.h>
 #include <KHR/khrplatform.h>
 
-#include <wima.h>
-#include <draw.h>
-#include <render.h>
+#include <wima/wima.h>
+#include <wima/draw.h>
+#include <wima/render.h>
 
 WimaStatus cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e);
 WimaStatus cb_scroll(WimaWidget wih, WimaScrollEvent e);

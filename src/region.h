@@ -34,7 +34,15 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <wima.h>
+#ifndef WIMA_REGION_PRIVATE_H
+#define WIMA_REGION_PRIVATE_H
+
+/* For C++ compatibility */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <wima/wima.h>
 
 typedef struct WimaReg {
 
@@ -52,3 +60,9 @@ typedef struct WimaReg {
 	uint32_t itemCap;
 
 } WimaReg;
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // WIMA_REGION_PRIVATE_H

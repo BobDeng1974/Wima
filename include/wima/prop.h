@@ -44,7 +44,7 @@ extern "C" {
 
 #include <stdint.h>
 
-#include <wima.h>
+#include <wima/wima.h>
 
 #define WIMA_PROP_INVALID ((WimaProperty) -1)
 

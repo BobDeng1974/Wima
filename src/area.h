@@ -44,7 +44,7 @@ extern "C" {
 
 #include <nanovg.h>
 
-#include <wima.h>
+#include <wima/wima.h>
 
 #include "widget.h"
 #include "layout.h"

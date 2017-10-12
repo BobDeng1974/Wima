@@ -70,7 +70,7 @@ extern "C" {
 #include <stdint.h>
 #include <string.h>
 
-#include <wima.h>
+#include <wima/wima.h>
 
 #include "event.h"
 

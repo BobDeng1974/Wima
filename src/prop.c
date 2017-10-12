@@ -43,7 +43,7 @@
 #include <dyna/vector.h>
 #include <dyna/string.h>
 
-#include <prop.h>
+#include <wima/prop.h>
 
 #include "global.h"
 #include "prop.h"

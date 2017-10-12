@@ -24,4 +24,19 @@
 #
 #	****** END LICENSE BLOCK ******
 
-add_subdirectory("${PROJECT_NAME}")
+set("WIMA_INC"
+
+	# Add headers here.
+	"wima.h"
+	"theme.h"
+	"widget.h"
+	"layout.h"
+	"prop.h"
+)
+
+# Install the header files.
+install(
+	FILES "${WIMA_INC}"
+	DESTINATION "include/${PROJECT_NAME}"
+)
+

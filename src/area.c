@@ -36,14 +36,14 @@
 
 #include <assert.h>
 #include <limits.h>
-#include <math.h>
 #include <string.h>
 
 #include <yc/assert.h>
 #include <yc/mem.h>
 
-#include <wima.h>
-#include <draw.h>
+#include <wima/wima.h>
+#include <wima/draw.h>
+#include <wima/math.h>
 
 #include <math.h>
 

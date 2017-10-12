@@ -61,7 +61,7 @@
 #ifndef WIMA_OLD_LAYOUT_H
 #define WIMA_OLD_LAYOUT_H
 
-#include <wima.h>
+#include <wima/wima.h>
 
 typedef enum WimaLayoutStage {
 

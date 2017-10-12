@@ -45,7 +45,7 @@
 
 #include <nanovg.h>
 
-#include <wima.h>
+#include <wima/wima.h>
 
 #include "event.h"
 #include "old_layout.h"

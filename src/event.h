@@ -37,7 +37,7 @@
 #ifndef WIMA_EVENT_H
 #define WIMA_EVENT_H
 
-#include <wima.h>
+#include <wima/wima.h>
 
 // Limits.
 

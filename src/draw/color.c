@@ -58,9 +58,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <math.h>
-
-#include <render.h>
+#include <wima/render.h>
+#include <wima/math.h>
 
 #include "../global.h"
 

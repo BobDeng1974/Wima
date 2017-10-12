@@ -66,8 +66,8 @@
 
 #include <nanovg.h>
 
-#include <prop.h>
-#include <render.h>
+#include <wima/prop.h>
+#include <wima/render.h>
 
 #include <math.h>
 #include "../global.h"

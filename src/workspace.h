@@ -37,7 +37,7 @@
 #ifndef WIMA_WORKSPACE_H
 #define WIMA_WORKSPACE_H
 
-#include <wima.h>
+#include <wima/wima.h>
 
 /**
  * A workspace, which can be broken down into areas.

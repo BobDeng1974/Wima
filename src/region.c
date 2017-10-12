@@ -39,7 +39,7 @@
 #include <dyna/dyna.h>
 #include <dyna/vector.h>
 
-#include <wima.h>
+#include <wima/wima.h>
 
 #include "global.h"
 #include "region.h"

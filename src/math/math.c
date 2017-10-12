@@ -64,7 +64,7 @@
 
 #include <nanovg.h>
 
-#include <wima.h>
+#include <wima/wima.h>
 
 #ifdef _MSC_VER
 

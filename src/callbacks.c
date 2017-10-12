@@ -38,7 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <wima.h>
+#include <wima/wima.h>
 
 #include "callbacks.h"
 #include "widget.h"

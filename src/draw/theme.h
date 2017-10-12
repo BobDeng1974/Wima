@@ -42,7 +42,7 @@
 extern "C" {
 #endif
 
-#include <render.h>
+#include <wima/render.h>
 
 // TODO: Put these in the theme.
 

@@ -46,7 +46,7 @@
 
 #include <stb_image.h>
 
-#include <wima.h>
+#include <wima/wima.h>
 
 #include "callbacks.h"
 #include "region.h"

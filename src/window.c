@@ -41,9 +41,9 @@
 #include <dyna/dyna.h>
 #include <dyna/tree.h>
 
-#include <wima.h>
-#include <draw.h>
-#include <math.h>
+#include <wima/wima.h>
+#include <wima/draw.h>
+#include <wima/math.h>
 
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg.h>

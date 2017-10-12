@@ -42,8 +42,8 @@
 extern "C" {
 #endif
 
-#include <render.h>
-#include <layout.h>
+#include <wima/render.h>
+#include <wima/layout.h>
 
 #include "old_layout.h"
 #include "widget.h"

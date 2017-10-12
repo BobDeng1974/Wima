@@ -42,7 +42,7 @@
 extern "C" {
 #endif
 
-#include <prop.h>
+#include <wima/prop.h>
 
 #define WIMA_PROP_SEED (0xdeadbeef0ddba11)
 

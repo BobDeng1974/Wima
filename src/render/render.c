@@ -60,9 +60,9 @@
 
 #include <string.h>
 
-#include <render.h>
-#include <draw.h>
-#include <math.h>
+#include <wima/render.h>
+#include <wima/draw.h>
+#include <wima/math.h>
 
 #include "../draw/theme.h"
 #include "../draw/color.h"

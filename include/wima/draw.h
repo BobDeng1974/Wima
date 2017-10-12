@@ -44,7 +44,7 @@ extern "C" {
 
 #include <stdbool.h>
 
-#include <wima.h>
+#include <wima/wima.h>
 
 typedef struct WimaColor {
 

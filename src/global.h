@@ -42,9 +42,9 @@
 #include <dyna/vector.h>
 #include <dyna/string.h>
 
-#include <wima.h>
-#include <render.h>
-#include <prop.h>
+#include <wima/wima.h>
+#include <wima/render.h>
+#include <wima/prop.h>
 
 #include <GLFW/glfw3.h>
 
