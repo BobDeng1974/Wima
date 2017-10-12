@@ -85,7 +85,7 @@ void wima_draw_label(WimaNvgInfo nvg,
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is WIMA_WIDGET_HEIGHT
 void wima_draw_toolBtn(WimaNvgInfo nvg,
-    float x, float y, float w, float h, int flags, WimaItemState state,
+    float x, float y, float w, float h, int flags, WimaWidgetState state,
     int iconid, const char *label);
 
 // Draw a radio button with its lower left origin at (x,y) and size of (w,h),
@@ -95,7 +95,7 @@ void wima_draw_toolBtn(WimaNvgInfo nvg,
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is WIMA_WIDGET_HEIGHT
 void wima_draw_radioBtn(WimaNvgInfo nvg,
-    float x, float y, float w, float h, int flags, WimaItemState state,
+    float x, float y, float w, float h, int flags, WimaWidgetState state,
     int iconid, const char *label);
 
 
@@ -115,7 +115,7 @@ int wima_draw_textField_pos(WimaNvgInfo nvg, float x, float y, float w, float h,
 // if cend < cbegin, then no caret will be drawn
 // widget looks best when height is WIMA_WIDGET_HEIGHT
 void wima_draw_textField(WimaNvgInfo nvg,
-    float x, float y, float w, float h, int flags, WimaItemState state,
+    float x, float y, float w, float h, int flags, WimaWidgetState state,
     int iconid, const char *text, int cbegin, int cend);
 
 // Draw an option button with its lower left origin at (x,y) and size of (w,h),
@@ -124,7 +124,7 @@ void wima_draw_textField(WimaNvgInfo nvg,
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is WIMA_WIDGET_HEIGHT
 void wima_draw_optionBtn(WimaNvgInfo nvg,
-    float x, float y, float w, float h, WimaItemState state,
+    float x, float y, float w, float h, WimaWidgetState state,
     const char *label);
 
 // Draw a choice button with its lower left origin at (x,y) and size of (w,h),
@@ -134,7 +134,7 @@ void wima_draw_optionBtn(WimaNvgInfo nvg,
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is WIMA_WIDGET_HEIGHT
 void wima_draw_choiceBtn(WimaNvgInfo nvg,
-    float x, float y, float w, float h, int flags, WimaItemState state,
+    float x, float y, float w, float h, int flags, WimaWidgetState state,
     int iconid, const char *label);
 
 // Draw a color button  with its lower left origin at (x,y) and size of (w,h),
@@ -152,7 +152,7 @@ void wima_draw_colorBtn(WimaNvgInfo nvg,
 // a ":" separator
 // widget looks best when height is WIMA_WIDGET_HEIGHT
 void wima_draw_numField(WimaNvgInfo nvg,
-    float x, float y, float w, float h, int flags, WimaItemState state,
+    float x, float y, float w, float h, int flags, WimaWidgetState state,
     const char *label, const char *value);
 
 // Draw slider control with its lower left origin at (x,y) and size of (w,h),
@@ -164,7 +164,7 @@ void wima_draw_numField(WimaNvgInfo nvg,
 // a ":" separator
 // widget looks best when height is WIMA_WIDGET_HEIGHT
 void wima_draw_slider(WimaNvgInfo nvg,
-    float x, float y, float w, float h, int flags, WimaItemState state,
+    float x, float y, float w, float h, int flags, WimaWidgetState state,
     float progress, const char *label, const char *value);
 
 // Draw scrollbar with its lower left origin at (x,y) and size of (w,h),
@@ -174,7 +174,7 @@ void wima_draw_slider(WimaNvgInfo nvg,
 // horizontal widget looks best when height is WIMA_SCROLLBAR_HEIGHT,
 // vertical looks best when width is WIMA_SCROLLBAR_WIDTH
 void wima_draw_scrollbar(WimaNvgInfo nvg,
-    float x, float y, float w, float h, WimaItemState state,
+    float x, float y, float w, float h, WimaWidgetState state,
     float offset, float size);
 
 // Draw a menu background with its lower left origin at (x,y) and size of (w,h),
@@ -198,14 +198,14 @@ void wima_draw_menu_separator(WimaNvgInfo nvg, float x, float y, float w, float 
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is WIMA_WIDGET_HEIGHT
 void wima_draw_menu_item(WimaNvgInfo nvg,
-    float x, float y, float w, float h, WimaItemState state,
+    float x, float y, float w, float h, WimaWidgetState state,
     int iconid, const char *label, bool hasSubMenu);
 
 // Draw a tooltip background with its lower left origin at (x,y) and size of (w,h)
 void wima_draw_tooltip_background(WimaNvgInfo nvg, float x, float y, float w, float h);
 
 // Draw a node port at the given position filled with the given color
-void wima_draw_node_port(WimaNvgInfo nvg, float x, float y, WimaItemState state,
+void wima_draw_node_port(WimaNvgInfo nvg, float x, float y, WimaWidgetState state,
     NVGcolor color);
 
 // Draw a node wire originating at (x0,y0) and floating to (x1,y1), with
@@ -214,7 +214,7 @@ void wima_draw_node_port(WimaNvgInfo nvg, float x, float y, WimaItemState state,
 // WIMA_HOVER: selected wire color
 // WIMA_ACTIVE: dragged wire color
 void wima_draw_node_wire(WimaNvgInfo nvg, float x0, float y0, float x1, float y1,
-    WimaItemState state0, WimaItemState state1);
+    WimaWidgetState state0, WimaWidgetState state1);
 
 // Draw a node wire originating at (x0,y0) and floating to (x1,y1), with
 // a colored gradient based on the two colors color0 and color1
@@ -224,7 +224,7 @@ void wima_draw_node_wire_colored(WimaNvgInfo nvg, float x0, float y0, float x1, 
 // Draw a node background with its upper left origin at (x,y) and size of (w,h)
 // where titleColor provides the base color for the title bar
 void wima_draw_node_background(WimaNvgInfo nvg, float x, float y, float w, float h,
-    WimaItemState state, int iconid, const char *label, NVGcolor titleColor);
+    WimaWidgetState state, int iconid, const char *label, NVGcolor titleColor);
 
 ////////////////////////////////////////////////////////////////////////////////
 

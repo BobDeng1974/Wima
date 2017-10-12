@@ -78,7 +78,7 @@ void wima_draw_label(WimaNvgInfo nvg, float x, float y, float w, float h, int ic
 }
 
 void wima_draw_toolBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
-                         WimaItemState state, int iconid, const char *label)
+                         WimaWidgetState state, int iconid, const char *label)
 {
 	assert_init;
 
@@ -100,7 +100,7 @@ void wima_draw_toolBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int 
 }
 
 void wima_draw_radioBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
-                          WimaItemState state, int iconid, const char *label)
+                          WimaWidgetState state, int iconid, const char *label)
 {
 	assert_init;
 
@@ -130,7 +130,7 @@ int wima_draw_textField_pos(WimaNvgInfo nvg, float x, float y, float w, float h,
 }
 
 void wima_draw_textField(WimaNvgInfo nvg, float x, float y, float w, float h,
-                           int flags, WimaItemState state, int iconid, const char *text,
+                           int flags, WimaWidgetState state, int iconid, const char *text,
                            int cbegin, int cend)
 {
 	assert_init;
@@ -158,7 +158,7 @@ void wima_draw_textField(WimaNvgInfo nvg, float x, float y, float w, float h,
 }
 
 void wima_draw_optionBtn(WimaNvgInfo nvg, float x, float y, float w, float h,
-                         WimaItemState state, const char *label)
+                         WimaWidgetState state, const char *label)
 {
 	assert_init;
 
@@ -197,7 +197,7 @@ void wima_draw_optionBtn(WimaNvgInfo nvg, float x, float y, float w, float h,
 }
 
 void wima_draw_choiceBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
-                           WimaItemState state, int iconid, const char *label)
+                           WimaWidgetState state, int iconid, const char *label)
 {
 	assert_init;
 
@@ -238,7 +238,7 @@ void wima_draw_colorBtn(WimaNvgInfo nvg, float x, float y, float w, float h, int
 }
 
 void wima_draw_numField(WimaNvgInfo nvg, float x, float y, float w, float h, int flags,
-                          WimaItemState state, const char *label, const char *value)
+                          WimaWidgetState state, const char *label, const char *value)
 {
 	assert_init;
 
@@ -266,7 +266,7 @@ void wima_draw_numField(WimaNvgInfo nvg, float x, float y, float w, float h, int
 }
 
 void wima_draw_slider(WimaNvgInfo nvg, float x, float y, float w, float h,
-                        int flags, WimaItemState state, float progress,
+                        int flags, WimaWidgetState state, float progress,
                         const char *label, const char *value)
 {
 	assert_init;
@@ -303,7 +303,7 @@ void wima_draw_slider(WimaNvgInfo nvg, float x, float y, float w, float h,
 }
 
 void wima_draw_scrollbar(WimaNvgInfo nvg,float x, float y, float w, float h,
-                           WimaItemState state, float offset, float size)
+                           WimaWidgetState state, float offset, float size)
 {
 	assert_init;
 
@@ -403,7 +403,7 @@ void wima_draw_menu_separator(WimaNvgInfo nvg, float x, float y, float w, float 
 }
 
 void wima_draw_menu_item(WimaNvgInfo nvg, float x, float y, float w, float h,
-                           WimaItemState state, int iconid, const char *label,
+                           WimaWidgetState state, int iconid, const char *label,
                            bool hasSubMenu)
 {
 	assert_init;
@@ -429,7 +429,7 @@ void wima_draw_menu_item(WimaNvgInfo nvg, float x, float y, float w, float h,
 	}
 }
 
-void wima_draw_node_port(WimaNvgInfo nvg, float x, float y, WimaItemState state, NVGcolor color) {
+void wima_draw_node_port(WimaNvgInfo nvg, float x, float y, WimaWidgetState state, NVGcolor color) {
 
 	assert_init;
 
@@ -472,7 +472,7 @@ void wima_draw_node_wire_colored(WimaNvgInfo nvg, float x0, float y0, float x1, 
 }
 
 void wima_draw_node_wire(WimaNvgInfo nvg, float x0, float y0, float x1, float y1,
-                           WimaItemState state0, WimaItemState state1)
+                           WimaWidgetState state0, WimaWidgetState state1)
 {
 	assert_init;
 
@@ -483,7 +483,7 @@ void wima_draw_node_wire(WimaNvgInfo nvg, float x0, float y0, float x1, float y1
 }
 
 void wima_draw_node_background(WimaNvgInfo nvg, float x, float y, float w, float h,
-                                 WimaItemState state, int iconid, const char *label,
+                                 WimaWidgetState state, int iconid, const char *label,
                                  NVGcolor titleColor)
 {
 	assert_init;

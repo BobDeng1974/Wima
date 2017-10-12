@@ -289,7 +289,7 @@ uint32_t wima_widget_events(WimaWidget item) {
 	return wima_widget_ptr(item)->widget.flags & WIMA_ITEM_EVENT_MASK;
 }
 
-WimaItemState wima_widget_state(WimaWidget item) {
+WimaWidgetState wima_widget_state(WimaWidget item) {
 
 	assert_init;
 

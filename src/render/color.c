@@ -98,8 +98,8 @@ NVGcolor wima_color_offset(NVGcolor color, int delta) {
 	return result;
 }
 
-void wima_color_inner(NVGcolor *shade_top, NVGcolor *shade_down, WimaWidgetTheme* theme,
-                      WimaItemState state, bool flipActive)
+void wima_color_inner(WimaColor *shade_top, WimaColor *shade_down, WimaWidgetTheme* theme,
+                      WimaWidgetState state, bool flipActive)
 {
 	if (theme->shaded) {
 
@@ -172,11 +172,11 @@ void wima_color_inner(NVGcolor *shade_top, NVGcolor *shade_down, WimaWidgetTheme
 	}
 }
 
-NVGcolor wima_color_text(WimaWidgetTheme* theme, WimaItemState state) {
+WimaColor wima_color_text(WimaWidgetTheme* theme, WimaWidgetState state) {
 	return (state == WIMA_ITEM_ACTIVE) ? theme->textSelected : theme->text;
 }
 
-NVGcolor wima_color_node_wire(WimaNodeTheme* theme, WimaItemState state) {
+WimaColor wima_color_node_wire(WimaNodeTheme* theme, WimaWidgetState state) {
 
 	wassert(theme != NULL, WIMA_ASSERT_THEME);
 

@@ -173,7 +173,7 @@ typedef enum WimaItemLayoutFlags {
 } WimaItemLayout;
 
 // Item states as returned by uiGetState().
-typedef enum WimaItemState {
+typedef enum WimaWidgetState {
 
 	// The item is inactive.
 	WIMA_ITEM_DEFAULT = 0,
@@ -187,7 +187,7 @@ typedef enum WimaItemState {
 	// The item is unresponsive.
 	WIMA_ITEM_FROZEN  = 1 << 2,
 
-} WimaItemState;
+} WimaWidgetState;
 
 // For cursor positions, mainly.
 typedef struct WimaPos {
@@ -604,7 +604,7 @@ typedef struct WimaMenuItem {
 
 	WimaRect rect;
 
-	WimaItemState state;
+	WimaWidgetState state;
 
 	int icon;
 
@@ -784,7 +784,7 @@ uint32_t wima_widget_events(WimaWidget item);
 // a call to uiProcess().
 // The returned value is one of WIMA_ITEM_DEFAULT, WIMA_ITEM_HOVER,
 // WIMA_ITEM_ACTIVE, WIMA_ITEM_FROZEN.
-WimaItemState wima_widget_state(WimaWidget item);
+WimaWidgetState wima_widget_state(WimaWidget item);
 
 // returns 1 if an items absolute rectangle contains a given coordinate
 // otherwise 0

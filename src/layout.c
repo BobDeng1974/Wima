@@ -197,7 +197,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 	return wlh;
 }
 
-void wima_layout_setBackgroundColor(WimaLayout wlh, NVGcolor color) {
+void wima_layout_setBackgroundColor(WimaLayout wlh, WimaColor color) {
 
 	assert_init;
 
