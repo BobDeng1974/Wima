@@ -63,7 +63,7 @@
 #include <theme.h>
 #include <draw.h>
 
-#include "../theme/theme.h"
+#include "../render/theme.h"
 #include "../math/math.h"
 #include "../global.h"
 #include "../window.h"

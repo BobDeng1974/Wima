@@ -63,7 +63,7 @@ include_directories("${X11_INCLUDE_DIR}" "${OPENGL_INCLUDE_DIR}")
 
 add_subdirectory(math)
 
-add_subdirectory(theme)
+add_subdirectory(render)
 add_subdirectory(draw)
 
 set(WIMA_GLAD "${PROJECT_NAME}_glad")
