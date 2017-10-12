@@ -43,12 +43,11 @@
 
 #include <wima.h>
 #include <draw.h>
+#include <math.h>
 
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg.h>
 #include <nanovg_gl.h>
-
-#include "math/math.h"
 
 #include "draw/theme.h"
 

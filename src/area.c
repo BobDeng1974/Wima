@@ -45,7 +45,7 @@
 #include <wima.h>
 #include <draw.h>
 
-#include "math/math.h"
+#include <math.h>
 
 #include "old_layout.h"
 #include "region.h"

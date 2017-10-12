@@ -62,10 +62,10 @@
 
 #include <render.h>
 #include <draw.h>
+#include <math.h>
 
 #include "../draw/theme.h"
 #include "../draw/color.h"
-#include "../math/math.h"
 #include "../global.h"
 #include "../window.h"
 

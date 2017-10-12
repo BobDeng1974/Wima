@@ -40,6 +40,7 @@
 #include <yc/assert.h>
 
 #include <wima.h>
+#include <math.h>
 
 #include "region.h"
 #include "area.h"

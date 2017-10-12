@@ -69,7 +69,7 @@
 #include <prop.h>
 #include <render.h>
 
-#include "../math/math.h"
+#include <math.h>
 #include "../global.h"
 #include "../prop.h"
 #include "theme.h"

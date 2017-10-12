@@ -58,7 +58,7 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include "../math/math.h"
+#include <math.h>
 
 #include <render.h>
 
