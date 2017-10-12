@@ -24,13 +24,21 @@
 #
 #	****** END LICENSE BLOCK ******
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.9)
 
 project(wima C)
 
 # Necessary to suppress a useless warning with QtCreator.
 set(ignoreMe "${QT_QMAKE_EXECUTABLE}")
 set(ignoreMe "${CMAKE_CXX_COMPILER}")
+
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Release)
+endif()
+
+if(NOT "${CMAKE_BUILD_TYPE}" MATCHES "Debug")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -flto")
+endif()
 
 enable_testing()
 
