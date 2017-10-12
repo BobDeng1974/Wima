@@ -208,6 +208,23 @@ typedef struct WimaPos {
 } WimaPos;
 
 // For cursor positions, mainly.
+typedef struct WimaPosf {
+
+	union {
+
+		float v[2];
+
+		struct {
+
+			float x;
+			float y;
+
+		};
+
+	};
+
+} WimaPosf;
+
 typedef struct WimaSize {
 
 	union {
@@ -244,6 +261,28 @@ typedef struct WimaRect {
 	};
 
 } WimaRect;
+
+// Transform.
+typedef struct WimaTransform {
+
+	union {
+
+		float v[6];
+
+		struct {
+
+			float sx;
+			float kx;
+			float tx;
+			float ky;
+			float sy;
+			float ty;
+
+		};
+
+	};
+
+} WimaTransform;
 
 /**
  * A handle to a region (area template) type.

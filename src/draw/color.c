@@ -137,6 +137,11 @@ WimaColor wima_color_setAlphaf(WimaColor c0, float a) {
 	return c.wima;
 }
 
+WimaColor wima_color_multiplyAlphaf(WimaColor color, float a) {
+	color.a *= a;
+	return color;
+}
+
 WimaColor wima_color_hsl(float h, float s, float l) {
 
 	WimaCol c;
@@ -153,11 +158,6 @@ WimaColor wima_color_hsla(float h, float s, float l, unsigned char a) {
 	c.nvg = nvgHSLA(h, s, l, a);
 
 	return c.wima;
-}
-
-WimaColor wima_color_multiplyTransparent(WimaColor color) {
-	color.a *= WIMA_TRANSPARENT_ALPHA;
-	return color;
 }
 
 WimaColor wima_color_offset(WimaColor color, int delta) {
@@ -179,101 +179,4 @@ WimaColor wima_color_offset(WimaColor color, int delta) {
 	}
 
 	return result;
-}
-
-void wima_color_inner(WimaColor *shade_top, WimaColor *shade_down, WimaWidgetTheme* theme,
-                      WimaWidgetState state, bool flipActive)
-{
-	if (theme->shaded) {
-
-		switch(state) {
-
-			default:
-
-			case WIMA_ITEM_DEFAULT:
-			{
-				*shade_top = wima_color_offset(theme->inner, theme->shadeTop);
-				*shade_down = wima_color_offset(theme->inner, theme->shadeBottom);
-
-				break;
-			}
-
-			case WIMA_ITEM_HOVER:
-			{
-				WimaColor color = wima_color_offset(theme->inner, WIMA_HOVER_SHADE);
-
-				*shade_top = wima_color_offset(color, theme->shadeTop);
-				*shade_down = wima_color_offset(color, theme->shadeBottom);
-
-				break;
-			}
-
-			case WIMA_ITEM_ACTIVE:
-			{
-				int delta = flipActive ? theme->shadeBottom : theme->shadeTop;
-				*shade_top = wima_color_offset(theme->innerSelected, delta);
-
-				delta = flipActive ? theme->shadeTop : theme->shadeBottom;
-				*shade_down = wima_color_offset(theme->innerSelected, delta);
-
-				break;
-			}
-		}
-	}
-	else {
-
-		switch(state) {
-
-			default:
-
-			case WIMA_ITEM_DEFAULT:
-			{
-				*shade_top = theme->inner;
-				*shade_down = theme->inner;
-
-				break;
-			}
-
-			case WIMA_ITEM_HOVER:
-			{
-				WimaColor color = wima_color_offset(theme->inner, WIMA_HOVER_SHADE);
-
-				*shade_top = color;
-				*shade_down = color;
-
-				break;
-			}
-
-			case WIMA_ITEM_ACTIVE:
-			{
-				*shade_top = theme->innerSelected;
-				*shade_down = theme->innerSelected;
-
-				break;
-			}
-		}
-	}
-}
-
-WimaColor wima_color_text(WimaWidgetTheme* theme, WimaWidgetState state) {
-	return (state == WIMA_ITEM_ACTIVE) ? theme->textSelected : theme->text;
-}
-
-WimaColor wima_color_node_wire(WimaNodeTheme* theme, WimaWidgetState state) {
-
-	wassert(theme != NULL, WIMA_ASSERT_THEME);
-
-	switch(state) {
-
-		default:
-
-		case WIMA_ITEM_DEFAULT:
-			return theme->wire;
-
-		case WIMA_ITEM_HOVER:
-			return theme->wireSelected;
-
-		case WIMA_ITEM_ACTIVE:
-			return theme->nodeActive;
-	}
 }

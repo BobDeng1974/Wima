@@ -62,6 +62,8 @@
 
 #include <math.h>
 
+#include <nanovg.h>
+
 #include <wima.h>
 
 #ifdef _MSC_VER
@@ -132,4 +134,74 @@ bool wima_rect_contains(WimaRect r, WimaPos pos) {
 	int y = pos.y - r.y;
 
 	return x >= 0 && y >= 0 && x < r.w && y < r.h;
+}
+
+float wima_degToRad(float deg) {
+	return nvgDegToRad(deg);
+}
+
+float wima_radToDeg(float rad) {
+	return nvgRadToDeg(rad);
+}
+
+WimaTransform wima_transform_identity() {
+
+	WimaTransform tx;
+
+	nvgTransformIdentity(tx.v);
+
+	return tx;
+}
+
+WimaTransform wima_transform_translate(WimaTransform src, float tx, float ty) {
+	nvgTransformTranslate(src.v, tx, ty);
+	return src;
+}
+
+WimaTransform wima_transform_scale(WimaTransform src, float sx, float sy) {
+	nvgTransformScale(src.v, sx, sy);
+	return src;
+}
+
+WimaTransform wima_transform_rotate(WimaTransform src, float a) {
+	nvgTransformRotate(src.v, a);
+	return src;
+}
+
+WimaTransform wima_transform_skewX(WimaTransform src, float a) {
+	nvgTransformSkewX(src.v, a);
+	return src;
+}
+
+WimaTransform wima_transform_skewY(WimaTransform src, float a) {
+	nvgTransformSkewY(src.v, a);
+	return src;
+}
+
+WimaTransform wima_transform_multiply(WimaTransform src1, WimaTransform src2) {
+	nvgTransformMultiply(src1.v, src2.v);
+	return src1;
+}
+
+WimaTransform wima_transform_premultiply(WimaTransform src1, WimaTransform src2) {
+	nvgTransformPremultiply(src1.v, src2.v);
+	return src1;
+}
+
+WimaTransform wima_transform_inverse(WimaTransform src) {
+
+	WimaTransform dest;
+
+	nvgTransformInverse(dest.v, src.v);
+
+	return dest;
+}
+
+WimaPosf wima_transform_point(WimaTransform transform, WimaPosf pos) {
+
+	WimaPosf result;
+
+	nvgTransformPoint(&result.x, &result.y, transform.v, pos.x, pos.y);
+
+	return result;
 }

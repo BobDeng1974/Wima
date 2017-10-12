@@ -102,4 +102,41 @@ WimaRect wima_rect(WimaPos pos, WimaSize size);
 
 bool wima_rect_contains(WimaRect r, WimaPos pos);
 
+float wima_radians(float deg);
+float wima_degrees(float rad);
+
+// The following functions can be used to make calculations on 2x3 transformation matrices.
+// A 2x3 matrix is represented as float[6].
+
+// Sets the transform to identity matrix.
+WimaTransform wima_transform_identity();
+
+// Sets the transform to translation matrix matrix.
+WimaTransform wima_transform_translate(WimaTransform src, float tx, float ty);
+
+// Sets the transform to scale matrix.
+WimaTransform wima_transform_scale(WimaTransform src, float sx, float sy);
+
+// Sets the transform to rotate matrix. Angle is specified in radians.
+WimaTransform wima_transform_rotate(WimaTransform src, float a);
+
+// Sets the transform to skew-x matrix. Angle is specified in radians.
+WimaTransform wima_transform_skewX(WimaTransform src, float a);
+
+// Sets the transform to skew-y matrix. Angle is specified in radians.
+WimaTransform wima_transform_skewY(WimaTransform src, float a);
+
+// Sets the transform to the result of multiplication of two transforms, of A = A*B.
+WimaTransform wima_transform_multiply(WimaTransform src1, WimaTransform src2);
+
+// Sets the transform to the result of multiplication of two transforms, of A = B*A.
+WimaTransform wima_transform_premultiply(WimaTransform src1, WimaTransform src2);
+
+// Sets the destination to inverse of specified transform.
+// Returns result if the inverse could be calculated, else identity.
+WimaTransform wima_transform_inverse(WimaTransform src);
+
+// Transform a point by given transform.
+WimaPos wima_transform_point(WimaTransform transform, WimaPos pos);
+
 #endif // WIMA_MATH_H

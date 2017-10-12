@@ -357,6 +357,21 @@ void wima_render_arrow_upDown(WimaNvgInfo nvg, float x, float y, float s, WimaCo
 // Draw a node down-arrow with its tip at (x,y) and size s
 void wima_render_node_arrow_down(WimaNvgInfo nvg, float x, float y, float s, WimaColor color);
 
+// computes the upper and lower gradient colors for the inner box from a widget
+// theme and the widgets state. If flipActive is set and the state is
+// BND_ACTIVE, the upper and lower colors will be swapped.
+void wima_render_innerColor(WimaColor *shade_top, WimaColor *shade_down, WimaWidgetTheme* theme,
+                            WimaWidgetState state, bool flipActive);
+
+// computes the text color for a widget label from a widget theme and the
+// widgets state.
+WimaColor wima_render_textColor(WimaWidgetTheme* theme, WimaWidgetState state);
+
+// return the color of a node wire based on state
+// BND_HOVER indicates selected state,
+// BND_ACTIVE indicates dragged state
+WimaColor wima_render_node_wireColor(WimaNodeTheme* theme, WimaWidgetState state);
+
 ////////////////////////////////////////////////////////////////////////////////
 
 #endif // WIMA_WIDGET_H

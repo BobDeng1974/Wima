@@ -851,28 +851,57 @@ typedef struct WimaTheme {
 // Color functions.
 
 // make color transparent using the default alpha value
-WimaColor wima_color_multiplyTransparent(WimaColor color);
+WimaColor wima_color_multiplyAlphaf(WimaColor color, float a);
 
 // offset a color by a given integer delta in the range -100 to 100
 WimaColor wima_color_offset(WimaColor color, int delta);
 
-// computes the upper and lower gradient colors for the inner box from a widget
-// theme and the widgets state. If flipActive is set and the state is
-// BND_ACTIVE, the upper and lower colors will be swapped.
-void wima_color_inner(WimaColor *shade_top, WimaColor *shade_down, WimaWidgetTheme* theme,
-                      WimaWidgetState state, bool flipActive);
-
-// computes the text color for a widget label from a widget theme and the
-// widgets state.
-WimaColor wima_color_text(WimaWidgetTheme* theme, WimaWidgetState state);
-
-// return the color of a node wire based on state
-// BND_HOVER indicates selected state,
-// BND_ACTIVE indicates dragged state
-WimaColor wima_color_node_wire(WimaNodeTheme* theme, WimaWidgetState state);
-
 void wima_theme_load(WimaTheme* theme);
 WimaTheme* wima_theme();
+
+// Pushes and saves the current render state into a state stack.
+// A matching nvgRestore() must be used to restore the state.
+void wima_draw_state_save(WimaWindow wwh);
+
+// Pops and restores current render state.
+void wima_draw_state_restore(WimaWindow wwh);
+
+// Resets current render state to default values. Does not affect the render state stack.
+void wima_draw_state_reset(WimaWindow wwh);
+
+// Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
+void wima_draw_antialias(WimaWindow wwh, bool enabled);
+
+// Sets current stroke style to a solid color.
+void wima_draw_stroke_color(WimaWindow wwh, WimaColor color);
+
+// Sets current stroke style to a paint, which can be a one of the gradients or a pattern.
+void wima_draw_stroke_paint(WimaWindow wwh, WimaPaint paint);
+
+// Sets current fill style to a solid color.
+void wima_draw_fill_color(WimaWindow wwh, WimaColor color);
+
+// Sets current fill style to a paint, which can be a one of the gradients or a pattern.
+void wima_draw_fill_paint(WimaWindow wwh, WimaPaint paint);
+
+// Sets the miter limit of the stroke style.
+// Miter limit controls when a sharp corner is beveled.
+void wima_draw_miter_limit(WimaWindow wwh, float limit);
+
+// Sets the stroke width of the stroke style.
+void wima_draw_stroke_width(WimaWindow wwh, float size);
+
+// Sets how the end of the line (cap) is drawn,
+// Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.
+void wima_draw_line_cap(WimaWindow wwh, int cap);
+
+// Sets how sharp path corners are drawn.
+// Can be one of NVG_MITER (default), NVG_ROUND, NVG_BEVEL.
+void wima_draw_line_join(WimaWindow wwh, int join);
+
+// Sets the transparency applied to all rendered shapes.
+// Already transparent paths will get proportionally more transparent as well.
+void wima_draw_globalAlpha(WimaWindow wwh, float alpha);
 
 #ifdef __cplusplus
 }
