@@ -967,9 +967,9 @@ static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos 
 
 		while (item.item >= 0) {
 
-			pitem = (WimaLayoutItem*) wima_item_ptr(item);
+			pitem = (WimaLayoutItem*) wima_widget_ptr(item);
 
-			if (wima_item_contains(item, pos)) {
+			if (wima_widget_contains(item, pos)) {
 
 				if (!(pitem->layout.flags & WIMA_LAYOUT_ENABLE)) {
 					break;

@@ -708,7 +708,7 @@ typedef struct WimaAppFuncs {
 // Widget functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaWidget wima_item_new(WimaArea wah, WimaItemFuncs funcs);
+WimaWidget wima_widget_new(WimaArea wah, WimaItemFuncs funcs);
 // set an items state to frozen; the UI will not recurse into frozen items
 // when searching for hover or active items; subsequently, frozen items and
 // their child items will not cause mouse event notifications.
@@ -716,83 +716,83 @@ WimaWidget wima_item_new(WimaArea wah, WimaItemFuncs funcs);
 // UI_COLD for child items. Upon encountering a frozen item, the drawing
 // routine needs to handle rendering of child items appropriately.
 // see example.cpp for a demonstration.
-void wima_item_setFrozen(WimaWidget item, bool enable);
-bool wima_item_frozen(WimaWidget item);
+void wima_widget_setFrozen(WimaWidget item, bool enable);
+bool wima_widget_frozen(WimaWidget item);
 
 // set the size of the item; a size of 0 indicates the dimension to be
 // dynamic; if the size is set, the item can not expand beyond that size.
-void wima_item_setSize(WimaWidget item, WimaSize size);
+void wima_widget_setSize(WimaWidget item, WimaSize size);
 
 // return the width of the item as set by uiSetSize()
-int wima_item_width(WimaWidget item);
+int wima_widget_width(WimaWidget item);
 
 // return the height of the item as set by uiSetSize()
-int wima_item_height(WimaWidget item);
+int wima_widget_height(WimaWidget item);
 
 // set the anchoring behavior of the item to one or multiple UIlayoutFlags
-void wima_item_setLayout(WimaWidget item, uint32_t flags);
+void wima_widget_setLayout(WimaWidget item, uint32_t flags);
 
 // return the anchoring behavior as set by uiSetLayout()
-uint32_t wima_item_layout(WimaWidget item);
+uint32_t wima_widget_layout(WimaWidget item);
 
 // set the box model behavior of the item to one or multiple UIboxFlags
-void wima_item_setBox(WimaWidget item, uint32_t flags);
+void wima_widget_setBox(WimaWidget item, uint32_t flags);
 
 // return the box model as set by uiSetBox()
-uint32_t wima_item_box(WimaWidget item);
+uint32_t wima_widget_box(WimaWidget item);
 
 // set the left, top, right and bottom margins of an item; when the item is
 // anchored to the parent or another item, the margin controls the distance
 // from the neighboring element.
-void wima_item_setMargins(WimaWidget item, short l, short t, short r, short b);
+void wima_widget_setMargins(WimaWidget item, short l, short t, short r, short b);
 
 // return the left margin of the item as set with uiSetMargins()
-short wima_item_marginLeft(WimaWidget item);
+short wima_widget_marginLeft(WimaWidget item);
 
 // return the top margin of the item as set with uiSetMargins()
-short wima_item_marginTop(WimaWidget item);
+short wima_widget_marginTop(WimaWidget item);
 
 // return the right margin of the item as set with uiSetMargins()
-short wima_item_marginRight(WimaWidget item);
+short wima_widget_marginRight(WimaWidget item);
 
 // return the bottom margin of the item as set with uiSetMargins()
-short wima_item_marginDown(WimaWidget item);
+short wima_widget_marginDown(WimaWidget item);
 
 // set the application-dependent handle of an item.
 // handle is an application defined 64-bit handle. If handle is NULL, the item
 // will not be interactive.
-void wima_item_setUserPointer(WimaWidget item, void* handle);
+void wima_widget_setUserPointer(WimaWidget item, void* handle);
 
 // return the application-dependent handle of the item as passed to uiSetHandle()
 // or uiAllocHandle().
 void* wima_widget_userPointer(WimaWidget item);
 
 // flags is a user-defined set of flags defined by UI_USERMASK.
-void wima_item_setFlags(WimaWidget item, uint32_t flags);
+void wima_widget_setFlags(WimaWidget item, uint32_t flags);
 
 // return the user-defined flags for an item as passed to uiSetFlags()
-uint32_t wima_item_flags(WimaWidget item);
+uint32_t wima_widget_flags(WimaWidget item);
 
 // returns the items layout rectangle in absolute coordinates. If
 // uiGetRect() is called before uiEndLayout(), the values of the returned
 // rectangle are undefined.
-WimaRect wima_item_rect(WimaWidget item);
+WimaRect wima_widget_rect(WimaWidget item);
 
-uint32_t wima_item_events(WimaWidget item);
+uint32_t wima_widget_events(WimaWidget item);
 
 // return the current state of the item. This state is only valid after
 // a call to uiProcess().
 // The returned value is one of WIMA_ITEM_DEFAULT, WIMA_ITEM_HOVER,
 // WIMA_ITEM_ACTIVE, WIMA_ITEM_FROZEN.
-WimaItemState wima_item_state(WimaWidget item);
+WimaItemState wima_widget_state(WimaWidget item);
 
 // returns 1 if an items absolute rectangle contains a given coordinate
 // otherwise 0
-bool wima_item_contains(WimaWidget item, WimaPos pos);
-bool wima_item_compare(WimaWidget item1, WimaWidget item2);
-bool wima_item_isActive(WimaWidget item);
-bool wima_item_isHovered(WimaWidget item);
-bool wima_item_isFocused(WimaWidget item);
+bool wima_widget_contains(WimaWidget item, WimaPos pos);
+bool wima_widget_compare(WimaWidget item1, WimaWidget item2);
+bool wima_widget_isActive(WimaWidget item);
+bool wima_widget_isHovered(WimaWidget item);
+bool wima_widget_isFocused(WimaWidget item);
 
 
 ////////////////////////////////////////////////////////////////////////////////
