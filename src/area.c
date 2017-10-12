@@ -43,7 +43,7 @@
 #include <yc/mem.h>
 
 #include <wima.h>
-#include <widget.h>
+#include <draw.h>
 
 #include "math/math.h"
 

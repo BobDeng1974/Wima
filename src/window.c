@@ -42,7 +42,7 @@
 #include <dyna/tree.h>
 
 #include <wima.h>
-#include <widget.h>
+#include <draw.h>
 
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg.h>

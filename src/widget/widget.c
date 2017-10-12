@@ -61,12 +61,12 @@
 #include <string.h>
 
 #include <theme.h>
+#include <draw.h>
+
 #include "../theme/theme.h"
 #include "../math/math.h"
 #include "../global.h"
 #include "../window.h"
-
-#include "widget.h"
 
 global_decl;
 assert_msgs_decl;

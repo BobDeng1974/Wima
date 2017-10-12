@@ -42,7 +42,7 @@
 #include <KHR/khrplatform.h>
 
 #include <wima.h>
-#include <widget.h>
+#include <draw.h>
 #include <theme.h>
 
 WimaStatus cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e);
