@@ -153,11 +153,6 @@ typedef enum WimaBlend {
 	WIMA_BLEND_SRC_ALPHA_SATURATE  = 1<<10,
 } WimaBlend;
 
-//
-// Color utils
-//
-// Colors in NanoVG are stored as unsigned ints in ABGR format.
-
 // Returns a color value from red, green, blue values. Alpha will be set to 255 (1.0f).
 WimaColor wima_color_rgb(unsigned char r, unsigned char g, unsigned char b);
 

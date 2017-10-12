@@ -63,14 +63,97 @@
 #include <render.h>
 
 #include "../global.h"
+
+#include "color.h"
 #include "theme.h"
 
 assert_msgs_decl;
 
-// Low Level Color Functions
-// -------------------
-// these are part of the implementation detail and can be used to theme
-// new kinds of controls in a similar fashion.
+WimaColor wima_color_rgb(unsigned char r, unsigned char g, unsigned char b) {
+
+	WimaCol c;
+
+	c.nvg = nvgRGB(r, g, b);
+
+	return c.wima;
+}
+
+WimaColor wima_color_rgbf(float r, float g, float b) {
+
+	WimaCol c;
+
+	c.nvg = nvgRGBf(r, g, b);
+
+	return c.wima;
+}
+
+WimaColor wima_color_rgba(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+
+	WimaCol c;
+
+	c.nvg = nvgRGBA(r, g, b, a);
+
+	return c.wima;
+}
+
+WimaColor wima_color_rgbaf(float r, float g, float b, float a) {
+
+	WimaCol c;
+
+	c.nvg = nvgRGBAf(r, g, b, a);
+
+	return c.wima;
+}
+
+WimaColor wima_color_lerp(WimaColor c0, WimaColor c1, float u) {
+
+	WimaCol c, wc0, wc1;
+
+	wc0.wima = c0;
+	wc1.wima = c1;
+
+	c.nvg = nvgLerpRGBA(wc0.nvg, wc1.nvg, u);
+
+	return c.wima;
+}
+
+WimaColor wima_color_setAlpha(WimaColor c0, unsigned char a) {
+
+	WimaCol c, wc0;
+	wc0.wima = c0;
+
+	c.nvg = nvgTransRGBA(wc0.nvg, a);
+
+	return c.wima;
+}
+
+WimaColor wima_setAlphaf(WimaColor c0, float a) {
+
+	WimaCol c, wc0;
+	wc0.wima = c0;
+
+	c.nvg = nvgTransRGBAf(wc0.nvg, a);
+
+	return c.wima;
+}
+
+WimaColor wima_color_hsl(float h, float s, float l) {
+
+	WimaCol c;
+
+	c.nvg = nvgHSL(h, s, l);
+
+	return c.wima;
+}
+
+WimaColor wima_color_hsla(float h, float s, float l, unsigned char a) {
+
+	WimaCol c;
+
+	c.nvg = nvgHSLA(h, s, l, a);
+
+	return c.wima;
+}
 
 WimaColor wima_color_multiplyTransparent(WimaColor color) {
 	color.a *= WIMA_TRANSPARENT_ALPHA;
