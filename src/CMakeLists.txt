@@ -49,7 +49,7 @@ set(WIMA_SRC
 
 	# Put all source files here.
 	"prop.c"
-	"item.c"
+	"widget.c"
 	"layout.c"
 	"callbacks.c"
 	"region.c"

@@ -38,7 +38,7 @@
 
 #include "global.h"
 #include "layout.h"
-#include "item.h"
+#include "widget.h"
 #include "area.h"
 
 global_decl;

@@ -41,7 +41,7 @@
 #include <wima.h>
 
 #include "callbacks.h"
-#include "item.h"
+#include "widget.h"
 #include "area.h"
 #include "workspace.h"
 #include "window.h"

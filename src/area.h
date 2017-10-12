@@ -46,7 +46,7 @@ extern "C" {
 
 #include <wima.h>
 
-#include "item.h"
+#include "widget.h"
 #include "layout.h"
 #include "window.h"
 

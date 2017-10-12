@@ -53,7 +53,7 @@
 #include "window.h"
 #include "global.h"
 
-#include "item.h"
+#include "widget.h"
 
 global_decl;
 assert_msgs_decl;

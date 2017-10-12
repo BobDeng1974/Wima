@@ -63,7 +63,7 @@
 
 #include "global.h"
 
-#include "item.h"
+#include "widget.h"
 
 #include "area.h"
 

@@ -45,7 +45,7 @@ extern "C" {
 #include <layout.h>
 
 #include "old_layout.h"
-#include "item.h"
+#include "widget.h"
 
 #define WIMA_LAYOUT_INVALID ((uint16_t) -1)
 
