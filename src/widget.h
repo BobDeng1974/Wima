@@ -136,7 +136,7 @@ extern "C" {
 
 // End limits.
 
-typedef struct WimaItem {
+typedef struct WimaWdgt {
 
 	// Event functions.
 	WimaItemFuncs funcs;
@@ -152,7 +152,7 @@ typedef struct WimaItem {
 	// absolute coordinates.
 	int16_t margins[4];
 
-} WimaItem;
+} WimaWdgt;
 
 typedef struct WimaLayoutItem WimaLayoutItem;
 

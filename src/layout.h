@@ -89,7 +89,7 @@ typedef struct WimaLayoutItem {
 	union {
 
 		WimaLayoutInfo layout;
-		WimaItem widget;
+		WimaWdgt widget;
 
 	};
 
