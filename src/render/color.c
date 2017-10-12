@@ -127,7 +127,7 @@ WimaColor wima_color_setAlpha(WimaColor c0, unsigned char a) {
 	return c.wima;
 }
 
-WimaColor wima_setAlphaf(WimaColor c0, float a) {
+WimaColor wima_color_setAlphaf(WimaColor c0, float a) {
 
 	WimaCol c, wc0;
 	wc0.wima = c0;

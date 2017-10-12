@@ -174,7 +174,7 @@ WimaColor wima_color_lerp(WimaColor c0, WimaColor c1, float u);
 WimaColor wima_color_setAlpha(WimaColor c0, unsigned char a);
 
 // Sets transparency of a color value.
-WimaColor wima_setAlphaf(WimaColor c0, float a);
+WimaColor wima_color_setAlphaf(WimaColor c0, float a);
 
 // Returns color value specified by hue, saturation and lightness.
 // HSL values are all in range [0..1], alpha will be set to 255.
@@ -183,14 +183,6 @@ WimaColor wima_color_hsl(float h, float s, float l);
 // Returns color value specified by hue, saturation and lightness and alpha.
 // HSL values are all in range [0..1], alpha in range [0..255]
 WimaColor wima_color_hsla(float h, float s, float l, unsigned char a);
-
-// How text on a control is aligned.
-typedef enum WimaTextAlignment {
-
-	WIMA_LEFT = 0,
-	WIMA_CENTER,
-
-} WimaTextAlignment;
 
 // Flags indicating which corners are sharp (for grouping widgets).
 typedef enum WimaWidgetCorner {
