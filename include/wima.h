@@ -262,6 +262,25 @@ typedef struct WimaRect {
 
 } WimaRect;
 
+typedef struct WimaRectf {
+
+	union {
+
+		float v[4];
+
+		struct {
+
+			float x;
+			float y;
+			float w;
+			float h;
+
+		};
+
+	};
+
+} WimaRectf;
+
 // Transform.
 typedef struct WimaTransform {
 

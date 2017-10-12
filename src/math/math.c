@@ -128,6 +128,18 @@ WimaRect wima_rect(WimaPos pos, WimaSize size) {
 	return r;
 }
 
+WimaRectf wima_rectf(WimaRect rect) {
+
+	WimaRectf r;
+
+	r.x = (float) rect.x;
+	r.y = (float) rect.y;
+	r.w = (float) rect.w;
+	r.h = (float) rect.h;
+
+	return r;
+}
+
 bool wima_rect_contains(WimaRect r, WimaPos pos) {
 
 	int x = pos.x - r.x;
