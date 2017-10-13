@@ -125,7 +125,7 @@ void wima_area_setType(WimaArea wah, WimaRegion type) {
 
 	area->area.type = type;
 
-	wima_window_requestLayout(wah.window);
+	wima_window_layout(wah.window);
 }
 
 WimaRegion wima_area_type(WimaArea wah) {

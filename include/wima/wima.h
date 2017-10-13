@@ -909,9 +909,11 @@ WimaWidget wima_window_focus(WimaWindow wwh);
 
 void wima_window_clearEvents(WimaWindow wwh);
 
-void wima_window_requestRefresh(WimaWindow wwh);
+void wima_window_refresh(WimaWindow wwh);
+void wima_window_cancelRefresh(WimaWindow wwh);
 bool wima_window_needsRefresh(WimaWindow wwh);
-void wima_window_requestLayout(WimaWindow wwh);
+void wima_window_layout(WimaWindow wwh);
+void wima_window_cancelLayout(WimaWindow wwh);
 bool wima_window_needsLayout(WimaWindow wwh);
 
 DynaTree wima_window_areas(WimaWindow wwh);

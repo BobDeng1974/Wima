@@ -423,7 +423,7 @@ void wima_window_clearEvents(WimaWindow wwh) {
 	win->ctx.scroll.y = 0;
 }
 
-void wima_window_requestRefresh(WimaWindow wwh) {
+void wima_window_refresh(WimaWindow wwh) {
 
 	assert_init;
 
@@ -432,6 +432,17 @@ void wima_window_requestRefresh(WimaWindow wwh) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	win->flags |= WIMA_WINDOW_DIRTY_BIT;
+}
+
+void wima_window_cancelRefresh(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	win->flags &= ~(WIMA_WINDOW_DIRTY_BIT);
 }
 
 bool wima_window_needsRefresh(WimaWindow wwh) {
@@ -445,7 +456,7 @@ bool wima_window_needsRefresh(WimaWindow wwh) {
 	return WIMA_WINDOW_IS_DIRTY(win);
 }
 
-void wima_window_requestLayout(WimaWindow wwh) {
+void wima_window_layout(WimaWindow wwh) {
 
 	assert_init;
 
@@ -454,6 +465,17 @@ void wima_window_requestLayout(WimaWindow wwh) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	win->flags |= (WIMA_WINDOW_LAYOUT_BIT | WIMA_WINDOW_DIRTY_BIT);
+}
+
+void wima_window_cancelLayout(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	win->flags &= ~(WIMA_WINDOW_LAYOUT_BIT);
 }
 
 bool wima_window_needsLayout(WimaWindow wwh) {
