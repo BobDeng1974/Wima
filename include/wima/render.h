@@ -183,12 +183,52 @@ typedef enum WimaBlend {
 	WIMA_BLEND_SRC_ALPHA_SATURATE  = 1<<10,
 } WimaBlend;
 
+typedef struct WimaGlyphPosition {
+
+	// Position of the glyph in the input string.
+	const char* str;
+
+	// The x-coordinate of the logical glyph position.
+	float x;
+
+	// The bounds of the glyph shape.
+	float minx, maxx;
+
+} WimaGlyphPosition;
+
+typedef struct WimaTextRow {
+
+	// Pointer to the input text where the row starts.
+	const char* start;
+
+	// Pointer to the input text where the row ends (one past the last character).
+	const char* end;
+
+	// Pointer to the beginning of the next row.
+	const char* next;
+
+	// Logical width of the row.
+	float width;
+
+	// Actual bounds of the row. Logical width and bounds can
+	// differ because of kerning and some parts over extending.
+	float minx, maxx;
+
+} WimaTextRow;
+
+typedef struct WimaTextMetrics {
+
+	float ascender;
+	float descender;
+	float lineHeight;
+
+} WimaTextMetrics;
+
 // Returns a color value from red, green, blue values. Alpha will be set to 255 (1.0f).
 WimaColor wima_color_rgb(unsigned char r, unsigned char g, unsigned char b);
 
 // Returns a color value from red, green, blue values. Alpha will be set to 1.0f.
 WimaColor wima_color_rgbf(float r, float g, float b);
-
 
 // Returns a color value from red, green, blue and alpha values.
 WimaColor wima_color_rgba(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
@@ -1056,6 +1096,57 @@ void wima_path_fill(WimaRenderContext* ctx);
 
 // Fills the current path with current stroke style.
 void wima_path_stroke(WimaRenderContext* ctx);
+
+////////////////////////////////////////////////////////////////////////////////
+// Text.
+////////////////////////////////////////////////////////////////////////////////
+
+// Sets the blur of current text style.
+void wima_text_blur(WimaRenderContext* ctx, float blur);
+
+// Sets the letter spacing of current text style.
+void wima_text_letterSpacing(WimaRenderContext* ctx, float spacing);
+
+// Sets the proportional line height of current text style. The line height is specified as multiple of font size.
+void wima_text_lineHeight(WimaRenderContext* ctx, float lineHeight);
+
+// Sets the text align of current text style, see NVGalign for options.
+void wima_text_align(WimaRenderContext* ctx, WimaTextAlign align);
+
+// Draws text string at specified location. If end is specified only the sub-string up to the end is drawn.
+float wima_text(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end);
+
+// Draws multi-line text string at specified location wrapped at the specified width. If end is specified only the sub-string up to the end is drawn.
+// White space is stripped at the beginning of the rows, the text is split at word boundaries or when new-line characters are encountered.
+// Words longer than the max width are slit at nearest character (i.e. no hyphenation).
+void wima_text_box(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth, const char* string, const char* end);
+
+// Measures the specified text string. Parameter bounds should be a pointer to float[4],
+// if the bounding box of the text should be returned. The bounds value are [xmin,ymin, xmax,ymax]
+// Returns the horizontal advance of the measured text (i.e. where the next character should drawn).
+// Measured values are returned in local coordinate space.
+float wima_text_bounds(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end, WimaRectf* bounds);
+
+// Measures the specified multi-text string. Parameter bounds should be a pointer to float[4],
+// if the bounding box of the text should be returned. The bounds value are [xmin,ymin, xmax,ymax]
+// Measured values are returned in local coordinate space.
+WimaRectf wima_text_box_bounds(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth,
+                               const char* string, const char* end);
+
+// Calculates the glyph x positions of the specified text. If end is specified only the sub-string will be used.
+// Measured values are returned in local coordinate space.
+int wima_text_glyphPositions(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end,
+                             WimaGlyphPosition* positions, int maxPositions);
+
+// Returns the vertical metrics based on the current text style.
+// Measured values are returned in local coordinate space.
+WimaTextMetrics wima_text_metrics(WimaRenderContext* ctx);
+
+// Breaks the specified text into lines. If end is specified only the sub-string will be used.
+// White space is stripped at the beginning of the rows, the text is split at word boundaries or when new-line characters are encountered.
+// Words longer than the max width are slit at nearest character (i.e. no hyphenation).
+int wima_text_breakLines(WimaRenderContext* ctx, const char* string, const char* end,
+                         float breakRowWidth, WimaTextRow* rows, int maxRows);
 
 ////////////////////////////////////////////////////////////////////////////////
 

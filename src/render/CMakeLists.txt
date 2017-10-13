@@ -40,6 +40,7 @@ set(WIMA_RENDER_SRC
 	"state.c"
 	"style.c"
 	"path.c"
+	"text.c"
 	"render.c"
 )
 

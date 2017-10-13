@@ -42,6 +42,10 @@
 extern "C" {
 #endif
 
+#include <nanovg.h>
+
+#include <wima/render.h>
+
 typedef struct WimaRenderContext {
 
 	NVGcontext* nvg;
@@ -63,6 +67,20 @@ typedef union WimaPnt {
 	WimaPaint wima;
 
 } WimaPnt;
+
+typedef union WimaGlyphPos {
+
+	NVGglyphPosition nvg;
+	WimaGlyphPosition wima;
+
+} WimaGlyphPos;
+
+typedef union WimaTxtRow {
+
+	NVGtextRow nvg;
+	WimaTextRow wima;
+
+} WimaTxtRow;
 
 // TODO: Put these in the theme.
 
