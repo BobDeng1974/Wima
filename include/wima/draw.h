@@ -166,7 +166,6 @@ WimaColor wima_color_rgba(unsigned char r, unsigned char g, unsigned char b, uns
 // Returns a color value from red, green, blue and alpha values.
 WimaColor wima_color_rgbaf(float r, float g, float b, float a);
 
-
 // Linearly interpolates from color c0 to c1, and returns resulting color value.
 WimaColor wima_color_lerp(WimaColor c0, WimaColor c1, float u);
 
@@ -176,6 +175,9 @@ WimaColor wima_color_setAlpha(WimaColor c0, unsigned char a);
 // Sets transparency of a color value.
 WimaColor wima_color_setAlphaf(WimaColor c0, float a);
 
+// make color transparent using the default alpha value
+WimaColor wima_color_multiplyAlphaf(WimaColor color, float a);
+
 // Returns color value specified by hue, saturation and lightness.
 // HSL values are all in range [0..1], alpha will be set to 255.
 WimaColor wima_color_hsl(float h, float s, float l);
@@ -183,6 +185,9 @@ WimaColor wima_color_hsl(float h, float s, float l);
 // Returns color value specified by hue, saturation and lightness and alpha.
 // HSL values are all in range [0..1], alpha in range [0..255]
 WimaColor wima_color_hsla(float h, float s, float l, unsigned char a);
+
+// offset a color by a given integer delta in the range -100 to 100
+WimaColor wima_color_offset(WimaColor color, int delta);
 
 // Flags indicating which corners are sharp (for grouping widgets).
 typedef enum WimaWidgetCorner {
@@ -847,14 +852,6 @@ typedef struct WimaTheme {
 	WimaNodeTheme node;
 
 } WimaTheme;
-
-// Color functions.
-
-// make color transparent using the default alpha value
-WimaColor wima_color_multiplyAlphaf(WimaColor color, float a);
-
-// offset a color by a given integer delta in the range -100 to 100
-WimaColor wima_color_offset(WimaColor color, int delta);
 
 void wima_theme_load(WimaTheme* theme);
 WimaTheme* wima_theme();
