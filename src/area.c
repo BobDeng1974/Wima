@@ -1064,7 +1064,7 @@ static void wima_area_background(WimaAr* area, NVGcontext* nvg) {
 	c.wima = wg.theme->backgroundColor;
 
 	nvgBeginPath(nvg);
-	nvgRect(nvg, area->rect.x, area->rect.y, area->rect.w, area->rect.h);
+	nvgRect(nvg, 0, 0, area->rect.w, area->rect.h);
 	nvgFillColor(nvg, c.nvg);
 	nvgFill(nvg);
 }
