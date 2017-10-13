@@ -42,14 +42,14 @@
 #include <dyna/tree.h>
 
 #include <wima/wima.h>
-#include <wima/draw.h>
+#include <wima/render.h>
 #include <wima/math.h>
 
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg.h>
 #include <nanovg_gl.h>
 
-#include "draw/theme.h"
+#include "render/theme.h"
 
 #include "callbacks.h"
 #include "region.h"

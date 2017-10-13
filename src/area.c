@@ -42,7 +42,7 @@
 #include <yc/mem.h>
 
 #include <wima/wima.h>
-#include <wima/draw.h>
+#include <wima/render.h>
 #include <wima/math.h>
 
 #include <math.h>

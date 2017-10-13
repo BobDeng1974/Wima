@@ -55,7 +55,7 @@
 #include "prop.h"
 #include "global.h"
 
-#include "draw/theme.h"
+#include "render/theme.h"
 
 global_decl;
 assert_msgs_decl;

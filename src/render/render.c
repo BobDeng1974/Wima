@@ -61,11 +61,10 @@
 #include <string.h>
 
 #include <wima/render.h>
-#include <wima/draw.h>
 #include <wima/math.h>
 
-#include "../draw/theme.h"
-#include "../draw/color.h"
+#include "../render/theme.h"
+#include "../render/color.h"
 #include "../global.h"
 #include "../window.h"
 

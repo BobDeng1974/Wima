@@ -64,7 +64,6 @@ include_directories("../include")
 
 add_subdirectory(math)
 
-add_subdirectory(draw)
 add_subdirectory(render)
 
 set(WIMA_GLAD "${PROJECT_NAME}_glad")
