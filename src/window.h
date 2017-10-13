@@ -52,6 +52,8 @@
 
 #include "workspace.h"
 
+#include "render/render.h"
+
 #define WIMA_MIN_AREA_DIM (26)
 
 // Consecutive click threshold in ms.
@@ -121,7 +123,7 @@ typedef struct WimaWin {
 
 	GLFWcursor* cursor;
 
-	WimaNvgInfo nvg;
+	WimaRenderContext render;
 	WimaWinCtx ctx;
 
 	WimaSize fbsize;

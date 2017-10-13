@@ -181,13 +181,13 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph) {
 
 	WimaWin* window = dvec_get(wg.windows, idx);
 
-	window->nvg.nvg = nvgCreateGL3(NVG_ANTIALIAS);
+	window->render.nvg = nvgCreateGL3(NVG_ANTIALIAS);
 
 	// Load the font.
-	window->nvg.font = nvgCreateFont(window->nvg.nvg, "default", dstr_str(wg.fontPath));
+	window->render.font = nvgCreateFont(window->render.nvg, "default", dstr_str(wg.fontPath));
 
 	// Load the icons.
-	window->nvg.icons = nvgCreateImage(window->nvg.nvg, dstr_str(wg.iconSheetPath), 0);
+	window->render.icons = nvgCreateImage(window->render.nvg, dstr_str(wg.iconSheetPath), 0);
 
 	// Load the app icon.
 	if (wg.numIcons) {
@@ -744,7 +744,7 @@ WimaStatus wima_window_free(WimaWin* win) {
 
 	dstr_free(win->name);
 
-	nvgDeleteGL3(win->nvg.nvg);
+	nvgDeleteGL3(win->render.nvg);
 
 	return wima_area_free(win->areas);
 }
@@ -836,11 +836,11 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 		glEnable(GL_SCISSOR_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		nvgBeginFrame(win->nvg.nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
+		nvgBeginFrame(win->render.nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 
-		status = wima_area_draw(wwh, win->pixelRatio);
+		status = wima_area_draw(&win->render, win->areas, win->pixelRatio);
 		if (status) {
-			nvgCancelFrame(win->nvg.nvg);
+			nvgCancelFrame(win->render.nvg);
 			return status;
 		}
 
@@ -848,12 +848,12 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 
 			status = wima_window_drawMenu(win, win->menu, 0);
 			if (status) {
-				nvgCancelFrame(win->nvg.nvg);
+				nvgCancelFrame(win->render.nvg);
 				return status;
 			}
 		}
 
-		nvgEndFrame(win->nvg.nvg);
+		nvgEndFrame(win->render.nvg);
 
 		glFlush();
 
@@ -883,12 +883,12 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	bool hasTitle = isTopAndContext && (win->menuTitle || win->menuIcon >= 0);
 
 	if (hasTitle) {
-		width = wima_render_label_estimateWidth(win->nvg, win->menuIcon, win->menuTitle);
+		width = wima_render_label_estimateWidth(&win->render, win->menuIcon, win->menuTitle);
 	}
 
 	float w, h;
 
-	float arrowWidth = wima_render_label_estimateWidth(win->nvg, WIMA_ICONID(28,2), NULL);
+	float arrowWidth = wima_render_label_estimateWidth(&win->render, WIMA_ICONID(28,2), NULL);
 
 	// Estimate width.
 	for (int i = 0; i < menu->numItems; ++i) {
@@ -896,7 +896,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 		WimaMenuItem item = menu->items[i];
 
 		if (item.label) {
-			w = wima_render_label_estimateWidth(win->nvg, item.icon, item.label);
+			w = wima_render_label_estimateWidth(&win->render, item.icon, item.label);
 			w += item.hasSubMenu ? arrowWidth : 0;
 		}
 		else {
@@ -911,7 +911,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	float height = 0.0f;
 
 	if (hasTitle) {
-		titleHeight = wima_render_label_estimateHeight(win->nvg, win->menuIcon, win->menuTitle, width) + 5;
+		titleHeight = wima_render_label_estimateHeight(&win->render, win->menuIcon, win->menuTitle, width) + 5;
 		height = titleHeight + WIMA_MENU_SEPARATOR_HEIGHT;
 	}
 	else {
@@ -924,7 +924,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 		WimaMenuItem item = menu->items[i];
 
 		if (item.label) {
-			h = wima_render_label_estimateHeight(win->nvg, item.icon, item.label, width);
+			h = wima_render_label_estimateHeight(&win->render, item.icon, item.label, width);
 		}
 		else {
 			h = WIMA_MENU_SEPARATOR_HEIGHT;
@@ -980,17 +980,17 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	}
 
 	// Set up NanoVG.
-	nvgResetTransform(win->nvg.nvg);
-	nvgResetScissor(win->nvg.nvg);
+	nvgResetTransform(win->render.nvg);
+	nvgResetScissor(win->render.nvg);
 
-	nvgTranslate(win->nvg.nvg, menu->pos.x, menu->pos.y);
-	nvgScissor(win->nvg.nvg, 0, 0, menu->size.w, menu->size.h);
+	nvgTranslate(win->render.nvg, menu->pos.x, menu->pos.y);
+	nvgScissor(win->render.nvg, 0, 0, menu->size.w, menu->size.h);
 
-	wima_render_menu_background(win->nvg, 0, 0, menu->size.w, menu->size.h, WIMA_CORNER_NONE);
+	wima_render_menu_background(&win->render, 0, 0, menu->size.w, menu->size.h, WIMA_CORNER_NONE);
 
 	if (hasTitle) {
-		wima_render_menu_label(win->nvg, 0, 5, width, titleHeight, win->menuIcon, win->menuTitle);
-		wima_render_menu_separator(win->nvg, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
+		wima_render_menu_label(&win->render, 0, 5, width, titleHeight, win->menuIcon, win->menuTitle);
+		wima_render_menu_separator(&win->render, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
 	}
 
 	WimaMenu* m = wima_window_menu_contains(menu, pos);
@@ -1023,11 +1023,11 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 				item.state = contained ? WIMA_ITEM_HOVER : item.state;
 			}
 
-			wima_render_menu_item(win->nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h,
+			wima_render_menu_item(&win->render, item.rect.x, item.rect.y, item.rect.w, item.rect.h,
 			                      item.state, item.icon, item.label, item.hasSubMenu);
 		}
 		else {
-			wima_render_menu_separator(win->nvg, item.rect.x, item.rect.y, item.rect.w, item.rect.h);
+			wima_render_menu_separator(&win->render, item.rect.x, item.rect.y, item.rect.w, item.rect.h);
 		}
 	}
 

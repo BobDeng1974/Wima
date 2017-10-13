@@ -93,7 +93,7 @@ void printMods(WimaMods mods) {
 	fputc('\n', stdout);
 }
 
-WimaStatus cb_draw(WimaWidget item, WimaNvgInfo nvg) {
+WimaStatus cb_draw(WimaWidget item, WimaRenderContext* ctx) {
 
 	char buffer[100];
 
@@ -115,7 +115,7 @@ WimaStatus cb_draw(WimaWidget item, WimaNvgInfo nvg) {
 	wima_widget_label(nvg, r.x + 2, r.y + 2, width, height, WIMA_ICONID(0,0), stuff);
 #endif
 
-	wima_render_label(nvg, r.x, r.y, r.w, r.h, WIMA_ICONID(0,0), buffer);
+	wima_render_label(ctx, r.x, r.y, r.w, r.h, WIMA_ICONID(0,0), buffer);
 
 	return WIMA_STATUS_SUCCESS;
 }

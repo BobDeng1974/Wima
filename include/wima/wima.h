@@ -687,14 +687,6 @@ typedef struct WimaMenu {
 
 } WimaMenu;
 
-typedef struct WimaNvgInfo {
-
-	NVGcontext* nvg;
-	int font;
-	int icons;
-
-} WimaNvgInfo;
-
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
@@ -732,9 +724,10 @@ typedef struct WimaRegionFuncs {
 
 } WimaRegionFuncs;
 
+typedef struct WimaRenderContext WimaRenderContext;
 typedef struct WimaMonitor WimaMonitor;
 
-typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaNvgInfo);
+typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaRenderContext*);
 typedef void (*WimaErrorFunc)(WimaStatus, const char*);
 typedef WimaStatus (*WimaWindowFileDropFunc)(WimaWindow, int, const char**);
 typedef WimaStatus (*WimaWindowPosFunc)(WimaWindow, WimaPos);

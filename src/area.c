@@ -55,6 +55,8 @@
 
 #include "widget.h"
 
+#include "render/color.h"
+
 global_decl;
 assert_msgs_decl;
 
@@ -164,7 +166,7 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 static bool wima_area_node_valid(DynaTree regions, DynaNode node);
 static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 
-static WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, float ratio);
+static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, DynaNode node, float ratio);
 static WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, bool adjustSplit);
 static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
 static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaPos cursor);
@@ -177,6 +179,7 @@ static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* righ
 static WimaPos wima_area_translatePos(WimaAr* area, WimaPos pos);
 static void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport);
 static void wima_area_popViewport(NVGcontext* nvg);
+static void wima_area_background(WimaAr* area, NVGcontext* nvg);
 static void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg);
 static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg);
 static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertical, bool mirror);
@@ -460,18 +463,16 @@ WimaStatus wima_area_mouseEnter(WimaAr* area, bool enter) {
 	return status;
 }
 
-WimaStatus wima_area_draw(WimaWindow wwh, float ratio) {
+WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas, float ratio) {
 
 	assert_init;
 
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+	wassert(areas != NULL, WIMA_ASSERT_WINDOW_AREAS);
 
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	return wima_area_node_draw(win->nvg, win->areas, dtree_root(), ratio);
+	return wima_area_node_draw(ctx, areas, dtree_root(), ratio);
 }
 
-static WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode node, float ratio) {
+static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, DynaNode node, float ratio) {
 
 	assert_init;
 
@@ -481,24 +482,24 @@ static WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode 
 
 	if (WIMA_AREA_IS_PARENT(area)) {
 
-		status = wima_area_node_draw(nvg, areas, dtree_left(node), ratio);
+		status = wima_area_node_draw(ctx, areas, dtree_left(node), ratio);
 		if (status) {
 			return status;
 		}
 
-		status = wima_area_node_draw(nvg, areas, dtree_right(node), ratio);
+		status = wima_area_node_draw(ctx, areas, dtree_right(node), ratio);
 	}
 	else {
 
-		wima_area_pushViewport(nvg.nvg, area->rect);
+		wima_area_pushViewport(ctx->nvg, area->rect);
 
-		wima_render_background(nvg, 0, 0, area->rect.w, area->rect.h);
+		wima_area_background(area, ctx->nvg);
 
 		if (area->area.ctx.itemCount > 0) {
 
-			nvgSave(nvg.nvg);
+			nvgSave(ctx->nvg);
 
-			nvgScale(nvg.nvg, area->area.scale, area->area.scale);
+			nvgScale(ctx->nvg, area->area.scale, area->area.scale);
 
 			WimaWidget item;
 			item.item = 0;
@@ -506,16 +507,16 @@ static WimaStatus wima_area_node_draw(WimaNvgInfo nvg, DynaTree areas, DynaNode 
 			item.window = area->window;
 
 			// Draw the area. The draw function is guaranteed to be non-null.
-			status = wg.funcs.draw(item, nvg);
+			status = wg.funcs.draw(item, ctx);
 
-			nvgRestore(nvg.nvg);
+			nvgRestore(ctx->nvg);
 		}
 
 		// Draw the border shading and split widgets.
-		wima_area_drawSplitWidgets(area, nvg.nvg);
-		wima_area_drawBorders(area, nvg.nvg);
+		wima_area_drawSplitWidgets(area, ctx->nvg);
+		wima_area_drawBorders(area, ctx->nvg);
 
-		wima_area_popViewport(nvg.nvg);
+		wima_area_popViewport(ctx->nvg);
 	}
 
 	return status;
@@ -1053,6 +1054,19 @@ static void wima_area_popViewport(NVGcontext* nvg) {
 
 	nvgResetTransform(nvg);
 	nvgResetScissor(nvg);
+}
+
+static void wima_area_background(WimaAr* area, NVGcontext* nvg) {
+
+	assert_init;
+
+	WimaCol c;
+	c.wima = wg.theme->backgroundColor;
+
+	nvgBeginPath(nvg);
+	nvgRect(nvg, area->rect.x, area->rect.y, area->rect.w, area->rect.h);
+	nvgFillColor(nvg, c.nvg);
+	nvgFill(nvg);
 }
 
 static void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg) {
