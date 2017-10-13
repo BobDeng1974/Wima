@@ -879,13 +879,13 @@ WimaTheme* wima_theme();
 
 // Pushes and saves the current render state into a state stack.
 // A matching nvgRestore() must be used to restore the state.
-void wima_render_state_save(WimaWindow wwh);
+void wima_render_state_save(WimaRenderContext* ctx);
 
 // Pops and restores current render state.
-void wima_render_state_restore(WimaWindow wwh);
+void wima_render_state_restore(WimaRenderContext* ctx);
 
 // Resets current render state to default values. Does not affect the render state stack.
-void wima_render_state_reset(WimaWindow wwh);
+void wima_render_state_reset(WimaRenderContext* ctx);
 
 // Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
 void wima_style_antialias(WimaWindow wwh, bool enabled);
