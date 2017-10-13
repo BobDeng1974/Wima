@@ -71,7 +71,13 @@ void wima_text_box(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth,
 float wima_text_bounds(WimaRenderContext* ctx, WimaVecf pt, const char* string,
                        const char* end, WimaRectf* bounds)
 {
-	return nvgTextBounds(ctx->nvg, pt.x, pt.y, string, end, bounds->v);
+	float result = nvgTextBounds(ctx->nvg, pt.x, pt.y, string, end, bounds->v);
+
+	// NanoVG does xmin, xmax, etc, not a rectangle.
+	bounds->w -= bounds->x;
+	bounds->h -= bounds->y;
+
+	return result;
 }
 
 WimaRectf wima_text_box_bounds(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth,
@@ -80,6 +86,10 @@ WimaRectf wima_text_box_bounds(WimaRenderContext* ctx, WimaVecf pt, float breakR
 	WimaRectf result;
 
 	nvgTextBoxBounds(ctx->nvg, pt.x, pt.y, breakRowWidth, string, end, result.v);
+
+	// NanoVG does xmin, xmax, etc, not a rectangle.
+	result.w -= result.x;
+	result.h -= result.y;
 
 	return result;
 }
