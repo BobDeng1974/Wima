@@ -888,38 +888,38 @@ void wima_render_state_restore(WimaRenderContext* ctx);
 void wima_render_state_reset(WimaRenderContext* ctx);
 
 // Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
-void wima_style_antialias(WimaWindow wwh, bool enabled);
+void wima_style_antialias(WimaRenderContext* ctx, bool enabled);
 
 // Sets current stroke style to a solid color.
-void wima_style_stroke_color(WimaWindow wwh, WimaColor color);
+void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color);
 
 // Sets current stroke style to a paint, which can be a one of the gradients or a pattern.
-void wima_style_stroke_paint(WimaWindow wwh, WimaPaint paint);
+void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint);
 
 // Sets current fill style to a solid color.
-void wima_style_fill_color(WimaWindow wwh, WimaColor color);
+void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color);
 
 // Sets current fill style to a paint, which can be a one of the gradients or a pattern.
-void wima_style_fill_paint(WimaWindow wwh, WimaPaint paint);
+void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint);
 
 // Sets the miter limit of the stroke style.
 // Miter limit controls when a sharp corner is beveled.
-void wima_style_miter_limit(WimaWindow wwh, float limit);
+void wima_style_miter_limit(WimaRenderContext* ctx, float limit);
 
 // Sets the stroke width of the stroke style.
-void wima_style_stroke_width(WimaWindow wwh, float size);
+void wima_style_stroke_width(WimaRenderContext* ctx, float size);
 
 // Sets how the end of the line (cap) is drawn,
 // Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.
-void wima_style_line_cap(WimaWindow wwh, int cap);
+void wima_style_line_cap(WimaRenderContext* ctx, WimaLineCap cap);
 
 // Sets how sharp path corners are drawn.
 // Can be one of NVG_MITER (default), NVG_ROUND, NVG_BEVEL.
-void wima_style_line_join(WimaWindow wwh, int join);
+void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join);
 
 // Sets the transparency applied to all rendered shapes.
 // Already transparent paths will get proportionally more transparent as well.
-void wima_style_setGlobalAlpha(WimaWindow wwh, float alpha);
+void wima_style_setGlobalAlpha(WimaRenderContext* ctx, float alpha);
 
 ////////////////////////////////////////////////////////////////////////////////
 

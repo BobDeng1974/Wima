@@ -55,7 +55,7 @@
 
 #include "widget.h"
 
-#include "render/color.h"
+#include "render/render.h"
 
 global_decl;
 assert_msgs_decl;

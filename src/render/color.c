@@ -63,8 +63,7 @@
 
 #include "../global.h"
 
-#include "color.h"
-#include "theme.h"
+#include "render.h"
 
 assert_msgs_decl;
 

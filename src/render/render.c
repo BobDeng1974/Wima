@@ -63,8 +63,7 @@
 #include <wima/render.h>
 #include <wima/math.h>
 
-#include "../render/theme.h"
-#include "../render/color.h"
+#include "../render/render.h"
 #include "../global.h"
 #include "../window.h"
 

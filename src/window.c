@@ -49,7 +49,7 @@
 #include <nanovg.h>
 #include <nanovg_gl.h>
 
-#include "render/theme.h"
+#include "render/render.h"
 
 #include "callbacks.h"
 #include "region.h"

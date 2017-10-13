@@ -68,11 +68,11 @@
 
 #include <wima/prop.h>
 #include <wima/render.h>
+#include <wima/math.h>
 
-#include <math.h>
 #include "../global.h"
 #include "../prop.h"
-#include "theme.h"
+#include "render.h"
 
 global_decl;
 assert_msgs_decl;
