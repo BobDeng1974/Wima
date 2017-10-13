@@ -901,7 +901,7 @@ void wima_draw_line_join(WimaWindow wwh, int join);
 
 // Sets the transparency applied to all rendered shapes.
 // Already transparent paths will get proportionally more transparent as well.
-void wima_draw_globalAlpha(WimaWindow wwh, float alpha);
+void wima_draw_setGlobalAlpha(WimaWindow wwh, float alpha);
 
 #ifdef __cplusplus
 }
