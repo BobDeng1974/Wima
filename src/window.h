@@ -76,13 +76,13 @@
 typedef struct WimaWinCtx {
 
 	// Where the cursor was last frame.
-	WimaPos last_cursor;
+	WimaVec last_cursor;
 
 	// Where the cursor is currently.
-	WimaPos cursorPos;
+	WimaVec cursorPos;
 
 	// Accumulated scroll wheel offsets.
-	WimaPos scroll;
+	WimaVec scroll;
 
 	WimaWidget active;
 	WimaWidget focus;
@@ -98,7 +98,7 @@ typedef struct WimaWinCtx {
 
 	WimaMods mods;
 
-	WimaPos dragStart;
+	WimaVec dragStart;
 
 	WimaMouseSplitEvent split;
 
@@ -131,7 +131,7 @@ typedef struct WimaWin {
 
 	WimaMenu* menu;
 	const char* menuTitle;
-	WimaPos menuOffset;
+	WimaVec menuOffset;
 	int menuIcon;
 
 	float pixelRatio;

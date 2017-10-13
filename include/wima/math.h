@@ -98,10 +98,10 @@ int wima_min(int a, int b);
 
 float wima_clamp(float v, float mn, float mx);
 
-WimaRect wima_rect(WimaPos pos, WimaSize size);
+WimaRect wima_rect(WimaVec pos, WimaSize size);
 WimaRectf wima_rectf(WimaRect rect);
 
-bool wima_rect_contains(WimaRect r, WimaPos pos);
+bool wima_rect_contains(WimaRect r, WimaVec pos);
 
 float wima_radians(float deg);
 float wima_degrees(float rad);
@@ -138,6 +138,6 @@ WimaTransform wima_transform_premultiply(WimaTransform src1, WimaTransform src2)
 WimaTransform wima_transform_inverse(WimaTransform src);
 
 // Transform a point by given transform.
-WimaPosf wima_transform_point(WimaTransform transform, WimaPosf pos);
+WimaVecf wima_transform_point(WimaTransform transform, WimaVecf pos);
 
 #endif // WIMA_MATH_H

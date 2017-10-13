@@ -35,9 +35,11 @@ set(WIMA_RENDER_SRC
 
 	# Add source files here.
 	"color.c"
+	"paint.c"
 	"theme.c"
 	"state.c"
 	"style.c"
+	"path.c"
 	"render.c"
 )
 

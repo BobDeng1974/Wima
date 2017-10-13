@@ -310,7 +310,7 @@ WimaWidgetState wima_widget_state(WimaWidget item) {
 	return wima_widget_isHovered(item) ? WIMA_ITEM_HOVER : WIMA_ITEM_DEFAULT;
 }
 
-bool wima_widget_contains(WimaWidget item, WimaPos pos) {
+bool wima_widget_contains(WimaWidget item, WimaVec pos) {
 
 	assert_init;
 

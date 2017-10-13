@@ -280,7 +280,7 @@ WimaMods wima_window_mods(WimaWindow wwh) {
 	return win->ctx.mods;
 }
 
-WimaPos wima_window_scroll(WimaWindow wwh) {
+WimaVec wima_window_scroll(WimaWindow wwh) {
 
 	assert_init;
 
@@ -719,7 +719,7 @@ WimaCursor* wima_window_cursor_type(WimaWindow wwh) {
 	return (WimaCursor*) win->cursor;
 }
 
-WimaPos wima_window_cursor_start(WimaWindow wwh) {
+WimaVec wima_window_cursor_start(WimaWindow wwh) {
 
 	assert_init;
 
@@ -730,7 +730,7 @@ WimaPos wima_window_cursor_start(WimaWindow wwh) {
 	return win->ctx.last_cursor;
 }
 
-WimaPos wima_window_cursor_delta(WimaWindow wwh) {
+WimaVec wima_window_cursor_delta(WimaWindow wwh) {
 
 	assert_init;
 
@@ -738,7 +738,7 @@ WimaPos wima_window_cursor_delta(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	WimaPos result = {{{
+	WimaVec result = {{{
 	        win->ctx.cursorPos.x - win->ctx.last_cursor.x,
 	        win->ctx.cursorPos.y - win->ctx.last_cursor.y
 	}}};
@@ -749,7 +749,7 @@ WimaPos wima_window_cursor_delta(WimaWindow wwh) {
 // Static functions needed for private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaPos pos);
+static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos);
 static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wih, WimaEvent e);
 static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaMouseBtnEvent e);
 static WimaStatus wima_window_processFileDrop(WimaWindow wwh, DynaVector files);
@@ -983,10 +983,10 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	}
 
 	// Get the cursor.
-	WimaPos cursor = win->ctx.cursorPos;
+	WimaVec cursor = win->ctx.cursorPos;
 
 	// Need to keep this for later.
-	WimaPos pos = cursor;
+	WimaVec pos = cursor;
 
 	// Figure out if the cursor is.
 	bool menuContainsCursor = wima_rect_contains(wima_rect(menu->pos, menu->size), cursor);
@@ -1060,7 +1060,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaPos pos) {
+static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos) {
 
 	wassert(menu != NULL, WIMA_ASSERT_WINDOW_MENU);
 
@@ -1273,7 +1273,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		case WIMA_EVENT_WIN_POS:
 		{
 			if (wg.funcs.pos) {
-				WimaPos pos = e.pos;
+				WimaVec pos = e.pos;
 				status = wg.funcs.pos(wwh, pos);
 			}
 			else {
@@ -1355,7 +1355,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih,
 
 		WimaMenu* menu = win->menu;
 
-		WimaPos pos = win->ctx.cursorPos;
+		WimaVec pos = win->ctx.cursorPos;
 
 		WimaMenu* m = wima_window_menu_contains(menu, pos);
 

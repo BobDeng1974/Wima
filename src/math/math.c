@@ -116,7 +116,7 @@ float wima_clamp(float v, float mn, float mx) {
 	return (v > mx) ? mx : ((v < mn) ? mn : v);
 }
 
-WimaRect wima_rect(WimaPos pos, WimaSize size) {
+WimaRect wima_rect(WimaVec pos, WimaSize size) {
 
 	WimaRect r;
 
@@ -140,7 +140,7 @@ WimaRectf wima_rectf(WimaRect rect) {
 	return r;
 }
 
-bool wima_rect_contains(WimaRect r, WimaPos pos) {
+bool wima_rect_contains(WimaRect r, WimaVec pos) {
 
 	int x = pos.x - r.x;
 	int y = pos.y - r.y;
@@ -209,9 +209,9 @@ WimaTransform wima_transform_inverse(WimaTransform src) {
 	return dest;
 }
 
-WimaPosf wima_transform_point(WimaTransform transform, WimaPosf pos) {
+WimaVecf wima_transform_point(WimaTransform transform, WimaVecf pos) {
 
-	WimaPosf result;
+	WimaVecf result;
 
 	nvgTransformPoint(&result.x, &result.y, transform.v, pos.x, pos.y);
 

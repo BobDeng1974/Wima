@@ -190,7 +190,7 @@ typedef enum WimaWidgetState {
 } WimaWidgetState;
 
 // For cursor positions, mainly.
-typedef struct WimaPos {
+typedef struct WimaVec {
 
 	union {
 
@@ -205,10 +205,10 @@ typedef struct WimaPos {
 
 	};
 
-} WimaPos;
+} WimaVec;
 
 // For cursor positions, mainly.
-typedef struct WimaPosf {
+typedef struct WimaVecf {
 
 	union {
 
@@ -223,7 +223,7 @@ typedef struct WimaPosf {
 
 	};
 
-} WimaPosf;
+} WimaVecf;
 
 typedef struct WimaSize {
 
@@ -627,7 +627,7 @@ typedef struct WimaMouseDragEvent {
 
 	WimaMouseBtn button;
 	WimaMods mods;
-	WimaPos pos;
+	WimaVec pos;
 
 } WimaMouseDragEvent;
 
@@ -672,7 +672,7 @@ typedef struct WimaMenuItem {
 
 typedef struct WimaMenu {
 
-	WimaPos pos;
+	WimaVec pos;
 	WimaSize size;
 
 	union {
@@ -710,7 +710,7 @@ typedef void* (*WimaAreaGenUserPointerFunc)(WimaArea);
 typedef void (*WimaAreaFreeUserPointerFunc)(void*);
 typedef WimaStatus (*WimaAreaLayoutFunc)(WimaArea, WimaLayout, WimaSize);
 typedef WimaStatus (*WimaAreaKeyFunc)(WimaArea, WimaKeyEvent);
-typedef WimaStatus (*WimaAreaMousePosFunc)(WimaArea, WimaPos);
+typedef WimaStatus (*WimaAreaMousePosFunc)(WimaArea, WimaVec);
 typedef WimaStatus (*WimaAreaMouseEnterFunc)(WimaArea, bool);
 
 typedef struct WimaRegionFuncs {
@@ -730,7 +730,7 @@ typedef struct WimaMonitor WimaMonitor;
 typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaRenderContext*);
 typedef void (*WimaErrorFunc)(WimaStatus, const char*);
 typedef WimaStatus (*WimaWindowFileDropFunc)(WimaWindow, int, const char**);
-typedef WimaStatus (*WimaWindowPosFunc)(WimaWindow, WimaPos);
+typedef WimaStatus (*WimaWindowPosFunc)(WimaWindow, WimaVec);
 typedef WimaStatus (*WimaFramebufferSizeFunc)(WimaWindow, WimaSize);
 typedef WimaStatus (*WimaWindowSizeFunc)(WimaWindow, WimaSize);
 typedef WimaStatus (*WimaWindowMouseEnterFunc)(WimaWindow, bool);
@@ -839,7 +839,7 @@ WimaWidgetState wima_widget_state(WimaWidget item);
 
 // returns 1 if an items absolute rectangle contains a given coordinate
 // otherwise 0
-bool wima_widget_contains(WimaWidget item, WimaPos pos);
+bool wima_widget_contains(WimaWidget item, WimaVec pos);
 bool wima_widget_compare(WimaWidget item1, WimaWidget item2);
 bool wima_widget_isActive(WimaWidget item);
 bool wima_widget_isHovered(WimaWidget item);
@@ -870,7 +870,7 @@ WimaRegion wima_area_type(WimaArea wah);
 // return the total number of allocated items
 int wima_area_itemCount(WimaArea wah);
 
-bool wima_area_contains(WimaArea wah, WimaPos pos);
+bool wima_area_contains(WimaArea wah, WimaVec pos);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Workspace functions.
@@ -897,7 +897,7 @@ void* wima_window_userPointer(WimaWindow win);
 
 WimaStatus wima_window_setMods(WimaWindow wwh, WimaMods mods);
 WimaMods wima_window_mods(WimaWindow wwh);
-WimaPos wima_window_scroll(WimaWindow wwh);
+WimaVec wima_window_scroll(WimaWindow wwh);
 uint32_t wima_window_clicks(WimaWindow wwh);
 
 WimaStatus wima_window_setHover(WimaWindow wwh, WimaWidget wih);
@@ -930,8 +930,8 @@ WimaStatus wima_window_removeMenu(WimaWindow wwh);
 void wima_window_cursor_setType(WimaWindow wwh, WimaCursor* c);
 void wima_window_cursor_setStandardType(WimaWindow wwh, WimaCursorType c);
 WimaCursor* wima_window_cursor_type(WimaWindow wwh);
-WimaPos wima_window_cursor_start(WimaWindow wwh);
-WimaPos wima_window_cursor_delta(WimaWindow wwh);
+WimaVec wima_window_cursor_start(WimaWindow wwh);
+WimaVec wima_window_cursor_delta(WimaWindow wwh);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Wima global functions.

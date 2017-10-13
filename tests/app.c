@@ -207,7 +207,7 @@ WimaStatus cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_mousePos(WimaArea wah, WimaPos pos) {
+WimaStatus cb_mousePos(WimaArea wah, WimaVec pos) {
 
 #if 0
 	printf("Area[%d] Pos: { x: %4d; y: %4d }\n", wah.area, pos.x, pos.y);
@@ -315,7 +315,7 @@ WimaStatus cb_windowSize(WimaWindow wwh, WimaSize size) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_windowPos(WimaWindow wwh, WimaPos pos) {
+WimaStatus cb_windowPos(WimaWindow wwh, WimaVec pos) {
 
 #if 0
 	printf("Window[%d] moved to { %4d, %4d }\n", wwh, pos.x, pos.y);

@@ -219,6 +219,32 @@ WimaColor wima_color_hsla(float h, float s, float l, unsigned char a);
 // offset a color by a given integer delta in the range -100 to 100
 WimaColor wima_color_offset(WimaColor color, int delta);
 
+// Creates and returns a linear gradient. Parameters (sx,sy)-(ex,ey) specify the start and end coordinates
+// of the linear gradient, icol specifies the start color and ocol the end color.
+// The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
+WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, float sx, float sy, float ex, float ey,
+                                    WimaColor icol, WimaColor ocol);
+
+// Creates and returns a box gradient. Box gradient is a feathered rounded rectangle, it is useful for rendering
+// drop shadows or highlights for boxes. Parameters (x,y) define the top-left corner of the rectangle,
+// (w,h) define the size of the rectangle, r defines the corner radius, and f feather. Feather defines how blurry
+// the border of the rectangle is. Parameter icol specifies the inner color and ocol the outer color of the gradient.
+// The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
+WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, float x, float y, float w, float h,
+                                 float r, float f, WimaColor icol, WimaColor ocol);
+
+// Creates and returns a radial gradient. Parameters (cx,cy) specify the center, inr and outr specify
+// the inner and outer radius of the gradient, icol specifies the start color and ocol the end color.
+// The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
+WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, float cx, float cy, float inr, float outr,
+                                    WimaColor icol, WimaColor ocol);
+
+// Creates and returns an image patter. Parameters (ox,oy) specify the left-top location of the image pattern,
+// (ex,ey) the size of one image, angle rotation around the top-left corner, image is handle to the image to render.
+// The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
+WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, float ox, float oy, float ex, float ey,
+                                  float angle, int image, float alpha);
+
 // Flags indicating which corners are sharp (for grouping widgets).
 typedef enum WimaWidgetCorner {
 
@@ -888,13 +914,13 @@ WimaTheme* wima_theme();
 
 // Pushes and saves the current render state into a state stack.
 // A matching nvgRestore() must be used to restore the state.
-void wima_render_state_save(WimaRenderContext* ctx);
+void wima_render_save(WimaRenderContext* ctx);
 
 // Pops and restores current render state.
-void wima_render_state_restore(WimaRenderContext* ctx);
+void wima_render_restore(WimaRenderContext* ctx);
 
 // Resets current render state to default values. Does not affect the render state stack.
-void wima_render_state_reset(WimaRenderContext* ctx);
+void wima_render_reset(WimaRenderContext* ctx);
 
 // Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
 void wima_style_antialias(WimaRenderContext* ctx, bool enabled);
@@ -929,6 +955,107 @@ void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join);
 // Sets the transparency applied to all rendered shapes.
 // Already transparent paths will get proportionally more transparent as well.
 void wima_style_setGlobalAlpha(WimaRenderContext* ctx, float alpha);
+
+// Resets current transform to a identity matrix.
+void wima_render_resetTransform(WimaRenderContext* ctx);
+
+// Premultiplies current coordinate system by specified matrix.
+// The parameters are interpreted as matrix as follows:
+//   [a c e]
+//   [b d f]
+//   [0 0 1]
+void wima_render_transform(WimaRenderContext* ctx, WimaTransform tx);
+
+// Translates current coordinate system.
+void wima_render_translate(WimaRenderContext* ctx, WimaVecf vec);
+
+// Rotates current coordinate system. Angle is specified in radians.
+void wima_render_rotate(WimaRenderContext* ctx, float angle);
+
+// Skews the current coordinate system along X axis. Angle is specified in radians.
+void wima_render_skewX(WimaRenderContext* ctx, float angle);
+
+// Skews the current coordinate system along Y axis. Angle is specified in radians.
+void wima_render_skewY(WimaRenderContext* ctx, float angle);
+
+// Scales the current coordinate system.
+void wima_render_scale(WimaRenderContext* ctx, float x, float y);
+
+// Stores the top part (a-f) of the current transformation matrix in to the specified buffer.
+//   [a c e]
+//   [b d f]
+//   [0 0 1]
+// There should be space for 6 floats in the return buffer for the values a-f.
+WimaTransform wima_render_currentTransform(WimaRenderContext* ctx);
+
+// Sets the current scissor rectangle.
+// The scissor rectangle is transformed by the current transform.
+void wima_render_scissor(WimaRenderContext* ctx, WimaRectf rect);
+
+// Intersects current scissor rectangle with the specified rectangle.
+// The scissor rectangle is transformed by the current transform.
+// Note: in case the rotation of previous scissor rect differs from
+// the current one, the intersection will be done between the specified
+// rectangle and the previous scissor rectangle transformed in the current
+// transform space. The resulting shape is always rectangle.
+void wima_render_intersectScissor(WimaRenderContext* ctx, WimaRectf rect);
+
+// Reset and disables scissoring.
+void wima_render_resetScissor(WimaRenderContext* ctx);
+
+////////////////////////////////////////////////////////////////////////////////
+// Paths
+////////////////////////////////////////////////////////////////////////////////
+
+// Clears the current path and sub-paths.
+void wima_path_begin(WimaRenderContext* ctx);
+
+// Starts new sub-path with specified point as first point.
+void wima_path_moveTo(WimaRenderContext* ctx, WimaVecf pt);
+
+// Adds line segment from the last point in the path to the specified point.
+void wima_path_lineTo(WimaRenderContext* ctx, WimaVecf pt);
+
+// Adds cubic bezier segment from last point in the path via two control points to the specified point.
+void wima_path_bezierTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c1, WimaVecf c2);
+
+// Adds quadratic bezier segment from last point in the path via a control point to the specified point.
+void wima_path_quadTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c);
+
+// Adds an arc segment at the corner defined by the last path point, and two specified points.
+void wima_path_arcTo(WimaRenderContext* ctx, WimaVecf pt1, WimaVecf pt2, float radius);
+
+// Closes current sub-path with a line segment.
+void wima_path_close(WimaRenderContext* ctx);
+
+// Sets the current sub-path winding, see NVGwinding and NVGsolidity.
+void wima_path_winding(WimaRenderContext* ctx, WimaWinding dir);
+
+// Creates new circle arc shaped sub-path. The arc center is at cx,cy, the arc radius is r,
+// and the arc is drawn from angle a0 to a1, and swept in direction dir (NVG_CCW, or NVG_CW).
+// Angles are specified in radians.
+void wima_path_arc(WimaRenderContext* ctx, WimaVecf c, float r, float a0, float a1, WimaWinding dir);
+
+// Creates new rectangle shaped sub-path.
+void wima_path_rect(WimaRenderContext* ctx, WimaRectf rect);
+
+// Creates new rounded rectangle shaped sub-path.
+void wima_path_roundedRect(WimaRenderContext* ctx, WimaRectf rect, float r);
+
+// Creates new rounded rectangle shaped sub-path with varying radii for each corner.
+void wima_path_roundedRectVary(WimaRenderContext* ctx, WimaRectf rect, float tl, float tr, float br, float bl);
+
+// Creates new ellipse shaped sub-path.
+void wima_path_ellipse(WimaRenderContext* ctx, WimaVecf c, float rx, float ry);
+
+// Creates new circle shaped sub-path.
+void wima_path_circle(WimaRenderContext* ctx, WimaVecf c, float r);
+
+// Fills the current path with current fill style.
+void wima_path_fill(WimaRenderContext* ctx);
+
+// Fills the current path with current stroke style.
+void wima_path_stroke(WimaRenderContext* ctx);
 
 ////////////////////////////////////////////////////////////////////////////////
 

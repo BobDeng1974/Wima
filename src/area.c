@@ -148,7 +148,7 @@ int wima_area_itemCount(WimaArea wah) {
 	return area->area.ctx.itemCount;
 }
 
-bool wima_area_contains(WimaArea wah, WimaPos pos) {
+bool wima_area_contains(WimaArea wah, WimaVec pos) {
 
 	assert_init;
 
@@ -169,14 +169,14 @@ static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, DynaNode node, float ratio);
 static WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, bool adjustSplit);
 static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
-static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaPos cursor);
-static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, WimaMouseSplitEvent* result);
+static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaVec cursor);
+static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVec pos, WimaMouseSplitEvent* result);
 static WimaStatus wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bool isLeft, bool vertical);
 static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool isLeft, bool vertical);
-static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos pos, uint32_t flags);
+static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaVec pos, uint32_t flags);
 
 static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* right);
-static WimaPos wima_area_translatePos(WimaAr* area, WimaPos pos);
+static WimaVec wima_area_translatePos(WimaAr* area, WimaVec pos);
 static void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport);
 static void wima_area_popViewport(NVGcontext* nvg);
 static void wima_area_background(WimaAr* area, NVGcontext* nvg);
@@ -419,7 +419,7 @@ WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e) {
 	return status;
 }
 
-WimaStatus wima_area_mousePos(WimaAr* area, WimaPos pos) {
+WimaStatus wima_area_mousePos(WimaAr* area, WimaVec pos) {
 
 	assert_init;
 
@@ -635,7 +635,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 	return status;
 }
 
-WimaAreaNode wima_area_containsMouse(DynaTree areas, WimaPos cursor) {
+WimaAreaNode wima_area_containsMouse(DynaTree areas, WimaVec cursor) {
 
 	assert_init;
 	wassert(areas != NULL, WIMA_ASSERT_WINDOW_AREAS);
@@ -647,7 +647,7 @@ WimaAreaNode wima_area_containsMouse(DynaTree areas, WimaPos cursor) {
 	return wima_area_node_containsMouse(areas, dtree_node(areas, dtree_root()), cursor);
 }
 
-static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaPos cursor) {
+static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaVec cursor) {
 
 	WimaAreaNode result;
 
@@ -685,13 +685,13 @@ static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, W
 	return result;
 }
 
-bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos, WimaMouseSplitEvent* result) {
+bool wima_area_mouseOnSplit(DynaTree areas, WimaVec pos, WimaMouseSplitEvent* result) {
 	assert_init;
 	wassert(areas != NULL, WIMA_ASSERT_WINDOW_AREAS);
 	return wima_area_node_mouseOnSplit(areas, dtree_root(), pos, result);
 }
 
-static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos pos, WimaMouseSplitEvent* result) {
+static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVec pos, WimaMouseSplitEvent* result) {
 
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
@@ -706,7 +706,7 @@ static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos p
 	bool vertical = area->parent.vertical;
 	int split = area->parent.spliti;
 
-	WimaPos tx = wima_area_translatePos(area, pos);
+	WimaVec tx = wima_area_translatePos(area, pos);
 
 	if (vertical) {
 
@@ -749,7 +749,7 @@ static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaPos p
 	return on;
 }
 
-WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaPos cursor) {
+WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaVec cursor) {
 
 	assert_init;
 
@@ -757,7 +757,7 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 
 	WimaAr* area = dtree_node(areas, node);
 
-	WimaPos pos = wima_area_translatePos(area, cursor);
+	WimaVec pos = wima_area_translatePos(area, cursor);
 
 	int diff = (e.vertical ? pos.x : pos.y) - area->parent.spliti;
 
@@ -902,7 +902,7 @@ static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool is
 	return limit;
 }
 
-WimaWidget wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags) {
+WimaWidget wima_area_findItem(DynaTree areas, WimaVec pos, uint32_t flags) {
 
 	assert_init;
 
@@ -913,7 +913,7 @@ WimaWidget wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags) {
 	return wima_area_node_findItem(areas, dtree_node(areas, root), pos, flags);
 }
 
-static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaPos pos, uint32_t flags) {
+static WimaWidget wima_area_node_findItem(DynaTree areas, WimaAr* area, WimaVec pos, uint32_t flags) {
 
 	assert_init;
 
@@ -1029,11 +1029,11 @@ static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* righ
 	}
 }
 
-static WimaPos wima_area_translatePos(WimaAr* area, WimaPos pos) {
+static WimaVec wima_area_translatePos(WimaAr* area, WimaVec pos) {
 
 	assert_init;
 
-	WimaPos result;
+	WimaVec result;
 
 	result.x = pos.x - area->rect.x;
 	result.y = pos.y - area->rect.y;

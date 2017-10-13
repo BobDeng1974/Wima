@@ -111,7 +111,7 @@ bool wima_area_valid(DynaTree regions);
 WimaStatus wima_area_free(DynaTree areas);
 
 WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e);
-WimaStatus wima_area_mousePos(WimaAr* area, WimaPos pos);
+WimaStatus wima_area_mousePos(WimaAr* area, WimaVec pos);
 WimaStatus wima_area_mouseEnter(WimaAr* area, bool enter);
 
 WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas, float ratio);
@@ -123,9 +123,9 @@ WimaStatus wima_area_resize(DynaTree areas, WimaRect rect);
 // It is safe to immediately draw the items after a call to uiEndLayout().
 // this is an O(N) operation for N = number of declared items.
 WimaStatus wima_area_layout(DynaTree areas);
-WimaAreaNode wima_area_containsMouse(DynaTree areas, WimaPos cursor);
-bool wima_area_mouseOnSplit(DynaTree areas, WimaPos pos, WimaMouseSplitEvent* result);
-WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaPos cursor);
+WimaAreaNode wima_area_containsMouse(DynaTree areas, WimaVec cursor);
+bool wima_area_mouseOnSplit(DynaTree areas, WimaVec pos, WimaMouseSplitEvent* result);
+WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaVec cursor);
 
 // returns the topmost item containing absolute location (x,y), starting with
 // item as parent, using a set of flags and masks as filter:
@@ -134,7 +134,7 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 // otherwise the first item matching (item.flags & flags) == mask is returned.
 // you may combine box, layout, event and user flags.
 // frozen items will always be ignored.
-WimaWidget wima_area_findItem(DynaTree areas, WimaPos pos, uint32_t flags);
+WimaWidget wima_area_findItem(DynaTree areas, WimaVec pos, uint32_t flags);
 
 #ifdef __cplusplus
 }

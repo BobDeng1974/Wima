@@ -39,14 +39,63 @@
 #include <wima/render.h>
 #include "render.h"
 
-void wima_render_state_save(WimaRenderContext* ctx) {
+void wima_render_save(WimaRenderContext* ctx) {
 	nvgSave(ctx->nvg);
 }
 
-void wima_render_state_restore(WimaRenderContext* ctx) {
+void wima_render_restore(WimaRenderContext* ctx) {
 	nvgRestore(ctx->nvg);
 }
 
-void wima_render_state_reset(WimaRenderContext* ctx) {
+void wima_render_reset(WimaRenderContext* ctx) {
 	nvgReset(ctx->nvg);
+}
+
+void wima_render_resetTransform(WimaRenderContext* ctx) {
+	nvgResetTransform(ctx->nvg);
+}
+
+void wima_render_transform(WimaRenderContext* ctx, WimaTransform tx) {
+	nvgTransform(ctx->nvg, tx.v[0], tx.v[1], tx.v[2], tx.v[3], tx.v[4], tx.v[5]);
+}
+
+void wima_render_translate(WimaRenderContext* ctx, WimaVecf vec) {
+	nvgTranslate(ctx->nvg, vec.x, vec.y);
+}
+
+void wima_render_rotate(WimaRenderContext* ctx, float angle) {
+	nvgRotate(ctx->nvg, angle);
+}
+
+void wima_render_skewX(WimaRenderContext* ctx, float angle) {
+	nvgSkewX(ctx->nvg, angle);
+}
+
+void wima_render_skewY(WimaRenderContext* ctx, float angle) {
+	nvgSkewY(ctx->nvg, angle);
+}
+
+void wima_render_scale(WimaRenderContext* ctx, float x, float y) {
+	nvgScale(ctx->nvg, x, y);
+}
+
+WimaTransform wima_render_currentTransform(WimaRenderContext* ctx) {
+
+	WimaTransform result;
+
+	nvgCurrentTransform(ctx->nvg, result.v);
+
+	return result;
+}
+
+void wima_render_scissor(WimaRenderContext* ctx, WimaRectf rect) {
+	nvgScissor(ctx->nvg, rect.x, rect.y, rect.w, rect.h);
+}
+
+void wima_render_intersectScissor(WimaRenderContext* ctx, WimaRectf rect) {
+	nvgIntersectScissor(ctx->nvg, rect.x, rect.y, rect.w, rect.h);
+}
+
+void wima_render_resetScissor(WimaRenderContext* ctx) {
+	nvgResetScissor(ctx->nvg);
 }

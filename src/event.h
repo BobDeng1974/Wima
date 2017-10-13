@@ -113,7 +113,7 @@ typedef struct WimaEvent {
 
 		WimaMouseClickEvent click;
 
-		WimaPos pos;
+		WimaVec pos;
 
 		WimaMouseDragEvent drag;
 
