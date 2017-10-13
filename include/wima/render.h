@@ -131,6 +131,15 @@ typedef enum WimaLineCap {
 
 } WimaLineCap;
 
+typedef enum WimaLineJoin {
+
+	WIMA_JOIN_ROUND = WIMA_CAP_ROUND,
+	// Skip one.
+	WIMA_JOIN_BEVEL = WIMA_CAP_ROUND + 2,
+	WIMA_JOIN_MITER = WIMA_JOIN_BEVEL + 1,
+
+} WimaLineJoin;
+
 typedef enum WimaTextAlign {
 
 	// Horizontal align
