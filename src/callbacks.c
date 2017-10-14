@@ -39,6 +39,7 @@
 #include <string.h>
 
 #include <wima/wima.h>
+#include <wima/math.h>
 
 #include "callbacks.h"
 #include "widget.h"
@@ -323,8 +324,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	// in converting them to pixels; it just gives them back
 	// in floating point numbers, for whatever reason.
 	WimaVec pos;
-	pos.x = (int) x;
-	pos.y = (int) y;
+	pos.x = floor(x);
+	pos.y = floor(y);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
