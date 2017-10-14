@@ -62,6 +62,7 @@ const char* wima_assert_msgs[] = {
     "more than 16 icons provided",
 
     "window is not valid",
+    "window does not match its GLFW handle",
     "window area tree is null",
     "window does not match item",
     "window menu is not valid",

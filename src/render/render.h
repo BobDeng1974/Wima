@@ -42,9 +42,12 @@
 extern "C" {
 #endif
 
+#include <GLFW/glfw3.h>
+
 #include <nanovg.h>
 
 #include <wima/render.h>
+#include <wima/input.h>
 
 typedef struct WimaRenderContext {
 
@@ -81,6 +84,13 @@ typedef union WimaTxtRow {
 	WimaTextRow wima;
 
 } WimaTxtRow;
+
+typedef union WimaImg {
+
+	GLFWimage glfw;
+	WimaImage wima;
+
+} WimaImg;
 
 // TODO: Put these in the theme.
 

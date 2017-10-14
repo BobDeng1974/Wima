@@ -54,28 +54,6 @@ extern "C" {
 #include <dyna/string.h>
 #include <dyna/tree.h>
 
-typedef enum WimaCursorType {
-
-	// Standard arrow cursor.
-	WIMA_CURSOR_ARROW		= 0,
-
-	// Ibeam cursor.
-	WIMA_CURSOR_IBEAM,
-
-	// Crosshair cursor.
-	WIMA_CURSOR_CROSSHAIR,
-
-	// Hand cursor.
-	WIMA_CURSOR_HAND,
-
-	// Horizontal resize cursor.
-	WIMA_CURSOR_HRESIZE,
-
-	// Vertical resize cursor.
-	WIMA_CURSOR_VRESIZE
-
-} WimaCursorType;
-
 // Container flags to pass to uiSetBox().
 typedef enum WimaItemBox {
 
@@ -884,9 +862,6 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion
 // Window functions and definitions.
 ////////////////////////////////////////////////////////////////////////////////
 
-// Opaque struct type;
-typedef struct WimaCursor WimaCursor;
-
 WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph);
 WimaStatus wima_window_close(WimaWindow wwh);
 void wima_window_grabFocus(WimaWindow wwh);
@@ -927,12 +902,6 @@ WimaMenu* wima_window_menu(WimaWindow wwh);
 const char* wima_window_menuTitle(WimaWindow wwh);
 int wima_window_menuIcon(WimaWindow wwh);
 WimaStatus wima_window_removeMenu(WimaWindow wwh);
-
-void wima_window_cursor_setType(WimaWindow wwh, WimaCursor* c);
-void wima_window_cursor_setStandardType(WimaWindow wwh, WimaCursorType c);
-WimaCursor* wima_window_cursor_type(WimaWindow wwh);
-WimaVec wima_window_cursor_start(WimaWindow wwh);
-WimaVec wima_window_cursor_delta(WimaWindow wwh);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Wima global functions.

@@ -44,6 +44,7 @@
 #include <wima/wima.h>
 #include <wima/render.h>
 #include <wima/math.h>
+#include <wima/input.h>
 
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg.h>
@@ -216,6 +217,8 @@ void wima_window_grabFocus(WimaWindow wwh) {
 	assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	wg.currentWin = wwh;
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
@@ -691,69 +694,6 @@ WimaStatus wima_window_removeMenu(WimaWindow wwh) {
 	win->flags = 0;
 
 	return WIMA_STATUS_SUCCESS;
-}
-
-void wima_window_cursor_setType(WimaWindow wwh, WimaCursor* cursor) {
-
-	assert_init;
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	GLFWcursor* c =(GLFWcursor*) cursor;
-
-	win->cursor = c;
-	glfwSetCursor(win->window, c);
-}
-
-void wima_window_cursor_setStandardType(WimaWindow wwh, WimaCursorType c) {
-
-	assert_init;
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	win->cursor = wg.cursors[c];
-	glfwSetCursor(win->window, wg.cursors[c]);
-}
-
-WimaCursor* wima_window_cursor_type(WimaWindow wwh) {
-
-	assert_init;
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	return (WimaCursor*) win->cursor;
-}
-
-WimaVec wima_window_cursor_start(WimaWindow wwh) {
-
-	assert_init;
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	return win->ctx.last_cursor;
-}
-
-WimaVec wima_window_cursor_delta(WimaWindow wwh) {
-
-	assert_init;
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	WimaVec result = {{{
-	        win->ctx.cursorPos.x - win->ctx.last_cursor.x,
-	        win->ctx.cursorPos.y - win->ctx.last_cursor.y
-	}}};
-	return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

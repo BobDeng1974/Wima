@@ -66,12 +66,15 @@ add_subdirectory(math)
 
 add_subdirectory(render)
 
+add_subdirectory(input)
+
 set(WIMA_GLAD "${PROJECT_NAME}_glad")
 
 create_pic_library(
 	"${PROJECT_NAME}" "${PROJECT_NAME}" "${WIMA_SRC}" "YES"
 
 	# Put the needed libraries here.
+	"${WIMA_INPUT}"
 	"${WIMA_DRAW}"
 	"${WIMA_GLOBAL}"
 	"${NANOVG_PIC}"

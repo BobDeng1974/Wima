@@ -40,6 +40,7 @@
 
 #include <wima/wima.h>
 #include <wima/math.h>
+#include <wima/input.h>
 
 #include "callbacks.h"
 #include "widget.h"
@@ -808,7 +809,7 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 
 	if (hasFocus) {
 		wima_window_setDirty(wwin, false);
-		glfwMakeContextCurrent(window);
+		wima_window_grabFocus(wwh);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
