@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+#include <wima/wima.h>
+
 typedef struct WimaVideoMode {
 
 	int width;
@@ -101,6 +103,8 @@ void wima_cursor_destroy(WimaCursor* cursor);
 void wima_cursor_setType(WimaCursor* c);
 void wima_cursor_setStandardType(WimaCursorType c);
 WimaCursor* wima_cursor_type();
+
+WimaVec wima_cursor_pos();
 WimaVec wima_cursor_start();
 WimaVec wima_cursor_delta();
 

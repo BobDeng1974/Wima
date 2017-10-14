@@ -102,6 +102,19 @@ WimaCursor* wima_cursor_type() {
 	return (WimaCursor*) win->cursor;
 }
 
+WimaVec wima_cursor_pos() {
+
+	assert_init;
+
+	wassert(wima_window_valid(wg.currentWin), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wg.currentWin);
+
+	wassert(win->window == glfwGetCurrentContext(), WIMA_ASSERT_WINDOW_GLFW_MISMATCH);
+
+	return win->ctx.cursorPos;
+}
+
 WimaVec wima_cursor_start() {
 
 	assert_init;
