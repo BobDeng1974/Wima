@@ -808,6 +808,7 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 
 	if (hasFocus) {
 		wima_window_setDirty(wwin, false);
+		glfwMakeContextCurrent(window);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
