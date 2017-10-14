@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
+
 #include <wima/wima.h>
 
 typedef struct WimaVideoMode {
@@ -94,6 +96,14 @@ typedef enum WimaCursorType {
 
 } WimaCursorType;
 
+typedef enum WimaCursorMode {
+
+	WIMA_CURSOR_NORMAL,
+	WIMA_CURSOR_HIDDEN,
+	WIMA_CURSOR_DISABLED
+
+} WimaCursorMode;
+
 // Opaque struct type;
 typedef struct WimaCursor WimaCursor;
 
@@ -104,9 +114,24 @@ void wima_cursor_setType(WimaCursor* c);
 void wima_cursor_setStandardType(WimaCursorType c);
 WimaCursor* wima_cursor_type();
 
+void wima_cursor_setMode(WimaCursorMode mode);
+WimaCursorMode wima_cursor_mode();
+
+void wima_cursor_setPos(WimaVec pos);
 WimaVec wima_cursor_pos();
 WimaVec wima_cursor_start();
 WimaVec wima_cursor_delta();
+
+void wima_input_setStickyKeys(bool enabled);
+bool wima_input_stickyKeys();
+void wima_input_setStickyMouseBtns(bool enabled);
+bool wima_input_stickMouseBtns();
+
+// TODO: These are not done.
+const char* wima_key_name(WimaKey key, int scancode);
+WimaAction wima_key_state(WimaKey key);
+
+WimaAction wima_mouse_state(WimaMouseBtn btn);
 
 #ifdef __cplusplus
 }

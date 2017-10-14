@@ -102,6 +102,32 @@ WimaCursor* wima_cursor_type() {
 	return (WimaCursor*) win->cursor;
 }
 
+void wima_cursor_setMode(WimaCursorMode mode) {
+	glfwSetInputMode(glfwGetCurrentContext(), GLFW_CURSOR, mode + GLFW_CURSOR_NORMAL);
+}
+
+WimaCursorMode wima_cursor_mode() {
+
+	int mode = glfwGetInputMode(glfwGetCurrentContext(), GLFW_CURSOR);
+
+	return (WimaCursorMode) (mode - GLFW_CURSOR_NORMAL);
+}
+
+void wima_cursor_setPos(WimaVec pos) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wg.currentWin), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wg.currentWin);
+
+	wassert(win->window == glfwGetCurrentContext(), WIMA_ASSERT_WINDOW_GLFW_MISMATCH);
+
+	win->ctx.cursorPos = pos;
+
+	glfwSetCursorPos(glfwGetCurrentContext(), (double) pos.x, (double) pos.y);
+}
+
 WimaVec wima_cursor_pos() {
 
 	assert_init;

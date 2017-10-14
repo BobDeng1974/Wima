@@ -31,6 +31,7 @@ set(WIMA_INPUT_SRC
 
 	# Add source files here.
 	"cursor.c"
+	"input.c"
 )
 
 set(WIMA_MATH "${PROJECT_NAME}_math")
