@@ -889,6 +889,7 @@ typedef struct WimaCursor WimaCursor;
 
 WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph);
 WimaStatus wima_window_close(WimaWindow wwh);
+void wima_window_grabFocus(WimaWindow wwh);
 
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title);
 DynaString wima_window_title(WimaWindow wwh);

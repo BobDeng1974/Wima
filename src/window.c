@@ -211,6 +211,17 @@ WimaStatus wima_window_close(WimaWindow wwh) {
 	return WIMA_STATUS_SUCCESS;
 }
 
+void wima_window_grabFocus(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwMakeContextCurrent(win->window);
+}
+
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {
 
 	assert_init;
