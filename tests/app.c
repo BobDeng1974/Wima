@@ -106,13 +106,13 @@ WimaStatus cb_draw(WimaWidget item, WimaRenderContext* ctx) {
 
 	const char* stuff = "This has 2 lines.\nIt's a test.";
 
-	float width = wima_widget_label_estimateWidth(nvg, WIMA_ICONID(0,0), stuff);
-	float height = wima_widget_label_estimateHeight(nvg, WIMA_ICONID(0,0), stuff, width);
+	float width = wima_render_label_estimateWidth(ctx, WIMA_ICONID(0,0), stuff);
+	float height = wima_render_label_estimateHeight(ctx, WIMA_ICONID(0,0), stuff, width);
 
-	wima_widget_choiceBtn(nvg, r.x, r.y, r.w, r.h, 0, WIMA_ITEM_DEFAULT, -1, "Stuff");
+	wima_render_choiceBtn(ctx, r.x, r.y, r.w, r.h, 0, WIMA_ITEM_DEFAULT, -1, "Stuff");
 
-	wima_widget_tooltip_background(nvg, r.x + 2, r.y + 2, width, height);
-	wima_widget_label(nvg, r.x + 2, r.y + 2, width, height, WIMA_ICONID(0,0), stuff);
+	wima_render_tooltip_background(ctx, r.x + 2, r.y + 2, width, height);
+	wima_render_label(ctx, r.x + 2, r.y + 2, width, height, WIMA_ICONID(0,0), stuff);
 #endif
 
 	wima_render_label(ctx, r.x, r.y, r.w, r.h, WIMA_ICONID(0,0), buffer);
