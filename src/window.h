@@ -103,12 +103,13 @@ typedef struct WimaWinCtx {
 	WimaMouseSplitEvent split;
 
 	uint32_t eventCount;
-	WimaEvent events[WIMA_MAX_EVENTS];
-	WimaWidget eventItems[WIMA_MAX_EVENTS];
 
 	WimaAreaNode cursorArea;
 
 	bool movingSplit;
+
+	WimaEvent events[WIMA_MAX_EVENTS];
+	WimaWidget eventItems[WIMA_MAX_EVENTS];
 
 } WimaWinCtx;
 

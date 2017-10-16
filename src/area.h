@@ -94,9 +94,9 @@ typedef struct WimaAr {
 
 	WimaRect rect;
 
-	WimaWindow window;
 	WimaAreaNode node;
 
+	WimaWindow window;
 	bool isParent;
 
 } WimaAr;

@@ -596,8 +596,8 @@ typedef struct WimaMouseBtnEvent {
 typedef struct WimaMouseClickEvent {
 
 	uint32_t timestamp;
-	uint16_t clicks;
 	WimaMods mods;
+	uint16_t clicks;
 
 } WimaMouseClickEvent;
 
