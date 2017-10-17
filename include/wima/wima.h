@@ -281,6 +281,67 @@ typedef struct WimaTransform {
 
 } WimaTransform;
 
+// Opaque struct type;
+typedef struct WimaCursor WimaCursor;
+
+typedef struct WimaVideoMode {
+
+	int width;
+	int height;
+	int redBits;
+	int greenBits;
+	int blueBits;
+	int refreshRate;
+
+} WimaVideoMode;
+
+typedef struct WimaGammaRamp {
+
+	unsigned short* red;
+	unsigned short* green;
+	unsigned short* blue;
+	unsigned int size;
+
+} WimaGammaRamp;
+
+typedef struct WimaImage {
+
+	int width;
+	int height;
+	unsigned char* pixels;
+
+} WimaImage;
+
+typedef enum WimaCursorType {
+
+	// Standard arrow cursor.
+	WIMA_CURSOR_ARROW		= 0,
+
+	// Ibeam cursor.
+	WIMA_CURSOR_IBEAM,
+
+	// Crosshair cursor.
+	WIMA_CURSOR_CROSSHAIR,
+
+	// Hand cursor.
+	WIMA_CURSOR_HAND,
+
+	// Horizontal resize cursor.
+	WIMA_CURSOR_HRESIZE,
+
+	// Vertical resize cursor.
+	WIMA_CURSOR_VRESIZE
+
+} WimaCursorType;
+
+typedef enum WimaCursorMode {
+
+	WIMA_CURSOR_NORMAL,
+	WIMA_CURSOR_HIDDEN,
+	WIMA_CURSOR_DISABLED
+
+} WimaCursorMode;
+
 /**
  * A handle to a region (area template) type.
  */
@@ -734,6 +795,24 @@ typedef struct WimaAppFuncs {
 } WimaAppFuncs;
 
 ////////////////////////////////////////////////////////////////////////////////
+// Cursor and key functions.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) yinline;
+void wima_cursor_destroy(WimaCursor* cursor) yinline;
+
+const char* wima_key_name(WimaKey key, int scancode) yinline;
+
+////////////////////////////////////////////////////////////////////////////////
+// Time functions.
+////////////////////////////////////////////////////////////////////////////////
+
+void wima_setTime(double time) yinline;
+double wima_time() yinline;
+uint64_t wima_time_raw() yinline;
+uint64_t wima_time_freq() yinline;
+
+////////////////////////////////////////////////////////////////////////////////
 // Widget functions.
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -902,6 +981,30 @@ WimaMenu* wima_window_menu(WimaWindow wwh);
 const char* wima_window_menuTitle(WimaWindow wwh);
 int wima_window_menuIcon(WimaWindow wwh);
 WimaStatus wima_window_removeMenu(WimaWindow wwh);
+
+void wima_window_setCursorType(WimaWindow wwh, WimaCursor* c) yinline;
+void wima_window_setStandardCursorType(WimaWindow wwh, WimaCursorType c) yinline;
+WimaCursor* wima_window_cursorType(WimaWindow wwh) yinline;
+
+void wima_window_setCursorMode(WimaWindow wwh, WimaCursorMode mode) yinline;
+WimaCursorMode wima_window_cursorMode(WimaWindow wwh) yinline;
+
+void wima_window_setCursorPos(WimaWindow wwh, WimaVec pos) yinline;
+WimaVec wima_window_cursorPos(WimaWindow wwh) yinline;
+WimaVec wima_window_cursorStart(WimaWindow wwh) yinline;
+WimaVec wima_window_cursorDelta(WimaWindow wwh) yinline;
+
+void wima_window_setStickyKeys(WimaWindow wwh, bool enabled) yinline;
+bool wima_window_stickyKeys(WimaWindow wwh) yinline;
+void wima_window_setStickyMouseBtns(WimaWindow wwh, bool enabled) yinline;
+bool wima_window_stickyMouseBtns(WimaWindow wwh) yinline;
+
+WimaAction wima_window_keyState(WimaWindow wwh, WimaKey key) yinline;
+
+WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) yinline;
+
+void wima_window_setClipboard(WimaWindow wwh, const char* string) yinline;
+const char* wima_window_clipboard(WimaWindow wwh) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Wima global functions.

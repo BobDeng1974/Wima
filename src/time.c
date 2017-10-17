@@ -29,65 +29,29 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	Source code for Wima input.
+ *	Functions to manipulate time.
  *
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <stdbool.h>
+#include <stdint.h>
 
-#include <wima/input.h>
+#include <wima/wima.h>
 
 #include <GLFW/glfw3.h>
 
-void wima_input_setStickyKeys(bool enabled) {
-	glfwSetInputMode(glfwGetCurrentContext(), GLFW_STICKY_KEYS, enabled ? GLFW_TRUE : GLFW_FALSE);
-}
-
-bool wima_input_stickyKeys() {
-	return glfwGetInputMode(glfwGetCurrentContext(), GLFW_STICKY_KEYS) == GLFW_TRUE;
-}
-
-void wima_input_setStickyMouseBtns(bool enabled) {
-	glfwSetInputMode(glfwGetCurrentContext(), GLFW_STICKY_MOUSE_BUTTONS, enabled ? GLFW_TRUE : GLFW_FALSE);
-}
-
-bool wima_input_stickMouseBtns() {
-	return glfwGetInputMode(glfwGetCurrentContext(), GLFW_STICKY_MOUSE_BUTTONS) == GLFW_TRUE;
-}
-
-const char* wima_input_key_name(WimaKey key, int scancode) {
-	return glfwGetKeyName(key, scancode);
-}
-
-WimaAction wima_input_key(WimaKey key) {
-	return (WimaAction) glfwGetKey(glfwGetCurrentContext(), key);
-}
-
-WimaAction wima_input_mouse(WimaMouseBtn btn) {
-	return (WimaAction) glfwGetMouseButton(glfwGetCurrentContext(), btn);
-}
-
-void wima_input_setClipboard(const char* string) {
-	glfwSetClipboardString(glfwGetCurrentContext(), string);
-}
-
-const char* wima_input_clipboard() {
-	return glfwGetClipboardString(glfwGetCurrentContext());
-}
-
-void wima_input_setTime(double time) {
+void wima_setTime(double time) {
 	glfwSetTime(time);
 }
 
-double wima_input_time() {
+double wima_time() {
 	return glfwGetTime();
 }
 
-uint64_t wima_input_time_raw() {
+uint64_t wima_time_raw() {
 	return glfwGetTimerValue();
 }
 
-uint64_t wima_input_time_freq() {
+uint64_t wima_time_freq() {
 	return glfwGetTimerFrequency();
 }

@@ -696,6 +696,206 @@ WimaStatus wima_window_removeMenu(WimaWindow wwh) {
 	return WIMA_STATUS_SUCCESS;
 }
 
+void wima_window_setCursorType(WimaWindow wwh, WimaCursor* cursor) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	GLFWcursor* c =(GLFWcursor*) cursor;
+
+	win->cursor = c;
+	glfwSetCursor(win->window, c);
+}
+
+void wima_window_setStandardCursorType(WimaWindow wwh, WimaCursorType c) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	win->cursor = wg.cursors[c];
+	glfwSetCursor(win->window, wg.cursors[c]);
+}
+
+WimaCursor* wima_window_cursorType(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return (WimaCursor*) win->cursor;
+}
+
+void wima_window_setCursorMode(WimaWindow wwh, WimaCursorMode mode) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwSetInputMode(win->window, GLFW_CURSOR, mode + GLFW_CURSOR_NORMAL);
+}
+
+WimaCursorMode wima_window_cursorMode(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	int mode = glfwGetInputMode(win->window, GLFW_CURSOR);
+
+	return (WimaCursorMode) (mode - GLFW_CURSOR_NORMAL);
+}
+
+void wima_window_setCursorPos(WimaWindow wwh, WimaVec pos) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	win->ctx.cursorPos = pos;
+
+	glfwSetCursorPos(win->window, (double) pos.x, (double) pos.y);
+}
+
+WimaVec wima_window_cursorPos(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return win->ctx.cursorPos;
+}
+
+WimaVec wima_window_cursorStart(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return win->ctx.last_cursor;
+}
+
+WimaVec wima_window_cursorDelta(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	WimaVec result = {{{
+	        win->ctx.cursorPos.x - win->ctx.last_cursor.x,
+	        win->ctx.cursorPos.y - win->ctx.last_cursor.y
+	}}};
+
+	return result;
+}
+
+void wima_window_setStickyKeys(WimaWindow wwh, bool enabled) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwSetInputMode(win->window, GLFW_STICKY_KEYS, enabled ? GLFW_TRUE : GLFW_FALSE);
+}
+
+bool wima_window_stickyKeys(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return glfwGetInputMode(win->window, GLFW_STICKY_KEYS) == GLFW_TRUE;
+}
+
+void wima_window_setStickyMouseBtns(WimaWindow wwh, bool enabled) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwSetInputMode(win->window, GLFW_STICKY_MOUSE_BUTTONS, enabled ? GLFW_TRUE : GLFW_FALSE);
+}
+
+bool wima_window_stickyMouseBtns(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return glfwGetInputMode(win->window, GLFW_STICKY_MOUSE_BUTTONS) == GLFW_TRUE;
+}
+
+WimaAction wima_window_keyState(WimaWindow wwh, WimaKey key) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return (WimaAction) glfwGetKey(win->window, key);
+}
+
+WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return (WimaAction) glfwGetMouseButton(win->window, btn);
+}
+
+void wima_window_setClipboard(WimaWindow wwh, const char* string) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwSetClipboardString(win->window, string);
+}
+
+const char* wima_window_clipboard(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return glfwGetClipboardString(win->window);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions needed for private functions.
 ////////////////////////////////////////////////////////////////////////////////

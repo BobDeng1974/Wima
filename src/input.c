@@ -29,21 +29,34 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	<Put description here>
+ *	Functions for manipulating cursors.
  *
  *	******** END FILE DESCRIPTION ********
  */
 
-#ifndef WIMA_INPUT_PRIVATE_H
-#define WIMA_INPUT_PRIVATE_H
+#include <wima/wima.h>
+#include <wima/input.h>
 
-/* For C++ compatibility. */
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "global.h"
+#include "window.h"
 
-#ifdef __cplusplus
+#include "render/render.h"
+
+global_decl;
+assert_msgs_decl;
+
+WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) {
+
+	WimaImg i;
+	i.wima = img;
+
+	return (WimaCursor*) glfwCreateCursor(&i.glfw, xhot, yhot);
 }
-#endif
 
-#endif // WIMA_INPUT_PRIVATE_H
+void wima_cursor_destroy(WimaCursor* cursor) {
+	glfwDestroyCursor((GLFWcursor*) cursor);
+}
+
+const char* wima_key_name(WimaKey key, int scancode) {
+	return glfwGetKeyName(key, scancode);
+}

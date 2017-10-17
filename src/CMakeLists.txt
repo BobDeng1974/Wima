@@ -48,6 +48,8 @@ create_pic_library("${WIMA_GLOBAL}" "${WIMA_GLOBAL}" "${WIMA_GLOBAL_SRC}" YES
 set(WIMA_SRC
 
 	# Put all source files here.
+	"time.c"
+	"input.c"
 	"prop.c"
 	"widget.c"
 	"layout.c"
@@ -65,8 +67,6 @@ include_directories("../include")
 add_subdirectory(math)
 
 add_subdirectory(render)
-
-add_subdirectory(input)
 
 set(WIMA_GLAD "${PROJECT_NAME}_glad")
 
