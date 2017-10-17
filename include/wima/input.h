@@ -128,10 +128,18 @@ void wima_input_setStickyMouseBtns(bool enabled);
 bool wima_input_stickMouseBtns();
 
 // TODO: These are not done.
-const char* wima_key_name(WimaKey key, int scancode);
-WimaAction wima_key_state(WimaKey key);
+const char* wima_input_key_name(WimaKey key, int scancode);
+WimaAction wima_input_key(WimaKey key);
 
-WimaAction wima_mouse_state(WimaMouseBtn btn);
+WimaAction wima_input_mouse(WimaMouseBtn btn);
+
+void wima_input_setClipboard(const char* string);
+const char* wima_input_clipboard();
+
+void wima_input_setTime(double time);
+double wima_input_time();
+uint64_t wima_input_time_raw();
+uint64_t wima_input_time_freq();
 
 #ifdef __cplusplus
 }

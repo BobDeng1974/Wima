@@ -55,3 +55,39 @@ void wima_input_setStickyMouseBtns(bool enabled) {
 bool wima_input_stickMouseBtns() {
 	return glfwGetInputMode(glfwGetCurrentContext(), GLFW_STICKY_MOUSE_BUTTONS) == GLFW_TRUE;
 }
+
+const char* wima_input_key_name(WimaKey key, int scancode) {
+	return glfwGetKeyName(key, scancode);
+}
+
+WimaAction wima_input_key(WimaKey key) {
+	return (WimaAction) glfwGetKey(glfwGetCurrentContext(), key);
+}
+
+WimaAction wima_input_mouse(WimaMouseBtn btn) {
+	return (WimaAction) glfwGetMouseButton(glfwGetCurrentContext(), btn);
+}
+
+void wima_input_setClipboard(const char* string) {
+	glfwSetClipboardString(glfwGetCurrentContext(), string);
+}
+
+const char* wima_input_clipboard() {
+	return glfwGetClipboardString(glfwGetCurrentContext());
+}
+
+void wima_input_setTime(double time) {
+	glfwSetTime(time);
+}
+
+double wima_input_time() {
+	return glfwGetTime();
+}
+
+uint64_t wima_input_time_raw() {
+	return glfwGetTimerValue();
+}
+
+uint64_t wima_input_time_freq() {
+	return glfwGetTimerFrequency();
+}
