@@ -71,7 +71,7 @@ static void wima_window_clearContext(WimaWinCtx* ctx);
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph) {
+WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, bool resizable, bool decorated) {
 
 	assert_init;
 
@@ -94,6 +94,8 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph) {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 	glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
+	glfwWindowHint(GLFW_DECORATED, decorated ? GLFW_TRUE : GLFW_FALSE);
+	glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
 
 	const char* name = dstr_str(wg.name);
 
@@ -235,6 +237,116 @@ bool wima_window_focused(WimaWindow wwh) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	return glfwGetWindowAttrib(win->window, GLFW_FOCUSED) == GLFW_TRUE;
+}
+
+void wima_window_minimize(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwIconifyWindow(win->window);
+}
+
+bool wima_window_minimized(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return glfwGetWindowAttrib(win->window, GLFW_ICONIFIED) == GLFW_TRUE;
+}
+
+void wima_window_maximize(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwMaximizeWindow(win->window);
+}
+
+bool wima_window_maximized(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return glfwGetWindowAttrib(win->window, GLFW_MAXIMIZED) == GLFW_TRUE;
+}
+
+void wima_window_restore(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwRestoreWindow(win->window);
+}
+
+void wima_window_hide(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwHideWindow(win->window);
+}
+
+void wima_window_show(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwShowWindow(win->window);
+}
+
+bool wima_window_visible(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return glfwGetWindowAttrib(win->window, GLFW_VISIBLE) == GLFW_TRUE;
+}
+
+bool wima_window_decorated(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return glfwGetWindowAttrib(win->window, GLFW_DECORATED) == GLFW_TRUE;
+}
+
+bool wima_window_resizable(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return glfwGetWindowAttrib(win->window, GLFW_RESIZABLE) == GLFW_TRUE;
 }
 
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {

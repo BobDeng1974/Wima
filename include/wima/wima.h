@@ -941,11 +941,25 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion
 // Window functions and definitions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph);
+WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, bool resizable, bool decorated);
 WimaStatus wima_window_close(WimaWindow wwh);
 
 void wima_window_setFocused(WimaWindow wwh);
 bool wima_window_focused(WimaWindow wwh);
+
+void wima_window_minimize(WimaWindow wwh);
+bool wima_window_minimized(WimaWindow wwh);
+
+void wima_window_maximize(WimaWindow wwh);
+bool wima_window_maximized(WimaWindow wwh);
+void wima_window_restore(WimaWindow wwh);
+
+void wima_window_hide(WimaWindow wwh);
+void wima_window_show(WimaWindow wwh);
+bool wima_window_visible(WimaWindow wwh);
+
+bool wima_window_decorated(WimaWindow wwh);
+bool wima_window_resizable(WimaWindow wwh);
 
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title);
 DynaString wima_window_title(WimaWindow wwh);

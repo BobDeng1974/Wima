@@ -487,7 +487,7 @@ int main() {
 	WimaWindow wwh;
 
 	// Create the window and check for error.
-	status = wima_window_create(&wwh, wksp);
+	status = wima_window_create(&wwh, wksp, true, true);
 	if (status) {
 		return status;
 	}
