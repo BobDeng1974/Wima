@@ -44,6 +44,8 @@ extern "C" {
 
 #include <stdbool.h>
 
+#include <yc/opt.h>
+
 #include <wima/wima.h>
 
 typedef struct WimaVideoMode {
@@ -107,39 +109,39 @@ typedef enum WimaCursorMode {
 // Opaque struct type;
 typedef struct WimaCursor WimaCursor;
 
-WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot);
-void wima_cursor_destroy(WimaCursor* cursor);
+WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) yinline;
+void wima_cursor_destroy(WimaCursor* cursor) yinline;
 
-void wima_cursor_setType(WimaCursor* c);
-void wima_cursor_setStandardType(WimaCursorType c);
-WimaCursor* wima_cursor_type();
+void wima_cursor_setType(WimaCursor* c) yinline;
+void wima_cursor_setStandardType(WimaCursorType c) yinline;
+WimaCursor* wima_cursor_type() yinline;
 
-void wima_cursor_setMode(WimaCursorMode mode);
-WimaCursorMode wima_cursor_mode();
+void wima_cursor_setMode(WimaCursorMode mode) yinline;
+WimaCursorMode wima_cursor_mode() yinline;
 
-void wima_cursor_setPos(WimaVec pos);
-WimaVec wima_cursor_pos();
-WimaVec wima_cursor_start();
-WimaVec wima_cursor_delta();
+void wima_cursor_setPos(WimaVec pos) yinline;
+WimaVec wima_cursor_pos() yinline;
+WimaVec wima_cursor_start() yinline;
+WimaVec wima_cursor_delta() yinline;
 
-void wima_input_setStickyKeys(bool enabled);
-bool wima_input_stickyKeys();
-void wima_input_setStickyMouseBtns(bool enabled);
-bool wima_input_stickMouseBtns();
+void wima_input_setStickyKeys(bool enabled) yinline;
+bool wima_input_stickyKeys() yinline;
+void wima_input_setStickyMouseBtns(bool enabled) yinline;
+bool wima_input_stickMouseBtns() yinline;
 
 // TODO: These are not done.
-const char* wima_input_key_name(WimaKey key, int scancode);
-WimaAction wima_input_key(WimaKey key);
+const char* wima_input_key_name(WimaKey key, int scancode) yinline;
+WimaAction wima_input_key(WimaKey key) yinline;
 
-WimaAction wima_input_mouse(WimaMouseBtn btn);
+WimaAction wima_input_mouse(WimaMouseBtn btn) yinline;
 
-void wima_input_setClipboard(const char* string);
-const char* wima_input_clipboard();
+void wima_input_setClipboard(const char* string) yinline;
+const char* wima_input_clipboard() yinline;
 
-void wima_input_setTime(double time);
-double wima_input_time();
-uint64_t wima_input_time_raw();
-uint64_t wima_input_time_freq();
+void wima_input_setTime(double time) yinline;
+double wima_input_time() yinline;
+uint64_t wima_input_time_raw() yinline;
+uint64_t wima_input_time_freq() yinline;
 
 #ifdef __cplusplus
 }
