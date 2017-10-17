@@ -943,7 +943,9 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion
 
 WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph);
 WimaStatus wima_window_close(WimaWindow wwh);
-void wima_window_grabFocus(WimaWindow wwh);
+
+void wima_window_setFocused(WimaWindow wwh);
+bool wima_window_focused(WimaWindow wwh);
 
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title);
 DynaString wima_window_title(WimaWindow wwh);

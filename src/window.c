@@ -93,6 +93,7 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+	glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
 
 	const char* name = dstr_str(wg.name);
 
@@ -212,7 +213,7 @@ WimaStatus wima_window_close(WimaWindow wwh) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-void wima_window_grabFocus(WimaWindow wwh) {
+void wima_window_setFocused(WimaWindow wwh) {
 
 	assert_init;
 
@@ -223,6 +224,17 @@ void wima_window_grabFocus(WimaWindow wwh) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	glfwMakeContextCurrent(win->window);
+}
+
+bool wima_window_focused(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return glfwGetWindowAttrib(win->window, GLFW_FOCUSED) == GLFW_TRUE;
 }
 
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {

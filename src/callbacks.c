@@ -809,7 +809,7 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 
 	if (hasFocus) {
 		wima_window_setDirty(wwin, false);
-		wima_window_grabFocus(wwh);
+		wima_window_setFocused(wwh);
 	}
 
 	int numEvents = wwin->ctx.eventCount;
