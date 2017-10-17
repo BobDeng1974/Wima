@@ -57,7 +57,7 @@ typedef struct WimaReg {
 	WimaAreaMousePosFunc mouse_pos;
 	WimaAreaMouseEnterFunc mouse_enter;
 
-	uint32_t itemCap;
+	uint16_t itemCap;
 
 } WimaReg;
 
