@@ -152,6 +152,9 @@ typedef enum WimaAssertType {
 	WIMA_ASSERT_PROP_PTR_DRAW,
 	WIMA_ASSERT_PROP_TYPE,
 
+	WIMA_ASSERT_MONITOR,
+	WIMA_ASSERT_MONITOR_RAMP_SIZE,
+
 } WimaAssertType;
 
 #define global_decl       extern WimaG wg

@@ -54,6 +54,8 @@ extern "C" {
 #include <dyna/string.h>
 #include <dyna/tree.h>
 
+#define WIMA_GAMMA_RAMP_SIZE 256
+
 // Container flags to pass to uiSetBox().
 typedef enum WimaItemBox {
 
@@ -284,26 +286,6 @@ typedef struct WimaTransform {
 // Opaque struct type;
 typedef struct WimaCursor WimaCursor;
 
-typedef struct WimaVideoMode {
-
-	int width;
-	int height;
-	int redBits;
-	int greenBits;
-	int blueBits;
-	int refreshRate;
-
-} WimaVideoMode;
-
-typedef struct WimaGammaRamp {
-
-	unsigned short* red;
-	unsigned short* green;
-	unsigned short* blue;
-	unsigned int size;
-
-} WimaGammaRamp;
-
 typedef struct WimaImage {
 
 	int width;
@@ -341,6 +323,42 @@ typedef enum WimaCursorMode {
 	WIMA_CURSOR_DISABLED
 
 } WimaCursorMode;
+
+typedef struct WimaMonitor WimaMonitor;
+
+typedef struct WimaMonitorArray {
+
+	WimaMonitor** monitors;
+	int count;
+
+} WimaMonitorArray;
+
+typedef struct WimaVideoMode {
+
+	int width;
+	int height;
+	int redBits;
+	int greenBits;
+	int blueBits;
+	int refreshRate;
+
+} WimaVideoMode;
+
+typedef struct WimaVideoModeArray {
+
+	WimaVideoMode* modes;
+	int count;
+
+} WimaVideoModeArray;
+
+typedef struct WimaGammaRamp {
+
+	unsigned short red[WIMA_GAMMA_RAMP_SIZE];
+	unsigned short green[WIMA_GAMMA_RAMP_SIZE];
+	unsigned short blue[WIMA_GAMMA_RAMP_SIZE];
+	int size;
+
+} WimaGammaRamp;
 
 /**
  * A handle to a region (area template) type.
@@ -764,7 +782,6 @@ typedef struct WimaRegionFuncs {
 } WimaRegionFuncs;
 
 typedef struct WimaRenderContext WimaRenderContext;
-typedef struct WimaMonitor WimaMonitor;
 
 typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaRenderContext*);
 typedef void (*WimaErrorFunc)(WimaStatus, const char*);
@@ -802,6 +819,24 @@ WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) yinline;
 void wima_cursor_destroy(WimaCursor* cursor) yinline;
 
 const char* wima_key_name(WimaKey key, int scancode) yinline;
+
+////////////////////////////////////////////////////////////////////////////////
+// Monitor functions.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaMonitorArray wima_monitor_list();
+WimaMonitor* wima_monitor_primary();
+
+WimaVec wima_monitor_pos(WimaMonitor* monitor);
+WimaSize wima_monitor_size(WimaMonitor* monitor);
+const char* wima_monitor_name(WimaMonitor* monitor);
+
+WimaVideoMode wima_monitor_mode(WimaMonitor* monitor);
+WimaVideoModeArray wima_monitor_modes(WimaMonitor* monitor);
+
+void wima_monitor_setGamma(WimaMonitor* monitor, float gamma);
+void wima_monitor_setGammaRamp(WimaMonitor* monitor, WimaGammaRamp* ramp);
+WimaGammaRamp wima_monitor_gammaRamp(WimaMonitor* monitor);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Time functions.

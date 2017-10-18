@@ -118,5 +118,8 @@ const char* wima_assert_msgs[] = {
     "prop draw function is NULL",
     "prop types do not match",
 
+    "monitor is NULL",
+    "gamma ramp size is not 256",
+
 #endif
 };
