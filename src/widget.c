@@ -58,7 +58,6 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <assert.h>
 #include <string.h>
 
 #include "global.h"

@@ -34,7 +34,6 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <assert.h>
 #include <stdbool.h>
 #include <string.h>
 

@@ -58,9 +58,7 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <assert.h>
-
-#include <wima.h>
+#include <wima/wima.h>
 
 #include "math/math.h"
 

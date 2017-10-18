@@ -58,7 +58,6 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <assert.h>
 #include <math.h>
 #include <string.h>
 
