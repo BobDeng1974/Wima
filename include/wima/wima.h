@@ -976,7 +976,7 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion
 // Window functions and definitions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, bool resizable, bool decorated);
+WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize size, bool resizable, bool decorated);
 WimaStatus wima_window_close(WimaWindow wwh);
 
 void wima_window_setFocused(WimaWindow wwh);
@@ -987,6 +987,7 @@ bool wima_window_minimized(WimaWindow wwh);
 
 void wima_window_maximize(WimaWindow wwh);
 bool wima_window_maximized(WimaWindow wwh);
+void wima_window_fullscreen(WimaWindow wwh, WimaMonitor* monitor);
 void wima_window_restore(WimaWindow wwh);
 
 void wima_window_hide(WimaWindow wwh);
@@ -998,10 +999,17 @@ bool wima_window_resizable(WimaWindow wwh);
 
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title);
 DynaString wima_window_title(WimaWindow wwh);
+void wima_window_setPosition(WimaWindow wwh, WimaVec pos);
+WimaVec wima_window_position(WimaWindow wwh);
+void wima_window_setSize(WimaWindow wwh, WimaSize size);
+WimaSize wima_window_size(WimaWindow wwh);
+void wima_window_setSizeLimits(WimaWindow wwh, WimaSize min, WimaSize max);
+void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator);
+WimaSize wima_window_framebufferSize(WimaWindow wwh);
 WimaStatus wima_window_setUserPointer(WimaWindow win, void* user);
 void* wima_window_userPointer(WimaWindow win);
 
-WimaStatus wima_window_setMods(WimaWindow wwh, WimaMods mods);
+void wima_window_setMods(WimaWindow wwh, WimaMods mods);
 WimaMods wima_window_mods(WimaWindow wwh);
 WimaVec wima_window_scroll(WimaWindow wwh);
 uint32_t wima_window_clicks(WimaWindow wwh);

@@ -70,7 +70,7 @@ static void wima_window_clearContext(WimaWinCtx* ctx);
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, bool resizable, bool decorated) {
+WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize size, bool resizable, bool decorated) {
 
 	assert_init;
 
@@ -103,7 +103,7 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, bool resizab
 		return WIMA_STATUS_WINDOW_ERR;
 	}
 
-	GLFWwindow* win = glfwCreateWindow(640, 480, name, NULL, NULL);
+	GLFWwindow* win = glfwCreateWindow(size.w, size.h, name, NULL, NULL);
 
 	if (!win) {
 		return WIMA_STATUS_WINDOW_ERR;
@@ -133,6 +133,11 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, bool resizab
 	glfwSetWindowFocusCallback(win, wima_callback_windowFocus);
 	glfwSetWindowCloseCallback(win, wima_callback_windowClose);
 	glfwSetMonitorCallback(wima_callback_monitorConnected);
+
+	// Set the icons.
+	if (wg.numIcons > 0) {
+		glfwSetWindowIcon(win, wg.numIcons, wg.icons);
+	}
 
 	wwin.window = win;
 	WimaWindow idx;
@@ -282,6 +287,21 @@ bool wima_window_maximized(WimaWindow wwh) {
 	return glfwGetWindowAttrib(win->window, GLFW_MAXIMIZED) == GLFW_TRUE;
 }
 
+void wima_window_fullscreen(WimaWindow wwh, WimaMonitor* monitor) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	int w, h;
+
+	glfwGetMonitorPhysicalSize((GLFWmonitor*) monitor, &w, &h);
+
+	glfwSetWindowMonitor(win->window, (GLFWmonitor*) monitor, 0, 0, w, h, GLFW_DONT_CARE);
+}
+
 void wima_window_restore(WimaWindow wwh) {
 
 	assert_init;
@@ -369,6 +389,102 @@ DynaString wima_window_title(WimaWindow wwh) {
 	return win->name;
 }
 
+
+void wima_window_setPosition(WimaWindow wwh, WimaVec pos) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwSetWindowPos(win->window, pos.x, pos.y);
+}
+
+WimaVec wima_window_position(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	WimaVec pos;
+
+	glfwGetWindowPos(win->window, &pos.x, &pos.y);
+
+	return pos;
+}
+
+void wima_window_setSize(WimaWindow wwh, WimaSize size) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwSetWindowSize(win->window, size.w, size.h);
+}
+
+WimaSize wima_window_size(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	WimaSize size;
+
+	glfwGetWindowSize(win->window, &size.w, &size.h);
+
+	return size;
+}
+
+void wima_window_setSizeLimits(WimaWindow wwh, WimaSize min, WimaSize max) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwSetWindowSizeLimits(win->window, min.w, min.h, max.w, max.h);
+}
+
+void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	glfwSetWindowAspectRatio(win->window, numerator, denominator);
+}
+
+WimaSize wima_window_framebufferSize(WimaWindow wwh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+#ifdef __YASSERT__
+
+	int w, h;
+
+	glfwGetFramebufferSize(win->window, &w, &h);
+
+	wassert(win->fbsize.w == w && win->fbsize.h == h, WIMA_ASSERT_WINDOW_FRAMEBUFFER_SIZE_MISMATCH);
+
+#endif
+
+	return win->fbsize;
+}
+
 WimaStatus wima_window_setUserPointer(WimaWindow wwh, void* user) {
 
 	assert_init;
@@ -393,7 +509,7 @@ void* wima_window_userPointer(WimaWindow wwh) {
 	return win->user;
 }
 
-WimaStatus wima_window_setMods(WimaWindow wwh, WimaMods mods) {
+void wima_window_setMods(WimaWindow wwh, WimaMods mods) {
 
 	assert_init;
 
@@ -402,8 +518,6 @@ WimaStatus wima_window_setMods(WimaWindow wwh, WimaMods mods) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	win->ctx.mods = mods;
-
-	return WIMA_STATUS_SUCCESS;
 }
 
 WimaMods wima_window_mods(WimaWindow wwh) {

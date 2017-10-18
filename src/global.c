@@ -62,12 +62,13 @@ const char* wima_assert_msgs[] = {
     "more than 16 icons provided",
 
     "window is not valid",
-    "window does not match its GLFW handle",
+    "window does not match its GLFW handle; this is a bug in Wima",
     "window area tree is null",
     "window does not match item",
     "window menu is not valid",
     "window menu is not a context menu",
-    "window context is not valid",
+    "window context is not valid; this is a bug in Wima",
+    "window framebuffer size does not match GLFW framebuffer size; this is a bug in Wima",
 
     "workspace is not valid",
     "no workspaces are registered",
@@ -92,9 +93,9 @@ const char* wima_assert_msgs[] = {
     "widget flags not just layout flags",
     "widget flags not just box flags",
 
-    "not in layout stage",
-    "in layout stage at wrong time",
-    "not in process stage",
+    "not in layout stage; this is a bug in Wima",
+    "in layout stage at wrong time; this is a bug in Wima",
+    "not in process stage; this is a bug in Wima",
 
     "theme is null",
 
