@@ -190,7 +190,7 @@ static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertic
 WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node) {
 
 	assert_init;
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WINDOW);
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
@@ -466,7 +466,7 @@ WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas, float ratio) {
 
 	assert_init;
 
-	wassert(areas != NULL, WIMA_ASSERT_WINDOW_AREAS);
+	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
 
 	return wima_area_node_draw(ctx, areas, dtree_root(), ratio);
 }
@@ -562,7 +562,7 @@ static WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect 
 
 WimaStatus wima_area_layout(DynaTree areas) {
 	assert_init;
-	wassert(areas != NULL, WIMA_ASSERT_WINDOW_AREAS);
+	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
 	return wima_area_node_layout(areas, dtree_root());
 }
 
@@ -637,7 +637,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 WimaAreaNode wima_area_containsMouse(DynaTree areas, WimaVec cursor) {
 
 	assert_init;
-	wassert(areas != NULL, WIMA_ASSERT_WINDOW_AREAS);
+	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
 
 	DynaNode root = dtree_root();
 
@@ -686,7 +686,7 @@ static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, W
 
 bool wima_area_mouseOnSplit(DynaTree areas, WimaVec pos, WimaMouseSplitEvent* result) {
 	assert_init;
-	wassert(areas != NULL, WIMA_ASSERT_WINDOW_AREAS);
+	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
 	return wima_area_node_mouseOnSplit(areas, dtree_root(), pos, result);
 }
 

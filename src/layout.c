@@ -134,7 +134,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 
 	assert_init;
 
-	wassert(wima_window_valid(parent.window), WIMA_ASSERT_WINDOW);
+	wassert(wima_window_valid(parent.window), WIMA_ASSERT_WIN);
 
 	WimaWin* win = dvec_get(wg.windows, parent.window);
 
@@ -201,7 +201,7 @@ void wima_layout_setBackgroundColor(WimaLayout wlh, WimaColor color) {
 
 	assert_init;
 
-	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WINDOW);
+	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
 
 	WimaWin* win = dvec_get(wg.windows, wlh.window);
 
@@ -222,7 +222,7 @@ WimaColor wima_layout_backgroundColor(WimaLayout wlh) {
 
 	assert_init;
 
-	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WINDOW);
+	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
 
 	WimaWin* win = dvec_get(wg.windows, wlh.window);
 

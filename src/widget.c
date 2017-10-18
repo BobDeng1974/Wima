@@ -77,7 +77,7 @@ WimaWidget wima_widget_new(WimaArea wah, WimaItemFuncs funcs) {
 
 	assert_init;
 
-	wassert(wima_window_valid(wah.window), WIMA_ASSERT_WINDOW);
+	wassert(wima_window_valid(wah.window), WIMA_ASSERT_WIN);
 
 	WimaWin* win = dvec_get(wg.windows, wah.window);
 
@@ -330,7 +330,7 @@ bool wima_widget_isActive(WimaWidget item) {
 
 	assert_init;
 
-	wassert(wima_window_valid(item.window), WIMA_ASSERT_WINDOW);
+	wassert(wima_window_valid(item.window), WIMA_ASSERT_WIN);
 
 	WimaWin* win = dvec_get(wg.windows, item.window);
 
@@ -341,7 +341,7 @@ bool wima_widget_isHovered(WimaWidget item) {
 
 	assert_init;
 
-	wassert(wima_window_valid(item.window), WIMA_ASSERT_WINDOW);
+	wassert(wima_window_valid(item.window), WIMA_ASSERT_WIN);
 
 	WimaWin* win = dvec_get(wg.windows, item.window);
 
@@ -352,7 +352,7 @@ bool wima_widget_isFocused(WimaWidget item) {
 
 	assert_init;
 
-	wassert(wima_window_valid(item.window), WIMA_ASSERT_WINDOW);
+	wassert(wima_window_valid(item.window), WIMA_ASSERT_WIN);
 
 	WimaWin* win = dvec_get(wg.windows, item.window);
 
