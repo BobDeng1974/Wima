@@ -26,6 +26,12 @@
 
 add_subdirectory(glad)
 
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_DOCS ON CACHE BOOL "" FORCE)
+
+add_subdirectory(glfw)
+
 set(WIMA_GLAD "${WIMA_GLAD}" PARENT_SCOPE)
 
 set(NANOVG "nanovg")
