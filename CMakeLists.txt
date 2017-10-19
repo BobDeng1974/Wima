@@ -60,6 +60,16 @@ set("WIMA_LIB_DIR" "lib")
 set("WIMA_SRC_DIR" "src")
 set("WIMA_RES_DIR" "res")
 
+set(WIMA_CMAKE_DIR "cmake")
+
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${WIMA_CMAKE_DIR}/.git")
+	string(
+		CONCAT WIMA_CMAKE_SUBMODULE_ERR
+		"\nThe cmake git submodule is not available. "
+		"Please run\ngit submodule update --init --recursive")
+	message(FATAL_ERROR "${WIMA_CMAKE_SUBMODULE_ERR}")
+endif()
+
 add_subdirectory("cmake")
 
 add_subdirectory("${WIMA_DOCS_DIR}")

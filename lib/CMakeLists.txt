@@ -26,16 +26,36 @@
 
 add_subdirectory(glad)
 
+set(WIMA_GLAD "${WIMA_GLAD}" PARENT_SCOPE)
+
+set(WIMA_GLFW_DIR "glfw")
+
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${WIMA_GLFW_DIR}/.git")
+	string(
+		CONCAT WIMA_GLFW_SUBMODULE_ERR
+		"\nThe GLFW git submodule is not available. "
+		"Please run\ngit submodule update --init --recursive")
+	message(FATAL_ERROR "${WIMA_GLFW_SUBMODULE_ERR}")
+endif()
+
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_DOCS ON CACHE BOOL "" FORCE)
 
 add_subdirectory(glfw)
 
-set(WIMA_GLAD "${WIMA_GLAD}" PARENT_SCOPE)
-
 set(NANOVG "nanovg")
 set(NANOVG "${NANOVG}" PARENT_SCOPE)
+
+set(WIMA_NVG_DIR "${NANOVG}")
+
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${WIMA_NVG_DIR}/.git")
+	string(
+		CONCAT WIMA_NVG_SUBMODULE_ERR
+		"\nThe NanoVG git submodule is not available. "
+		"Please run\ngit submodule update --init --recursive")
+	message(FATAL_ERROR "${WIMA_NVG_SUBMODULE_ERR}")
+endif()
 
 add_definitions(
 	-DNANOVG_GL3_IMPLEMENTATION
