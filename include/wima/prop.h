@@ -34,7 +34,10 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#ifndef WIMA_PROP_H
+// This is to resolve a circular dependency with render.h.
+#ifdef WIMA_PROP_RENDER_H
+typedef uint32_t WimaProperty;
+#elif !defined(WIMA_PROP_H)
 #define WIMA_PROP_H
 
 /* For C++ compatibility. */
@@ -45,6 +48,7 @@ extern "C" {
 #include <stdint.h>
 
 #include <wima/wima.h>
+#include <wima/render.h>
 
 #define WIMA_PROP_INVALID ((WimaProperty) -1)
 
@@ -85,8 +89,8 @@ DynaString wima_prop_string(WimaProperty wph);
 void wima_prop_setEnumIdx(WimaProperty wph, uint32_t idx);
 uint32_t wima_prop_enum(WimaProperty wph);
 DynaVector wima_prop_list(WimaProperty wph);
-void wima_prop_setColor(WimaProperty wph, NVGcolor color);
-NVGcolor wima_prop_color(WimaProperty wph);
+void wima_prop_setColor(WimaProperty wph, WimaColor color);
+WimaColor wima_prop_color(WimaProperty wph);
 void* wima_prop_ptr(WimaProperty wph);
 
 WimaProperty wima_prop_registerGroup(const char* name, const char* label, const char* desc);
@@ -100,7 +104,7 @@ WimaProperty wima_prop_registerEnum(const char* name, const char* label, const c
                                     const char* names[], const uint32_t* vals,
                                     uint32_t nvals, uint32_t initalIdx);
 WimaProperty wima_prop_registerList(const char* name, const char* label, const char* desc, DynaVector list);
-WimaProperty wima_prop_registerColor(const char* name, const char* label, const char* desc, NVGcolor initial);
+WimaProperty wima_prop_registerColor(const char* name, const char* label, const char* desc, WimaColor initial);
 WimaProperty wima_prop_registerPtr(const char* name, const char* label, const char* desc,
                                    void* ptr, WimaPropDrawFunc draw, WimaPropFreeFunc free);
 WimaProperty wima_prop_registerOperator(const char* name, const char* label,

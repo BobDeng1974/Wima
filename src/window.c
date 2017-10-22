@@ -1246,7 +1246,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 
 		nvgBeginFrame(win->render.nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 
-		status = wima_area_draw(&win->render, win->areas, win->pixelRatio);
+		status = wima_area_draw(&win->render, win->areas);
 		if (status) {
 			nvgCancelFrame(win->render.nvg);
 			return status;

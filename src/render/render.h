@@ -306,15 +306,22 @@ typedef union WimaImg {
 #define WIMA_THEME_NUM_TYPES        (14)
 #define WIMA_THEME_BG_LENGTH        (1)
 #define WIMA_THEME_NUM_ITEMS        (12)
-#define WIMA_THEME_ITEM_LENGTH      (WIMA_THEME_BG_LENGTH + WIMA_THEME_NUM_ITEMS)
+#define WIMA_THEME_WIDGET_LENGTH      (WIMA_THEME_BG_LENGTH + WIMA_THEME_NUM_ITEMS)
 
-#define WIMA_THEME_ITEM_NUM_TYPES   (9)
-#define WIMA_THEME_ITEM_NUM_COLORS  (6)
+#define WIMA_THEME_WIDGET_NUM_TYPES   (9)
+#define WIMA_THEME_WIDGET_NUM_COLORS  (6)
 
 #define WIMA_THEME_NODE_NUM_TYPES   (10)
 #define WIMA_THEME_NODE_NUM_COLORS  (9)
 
 #define WIMA_THEME_MAX_BUFFER       (1025)
+
+WimaProperty wima_theme_loadDefault(WimaProperty* props);
+WimaProperty wima_theme_loadBackgroundDefault();
+WimaProperty wima_theme_loadItemDefault(WimaThemeType type);
+WimaProperty wima_theme_loadNodeDefault();
+
+WimaProperty wima_theme_create();
 
 #ifdef __cplusplus
 }

@@ -50,6 +50,8 @@ WimaG wg;
 const char* wima_assert_msgs[] = {
 #ifdef __YASSERT__
 
+    "default taken on enum switch",
+
     "wima is not initialized",
 
     "app name is null",
@@ -98,6 +100,9 @@ const char* wima_assert_msgs[] = {
     "not in process stage; this is a bug in Wima",
 
     "theme is null",
+    "theme type is not an item type; this is a bug in Wima",
+    "theme item is not a color type; this is a bug in Wima",
+    "node item is not a color type; this is a bug in Wima",
 
     "prop is not valid",
     "prop is not a group prop",

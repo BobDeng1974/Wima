@@ -48,6 +48,8 @@
 
 #include <GLFW/glfw3.h>
 
+#include "render/render.h"
+
 #define WIMA_MAX_ICONS (16)
 
 typedef struct GLFWcursor wima_cursor;
@@ -66,7 +68,12 @@ typedef struct WimaG {
 	DynaVector workspaces;
 	DynaVector regions;
 
-	WimaTheme* theme;
+	WimaProperty themes[WIMA_THEME_NUM_TYPES];
+	WimaProperty theme;
+
+	// Icons.
+	int numIcons;
+	GLFWimage icons[WIMA_MAX_ICONS];
 
 	DynaString fontPath;
 	DynaString iconSheetPath;
@@ -74,13 +81,11 @@ typedef struct WimaG {
 	// Standard cursors.
 	GLFWcursor* cursors[6];
 
-	// Icons.
-	GLFWimage icons[WIMA_MAX_ICONS];
-	int numIcons;
-
 } WimaG;
 
 typedef enum WimaAssertType {
+
+	WIMA_ASSERT_SWITCH_DEFAULT,
 
 	WIMA_ASSERT_INIT,
 
@@ -130,6 +135,9 @@ typedef enum WimaAssertType {
 	WIMA_ASSERT_STAGE_PROCESS,
 
 	WIMA_ASSERT_THEME,
+	WIMA_ASSERT_THEME_ITEM_TYPE,
+	WIMA_ASSERT_THEME_ITEM_COLOR,
+	WIMA_ASSERT_THEME_NODE_COLOR,
 
 	WIMA_ASSERT_PROP,
 	WIMA_ASSERT_PROP_GROUP,

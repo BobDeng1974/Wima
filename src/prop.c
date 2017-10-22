@@ -59,7 +59,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
                                        WimaPropType type, const WimaPropData* data);
 
 #ifdef __YASSERT__
-static bool wima_prop_valid(WimaProperty wph);
+bool wima_prop_valid(WimaProperty wph);
 static bool wima_prop_enumNamesValid(const char* names[], uint32_t numNames);
 #endif
 
@@ -343,7 +343,7 @@ DynaVector wima_prop_list(WimaProperty wph) {
 	return data->_list;
 }
 
-void wima_prop_setColor(WimaProperty wph, NVGcolor color) {
+void wima_prop_setColor(WimaProperty wph, WimaColor color) {
 
 	assert_init;
 
@@ -359,7 +359,7 @@ void wima_prop_setColor(WimaProperty wph, NVGcolor color) {
 	data->_color = color;
 }
 
-NVGcolor wima_prop_color(WimaProperty wph) {
+WimaColor wima_prop_color(WimaProperty wph) {
 
 	assert_init;
 
@@ -502,7 +502,7 @@ WimaProperty wima_prop_registerList(const char* name, const char* label, const c
 	return idx;
 }
 
-WimaProperty wima_prop_registerColor(const char* name, const char* label, const char* desc, NVGcolor initial) {
+WimaProperty wima_prop_registerColor(const char* name, const char* label, const char* desc, WimaColor initial) {
 
 	assert_init;
 
@@ -722,7 +722,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 }
 
 #ifdef __YASSERT__
-static bool wima_prop_valid(WimaProperty wph) {
+bool wima_prop_valid(WimaProperty wph) {
 
 	assert_init;
 

@@ -40,12 +40,15 @@
 #include <yc/assert.h>
 #include <yc/mem.h>
 
+#include <dyna/nvector.h>
+
 #include <wima/wima.h>
 #include <wima/render.h>
 #include <wima/math.h>
 
 #include <math.h>
 
+#include "prop.h"
 #include "old_layout.h"
 #include "region.h"
 #include "area.h"
@@ -165,7 +168,7 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 static bool wima_area_node_valid(DynaTree regions, DynaNode node);
 static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
 
-static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, DynaNode node, float ratio);
+static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, DynaNode node, WimaPropData* bg);
 static WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, bool adjustSplit);
 static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
 static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaVec cursor);
@@ -178,7 +181,7 @@ static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* righ
 static WimaVec wima_area_translatePos(WimaAr* area, WimaVec pos);
 static void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport);
 static void wima_area_popViewport(NVGcontext* nvg);
-static void wima_area_background(WimaAr* area, NVGcontext* nvg);
+static void wima_area_background(WimaAr* area, NVGcontext* nvg, WimaPropData* bg);
 static void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg);
 static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg);
 static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertical, bool mirror);
@@ -462,16 +465,18 @@ WimaStatus wima_area_mouseEnter(WimaAr* area, bool enter) {
 	return status;
 }
 
-WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas, float ratio) {
+WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas) {
 
 	assert_init;
 
 	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
 
-	return wima_area_node_draw(ctx, areas, dtree_root(), ratio);
+	WimaPropData* bg = dnvec_get(wg.props, wg.themes[WIMA_THEME_BG], WIMA_PROP_DATA_IDX);
+
+	return wima_area_node_draw(ctx, areas, dtree_root(), bg);
 }
 
-static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, DynaNode node, float ratio) {
+static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, DynaNode node, WimaPropData* bg) {
 
 	assert_init;
 
@@ -481,18 +486,18 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 
 	if (WIMA_AREA_IS_PARENT(area)) {
 
-		status = wima_area_node_draw(ctx, areas, dtree_left(node), ratio);
+		status = wima_area_node_draw(ctx, areas, dtree_left(node), bg);
 		if (status) {
 			return status;
 		}
 
-		status = wima_area_node_draw(ctx, areas, dtree_right(node), ratio);
+		status = wima_area_node_draw(ctx, areas, dtree_right(node), bg);
 	}
 	else {
 
 		wima_area_pushViewport(ctx->nvg, area->rect);
 
-		wima_area_background(area, ctx->nvg);
+		wima_area_background(area, ctx->nvg, bg);
 
 		if (area->area.ctx.itemCount > 0) {
 
@@ -1055,16 +1060,13 @@ static void wima_area_popViewport(NVGcontext* nvg) {
 	nvgResetScissor(nvg);
 }
 
-static void wima_area_background(WimaAr* area, NVGcontext* nvg) {
+static void wima_area_background(WimaAr* area, NVGcontext* nvg, WimaPropData* bg) {
 
 	assert_init;
 
-	WimaCol c;
-	c.wima = wg.theme->backgroundColor;
-
 	nvgBeginPath(nvg);
 	nvgRect(nvg, 0, 0, area->rect.w, area->rect.h);
-	nvgFillColor(nvg, c.nvg);
+	nvgFillColor(nvg, bg->_nvgcolor);
 	nvgFill(nvg);
 }
 

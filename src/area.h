@@ -114,7 +114,7 @@ WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e);
 WimaStatus wima_area_mousePos(WimaAr* area, WimaVec pos);
 WimaStatus wima_area_mouseEnter(WimaAr* area, bool enter);
 
-WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas, float ratio);
+WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas);
 WimaStatus wima_area_resize(DynaTree areas, WimaRect rect);
 
 // layout all added items starting from the root item 0.

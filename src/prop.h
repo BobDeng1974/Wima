@@ -42,7 +42,10 @@
 extern "C" {
 #endif
 
+#include <yc/assert.h>
+
 #include <wima/prop.h>
+#include <wima/render.h>
 
 #define WIMA_PROP_SEED (0xdeadbeef0ddba11)
 
@@ -118,7 +121,8 @@ typedef union WimaPropData {
 
 	DynaVector _list;
 
-	NVGcolor _color;
+	WimaColor _color;
+	NVGcolor _nvgcolor;
 
 	WimaPropPtr _ptr;
 
@@ -130,6 +134,10 @@ typedef union WimaPropData {
 #define WIMA_PROP_DATA_IDX (1)
 
 void wima_prop_free(WimaProperty wph);
+
+#ifdef __YASSERT__
+bool wima_prop_valid(WimaProperty wph);
+#endif
 
 #ifdef __cplusplus
 }

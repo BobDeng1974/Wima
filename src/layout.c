@@ -188,7 +188,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 	playout->area = parent.area;
 	playout->window = parent.window;
 
-	playout->layout.bgcolor = wg.theme->backgroundColor;
+	playout->layout.bgcolor = wima_prop_color(wg.themes[WIMA_THEME_BG]);
 	playout->layout.split = split;
 	playout->layout.firstKid = WIMA_ITEM_INVALID;
 	playout->layout.lastKid = WIMA_LAYOUT_INVALID;

@@ -67,6 +67,10 @@
 
 #include <wima/wima.h>
 
+#define WIMA_PROP_RENDER_H
+#include <wima/prop.h>
+#undef WIMA_PROP_RENDER_H
+
 typedef struct WimaColor {
 
 	union {
@@ -832,125 +836,126 @@ typedef enum WimaIcon {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// The theme used to draw a single widget or widget box; these values
-// correspond to the same values that can be retrieved from the Theme
-// panel in the Blender preferences.
-typedef struct WimaWidgetTheme {
+typedef enum wima_theme_type {
 
-	// Color of widget box outline.
-	WimaColor outline;
+	WIMA_THEME_BG,
+	WIMA_THEME_REGULAR,
+	WIMA_THEME_TOOL,
+	WIMA_THEME_RADIO,
+	WIMA_THEME_TEXTFIELD,
+	WIMA_THEME_OPTION,
+	WIMA_THEME_CHOICE,
+	WIMA_THEME_NUMFIELD,
+	WIMA_THEME_SLIDER,
+	WIMA_THEME_SCROLLBAR,
+	WIMA_THEME_MENU,
+	WIMA_THEME_MENU_ITEM,
+	WIMA_THEME_TOOLTIP,
+	WIMA_THEME_NODE,
 
-	// Color of widget item (meaning changes depending on class).
-	WimaColor item;
+} WimaThemeType;
 
-	// Fill color of widget box.
-	WimaColor inner;
+typedef enum wima_item_theme_type {
 
-	// Fill color of widget box when active.
-	WimaColor innerSelected;
+	WIMA_THEME_WIDGET_OUTLINE,
+	WIMA_THEME_WIDGET_ITEM,
+	WIMA_THEME_WIDGET_INNER,
+	WIMA_THEME_WIDGET_INNER_SELECTED,
+	WIMA_THEME_WIDGET_TEXT,
+	WIMA_THEME_WIDGET_TEXT_SELECTED,
+	WIMA_THEME_WIDGET_SHADE_TOP,
+	WIMA_THEME_WIDGET_SHADE_BOTTOM,
+	WIMA_THEME_WIDGET_SHADED
 
-	// Color of text label.
-	WimaColor text;
+} WimaItemThemeType;
 
-	// Color of text label when active.
-	WimaColor textSelected;
+typedef enum wima_node_theme_type {
 
-	// Delta modifier for upper part of gradient (-100 to 100).
-	int shadeTop;
+	WIMA_THEME_NODE_OUTLINE,
+	WIMA_THEME_NODE_OUTLINE_SELECTED,
+	WIMA_THEME_NODE_OUTLINE_ACTIVE,
+	WIMA_THEME_NODE_BG,
+	WIMA_THEME_NODE_TEXT,
+	WIMA_THEME_NODE_TEXT_SELECTED,
+	WIMA_THEME_NODE_WIRE,
+	WIMA_THEME_NODE_WIRE_OUTLINE,
+	WIMA_THEME_NODE_WIRE_SELECTED,
+	WIMA_THEME_NODE_WIRE_CURVING
 
-	// Delta modifier for lower part of gradient (-100 to 100).
-	int shadeBottom;
+} WimaNodeThemeType;
 
-	// Whether to use shading or not.
-	bool shaded;
+////////////////////////////////////////////////////////////////////////////////
+// Theme functions.
+////////////////////////////////////////////////////////////////////////////////
 
-} WimaWidgetTheme;
+typedef struct WimaWidgetTheme WimaWidgetTheme;
+typedef struct WimaNodeTheme WimaNodeTheme;
 
-// The theme used to draw nodes.
-typedef struct WimaNodeTheme {
+void wima_theme_setBackground(WimaColor bg);
+WimaColor wima_theme_background();
 
-	// Outline color of default node.
-	WimaColor outline;
+WimaWidgetTheme* wima_theme_widgetTheme(WimaThemeType type);
 
-	// Outline color of selected node (and downarrow).
-	WimaColor nodeSelected;
+void wima_theme_widget_setOutline(WimaThemeType type, WimaColor color);
+WimaColor wima_theme_widget_outline(WimaThemeType type);
 
-	// Outline color of active node (and dragged wire).
-	WimaColor nodeActive;
+void wima_theme_widget_setItem(WimaThemeType type, WimaColor color);
+WimaColor wima_theme_widget_item(WimaThemeType type);
 
-	// Color of background of node.
-	WimaColor nodeBackdrop;
+void wima_theme_widget_setInner(WimaThemeType type, WimaColor color);
+WimaColor wima_theme_widget_inner(WimaThemeType type);
 
-	// Color of text label.
-	WimaColor text;
+void wima_theme_widget_setInnerSelected(WimaThemeType type, WimaColor color);
+WimaColor wima_theme_widget_innerSelected(WimaThemeType type);
 
-	// Color of text label when active.
-	WimaColor textSelected;
+void wima_theme_widget_setText(WimaThemeType type, WimaColor color);
+WimaColor wima_theme_widget_text(WimaThemeType type);
 
-	// Normal color of wires.
-	WimaColor wire;
+void wima_theme_widget_setTextSelected(WimaThemeType type, WimaColor color);
+WimaColor wima_theme_widget_textSelected(WimaThemeType type);
 
-	// Outline of wires.
-	WimaColor wireOutline;
+void wima_theme_widget_setShadeTop(WimaThemeType type, int delta);
+int wima_theme_widget_shadeTop(WimaThemeType type);
 
-	// Color of selected wire.
-	WimaColor wireSelected;
+void wima_theme_widget_setShadeBottom(WimaThemeType type, int delta);
+int wima_theme_widget_shadeBottom(WimaThemeType type);
 
-	// How much a noodle curves (0 to 10).
-	int noodleCurving;
+void wima_theme_widget_setShaded(WimaThemeType type, bool shaded);
+bool wima_theme_widget_shaded(WimaThemeType type);
 
-} WimaNodeTheme;
+void wima_theme_node_setOutline(WimaColor color);
+WimaColor wima_theme_node_outline();
 
-// The theme used to draw widgets.
-typedef struct WimaTheme {
+void wima_theme_node_setOutlineSelected(WimaColor color);
+WimaColor wima_theme_node_outlineSelected();
 
-	// The background color of panels and windows.
-	WimaColor backgroundColor;
+void wima_theme_node_setOutlineActive(WimaColor color);
+WimaColor wima_theme_node_outlineActive();
 
-	// Theme for labels.
-	WimaWidgetTheme regular;
+void wima_theme_node_setBackground(WimaColor color);
+WimaColor wima_theme_node_background();
 
-	// Theme for tool buttons.
-	WimaWidgetTheme tool;
+void wima_theme_node_setText(WimaColor color);
+WimaColor wima_theme_node_text();
 
-	// Theme for radio buttons.
-	WimaWidgetTheme radio;
+void wima_theme_node_setTextSelected(WimaColor color);
+WimaColor wima_theme_node_textSelected();
 
-	// Theme for text fields.
-	WimaWidgetTheme textField;
+void wima_theme_node_setWire(WimaColor color);
+WimaColor wima_theme_node_wire();
 
-	// Theme for option buttons (checkboxes).
-	WimaWidgetTheme option;
+void wima_theme_node_setWireOutline(WimaColor color);
+WimaColor wima_theme_node_wireOutline();
 
-	// Theme for choice buttons (comboboxes).
-	// Blender calls them "menu buttons."
-	WimaWidgetTheme choice;
+void wima_theme_node_setWireSelected(WimaColor color);
+WimaColor wima_theme_node_wireSelected();
 
-	// Theme for number fields.
-	WimaWidgetTheme numField;
+void wima_theme_node_setWireCurving(int curving);
+int wima_theme_node_wireCurving();
 
-	// Theme for slider controls.
-	WimaWidgetTheme slider;
-
-	// Theme for scrollbars.
-	WimaWidgetTheme scrollBar;
-
-	// Theme for menu backgrounds.
-	WimaWidgetTheme menu;
-
-	// Theme for menu items.
-	WimaWidgetTheme menuItem;
-
-	// Theme for tooltips.
-	WimaWidgetTheme tooltip;
-
-	// Theme for nodes.
-	WimaNodeTheme node;
-
-} WimaTheme;
-
-void wima_theme_load(WimaTheme* theme);
-WimaTheme* wima_theme();
+////////////////////////////////////////////////////////////////////////////////
+// Render state functions.
+////////////////////////////////////////////////////////////////////////////////
 
 // Pushes and saves the current render state into a state stack.
 // A matching nvgRestore() must be used to restore the state.
@@ -961,6 +966,10 @@ void wima_render_restore(WimaRenderContext* ctx);
 
 // Resets current render state to default values. Does not affect the render state stack.
 void wima_render_reset(WimaRenderContext* ctx);
+
+////////////////////////////////////////////////////////////////////////////////
+// Render style functions.
+////////////////////////////////////////////////////////////////////////////////
 
 // Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
 void wima_style_antialias(WimaRenderContext* ctx, bool enabled);
@@ -995,6 +1004,10 @@ void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join);
 // Sets the transparency applied to all rendered shapes.
 // Already transparent paths will get proportionally more transparent as well.
 void wima_style_setGlobalAlpha(WimaRenderContext* ctx, float alpha);
+
+////////////////////////////////////////////////////////////////////////////////
+// Render transform functions.
+////////////////////////////////////////////////////////////////////////////////
 
 // Resets current transform to a identity matrix.
 void wima_render_resetTransform(WimaRenderContext* ctx);

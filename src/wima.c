@@ -61,8 +61,6 @@
 global_decl;
 assert_msgs_decl;
 
-extern WimaTheme wima_initial_theme;
-
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,9 +92,6 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.name = NULL;
 	wg.props = NULL;
 	wg.windows = NULL;
-
-	// Set the initial theme.
-	wg.theme = &wima_initial_theme;
 
 	// Clear before trying to set.
 	wg.fontPath = NULL;
@@ -136,6 +131,9 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
+
+	// Set the initial theme.
+	wg.theme = wima_theme_loadDefault(wg.themes);
 
 	wg.regions = dvec_create(0, sizeof(WimaReg), NULL);
 	if (!wg.regions) {
