@@ -788,6 +788,28 @@ static WimaColor wima_theme_nodeColor(WimaNodeThemeType type) {
 	return wima_prop_color(subHandles[type]);
 }
 
+WimaWidgetTheme* wima_theme_widget(WimaThemeType type) {
+
+	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
+
+	WimaProperty wph = wg.themes[type];
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* item = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
+	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
+
+	WimaProperty* subHandles = dvec_get(data->_list, 0);
+
+	wassert(wima_prop_valid(subHandles[0]), WIMA_ASSERT_PROP);
+
+	return (WimaWidgetTheme*) dnvec_get(wg.props, subHandles[0], WIMA_PROP_DATA_IDX);
+}
+
 void wima_theme_widget_setOutline(WimaThemeType type, WimaColor color) {
 	wima_theme_setWidgetColor(type, WIMA_THEME_WIDGET_OUTLINE, color);
 }
@@ -894,6 +916,26 @@ bool wima_theme_widget_shaded(WimaThemeType type) {
 	wassert(wima_prop_valid(subHandles[WIMA_THEME_WIDGET_SHADED]), WIMA_ASSERT_PROP);
 
 	return wima_prop_bool(subHandles[WIMA_THEME_WIDGET_SHADED]);
+}
+
+WimaNodeTheme* wima_theme_nodeTheme() {
+
+	WimaProperty wph = wg.themes[WIMA_THEME_NODE];
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* node = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
+	wassert(node->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
+
+	WimaProperty* subHandles = dvec_get(data->_list, 0);
+
+	wassert(wima_prop_valid(subHandles[0]), WIMA_ASSERT_PROP);
+
+	return (WimaNodeTheme*) dnvec_get(wg.props, subHandles[0], WIMA_PROP_DATA_IDX);
 }
 
 void wima_theme_node_setOutline(WimaColor color) {

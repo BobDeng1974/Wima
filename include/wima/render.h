@@ -894,7 +894,7 @@ typedef struct WimaNodeTheme WimaNodeTheme;
 void wima_theme_setBackground(WimaColor bg);
 WimaColor wima_theme_background();
 
-WimaWidgetTheme* wima_theme_widgetTheme(WimaThemeType type);
+WimaWidgetTheme* wima_theme_widget(WimaThemeType type);
 
 void wima_theme_widget_setOutline(WimaThemeType type, WimaColor color);
 WimaColor wima_theme_widget_outline(WimaThemeType type);
@@ -922,6 +922,8 @@ int wima_theme_widget_shadeBottom(WimaThemeType type);
 
 void wima_theme_widget_setShaded(WimaThemeType type, bool shaded);
 bool wima_theme_widget_shaded(WimaThemeType type);
+
+WimaNodeTheme* wima_theme_nodeTheme();
 
 void wima_theme_node_setOutline(WimaColor color);
 WimaColor wima_theme_node_outline();
