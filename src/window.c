@@ -751,7 +751,7 @@ DynaTree wima_window_areas(WimaWindow wwh) {
 
 	int nodes = dtree_nodes(winareas);
 
-	DynaTree areas = dtree_create(NULL, nodes, sizeof(WimaAr));
+	DynaTree areas = dtree_create(nodes, sizeof(WimaAr), NULL);
 	if (!areas) {
 		return NULL;
 	}
@@ -783,7 +783,7 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 
 	if (!window->areas) {
 
-		window->areas = dtree_create(NULL, dtree_nodes(wksp), sizeof(WimaAr));
+		window->areas = dtree_create(dtree_nodes(wksp), sizeof(WimaAr), NULL);
 
 		if (!window->areas) {
 			return WIMA_STATUS_WINDOW_ERR;
@@ -818,7 +818,7 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 
 	if (!window->areas) {
 
-		window->areas = dtree_create(NULL, dtree_nodes(areas), sizeof(WimaAr));
+		window->areas = dtree_create(dtree_nodes(areas), sizeof(WimaAr), NULL);
 
 		if (!window->areas) {
 			return WIMA_STATUS_WINDOW_ERR;

@@ -331,7 +331,7 @@ WimaProperty wima_prop_registerGroup(const char* name, const char* label, const 
 	WimaProp* prop = wima_prop_register(name, label, desc, WIMA_PROP_GROUP);
 	wassert(prop->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
 
-	prop->_list = dvec_create(NULL, 0, sizeof(WimaProperty));
+	prop->_list = dvec_create(0, sizeof(WimaProperty), NULL);
 	wassert(prop->_list != NULL, WIMA_ASSERT_PROP_LIST_NULL);
 
 	return prop->idx;

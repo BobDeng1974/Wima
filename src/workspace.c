@@ -58,7 +58,7 @@ WimaStatus wima_workspace_register(WimaWorkspace* wth) {
 
 	assert_init;
 
-	WimaWksp wksp = dtree_create(NULL, 0, sizeof(WimaAr));
+	WimaWksp wksp = dtree_create(0, sizeof(WimaAr), NULL);
 	if (!wksp) {
 		return WIMA_STATUS_WORKSPACE_ERR;
 	}

@@ -120,25 +120,25 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 		return WIMA_STATUS_INIT_ERR;
 	}
 
-	wg.windows = dvec_create(NULL, 0, sizeof(WimaWin));
+	wg.windows = dvec_create(0, sizeof(WimaWin), NULL);
 	if (!wg.windows) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
-	wg.props = dvec_create(NULL, 0, sizeof(WimaProp));
+	wg.props = dvec_create(0, sizeof(WimaProp), NULL);
 	if (!wg.props) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
-	wg.regions = dvec_create(NULL, 0, sizeof(WimaReg));
+	wg.regions = dvec_create(0, sizeof(WimaReg), NULL);
 	if (!wg.regions) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
-	wg.workspaces = dvec_create(NULL, 0, sizeof(WimaWksp));
+	wg.workspaces = dvec_create(0, sizeof(WimaWksp), NULL);
 	if (!wg.workspaces) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
