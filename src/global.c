@@ -103,6 +103,7 @@ const char* wima_assert_msgs[] = {
     "theme type is not an item type; this is a bug in Wima",
     "theme item is not a color type; this is a bug in Wima",
     "node item is not a color type; this is a bug in Wima",
+    "theme items were not consecutive; this is a bug in Wima",
 
     "prop is not valid",
     "prop is not a group prop",

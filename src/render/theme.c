@@ -558,9 +558,20 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type) {
 	// Plus 1 for the background color.
 	int initial = idx * WIMA_THEME_WIDGET_NUM_COLORS + 1;
 
+#ifdef __YASSERT__
+	WimaProperty prev;
+#endif
+
 	for (int i = 0; i < WIMA_THEME_WIDGET_NUM_COLORS; ++i) {
+
 		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, widgetThemeNames[i],
 		                              widgetThemeLabels[i], descs[i], initial++);
+
+#ifdef __YASSERT__
+		wassert(i != 0 && prev != child - 1, WIMA_ASSERT_THEME_PROP_CONSECUTIVE);
+		prev = child;
+#endif
+
 		wima_prop_link(main, child);
 	}
 
@@ -597,9 +608,20 @@ WimaProperty wima_theme_loadNode() {
 
 	WimaProperty child;
 
+#ifdef __YASSERT__
+	WimaProperty prev;
+#endif
+
 	for (int i = 0; i < WIMA_THEME_NODE_NUM_COLORS; ++i) {
+
 		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, nodeThemeNames[i],
 		                              nodeThemeLabels[i], nodeDescs[i], initial++);
+
+#ifdef __YASSERT__
+		wassert(i != 0 && prev != child - 1, WIMA_ASSERT_THEME_PROP_CONSECUTIVE);
+		prev = child;
+#endif
+
 		wima_prop_link(main, child);
 	}
 
