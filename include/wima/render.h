@@ -923,7 +923,7 @@ int wima_theme_widget_shadeBottom(WimaThemeType type);
 void wima_theme_widget_setShaded(WimaThemeType type, bool shaded);
 bool wima_theme_widget_shaded(WimaThemeType type);
 
-WimaNodeTheme* wima_theme_nodeTheme();
+WimaNodeTheme* wima_theme_node();
 
 void wima_theme_node_setOutline(WimaColor color);
 WimaColor wima_theme_node_outline();

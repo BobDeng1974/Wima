@@ -516,21 +516,22 @@ static const char** wima_theme_descs(WimaThemeType type) {
 	}
 }
 
-WimaProperty wima_theme_load(WimaProperty* props) {
+WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 
 	WimaProperty main = wima_theme_create();
 
 	WimaProperty bg = wima_theme_loadBackground();
 	wima_prop_link(main, bg);
 	props[WIMA_THEME_BG] = bg;
+	starts[WIMA_THEME_BG] = bg;
 
 	for (WimaThemeType i = WIMA_THEME_REGULAR; i < WIMA_THEME_NODE; ++i) {
-		WimaProperty item = wima_theme_loadWidget(i);
+		WimaProperty item = wima_theme_loadWidget(i, starts);
 		wima_prop_link(main, item);
 		props[i] = item;
 	}
 
-	WimaProperty node = wima_theme_loadNode();
+	WimaProperty node = wima_theme_loadNode(starts);
 	wima_prop_link(main, node);
 	props[WIMA_THEME_NODE] = node;
 
@@ -542,7 +543,7 @@ WimaProperty wima_theme_loadBackground() {
 	                             NULL, widgetThemeLabels[WIMA_THEME_BG], bgDesc, 0);
 }
 
-WimaProperty wima_theme_loadWidget(WimaThemeType type) {
+WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 
 	const char** descs = wima_theme_descs(type);
 
@@ -566,6 +567,10 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type) {
 
 		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, widgetThemeNames[i],
 		                              widgetThemeLabels[i], descs[i], initial++);
+
+		if (i == 0) {
+			starts[type] = child;
+		}
 
 #ifdef __YASSERT__
 		wassert(i != 0 && prev != child - 1, WIMA_ASSERT_THEME_PROP_CONSECUTIVE);
@@ -596,7 +601,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type) {
 	return main;
 }
 
-WimaProperty wima_theme_loadNode() {
+WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 
 	WimaProperty main = wima_theme_createProp(WIMA_PROP_GROUP, widgetParentNames[WIMA_THEME_NODE],
 	                                          NULL, widgetParentLabels[WIMA_THEME_NODE], NULL, 0);
@@ -616,6 +621,10 @@ WimaProperty wima_theme_loadNode() {
 
 		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, nodeThemeNames[i],
 		                              nodeThemeLabels[i], nodeDescs[i], initial++);
+
+		if (i == 0) {
+			starts[WIMA_THEME_NODE] = child;
+		}
 
 #ifdef __YASSERT__
 		wassert(i != 0 && prev != child - 1, WIMA_ASSERT_THEME_PROP_CONSECUTIVE);
@@ -814,22 +823,11 @@ WimaWidgetTheme* wima_theme_widget(WimaThemeType type) {
 
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
-	WimaProperty wph = wg.themes[type];
+	WimaProperty wph = wg.themeStarts[type];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
-#ifdef __YASSERT__
-	WimaPropInfo* item = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
-	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
-#endif
-
-	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
-
-	WimaProperty* subHandles = dvec_get(data->_list, 0);
-
-	wassert(wima_prop_valid(subHandles[0]), WIMA_ASSERT_PROP);
-
-	return (WimaWidgetTheme*) dnvec_get(wg.props, subHandles[0], WIMA_PROP_DATA_IDX);
+	return (WimaWidgetTheme*) dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 }
 
 void wima_theme_widget_setOutline(WimaThemeType type, WimaColor color) {
@@ -940,24 +938,13 @@ bool wima_theme_widget_shaded(WimaThemeType type) {
 	return wima_prop_bool(subHandles[WIMA_THEME_WIDGET_SHADED]);
 }
 
-WimaNodeTheme* wima_theme_nodeTheme() {
+WimaNodeTheme* wima_theme_node() {
 
-	WimaProperty wph = wg.themes[WIMA_THEME_NODE];
+	WimaProperty wph = wg.themeStarts[WIMA_THEME_NODE];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
-#ifdef __YASSERT__
-	WimaPropInfo* node = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
-	wassert(node->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
-#endif
-
-	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
-
-	WimaProperty* subHandles = dvec_get(data->_list, 0);
-
-	wassert(wima_prop_valid(subHandles[0]), WIMA_ASSERT_PROP);
-
-	return (WimaNodeTheme*) dnvec_get(wg.props, subHandles[0], WIMA_PROP_DATA_IDX);
+	return (WimaNodeTheme*) dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 }
 
 void wima_theme_node_setOutline(WimaColor color) {

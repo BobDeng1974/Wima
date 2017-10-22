@@ -68,6 +68,7 @@ typedef struct WimaG {
 	DynaVector workspaces;
 	DynaVector regions;
 
+	WimaProperty themeStarts[WIMA_THEME_NUM_TYPES];
 	WimaProperty themes[WIMA_THEME_NUM_TYPES];
 	WimaProperty theme;
 

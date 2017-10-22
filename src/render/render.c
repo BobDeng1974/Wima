@@ -63,16 +63,22 @@
 #include <wima/render.h>
 #include <wima/math.h>
 
-#include "../render/render.h"
+#include "render.h"
+
 #include "../global.h"
+#include "../prop.h"
 #include "../window.h"
 
 global_decl;
 assert_msgs_decl;
 
 void wima_render_label(WimaRenderContext* ctx, float x, float y, float w, float h, int iconid, const char *label) {
+
 	assert_init;
-	wima_render_label_icon_value(ctx, x, y, w, h, iconid, wg.themes->regular.text,
+
+	WimaPropData* theme = (WimaPropData*) wima_theme_widget(WIMA_THEME_REGULAR);
+
+	wima_render_label_icon_value(ctx, x, y, w, h, iconid, theme[WIMA_THEME_WIDGET_TEXT]._color,
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
