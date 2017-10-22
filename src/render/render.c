@@ -76,30 +76,32 @@ void wima_render_label(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	assert_init;
 
-	WimaPropData* theme = (WimaPropData*) wima_theme_widget(WIMA_THEME_REGULAR);
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_REGULAR);
 
-	wima_render_label_icon_value(ctx, x, y, w, h, iconid, theme[WIMA_THEME_WIDGET_TEXT]._color,
+	wima_render_label_icon_value(ctx, x, y, w, h, iconid, t[WIMA_THEME_WIDGET_TEXT]._color,
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
 void wima_render_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h, int flags,
-                       WimaWidgetState state, int iconid, const char *label)
+                         WimaWidgetState state, int iconid, const char *label)
 {
 	assert_init;
 
 	float cr[4];
-	WimaColor shade_top, shade_down;
+	WimaColor shade_top, shade_btm;
+
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TOOL);
 
 	wima_render_corners_rounded(cr, WIMA_TOOL_RADIUS, flags);
 	wima_render_inset(ctx, x, y, w, h, cr[2], cr[3]);
-	wima_render_innerColor(&shade_top, &shade_down, &wg.themes->tool, state, 1);
+	wima_render_innerColor(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, 1);
 
-	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
+	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
-	WimaColor transparent = wima_color_multiplyAlphaf(wg.themes->tool.outline, WIMA_TRANSPARENT_ALPHA);
+	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_render_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 
-	WimaColor textColor = wima_render_textColor(&wg.themes->tool, state);
+	WimaColor textColor = wima_render_textColor((WimaWidgetTheme*) t, state);
 	wima_render_label_icon_value(ctx, x, y, w, h, iconid, textColor, WIMA_ALIGN_CENTER,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
 }
@@ -110,19 +112,21 @@ void wima_render_radioBtn(WimaRenderContext* ctx, float x, float y, float w, flo
 	assert_init;
 
 	float cr[4];
-	WimaColor shade_top, shade_down;
+	WimaColor shade_top, shade_btm;
+
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_RADIO);
 
 	wima_render_corners_rounded(cr, WIMA_OPTION_RADIUS, flags);
 	wima_render_inset(ctx, x, y, w, h, cr[2], cr[3]);
 
-	wima_render_innerColor(&shade_top, &shade_down, &wg.themes->radio, state, 1);
+	wima_render_innerColor(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, 1);
 
-	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
+	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
-	WimaColor transparent = wima_color_multiplyAlphaf(wg.themes->radio.outline, WIMA_TRANSPARENT_ALPHA);
+	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_render_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 
-	WimaColor textColor = wima_render_textColor(&wg.themes->radio, state);
+	WimaColor textColor = wima_render_textColor((WimaWidgetTheme*) t, state);
 	wima_render_label_icon_value(ctx, x, y, w, h, iconid, textColor, WIMA_ALIGN_CENTER,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
 }
@@ -141,25 +145,27 @@ void wima_render_textField(WimaRenderContext* ctx, float x, float y, float w, fl
 	assert_init;
 
 	float cr[4];
-	WimaColor shade_top, shade_down;
+	WimaColor shade_top, shade_btm;
+
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TEXTFIELD);
 
 	wima_render_corners_rounded(cr, WIMA_TEXT_RADIUS, flags);
 	wima_render_inset(ctx, x, y, w, h, cr[2], cr[3]);
 
-	wima_render_innerColor(&shade_top, &shade_down, &wg.themes->textField, state, 0);
+	wima_render_innerColor(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, 0);
 
-	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
+	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
-	WimaColor transparent = wima_color_multiplyAlphaf(wg.themes->textField.outline, WIMA_TRANSPARENT_ALPHA);
+	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_render_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 
 	if (state != WIMA_ITEM_ACTIVE) {
 		cend = -1;
 	}
 
-	WimaColor textColor = wima_render_textColor(&wg.themes->textField, state);
+	WimaColor textColor = wima_render_textColor((WimaWidgetTheme*) t, state);
 	wima_render_label_caret(ctx, x, y, w, h, iconid, textColor, WIMA_LABEL_FONT_SIZE,
-	                        text, wg.themes->textField.item, cbegin, cend);
+	                        text, t[WIMA_THEME_WIDGET_WIDGET]._color, cbegin, cend);
 }
 
 void wima_render_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
@@ -168,7 +174,9 @@ void wima_render_optionBtn(WimaRenderContext* ctx, float x, float y, float w, fl
 	assert_init;
 
 	float ox, oy;
-	WimaColor shade_top, shade_down;
+	WimaColor shade_top, shade_btm;
+
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_OPTION);
 
 	ox = x;
 	oy = y + h - WIMA_OPTION_HEIGHT - 3;
@@ -177,15 +185,15 @@ void wima_render_optionBtn(WimaRenderContext* ctx, float x, float y, float w, fl
 	                  WIMA_OPTION_WIDTH,  WIMA_OPTION_HEIGHT,
 	                  WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS);
 
-	wima_render_innerColor(&shade_top, &shade_down, &wg.themes->option, state, true);
+	wima_render_innerColor(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, true);
 
 	wima_render_box_inner(ctx, ox, oy,
 	                      WIMA_OPTION_WIDTH,  WIMA_OPTION_HEIGHT,
 	                      WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS,
 	                      WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS,
-	                      shade_top, shade_down);
+	                      shade_top, shade_btm);
 
-	WimaColor transparent = wima_color_multiplyAlphaf(wg.themes->option.outline, WIMA_TRANSPARENT_ALPHA);
+	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_render_box_outline(ctx, ox, oy,
 	                        WIMA_OPTION_WIDTH,  WIMA_OPTION_HEIGHT,
 	                        WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS,
@@ -193,10 +201,11 @@ void wima_render_optionBtn(WimaRenderContext* ctx, float x, float y, float w, fl
 	                        transparent);
 
 	if (state == WIMA_ITEM_ACTIVE) {
-		wima_render_check(ctx, ox, oy, wima_color_multiplyAlphaf(wg.themes->option.item, WIMA_TRANSPARENT_ALPHA));
+		WimaColor tp = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_WIDGET]._color, WIMA_TRANSPARENT_ALPHA);
+		wima_render_check(ctx, ox, oy, tp);
 	}
 
-	WimaColor textColor = wima_render_textColor(&wg.themes->option, state);
+	WimaColor textColor = wima_render_textColor((WimaWidgetTheme*) t, state);
 	wima_render_label_icon_value(ctx, x + 12, y, w - 12, h, -1, textColor,
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
@@ -207,23 +216,25 @@ void wima_render_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, fl
 	assert_init;
 
 	float cr[4];
-	WimaColor shade_top, shade_down;
+	WimaColor shade_top, shade_btm;
+
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_CHOICE);
 
 	wima_render_corners_rounded(cr, WIMA_OPTION_RADIUS, flags);
 	wima_render_inset(ctx, x, y, w, h, cr[2], cr[3]);
 
-	wima_render_innerColor(&shade_top, &shade_down, &wg.themes->choice, state, 1);
+	wima_render_innerColor(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, 1);
 
-	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
+	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
-	WimaColor boxTrans = wima_color_multiplyAlphaf(wg.themes->choice.outline, WIMA_TRANSPARENT_ALPHA);
+	WimaColor boxTrans = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_render_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], boxTrans);
 
-	WimaColor textColor = wima_render_textColor(&wg.themes->choice, state);
+	WimaColor textColor = wima_render_textColor((WimaWidgetTheme*) t, state);
 	wima_render_label_icon_value(ctx, x, y, w, h, iconid, textColor,
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 
-	WimaColor arrowTrans = wima_color_multiplyAlphaf(wg.themes->choice.item, WIMA_TRANSPARENT_ALPHA);
+	WimaColor arrowTrans = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_WIDGET]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_render_arrow_upDown(ctx, x + w - 10, y + 10, 5, arrowTrans);
 }
 
@@ -233,12 +244,14 @@ void wima_render_colorBtn(WimaRenderContext* ctx, float x, float y, float w, flo
 
 	float cr[4];
 
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TOOL);
+
 	wima_render_corners_rounded(cr, WIMA_TOOL_RADIUS, flags);
 	wima_render_inset(ctx, x, y, w, h, cr[2], cr[3]);
 
 	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], color, color);
 
-	WimaColor transparent = wima_color_multiplyAlphaf(wg.themes->tool.outline, WIMA_TRANSPARENT_ALPHA);
+	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_render_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 }
 
@@ -248,23 +261,25 @@ void wima_render_numField(WimaRenderContext* ctx, float x, float y, float w, flo
 	assert_init;
 
 	float cr[4];
-	WimaColor shade_top, shade_down;
+	WimaColor shade_top, shade_btm;
+
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_NUMFIELD);
 
 	wima_render_corners_rounded(cr, WIMA_NUMBER_RADIUS, flags);
 	wima_render_inset(ctx, x, y, w, h, cr[2], cr[3]);
 
-	wima_render_innerColor(&shade_top, &shade_down, &wg.themes->numField, state, 0);
+	wima_render_innerColor(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, 0);
 
-	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
+	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
-	WimaColor boxTrans = wima_color_multiplyAlphaf(wg.themes->numField.outline, WIMA_TRANSPARENT_ALPHA);
+	WimaColor boxTrans = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_render_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], boxTrans);
 
-	WimaColor textColor = wima_render_textColor(&wg.themes->numField, state);
+	WimaColor textColor = wima_render_textColor((WimaWidgetTheme*) t, state);
 	wima_render_label_icon_value(ctx, x, y, w, h, -1, textColor,
 	                             WIMA_ALIGN_CENTER, WIMA_LABEL_FONT_SIZE, label, value);
 
-	WimaColor arrowTrans = wima_color_multiplyAlphaf(wg.themes->numField.item, WIMA_TRANSPARENT_ALPHA);
+	WimaColor arrowTrans = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_WIDGET]._color, WIMA_TRANSPARENT_ALPHA);
 
 	wima_render_arrow(ctx, x + 8, y + 10, -WIMA_NUMBER_ARROW_SIZE, arrowTrans);
 	wima_render_arrow(ctx, x + w - 8, y + 10, WIMA_NUMBER_ARROW_SIZE, arrowTrans);
@@ -277,32 +292,34 @@ void wima_render_slider(WimaRenderContext* ctx, float x, float y, float w, float
 	assert_init;
 
 	float cr[4];
-	WimaColor shade_top, shade_down;
+	WimaColor shade_top, shade_btm;
+
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_SLIDER);
 
 	wima_render_corners_rounded(cr, WIMA_NUMBER_RADIUS, flags);
 	wima_render_inset(ctx, x, y, w, h, cr[2], cr[3]);
 
-	wima_render_innerColor(&shade_top, &shade_down, &wg.themes->slider, state, 0);
+	wima_render_innerColor(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, 0);
 
-	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
+	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
 	if (state == WIMA_ITEM_ACTIVE) {
-		shade_top = wima_color_offset(wg.themes->slider.item, wg.themes->slider.shadeTop);
-		shade_down = wima_color_offset(wg.themes->slider.item, wg.themes->slider.shadeBottom);
+		shade_top = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
+		shade_btm = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
 	}
 	else {
-		shade_top = wima_color_offset(wg.themes->slider.item, wg.themes->slider.shadeBottom);
-		shade_down = wima_color_offset(wg.themes->slider.item, wg.themes->slider.shadeTop);
+		shade_top = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
+		shade_btm = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
 	}
 
 	nvgScissor(ctx->nvg, x, y, 8 + (w - 8) * wima_clamp(progress, 0, 1), h);
-	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2],cr[3], shade_top, shade_down);
+	wima_render_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2],cr[3], shade_top, shade_btm);
 	nvgResetScissor(ctx->nvg);
 
-	WimaColor transparent = wima_color_multiplyAlphaf(wg.themes->slider.outline, WIMA_TRANSPARENT_ALPHA);
+	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_render_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 
-	WimaColor textColor = wima_render_textColor(&wg.themes->slider, state);
+	WimaColor textColor = wima_render_textColor((WimaWidgetTheme*) t, state);
 	wima_render_label_icon_value(ctx, x, y, w, h, -1, textColor, WIMA_ALIGN_CENTER,
 	                             WIMA_LABEL_FONT_SIZE, label, value);
 }
@@ -312,16 +329,20 @@ void wima_render_scrollbar(WimaRenderContext* ctx,float x, float y, float w, flo
 {
 	assert_init;
 
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_SCROLLBAR);
+
 	wima_render_inset(ctx, x, y, w, h, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS);
 
-	WimaColor top = wima_color_offset(wg.themes->scrollBar.inner, 3 * wg.themes->scrollBar.shadeBottom);
-	WimaColor bottom = wima_color_offset(wg.themes->scrollBar.inner, 3 * wg.themes->scrollBar.shadeTop);
+	WimaColor top = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color,
+	                                  3 * t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
+	WimaColor btm = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color,
+	                                  3 * t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
 	wima_render_box_inner(ctx, x, y, w, h,
 	                      WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
 	                      WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
-	                      top, bottom);
+	                      top, btm);
 
-	WimaColor transparent = wima_color_multiplyAlphaf(wg.themes->scrollBar.outline, WIMA_TRANSPARENT_ALPHA);
+	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 
 	wima_render_box_outline(ctx,x,y,w,h,
 	                        WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
@@ -329,12 +350,12 @@ void wima_render_scrollbar(WimaRenderContext* ctx,float x, float y, float w, flo
 	                        transparent);
 
 	int delta = (state == WIMA_ITEM_ACTIVE) ? WIMA_SCROLLBAR_ACTIVE_SHADE : 0;
-	WimaColor itemColor = wima_color_offset(wg.themes->scrollBar.item, delta);
+	WimaColor itemColor = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, delta);
 
 	WimaRect r = wima_render_scroll_handle_rect(x, y, w, h, offset, size);
 
-	WimaColor topOffset = wima_color_offset(itemColor, 3 * wg.themes->scrollBar.shadeTop);
-	WimaColor bottomOffset = wima_color_offset(itemColor, 3 * wg.themes->scrollBar.shadeBottom);
+	WimaColor topOffset = wima_color_offset(itemColor, 3 * t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
+	WimaColor bottomOffset = wima_color_offset(itemColor, 3 * t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
 
 	wima_render_box_inner(ctx, r.x, r.y, r.w, r.h,
 	                      WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
@@ -352,14 +373,16 @@ void wima_render_menu_background(WimaRenderContext* ctx, float x, float y, float
 	assert_init;
 
 	float cr[4];
-	WimaColor shade_top, shade_down;
+	WimaColor shade_top, shade_btm;
+
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_MENU);
 
 	wima_render_corners_rounded(cr, WIMA_MENU_RADIUS, flags);
 
-	wima_render_innerColor(&shade_top, &shade_down, &wg.themes->menu, WIMA_ITEM_DEFAULT, 0);
-	wima_render_box_inner(ctx, x, y, w, h + 1, cr[0], cr[1], cr[2], cr[3], shade_top, shade_down);
+	wima_render_innerColor(&shade_top, &shade_btm, (WimaWidgetTheme*) t, WIMA_ITEM_DEFAULT, 0);
+	wima_render_box_inner(ctx, x, y, w, h + 1, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
-	WimaColor color = wima_color_multiplyAlphaf(wg.themes->menu.outline, WIMA_TRANSPARENT_ALPHA);
+	WimaColor color = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_render_box_outline(ctx, x, y, w, h + 1, cr[0], cr[1], cr[2], cr[3], color);
 	wima_render_dropShadow(ctx, x, y, w, h, WIMA_MENU_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
 }
@@ -368,16 +391,18 @@ void wima_render_tooltip_background(WimaRenderContext* ctx, float x, float y, fl
 
 	assert_init;
 
-	WimaColor shade_top, shade_down;
+	WimaColor shade_top, shade_btm;
 
-	wima_render_innerColor(&shade_top, &shade_down, &wg.themes->tooltip, WIMA_ITEM_DEFAULT, 0);
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TOOLTIP);
+
+	wima_render_innerColor(&shade_top, &shade_btm, (WimaWidgetTheme*) t, WIMA_ITEM_DEFAULT, 0);
 
 	wima_render_box_inner(ctx, x, y, w, h + 1,
 	                      WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
 	                      WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
-	                      shade_top, shade_down);
+	                      shade_top, shade_btm);
 
-	WimaColor transparent = wima_color_multiplyAlphaf(wg.themes->tooltip.outline, WIMA_TRANSPARENT_ALPHA);
+	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_render_box_outline(ctx, x, y, w, h + 1,
 	                        WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
 	                        WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
@@ -387,8 +412,12 @@ void wima_render_tooltip_background(WimaRenderContext* ctx, float x, float y, fl
 }
 
 void wima_render_menu_label(WimaRenderContext* ctx, float x, float y, float w, float h, int iconid, const char *label) {
+
 	assert_init;
-	wima_render_label_icon_value(ctx, x, y, w, h, iconid, wg.themes->menu.text,
+
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_MENU);
+
+	wima_render_label_icon_value(ctx, x, y, w, h, iconid, t[WIMA_THEME_WIDGET_TEXT]._color,
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
@@ -413,19 +442,21 @@ void wima_render_menu_item(WimaRenderContext* ctx, float x, float y, float w, fl
 {
 	assert_init;
 
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_MENU_ITEM);
+
 	if (state != WIMA_ITEM_DEFAULT) {
 
-		WimaColor shadeTop = wima_color_offset(wg.themes->menuItem.innerSelected,
-		                                      wg.themes->menuItem.shadeTop);
-		WimaColor shadeBottom = wima_color_offset(wg.themes->menuItem.innerSelected,
-		                                         wg.themes->menuItem.shadeBottom);
+		WimaColor shadeTop = wima_color_offset(t[WIMA_THEME_WIDGET_INNER_SELECTED]._color,
+		                                      t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
+		WimaColor shadeBtm = wima_color_offset(t[WIMA_THEME_WIDGET_INNER_SELECTED]._color,
+		                                       t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
 
-		wima_render_box_inner(ctx, x, y, w, h, 0, 0, 0, 0, shadeTop, shadeBottom);
+		wima_render_box_inner(ctx, x, y, w, h, 0, 0, 0, 0, shadeTop, shadeBtm);
 
 		state = WIMA_ITEM_ACTIVE;
 	}
 
-	WimaColor textColor = wima_render_textColor(&wg.themes->menuItem, state);
+	WimaColor textColor = wima_render_textColor((WimaWidgetTheme*) t, state);
 	wima_render_label_icon_value(ctx, x, y, w, h, iconid, textColor, WIMA_ALIGN_LEFT,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
 
@@ -438,17 +469,17 @@ void wima_render_node_port(WimaRenderContext* ctx, float x, float y, WimaWidgetS
 
 	assert_init;
 
-	WimaCol c;
-	c.wima = wg.themes->node.wire;
+	WimaPropData* t = (WimaPropData*) wima_theme_node();
 
 	nvgBeginPath(ctx->nvg);
 
 	nvgCircle(ctx->nvg, x, y, WIMA_NODE_PORT_RADIUS);
 
-	nvgStrokeColor(ctx->nvg, c.nvg);
+	nvgStrokeColor(ctx->nvg, t[WIMA_THEME_NODE_WIRE]._nvgcolor);
 	nvgStrokeWidth(ctx->nvg, 1.0f);
 	nvgStroke(ctx->nvg);
 
+	WimaCol c;
 	c.wima = (state != WIMA_ITEM_DEFAULT) ? wima_color_offset(color, WIMA_HOVER_SHADE) : color;
 
 	nvgFillColor(ctx->nvg, c.nvg);
@@ -460,8 +491,10 @@ void wima_render_node_wire_colored(WimaRenderContext* ctx, float x0, float y0, f
 {
 	assert_init;
 
+	WimaPropData* t = (WimaPropData*) wima_theme_node();
+
 	float length = wima_fmaxf(fabsf(x1 - x0), fabsf(y1 - y0));
-	float delta = length * (float) wg.themes->node.noodleCurving / 10.0f;
+	float delta = length * (float) t[WIMA_THEME_NODE_WIRE_CURVING]._int.val / 10.0f;
 
 	nvgBeginPath(ctx->nvg);
 
@@ -470,7 +503,7 @@ void wima_render_node_wire_colored(WimaRenderContext* ctx, float x0, float y0, f
 
 	WimaCol colorw;
 
-	colorw.wima= wg.themes->node.wire;
+	colorw.wima= t[WIMA_THEME_NODE_WIRE]._color;
 	colorw.wima.a = (color0.a < color1.a) ? color0.a : color1.a;
 
 	nvgStrokeColor(ctx->nvg, colorw.nvg);
@@ -493,8 +526,10 @@ void wima_render_node_wire(WimaRenderContext* ctx, float x0, float y0, float x1,
 {
 	assert_init;
 
-	WimaColor first = wima_render_node_wireColor(&wg.themes->node, state0);
-	WimaColor second = wima_render_node_wireColor(&wg.themes->node, state1);
+	WimaPropData* t = (WimaPropData*) wima_theme_node();
+
+	WimaColor first = wima_render_node_wireColor((WimaNodeTheme*) t, state0);
+	WimaColor second = wima_render_node_wireColor((WimaNodeTheme*) t, state1);
 
 	wima_render_node_wire_colored(ctx, x0, y0, x1, y1, first, second);
 }
@@ -505,6 +540,9 @@ void wima_render_node_background(WimaRenderContext* ctx, float x, float y, float
 {
 	assert_init;
 
+	WimaPropData* t = (WimaPropData*) wima_theme_node();
+	WimaPropData* reg = (WimaPropData*) wima_theme_widget(WIMA_THEME_REGULAR);
+
 	WimaColor top = wima_color_multiplyAlphaf(wima_color_offset(titleColor, WIMA_BEVEL_SHADE), WIMA_TRANSPARENT_ALPHA);
 	WimaColor bottom = wima_color_multiplyAlphaf(titleColor, WIMA_TRANSPARENT_ALPHA);
 
@@ -512,15 +550,15 @@ void wima_render_node_background(WimaRenderContext* ctx, float x, float y, float
 	                      WIMA_NODE_RADIUS, WIMA_NODE_RADIUS, 0, 0,
 	                      top, bottom);
 
-	WimaColor shadeTop = wima_color_multiplyAlphaf(wg.themes->node.nodeBackdrop, WIMA_TRANSPARENT_ALPHA);
-	WimaColor shadeBottom = wima_color_multiplyAlphaf(wg.themes->node.nodeBackdrop, WIMA_TRANSPARENT_ALPHA);
+	WimaColor shadeTop = wima_color_multiplyAlphaf(t[WIMA_THEME_NODE_BG]._color, WIMA_TRANSPARENT_ALPHA);
+	WimaColor shadeBottom = wima_color_multiplyAlphaf(t[WIMA_THEME_NODE_BG]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_render_box_inner(ctx, x, y + WIMA_NODE_TITLE_HEIGHT - 1, w, h + 2 - WIMA_NODE_TITLE_HEIGHT,
 	                      0, 0, WIMA_NODE_RADIUS, WIMA_NODE_RADIUS, shadeTop, shadeBottom);
 
 	WimaColor shadow = wima_color_offset(titleColor, WIMA_BEVEL_SHADE);
 	wima_render_node_label_icon(ctx, x + WIMA_NODE_ARROW_AREA_WIDTH, y,
 	                            w - WIMA_NODE_ARROW_AREA_WIDTH - WIMA_NODE_MARGIN_SIDE,
-	                            WIMA_NODE_TITLE_HEIGHT, iconid, wg.themes->regular.text,
+	                            WIMA_NODE_TITLE_HEIGHT, iconid, reg[WIMA_THEME_WIDGET_TEXT]._color,
 	                            shadow, WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label);
 
 	WimaColor arrowColor;
@@ -532,7 +570,7 @@ void wima_render_node_background(WimaRenderContext* ctx, float x, float y, float
 
 		case WIMA_ITEM_DEFAULT:
 		{
-			borderColor = wg.themes->node.outline;
+			borderColor = t[WIMA_THEME_NODE_OUTLINE]._color;
 			arrowColor = wima_color_offset(titleColor, -WIMA_BEVEL_SHADE);
 
 			break;
@@ -540,16 +578,16 @@ void wima_render_node_background(WimaRenderContext* ctx, float x, float y, float
 
 		case WIMA_ITEM_HOVER:
 		{
-			borderColor = wg.themes->node.nodeSelected;
-			arrowColor = wg.themes->node.nodeSelected;
+			borderColor = t[WIMA_THEME_NODE_OUTLINE_SELECTED]._color;
+			arrowColor = t[WIMA_THEME_NODE_OUTLINE_SELECTED]._color;
 
 			break;
 		}
 
 		case WIMA_ITEM_ACTIVE:
 		{
-			borderColor = wg.themes->node.nodeActive;
-			arrowColor = wg.themes->node.nodeSelected;
+			borderColor = t[WIMA_THEME_NODE_OUTLINE_ACTIVE]._color;
+			arrowColor = t[WIMA_THEME_NODE_OUTLINE_SELECTED]._color;
 
 			break;
 		}
@@ -681,7 +719,9 @@ void wima_render_bevel(WimaRenderContext* ctx, float x, float y, float w, float 
 	WimaColor offset;
 	WimaCol transparent;
 
-	offset = wima_color_offset(wg.themes->backgroundColor, -WIMA_BEVEL_SHADE);
+	WimaColor bg = wima_theme_background();
+
+	offset = wima_color_offset(bg, -WIMA_BEVEL_SHADE);
 	transparent.wima = wima_color_multiplyAlphaf(offset, WIMA_TRANSPARENT_ALPHA);
 
 	nvgStrokeColor(ctx->nvg, transparent.nvg);
@@ -692,7 +732,7 @@ void wima_render_bevel(WimaRenderContext* ctx, float x, float y, float w, float 
 	nvgLineTo(ctx->nvg, x, y);
 	nvgLineTo(ctx->nvg, x + w, y);
 
-	offset = wima_color_offset(wg.themes->backgroundColor, WIMA_BEVEL_SHADE);
+	offset = wima_color_offset(bg, WIMA_BEVEL_SHADE);
 	transparent.wima = wima_color_multiplyAlphaf(offset, WIMA_TRANSPARENT_ALPHA);
 	nvgStrokeColor(ctx->nvg, transparent.nvg);
 	nvgStroke(ctx->nvg);
@@ -715,7 +755,7 @@ void wima_render_inset(WimaRenderContext* ctx, float x, float y, float w, float 
 	nvgArcTo(ctx->nvg, x, y + h, x, y, cr3);
 
 	WimaCol bevelColor;
-	bevelColor.wima = wima_color_offset(wg.themes->backgroundColor, WIMA_INSET_BEVEL_SHADE);
+	bevelColor.wima = wima_color_offset(wima_theme_background(), WIMA_INSET_BEVEL_SHADE);
 
 	nvgStrokeWidth(ctx->nvg, 1);
 
@@ -783,13 +823,13 @@ void wima_render_dropShadow(WimaRenderContext* ctx, float x, float y, float w, f
 
 void wima_render_box_inner(WimaRenderContext* ctx, float x, float y, float w, float h,
                            float cr0, float cr1, float cr2, float cr3,
-                           WimaColor shade_top, WimaColor shade_down)
+                           WimaColor shade_top, WimaColor shade_btm)
 {
 	assert_init;
 
 	WimaCol stop, sbtm;
 	stop.wima = shade_top;
-	sbtm.wima = shade_down;
+	sbtm.wima = shade_btm;
 
 	nvgBeginPath(ctx->nvg);
 
@@ -1246,10 +1286,12 @@ WimaRect wima_render_scroll_handle_rect(float x, float y, float w, float h, floa
 	return result;
 }
 
-void wima_render_innerColor(WimaColor *shade_top, WimaColor *shade_down, WimaWidgetTheme* theme,
+void wima_render_innerColor(WimaColor *shade_top, WimaColor *shade_btm, WimaWidgetTheme* theme,
                             WimaWidgetState state, bool flipActive)
 {
-	if (theme->shaded) {
+	WimaPropData* t = (WimaPropData*) theme;
+
+	if (t[WIMA_THEME_WIDGET_SHADED]._bool) {
 
 		switch(state) {
 
@@ -1257,29 +1299,35 @@ void wima_render_innerColor(WimaColor *shade_top, WimaColor *shade_down, WimaWid
 
 			case WIMA_ITEM_DEFAULT:
 			{
-				*shade_top = wima_color_offset(theme->inner, theme->shadeTop);
-				*shade_down = wima_color_offset(theme->inner, theme->shadeBottom);
+				*shade_top = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color,
+				                               t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
+				*shade_btm = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color,
+				                               t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
 
 				break;
 			}
 
 			case WIMA_ITEM_HOVER:
 			{
-				WimaColor color = wima_color_offset(theme->inner, WIMA_HOVER_SHADE);
+				WimaColor color = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color, WIMA_HOVER_SHADE);
 
-				*shade_top = wima_color_offset(color, theme->shadeTop);
-				*shade_down = wima_color_offset(color, theme->shadeBottom);
+				*shade_top = wima_color_offset(color, t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
+				*shade_btm = wima_color_offset(color, t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
 
 				break;
 			}
 
 			case WIMA_ITEM_ACTIVE:
 			{
-				int delta = flipActive ? theme->shadeBottom : theme->shadeTop;
-				*shade_top = wima_color_offset(theme->innerSelected, delta);
+				int delta = flipActive ?
+				                t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val :
+				                t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val;
+				*shade_top = wima_color_offset(t[WIMA_THEME_WIDGET_INNER_SELECTED]._color, delta);
 
-				delta = flipActive ? theme->shadeTop : theme->shadeBottom;
-				*shade_down = wima_color_offset(theme->innerSelected, delta);
+				delta = flipActive ?
+				            t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val :
+				            t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val;
+				*shade_btm = wima_color_offset(t[WIMA_THEME_WIDGET_INNER_SELECTED]._color, delta);
 
 				break;
 			}
@@ -1293,26 +1341,26 @@ void wima_render_innerColor(WimaColor *shade_top, WimaColor *shade_down, WimaWid
 
 			case WIMA_ITEM_DEFAULT:
 			{
-				*shade_top = theme->inner;
-				*shade_down = theme->inner;
+				*shade_top = t[WIMA_THEME_WIDGET_INNER]._color;
+				*shade_btm = t[WIMA_THEME_WIDGET_INNER]._color;
 
 				break;
 			}
 
 			case WIMA_ITEM_HOVER:
 			{
-				WimaColor color = wima_color_offset(theme->inner, WIMA_HOVER_SHADE);
+				WimaColor color = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color, WIMA_HOVER_SHADE);
 
 				*shade_top = color;
-				*shade_down = color;
+				*shade_btm = color;
 
 				break;
 			}
 
 			case WIMA_ITEM_ACTIVE:
 			{
-				*shade_top = theme->innerSelected;
-				*shade_down = theme->innerSelected;
+				*shade_top = t[WIMA_THEME_WIDGET_INNER_SELECTED]._color;
+				*shade_btm = t[WIMA_THEME_WIDGET_INNER_SELECTED]._color;
 
 				break;
 			}
@@ -1321,24 +1369,31 @@ void wima_render_innerColor(WimaColor *shade_top, WimaColor *shade_down, WimaWid
 }
 
 WimaColor wima_render_textColor(WimaWidgetTheme* theme, WimaWidgetState state) {
-	return (state == WIMA_ITEM_ACTIVE) ? theme->textSelected : theme->text;
+
+	WimaPropData* t = (WimaPropData*) theme;
+
+	return (state == WIMA_ITEM_ACTIVE) ?
+	            t[WIMA_THEME_WIDGET_TEXT_SELECTED]._color :
+	            t[WIMA_THEME_WIDGET_TEXT]._color;
 }
 
 WimaColor wima_render_node_wireColor(WimaNodeTheme* theme, WimaWidgetState state) {
 
 	wassert(theme != NULL, WIMA_ASSERT_THEME);
 
+	WimaPropData* t = (WimaPropData*) theme;
+
 	switch(state) {
 
 		default:
 
 		case WIMA_ITEM_DEFAULT:
-			return theme->wire;
+			return t[WIMA_THEME_NODE_WIRE]._color;
 
 		case WIMA_ITEM_HOVER:
-			return theme->wireSelected;
+			return t[WIMA_THEME_NODE_WIRE_SELECTED]._color;
 
 		case WIMA_ITEM_ACTIVE:
-			return theme->nodeActive;
+			return t[WIMA_THEME_NODE_OUTLINE_ACTIVE]._color;
 	}
 }

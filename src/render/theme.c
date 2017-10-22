@@ -587,9 +587,9 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 	wima_prop_link(main, child);
 
 	child = wima_theme_createProp(WIMA_PROP_INT, parentName,
-	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADE_BOTTOM],
-	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADE_BOTTOM],
-	                              descs[WIMA_THEME_WIDGET_SHADE_BOTTOM], shadeBottoms[idx]);
+	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADE_BTM],
+	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADE_BTM],
+	                              descs[WIMA_THEME_WIDGET_SHADE_BTM], shadeBottoms[idx]);
 	wima_prop_link(main, child);
 
 	child = wima_theme_createProp(WIMA_PROP_BOOL, parentName,
@@ -744,7 +744,7 @@ static void wima_theme_setWidgetDelta(WimaThemeType type, bool top, int delta) {
 
 	WimaProperty* subHandles = dvec_get(data->_list, 0);
 
-	int idx = top ? WIMA_THEME_WIDGET_SHADE_TOP : WIMA_THEME_WIDGET_SHADE_BOTTOM;
+	int idx = top ? WIMA_THEME_WIDGET_SHADE_TOP : WIMA_THEME_WIDGET_SHADE_BTM;
 
 	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
 
@@ -768,7 +768,7 @@ static int wima_theme_widgetDelta(WimaThemeType type, bool top) {
 
 	WimaProperty* subHandles = dvec_get(data->_list, 0);
 
-	int idx = top ? WIMA_THEME_WIDGET_SHADE_TOP : WIMA_THEME_WIDGET_SHADE_BOTTOM;
+	int idx = top ? WIMA_THEME_WIDGET_SHADE_TOP : WIMA_THEME_WIDGET_SHADE_BTM;
 
 	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
 
