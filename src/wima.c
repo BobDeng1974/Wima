@@ -133,7 +133,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Set the initial theme.
-	wg.theme = wima_theme_loadDefault(wg.themes);
+	wg.theme = wima_theme_load(wg.themes);
 
 	wg.regions = dvec_create(0, sizeof(WimaReg), NULL);
 	if (!wg.regions) {

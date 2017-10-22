@@ -855,10 +855,10 @@ typedef enum wima_theme_type {
 
 } WimaThemeType;
 
-typedef enum wima_item_theme_type {
+typedef enum WimaWidgetThemeType {
 
 	WIMA_THEME_WIDGET_OUTLINE,
-	WIMA_THEME_WIDGET_ITEM,
+	WIMA_THEME_WIDGET_WIDGET,
 	WIMA_THEME_WIDGET_INNER,
 	WIMA_THEME_WIDGET_INNER_SELECTED,
 	WIMA_THEME_WIDGET_TEXT,
@@ -867,7 +867,7 @@ typedef enum wima_item_theme_type {
 	WIMA_THEME_WIDGET_SHADE_BOTTOM,
 	WIMA_THEME_WIDGET_SHADED
 
-} WimaItemThemeType;
+} WimaWidgetThemeType;
 
 typedef enum wima_node_theme_type {
 
@@ -899,8 +899,8 @@ WimaWidgetTheme* wima_theme_widgetTheme(WimaThemeType type);
 void wima_theme_widget_setOutline(WimaThemeType type, WimaColor color);
 WimaColor wima_theme_widget_outline(WimaThemeType type);
 
-void wima_theme_widget_setItem(WimaThemeType type, WimaColor color);
-WimaColor wima_theme_widget_item(WimaThemeType type);
+void wima_theme_widget_setWidgetColor(WimaThemeType type, WimaColor color);
+WimaColor wima_theme_widget_widgetColor(WimaThemeType type);
 
 void wima_theme_widget_setInner(WimaThemeType type, WimaColor color);
 WimaColor wima_theme_widget_inner(WimaThemeType type);

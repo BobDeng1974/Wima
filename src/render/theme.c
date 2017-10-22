@@ -93,7 +93,7 @@ const char* themePrefix = "wima_theme_";
 const char* themeLabel = "User Interface Theme";
 const char* bgDesc = "Default background color";
 
-const char* itemParentNames[] = {
+const char* widgetParentNames[] = {
     "background",
     "regular",
     "tool",
@@ -110,7 +110,7 @@ const char* itemParentNames[] = {
     "node"
 };
 
-const char* itemParentLabels[] = {
+const char* widgetParentLabels[] = {
     "Background",
     "Regular",
     "Tool",
@@ -127,7 +127,7 @@ const char* itemParentLabels[] = {
     "Node"
 };
 
-const char* itemThemeNames[] = {
+const char* widgetThemeNames[] = {
     "_outline",
     "_item",
     "_inner",
@@ -139,7 +139,7 @@ const char* itemThemeNames[] = {
     "_shaded"
 };
 
-const char* itemThemeLabels[] = {
+const char* widgetThemeLabels[] = {
     "Outline",
     "Item",
     "Inner",
@@ -516,40 +516,40 @@ static const char** wima_theme_descs(WimaThemeType type) {
 	}
 }
 
-WimaProperty wima_theme_loadDefault(WimaProperty* props) {
+WimaProperty wima_theme_load(WimaProperty* props) {
 
 	WimaProperty main = wima_theme_create();
 
-	WimaProperty bg = wima_theme_loadBackgroundDefault();
+	WimaProperty bg = wima_theme_loadBackground();
 	wima_prop_link(main, bg);
 	props[WIMA_THEME_BG] = bg;
 
 	for (WimaThemeType i = WIMA_THEME_REGULAR; i < WIMA_THEME_NODE; ++i) {
-		WimaProperty item = wima_theme_loadItemDefault(i);
+		WimaProperty item = wima_theme_loadWidget(i);
 		wima_prop_link(main, item);
 		props[i] = item;
 	}
 
-	WimaProperty node = wima_theme_loadNodeDefault();
+	WimaProperty node = wima_theme_loadNode();
 	wima_prop_link(main, node);
 	props[WIMA_THEME_NODE] = node;
 
 	return main;
 }
 
-WimaProperty wima_theme_loadBackgroundDefault() {
-	return wima_theme_createProp(WIMA_PROP_COLOR, itemParentNames[WIMA_THEME_BG],
-	                             NULL, itemThemeLabels[WIMA_THEME_BG], bgDesc, 0);
+WimaProperty wima_theme_loadBackground() {
+	return wima_theme_createProp(WIMA_PROP_COLOR, widgetParentNames[WIMA_THEME_BG],
+	                             NULL, widgetThemeLabels[WIMA_THEME_BG], bgDesc, 0);
 }
 
-WimaProperty wima_theme_loadItemDefault(WimaThemeType type) {
+WimaProperty wima_theme_loadWidget(WimaThemeType type) {
 
 	const char** descs = wima_theme_descs(type);
 
-	WimaProperty main = wima_theme_createProp(WIMA_PROP_GROUP, itemParentNames[type],
-	                                          NULL, itemParentLabels[type], NULL, 0);
+	WimaProperty main = wima_theme_createProp(WIMA_PROP_GROUP, widgetParentNames[type],
+	                                          NULL, widgetParentLabels[type], NULL, 0);
 
-	const char* parentName = itemParentNames[type];
+	const char* parentName = widgetParentNames[type];
 
 	WimaProperty child;
 
@@ -559,41 +559,41 @@ WimaProperty wima_theme_loadItemDefault(WimaThemeType type) {
 	int initial = idx * WIMA_THEME_WIDGET_NUM_COLORS + 1;
 
 	for (int i = 0; i < WIMA_THEME_WIDGET_NUM_COLORS; ++i) {
-		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, itemThemeNames[i],
-		                              itemThemeLabels[i], descs[i], initial++);
+		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, widgetThemeNames[i],
+		                              widgetThemeLabels[i], descs[i], initial++);
 		wima_prop_link(main, child);
 	}
 
 	child = wima_theme_createProp(WIMA_PROP_INT, parentName,
-	                              itemThemeNames[WIMA_THEME_WIDGET_SHADE_TOP],
-	                              itemThemeLabels[WIMA_THEME_WIDGET_SHADE_TOP],
+	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADE_TOP],
+	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADE_TOP],
 	                              descs[WIMA_THEME_WIDGET_SHADE_TOP], shadeTops[idx]);
 	wima_prop_link(main, child);
 
 	child = wima_theme_createProp(WIMA_PROP_INT, parentName,
-	                              itemThemeNames[WIMA_THEME_WIDGET_SHADE_BOTTOM],
-	                              itemThemeLabels[WIMA_THEME_WIDGET_SHADE_BOTTOM],
+	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADE_BOTTOM],
+	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADE_BOTTOM],
 	                              descs[WIMA_THEME_WIDGET_SHADE_BOTTOM], shadeBottoms[idx]);
 	wima_prop_link(main, child);
 
 	child = wima_theme_createProp(WIMA_PROP_BOOL, parentName,
-	                              itemThemeNames[WIMA_THEME_WIDGET_SHADED],
-	                              itemThemeLabels[WIMA_THEME_WIDGET_SHADED],
+	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADED],
+	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADED],
 	                              descs[WIMA_THEME_WIDGET_SHADED], true);
 	wima_prop_link(main, child);
 
 	return main;
 }
 
-WimaProperty wima_theme_loadNodeDefault() {
+WimaProperty wima_theme_loadNode() {
 
-	WimaProperty main = wima_theme_createProp(WIMA_PROP_GROUP, itemParentNames[WIMA_THEME_NODE],
-	                                          NULL, itemParentLabels[WIMA_THEME_NODE], NULL, 0);
+	WimaProperty main = wima_theme_createProp(WIMA_PROP_GROUP, widgetParentNames[WIMA_THEME_NODE],
+	                                          NULL, widgetParentLabels[WIMA_THEME_NODE], NULL, 0);
 
 	// Plus 1 for background.
 	int initial = 1 + WIMA_THEME_WIDGET_NUM_TYPES * WIMA_THEME_WIDGET_NUM_COLORS;
 
-	const char* parentName = itemParentNames[WIMA_THEME_NODE];
+	const char* parentName = widgetParentNames[WIMA_THEME_NODE];
 
 	WimaProperty child;
 
@@ -650,10 +650,10 @@ WimaColor wima_theme_background() {
 	return wima_prop_color(wph);
 }
 
-static void wima_theme_setItemColor(WimaThemeType type, WimaItemThemeType idx, WimaColor color) {
+static void wima_theme_setWidgetColor(WimaThemeType type, WimaWidgetThemeType idx, WimaColor color) {
 
-	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_ITEM_COLOR);
-	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_ITEM_TYPE);
+	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_WIDGET_COLOR);
+	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
 	WimaProperty wph = wg.themes[type];
 
@@ -673,10 +673,10 @@ static void wima_theme_setItemColor(WimaThemeType type, WimaItemThemeType idx, W
 	wima_prop_setColor(subHandles[idx], color);
 }
 
-static WimaColor wima_theme_itemColor(WimaThemeType type, WimaItemThemeType idx) {
+static WimaColor wima_theme_widgetColor(WimaThemeType type, WimaWidgetThemeType idx) {
 
-	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_ITEM_COLOR);
-	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_ITEM_TYPE);
+	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_WIDGET_COLOR);
+	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
 	WimaProperty wph = wg.themes[type];
 
@@ -696,9 +696,9 @@ static WimaColor wima_theme_itemColor(WimaThemeType type, WimaItemThemeType idx)
 	return wima_prop_color(subHandles[idx]);
 }
 
-static void wima_theme_setItemDelta(WimaThemeType type, bool top, int delta) {
+static void wima_theme_setWidgetDelta(WimaThemeType type, bool top, int delta) {
 
-	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_ITEM_TYPE);
+	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
 	WimaProperty wph = wg.themes[type];
 
@@ -720,9 +720,9 @@ static void wima_theme_setItemDelta(WimaThemeType type, bool top, int delta) {
 	wima_prop_setInt(subHandles[idx], delta);
 }
 
-static int wima_theme_itemDelta(WimaThemeType type, bool top) {
+static int wima_theme_widgetDelta(WimaThemeType type, bool top) {
 
-	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_ITEM_TYPE);
+	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
 	WimaProperty wph = wg.themes[type];
 
@@ -789,72 +789,72 @@ static WimaColor wima_theme_nodeColor(WimaNodeThemeType type) {
 }
 
 void wima_theme_widget_setOutline(WimaThemeType type, WimaColor color) {
-	wima_theme_setItemColor(type, WIMA_THEME_WIDGET_OUTLINE, color);
+	wima_theme_setWidgetColor(type, WIMA_THEME_WIDGET_OUTLINE, color);
 }
 
 WimaColor wima_theme_widget_outline(WimaThemeType type) {
-	return wima_theme_itemColor(type, WIMA_THEME_WIDGET_OUTLINE);
+	return wima_theme_widgetColor(type, WIMA_THEME_WIDGET_OUTLINE);
 }
 
-void wima_theme_widget_setItem(WimaThemeType type, WimaColor color) {
-	wima_theme_setItemColor(type, WIMA_THEME_WIDGET_ITEM, color);
+void wima_theme_widget_setWidgetColor(WimaThemeType type, WimaColor color) {
+	wima_theme_setWidgetColor(type, WIMA_THEME_WIDGET_WIDGET, color);
 }
 
-WimaColor wima_theme_widget_item(WimaThemeType type) {
-	return wima_theme_itemColor(type, WIMA_THEME_WIDGET_ITEM);
+WimaColor wima_theme_widget_widgetColor(WimaThemeType type) {
+	return wima_theme_widgetColor(type, WIMA_THEME_WIDGET_WIDGET);
 }
 
 void wima_theme_widget_setInner(WimaThemeType type, WimaColor color) {
-	wima_theme_setItemColor(type, WIMA_THEME_WIDGET_INNER, color);
+	wima_theme_setWidgetColor(type, WIMA_THEME_WIDGET_INNER, color);
 }
 
 WimaColor wima_theme_widget_inner(WimaThemeType type) {
-	return wima_theme_itemColor(type, WIMA_THEME_WIDGET_INNER);
+	return wima_theme_widgetColor(type, WIMA_THEME_WIDGET_INNER);
 }
 
 void wima_theme_widget_setInnerSelected(WimaThemeType type, WimaColor color) {
-	wima_theme_setItemColor(type, WIMA_THEME_WIDGET_INNER_SELECTED, color);
+	wima_theme_setWidgetColor(type, WIMA_THEME_WIDGET_INNER_SELECTED, color);
 }
 
 WimaColor wima_theme_widget_innerSelected(WimaThemeType type) {
-	return wima_theme_itemColor(type, WIMA_THEME_WIDGET_INNER_SELECTED);
+	return wima_theme_widgetColor(type, WIMA_THEME_WIDGET_INNER_SELECTED);
 }
 
 void wima_theme_widget_setText(WimaThemeType type, WimaColor color) {
-	wima_theme_setItemColor(type, WIMA_THEME_WIDGET_TEXT, color);
+	wima_theme_setWidgetColor(type, WIMA_THEME_WIDGET_TEXT, color);
 }
 
 WimaColor wima_theme_widget_text(WimaThemeType type) {
-	return wima_theme_itemColor(type, WIMA_THEME_WIDGET_TEXT);
+	return wima_theme_widgetColor(type, WIMA_THEME_WIDGET_TEXT);
 }
 
 void wima_theme_widget_setTextSelected(WimaThemeType type, WimaColor color) {
-	wima_theme_setItemColor(type, WIMA_THEME_WIDGET_TEXT_SELECTED, color);
+	wima_theme_setWidgetColor(type, WIMA_THEME_WIDGET_TEXT_SELECTED, color);
 }
 
 WimaColor wima_theme_widget_textSelected(WimaThemeType type) {
-	return wima_theme_itemColor(type, WIMA_THEME_WIDGET_TEXT_SELECTED);
+	return wima_theme_widgetColor(type, WIMA_THEME_WIDGET_TEXT_SELECTED);
 }
 
 void wima_theme_widget_setShadeTop(WimaThemeType type, int delta) {
-	wima_theme_setItemDelta(type, true, delta);
+	wima_theme_setWidgetDelta(type, true, delta);
 }
 
 int wima_theme_widget_shadeTop(WimaThemeType type) {
-	return wima_theme_itemDelta(type, true);
+	return wima_theme_widgetDelta(type, true);
 }
 
 void wima_theme_widget_setShadeBottom(WimaThemeType type, int delta) {
-	wima_theme_setItemDelta(type, false, delta);
+	wima_theme_setWidgetDelta(type, false, delta);
 }
 
 int wima_theme_widget_shadeBottom(WimaThemeType type) {
-	return wima_theme_itemDelta(type, false);
+	return wima_theme_widgetDelta(type, false);
 }
 
 void wima_theme_widget_setShaded(WimaThemeType type, bool shaded) {
 
-	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_ITEM_TYPE);
+	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
 	WimaProperty wph = wg.themes[type];
 
@@ -876,7 +876,7 @@ void wima_theme_widget_setShaded(WimaThemeType type, bool shaded) {
 
 bool wima_theme_widget_shaded(WimaThemeType type) {
 
-	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_ITEM_TYPE);
+	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
 	WimaProperty wph = wg.themes[type];
 
