@@ -43,6 +43,7 @@
 
 #include <dyna/dyna.h>
 #include <dyna/vector.h>
+#include <dyna/nvector.h>
 
 #include <stb_image.h>
 
@@ -126,7 +127,11 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 		return WIMA_STATUS_INIT_ERR;
 	}
 
-	wg.props = dvec_create(0, sizeof(WimaProp), NULL);
+	// These are to initialize the DynaNVector.
+	const size_t sizes[] = { sizeof(WimaPropInfo), sizeof(WimaPropData) };
+	const DestructFunc dtors[] = { NULL, NULL };
+
+	wg.props = dnvec_create(2, 0, sizes, dtors);
 	if (!wg.props) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
@@ -286,7 +291,7 @@ void wima_exit() {
 			wima_prop_free(i);
 		}
 
-		dvec_free(wg.props);
+		dnvec_free(wg.props);
 	}
 
 	if (wg.windows) {

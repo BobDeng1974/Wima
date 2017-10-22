@@ -88,7 +88,7 @@ typedef struct WimaPropPtr {
 
 } WimaPropPtr;
 
-typedef struct WimaProp {
+typedef struct WimaPropInfo {
 
 	DynaString name;
 
@@ -102,29 +102,32 @@ typedef struct WimaProp {
 
 	WimaPropType type;
 
-	union {
+} WimaPropInfo;
 
-		bool _bool;
+typedef union WimaPropData {
 
-		WimaPropInt _int;
+	bool _bool;
 
-		WimaPropFloat _float;
+	WimaPropInt _int;
 
-		DynaString _str;
+	WimaPropFloat _float;
 
-		WimaPropEnum _enum;
+	DynaString _str;
 
-		DynaVector _list;
+	WimaPropEnum _enum;
 
-		NVGcolor _color;
+	DynaVector _list;
 
-		WimaPropPtr _ptr;
+	NVGcolor _color;
 
-		WimaItemMouseClickFunc _op;
+	WimaPropPtr _ptr;
 
-	};
+	WimaItemMouseClickFunc _op;
 
-} WimaProp;
+} WimaPropData;
+
+#define WIMA_PROP_INFO_IDX (0)
+#define WIMA_PROP_DATA_IDX (1)
 
 void wima_prop_free(WimaProperty wph);
 

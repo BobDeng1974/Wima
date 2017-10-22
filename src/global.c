@@ -117,6 +117,7 @@ const char* wima_assert_msgs[] = {
     "list is NULL",
     "prop pointer is NULL",
     "prop draw function is NULL",
+    "operator is NULL",
     "prop types do not match",
 
     "monitor is NULL",
