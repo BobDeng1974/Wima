@@ -225,8 +225,6 @@ void wima_window_setFocused(WimaWindow wwh) {
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
-	wg.currentWin = wwh;
-
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	glfwMakeContextCurrent(win->window);

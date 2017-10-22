@@ -78,8 +78,6 @@ typedef struct WimaG {
 	GLFWimage icons[WIMA_MAX_ICONS];
 	int numIcons;
 
-	WimaWindow currentWin;
-
 } WimaG;
 
 typedef enum WimaAssertType {
