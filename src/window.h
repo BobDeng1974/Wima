@@ -63,7 +63,8 @@
 #define WIMA_WIN_IS_DIRTY(win)  (((win)->flags) & WIMA_WIN_DIRTY)
 
 #define WIMA_WIN_LAYOUT (0x40)
-#define WIMA_WIN_NEEDS_LAYOUT(win)  (((win)->flags) & WIMA_WIN_LAYOUT)
+#define WIMA_WIN_LAYOUT_FORCE (0x20)
+#define WIMA_WIN_NEEDS_LAYOUT(win)  (((win)->flags) & (WIMA_WIN_LAYOUT | WIMA_WIN_LAYOUT_FORCE))
 
 #define WIMA_WIN_MENU          (0x01)
 #define WIMA_WIN_MENU_RELEASED (0x02)

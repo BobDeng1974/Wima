@@ -1165,7 +1165,7 @@ void wima_window_setDirty(WimaWin* win, bool layout) {
 	win->flags |= WIMA_WIN_DIRTY;
 
 	if (layout) {
-		win->flags |= WIMA_WIN_LAYOUT;
+		win->flags |= WIMA_WIN_LAYOUT_FORCE;
 	}
 }
 
