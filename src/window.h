@@ -59,19 +59,19 @@
 // Consecutive click threshold in ms.
 #define WIMA_CLICK_THRESHOLD 250
 
-#define WIMA_WINDOW_DIRTY_BIT (0x80)
-#define WIMA_WINDOW_IS_DIRTY(win)  (((win)->flags) & WIMA_WINDOW_DIRTY_BIT)
+#define WIMA_WINDOW_DIRTY (0x80)
+#define WIMA_WINDOW_IS_DIRTY(win)  (((win)->flags) & WIMA_WINDOW_DIRTY)
 
-#define WIMA_WINDOW_LAYOUT_BIT (0x40)
-#define WIMA_WINDOW_NEEDS_LAYOUT(win)  (((win)->flags) & WIMA_WINDOW_LAYOUT_BIT)
+#define WIMA_WINDOW_LAYOUT (0x40)
+#define WIMA_WINDOW_NEEDS_LAYOUT(win)  (((win)->flags) & WIMA_WINDOW_LAYOUT)
 
-#define WIMA_WINDOW_MENU_BIT (0x01)
-#define WIMA_WINDOW_MENU_RELEASED_BIT (0x02)
-#define WIMA_WINDOW_MENU_CONTEXT_BIT (0x04)
+#define WIMA_WINDOW_MENU (0x01)
+#define WIMA_WINDOW_MENU_RELEASED (0x02)
+#define WIMA_WINDOW_MENU_CONTEXT (0x04)
 
-#define WIMA_WINDOW_HAS_MENU(win)        (((win)->flags) & WIMA_WINDOW_MENU_BIT)
-#define WIMA_WINDOW_MENU_RELEASED(win)   (((win)->flags) & WIMA_WINDOW_MENU_RELEASED_BIT)
-#define WIMA_WINDOW_MENU_IS_CONTEXT(win) (((win)->flags) & WIMA_WINDOW_MENU_CONTEXT_BIT)
+#define WIMA_WINDOW_HAS_MENU(win)        (((win)->flags) & WIMA_WINDOW_MENU)
+#define WIMA_WINDOW_MENU_IS_RELEASED(win)   (((win)->flags) & WIMA_WINDOW_MENU_RELEASED)
+#define WIMA_WINDOW_MENU_IS_CONTEXT(win) (((win)->flags) & WIMA_WINDOW_MENU_CONTEXT)
 
 typedef struct WimaWinCtx {
 

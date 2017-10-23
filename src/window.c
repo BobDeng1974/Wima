@@ -83,7 +83,7 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize siz
 	wwin.winsize.w = 0;
 	wwin.winsize.h = 0;
 
-	wwin.flags = WIMA_WINDOW_DIRTY_BIT | WIMA_WINDOW_LAYOUT_BIT;
+	wwin.flags = WIMA_WINDOW_DIRTY | WIMA_WINDOW_LAYOUT;
 
 	// Set the standard cursor as the cursor.
 	wwin.cursor = wg.cursors[WIMA_CURSOR_ARROW];
@@ -680,7 +680,7 @@ void wima_window_refresh(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	win->flags |= WIMA_WINDOW_DIRTY_BIT;
+	win->flags |= WIMA_WINDOW_DIRTY;
 }
 
 void wima_window_cancelRefresh(WimaWindow wwh) {
@@ -691,7 +691,7 @@ void wima_window_cancelRefresh(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	win->flags &= ~(WIMA_WINDOW_DIRTY_BIT);
+	win->flags &= ~(WIMA_WINDOW_DIRTY);
 }
 
 bool wima_window_needsRefresh(WimaWindow wwh) {
@@ -713,7 +713,7 @@ void wima_window_layout(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	win->flags |= (WIMA_WINDOW_LAYOUT_BIT | WIMA_WINDOW_DIRTY_BIT);
+	win->flags |= (WIMA_WINDOW_LAYOUT | WIMA_WINDOW_DIRTY);
 }
 
 void wima_window_cancelLayout(WimaWindow wwh) {
@@ -724,7 +724,7 @@ void wima_window_cancelLayout(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	win->flags &= ~(WIMA_WINDOW_LAYOUT_BIT);
+	win->flags &= ~(WIMA_WINDOW_LAYOUT);
 }
 
 bool wima_window_needsLayout(WimaWindow wwh) {
@@ -847,7 +847,7 @@ WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	win->flags = (WIMA_WINDOW_MENU_BIT | WIMA_WINDOW_MENU_CONTEXT_BIT);
+	win->flags = (WIMA_WINDOW_MENU | WIMA_WINDOW_MENU_CONTEXT);
 
 	// Set up the offset.
 	win->menuOffset = menu->pos;
@@ -873,7 +873,7 @@ WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	win->flags = WIMA_WINDOW_MENU_BIT;
+	win->flags = WIMA_WINDOW_MENU;
 
 	// Set the menu.
 	win->menu = menu;
@@ -1163,10 +1163,10 @@ void wima_window_setDirty(WimaWin* win, bool layout) {
 
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 
-	win->flags |= WIMA_WINDOW_DIRTY_BIT;
+	win->flags |= WIMA_WINDOW_DIRTY;
 
 	if (layout) {
-		win->flags |= WIMA_WINDOW_LAYOUT_BIT;
+		win->flags |= WIMA_WINDOW_LAYOUT;
 	}
 }
 
@@ -1270,7 +1270,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 		// Swap front and back buffers.
 		glfwSwapBuffers(win->window);
 
-		win->flags &= ~(WIMA_WINDOW_DIRTY_BIT | WIMA_WINDOW_LAYOUT_BIT);
+		win->flags &= ~(WIMA_WINDOW_DIRTY | WIMA_WINDOW_LAYOUT);
 	}
 
 	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
@@ -1750,8 +1750,8 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih,
 			// If the mouse button hasn't been released yet,
 			// set it to released and return because we don't
 			// need to do anything else.
-			if (!WIMA_WINDOW_MENU_RELEASED(win)) {
-				win->flags |= WIMA_WINDOW_MENU_RELEASED_BIT;
+			if (!WIMA_WINDOW_MENU_IS_RELEASED(win)) {
+				win->flags |= WIMA_WINDOW_MENU_RELEASED;
 				return WIMA_STATUS_SUCCESS;
 			}
 
