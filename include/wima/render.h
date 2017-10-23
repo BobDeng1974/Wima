@@ -61,6 +61,11 @@
 #ifndef WIMA_RENDER_H
 #define WIMA_RENDER_H
 
+/* For C++ compatibility */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 
 #include <nanovg.h>
@@ -1467,5 +1472,9 @@ WimaColor wima_render_textColor(WimaWidgetTheme* theme, WimaWidgetState state);
 WimaColor wima_render_node_wireColor(WimaNodeTheme* theme, WimaWidgetState state);
 
 ////////////////////////////////////////////////////////////////////////////////
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // WIMA_RENDER_H

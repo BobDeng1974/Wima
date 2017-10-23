@@ -62,6 +62,11 @@
 #ifndef WIMA_MATH_H
 #define WIMA_MATH_H
 
+/* For C++ compatibility */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <math.h>
 
 #include <yc/opt.h>
@@ -141,5 +146,9 @@ WimaTransform wima_transform_inverse(WimaTransform src) yinline;
 
 // Transform a point by given transform.
 WimaVecf wima_transform_point(WimaTransform transform, WimaVecf pos) yinline;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // WIMA_MATH_H
