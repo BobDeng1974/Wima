@@ -150,6 +150,11 @@ WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child) {
 	WimaPropData* data = dnvec_get(wg.props, parent, WIMA_PROP_DATA_IDX);
 
 	size_t len = dvec_len(data->_list);
+
+	if (len != 0) {
+		return WIMA_STATUS_PROP_ERR;
+	}
+
 	WimaProperty* handles = dvec_get(data->_list, 0);
 
 	for (size_t i = 0; i < len; ++i) {
