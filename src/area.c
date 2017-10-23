@@ -531,7 +531,7 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 			nvgScale(ctx->nvg, area->area.scale, area->area.scale);
 
 			WimaWidget item;
-			item.item = 0;
+			item.widget = 0;
 			item.area = node;
 			item.window = area->window;
 
@@ -651,7 +651,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 		if (area->area.ctx.itemCount) {
 
 			WimaWidget zero;
-			zero.item = 0;
+			zero.widget = 0;
 			zero.area = node;
 			zero.window = area->window;
 
@@ -974,7 +974,7 @@ static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVe
 				item = wima_area_node_findWidget(areas, right, pos, flags);
 			}
 			else {
-				item.item = -1;
+				item.widget = -1;
 				item.area = area->node;
 				item.window = area->window;
 			}
@@ -987,12 +987,12 @@ static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVe
 		WimaItem *pitem;
 
 		WimaWidget item;
-		item.item = 0;
+		item.widget = 0;
 		item.area = area->node;
 		item.window = area->window;
 
 		WimaWidget best_hit = item;
-		best_hit.item = WIMA_ITEM_INVALID;
+		best_hit.widget = WIMA_ITEM_INVALID;
 
 		// TODO: Remove this.
 		return best_hit;
@@ -1000,7 +1000,7 @@ static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVe
 		// Translate the position to the area.
 		pos = wima_area_translatePos(area, pos);
 
-		while (item.item >= 0) {
+		while (item.widget >= 0) {
 
 			pitem = wima_widget_ptr(item);
 
@@ -1014,10 +1014,10 @@ static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVe
 					best_hit = item;
 				}
 
-				item.item = pitem->layout.firstKid;
+				item.widget = pitem->layout.firstKid;
 			}
 			else {
-				item.item = pitem->nextSibling;
+				item.widget = pitem->nextSibling;
 			}
 		}
 

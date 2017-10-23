@@ -94,7 +94,7 @@ WimaWidget wima_widget_new(WimaArea wah, WimaItemFuncs funcs) {
 
 	WimaWidget wih;
 	wih.area = wah.area;
-	wih.item = idx;
+	wih.widget = idx;
 	wih.window = wah.window;
 
 	WimaItem* item = wima_widget_ptr(wih);
@@ -323,7 +323,7 @@ bool wima_widget_contains(WimaWidget item, WimaVec pos) {
 
 bool wima_widget_compare(WimaWidget item1, WimaWidget item2) {
 	assert_init;
-	return (item1.item == item2.item && item1.area == item2.area && item1.window == item2.window);
+	return (item1.widget == item2.widget && item1.area == item2.area && item1.window == item2.window);
 }
 
 bool wima_widget_isActive(WimaWidget item) {
@@ -370,7 +370,7 @@ WimaItem* wima_widget_ptr(WimaWidget wih) {
 	WimaAr* area = wima_area_ptr(wih.window, wih.area);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	wassert(wih.item < area->area.ctx.itemCount, WIMA_ASSERT_WIDGET);
+	wassert(wih.widget < area->area.ctx.itemCount, WIMA_ASSERT_WIDGET);
 
-	return area->area.ctx.items + wih.item;
+	return area->area.ctx.items + wih.widget;
 }

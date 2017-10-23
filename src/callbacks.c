@@ -410,8 +410,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			}
 
 			// Clear the items.
-			wwin->ctx.active.item = -1;
-			wwin->ctx.hover.item = -1;
+			wwin->ctx.active.widget = -1;
+			wwin->ctx.hover.widget = -1;
 		}
 	}
 	else {

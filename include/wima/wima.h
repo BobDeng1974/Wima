@@ -400,7 +400,7 @@ typedef struct WimaArea {
  */
 typedef struct WimaWidget {
 
-	uint16_t item;
+	uint16_t widget;
 
 	WimaAreaNode area;
 	WimaWindow window;

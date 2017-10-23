@@ -566,7 +566,7 @@ WimaStatus wima_window_setHover(WimaWindow wwh, WimaWidget wih) {
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	if (area->area.ctx.itemCount < wih.item) {
+	if (area->area.ctx.itemCount < wih.widget) {
 		win->ctx.hover = wih;
 		return WIMA_STATUS_SUCCESS;
 	}
@@ -602,7 +602,7 @@ WimaStatus wima_window_setActive(WimaWindow wwh, WimaWidget wih) {
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	if (area->area.ctx.itemCount < wih.item) {
+	if (area->area.ctx.itemCount < wih.widget) {
 		win->ctx.active = wih;
 		return WIMA_STATUS_SUCCESS;
 	}
@@ -638,7 +638,7 @@ WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih) {
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	if (area->area.ctx.itemCount < wih.item) {
+	if (area->area.ctx.itemCount < wih.widget) {
 		win->ctx.focus = wih;
 		return WIMA_STATUS_SUCCESS;
 	}
@@ -1533,7 +1533,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 
 		case WIMA_EVENT_MOUSE_CLICK:
 		{
-			if (wih.item >= 0) {
+			if (wih.widget >= 0) {
 
 				WimaItem* pitem = wima_widget_ptr(wih);
 
@@ -1582,7 +1582,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 
 		case WIMA_EVENT_MOUSE_DRAG:
 		{
-			if (wih.item >= 0) {
+			if (wih.widget >= 0) {
 
 				WimaItem* pitem = wima_widget_ptr(wih);
 
@@ -1611,7 +1611,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 
 		case WIMA_EVENT_SCROLL:
 		{
-			if (wih.item >= 0) {
+			if (wih.widget >= 0) {
 
 				WimaItem* pitem = wima_widget_ptr(wih);
 
@@ -1631,7 +1631,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 
 		case WIMA_EVENT_CHAR:
 		{
-			if (wih.item >= 0) {
+			if (wih.widget >= 0) {
 
 				WimaItem* pitem = wima_widget_ptr(wih);
 
@@ -1818,7 +1818,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih,
 		win->ctx.split.split = -1;
 		win->ctx.dragStart.x = -1;
 	}
-	else if (wih.item >= 0) {
+	else if (wih.widget >= 0) {
 
 		WimaItem* pitem = wima_widget_ptr(wih);
 
