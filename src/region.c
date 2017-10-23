@@ -74,7 +74,7 @@ WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t
 	size_t idx = dvec_len(wg.regions);
 
 	DynaStatus status = dvec_push(wg.regions, &reg);
-	if (status) {
+	if (yunlikely(status)) {
 		return WIMA_STATUS_AREA_ERR;
 	}
 
