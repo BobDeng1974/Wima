@@ -148,7 +148,7 @@ typedef struct WimaWin {
 
 WimaStatus wima_window_free(WimaWin* win);
 
-void wima_window_setDirty(WimaWin* win, bool layout);
+void wima_window_setDirty(WimaWin* win, bool layout) yinline;
 void wima_window_setModifier(WimaWin* win, WimaKey key, WimaAction action);
 
 // clear the item buffers and draw all areas; uiBeginLayout() should be called
