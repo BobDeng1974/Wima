@@ -554,7 +554,7 @@ uint32_t wima_window_clicks(WimaWindow wwh) {
 	return win->ctx.clicks;
 }
 
-WimaStatus wima_window_setHover(WimaWindow wwh, WimaWidget wih) {
+void wima_window_setHover(WimaWindow wwh, WimaWidget wih) {
 
 	assert_init;
 
@@ -570,12 +570,9 @@ WimaStatus wima_window_setHover(WimaWindow wwh, WimaWidget wih) {
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	if (yunlikely(area->area.ctx.itemCount >= wih.widget)) {
-		return WIMA_STATUS_WINDOW_ERR;
-	}
+	wassert(wih.widget < area->area.ctx.itemCount, WIMA_ASSERT_WIDGET);
 
 	win->ctx.hover = wih;
-	return WIMA_STATUS_SUCCESS;
 }
 
 WimaWidget wima_window_hover(WimaWindow wwh) {
@@ -589,7 +586,7 @@ WimaWidget wima_window_hover(WimaWindow wwh) {
 	return win->ctx.hover;
 }
 
-WimaStatus wima_window_setActive(WimaWindow wwh, WimaWidget wih) {
+void wima_window_setActive(WimaWindow wwh, WimaWidget wih) {
 
 	assert_init;
 
@@ -605,12 +602,9 @@ WimaStatus wima_window_setActive(WimaWindow wwh, WimaWidget wih) {
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	if (yunlikely(area->area.ctx.itemCount >= wih.widget)) {
-		return WIMA_STATUS_WINDOW_ERR;
-	}
+	wassert(wih.widget < area->area.ctx.itemCount, WIMA_ASSERT_WIDGET);
 
 	win->ctx.active = wih;
-	return WIMA_STATUS_SUCCESS;
 }
 
 WimaWidget wima_window_actve(WimaWindow wwh) {
@@ -624,7 +618,7 @@ WimaWidget wima_window_actve(WimaWindow wwh) {
 	return win->ctx.active;
 }
 
-WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih) {
+void wima_window_setFocus(WimaWindow wwh, WimaWidget wih) {
 
 	assert_init;
 
@@ -640,12 +634,9 @@ WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih) {
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	if (yunlikely(area->area.ctx.itemCount >= wih.widget)) {
-		return WIMA_STATUS_WINDOW_ERR;
-	}
+	wassert(wih.widget < area->area.ctx.itemCount, WIMA_ASSERT_WIDGET);
 
 	win->ctx.focus = wih;
-	return WIMA_STATUS_SUCCESS;
 }
 
 WimaWidget wima_window_focus(WimaWindow wwh) {
