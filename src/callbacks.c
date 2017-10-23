@@ -40,7 +40,6 @@
 
 #include <wima/wima.h>
 #include <wima/math.h>
-#include <wima/input.h>
 
 #include "callbacks.h"
 #include "widget.h"

@@ -47,7 +47,6 @@ extern "C" {
 #include <nanovg.h>
 
 #include <wima/render.h>
-#include <wima/input.h>
 
 typedef struct WimaRenderContext {
 

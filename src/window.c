@@ -43,7 +43,6 @@
 #include <wima/wima.h>
 #include <wima/render.h>
 #include <wima/math.h>
-#include <wima/input.h>
 
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg.h>

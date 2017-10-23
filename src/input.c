@@ -35,7 +35,6 @@
  */
 
 #include <wima/wima.h>
-#include <wima/input.h>
 
 #include "global.h"
 #include "window.h"
