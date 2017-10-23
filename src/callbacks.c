@@ -150,20 +150,28 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 	assert_init;
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+	// Get the pointer to the window.
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
+	// Change GLFW data to Wima data.
 	WimaKey wkey = (WimaKey) key;
 	WimaAction wact = (WimaAction) action;
 	WimaMods wmods = (WimaMods) mods;
 
+	// Set the window's mods.
 	wwin->ctx.mods = mods;
 
+	// This is here so Wima can set mods exactly when they are pressed,
+	// if GLFW provides that. Sometimes it can't because the OS doesn't
+	// allow windows to get key presses.
 	switch(wkey) {
 
+		// These are all the mod keys.
 		case WIMA_KEY_LEFT_SHIFT:
 		case WIMA_KEY_LEFT_CONTROL:
 		case WIMA_KEY_LEFT_ALT:
@@ -173,14 +181,17 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 		case WIMA_KEY_RIGHT_ALT:
 		case WIMA_KEY_RIGHT_SUPER:
 		{
+			// Set the modifier in the window.
 			wima_window_setModifier(wwin, wkey, wact);
 			return;
 		}
 
+		// Don't handle anything else.
 		default:
 			break;
 	}
 
+	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
@@ -190,18 +201,21 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 		return;
 	}
 
+	// Calculate a pointer to the event we'll fill.
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
+	// Fill the event.
 	event->type = WIMA_EVENT_KEY;
 	event->area_key.key.key = wkey;
 	event->area_key.key.scancode = scancode;
 	event->area_key.key.action = wact;
 	event->area_key.key.mods = wmods;
-
-	wima_window_setDirty(wwin, false);
-
 	event->area_key.area = wima_area_containsMouse(wwin->areas, wwin->ctx.cursorPos);
 
+	// Set the window as dirty (to be redrawn).
+	wima_window_setDirty(wwin, false);
+
+	// Add one to the event count.
 	++(wwin->ctx.eventCount);
 }
 
@@ -212,18 +226,21 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	double time = glfwGetTime();
 	uint32_t ts = (uint32_t) (time * 1000);
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the pointer to the window.
+	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	WimaMouseBtn wbtn = (WimaMouseBtn) btn;
 	WimaMods wmods = (WimaMods) mods;
 	WimaAction wact = (WimaAction) action;
 
-	WimaWin* wwin = dvec_get(wg.windows, wwh);
-
 	wwin->ctx.mods = wmods;
 
+	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
@@ -316,9 +333,13 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 	assert_init;
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the pointer to the window.
+	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
@@ -326,8 +347,6 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	WimaVec pos;
 	pos.x = floor(x);
 	pos.y = floor(y);
-
-	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	wwin->ctx.cursorPos = pos;
 
@@ -426,6 +445,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 		return;
 	}
 
+	// Get the number of events.
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	event->type = WIMA_EVENT_MOUSE_POS;
@@ -438,9 +458,13 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 	assert_init;
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the pointer to the window.
+	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
@@ -448,8 +472,7 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 	int xint = (int) xoffset;
 	int yint = (int) yoffset;
 
-	WimaWin* wwin = dvec_get(wg.windows, wwh);
-
+	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
@@ -485,16 +508,19 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
 	assert_init;
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+	// Get the pointer to the window.
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	WimaMods wmods = (WimaMods) mods;
 
 	wwin->ctx.mods = wmods;
 
+	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
@@ -521,12 +547,15 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 
 	const char* errorMsg = "Could not allocate a file name";
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+	// Get the pointer to the window.
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
+	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
@@ -574,10 +603,12 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 	assert_init;
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+	// Get the pointer to the window.
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	wima_window_setDirty(wwin, false);
@@ -597,6 +628,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 		wwin->ctx.cursorArea = WIMA_AREA_INVALID;
 	}
 
+	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
@@ -618,14 +650,17 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 
 	assert_init;
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+	// Get the pointer to the window.
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	wima_window_setDirty(wwin, false);
 
+	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
@@ -651,10 +686,12 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 	glScissor(0, 0, width, height);
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+	// Get the pointer to the window.
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	wima_window_setDirty(wwin, true);
@@ -674,6 +711,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 		wg.funcs.error(status, descs[status - 128]);
 	}
 
+	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
@@ -696,10 +734,12 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
 	assert_init;
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+	// Get the pointer to the window.
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	wima_window_setDirty(wwin, true);
@@ -708,6 +748,7 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 	wwin->winsize.h = height;
 	wwin->pixelRatio = (float) wwin->fbsize.w / width;
 
+	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
@@ -730,10 +771,12 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 
 	assert_init;
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+	// Get the pointer to the window.
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	bool isMinimized = minimized != 0;
@@ -742,6 +785,7 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 		wima_window_setDirty(wwin, true);
 	}
 
+	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
@@ -763,10 +807,12 @@ void wima_callback_windowRefresh(GLFWwindow* window) {
 
 	assert_init;
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+	// Get the pointer to the window.
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	wima_window_setDirty(wwin, false);
@@ -776,10 +822,12 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 
 	assert_init;
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+	// Get the pointer to the window.
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	bool hasFocus = focused != 0;
@@ -789,6 +837,7 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 		wima_window_setFocused(wwh);
 	}
 
+	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
@@ -816,6 +865,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 
 	assert_init;
 
+	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -824,6 +874,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 
 	if (!close || close(wwh)) {
 
+		// Get the pointer to the window.
 		WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 		wima_window_free(wwin);
@@ -858,6 +909,7 @@ void wima_callback_monitorConnected(GLFWmonitor* monitor, int connected) {
 
 void wima_callback_error(int error, const char* desc) {
 
+	// Print a standard header.
 	fprintf(stderr, "Error[%d]: %s\n", error, desc);
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
@@ -914,5 +966,6 @@ void wima_callback_error(int error, const char* desc) {
 		}
 	}
 
+	// Send the event to the client.
 	wg.funcs.error(status, desc);
 }
