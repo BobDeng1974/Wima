@@ -28,6 +28,9 @@
 include_directories("../lib/nanovg/src")
 include_directories("../lib/yc/include")
 
+# Make sure we know what the GLFW CMake target is.
+set(GLFW_LIB "glfw")
+
 set(WIMA_GLOBAL_SRC
 
 	# Add files here.
