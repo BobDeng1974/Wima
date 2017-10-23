@@ -138,6 +138,8 @@ bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n) {
 
 	assert_init;
 
+	wassert(wwh < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
+
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwh));
 
 	DynaNode p = dtree_parent(n);
