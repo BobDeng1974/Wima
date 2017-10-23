@@ -50,10 +50,16 @@ WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) {
 	WimaImg i;
 	i.wima = img;
 
+	wassert(img.pixels != NULL, WIMA_ASSERT_IMG_DATA);
+
+	wassert(img.width > 0 && img.height > 0, WIMA_ASSERT_CURSOR_DIM);
+	wassert(img.width > xhot && img.height > yhot, WIMA_ASSERT_CURSOR_HOT);
+
 	return (WimaCursor*) glfwCreateCursor(&i.glfw, xhot, yhot);
 }
 
 void wima_cursor_destroy(WimaCursor* cursor) {
+	wassert(cursor != NULL, WIMA_ASSERT_CURSOR);
 	glfwDestroyCursor((GLFWcursor*) cursor);
 }
 
