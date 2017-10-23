@@ -34,15 +34,22 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <yc/assert.h>
+
 #include <nanovg.h>
 
 #include <wima/render.h>
 
 #include "render.h"
+#include "../global.h"
+
+assert_msgs_decl;
 
 WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, float sx, float sy, float ex, float ey,
                                     WimaColor icol, WimaColor ocol)
 {
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+
 	WimaCol ic, oc;
 	WimaPnt p;
 
@@ -57,6 +64,8 @@ WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, float sx, float sy, 
 WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, float x, float y, float w, float h,
                                  float r, float f, WimaColor icol, WimaColor ocol)
 {
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+
 	WimaCol ic, oc;
 	WimaPnt p;
 
@@ -71,6 +80,8 @@ WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, float x, float y, float
 WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, float cx, float cy, float inr, float outr,
                                     WimaColor icol, WimaColor ocol)
 {
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+
 	WimaCol ic, oc;
 	WimaPnt p;
 
@@ -85,6 +96,8 @@ WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, float cx, float cy, 
 WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, float ox, float oy, float ex, float ey,
                                   float angle, int image, float alpha)
 {
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+
 	// TODO: Write this function.
 
 	WimaPnt p;
