@@ -567,9 +567,11 @@ void wima_prop_unregister(WimaProperty wph) {
 
 	WimaPropInfo* prop = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
 
-	if (prop->idx != WIMA_PROP_INVALID) {
-		wima_prop_free(wph);
+	if (yunlikely(prop->idx == WIMA_PROP_INVALID)) {
+		return;
 	}
+
+	wima_prop_free(wph);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -584,7 +586,7 @@ void wima_prop_free(WimaProperty wph) {
 
 	WimaPropInfo* prop = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
 
-	if (prop->idx == WIMA_PROP_INVALID) {
+	if (yunlikely(prop->idx == WIMA_PROP_INVALID)) {
 		return;
 	}
 
@@ -691,7 +693,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 	WimaPropInfo prop;
 
 	prop.name = dstr_create(name);
-	if (!prop.name) {
+	if (yunlikely(!prop.name)) {
 		return WIMA_PROP_INVALID;
 	}
 
@@ -699,7 +701,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 
 		prop.label = dstr_create(label);
 
-		if (!prop.label) {
+		if (yunlikely(!prop.label)) {
 			dstr_free(prop.name);
 			return WIMA_PROP_INVALID;
 		}
@@ -712,7 +714,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 
 		prop.desc = dstr_create(desc);
 
-		if (!prop.desc) {
+		if (yunlikely(!prop.desc)) {
 			dstr_free(prop.label);
 			dstr_free(prop.name);
 			return WIMA_PROP_INVALID;
