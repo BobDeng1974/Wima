@@ -34,56 +34,84 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <yc/assert.h>
+
 #include <nanovg.h>
 
 #include <wima/render.h>
 
 #include "render.h"
 
+#include "../global.h"
+
+assert_msgs_decl;
+
 void wima_style_antialias(WimaRenderContext* ctx, bool enabled) {
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgShapeAntiAlias(ctx->nvg, enabled);
 }
 
 void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color) {
+
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+
 	WimaCol c;
 	c.wima = color;
+
 	nvgStrokeColor(ctx->nvg, c.nvg);
 }
 
 void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint) {
+
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+
 	WimaPnt p;
 	p.wima = paint;
+
 	nvgStrokePaint(ctx->nvg, p.nvg);
 }
 
 void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color) {
+
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+
 	WimaCol c;
 	c.wima = color;
+
 	nvgFillColor(ctx->nvg, c.nvg);
 }
 
 void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint) {
+
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+
 	WimaPnt p;
 	p.wima = paint;
+
 	nvgFillPaint(ctx->nvg, p.nvg);
 }
 
 void wima_style_miter_limit(WimaRenderContext* ctx, float limit) {
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgMiterLimit(ctx->nvg, limit);
 }
 
 void wima_style_stroke_width(WimaRenderContext* ctx, float size) {
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgStrokeWidth(ctx->nvg, size);
 }
 
 void wima_style_line_cap(WimaRenderContext* ctx, WimaLineCap cap) {
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgLineCap(ctx->nvg, cap);
 }
 
 void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join) {
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgLineJoin(ctx->nvg, join);
 }
 
 void wima_style_setGlobalAlpha(WimaRenderContext* ctx, float alpha) {
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgGlobalAlpha(ctx->nvg, alpha);
 }
