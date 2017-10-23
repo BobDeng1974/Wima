@@ -1268,9 +1268,9 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 
 		// Swap front and back buffers.
 		glfwSwapBuffers(win->window);
-
-		win->flags &= ~(WIMA_WIN_DIRTY | WIMA_WIN_LAYOUT);
 	}
+
+	win->flags &= ~(WIMA_WIN_DIRTY | WIMA_WIN_LAYOUT | WIMA_WIN_LAYOUT_FORCE);
 
 	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
 
