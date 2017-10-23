@@ -1228,6 +1228,9 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 		if (yunlikely(status)) {
 			return status;
 		}
+
+		// Make sure we draw after this.
+		win->flags |= WIMA_WIN_DIRTY;
 	}
 
 	if (WIMA_WIN_IS_DIRTY(win)) {
