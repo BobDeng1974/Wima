@@ -360,13 +360,13 @@ void cb_error(WimaStatus status, const char* desc) {
 	exit(status);
 }
 
-#define wima_print_assert(idx) printf("Message[%lu]: %s\n", idx, wima_assert_msgs[idx]);
-
 int main() {
 
+#if 0
 	for (size_t i = WIMA_ASSERT_SWITCH_DEFAULT; i <= WIMA_ASSERT_MONITOR_RAMP_SIZE; ++i) {
-		wima_print_assert(i);
+		printf("Message[%lu]: %s\n", i, wima_assert_msgs[i]);
 	}
+#endif
 
 	WimaAppFuncs appfuncs;
 	appfuncs.draw = cb_draw;
