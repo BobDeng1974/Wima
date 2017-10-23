@@ -490,7 +490,7 @@ WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas) {
 
 	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
 
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_CONTEXT);
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	WimaPropData* bg = dnvec_get(wg.props, wg.themes[WIMA_THEME_BG], WIMA_PROP_DATA_IDX);
 
@@ -503,7 +503,7 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_CONTEXT);
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 

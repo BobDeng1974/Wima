@@ -71,6 +71,7 @@ const char* wima_assert_msgs[] = {
     "window menu is not a context menu",
     "window context is not valid; this is a bug in Wima",
     "window framebuffer size does not match GLFW framebuffer size; this is a bug in Wima",
+    "window render context is NULL; this is a bug in Wima",
 
     "workspace is not valid",
     "no workspaces are registered",
