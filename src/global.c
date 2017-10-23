@@ -78,7 +78,7 @@ const char* wima_assert_msgs[] = {
     "area is not valid",
     "area is a parent, not a leaf",
     "area is a leaf, not a parent",
-    "number of items in area exceeds capacity"
+    "number of items in area exceeds capacity",
 
     "region is not valid",
     "no regions are registered",
