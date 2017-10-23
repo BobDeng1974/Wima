@@ -99,13 +99,13 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize siz
 	const char* name = dstr_str(wg.name);
 
 	wwin.name = dstr_create(name);
-	if (!wwin.name) {
+	if (yunlikely(!wwin.name)) {
 		return WIMA_STATUS_WINDOW_ERR;
 	}
 
 	GLFWwindow* win = glfwCreateWindow(size.w, size.h, name, NULL, NULL);
 
-	if (!win) {
+	if (yunlikely(!win)) {
 		return WIMA_STATUS_WINDOW_ERR;
 	}
 
@@ -162,13 +162,13 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize siz
 
 		idx = len;
 
-		if (dvec_push(wg.windows, &wwin)) {
+		if (yunlikely(dvec_push(wg.windows, &wwin))) {
 			return WIMA_STATUS_WINDOW_ERR;
 		}
 	}
 
 	WimaStatus status = wima_window_areas_replace(idx, wksph);
-	if (status) {
+	if (yunlikely(status)) {
 		return status;
 	}
 
@@ -182,7 +182,7 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize siz
 	// Set the swap interval.
 	glfwSwapInterval(1);
 
-	if (!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+	if (yunlikely(!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))) {
 		glfwTerminate();
 		return -1;
 	}
@@ -378,7 +378,7 @@ WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {
 
 	glfwSetWindowTitle(win->window, title);
 
-	if (dstr_set(win->name, title)) {
+	if (yunlikely(dstr_set(win->name, title))) {
 		return WIMA_STATUS_WINDOW_ERR;
 	}
 
@@ -571,13 +571,12 @@ WimaStatus wima_window_setHover(WimaWindow wwh, WimaWidget wih) {
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	if (area->area.ctx.itemCount < wih.widget) {
-		win->ctx.hover = wih;
-		return WIMA_STATUS_SUCCESS;
-	}
-	else {
+	if (yunlikely(area->area.ctx.itemCount >= wih.widget)) {
 		return WIMA_STATUS_WINDOW_ERR;
 	}
+
+	win->ctx.hover = wih;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaWidget wima_window_hover(WimaWindow wwh) {
@@ -607,13 +606,12 @@ WimaStatus wima_window_setActive(WimaWindow wwh, WimaWidget wih) {
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	if (area->area.ctx.itemCount < wih.widget) {
-		win->ctx.active = wih;
-		return WIMA_STATUS_SUCCESS;
-	}
-	else {
+	if (yunlikely(area->area.ctx.itemCount >= wih.widget)) {
 		return WIMA_STATUS_WINDOW_ERR;
 	}
+
+	win->ctx.active = wih;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaWidget wima_window_actve(WimaWindow wwh) {
@@ -643,13 +641,12 @@ WimaStatus wima_window_setFocus(WimaWindow wwh, WimaWidget wih) {
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	if (area->area.ctx.itemCount < wih.widget) {
-		win->ctx.focus = wih;
-		return WIMA_STATUS_SUCCESS;
-	}
-	else {
+	if (yunlikely(area->area.ctx.itemCount >= wih.widget)) {
 		return WIMA_STATUS_WINDOW_ERR;
 	}
+
+	win->ctx.focus = wih;
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaWidget wima_window_focus(WimaWindow wwh) {
@@ -754,11 +751,11 @@ DynaTree wima_window_areas(WimaWindow wwh) {
 	int nodes = dtree_nodes(winareas);
 
 	DynaTree areas = dtree_create(nodes, sizeof(WimaAr), NULL);
-	if (!areas) {
+	if (yunlikely(!areas)) {
 		return NULL;
 	}
 
-	if (dtree_copy(areas, winareas)) {
+	if (yunlikely(dtree_copy(areas, winareas))) {
 		dtree_free(areas);
 		return NULL;
 	}
@@ -777,7 +774,7 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wksph));
 
-	if (!wima_area_valid(wksp)) {
+	if (yunlikely(!wima_area_valid(wksp))) {
 		return WIMA_STATUS_WINDOW_ERR;
 	}
 
@@ -787,12 +784,12 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 
 		window->areas = dtree_create(dtree_nodes(wksp), sizeof(WimaAr), NULL);
 
-		if (!window->areas) {
+		if (yunlikely(!window->areas)) {
 			return WIMA_STATUS_WINDOW_ERR;
 		}
 	}
 
-	if (dtree_copy(window->areas, wksp)) {
+	if (yunlikely(dtree_copy(window->areas, wksp))) {
 		return WIMA_STATUS_WINDOW_ERR;
 	}
 
@@ -822,7 +819,7 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 
 		window->areas = dtree_create(dtree_nodes(areas), sizeof(WimaAr), NULL);
 
-		if (!window->areas) {
+		if (yunlikely(!window->areas)) {
 			return WIMA_STATUS_WINDOW_ERR;
 		}
 	}
@@ -1238,7 +1235,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 	if (WIMA_WIN_NEEDS_LAYOUT(win)) {
 
 		status = wima_area_layout(win->areas);
-		if (status) {
+		if (yunlikely(status)) {
 			return status;
 		}
 	}
@@ -1251,7 +1248,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 		nvgBeginFrame(win->render.nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 
 		status = wima_area_draw(&win->render, win->areas);
-		if (status) {
+		if (yunlikely(status)) {
 			nvgCancelFrame(win->render.nvg);
 			return status;
 		}
@@ -1259,7 +1256,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 		if (WIMA_WIN_HAS_MENU(win)) {
 
 			status = wima_window_drawMenu(win, win->menu, 0);
-			if (status) {
+			if (yunlikely(status)) {
 				nvgCancelFrame(win->render.nvg);
 				return status;
 			}
@@ -1493,7 +1490,7 @@ WimaStatus wima_window_processEvents(WimaWindow wwh) {
 
 		status = wima_window_processEvent(win, wwh, handles[i], events[i]);
 
-		if (status) {
+		if (yunlikely(status)) {
 			break;
 		}
 	}
