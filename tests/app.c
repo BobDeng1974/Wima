@@ -44,6 +44,10 @@
 #include <wima/wima.h>
 #include <wima/render.h>
 
+#include "../src/global.h"
+
+assert_msgs_decl;
+
 WimaStatus cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e);
 WimaStatus cb_scroll(WimaWidget wih, WimaScrollEvent e);
 WimaStatus cb_char(WimaWidget wih, WimaCharEvent e);
@@ -356,7 +360,13 @@ void cb_error(WimaStatus status, const char* desc) {
 	exit(status);
 }
 
+#define wima_print_assert(idx) printf("Message[%lu]: %s\n", idx, wima_assert_msgs[idx]);
+
 int main() {
+
+	for (size_t i = WIMA_ASSERT_SWITCH_DEFAULT; i <= WIMA_ASSERT_MONITOR_RAMP_SIZE; ++i) {
+		wima_print_assert(i);
+	}
 
 	WimaAppFuncs appfuncs;
 	appfuncs.draw = cb_draw;
