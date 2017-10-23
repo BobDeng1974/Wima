@@ -72,26 +72,26 @@ typedef uint32_t WimaProperty;
 typedef WimaStatus (*WimaPropDrawFunc)(WimaWidget, void*);
 typedef void (*WimaPropFreeFunc)(void*);
 
-WimaPropType wima_prop_type(WimaProperty wph);
+WimaPropType wima_prop_type(WimaProperty wph) yinline;
 
 WimaProperty wima_prop_find(const char* name);
 
 WimaStatus wima_prop_link(WimaProperty parent, WimaProperty child);
 WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child);
-DynaVector wima_prop_group(WimaProperty wph);
-void wima_prop_setBool(WimaProperty wph, bool val);
-bool wima_prop_bool(WimaProperty wph);
-void wima_prop_setInt(WimaProperty wph, int val);
-int wima_prop_int(WimaProperty wph);
-void wima_prop_setFloat(WimaProperty wph, float val);
-float wima_prop_float(WimaProperty wph);
-DynaString wima_prop_string(WimaProperty wph);
-void wima_prop_setEnumIdx(WimaProperty wph, uint32_t idx);
-uint32_t wima_prop_enum(WimaProperty wph);
-DynaVector wima_prop_list(WimaProperty wph);
-void wima_prop_setColor(WimaProperty wph, WimaColor color);
-WimaColor wima_prop_color(WimaProperty wph);
-void* wima_prop_ptr(WimaProperty wph);
+DynaVector wima_prop_group(WimaProperty wph) yinline;
+void wima_prop_setBool(WimaProperty wph, bool val) yinline;
+bool wima_prop_bool(WimaProperty wph) yinline;
+void wima_prop_setInt(WimaProperty wph, int val) yinline;
+int wima_prop_int(WimaProperty wph) yinline;
+void wima_prop_setFloat(WimaProperty wph, float val) yinline;
+float wima_prop_float(WimaProperty wph) yinline;
+DynaString wima_prop_string(WimaProperty wph) yinline;
+void wima_prop_setEnumIdx(WimaProperty wph, uint32_t idx) yinline;
+uint32_t wima_prop_enum(WimaProperty wph) yinline;
+DynaVector wima_prop_list(WimaProperty wph) yinline;
+void wima_prop_setColor(WimaProperty wph, WimaColor color) yinline;
+WimaColor wima_prop_color(WimaProperty wph) yinline;
+void* wima_prop_ptr(WimaProperty wph) yinline;
 
 WimaProperty wima_prop_registerGroup(const char* name, const char* label, const char* desc);
 WimaProperty wima_prop_registerBool(const char* name, const char* label, const char* desc, bool initial);
