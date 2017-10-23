@@ -134,7 +134,7 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 // otherwise the first item matching (item.flags & flags) == mask is returned.
 // you may combine box, layout, event and user flags.
 // frozen items will always be ignored.
-WimaWidget wima_area_findItem(DynaTree areas, WimaVec pos, uint32_t flags);
+WimaWidget wima_area_findWidget(DynaTree areas, WimaVec pos, uint32_t flags);
 
 #ifdef __cplusplus
 }

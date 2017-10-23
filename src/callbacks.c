@@ -238,7 +238,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
-	WimaWidget clickItem = wima_area_findItem(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN);
+	WimaWidget clickItem = wima_area_findWidget(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN);
 
 	wwin->ctx.active = clickItem;
 	wwin->ctx.focus = clickItem;
@@ -352,7 +352,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			WimaEvent* e;
 
 			// Set the hover item.
-			wwin->ctx.hover = wima_area_findItem(wwin->areas, pos, WIMA_ITEM_EVENT_MASK);
+			wwin->ctx.hover = wima_area_findWidget(wwin->areas, pos, WIMA_ITEM_EVENT_MASK);
 
 			// Find out if we switched areas.
 			WimaAreaNode area = wima_area_containsMouse(wwin->areas, pos);
@@ -464,7 +464,7 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 		return;
 	}
 
-	WimaWidget wih = wima_area_findItem(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_SCROLL);
+	WimaWidget wih = wima_area_findWidget(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_SCROLL);
 
 	wwin->ctx.eventItems[numEvents] = wih;
 
