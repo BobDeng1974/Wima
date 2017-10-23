@@ -229,45 +229,45 @@ typedef struct WimaTextMetrics {
 } WimaTextMetrics;
 
 // Returns a color value from red, green, blue values. Alpha will be set to 255 (1.0f).
-WimaColor wima_color_rgb(unsigned char r, unsigned char g, unsigned char b);
+WimaColor wima_color_rgb(unsigned char r, unsigned char g, unsigned char b) yinline;
 
 // Returns a color value from red, green, blue values. Alpha will be set to 1.0f.
-WimaColor wima_color_rgbf(float r, float g, float b);
+WimaColor wima_color_rgbf(float r, float g, float b) yinline;
 
 // Returns a color value from red, green, blue and alpha values.
-WimaColor wima_color_rgba(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+WimaColor wima_color_rgba(unsigned char r, unsigned char g, unsigned char b, unsigned char a) yinline;
 
 // Returns a color value from red, green, blue and alpha values.
-WimaColor wima_color_rgbaf(float r, float g, float b, float a);
+WimaColor wima_color_rgbaf(float r, float g, float b, float a) yinline;
 
 // Linearly interpolates from color c0 to c1, and returns resulting color value.
-WimaColor wima_color_lerp(WimaColor c0, WimaColor c1, float u);
+WimaColor wima_color_lerp(WimaColor c0, WimaColor c1, float u) yinline;
 
 // Sets transparency of a color value.
-WimaColor wima_color_setAlpha(WimaColor c0, unsigned char a);
+WimaColor wima_color_setAlpha(WimaColor c0, unsigned char a) yinline;
 
 // Sets transparency of a color value.
-WimaColor wima_color_setAlphaf(WimaColor c0, float a);
+WimaColor wima_color_setAlphaf(WimaColor c0, float a) yinline;
 
 // make color transparent using the default alpha value
-WimaColor wima_color_multiplyAlphaf(WimaColor color, float a);
+WimaColor wima_color_multiplyAlphaf(WimaColor color, float a) yinline;
 
 // Returns color value specified by hue, saturation and lightness.
 // HSL values are all in range [0..1], alpha will be set to 255.
-WimaColor wima_color_hsl(float h, float s, float l);
+WimaColor wima_color_hsl(float h, float s, float l) yinline;
 
 // Returns color value specified by hue, saturation and lightness and alpha.
 // HSL values are all in range [0..1], alpha in range [0..255]
-WimaColor wima_color_hsla(float h, float s, float l, unsigned char a);
+WimaColor wima_color_hsla(float h, float s, float l, unsigned char a) yinline;
 
 // offset a color by a given integer delta in the range -100 to 100
-WimaColor wima_color_offset(WimaColor color, int delta);
+WimaColor wima_color_offset(WimaColor color, int delta) yinline;
 
 // Creates and returns a linear gradient. Parameters (sx,sy)-(ex,ey) specify the start and end coordinates
 // of the linear gradient, icol specifies the start color and ocol the end color.
 // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
 WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, float sx, float sy, float ex, float ey,
-                                    WimaColor icol, WimaColor ocol);
+                                    WimaColor icol, WimaColor ocol) yinline;
 
 // Creates and returns a box gradient. Box gradient is a feathered rounded rectangle, it is useful for rendering
 // drop shadows or highlights for boxes. Parameters (x,y) define the top-left corner of the rectangle,
@@ -275,19 +275,19 @@ WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, float sx, float sy, 
 // the border of the rectangle is. Parameter icol specifies the inner color and ocol the outer color of the gradient.
 // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
 WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, float x, float y, float w, float h,
-                                 float r, float f, WimaColor icol, WimaColor ocol);
+                                 float r, float f, WimaColor icol, WimaColor ocol) yinline;
 
 // Creates and returns a radial gradient. Parameters (cx,cy) specify the center, inr and outr specify
 // the inner and outer radius of the gradient, icol specifies the start color and ocol the end color.
 // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
 WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, float cx, float cy, float inr, float outr,
-                                    WimaColor icol, WimaColor ocol);
+                                    WimaColor icol, WimaColor ocol) yinline;
 
 // Creates and returns an image patter. Parameters (ox,oy) specify the left-top location of the image pattern,
 // (ex,ey) the size of one image, angle rotation around the top-left corner, image is handle to the image to render.
 // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
 WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, float ox, float oy, float ex, float ey,
-                                  float angle, int image, float alpha);
+                                  float angle, int image, float alpha) yinline;
 
 // Flags indicating which corners are sharp (for grouping widgets).
 typedef enum WimaWidgetCorner {
@@ -891,69 +891,69 @@ typedef enum wima_node_theme_type {
 typedef struct WimaWidgetTheme WimaWidgetTheme;
 typedef struct WimaNodeTheme WimaNodeTheme;
 
-void wima_theme_setBackground(WimaColor bg);
-WimaColor wima_theme_background();
+void wima_theme_setBackground(WimaColor bg) yinline;
+WimaColor wima_theme_background() yinline;
 
-WimaWidgetTheme* wima_theme_widget(WimaThemeType type);
+WimaWidgetTheme* wima_theme_widget(WimaThemeType type) yinline;
 
-void wima_theme_widget_setOutline(WimaThemeType type, WimaColor color);
-WimaColor wima_theme_widget_outline(WimaThemeType type);
+void wima_theme_widget_setOutline(WimaThemeType type, WimaColor color) yinline;
+WimaColor wima_theme_widget_outline(WimaThemeType type) yinline;
 
-void wima_theme_widget_setWidgetColor(WimaThemeType type, WimaColor color);
-WimaColor wima_theme_widget_widgetColor(WimaThemeType type);
+void wima_theme_widget_setColor(WimaThemeType type, WimaColor color) yinline;
+WimaColor wima_theme_widget_color(WimaThemeType type) yinline;
 
-void wima_theme_widget_setInner(WimaThemeType type, WimaColor color);
-WimaColor wima_theme_widget_inner(WimaThemeType type);
+void wima_theme_widget_setInner(WimaThemeType type, WimaColor color) yinline;
+WimaColor wima_theme_widget_inner(WimaThemeType type) yinline;
 
-void wima_theme_widget_setInnerSelected(WimaThemeType type, WimaColor color);
-WimaColor wima_theme_widget_innerSelected(WimaThemeType type);
+void wima_theme_widget_setInnerSelected(WimaThemeType type, WimaColor color) yinline;
+WimaColor wima_theme_widget_innerSelected(WimaThemeType type) yinline;
 
-void wima_theme_widget_setText(WimaThemeType type, WimaColor color);
-WimaColor wima_theme_widget_text(WimaThemeType type);
+void wima_theme_widget_setText(WimaThemeType type, WimaColor color) yinline;
+WimaColor wima_theme_widget_text(WimaThemeType type) yinline;
 
-void wima_theme_widget_setTextSelected(WimaThemeType type, WimaColor color);
-WimaColor wima_theme_widget_textSelected(WimaThemeType type);
+void wima_theme_widget_setTextSelected(WimaThemeType type, WimaColor color) yinline;
+WimaColor wima_theme_widget_textSelected(WimaThemeType type) yinline;
 
-void wima_theme_widget_setShadeTop(WimaThemeType type, int delta);
-int wima_theme_widget_shadeTop(WimaThemeType type);
+void wima_theme_widget_setShadeTop(WimaThemeType type, int delta) yinline;
+int wima_theme_widget_shadeTop(WimaThemeType type) yinline;
 
-void wima_theme_widget_setShadeBottom(WimaThemeType type, int delta);
-int wima_theme_widget_shadeBottom(WimaThemeType type);
+void wima_theme_widget_setShadeBottom(WimaThemeType type, int delta) yinline;
+int wima_theme_widget_shadeBottom(WimaThemeType type) yinline;
 
-void wima_theme_widget_setShaded(WimaThemeType type, bool shaded);
-bool wima_theme_widget_shaded(WimaThemeType type);
+void wima_theme_widget_setShaded(WimaThemeType type, bool shaded) yinline;
+bool wima_theme_widget_shaded(WimaThemeType type) yinline;
 
-WimaNodeTheme* wima_theme_node();
+WimaNodeTheme* wima_theme_node() yinline;
 
-void wima_theme_node_setOutline(WimaColor color);
-WimaColor wima_theme_node_outline();
+void wima_theme_node_setOutline(WimaColor color) yinline;
+WimaColor wima_theme_node_outline() yinline;
 
-void wima_theme_node_setOutlineSelected(WimaColor color);
-WimaColor wima_theme_node_outlineSelected();
+void wima_theme_node_setOutlineSelected(WimaColor color) yinline;
+WimaColor wima_theme_node_outlineSelected() yinline;
 
-void wima_theme_node_setOutlineActive(WimaColor color);
-WimaColor wima_theme_node_outlineActive();
+void wima_theme_node_setOutlineActive(WimaColor color) yinline;
+WimaColor wima_theme_node_outlineActive() yinline;
 
-void wima_theme_node_setBackground(WimaColor color);
-WimaColor wima_theme_node_background();
+void wima_theme_node_setBackground(WimaColor color) yinline;
+WimaColor wima_theme_node_background() yinline;
 
-void wima_theme_node_setText(WimaColor color);
-WimaColor wima_theme_node_text();
+void wima_theme_node_setText(WimaColor color) yinline;
+WimaColor wima_theme_node_text() yinline;
 
-void wima_theme_node_setTextSelected(WimaColor color);
-WimaColor wima_theme_node_textSelected();
+void wima_theme_node_setTextSelected(WimaColor color) yinline;
+WimaColor wima_theme_node_textSelected() yinline;
 
-void wima_theme_node_setWire(WimaColor color);
-WimaColor wima_theme_node_wire();
+void wima_theme_node_setWire(WimaColor color) yinline;
+WimaColor wima_theme_node_wire() yinline;
 
-void wima_theme_node_setWireOutline(WimaColor color);
-WimaColor wima_theme_node_wireOutline();
+void wima_theme_node_setWireOutline(WimaColor color) yinline;
+WimaColor wima_theme_node_wireOutline() yinline;
 
-void wima_theme_node_setWireSelected(WimaColor color);
-WimaColor wima_theme_node_wireSelected();
+void wima_theme_node_setWireSelected(WimaColor color) yinline;
+WimaColor wima_theme_node_wireSelected() yinline;
 
-void wima_theme_node_setWireCurving(int curving);
-int wima_theme_node_wireCurving();
+void wima_theme_node_setWireCurving(int curving) yinline;
+int wima_theme_node_wireCurving() yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Render state functions.
@@ -961,91 +961,91 @@ int wima_theme_node_wireCurving();
 
 // Pushes and saves the current render state into a state stack.
 // A matching nvgRestore() must be used to restore the state.
-void wima_render_save(WimaRenderContext* ctx);
+void wima_render_save(WimaRenderContext* ctx) yinline;
 
 // Pops and restores current render state.
-void wima_render_restore(WimaRenderContext* ctx);
+void wima_render_restore(WimaRenderContext* ctx) yinline;
 
 // Resets current render state to default values. Does not affect the render state stack.
-void wima_render_reset(WimaRenderContext* ctx);
+void wima_render_reset(WimaRenderContext* ctx) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Render style functions.
 ////////////////////////////////////////////////////////////////////////////////
 
 // Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
-void wima_style_antialias(WimaRenderContext* ctx, bool enabled);
+void wima_style_antialias(WimaRenderContext* ctx, bool enabled) yinline;
 
 // Sets current stroke style to a solid color.
-void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color);
+void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color) yinline;
 
 // Sets current stroke style to a paint, which can be a one of the gradients or a pattern.
-void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint);
+void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint) yinline;
 
 // Sets current fill style to a solid color.
-void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color);
+void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color) yinline;
 
 // Sets current fill style to a paint, which can be a one of the gradients or a pattern.
-void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint);
+void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint) yinline;
 
 // Sets the miter limit of the stroke style.
 // Miter limit controls when a sharp corner is beveled.
-void wima_style_miter_limit(WimaRenderContext* ctx, float limit);
+void wima_style_miter_limit(WimaRenderContext* ctx, float limit) yinline;
 
 // Sets the stroke width of the stroke style.
-void wima_style_stroke_width(WimaRenderContext* ctx, float size);
+void wima_style_stroke_width(WimaRenderContext* ctx, float size) yinline;
 
 // Sets how the end of the line (cap) is drawn,
 // Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.
-void wima_style_line_cap(WimaRenderContext* ctx, WimaLineCap cap);
+void wima_style_line_cap(WimaRenderContext* ctx, WimaLineCap cap) yinline;
 
 // Sets how sharp path corners are drawn.
 // Can be one of NVG_MITER (default), NVG_ROUND, NVG_BEVEL.
-void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join);
+void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join) yinline;
 
 // Sets the transparency applied to all rendered shapes.
 // Already transparent paths will get proportionally more transparent as well.
-void wima_style_setGlobalAlpha(WimaRenderContext* ctx, float alpha);
+void wima_style_setGlobalAlpha(WimaRenderContext* ctx, float alpha) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Render transform functions.
 ////////////////////////////////////////////////////////////////////////////////
 
 // Resets current transform to a identity matrix.
-void wima_render_resetTransform(WimaRenderContext* ctx);
+void wima_render_resetTransform(WimaRenderContext* ctx) yinline;
 
 // Premultiplies current coordinate system by specified matrix.
 // The parameters are interpreted as matrix as follows:
 //   [a c e]
 //   [b d f]
 //   [0 0 1]
-void wima_render_transform(WimaRenderContext* ctx, WimaTransform tx);
+void wima_render_transform(WimaRenderContext* ctx, WimaTransform tx) yinline;
 
 // Translates current coordinate system.
-void wima_render_translate(WimaRenderContext* ctx, WimaVecf vec);
+void wima_render_translate(WimaRenderContext* ctx, WimaVecf vec) yinline;
 
 // Rotates current coordinate system. Angle is specified in radians.
-void wima_render_rotate(WimaRenderContext* ctx, float angle);
+void wima_render_rotate(WimaRenderContext* ctx, float angle) yinline;
 
 // Skews the current coordinate system along X axis. Angle is specified in radians.
-void wima_render_skewX(WimaRenderContext* ctx, float angle);
+void wima_render_skewX(WimaRenderContext* ctx, float angle) yinline;
 
 // Skews the current coordinate system along Y axis. Angle is specified in radians.
-void wima_render_skewY(WimaRenderContext* ctx, float angle);
+void wima_render_skewY(WimaRenderContext* ctx, float angle) yinline;
 
 // Scales the current coordinate system.
-void wima_render_scale(WimaRenderContext* ctx, float x, float y);
+void wima_render_scale(WimaRenderContext* ctx, float x, float y) yinline;
 
 // Stores the top part (a-f) of the current transformation matrix in to the specified buffer.
 //   [a c e]
 //   [b d f]
 //   [0 0 1]
 // There should be space for 6 floats in the return buffer for the values a-f.
-WimaTransform wima_render_currentTransform(WimaRenderContext* ctx);
+WimaTransform wima_render_currentTransform(WimaRenderContext* ctx) yinline;
 
 // Sets the current scissor rectangle.
 // The scissor rectangle is transformed by the current transform.
-void wima_render_scissor(WimaRenderContext* ctx, WimaRectf rect);
+void wima_render_scissor(WimaRenderContext* ctx, WimaRectf rect) yinline;
 
 // Intersects current scissor rectangle with the specified rectangle.
 // The scissor rectangle is transformed by the current transform.
@@ -1053,115 +1053,117 @@ void wima_render_scissor(WimaRenderContext* ctx, WimaRectf rect);
 // the current one, the intersection will be done between the specified
 // rectangle and the previous scissor rectangle transformed in the current
 // transform space. The resulting shape is always rectangle.
-void wima_render_intersectScissor(WimaRenderContext* ctx, WimaRectf rect);
+void wima_render_intersectScissor(WimaRenderContext* ctx, WimaRectf rect) yinline;
 
 // Reset and disables scissoring.
-void wima_render_resetScissor(WimaRenderContext* ctx);
+void wima_render_resetScissor(WimaRenderContext* ctx) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Paths.
 ////////////////////////////////////////////////////////////////////////////////
 
 // Clears the current path and sub-paths.
-void wima_path_begin(WimaRenderContext* ctx);
+void wima_path_begin(WimaRenderContext* ctx) yinline;
 
 // Starts new sub-path with specified point as first point.
-void wima_path_moveTo(WimaRenderContext* ctx, WimaVecf pt);
+void wima_path_moveTo(WimaRenderContext* ctx, WimaVecf pt) yinline;
 
 // Adds line segment from the last point in the path to the specified point.
-void wima_path_lineTo(WimaRenderContext* ctx, WimaVecf pt);
+void wima_path_lineTo(WimaRenderContext* ctx, WimaVecf pt) yinline;
 
 // Adds cubic bezier segment from last point in the path via two control points to the specified point.
-void wima_path_bezierTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c1, WimaVecf c2);
+void wima_path_bezierTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c1, WimaVecf c2) yinline;
 
 // Adds quadratic bezier segment from last point in the path via a control point to the specified point.
-void wima_path_quadTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c);
+void wima_path_quadTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c) yinline;
 
 // Adds an arc segment at the corner defined by the last path point, and two specified points.
-void wima_path_arcTo(WimaRenderContext* ctx, WimaVecf pt1, WimaVecf pt2, float radius);
+void wima_path_arcTo(WimaRenderContext* ctx, WimaVecf pt1, WimaVecf pt2, float radius) yinline;
 
 // Closes current sub-path with a line segment.
-void wima_path_close(WimaRenderContext* ctx);
+void wima_path_close(WimaRenderContext* ctx) yinline;
 
 // Sets the current sub-path winding, see NVGwinding and NVGsolidity.
-void wima_path_winding(WimaRenderContext* ctx, WimaWinding dir);
+void wima_path_winding(WimaRenderContext* ctx, WimaWinding dir) yinline;
 
 // Creates new circle arc shaped sub-path. The arc center is at cx,cy, the arc radius is r,
 // and the arc is drawn from angle a0 to a1, and swept in direction dir (NVG_CCW, or NVG_CW).
 // Angles are specified in radians.
-void wima_path_arc(WimaRenderContext* ctx, WimaVecf c, float r, float a0, float a1, WimaWinding dir);
+void wima_path_arc(WimaRenderContext* ctx, WimaVecf c, float r, float a0, float a1, WimaWinding dir) yinline;
 
 // Creates new rectangle shaped sub-path.
-void wima_path_rect(WimaRenderContext* ctx, WimaRectf rect);
+void wima_path_rect(WimaRenderContext* ctx, WimaRectf rect) yinline;
 
 // Creates new rounded rectangle shaped sub-path.
-void wima_path_roundedRect(WimaRenderContext* ctx, WimaRectf rect, float r);
+void wima_path_roundedRect(WimaRenderContext* ctx, WimaRectf rect, float r) yinline;
 
 // Creates new rounded rectangle shaped sub-path with varying radii for each corner.
-void wima_path_roundedRectVary(WimaRenderContext* ctx, WimaRectf rect, float tl, float tr, float br, float bl);
+void wima_path_roundedRectVary(WimaRenderContext* ctx, WimaRectf rect, float tl, float tr, float br, float bl) yinline;
 
 // Creates new ellipse shaped sub-path.
-void wima_path_ellipse(WimaRenderContext* ctx, WimaVecf c, float rx, float ry);
+void wima_path_ellipse(WimaRenderContext* ctx, WimaVecf c, float rx, float ry) yinline;
 
 // Creates new circle shaped sub-path.
-void wima_path_circle(WimaRenderContext* ctx, WimaVecf c, float r);
+void wima_path_circle(WimaRenderContext* ctx, WimaVecf c, float r) yinline;
 
 // Fills the current path with current fill style.
-void wima_path_fill(WimaRenderContext* ctx);
+void wima_path_fill(WimaRenderContext* ctx) yinline;
 
 // Fills the current path with current stroke style.
-void wima_path_stroke(WimaRenderContext* ctx);
+void wima_path_stroke(WimaRenderContext* ctx) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Text.
 ////////////////////////////////////////////////////////////////////////////////
 
 // Sets the blur of current text style.
-void wima_text_blur(WimaRenderContext* ctx, float blur);
+void wima_text_blur(WimaRenderContext* ctx, float blur) yinline;
 
 // Sets the letter spacing of current text style.
-void wima_text_letterSpacing(WimaRenderContext* ctx, float spacing);
+void wima_text_letterSpacing(WimaRenderContext* ctx, float spacing) yinline;
 
 // Sets the proportional line height of current text style. The line height is specified as multiple of font size.
-void wima_text_lineHeight(WimaRenderContext* ctx, float lineHeight);
+void wima_text_lineHeight(WimaRenderContext* ctx, float lineHeight) yinline;
 
 // Sets the text align of current text style, see NVGalign for options.
-void wima_text_align(WimaRenderContext* ctx, WimaTextAlign align);
+void wima_text_align(WimaRenderContext* ctx, WimaTextAlign align) yinline;
 
 // Draws text string at specified location. If end is specified only the sub-string up to the end is drawn.
-float wima_text(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end);
+float wima_text(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end) yinline;
 
 // Draws multi-line text string at specified location wrapped at the specified width. If end is specified only the sub-string up to the end is drawn.
 // White space is stripped at the beginning of the rows, the text is split at word boundaries or when new-line characters are encountered.
 // Words longer than the max width are slit at nearest character (i.e. no hyphenation).
-void wima_text_box(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth, const char* string, const char* end);
+void wima_text_box(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth,
+                   const char* string, const char* end) yinline;
 
 // Measures the specified text string. Parameter bounds should be a pointer to float[4],
 // if the bounding box of the text should be returned. The bounds value are [xmin,ymin, xmax,ymax]
 // Returns the horizontal advance of the measured text (i.e. where the next character should drawn).
 // Measured values are returned in local coordinate space.
-float wima_text_bounds(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end, WimaRectf* bounds);
+float wima_text_bounds(WimaRenderContext* ctx, WimaVecf pt, const char* string,
+                       const char* end, WimaRectf* bounds) yinline;
 
 // Measures the specified multi-text string. Parameter bounds should be a pointer to float[4],
 // if the bounding box of the text should be returned. The bounds value are [xmin,ymin, xmax,ymax]
 // Measured values are returned in local coordinate space.
 WimaRectf wima_text_box_bounds(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth,
-                               const char* string, const char* end);
+                               const char* string, const char* end) yinline;
 
 // Calculates the glyph x positions of the specified text. If end is specified only the sub-string will be used.
 // Measured values are returned in local coordinate space.
 int wima_text_glyphPositions(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end,
-                             WimaGlyphPosition* positions, int maxPositions);
+                             WimaGlyphPosition* positions, int maxPositions) yinline;
 
 // Returns the vertical metrics based on the current text style.
 // Measured values are returned in local coordinate space.
-WimaTextMetrics wima_text_metrics(WimaRenderContext* ctx);
+WimaTextMetrics wima_text_metrics(WimaRenderContext* ctx) yinline;
 
 // Breaks the specified text into lines. If end is specified only the sub-string will be used.
 // White space is stripped at the beginning of the rows, the text is split at word boundaries or when new-line characters are encountered.
 // Words longer than the max width are slit at nearest character (i.e. no hyphenation).
 int wima_text_breakLines(WimaRenderContext* ctx, const char* string, const char* end,
-                         float breakRowWidth, WimaTextRow* rows, int maxRows);
+                         float breakRowWidth, WimaTextRow* rows, int maxRows) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
 

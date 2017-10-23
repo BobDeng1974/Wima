@@ -856,11 +856,11 @@ WimaColor wima_theme_widget_outline(WimaThemeType type) {
 	return wima_theme_widgetColor(type, WIMA_THEME_WIDGET_OUTLINE);
 }
 
-void wima_theme_widget_setWidgetColor(WimaThemeType type, WimaColor color) {
+void wima_theme_widget_setColor(WimaThemeType type, WimaColor color) {
 	wima_theme_setWidgetColor(type, WIMA_THEME_WIDGET_WIDGET, color);
 }
 
-WimaColor wima_theme_widget_widgetColor(WimaThemeType type) {
+WimaColor wima_theme_widget_color(WimaThemeType type) {
 	return wima_theme_widgetColor(type, WIMA_THEME_WIDGET_WIDGET);
 }
 
