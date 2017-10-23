@@ -45,26 +45,28 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 
+#include <yc/opt.h>
+
 #include <wima/wima.h>
 #include <wima/render.h>
 
-uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical);
-uint16_t wima_layout_clearExpandFlags(uint16_t flags);
-uint16_t wima_layout_setScrollFlags(uint16_t flags, bool horizontal, bool vertical);
-uint16_t wima_layout_clearScrollFlags(uint16_t flags);
-uint16_t wima_layout_setSeparationFlag(uint16_t flags);
-uint16_t wima_layout_clearSeparationFlag(uint16_t flags);
-uint16_t wima_layout_setBoxFlag(uint16_t flags);
-uint16_t wima_layout_clearBoxFlag(uint16_t flags);
+uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical) yinline;
+uint16_t wima_layout_clearExpandFlags(uint16_t flags) yinline;
+uint16_t wima_layout_setScrollFlags(uint16_t flags, bool horizontal, bool vertical) yinline;
+uint16_t wima_layout_clearScrollFlags(uint16_t flags) yinline;
+uint16_t wima_layout_setSeparationFlag(uint16_t flags) yinline;
+uint16_t wima_layout_clearSeparationFlag(uint16_t flags) yinline;
+uint16_t wima_layout_setBoxFlag(uint16_t flags) yinline;
+uint16_t wima_layout_clearBoxFlag(uint16_t flags) yinline;
 
-void wima_layout_setBackgroundColor(WimaLayout wlh, WimaColor color);
-WimaColor wima_layout_backgroundColor(WimaLayout wlh);
+void wima_layout_setBackgroundColor(WimaLayout wlh, WimaColor color) yinline;
+WimaColor wima_layout_backgroundColor(WimaLayout wlh) yinline;
 
-WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags);
-WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags);
-WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split);
-WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags);
-WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags);
+WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags) yinline;
+WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags) yinline;
+WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split) yinline;
+WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags) yinline;
+WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags) yinline;
 
 #ifdef __cplusplus
 }

@@ -64,6 +64,8 @@
 
 #include <math.h>
 
+#include <yc/opt.h>
+
 #include <wima/wima.h>
 
 #ifdef _MSC_VER
@@ -92,52 +94,52 @@ double wima_fmax(double a, double b);
 
 #endif
 
-int wima_max(int a, int b);
+int wima_max(int a, int b) yinline;
 
-int wima_min(int a, int b);
+int wima_min(int a, int b) yinline;
 
-float wima_clamp(float v, float mn, float mx);
+float wima_clamp(float v, float mn, float mx) yinline;
 
-WimaRect wima_rect(WimaVec pos, WimaSize size);
-WimaRectf wima_rectf(WimaRect rect);
+WimaRect wima_rect(WimaVec pos, WimaSize size) yinline;
+WimaRectf wima_rectf(WimaRect rect) yinline;
 
-bool wima_rect_contains(WimaRect r, WimaVec pos);
+bool wima_rect_contains(WimaRect r, WimaVec pos) yinline;
 
-float wima_degToRad(float deg);
-float wima_radToDeg(float rad);
+float wima_degToRad(float deg) yinline;
+float wima_radToDeg(float rad) yinline;
 
 // The following functions can be used to make calculations on 2x3 transformation matrices.
 // A 2x3 matrix is represented as float[6].
 
 // Sets the transform to identity matrix.
-WimaTransform wima_transform_identity();
+WimaTransform wima_transform_identity() yinline;
 
 // Sets the transform to translation matrix matrix.
-WimaTransform wima_transform_translate(WimaTransform src, float tx, float ty);
+WimaTransform wima_transform_translate(WimaTransform src, float tx, float ty) yinline;
 
 // Sets the transform to scale matrix.
-WimaTransform wima_transform_scale(WimaTransform src, float sx, float sy);
+WimaTransform wima_transform_scale(WimaTransform src, float sx, float sy) yinline;
 
 // Sets the transform to rotate matrix. Angle is specified in radians.
-WimaTransform wima_transform_rotate(WimaTransform src, float a);
+WimaTransform wima_transform_rotate(WimaTransform src, float a) yinline;
 
 // Sets the transform to skew-x matrix. Angle is specified in radians.
-WimaTransform wima_transform_skewX(WimaTransform src, float a);
+WimaTransform wima_transform_skewX(WimaTransform src, float a) yinline;
 
 // Sets the transform to skew-y matrix. Angle is specified in radians.
-WimaTransform wima_transform_skewY(WimaTransform src, float a);
+WimaTransform wima_transform_skewY(WimaTransform src, float a) yinline;
 
 // Sets the transform to the result of multiplication of two transforms, of A = A*B.
-WimaTransform wima_transform_multiply(WimaTransform src1, WimaTransform src2);
+WimaTransform wima_transform_multiply(WimaTransform src1, WimaTransform src2) yinline;
 
 // Sets the transform to the result of multiplication of two transforms, of A = B*A.
-WimaTransform wima_transform_premultiply(WimaTransform src1, WimaTransform src2);
+WimaTransform wima_transform_premultiply(WimaTransform src1, WimaTransform src2) yinline;
 
 // Sets the destination to inverse of specified transform.
 // Returns result if the inverse could be calculated, else identity.
-WimaTransform wima_transform_inverse(WimaTransform src);
+WimaTransform wima_transform_inverse(WimaTransform src) yinline;
 
 // Transform a point by given transform.
-WimaVecf wima_transform_point(WimaTransform transform, WimaVecf pos);
+WimaVecf wima_transform_point(WimaTransform transform, WimaVecf pos) yinline;
 
 #endif // WIMA_MATH_H
