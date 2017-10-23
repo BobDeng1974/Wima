@@ -103,8 +103,8 @@ WimaRectf wima_rectf(WimaRect rect);
 
 bool wima_rect_contains(WimaRect r, WimaVec pos);
 
-float wima_radians(float deg);
-float wima_degrees(float rad);
+float wima_degToRad(float deg);
+float wima_radToDeg(float rad);
 
 // The following functions can be used to make calculations on 2x3 transformation matrices.
 // A 2x3 matrix is represented as float[6].
