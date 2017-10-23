@@ -239,7 +239,7 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 
 		// Set the left child user pointer and check for error.
 		status = wima_area_node_init(win, areas, dtree_left(node), left);
-		if (status) {
+		if (yunlikely(status)) {
 			return status;
 		}
 
@@ -255,7 +255,7 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 		WimaRegion reg = area->area.type;
 
 		// Check that the region handle is valid.
-		if (reg >= dvec_len(wg.regions)) {
+		if (yunlikely(reg >= dvec_len(wg.regions))) {
 			return WIMA_STATUS_WINDOW_ERR;
 		}
 
@@ -280,7 +280,7 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 		size_t size = ynalloc(sizeof(WimaItem) * region->itemCap);
 
 		area->area.ctx.items = ymalloc(size);
-		if (!area->area.ctx.items) {
+		if (yunlikely(!area->area.ctx.items)) {
 			return WIMA_STATUS_MALLOC_ERR;
 		}
 
@@ -366,13 +366,13 @@ static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 
 		// Set the left child user pointer and check for error.
 		status = wima_area_node_free(areas, dtree_left(node));
-		if (status) {
+		if (yunlikely(status)) {
 			return status;
 		}
 
 		// Set the right child user pointer and check for error.
 		status = wima_area_node_free(areas, dtree_right(node));
-		if (status) {
+		if (yunlikely(status)) {
 			return status;
 		}
 	}
@@ -390,7 +390,7 @@ static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 		WimaRegion reg = area->area.type;
 
 		// Check that the region handle is valid.
-		if (reg >= dvec_len(wg.regions)) {
+		if (yunlikely(reg >= dvec_len(wg.regions))) {
 			return WIMA_STATUS_WINDOW_ERR;
 		}
 
@@ -470,12 +470,12 @@ WimaStatus wima_area_mouseEnter(WimaAr* area, bool enter) {
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	WimaArea wah = wima_area(area->window, area->node);
+	WimaReg* region = dvec_get(wg.regions, area->area.type);
 
-	WimaReg* region = dvec_get(wg.regions, wima_area_type(wah));
+	WimaAreaMouseEnterFunc mouse_enter = region->mouse_enter;
 
-	if (region->mouse_enter) {
-		status = region->mouse_enter(wah, enter);
+	if (mouse_enter) {
+		status = mouse_enter(wima_area(area->window, area->node), enter);
 	}
 	else {
 		status = WIMA_STATUS_SUCCESS;
@@ -512,7 +512,7 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 	if (WIMA_AREA_IS_PARENT(area)) {
 
 		status = wima_area_node_draw(ctx, areas, dtree_left(node), bg);
-		if (status) {
+		if (yunlikely(status)) {
 			return status;
 		}
 
@@ -584,7 +584,7 @@ static WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect 
 	wima_area_childrenRects(area, &left, &right);
 
 	WimaStatus status = wima_area_node_resize(areas, dtree_left(node), left, adjustSplit);
-	if (status) {
+	if (yunlikely(status)) {
 		return status;
 	}
 
@@ -610,7 +610,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 	if (WIMA_AREA_IS_PARENT(area)) {
 
 		status = wima_area_node_layout(areas, dtree_left(node));
-		if (status) {
+		if (yunlikely(status)) {
 			return status;
 		}
 
@@ -644,7 +644,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 		status = layout(wah, wlh, size);
 
 		// Check for error.
-		if (status) {
+		if (yunlikely(status)) {
 			return status;
 		}
 
@@ -819,12 +819,12 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 	DynaNode rightNode = dtree_right(node);
 
 	status = wima_area_node_moveSplit(areas, leftNode, diff, true, e.vertical);
-	if (status) {
+	if (yunlikely(status)) {
 		return status;
 	}
 
 	status = wima_area_node_moveSplit(areas, rightNode, -diff, false, e.vertical);
-	if (status) {
+	if (yunlikely(status)) {
 		return status;
 	}
 
@@ -881,7 +881,7 @@ static WimaStatus wima_area_node_moveSplit(DynaTree areas, DynaNode node, int di
 			child = isLeft ? dtree_left(node) : dtree_right(node);
 
 			status = wima_area_node_moveSplit(areas, child, diff, isLeft, vertical);
-			if (status) {
+			if (yunlikely(status)) {
 				return status;
 			}
 		}
