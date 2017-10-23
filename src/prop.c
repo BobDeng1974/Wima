@@ -117,12 +117,16 @@ WimaStatus wima_prop_link(WimaProperty parent, WimaProperty child) {
 	WimaPropData* data = dnvec_get(wg.props, parent, WIMA_PROP_DATA_IDX);
 
 	size_t len = dvec_len(data->_list);
-	WimaProperty* handles = dvec_get(data->_list, 0);
 
-	for (size_t i = 0; i < len; ++i) {
+	if (len != 0) {
 
-		if (handles[i] == child) {
-			return WIMA_STATUS_SUCCESS;
+		WimaProperty* handles = dvec_get(data->_list, 0);
+
+		for (size_t i = 0; i < len; ++i) {
+
+			if (handles[i] == child) {
+				return WIMA_STATUS_SUCCESS;
+			}
 		}
 	}
 
@@ -654,27 +658,30 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 
 	size_t idx = dvec_len(wg.props);
 
-	WimaPropInfo* props = dnvec_get(wg.props, 0, WIMA_PROP_INFO_IDX);
+	if (idx != 0) {
 
-	size_t earlyIdx = 0;
-	bool early = false;
+		WimaPropInfo* props = dnvec_get(wg.props, 0, WIMA_PROP_INFO_IDX);
 
-	for (size_t i = 0; i < idx; ++i) {
+		size_t earlyIdx = 0;
+		bool early = false;
 
-		if (props[i].idx == WIMA_PROP_INVALID) {
+		for (size_t i = 0; i < idx; ++i) {
 
-			if (!early) {
-				early = true;
-				earlyIdx = i;
+			if (props[i].idx == WIMA_PROP_INVALID) {
+
+				if (!early) {
+					early = true;
+					earlyIdx = i;
+				}
+			}
+			else if (hash == props[i].hash && !strcmp(name, dstr_str(props[i].name))) {
+				wassert(type == props[i].type, WIMA_ASSERT_PROP_TYPE);
+				return i;
 			}
 		}
-		else if (hash == props[i].hash && !strcmp(name, dstr_str(props[i].name))) {
-			wassert(type == props[i].type, WIMA_ASSERT_PROP_TYPE);
-			return i;
-		}
-	}
 
-	idx = early ? earlyIdx : idx;
+		idx = early ? earlyIdx : idx;
+	}
 
 	WimaPropInfo prop;
 

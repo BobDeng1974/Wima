@@ -573,7 +573,10 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 		}
 
 #ifdef __YASSERT__
-		wassert(i != 0 && prev != child - 1, WIMA_ASSERT_THEME_PROP_CONSECUTIVE);
+		else {
+			wassert(prev == child - 1, WIMA_ASSERT_THEME_PROP_CONSECUTIVE);
+		}
+
 		prev = child;
 #endif
 
