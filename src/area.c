@@ -127,7 +127,11 @@ void wima_area_setType(WimaArea wah, WimaRegion type) {
 
 	area->area.type = type;
 
-	wima_window_layout(wah.window);
+	wassert(wima_window_valid(wah.window), WIMA_ASSERT_WIN);
+
+	WimaWin* win = dvec_get(wg.windows, wah.window);
+
+	wima_window_setDirty(win, true);
 }
 
 WimaRegion wima_area_type(WimaArea wah) {
