@@ -99,25 +99,25 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 
 	// Make sure these are set.
 	wg.fontPath = dstr_create(fontPath);
-	if (!wg.fontPath) {
+	if (yunlikely(!wg.fontPath)) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
 	wg.iconSheetPath = dstr_create(iconSheetPath);
-	if (!wg.iconSheetPath) {
+	if (yunlikely(!wg.iconSheetPath)) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
 	wg.name = dstr_create(name);
-	if (!wg.name) {
+	if (yunlikely(!wg.name)) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
 	wg.windows = dvec_create(0, sizeof(WimaWin), NULL);
-	if (!wg.windows) {
+	if (yunlikely(!wg.windows)) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
@@ -127,7 +127,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	const DestructFunc dtors[] = { NULL, NULL };
 
 	wg.props = dnvec_create(2, 0, sizes, dtors);
-	if (!wg.props) {
+	if (yunlikely(!wg.props)) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
@@ -136,18 +136,18 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.theme = wima_theme_load(wg.themes, wg.themeStarts);
 
 	wg.regions = dvec_create(0, sizeof(WimaReg), NULL);
-	if (!wg.regions) {
+	if (yunlikely(!wg.regions)) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
 	wg.workspaces = dvec_create(0, sizeof(WimaWksp), NULL);
-	if (!wg.workspaces) {
+	if (yunlikely(!wg.workspaces)) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
-	if (!glfwInit()) {
+	if (yunlikely(!glfwInit())) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
@@ -203,11 +203,11 @@ WimaStatus wima_main() {
 	assert_init;
 
 	GLFWwindow* win = glfwGetCurrentContext();
-	if (!win) {
+	if (yunlikely(!win)) {
 		return WIMA_STATUS_INVALID_STATE;
 	}
 
-	if (glfwWindowShouldClose(win)) {
+	if (yunlikely(glfwWindowShouldClose(win))) {
 		return WIMA_STATUS_SUCCESS;
 	}
 
@@ -223,7 +223,7 @@ WimaStatus wima_main() {
 
 		// Render here.
 		WimaStatus status = wima_window_draw(wwh);
-		if (status) {
+		if (yunlikely(status)) {
 			wg.funcs.error(status, "Wima encountered an error while rendering.");
 		}
 
@@ -232,7 +232,7 @@ WimaStatus wima_main() {
 		win = glfwGetCurrentContext();
 
 		// Break if we should close.
-		if (glfwWindowShouldClose(win)) {
+		if (yunlikely(glfwWindowShouldClose(win))) {
 			break;
 		}
 
@@ -241,7 +241,7 @@ WimaStatus wima_main() {
 
 		// Process events and check for error.
 		status = wima_window_processEvents(wwh);
-		if (status) {
+		if (yunlikely(status)) {
 			wg.funcs.error(status, "Wima encountered an error processing events.");
 		}
 
