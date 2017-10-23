@@ -44,7 +44,6 @@ void wima_callback_char(GLFWwindow* window, unsigned int code);
 void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods);
 void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]);
 
-void wima_callback_error(int error, const char* desc);
 void wima_callback_mouseEnter(GLFWwindow* window, int entered);
 void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos);
 void wima_callback_framebufferSize(GLFWwindow* window, int width, int height);
@@ -54,3 +53,4 @@ void wima_callback_windowRefresh(GLFWwindow* window);
 void wima_callback_windowFocus(GLFWwindow* window, int focused);
 void wima_callback_windowClose(GLFWwindow* window);
 void wima_callback_monitorConnected(GLFWmonitor* monitor, int connected);
+void wima_callback_error(int error, const char* desc);
