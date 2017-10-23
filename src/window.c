@@ -211,6 +211,8 @@ WimaStatus wima_window_close(WimaWindow wwh) {
 
 	assert_init;
 
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
 	if (!wg.funcs.close || wg.funcs.close(wwh)) {
 		WimaWin* win = dvec_get(wg.windows, wwh);
 		glfwSetWindowShouldClose(win->window, 1);
@@ -370,6 +372,8 @@ WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {
 
 	assert_init;
 
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	glfwSetWindowTitle(win->window, title);
@@ -383,6 +387,7 @@ WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {
 
 DynaString wima_window_title(WimaWindow wwh) {
 	assert_init;
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	return win->name;
 }
