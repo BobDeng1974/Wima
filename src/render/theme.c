@@ -129,7 +129,7 @@ const char* widgetParentLabels[] = {
 
 const char* widgetThemeNames[] = {
     "_outline",
-    "_item",
+    "_widget",
     "_inner",
     "_inner_selected",
     "_text",
@@ -630,7 +630,10 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 		}
 
 #ifdef __YASSERT__
-		wassert(i != 0 && prev != child - 1, WIMA_ASSERT_THEME_PROP_CONSECUTIVE);
+		else {
+			wassert(prev == child - 1, WIMA_ASSERT_THEME_PROP_CONSECUTIVE);
+		}
+
 		prev = child;
 #endif
 
