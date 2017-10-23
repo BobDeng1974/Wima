@@ -1257,8 +1257,6 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 
 		nvgEndFrame(win->render.nvg);
 
-		glFlush();
-
 		glDisable(GL_SCISSOR_TEST);
 
 		// Swap front and back buffers.
