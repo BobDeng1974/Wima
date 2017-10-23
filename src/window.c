@@ -387,7 +387,6 @@ DynaString wima_window_title(WimaWindow wwh) {
 	return win->name;
 }
 
-
 void wima_window_setPosition(WimaWindow wwh, WimaVec pos) {
 
 	assert_init;
