@@ -219,7 +219,7 @@ WimaStatus wima_main() {
 #endif
 
 		// Get the window handle.
-		WimaWindow wwh = WIMA_WINDOW(win);
+		WimaWindow wwh = WIMA_WIN(win);
 
 		// Render here.
 		WimaStatus status = wima_window_draw(wwh);
@@ -237,7 +237,7 @@ WimaStatus wima_main() {
 		}
 
 		// Get the window handle.
-		wwh = WIMA_WINDOW(win);
+		wwh = WIMA_WIN(win);
 
 		// Process events and check for error.
 		status = wima_window_processEvents(wwh);

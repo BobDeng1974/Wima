@@ -167,6 +167,6 @@ WimaStatus wima_window_processEvents(WimaWindow win);
 bool wima_window_valid(WimaWindow wwh);
 #endif
 
-#define WIMA_WINDOW(win) ((WimaWindow) (long) glfwGetWindowUserPointer(win))
+#define WIMA_WIN(win) ((WimaWindow) (long) glfwGetWindowUserPointer(win))
 
 #endif // WIMA_WINDOW_H

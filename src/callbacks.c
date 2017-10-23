@@ -151,7 +151,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 	assert_init;
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -214,7 +214,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	double time = glfwGetTime();
 	uint32_t ts = (uint32_t) (time * 1000);
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	WimaMouseBtn wbtn = (WimaMouseBtn) btn;
 	WimaMods wmods = (WimaMods) mods;
@@ -319,7 +319,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 	assert_init;
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
@@ -442,7 +442,7 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 	assert_init;
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
@@ -490,7 +490,7 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
 	assert_init;
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -527,7 +527,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 
 	const char* errorMsg = "Could not allocate a file name";
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -583,7 +583,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 	assert_init;
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -629,7 +629,7 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 
 	assert_init;
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -664,7 +664,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 	glScissor(0, 0, width, height);
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -711,7 +711,7 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
 	assert_init;
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -747,7 +747,7 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 
 	assert_init;
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -782,7 +782,7 @@ void wima_callback_windowRefresh(GLFWwindow* window) {
 
 	assert_init;
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -797,7 +797,7 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 
 	assert_init;
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 	if (!wwin) {
@@ -839,7 +839,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 
 	assert_init;
 
-	WimaWindow wwh = WIMA_WINDOW(window);
+	WimaWindow wwh = WIMA_WIN(window);
 
 	WimaWindowCloseFunc close = wg.funcs.close;
 
