@@ -433,6 +433,9 @@ const WimaColor colors[] = {
 
 static void wima_theme_createName(char* buffer, const char* name1, const char* name2) {
 
+	wassert(buffer != NULL, WIMA_ASSERT_PTR_NULL);
+	wassert(name1 != NULL, WIMA_ASSERT_PTR_NULL);
+
 	buffer[0] = '\0';
 
 	strcat(buffer, themePrefix);
@@ -446,6 +449,8 @@ static void wima_theme_createName(char* buffer, const char* name1, const char* n
 static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, const char* name2,
                                           const char* label, const char* desc, int initial)
 {
+	wassert(name1 != NULL, WIMA_ASSERT_PTR_NULL);
+
 	char buffer[WIMA_THEME_MAX_BUFFER];
 
 	wima_theme_createName(buffer, name1, name2);
@@ -518,6 +523,9 @@ static const char** wima_theme_descs(WimaThemeType type) {
 
 WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 
+	wassert(props != NULL, WIMA_ASSERT_PTR_NULL);
+	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
+
 	WimaProperty main = wima_theme_create();
 
 	WimaProperty bg = wima_theme_loadBackground();
@@ -544,6 +552,8 @@ WimaProperty wima_theme_loadBackground() {
 }
 
 WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
+
+	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
 	const char** descs = wima_theme_descs(type);
 
@@ -605,6 +615,8 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 }
 
 WimaProperty wima_theme_loadNode(WimaProperty* starts) {
+
+	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
 	WimaProperty main = wima_theme_createProp(WIMA_PROP_GROUP, widgetParentNames[WIMA_THEME_NODE],
 	                                          NULL, widgetParentLabels[WIMA_THEME_NODE], NULL, 0);
