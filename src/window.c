@@ -83,7 +83,7 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize siz
 	wwin.winsize.w = 0;
 	wwin.winsize.h = 0;
 
-	wwin.flags = WIMA_WINDOW_DIRTY | WIMA_WINDOW_LAYOUT;
+	wwin.flags = WIMA_WIN_DIRTY | WIMA_WIN_LAYOUT;
 
 	// Set the standard cursor as the cursor.
 	wwin.cursor = wg.cursors[WIMA_CURSOR_ARROW];
@@ -680,7 +680,7 @@ void wima_window_refresh(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	win->flags |= WIMA_WINDOW_DIRTY;
+	win->flags |= WIMA_WIN_DIRTY;
 }
 
 void wima_window_cancelRefresh(WimaWindow wwh) {
@@ -691,7 +691,7 @@ void wima_window_cancelRefresh(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	win->flags &= ~(WIMA_WINDOW_DIRTY);
+	win->flags &= ~(WIMA_WIN_DIRTY);
 }
 
 bool wima_window_needsRefresh(WimaWindow wwh) {
@@ -702,7 +702,7 @@ bool wima_window_needsRefresh(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	return WIMA_WINDOW_IS_DIRTY(win);
+	return WIMA_WIN_IS_DIRTY(win);
 }
 
 void wima_window_layout(WimaWindow wwh) {
@@ -713,7 +713,7 @@ void wima_window_layout(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	win->flags |= (WIMA_WINDOW_LAYOUT | WIMA_WINDOW_DIRTY);
+	win->flags |= (WIMA_WIN_LAYOUT | WIMA_WIN_DIRTY);
 }
 
 void wima_window_cancelLayout(WimaWindow wwh) {
@@ -724,7 +724,7 @@ void wima_window_cancelLayout(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	win->flags &= ~(WIMA_WINDOW_LAYOUT);
+	win->flags &= ~(WIMA_WIN_LAYOUT);
 }
 
 bool wima_window_needsLayout(WimaWindow wwh) {
@@ -735,7 +735,7 @@ bool wima_window_needsLayout(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	return WIMA_WINDOW_NEEDS_LAYOUT(win);
+	return WIMA_WIN_NEEDS_LAYOUT(win);
 }
 
 DynaTree wima_window_areas(WimaWindow wwh) {
@@ -847,7 +847,7 @@ WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	win->flags = (WIMA_WINDOW_MENU | WIMA_WINDOW_MENU_CONTEXT);
+	win->flags = (WIMA_WIN_MENU | WIMA_WIN_MENU_CONTEXT);
 
 	// Set up the offset.
 	win->menuOffset = menu->pos;
@@ -873,7 +873,7 @@ WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	win->flags = WIMA_WINDOW_MENU;
+	win->flags = WIMA_WIN_MENU;
 
 	// Set the menu.
 	win->menu = menu;
@@ -900,7 +900,7 @@ const char* wima_window_menuTitle(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	wassert(WIMA_WINDOW_MENU_IS_CONTEXT(win), WIMA_ASSERT_WIN_CONTEXT_MENU);
+	wassert(WIMA_WIN_MENU_IS_CONTEXT(win), WIMA_ASSERT_WIN_CONTEXT_MENU);
 
 	return win->menuTitle;
 }
@@ -913,7 +913,7 @@ int wima_window_menuIcon(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	wassert(WIMA_WINDOW_MENU_IS_CONTEXT(win), WIMA_ASSERT_WIN_CONTEXT_MENU);
+	wassert(WIMA_WIN_MENU_IS_CONTEXT(win), WIMA_ASSERT_WIN_CONTEXT_MENU);
 
 	return win->menuIcon;
 }
@@ -1163,10 +1163,10 @@ void wima_window_setDirty(WimaWin* win, bool layout) {
 
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 
-	win->flags |= WIMA_WINDOW_DIRTY;
+	win->flags |= WIMA_WIN_DIRTY;
 
 	if (layout) {
-		win->flags |= WIMA_WINDOW_LAYOUT;
+		win->flags |= WIMA_WIN_LAYOUT;
 	}
 }
 
@@ -1231,7 +1231,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 
 	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 
-	if (WIMA_WINDOW_NEEDS_LAYOUT(win)) {
+	if (WIMA_WIN_NEEDS_LAYOUT(win)) {
 
 		status = wima_area_layout(win->areas);
 		if (status) {
@@ -1239,7 +1239,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 		}
 	}
 
-	if (WIMA_WINDOW_IS_DIRTY(win)) {
+	if (WIMA_WIN_IS_DIRTY(win)) {
 
 		glEnable(GL_SCISSOR_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -1252,7 +1252,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 			return status;
 		}
 
-		if (WIMA_WINDOW_HAS_MENU(win)) {
+		if (WIMA_WIN_HAS_MENU(win)) {
 
 			status = wima_window_drawMenu(win, win->menu, 0);
 			if (status) {
@@ -1270,7 +1270,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 		// Swap front and back buffers.
 		glfwSwapBuffers(win->window);
 
-		win->flags &= ~(WIMA_WINDOW_DIRTY | WIMA_WINDOW_LAYOUT);
+		win->flags &= ~(WIMA_WIN_DIRTY | WIMA_WIN_LAYOUT);
 	}
 
 	win->ctx.stage = WIMA_UI_STAGE_POST_LAYOUT;
@@ -1287,7 +1287,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 
 	// Cache these. If parentWidth is 0, that means
 	// that this is the highest level menu.
-	bool isTopAndContext = WIMA_WINDOW_MENU_IS_CONTEXT(win) && parentWidth == 0;
+	bool isTopAndContext = WIMA_WIN_MENU_IS_CONTEXT(win) && parentWidth == 0;
 	bool hasTitle = isTopAndContext && (win->menuTitle || win->menuIcon >= 0);
 
 	if (hasTitle) {
@@ -1558,7 +1558,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 			win->ctx.cursorPos = e.pos;
 
 			// Don't do anything if we have a menu up.
-			if (WIMA_WINDOW_HAS_MENU(win)) {
+			if (WIMA_WIN_HAS_MENU(win)) {
 				status = WIMA_STATUS_SUCCESS;
 			}
 			else if (win->ctx.movingSplit) {
@@ -1737,7 +1737,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih,
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
-	if (WIMA_WINDOW_HAS_MENU(win)) {
+	if (WIMA_WIN_HAS_MENU(win)) {
 
 		WimaMenu* menu = win->menu;
 
@@ -1750,8 +1750,8 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih,
 			// If the mouse button hasn't been released yet,
 			// set it to released and return because we don't
 			// need to do anything else.
-			if (!WIMA_WINDOW_MENU_IS_RELEASED(win)) {
-				win->flags |= WIMA_WINDOW_MENU_RELEASED;
+			if (!WIMA_WIN_MENU_IS_RELEASED(win)) {
+				win->flags |= WIMA_WIN_MENU_RELEASED;
 				return WIMA_STATUS_SUCCESS;
 			}
 
