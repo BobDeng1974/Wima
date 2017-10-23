@@ -315,12 +315,12 @@ typedef union WimaImg {
 
 #define WIMA_THEME_MAX_BUFFER       (1025)
 
-WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts);
-WimaProperty wima_theme_loadBackground();
-WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts);
-WimaProperty wima_theme_loadNode(WimaProperty* starts);
+WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) yinline;
+WimaProperty wima_theme_loadBackground() yinline;
+WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) yinline;
+WimaProperty wima_theme_loadNode(WimaProperty* starts) yinline;
 
-WimaProperty wima_theme_create();
+WimaProperty wima_theme_create() yinline;
 
 #ifdef __cplusplus
 }
