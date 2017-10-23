@@ -129,5 +129,7 @@ const char* wima_assert_msgs[] = {
     "monitor is NULL",
     "gamma ramp size is not 256",
 
+    "ptr is NULL",
+
 #endif
 };
