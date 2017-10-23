@@ -111,7 +111,7 @@ typedef struct WimaItem {
 #define WIMA_ITEM_IS_LAYOUT(item)  ((item)->isLayout)
 #define WIMA_ITEM_IS_WIDGET(item)  (!((item)->isLayout))
 
-WimaItem* wima_layout_ptr(WimaLayout wlh);
+WimaItem* wima_layout_ptr(WimaLayout wlh) yinline;
 WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split);
 
 #ifdef __cplusplus
