@@ -745,8 +745,10 @@ static void wima_theme_setWidgetColor(WimaThemeType type, WimaWidgetThemeType id
 	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
 #endif
 
+	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
+	// Get the list of child properties.
 	WimaProperty* subHandles = dvec_get(data->_list, 0);
 
 	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
@@ -769,8 +771,10 @@ static WimaColor wima_theme_widgetColor(WimaThemeType type, WimaWidgetThemeType 
 	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
 #endif
 
+	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
+	// Get the list of child properties.
 	WimaProperty* subHandles = dvec_get(data->_list, 0);
 
 	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
@@ -792,10 +796,13 @@ static void wima_theme_setWidgetDelta(WimaThemeType type, bool top, int delta) {
 	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
 #endif
 
+	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
+	// Get the list of child properties.
 	WimaProperty* subHandles = dvec_get(data->_list, 0);
 
+	// Get the right index.
 	int idx = top ? WIMA_THEME_WIDGET_SHADE_TOP : WIMA_THEME_WIDGET_SHADE_BTM;
 
 	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
@@ -817,10 +824,13 @@ static int wima_theme_widgetDelta(WimaThemeType type, bool top) {
 	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
 #endif
 
+	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
+	// Get the list of child properties.
 	WimaProperty* subHandles = dvec_get(data->_list, 0);
 
+	// Get the right index.
 	int idx = top ? WIMA_THEME_WIDGET_SHADE_TOP : WIMA_THEME_WIDGET_SHADE_BTM;
 
 	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
@@ -842,8 +852,10 @@ static void wima_theme_setNodeColor(WimaNodeThemeType type, WimaColor color) {
 	wassert(node->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
 #endif
 
+	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
+	// Get the list of child properties.
 	WimaProperty* subHandles = dvec_get(data->_list, 0);
 
 	wassert(wima_prop_valid(subHandles[type]), WIMA_ASSERT_PROP);
@@ -865,8 +877,10 @@ static WimaColor wima_theme_nodeColor(WimaNodeThemeType type) {
 	wassert(node->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
 #endif
 
+	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
+	// Get the list of child properties.
 	WimaProperty* subHandles = dvec_get(data->_list, 0);
 
 	wassert(wima_prop_valid(subHandles[type]), WIMA_ASSERT_PROP);
@@ -964,8 +978,10 @@ void wima_theme_widget_setShaded(WimaThemeType type, bool shaded) {
 	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
 #endif
 
+	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
+	// Get the list of child properties.
 	WimaProperty* subHandles = dvec_get(data->_list, 0);
 
 	wassert(wima_prop_valid(subHandles[WIMA_THEME_WIDGET_SHADED]), WIMA_ASSERT_PROP);
@@ -987,8 +1003,10 @@ bool wima_theme_widget_shaded(WimaThemeType type) {
 	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
 #endif
 
+	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
+	// Get the list of child properties.
 	WimaProperty* subHandles = dvec_get(data->_list, 0);
 
 	wassert(wima_prop_valid(subHandles[WIMA_THEME_WIDGET_SHADED]), WIMA_ASSERT_PROP);
@@ -1091,8 +1109,10 @@ void wima_theme_node_setWireCurving(int curving) {
 	wassert(node->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
 #endif
 
+	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
+	// Get the list of child properties.
 	WimaProperty* subHandles = dvec_get(data->_list, 0);
 
 	wassert(wima_prop_valid(subHandles[WIMA_THEME_NODE_WIRE_CURVING]), WIMA_ASSERT_PROP);
@@ -1112,8 +1132,10 @@ int wima_theme_node_wireCurving() {
 	wassert(node->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
 #endif
 
+	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
+	// Get the list of child properties.
 	WimaProperty* subHandles = dvec_get(data->_list, 0);
 
 	wassert(wima_prop_valid(subHandles[WIMA_THEME_NODE_WIRE_CURVING]), WIMA_ASSERT_PROP);
