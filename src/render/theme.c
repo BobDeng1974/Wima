@@ -436,11 +436,14 @@ static void wima_theme_createName(char* buffer, const char* name1, const char* n
 	wassert(buffer != NULL, WIMA_ASSERT_PTR_NULL);
 	wassert(name1 != NULL, WIMA_ASSERT_PTR_NULL);
 
+	// Make the buffer have no length.
 	buffer[0] = '\0';
 
+	// Concatenate the strings.
 	strcat(buffer, themePrefix);
 	strcat(buffer, name1);
 
+	// If name2 is valid, concatenate it too.
 	if (name2) {
 		strcat(buffer, name2);
 	}
@@ -453,8 +456,10 @@ static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, 
 
 	char buffer[WIMA_THEME_MAX_BUFFER];
 
+	// Create the name.
 	wima_theme_createName(buffer, name1, name2);
 
+	// Switch on the type and create the property.
 	switch (type) {
 
 		case WIMA_PROP_GROUP:
@@ -477,6 +482,7 @@ static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, 
 
 static const char** wima_theme_descs(WimaThemeType type) {
 
+	// Switch on the type to return the correct descriptions.
 	switch (type) {
 
 		case WIMA_THEME_REGULAR:
@@ -526,19 +532,23 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 	wassert(props != NULL, WIMA_ASSERT_PTR_NULL);
 	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
+	// Create the main theme property.
 	WimaProperty main = wima_theme_create();
 
+	// Create the background and link it in, including in the arrays.
 	WimaProperty bg = wima_theme_loadBackground();
 	wima_prop_link(main, bg);
 	props[WIMA_THEME_BG] = bg;
 	starts[WIMA_THEME_BG] = bg;
 
+	// Loop through the widget types and load their themes.
 	for (WimaThemeType i = WIMA_THEME_REGULAR; i < WIMA_THEME_NODE; ++i) {
 		WimaProperty item = wima_theme_loadWidget(i, starts);
 		wima_prop_link(main, item);
 		props[i] = item;
 	}
 
+	// Create the node theme.
 	WimaProperty node = wima_theme_loadNode(starts);
 	wima_prop_link(main, node);
 	props[WIMA_THEME_NODE] = node;
@@ -555,15 +565,19 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 
 	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
+	// Get the right descriptions.
 	const char** descs = wima_theme_descs(type);
 
+	// Create the main widget property.
 	WimaProperty main = wima_theme_createProp(WIMA_PROP_GROUP, widgetParentNames[type],
 	                                          NULL, widgetParentLabels[type], NULL, 0);
 
+	// Get the parent name.
 	const char* parentName = widgetParentNames[type];
 
 	WimaProperty child;
 
+	// Get the index.
 	int idx = type - 1;
 
 	// Plus 1 for the background color.
@@ -573,11 +587,14 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 	WimaProperty prev;
 #endif
 
+	// Loop through the colors and create them.
 	for (int i = 0; i < WIMA_THEME_WIDGET_NUM_COLORS; ++i) {
 
+		// Create the property.
 		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, widgetThemeNames[i],
 		                              widgetThemeLabels[i], descs[i], initial++);
 
+		// If it's the first, put it into the start array.
 		if (i == 0) {
 			starts[type] = child;
 		}
@@ -590,21 +607,25 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 		prev = child;
 #endif
 
+		// Link the property to the main one.
 		wima_prop_link(main, child);
 	}
 
+	// Create the shade top prop and link it.
 	child = wima_theme_createProp(WIMA_PROP_INT, parentName,
 	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADE_TOP],
 	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADE_TOP],
 	                              descs[WIMA_THEME_WIDGET_SHADE_TOP], shadeTops[idx]);
 	wima_prop_link(main, child);
 
+	// Create the shade bottom prop and link it.
 	child = wima_theme_createProp(WIMA_PROP_INT, parentName,
 	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADE_BTM],
 	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADE_BTM],
 	                              descs[WIMA_THEME_WIDGET_SHADE_BTM], shadeBottoms[idx]);
 	wima_prop_link(main, child);
 
+	// Create the shaded prop and link it.
 	child = wima_theme_createProp(WIMA_PROP_BOOL, parentName,
 	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADED],
 	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADED],
@@ -624,6 +645,7 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 	// Plus 1 for background.
 	int initial = 1 + WIMA_THEME_WIDGET_NUM_TYPES * WIMA_THEME_WIDGET_NUM_COLORS;
 
+	// Get the parent name.
 	const char* parentName = widgetParentNames[WIMA_THEME_NODE];
 
 	WimaProperty child;
@@ -632,11 +654,14 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 	WimaProperty prev;
 #endif
 
+	// Loop through the colors and create them.
 	for (int i = 0; i < WIMA_THEME_NODE_NUM_COLORS; ++i) {
 
+		// Create the property.
 		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, nodeThemeNames[i],
 		                              nodeThemeLabels[i], nodeDescs[i], initial++);
 
+		// If it's the first, put it into the start array.
 		if (i == 0) {
 			starts[WIMA_THEME_NODE] = child;
 		}
@@ -649,17 +674,21 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 		prev = child;
 #endif
 
+		// Link the property to the main one.
 		wima_prop_link(main, child);
 	}
 
 	char buffer[WIMA_THEME_MAX_BUFFER];
 
+	// Set the buffer to length zero.
 	buffer[0] = '\0';
 
+	// Create the name of the curving prop.
 	strcat(buffer, themePrefix);
 	strcat(buffer, parentName);
 	strcat(buffer, nodeThemeNames[WIMA_THEME_NODE_WIRE_CURVING]);
 
+	// Create the curving prop and link it.
 	child = wima_prop_registerInt(buffer, nodeThemeLabels[WIMA_THEME_NODE_WIRE_CURVING],
 	                              nodeDescs[WIMA_THEME_NODE_WIRE_CURVING], 5, 0, 10, 1);
 	wima_prop_link(main, child);
@@ -673,6 +702,7 @@ WimaProperty wima_theme_create() {
 
 void wima_theme_setBackground(WimaColor bg) {
 
+	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_BG];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
@@ -687,6 +717,7 @@ void wima_theme_setBackground(WimaColor bg) {
 
 WimaColor wima_theme_background() {
 
+	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_BG];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
@@ -704,6 +735,7 @@ static void wima_theme_setWidgetColor(WimaThemeType type, WimaWidgetThemeType id
 	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_WIDGET_COLOR);
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
+	// Get the property.
 	WimaProperty wph = wg.themes[type];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
@@ -727,6 +759,7 @@ static WimaColor wima_theme_widgetColor(WimaThemeType type, WimaWidgetThemeType 
 	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_WIDGET_COLOR);
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
+	// Get the property.
 	WimaProperty wph = wg.themes[type];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
@@ -749,6 +782,7 @@ static void wima_theme_setWidgetDelta(WimaThemeType type, bool top, int delta) {
 
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
+	// Get the property.
 	WimaProperty wph = wg.themes[type];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
@@ -773,6 +807,7 @@ static int wima_theme_widgetDelta(WimaThemeType type, bool top) {
 
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
+	// Get the property.
 	WimaProperty wph = wg.themes[type];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
@@ -797,6 +832,7 @@ static void wima_theme_setNodeColor(WimaNodeThemeType type, WimaColor color) {
 
 	wassert(type <= WIMA_THEME_NODE_WIRE_SELECTED, WIMA_ASSERT_THEME_NODE_COLOR);
 
+	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_NODE];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
@@ -819,6 +855,7 @@ static WimaColor wima_theme_nodeColor(WimaNodeThemeType type) {
 
 	wassert(type <= WIMA_THEME_NODE_WIRE_SELECTED, WIMA_ASSERT_THEME_NODE_COLOR);
 
+	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_NODE];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
@@ -841,6 +878,7 @@ WimaWidgetTheme* wima_theme_widget(WimaThemeType type) {
 
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
+	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
@@ -916,6 +954,7 @@ void wima_theme_widget_setShaded(WimaThemeType type, bool shaded) {
 
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
+	// Get the property.
 	WimaProperty wph = wg.themes[type];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
@@ -938,6 +977,7 @@ bool wima_theme_widget_shaded(WimaThemeType type) {
 
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
+	// Get the property.
 	WimaProperty wph = wg.themes[type];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
@@ -958,6 +998,7 @@ bool wima_theme_widget_shaded(WimaThemeType type) {
 
 WimaNodeTheme* wima_theme_node() {
 
+	// Get the property.
 	WimaProperty wph = wg.themeStarts[WIMA_THEME_NODE];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
@@ -1040,6 +1081,7 @@ WimaColor wima_theme_node_wireSelected() {
 
 void wima_theme_node_setWireCurving(int curving) {
 
+	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_NODE];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
@@ -1060,6 +1102,7 @@ void wima_theme_node_setWireCurving(int curving) {
 
 int wima_theme_node_wireCurving() {
 
+	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_NODE];
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
