@@ -898,12 +898,7 @@ void wima_callback_monitorConnected(GLFWmonitor* monitor, int connected) {
 	WimaMonitorConnectedFunc monitor_func = wg.funcs.monitor;
 
 	if (monitor_func) {
-
-		WimaStatus status = monitor_func((WimaMonitor*) monitor, connected == GLFW_CONNECTED);
-
-		if (yunlikely(status)) {
-			wg.funcs.error(status, descs[status - 128]);
-		}
+		monitor_func((WimaMonitor*) monitor, connected == GLFW_CONNECTED);
 	}
 }
 

@@ -48,9 +48,9 @@
 
 assert_msgs_decl;
 
-WimaStatus cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e);
-WimaStatus cb_scroll(WimaWidget wih, WimaScrollEvent e);
-WimaStatus cb_char(WimaWidget wih, WimaCharEvent e);
+bool cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e);
+bool cb_scroll(WimaWidget wih, WimaScrollEvent e);
+bool cb_char(WimaWidget wih, WimaCharEvent e);
 
 /**
  * Prints a WimaAction to stdout.
@@ -153,7 +153,7 @@ WimaStatus cb_layout(WimaArea wah, WimaLayout wlh, WimaSize size) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_key(WimaArea wah, WimaKeyEvent e) {
+bool cb_key(WimaArea wah, WimaKeyEvent e) {
 
 #if 0
 	printf("Key Event:\n    Key: %d\n", e.key);
@@ -169,12 +169,13 @@ WimaStatus cb_key(WimaArea wah, WimaKeyEvent e) {
 
 	if (e.key == WIMA_KEY_ESCAPE && e.action == WIMA_ACTION_PRESS) {
 		wima_window_close(wah.window);
+		return true;
 	}
 
-	return WIMA_STATUS_SUCCESS;
+	return false;
 }
 
-WimaStatus cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e) {
+bool cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e) {
 
 #if 0
 	printf("Mouse Button Event:\n");
@@ -208,25 +209,25 @@ WimaStatus cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e) {
 	printf("    Clicks: %d\n", e.clicks);
 #endif
 
-	return WIMA_STATUS_SUCCESS;
+	return false;
 }
 
-WimaStatus cb_mousePos(WimaArea wah, WimaVec pos) {
+bool cb_mousePos(WimaArea wah, WimaVec pos) {
 
 #if 0
 	printf("Area[%d] Pos: { x: %4d; y: %4d }\n", wah.area, pos.x, pos.y);
 #endif
 
-	return WIMA_STATUS_SUCCESS;
+	return false;
 }
 
-WimaStatus cb_mouseEnterArea(WimaArea wah, bool entered) {
+bool cb_mouseEnterArea(WimaArea wah, bool entered) {
 
 #if 0
 	printf("Area[%d] %s\n", wah.area, entered ? "Enter" : "Exit");
 #endif
 
-	return WIMA_STATUS_SUCCESS;
+	return false;
 }
 
 const float scales[17] = {
@@ -234,7 +235,7 @@ const float scales[17] = {
     1.10f, 1.25f, 1.50f, 1.75f, 2.00f, 2.50f, 3.00f, 4.00f, 5.00f
 };
 
-WimaStatus cb_scroll(WimaWidget wih, WimaScrollEvent e) {
+bool cb_scroll(WimaWidget wih, WimaScrollEvent e) {
 
 	static int scaleIdx = 7;
 
@@ -257,22 +258,24 @@ WimaStatus cb_scroll(WimaWidget wih, WimaScrollEvent e) {
 #endif
 
 		wima_area_setScale(wah, scales[scaleIdx]);
+
+		return true;
 	}
 
-	return WIMA_STATUS_SUCCESS;
+	return false;
 }
 
-WimaStatus cb_char(WimaWidget wih, WimaCharEvent e) {
+bool cb_char(WimaWidget wih, WimaCharEvent e) {
 
 #if 0
 	printf("Char: %lc; Mods: ", e.code);
 	printMods(e.mods);
 #endif
 
-	return WIMA_STATUS_SUCCESS;
+	return false;
 }
 
-WimaStatus cb_fileDrop(WimaWindow wwh, int filec, const char* filev[]) {
+void cb_fileDrop(WimaWindow wwh, int filec, const char* filev[]) {
 
 #if 0
 	printf("Window[%d] Dropped Files:\n", wwh);
@@ -280,8 +283,6 @@ WimaStatus cb_fileDrop(WimaWindow wwh, int filec, const char* filev[]) {
 		printf("    %s\n", filev[i]);
 	}
 #endif
-
-	return WIMA_STATUS_SUCCESS;
 }
 
 void* cb_userPtr(WimaArea wah) {
@@ -292,58 +293,40 @@ void cb_userPtrFree(void* ptr) {
 	return;
 }
 
-WimaStatus cb_mouseEnter(WimaWindow wwh, bool entered) {
-
+void cb_mouseEnter(WimaWindow wwh, bool entered) {
 #if 0
 	printf("Window[%d] %s\n", wwh, entered ? "Enter" : "Exit");
 #endif
-
-	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_framebufferResize(WimaWindow wwh, WimaSize size) {
-
+void cb_framebufferResize(WimaWindow wwh, WimaSize size) {
 #if 0
 	printf("Framebuffer Resize: { handle: %u; width: %4d; height: %4d }\n", wwh, size.w, size.h);
 #endif
-
-	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_windowSize(WimaWindow wwh, WimaSize size) {
-
+void cb_windowSize(WimaWindow wwh, WimaSize size) {
 #if 0
 	printf("Window Resize: { handle: %u; width: %4d; height: %4d }\n", wwh, size.w, size.h);
 #endif
-
-	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_windowPos(WimaWindow wwh, WimaVec pos) {
-
+void cb_windowPos(WimaWindow wwh, WimaVec pos) {
 #if 0
 	printf("Window[%d] moved to { %4d, %4d }\n", wwh, pos.x, pos.y);
 #endif
-
-	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_minimize(WimaWindow wwh, bool minimized) {
-
+void cb_minimize(WimaWindow wwh, bool minimized) {
 #if 0
 	printf("Window[%d] %s\n", wwh, minimized ? "Minimized" : "Unminimized");
 #endif
-
-	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_focus(WimaWindow wwh, bool focused) {
-
+void cb_focus(WimaWindow wwh, bool focused) {
 #if 0
 	printf("Window[%d] %s\n", wwh, focused ? "Focused" : "Unfocused");
 #endif
-
-	return WIMA_STATUS_SUCCESS;
 }
 
 bool cb_close(WimaWindow wwh) {

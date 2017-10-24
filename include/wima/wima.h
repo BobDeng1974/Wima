@@ -747,11 +747,11 @@ typedef struct WimaMenu {
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
-typedef WimaStatus (*WimaItemMouseBtnFunc)(WimaWidget, WimaMouseBtnEvent);
-typedef WimaStatus (*WimaItemMouseClickFunc)(WimaWidget, WimaMouseClickEvent);
-typedef WimaStatus (*WimaItemMouseDragFunc)(WimaWidget, WimaMouseDragEvent);
-typedef WimaStatus (*WimaItemScrollFunc)(WimaWidget, WimaScrollEvent);
-typedef WimaStatus (*WimaItemCharEvent)(WimaWidget, WimaCharEvent);
+typedef bool (*WimaItemMouseBtnFunc)(WimaWidget, WimaMouseBtnEvent);
+typedef bool (*WimaItemMouseClickFunc)(WimaWidget, WimaMouseClickEvent);
+typedef bool (*WimaItemMouseDragFunc)(WimaWidget, WimaMouseDragEvent);
+typedef bool (*WimaItemScrollFunc)(WimaWidget, WimaScrollEvent);
+typedef bool (*WimaItemCharEvent)(WimaWidget, WimaCharEvent);
 
 typedef struct WimaItemFuncs {
 
@@ -766,9 +766,9 @@ typedef struct WimaItemFuncs {
 typedef void* (*WimaAreaGenUserPointerFunc)(WimaArea);
 typedef void (*WimaAreaFreeUserPointerFunc)(void*);
 typedef WimaStatus (*WimaAreaLayoutFunc)(WimaArea, WimaLayout, WimaSize);
-typedef WimaStatus (*WimaAreaKeyFunc)(WimaArea, WimaKeyEvent);
-typedef WimaStatus (*WimaAreaMousePosFunc)(WimaArea, WimaVec);
-typedef WimaStatus (*WimaAreaMouseEnterFunc)(WimaArea, bool);
+typedef bool (*WimaAreaKeyFunc)(WimaArea, WimaKeyEvent);
+typedef bool (*WimaAreaMousePosFunc)(WimaArea, WimaVec);
+typedef bool (*WimaAreaMouseEnterFunc)(WimaArea, bool);
 
 typedef struct WimaRegionFuncs {
 
@@ -785,15 +785,15 @@ typedef struct WimaRenderContext WimaRenderContext;
 
 typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaRenderContext*);
 typedef void (*WimaErrorFunc)(WimaStatus, const char*);
-typedef WimaStatus (*WimaWindowFileDropFunc)(WimaWindow, int, const char**);
-typedef WimaStatus (*WimaWindowPosFunc)(WimaWindow, WimaVec);
-typedef WimaStatus (*WimaFramebufferSizeFunc)(WimaWindow, WimaSize);
-typedef WimaStatus (*WimaWindowSizeFunc)(WimaWindow, WimaSize);
-typedef WimaStatus (*WimaWindowMouseEnterFunc)(WimaWindow, bool);
-typedef WimaStatus (*WimaWindowMinimizeFunc)(WimaWindow, bool);
-typedef WimaStatus (*WimaWindowFocusFunc)(WimaWindow, bool);
+typedef void (*WimaWindowFileDropFunc)(WimaWindow, int, const char**);
+typedef void (*WimaWindowPosFunc)(WimaWindow, WimaVec);
+typedef void (*WimaFramebufferSizeFunc)(WimaWindow, WimaSize);
+typedef void (*WimaWindowSizeFunc)(WimaWindow, WimaSize);
+typedef void (*WimaWindowMouseEnterFunc)(WimaWindow, bool);
+typedef void (*WimaWindowMinimizeFunc)(WimaWindow, bool);
+typedef void (*WimaWindowFocusFunc)(WimaWindow, bool);
 typedef bool (*WimaWindowCloseFunc)(WimaWindow);
-typedef WimaStatus (*WimaMonitorConnectedFunc)(WimaMonitor*, bool);
+typedef void (*WimaMonitorConnectedFunc)(WimaMonitor*, bool);
 
 typedef struct WimaAppFuncs {
 

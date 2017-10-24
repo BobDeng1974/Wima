@@ -1651,12 +1651,10 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		case WIMA_EVENT_WIN_POS:
 		{
 			if (wg.funcs.pos) {
-				WimaVec pos = e.pos;
-				status = wg.funcs.pos(wwh, pos);
+				wg.funcs.pos(wwh, e.pos);
 			}
-			else {
-				status = WIMA_STATUS_SUCCESS;
-			}
+
+			status = WIMA_STATUS_SUCCESS;
 
 			break;
 		}
@@ -1664,35 +1662,32 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		case WIMA_EVENT_FB_SIZE:
 		{
 			if (wg.funcs.fbsize) {
-				WimaSize size = e.size;
-				status = wg.funcs.fbsize(wwh, size);
+				wg.funcs.fbsize(wwh, e.size);
 			}
-			else {
-				status = WIMA_STATUS_SUCCESS;
-			}
+
+			status = WIMA_STATUS_SUCCESS;
+
 			break;
 		}
 
 		case WIMA_EVENT_WIN_SIZE:
 		{
 			if (wg.funcs.winsize) {
-				WimaSize size = e.size;
-				status = wg.funcs.winsize(wwh, size);
+				wg.funcs.winsize(wwh, e.size);
 			}
-			else {
-				status = WIMA_STATUS_SUCCESS;
-			}
+
+			status = WIMA_STATUS_SUCCESS;
+
 			break;
 		}
 
 		case WIMA_EVENT_WIN_ENTER:
 		{
 			if (wg.funcs.enter) {
-				status = wg.funcs.enter(wwh, e.mouse_enter);
+				wg.funcs.enter(wwh, e.mouse_enter);
 			}
-			else {
-				status = WIMA_STATUS_SUCCESS;
-			}
+
+			status = WIMA_STATUS_SUCCESS;
 
 			break;
 		}
@@ -1700,11 +1695,10 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		case WIMA_EVENT_WIN_MINIMIZE:
 		{
 			if (wg.funcs.minimize) {
-				status = wg.funcs.minimize(wwh, e.minimized);
+				wg.funcs.minimize(wwh, e.minimized);
 			}
-			else {
-				status = WIMA_STATUS_SUCCESS;
-			}
+
+			status = WIMA_STATUS_SUCCESS;
 
 			break;
 		}
@@ -1712,11 +1706,10 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		case WIMA_EVENT_WIN_FOCUS:
 		{
 			if (wg.funcs.focus) {
-				status = wg.funcs.focus(wwh, e.focused);
+				wg.funcs.focus(wwh, e.focused);
 			}
-			else {
-				status = WIMA_STATUS_SUCCESS;
-			}
+
+			status = WIMA_STATUS_SUCCESS;
 
 			break;
 		}
