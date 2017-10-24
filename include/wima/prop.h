@@ -102,6 +102,14 @@ typedef struct WimaPropGroup WimaPropGroup;
 typedef WimaStatus (*WimaPropDrawFunc)(WimaWidget, void*);
 
 /**
+ * A function to allow a list property to draw itself.
+ * @param wdgt	The widget that will contain the property.
+ * @param vec	The vector (list) in the property.
+ * @return		WIMA_STATUS_SUCCESS if the drawing was successful.
+ */
+typedef WimaStatus (*WimaPropListDrawFunc)(WimaWidget, DynaVector);
+
+/**
  * A function to allow Wima to free a pointer associated with a property.
  * @param ptr	The pointer to free.
  */
@@ -317,7 +325,8 @@ WimaProperty wima_prop_registerString(const char* name, const char* label, const
 WimaProperty wima_prop_registerEnum(const char* name, const char* label, const char* desc,
                                     const char* names[], const uint32_t* vals,
                                     uint32_t nvals, uint32_t initalIdx);
-WimaProperty wima_prop_registerList(const char* name, const char* label, const char* desc, DynaVector list);
+WimaProperty wima_prop_registerList(const char* name, const char* label, const char* desc,
+                                    DynaVector list, WimaPropListDrawFunc draw);
 WimaProperty wima_prop_registerColor(const char* name, const char* label, const char* desc, WimaColor initial);
 WimaProperty wima_prop_registerPtr(const char* name, const char* label, const char* desc,
                                    void* ptr, WimaPropDrawFunc draw, WimaPropFreeFunc free);

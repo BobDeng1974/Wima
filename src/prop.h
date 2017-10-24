@@ -82,6 +82,13 @@ typedef struct WimaPropEnum {
 
 } WimaPropEnum;
 
+typedef struct WimaPropList {
+
+	DynaVector list;
+	WimaPropListDrawFunc draw;
+
+} WimaPropList;
+
 typedef struct WimaPropPtr {
 
 	WimaPropDrawFunc draw;
@@ -109,6 +116,8 @@ typedef struct WimaPropInfo {
 
 typedef union WimaPropData {
 
+	DynaVector _group;
+
 	bool _bool;
 
 	WimaPropInt _int;
@@ -119,7 +128,7 @@ typedef union WimaPropData {
 
 	WimaPropEnum _enum;
 
-	DynaVector _list;
+	WimaPropList _list;
 
 	WimaColor _color;
 	NVGcolor _nvgcolor;

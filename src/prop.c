@@ -118,13 +118,13 @@ WimaStatus wima_prop_link(WimaProperty parent, WimaProperty child) {
 	WimaPropData* data = dnvec_get(wg.props, parent, WIMA_PROP_DATA_IDX);
 
 	// Cache this.
-	size_t len = dvec_len(data->_list);
+	size_t len = dvec_len(data->_group);
 
 	// If there are children...
 	if (len != 0) {
 
 		// Get the handles.
-		WimaProperty* handles = dvec_get(data->_list, 0);
+		WimaProperty* handles = dvec_get(data->_group, 0);
 
 		// Iterate through the handles.
 		for (size_t i = 0; i < len; ++i) {
@@ -137,7 +137,7 @@ WimaStatus wima_prop_link(WimaProperty parent, WimaProperty child) {
 	}
 
 	// Push the child onto the vector.
-	DynaStatus status = dvec_push(data->_list, &child);
+	DynaStatus status = dvec_push(data->_group, &child);
 
 	return status ? WIMA_STATUS_PROP_ERR : WIMA_STATUS_SUCCESS;
 }
@@ -158,7 +158,7 @@ WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child) {
 	WimaPropData* data = dnvec_get(wg.props, parent, WIMA_PROP_DATA_IDX);
 
 	// Cache this.
-	size_t len = dvec_len(data->_list);
+	size_t len = dvec_len(data->_group);
 
 	// If the len is 0, we have a problem.
 	if (len == 0) {
@@ -166,7 +166,7 @@ WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child) {
 	}
 
 	// Get the handles.
-	WimaProperty* handles = dvec_get(data->_list, 0);
+	WimaProperty* handles = dvec_get(data->_group, 0);
 
 	// Iterate through the handles.
 	for (size_t i = 0; i < len; ++i) {
@@ -175,7 +175,7 @@ WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child) {
 		if (handles[i] == child) {
 
 			// Remove the child and return the status.
-			DynaStatus status = dvec_remove(data->_list, i);
+			DynaStatus status = dvec_remove(data->_group, i);
 
 			return status ? WIMA_STATUS_PROP_ERR : WIMA_STATUS_SUCCESS;
 		}
@@ -198,7 +198,7 @@ WimaPropGroup* wima_prop_group(WimaProperty wph) {
 
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
-	return (WimaPropGroup*) data->_list;
+	return (WimaPropGroup*) data->_group;
 }
 
 WimaProperty wima_prop_group_getChild(WimaPropGroup* group, uint32_t idx) {
@@ -390,7 +390,7 @@ DynaVector wima_prop_list(WimaProperty wph) {
 
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
-	return data->_list;
+	return data->_list.list;
 }
 
 void wima_prop_setColor(WimaProperty wph, WimaColor color) {
@@ -447,8 +447,8 @@ WimaProperty wima_prop_registerGroup(const char* name, const char* label, const 
 
 	WimaPropData prop;
 
-	prop._list = dvec_create(0, sizeof(WimaProperty), NULL);
-	wassert(prop._list != NULL, WIMA_ASSERT_PROP_LIST_NULL);
+	prop._group = dvec_create(0, sizeof(WimaProperty), NULL);
+	wassert(prop._group != NULL, WIMA_ASSERT_PROP_LIST_NULL);
 
 	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_GROUP, &prop);
 
@@ -537,15 +537,17 @@ WimaProperty wima_prop_registerEnum(const char* name, const char* label, const c
 	return idx;
 }
 
-WimaProperty wima_prop_registerList(const char* name, const char* label, const char* desc, DynaVector list) {
-
+WimaProperty wima_prop_registerList(const char* name, const char* label, const char* desc,
+                                    DynaVector list, WimaPropListDrawFunc draw)
+{
 	assert_init;
 
 	wassert(list != NULL, WIMA_ASSERT_PROP_LIST_NULL);
 
 	WimaPropData prop;
 
-	prop._list = list;
+	prop._list.list = list;
+	prop._list.draw = draw;
 
 	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_LIST, &prop);
 
@@ -637,15 +639,15 @@ void wima_prop_free(WimaProperty wph) {
 
 		case WIMA_PROP_GROUP:
 		{
-			size_t len = dvec_len(data->_list);
+			size_t len = dvec_len(data->_group);
 
-			WimaProperty* handles = dvec_get(data->_list, 0);
+			WimaProperty* handles = dvec_get(data->_group, 0);
 
 			for (size_t i = 0; i < len; i++) {
 				wima_prop_free(handles[i]);
 			}
 
-			dvec_free(data->_list);
+			dvec_free(data->_group);
 
 			break;
 		}
@@ -663,7 +665,7 @@ void wima_prop_free(WimaProperty wph) {
 			break;
 
 		case WIMA_PROP_LIST:
-			dvec_free(data->_list);
+			dvec_free(data->_list.list);
 			break;
 
 		case WIMA_PROP_COLOR:
