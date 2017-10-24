@@ -976,7 +976,8 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion
 // Window functions and definitions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize size, bool resizable, bool decorated);
+WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize size,
+                              bool maximized, bool resizable, bool decorated);
 WimaStatus wima_window_close(WimaWindow wwh);
 
 void wima_window_setFocused(WimaWindow wwh) yinline;

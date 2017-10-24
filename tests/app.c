@@ -484,7 +484,7 @@ int main() {
 	size.h = 480;
 
 	// Create the window and check for error.
-	status = wima_window_create(&wwh, wksp, size, true, true);
+	status = wima_window_create(&wwh, wksp, size, true, true, true);
 	if (status) {
 		return status;
 	}

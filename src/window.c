@@ -69,7 +69,8 @@ static void wima_window_clearContext(WimaWinCtx* ctx);
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize size, bool resizable, bool decorated) {
+WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize size,
+                              bool maximized, bool resizable, bool decorated) {
 
 	assert_init;
 
@@ -90,7 +91,7 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize siz
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+	glfwWindowHint(GLFW_MAXIMIZED, maximized ? GLFW_TRUE : GLFW_FALSE);
 	glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
 	glfwWindowHint(GLFW_DECORATED, decorated ? GLFW_TRUE : GLFW_FALSE);
 	glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
