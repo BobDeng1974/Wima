@@ -174,6 +174,12 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 
 		wassert(WIMA_ITEM_IS_LAYOUT(pparent), WIMA_ASSERT_ITEM_LAYOUT);
 
+		wassert(!(pparent->layout.flags & WIMA_LAYOUT_SPLIT) || pparent->layout.kidCount < 2,
+		        WIMA_ASSERT_LAYOUT_SPLIT_MAX);
+
+		// Add to the kid count.
+		++(pparent->layout.kidCount);
+
 		// If the parent's last kid is valid...
 		if (pparent->layout.lastKid != WIMA_LAYOUT_INVALID) {
 
@@ -215,6 +221,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 	playout->layout.split = split;
 	playout->layout.firstKid = WIMA_ITEM_INVALID;
 	playout->layout.lastKid = WIMA_LAYOUT_INVALID;
+	playout->layout.kidCount = 0;
 	playout->layout.flags = flags;
 
 	return wlh;
