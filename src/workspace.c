@@ -58,44 +58,53 @@ WimaStatus wima_workspace_register(WimaWorkspace* wth) {
 
 	assert_init;
 
+	// Create the workspace and check for error.
 	WimaWksp wksp = dtree_create(0, sizeof(WimaAr), NULL);
 	if (yunlikely(!wksp)) {
 		return WIMA_STATUS_WORKSPACE_ERR;
 	}
 
+	// Get the index of the new workspace.
 	size_t len = dvec_len(wg.workspaces);
 
+	// Push the workspace onto the list.
 	DynaStatus status = dvec_push(wg.workspaces, &wksp);
 	if (yunlikely(status)) {
 		return WIMA_STATUS_WORKSPACE_ERR;
 	}
 
+	// Fill the return value.
 	*wth = len;
 
 	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
-                                    float split,             bool vertical)
+                                    float split, bool vertical)
 {
 	assert_init;
 
 	wassert(wwksp < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
 
+	// Get the workspace.
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwksp));
 
+	// Check that the node is valid so far.
 	if (!wima_workspace_nodeValid(wwksp, node)) {
 		return WIMA_STATUS_INVALID_PARAM;
 	}
 
+	// Fill an initial area with common data.
 	WimaAr wan;
 	wan.isParent = true;
 	wan.rect.w = -1;
 	wan.rect.h = -1;
 
+	// Set the parent data.
 	wan.parent.vertical = vertical;
 	wan.parent.split = fabs(split);
 
+	// Add the node to the tree and check for error.
 	DynaStatus status = dtree_add(wksp, node, &wan);
 	if (yunlikely(status)) {
 		return WIMA_STATUS_WORKSPACE_ERR;
@@ -110,18 +119,24 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion
 
 	wassert(wwh < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
 
+	// Get the workspace.
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwh));
 
+	// Check that the node is valid so far.
 	if (!wima_workspace_nodeValid(wwh, node)) {
 		return WIMA_STATUS_INVALID_PARAM;
 	}
 
+	// Fill an initial area with common data.
 	WimaAr wan;
 	wan.isParent = false;
 	wan.rect.w = -1;
 	wan.rect.h = -1;
+
+	// Set the area type.
 	wan.area.type = reg;
 
+	// Add the node to the tree and check for error.
 	DynaStatus status = dtree_add(wksp, node, &wan);
 	if (yunlikely(status)) {
 		return WIMA_STATUS_WORKSPACE_ERR;
@@ -140,10 +155,13 @@ bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n) {
 
 	wassert(wwh < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
 
+	// Get the workspace.
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwh));
 
+	// Get the parent and root.
 	DynaNode p = dtree_parent(n);
 	bool root = n == dtree_root();
 
+	// Return the condition.
 	return root || (dtree_exists(wksp, p) && WIMA_AREA_IS_PARENT((WimaAr*) dtree_node(wksp, p)));
 }
