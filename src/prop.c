@@ -568,7 +568,7 @@ WimaProperty wima_prop_registerColor(const char* name, const char* label, const 
 }
 
 WimaProperty wima_prop_registerPtr(const char* name, const char* label, const char* desc,
-                                   void* ptr, WimaPropDrawFunc draw, WimaPropFreeFunc free)
+                                   void* ptr, WimaPropPtrDrawFunc draw, WimaPropFreeFunc free)
 {
 	assert_init;
 

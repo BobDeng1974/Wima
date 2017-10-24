@@ -99,7 +99,7 @@ typedef struct WimaPropGroup WimaPropGroup;
  * @param ptr	The pointer of the widget.
  * @return		WIMA_STATUS_SUCCESS if the drawing was successful.
  */
-typedef WimaStatus (*WimaPropDrawFunc)(WimaWidget, void*);
+typedef WimaStatus (*WimaPropPtrDrawFunc)(WimaWidget, void*);
 
 /**
  * A function to allow a list property to draw itself.
@@ -329,7 +329,7 @@ WimaProperty wima_prop_registerList(const char* name, const char* label, const c
                                     DynaVector list, WimaPropListDrawFunc draw);
 WimaProperty wima_prop_registerColor(const char* name, const char* label, const char* desc, WimaColor initial);
 WimaProperty wima_prop_registerPtr(const char* name, const char* label, const char* desc,
-                                   void* ptr, WimaPropDrawFunc draw, WimaPropFreeFunc free);
+                                   void* ptr, WimaPropPtrDrawFunc draw, WimaPropFreeFunc free);
 WimaProperty wima_prop_registerOperator(const char* name, const char* label,
                                         const char* desc, WimaItemMouseClickFunc op);
 
