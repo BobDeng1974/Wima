@@ -1831,35 +1831,26 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih,
 
 static WimaStatus wima_window_processFileDrop(WimaWindow wwh, DynaVector files) {
 
-	WimaStatus status;
-
 	if (wg.funcs.file_drop) {
 
 		size_t len = dvec_len(files);
 
 		const char** names = malloc(len * sizeof(char*));
 
-		for (int i = 0; i < len; ++i) {
-
-			DynaString s = dvec_get(files, i);
-
-			names[i] = dstr_str(s);
+		if (yunlikely(names == NULL)) {
+			return WIMA_STATUS_MALLOC_ERR;
 		}
 
-		status = wg.funcs.file_drop(wwh, len, names);
-
 		for (int i = 0; i < len; ++i) {
-			DynaString s = dvec_get(files, i);
-			dstr_free(s);
+			names[i] = dstr_str(dvec_get(files, i));
 		}
+
+		wg.funcs.file_drop(wwh, len, names);
 
 		dvec_free(files);
 	}
-	else {
-		status = WIMA_STATUS_SUCCESS;
-	}
 
-	return status;
+	return WIMA_STATUS_SUCCESS;
 }
 
 static void wima_window_clearContext(WimaWinCtx* ctx) {
