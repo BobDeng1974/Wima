@@ -93,17 +93,17 @@ typedef struct WimaPropPtr {
 
 typedef struct WimaPropInfo {
 
+	WimaPropType type;
+
+	WimaProperty idx;
+
+	uint64_t hash;
+
 	DynaString name;
 
 	DynaString label;
 
 	DynaString desc;
-
-	uint64_t hash;
-
-	WimaProperty idx;
-
-	WimaPropType type;
 
 } WimaPropInfo;
 

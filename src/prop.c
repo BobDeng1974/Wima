@@ -185,7 +185,7 @@ WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child) {
 	return WIMA_STATUS_PROP_ERR;
 }
 
-DynaVector wima_prop_group(WimaProperty wph) {
+WimaPropGroup* wima_prop_group(WimaProperty wph) {
 
 	assert_init;
 
@@ -198,7 +198,33 @@ DynaVector wima_prop_group(WimaProperty wph) {
 
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
-	return data->_list;
+	return (WimaPropGroup*) data->_list;
+}
+
+WimaProperty wima_prop_group_getChild(WimaPropGroup* group, uint32_t idx) {
+
+	assert_init;
+
+	wassert(group != NULL, WIMA_ASSERT_PTR_NULL);
+
+	DynaVector v = (DynaVector) group;
+
+	if (idx >= dvec_len(v)) {
+		return WIMA_PROP_INVALID;
+	}
+
+	return *((WimaProperty*) dvec_get(v, idx));
+}
+
+uint32_t wima_prop_group_children(WimaPropGroup* group) {
+
+	assert_init;
+
+	wassert(group != NULL, WIMA_ASSERT_PTR_NULL);
+
+	DynaVector v = (DynaVector) group;
+
+	return (uint32_t) dvec_len(v);
 }
 
 void wima_prop_setBool(WimaProperty wph, bool val) {
@@ -335,7 +361,7 @@ void wima_prop_setEnumIdx(WimaProperty wph, uint32_t idx) {
 	data->_enum.idx = idx;
 }
 
-uint32_t wima_prop_enum(WimaProperty wph) {
+uint32_t wima_prop_enumIdx(WimaProperty wph) {
 
 	assert_init;
 
