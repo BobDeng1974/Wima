@@ -674,7 +674,8 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 		uint16_t flags = wima_layout_setExpandFlags(0, true, true);
 
 		// Create a root layout.
-		WimaLayout wlh = wima_layout_new(parent, flags, 0.0f);
+		WimaLayoutSplitCol splitcol;
+		WimaLayout wlh = wima_layout_new(parent, flags, splitcol);
 
 		// Get the region layout function.
 		WimaReg* region = dvec_get(wg.regions, area->area.type);

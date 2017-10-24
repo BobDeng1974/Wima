@@ -132,7 +132,7 @@ WimaItem* wima_layout_ptr(WimaLayout wlh) {
 	return area->area.ctx.items + wlh.layout;
 }
 
-WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
+WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol splitcol) {
 
 	assert_init;
 
@@ -218,7 +218,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 
 	// Set the background, split, kids, and flags.
 	playout->layout.bgcolor = wima_prop_color(wg.themes[WIMA_THEME_BG]);
-	playout->layout.split = split;
+	playout->layout.splitcol = splitcol;
 	playout->layout.firstKid = WIMA_ITEM_INVALID;
 	playout->layout.lastKid = WIMA_LAYOUT_INVALID;
 	playout->layout.kidCount = 0;
@@ -284,7 +284,10 @@ WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags) {
 	flags |= WIMA_LAYOUT_ROW;
 	flags &= ~(WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID);
 
-	return wima_layout_new(parent, flags, 0.0f);
+	// Create the splitcol.
+	WimaLayoutSplitCol splitcol;
+
+	return wima_layout_new(parent, flags, splitcol);
 }
 
 WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags) {
@@ -295,7 +298,10 @@ WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags) {
 	flags |= WIMA_LAYOUT_COL;
 	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID);
 
-	return wima_layout_new(parent, flags, 0.0f);
+	// Create the splitcol.
+	WimaLayoutSplitCol splitcol;
+
+	return wima_layout_new(parent, flags, splitcol);
 }
 
 WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split) {
@@ -306,7 +312,11 @@ WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split) {
 	flags |= WIMA_LAYOUT_SPLIT;
 	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID);
 
-	return wima_layout_new(parent, flags, split);
+	// Create the splitcol.
+	WimaLayoutSplitCol splitcol;
+	splitcol.split = split;
+
+	return wima_layout_new(parent, flags, splitcol);
 }
 
 WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags) {
@@ -317,10 +327,13 @@ WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags) {
 	flags |= WIMA_LAYOUT_LIST;
 	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_GRID);
 
-	return wima_layout_new(parent, flags, 0.0f);
+	// Create the splitcol.
+	WimaLayoutSplitCol splitcol;
+
+	return wima_layout_new(parent, flags, splitcol);
 }
 
-WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags) {
+WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags, uint32_t cols) {
 
 	assert_init;
 
@@ -328,5 +341,9 @@ WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags) {
 	flags |= WIMA_LAYOUT_GRID;
 	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST);
 
-	return wima_layout_new(parent, flags, 0.0f);
+	// Create the splitcol.
+	WimaLayoutSplitCol splitcol;
+	splitcol.cols = cols;
+
+	return wima_layout_new(parent, flags, splitcol);
 }

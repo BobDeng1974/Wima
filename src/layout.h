@@ -67,11 +67,18 @@ extern "C" {
 //#define WIMA_LAYOUT_ROW_FLOW    (0x1000)
 //#define WIMA_LAYOUT_COL_FLOW    (0x2000)
 
+typedef union WimaLayoutSplitCol {
+
+	float split;
+	uint32_t cols;
+
+} WimaLayoutSplitCol;
+
 typedef struct WimaLayoutInfo {
 
 	WimaColor bgcolor;
 
-	float split;
+	WimaLayoutSplitCol splitcol;
 
 	// Index of first kid.
 	// If old item: index of equivalent new item.
@@ -112,7 +119,7 @@ typedef struct WimaItem {
 #define WIMA_ITEM_IS_WIDGET(item)  (!((item)->isLayout))
 
 WimaItem* wima_layout_ptr(WimaLayout wlh) yinline;
-WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split);
+WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol splitcol);
 
 #ifdef __cplusplus
 }
