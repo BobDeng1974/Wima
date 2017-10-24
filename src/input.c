@@ -46,6 +46,7 @@ assert_msgs_decl;
 
 WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) {
 
+	// Create a go-between image.
 	WimaImg i;
 	i.wima = img;
 
@@ -54,6 +55,7 @@ WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) {
 	wassert(img.width > 0 && img.height > 0, WIMA_ASSERT_CURSOR_DIM);
 	wassert(img.width > xhot && img.height > yhot, WIMA_ASSERT_CURSOR_HOT);
 
+	// Cast the WimaImage to GLFWimage and have GLFW create the cursor.
 	return (WimaCursor*) glfwCreateCursor(&i.glfw, xhot, yhot);
 }
 
