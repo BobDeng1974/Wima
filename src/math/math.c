@@ -120,6 +120,7 @@ WimaRect wima_rect(WimaVec pos, WimaSize size) {
 
 	WimaRect r;
 
+	// Set the rectangle data.
 	r.x = pos.x;
 	r.y = pos.y;
 	r.w = size.w;
@@ -132,6 +133,7 @@ WimaRectf wima_rectf(WimaRect rect) {
 
 	WimaRectf r;
 
+	// Cast all data.
 	r.x = (float) rect.x;
 	r.y = (float) rect.y;
 	r.w = (float) rect.w;
@@ -142,9 +144,11 @@ WimaRectf wima_rectf(WimaRect rect) {
 
 bool wima_rect_contains(WimaRect r, WimaVec pos) {
 
+	// Translate into the rectangle space.
 	int x = pos.x - r.x;
 	int y = pos.y - r.y;
 
+	// Check the condition.
 	return x >= 0 && y >= 0 && x < r.w && y < r.h;
 }
 
