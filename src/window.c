@@ -887,11 +887,6 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 		}
 	}
 
-	// Destroy the old tree.
-	else {
-		dtree_free(window->areas);
-	}
-
 	// Restore the areas.
 	window->areas = areas;
 
