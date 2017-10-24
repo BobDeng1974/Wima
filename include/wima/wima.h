@@ -261,20 +261,34 @@ typedef struct WimaRectf {
 
 } WimaRectf;
 
-// Transform.
+/**
+ * A 2x3 (2D) transformation matrix.
+ */
 typedef struct WimaTransform {
 
 	union {
 
+		/// The six members accessible as an array.
 		float v[6];
 
 		struct {
 
+			/// The x scale factor.
 			float sx;
+
+			/// The x skew factor.
 			float kx;
+
+			/// The x translate factor.
 			float tx;
+
+			/// The y skew factor.
 			float ky;
+
+			/// The y scale factor.
 			float sy;
+
+			/// The y translate factor.
 			float ty;
 
 		};
@@ -283,7 +297,9 @@ typedef struct WimaTransform {
 
 } WimaTransform;
 
-// Opaque struct type;
+/**
+ * Opaque struct type
+ */
 typedef struct WimaCursor WimaCursor;
 
 typedef struct WimaImage {
@@ -296,22 +312,22 @@ typedef struct WimaImage {
 
 typedef enum WimaCursorType {
 
-	// Standard arrow cursor.
+	/// Standard arrow cursor.
 	WIMA_CURSOR_ARROW		= 0,
 
-	// Ibeam cursor.
+	/// Ibeam cursor.
 	WIMA_CURSOR_IBEAM,
 
-	// Crosshair cursor.
+	/// Crosshair cursor.
 	WIMA_CURSOR_CROSSHAIR,
 
-	// Hand cursor.
+	/// Hand cursor.
 	WIMA_CURSOR_HAND,
 
-	// Horizontal resize cursor.
+	/// Horizontal resize cursor.
 	WIMA_CURSOR_HRESIZE,
 
-	// Vertical resize cursor.
+	/// Vertical resize cursor.
 	WIMA_CURSOR_VRESIZE
 
 } WimaCursorType;
@@ -422,74 +438,93 @@ typedef struct WimaLayout {
  */
 typedef enum WimaStatus {
 
-	// Success.
+	/// Success.
 	WIMA_STATUS_SUCCESS        = 0,
 
-	// Returned when Wima fails to allocate memory.
+	/// Returned when Wima fails to allocate memory.
 	WIMA_STATUS_MALLOC_ERR     = 128,
 
-	// Returned when the platform returns an unknown error.
+	/// Returned when the platform returns an unknown error.
 	WIMA_STATUS_PLATFORM_ERR   = 129,
 
-	// Returned when Wima is in an invalid state for the operation.
+	/// Returned when Wima is in an invalid state for the operation.
 	WIMA_STATUS_INVALID_STATE  = 130,
 
-	// Returned when there was an error with OpenGL
-	// (though not including context errors).
+	/// Returned when there was an error with OpenGL
+	/// (though not including context errors).
 	WIMA_STATUS_OPENGL_ERR     = 131,
 
-	// Returned when OpenGL does not have a context.
+	/// Returned when OpenGL does not have a context.
 	WIMA_STATUS_CONTEXT_ERR    = 132,
 
-	// Returned when Wima fails to initialize.
+	/// Returned when Wima fails to initialize.
 	WIMA_STATUS_INIT_ERR       = 133,
 
-	// Returned when Wima fails to create a window.
+	/// Returned when Wima fails to create a window.
 	WIMA_STATUS_WINDOW_ERR     = 134,
 
-	// Returned when Wima fails to create a workspace.
+	/// Returned when Wima fails to create a workspace.
 	WIMA_STATUS_WORKSPACE_ERR  = 135,
 
-	// Returned when Wima fails to start an area.
+	/// Returned when Wima fails to start an area.
 	WIMA_STATUS_AREA_ERR       = 136,
 
-	// Returned when a property error occurs.
+	/// Returned when a property error occurs.
 	WIMA_STATUS_PROP_ERR       = 137,
 
-	// Returned when Wima gets an invalid enum value.
+	/// Returned when Wima gets an invalid enum value.
 	WIMA_STATUS_INVALID_ENUM   = 138,
 
-	// Returned when Wima gets an invalid parameter.
+	/// Returned when Wima gets an invalid parameter.
 	WIMA_STATUS_INVALID_PARAM  = 139,
 
-	// Returned when the clipboard contents were invalid.
+	/// Returned when the clipboard contents were invalid.
 	WIMA_STATUS_INVALID_CLIP   = 140,
 
-	// Returned when an event is dropped.
+	/// Returned when an event is dropped.
 	WIMA_STATUS_EVENT_DROPPED  = 141,
 
 } WimaStatus;
 
+/**
+ * The possible options for mouse buttons.
+ */
 typedef enum WimaMouseBtn {
 
+	/// The first mouse button.
 	WIMA_MOUSE_1       = 0,
+
+	/// The second mouse button.
 	WIMA_MOUSE_2       = 1,
+
+	/// The third mouse button.
 	WIMA_MOUSE_3       = 2,
+
+	/// The fourth mouse button.
 	WIMA_MOUSE_4       = 3,
+
+	/// The fifth mouse button.
 	WIMA_MOUSE_5       = 4,
+
+	/// The sixth mouse button.
 	WIMA_MOUSE_6       = 5,
+
+	/// The seventh mouse button.
 	WIMA_MOUSE_7       = 6,
+
+	/// The eighth mouse button.
 	WIMA_MOUSE_8       = 7,
 
+	/// The last mouse button.
 	WIMA_MOUSE_LAST    = WIMA_MOUSE_8,
 
-	// The left mouse button.
+	/// The left mouse button.
 	WIMA_MOUSE_LEFT    = WIMA_MOUSE_1,
 
-	// The right mouse button.
+	/// The right mouse button.
 	WIMA_MOUSE_RIGHT   = WIMA_MOUSE_2,
 
-	// The middle mouse button.
+	/// The middle mouse button.
 	WIMA_MOUSE_MIDDLE  = WIMA_MOUSE_3,
 
 } WimaMouseBtn;
@@ -883,23 +918,6 @@ void wima_widget_setBox(WimaWidget wdgt, uint32_t flags) yinline;
 
 // return the box model as set by uiSetBox()
 uint32_t wima_widget_box(WimaWidget wdgt) yinline;
-
-// set the left, top, right and bottom margins of an item; when the item is
-// anchored to the parent or another item, the margin controls the distance
-// from the neighboring element.
-void wima_widget_setMargins(WimaWidget wdgt, short l, short t, short r, short b) yinline;
-
-// return the left margin of the item as set with uiSetMargins()
-short wima_widget_marginLeft(WimaWidget wdgt) yinline;
-
-// return the top margin of the item as set with uiSetMargins()
-short wima_widget_marginTop(WimaWidget wdgt) yinline;
-
-// return the right margin of the item as set with uiSetMargins()
-short wima_widget_marginRight(WimaWidget wdgt) yinline;
-
-// return the bottom margin of the item as set with uiSetMargins()
-short wima_widget_marginDown(WimaWidget wdgt) yinline;
 
 // set the application-dependent handle of an item.
 // handle is an application defined 64-bit handle. If handle is NULL, the item
