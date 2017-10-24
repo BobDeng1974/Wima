@@ -53,6 +53,7 @@ WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, float sx, float sy, 
 	WimaCol ic, oc;
 	WimaPnt p;
 
+	// Translate between Wima and NanoVG.
 	ic.wima = icol;
 	oc.wima = ocol;
 
@@ -69,6 +70,7 @@ WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, float x, float y, float
 	WimaCol ic, oc;
 	WimaPnt p;
 
+	// Translate between Wima and NanoVG.
 	ic.wima = icol;
 	oc.wima = ocol;
 
@@ -85,6 +87,7 @@ WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, float cx, float cy, 
 	WimaCol ic, oc;
 	WimaPnt p;
 
+	// Translate between Wima and NanoVG.
 	ic.wima = icol;
 	oc.wima = ocol;
 
