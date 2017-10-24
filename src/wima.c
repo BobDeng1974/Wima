@@ -77,13 +77,13 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	// Check that we can access the font and icon sheets.
 	wassert(fontPath != NULL, WIMA_ASSERT_APP_FONT_PATH);
 	wassert(iconSheetPath != NULL, WIMA_ASSERT_APP_ICON_SHEET_PATH);
-
 	wassert(access(fontPath, F_OK|R_OK) != -1, WIMA_ASSERT_APP_FONT_READ);
 	wassert(access(iconSheetPath, F_OK|R_OK) != -1, WIMA_ASSERT_APP_ICON_SHEET_READ);
 
 	// Check to make sure the icons are good.
 	wassert(numIcons <= WIMA_MAX_ICONS, WIMA_ASSERT_APP_NUM_ICONS);
 
+	// Set the functions.
 	wg.funcs = funcs;
 
 	// Clear before trying to set.
@@ -92,30 +92,31 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.name = NULL;
 	wg.props = NULL;
 	wg.windows = NULL;
-
-	// Clear before trying to set.
 	wg.fontPath = NULL;
 	wg.iconSheetPath = NULL;
 
-	// Make sure these are set.
+	// Create and if error, exit.
 	wg.fontPath = dstr_create(fontPath);
 	if (yunlikely(!wg.fontPath)) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
+	// Create and if error, exit.
 	wg.iconSheetPath = dstr_create(iconSheetPath);
 	if (yunlikely(!wg.iconSheetPath)) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
+	// Create and if error, exit.
 	wg.name = dstr_create(name);
 	if (yunlikely(!wg.name)) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
+	// Create and if error, exit.
 	wg.windows = dvec_create(0, sizeof(WimaWin), NULL);
 	if (yunlikely(!wg.windows)) {
 		wima_exit();
@@ -126,6 +127,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	const size_t sizes[] = { sizeof(WimaPropInfo), sizeof(WimaPropData) };
 	const DestructFunc dtors[] = { NULL, NULL };
 
+	// Create and if error, exit.
 	wg.props = dnvec_create(2, 0, sizes, dtors);
 	if (yunlikely(!wg.props)) {
 		wima_exit();
@@ -135,23 +137,27 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	// Set the initial theme.
 	wg.theme = wima_theme_load(wg.themes, wg.themeStarts);
 
+	// Create and if error, exit.
 	wg.regions = dvec_create(0, sizeof(WimaReg), NULL);
 	if (yunlikely(!wg.regions)) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
+	// Create and if error, exit.
 	wg.workspaces = dvec_create(0, sizeof(WimaWksp), NULL);
 	if (yunlikely(!wg.workspaces)) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
+	// Initialize GLFW and exit on error.
 	if (yunlikely(!glfwInit())) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
 
+	// Set the error callback.
 	glfwSetErrorCallback(wima_callback_error);
 
 	// Create the cursors.
@@ -168,24 +174,30 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	// Create the icon images.
 	for (int i = 0; i < numIcons; ++i) {
 
+		// Load the image data using stb_image.
 		data = stbi_load(iconPaths[i], &x, &y, &components, 3);
 
+		// If everything looks valid...
 		if (data && components == 3) {
 
 			GLFWimage image;
 
+			// Create a GLFWimage.
 			image.pixels = data;
 			image.width = x;
 			image.height = y;
 
+			// Add the icon to the list.
 			wg.icons[i] = image;
 		}
 		else {
 
+			// If the data is valid, free it.
 			if (data) {
 				stbi_image_free(data);
 			}
 
+			// Exit.
 			wg.numIcons = i;
 			wima_exit();
 
@@ -193,6 +205,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 		}
 	}
 
+	// Make sure to set the number of icons.
 	wg.numIcons = numIcons;
 
 	return WIMA_STATUS_SUCCESS;
@@ -202,11 +215,13 @@ WimaStatus wima_main() {
 
 	assert_init;
 
+	// Make sure we have a valid window.
 	GLFWwindow* win = glfwGetCurrentContext();
 	if (yunlikely(!win)) {
 		return WIMA_STATUS_INVALID_STATE;
 	}
 
+	// Just make sure we shouldn't close the window right away.
 	if (yunlikely(glfwWindowShouldClose(win))) {
 		return WIMA_STATUS_SUCCESS;
 	}
@@ -215,6 +230,7 @@ WimaStatus wima_main() {
 	while (true) {
 
 #ifndef NDEBUG
+		// This is to time the loop in debug mode.
 		double time = glfwGetTime();
 #endif
 
@@ -246,6 +262,7 @@ WimaStatus wima_main() {
 		}
 
 #ifndef NDEBUG
+		// This is to time the loop in debug mode.
 		time = glfwGetTime() - time;
 		printf("Loop: %f ms\n", time * 1000.0f);
 #endif
@@ -258,56 +275,81 @@ void wima_exit() {
 
 	assert_init;
 
-	// Free the icon images.
+	// Free the icon images, if they exist.
 	if (wg.numIcons) {
 		for (int i = 0; i < wg.numIcons; ++i) {
 			stbi_image_free(wg.icons[i].pixels);
 		}
 	}
 
+	// Free the font path, if it exists.
 	if (wg.fontPath) {
 		dstr_free(wg.fontPath);
 	}
 
+	// Free the icon sheet path, if it exists.
 	if (wg.iconSheetPath) {
 		dstr_free(wg.iconSheetPath);
 	}
 
+	// Free the regions, if they exist.
 	if (wg.regions) {
 		dvec_free(wg.regions);
 	}
 
+	// Free the workspaces, if they exist.
 	if (wg.workspaces) {
+
+		// Get the length for the next loop.
+		size_t len = dvec_len(wg.workspaces);
+
+		// Loop over each item and free them all.
+		for(size_t i = 0; i < len; ++i) {
+			dtree_free(dvec_get(wg.workspaces, i));
+		}
+
+		// Free the actual list.
 		dvec_free(wg.workspaces);
 	}
 
+	// Free the props, if they exist.
 	if (wg.props) {
 
+		// Get the length for the next loop.
 		size_t len = dvec_len(wg.props);
 
+		// Loop over each item and free them all.
 		for (size_t i = 0; i < len; ++i) {
 			wima_prop_free(i);
 		}
 
+		// Free the actual list.
 		dnvec_free(wg.props);
 	}
 
+	// Free the windows, if they exist.
 	if (wg.windows) {
 
+		// Get the length for the next loop.
 		size_t len = dvec_len(wg.windows);
 
+		// Loop over each item and free them all.
 		for (int i = 0; i < len; ++i) {
 
+			// Get the pointer.
 			WimaWin* win = dvec_get(wg.windows, i);
 
+			// If the window IS valid, free it.
 			if (win->window) {
 				wima_window_free(win);
 			}
 		}
 
+		// Free the actual list.
 		dvec_free(wg.windows);
 	}
 
+	// Free the name, if it exists.
 	if (wg.name) {
 
 		dstr_free(wg.name);
@@ -316,5 +358,6 @@ void wima_exit() {
 		wg.name = NULL;
 	}
 
+	// Terminate GLFW.
 	glfwTerminate();
 }
