@@ -55,6 +55,7 @@ void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color) {
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Translate between Wima and NanoVG.
 	WimaCol c;
 	c.wima = color;
 
@@ -65,6 +66,7 @@ void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint) {
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Translate between Wima and NanoVG.
 	WimaPnt p;
 	p.wima = paint;
 
@@ -75,6 +77,7 @@ void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color) {
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Translate between Wima and NanoVG.
 	WimaCol c;
 	c.wima = color;
 
@@ -85,6 +88,7 @@ void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint) {
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Translate between Wima and NanoVG.
 	WimaPnt p;
 	p.wima = paint;
 

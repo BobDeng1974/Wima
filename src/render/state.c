@@ -102,6 +102,7 @@ WimaTransform wima_render_currentTransform(WimaRenderContext* ctx) {
 
 	WimaTransform result;
 
+	// Translate between Wima and NanoVG.
 	nvgCurrentTransform(ctx->nvg, result.v);
 
 	return result;
