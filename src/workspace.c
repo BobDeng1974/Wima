@@ -145,7 +145,5 @@ bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n) {
 	DynaNode p = dtree_parent(n);
 	bool root = n == dtree_root();
 
-	WimaAr* area = dtree_node(wksp, p);
-
-	return root || (dtree_exists(wksp, p) && WIMA_AREA_IS_PARENT(area));
+	return root || (dtree_exists(wksp, p) && WIMA_AREA_IS_PARENT((WimaAr*) dtree_node(wksp, p)));
 }
