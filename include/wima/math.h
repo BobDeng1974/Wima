@@ -73,6 +73,7 @@ extern "C" {
 
 #include <wima/wima.h>
 
+//! @cond Doxygen_Suppress
 #ifdef _MSC_VER
 
 #pragma warning (disable: 4996) // Switch off security warnings
@@ -98,54 +99,167 @@ double wima_fmax(double a, double b);
 #define wima_fmax(a, b) fmax(a, b)
 
 #endif
+//! @endcond Doxygen_Suppress
 
+/**
+ * @file math.h
+ */
+
+/**
+ * @defgroup math math
+ * Useful math functions for interacting with Wima.
+ * @{
+ */
+
+/**
+ * Returns the max of the two arguments.
+ * @param a	The first argument.
+ * @param b	The second argument.
+ * @return	The max of the two args.
+ */
 int wima_max(int a, int b) yinline;
 
+/**
+ * Returns the min of the two arguments.
+ * @param a	The first argument.
+ * @param b	The second argument.
+ * @return	The min of the two args.
+ */
 int wima_min(int a, int b) yinline;
 
-float wima_clamp(float v, float mn, float mx) yinline;
+/**
+ * Clamps @a v to be within @a min and @a max if it isn't already.
+ * @param v		The value to clamp.
+ * @param min	The min value to clamp to.
+ * @param mix	The max value to clamp to.
+ * @return		The clamped value.
+ */
+float wima_clamp(float v, float min, float mix) yinline;
 
+/**
+ * Creates a WimaRect from the position (upper left corner)
+ * and the size.
+ * @param pos	The position of the upper left corner.
+ * @param size	The size of the rectangle.
+ * @return		The generated rectangle.
+ */
 WimaRect wima_rect(WimaVec pos, WimaSize size) yinline;
+
+/**
+ * Creates a WimaRectf from the provided WimaRect.
+ * @param rect	The rectangle to turn into a WimaRectf.
+ * @return		The generated WimaRectf.
+ */
 WimaRectf wima_rectf(WimaRect rect) yinline;
 
+/**
+ * Returns true if @a r contains the specified position, false otherwise.
+ * @param r		The rectangle to test the position against.
+ * @param pos	The position to test.
+ * @return		true if @a pos is in @a r, false otherwise.
+ */
 bool wima_rect_contains(WimaRect r, WimaVec pos) yinline;
 
+/**
+ * Converts @a deg to radians.
+ * @param deg	The degrees to convert to radians.
+ * @return		@a deg in radians.
+ */
 float wima_degToRad(float deg) yinline;
+
+/**
+ * Converts @a rad to degrees.
+ * @param rad	The radians to convert to degrees.
+ * @return		@a rad in degrees.
+ */
 float wima_radToDeg(float rad) yinline;
 
-// The following functions can be used to make calculations on 2x3 transformation matrices.
-// A 2x3 matrix is represented as float[6].
-
-// Sets the transform to identity matrix.
+/**
+ * Returns the identity matrix.
+ * @return	The identity matrix.
+ */
 WimaTransform wima_transform_identity() yinline;
 
-// Sets the transform to translation matrix matrix.
+/**
+ * Translates the matrix @a src by @a tx x
+ * coordinates and @a ty y coordinates.
+ * @param src	The matrix to translate.
+ * @param tx	The amount to translate in x.
+ * @param ty	The amount to translate in y.
+ * @return		The translated matrix.
+ */
 WimaTransform wima_transform_translate(WimaTransform src, float tx, float ty) yinline;
 
-// Sets the transform to scale matrix.
+/**
+ * Scales the matrix @a src by @a sx on
+ * the x axis and @a sy on the y axis.
+ * @param src	The matrix to scale.
+ * @param sx	The amount to scale in x.
+ * @param sy	The amount to scale in y.
+ * @return		The scaled matrix.
+ */
 WimaTransform wima_transform_scale(WimaTransform src, float sx, float sy) yinline;
 
-// Sets the transform to rotate matrix. Angle is specified in radians.
+/**
+ * Rotates the matrix @a src by @a a radians
+ * @param src	The matrix to rotate.
+ * @param a		The angle in radians to rotate by.
+ * @return		The rotated matrix.
+ */
 WimaTransform wima_transform_rotate(WimaTransform src, float a) yinline;
 
-// Sets the transform to skew-x matrix. Angle is specified in radians.
+/**
+ * Skews the matrix @a src in the x axis by @a a radians
+ * @param src	The matrix to skew.
+ * @param a		The angle in radians to skew by.
+ * @return		The skewed matrix.
+ */
 WimaTransform wima_transform_skewX(WimaTransform src, float a) yinline;
 
-// Sets the transform to skew-y matrix. Angle is specified in radians.
+/**
+ * Skews the matrix @a src in the y axis by @a a radians
+ * @param src	The matrix to skew.
+ * @param a		The angle in radians to skew by.
+ * @return		The skewed matrix.
+ */
 WimaTransform wima_transform_skewY(WimaTransform src, float a) yinline;
 
-// Sets the transform to the result of multiplication of two transforms, of A = A*B.
+/**
+ * Multiplies @a src1 by @a src2 (@a src1 * @a src2) and returns the result.
+ * @param src1	The first matrix to multiply. It will be first.
+ * @param src2	The second matrix to multiply. It will be second.
+ * @return		The multiplied matrix.
+ */
 WimaTransform wima_transform_multiply(WimaTransform src1, WimaTransform src2) yinline;
 
-// Sets the transform to the result of multiplication of two transforms, of A = B*A.
+/**
+ * Multiplies @a src2 by @a src1 (@a src2 * @a src1) and returns the result.
+ * @param src1	The first matrix to multiply. It will be second.
+ * @param src2	The second matrix to multiply. It will be first.
+ * @return		The multiplied matrix.
+ */
 WimaTransform wima_transform_premultiply(WimaTransform src1, WimaTransform src2) yinline;
 
-// Sets the destination to inverse of specified transform.
-// Returns result if the inverse could be calculated, else identity.
+/**
+ * Calculates and returns the inverse of the specified matrix.
+ * If the inverse could not be calculated, it returns the identity.
+ * @param src	The matrix whose inverse will be returned.
+ * @return		The inverse of @a src, or the identity it it could
+ *				not be calculated.
+ */
 WimaTransform wima_transform_inverse(WimaTransform src) yinline;
 
-// Transform a point by given transform.
+/**
+ * Applies @a transform to @a pos and returns the result.
+ * @param transform	The transform to apply.
+ * @param pos		The point that the transform will be applied to.
+ * @return			The transformed point.
+ */
 WimaVecf wima_transform_point(WimaTransform transform, WimaVecf pos) yinline;
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }

@@ -108,8 +108,8 @@ int wima_min(int a, int b) {
 	return (a < b) ? a : b;
 }
 
-float wima_clamp(float v, float mn, float mx) {
-	return (v > mx) ? mx : ((v < mn) ? mn : v);
+float wima_clamp(float v, float min, float mix) {
+	return (v > mix) ? mix : ((v < min) ? min : v);
 }
 
 WimaRect wima_rect(WimaVec pos, WimaSize size) {
