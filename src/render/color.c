@@ -160,19 +160,25 @@ WimaColor wima_color_hsla(float h, float s, float l, unsigned char a) {
 
 WimaColor wima_color_offset(WimaColor color, int delta) {
 
-	float offset = (float) delta / 255.0f;
-
 	WimaColor result;
 
+	// If delta is not zero...
 	if (delta != 0) {
 
+		// Translate the offset of the delta into [0, 1] space.
+		float offset = (float) delta / 255.0f;
+
+		// Calculate each channel and clamp.
 		float r = wima_clamp(color.r + offset, 0, 1);
 		float g = wima_clamp(color.g + offset, 0, 1);
 		float b = wima_clamp(color.b + offset, 0, 1);
 
+		// Get the color.
 		result = wima_color_rgbaf(r, g, b, color.a);
 	}
 	else {
+
+		// Just return the color.
 		result = color;
 	}
 
