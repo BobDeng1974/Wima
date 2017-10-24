@@ -85,14 +85,17 @@ const char* descs[] = {
     "Allocation failed",
     "Platform returned an unknown error",
     "Wima is in an invalid state",
+    "OpenGL returned an error",
     "Wima does not have an OpenGL context",
     "Wima could not be initialized",
     "Wima could not create a window",
     "Wima could not create the requested workspace",
     "Wima could not create the requested area",
+    "Wima could not create the requested property",
     "Wima was given an invalid enum value",
     "Wima was given an invalid parameter",
-    "Clipboard contents were invalid"
+    "Clipboard contents were invalid",
+    "Wima dropped an event",
 };
 
 WimaMenuItem splitSubSubItems[] = {
@@ -199,6 +202,9 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	// If we've already reached our max.
 	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
 
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
+
 		// Drop the event.
 		return;
 	}
@@ -249,6 +255,9 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	// If we've already reached our max.
 	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
+
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
 
 		// Drop the event.
 		return;
@@ -345,6 +354,9 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	// If we've already reached our max.
 	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
 
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
+
 		// Drop the event.
 		return;
 	}
@@ -430,6 +442,9 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 				// If we've already reached our max.
 				if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
 
+					// Send an error to the client.
+					wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
+
 					// Drop the event.
 					return;
 				}
@@ -454,6 +469,9 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 				// If we've already reached our max.
 				if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
+
+					// Send an error to the client.
+					wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
 
 					// Drop the event.
 					return;
@@ -499,6 +517,9 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			// If we've already reached our max.
 			if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
 
+				// Send an error to the client.
+				wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
+
 				// Drop the event.
 				return;
 			}
@@ -530,6 +551,9 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 	// If we've already reached our max.
 	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
+
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
 
 		// Drop the event.
 		return;
@@ -573,6 +597,9 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 	// If we've already reached our max.
 	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
+
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
 
 		// Drop the event.
 		return;
@@ -627,6 +654,9 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 	// If we've already reached our max.
 	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
 
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
+
 		// Drop the event.
 		return;
 	}
@@ -665,6 +695,9 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 
 	// If we've already reached our max.
 	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
+
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
 
 		// Drop the event.
 		return;
@@ -722,8 +755,20 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 	// Set the window as dirty without forcing layout.
 	wima_window_setDirty(wwin, false);
 
+	uint32_t numEvents = wwin->ctx.eventCount;
+
+	// If we've already reached our max.
+	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
+
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
+
+		// Drop the event.
+		return;
+	}
+
 	// Send an exit area event.
-	if (wwin->ctx.eventCount < WIMA_MAX_EVENTS && wwin->ctx.cursorArea != WIMA_AREA_INVALID) {
+	if (wwin->ctx.cursorArea != WIMA_AREA_INVALID) {
 
 		WimaEvent* e = wwin->ctx.events + wwin->ctx.eventCount;
 
@@ -738,10 +783,13 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 	}
 
 	// Get the number of events.
-	int numEvents = wwin->ctx.eventCount;
+	numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
 	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
+
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
 
 		// Drop the event.
 		return;
@@ -778,6 +826,9 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 
 	// If we've already reached our max.
 	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
+
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
 
 		// Drop the event.
 		return;
@@ -837,6 +888,9 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	// If we've already reached our max.
 	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
 
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
+
 		// Drop the event.
 		return;
 	}
@@ -878,6 +932,9 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
 	// If we've already reached our max.
 	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
+
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
 
 		// Drop the event.
 		return;
@@ -921,6 +978,9 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 
 	// If we've already reached our max.
 	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
+
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
 
 		// Drop the event.
 		return;
@@ -981,6 +1041,9 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 
 	// If we've already reached our max.
 	if (yunlikely(numEvents >= WIMA_MAX_EVENTS)) {
+
+		// Send an error to the client.
+		wg.funcs.error(WIMA_STATUS_EVENT_DROPPED, descs[WIMA_STATUS_EVENT_DROPPED - 128]);
 
 		// Drop the event.
 		return;
@@ -1123,6 +1186,10 @@ void wima_callback_error(int error, const char* desc) {
 		}
 	}
 
-	// Send the event to the client.
-	wg.funcs.error(status, desc);
+	// If the status is an error...
+	if (status != WIMA_STATUS_SUCCESS) {
+
+		// Send the event to the client.
+		wg.funcs.error(status, desc);
+	}
 }
