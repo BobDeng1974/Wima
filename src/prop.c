@@ -114,22 +114,29 @@ WimaStatus wima_prop_link(WimaProperty parent, WimaProperty child) {
 	wassert(prop->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
 #endif
 
+	// Get the prop data.
 	WimaPropData* data = dnvec_get(wg.props, parent, WIMA_PROP_DATA_IDX);
 
+	// Cache this.
 	size_t len = dvec_len(data->_list);
 
+	// If there are children...
 	if (len != 0) {
 
+		// Get the handles.
 		WimaProperty* handles = dvec_get(data->_list, 0);
 
+		// Iterate through the handles.
 		for (size_t i = 0; i < len; ++i) {
 
+			// If the handle matches the child, return success.
 			if (handles[i] == child) {
 				return WIMA_STATUS_SUCCESS;
 			}
 		}
 	}
 
+	// Push the child onto the vector.
 	DynaStatus status = dvec_push(data->_list, &child);
 
 	return status ? WIMA_STATUS_PROP_ERR : WIMA_STATUS_SUCCESS;
@@ -147,26 +154,34 @@ WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child) {
 	wassert(prop->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
 #endif
 
+	// Get the prop data.
 	WimaPropData* data = dnvec_get(wg.props, parent, WIMA_PROP_DATA_IDX);
 
+	// Cache this.
 	size_t len = dvec_len(data->_list);
 
-	if (len != 0) {
+	// If the len is 0, we have a problem.
+	if (len == 0) {
 		return WIMA_STATUS_PROP_ERR;
 	}
 
+	// Get the handles.
 	WimaProperty* handles = dvec_get(data->_list, 0);
 
+	// Iterate through the handles.
 	for (size_t i = 0; i < len; ++i) {
 
+		// If the handle matches the child...
 		if (handles[i] == child) {
 
+			// Remove the child and return the status.
 			DynaStatus status = dvec_remove(data->_list, i);
 
 			return status ? WIMA_STATUS_PROP_ERR : WIMA_STATUS_SUCCESS;
 		}
 	}
 
+	// Return an error because we could not find the child.
 	return WIMA_STATUS_PROP_ERR;
 }
 
