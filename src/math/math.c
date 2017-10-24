@@ -75,23 +75,19 @@
 
 #include <float.h>
 
-static float wima_fminf ( float a, float b )
-{
+float wima_fminf(float a, float b) {
 	return _isnan(a) ? b : ( _isnan(b) ? a : ((a < b) ? a : b));
 }
 
-static float wima_fmaxf ( float a, float b )
-{
+float wima_fmaxf(float a, float b) {
 	return _isnan(a) ? b : ( _isnan(b) ? a : ((a > b) ? a : b));
 }
 
-static double wima_fmin ( double a, double b )
-{
+double wima_fmin(double a, double b) {
 	return _isnan(a) ? b : ( _isnan(b) ? a : ((a < b) ? a : b));
 }
 
-static double wima_fmax ( double a, double b )
-{
+double wima_fmax(double a, double b) {
 	return _isnan(a) ? b : ( _isnan(b) ? a : ((a > b) ? a : b));
 }
 
