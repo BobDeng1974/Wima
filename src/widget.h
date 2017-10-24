@@ -70,6 +70,7 @@ extern "C" {
 #include <string.h>
 
 #include <wima/wima.h>
+#include <wima/prop.h>
 
 #include "event.h"
 
@@ -137,19 +138,14 @@ extern "C" {
 
 typedef struct WimaWdgt {
 
-	// Event functions.
-	WimaItemFuncs funcs;
-
-	// Data handle.
-	void* handle;
-
-	// About 27 bits worth of flags.
+	/// About 27 bits worth of flags.
 	uint32_t flags;
 
-	// Margin offsets, interpretation depends on flags.
-	// After layouting, the first two components are
-	// absolute coordinates.
-	int16_t margins[4];
+	/// The property that this refers to.
+	WimaProperty prop;
+
+	/// Event functions.
+	WimaItemFuncs funcs;
 
 } WimaWdgt;
 

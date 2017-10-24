@@ -206,54 +206,6 @@ uint32_t wima_widget_box(WimaWidget wdgt) {
 	return wima_widget_ptr(wdgt)->widget.flags & WIMA_ITEM_BOX_MASK;
 }
 
-void wima_widget_setMargins(WimaWidget wdgt, short l, short t, short r, short b) {
-
-	assert_init;
-
-	WimaItem* pwdgt = wima_widget_ptr(wdgt);
-
-	pwdgt->widget.margins[0] = l;
-	pwdgt->widget.margins[1] = t;
-	pwdgt->widget.margins[2] = r;
-	pwdgt->widget.margins[3] = b;
-}
-
-short wima_widget_marginLeft(WimaWidget wdgt) {
-	assert_init;
-	return wima_widget_ptr(wdgt)->widget.margins[0];
-}
-
-short wima_widget_marginTop(WimaWidget wdgt) {
-	assert_init;
-	return wima_widget_ptr(wdgt)->widget.margins[1];
-}
-
-short wima_widget_marginRight(WimaWidget wdgt) {
-	assert_init;
-	return wima_widget_ptr(wdgt)->widget.margins[2];
-}
-
-short wima_widget_marginDown(WimaWidget wdgt) {
-	assert_init;
-	return wima_widget_ptr(wdgt)->widget.margins[3];
-}
-
-void wima_widget_setUserPointer(WimaWidget wdgt, void* handle) {
-
-	assert_init;
-
-	WimaItem* pwdgt = wima_widget_ptr(wdgt);
-
-	wassert(pwdgt->widget.handle == NULL, WIMA_ASSERT_WIDGET_USER_PTR_NOT_NULL);
-
-	pwdgt->widget.handle = handle;
-}
-
-void* wima_widget_userPointer(WimaWidget wdgt) {
-	assert_init;
-	return wima_widget_ptr(wdgt)->widget.handle;
-}
-
 void wima_widget_setFlags(WimaWidget wdgt, uint32_t flags) {
 
 	assert_init;
