@@ -50,23 +50,159 @@ extern "C" {
 #include <wima/wima.h>
 #include <wima/render.h>
 
+/**
+ * @file layout.h
+ */
+
+/**
+ * @defgroup layout layout
+ * Functions for manipulating layouts.
+ * @{
+ */
+
+/**
+ * Takes an initial flag value and sets the expand bits. If @a horizontal is
+ * true, the horizontal expand bit is set. Same goes for vertical.
+ * @param flags			The initial flag value to use.
+ * @param horizontal	Whether the horizontal expand bit should be set.
+ * @param vertical		Whether the vertical expand bit should be set.
+ * @return				A new set of flags with the old flags value plus
+ *						the desired expand bits set.
+ */
 uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical) yinline;
+
+/**
+ * Takes an initial flag value and clears the expand bits.
+ * @param flags	The initial flags value.
+ * @return		The @a flags without the expand bits set.
+ */
 uint16_t wima_layout_clearExpandFlags(uint16_t flags) yinline;
+
+/**
+ * Takes an initial flag value and sets the scroll bits. If @a horizontal is
+ * true, the horizontal scroll bit is set. Same goes for vertical.
+ * @param flags			The initial flag value to use.
+ * @param horizontal	Whether the horizontal scroll bit should be set.
+ * @param vertical		Whether the vertical scroll bit should be set.
+ * @return				A new set of flags with the old flags value plus
+ *						the desired scroll bits set.
+ */
 uint16_t wima_layout_setScrollFlags(uint16_t flags, bool horizontal, bool vertical) yinline;
+
+/**
+ * Takes an initial flag value and clears the scroll bits.
+ * @param flags	The initial flags value.
+ * @return		The @a flags without the scroll bits set.
+ */
 uint16_t wima_layout_clearScrollFlags(uint16_t flags) yinline;
+
+/**
+ * Takes an initial flag value and sets the separation bit.
+ * @param flags	The initial flags value.
+ * @return		The @a flags with the separation bit set.
+ */
 uint16_t wima_layout_setSeparationFlag(uint16_t flags) yinline;
+
+/**
+ * Takes an initial flag value and clears the separation bit.
+ * @param flags	The initial flags value.
+ * @return		The @a flags with the separation bit cleared.
+ */
 uint16_t wima_layout_clearSeparationFlag(uint16_t flags) yinline;
+
+/**
+ * Takes an initial flag value and sets the box bit.
+ * @param flags	The initial flags value.
+ * @return		The @a flags with the box bit set.
+ */
 uint16_t wima_layout_setBoxFlag(uint16_t flags) yinline;
+
+/**
+ * Takes an initial flag value and clears the box bit.
+ * @param flags	The initial flags value.
+ * @return		The @a flags with the box bit cleared.
+ */
 uint16_t wima_layout_clearBoxFlag(uint16_t flags) yinline;
 
+/**
+ * Sets the background color of the provided layout.
+ * @param wlh	The layout whose background color will be set.
+ * @param color	The new background color for the layout.
+ * @pre			@a wlh must be a valid WimaLayout.
+ */
 void wima_layout_setBackgroundColor(WimaLayout wlh, WimaColor color) yinline;
+
+/**
+ * Returns the current background color of the provided layout.
+ * @param wlh	The layout whose background color will be returned.
+ * @return		The background color of the layout.
+ * @pre			@a wlh must be a valid WimaLayout.
+ */
 WimaColor wima_layout_backgroundColor(WimaLayout wlh) yinline;
 
+/**
+ * Creates a new sublayout of the provided @a parent
+ * that will be laid out as a row.
+ * @param parent	The parent of the sublayout that
+ *					will be returned.
+ * @param flags		The flags to set in the sublayout.
+ * @return			The new sublayout of the parent.
+ * @pre				@a parent must be a valid WimaLayout.
+ */
 WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags) yinline;
+
+/**
+ * Creates a new sublayout of the provided @a parent
+ * that will be laid out as a column.
+ * @param parent	The parent of the sublayout that
+ *					will be returned.
+ * @param flags		The flags to set in the sublayout.
+ * @return			The new sublayout of the parent.
+ * @pre				@a parent must be a valid WimaLayout.
+ */
 WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags) yinline;
+
+/**
+ * Creates a new sublayout of the provided @a parent
+ * that will be laid out as a split. A split can only
+ * have two children, and they are laid out in a row.
+ * The first child gets @a split * 100 percent of the
+ * space, and the second child gets the difference.
+ * @param parent	The parent of the sublayout that
+ *					will be returned.
+ * @param flags		The flags to set in the sublayout.
+ * @param split		The location of the split between the two sublayouts.
+ * @return			The new sublayout of the parent.
+ * @pre				@a parent must be a valid WimaLayout.
+ */
 WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split) yinline;
+
+/**
+ * Creates a new sublayout of the provided @a parent
+ * that will be laid out as a list, going down.
+ * @param parent	The parent of the sublayout that
+ *					will be returned.
+ * @param flags		The flags to set in the sublayout.
+ * @return			The new sublayout of the parent.
+ * @pre				@a parent must be a valid WimaLayout.
+ */
 WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags) yinline;
-WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags) yinline;
+/**
+ * Creates a new sublayout of the provided @a parent
+ * that will be laid out as a grid with the specified
+ * amount of columns.
+ * @param parent	The parent of the sublayout that
+ *					will be returned.
+ * @param flags		The flags to set in the sublayout.
+ * @param cols		The number of columns the grid should have.
+ * @return			The new sublayout of the parent.
+ * @pre				@a parent must be a valid WimaLayout.
+ */
+WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags, uint32_t cols) yinline;
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }
