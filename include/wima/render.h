@@ -1079,21 +1079,51 @@ typedef enum WimaIcon {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * The types of themes that Wima stores in properties.
+ */
 typedef enum wima_theme_type {
 
+	/// The main background color.
 	WIMA_THEME_BG,
+
+	/// Theme for anything that doesn't have a specialized theme.
 	WIMA_THEME_REGULAR,
+
+	/// Theme for tools.
 	WIMA_THEME_TOOL,
+
+	/// Theme for radio buttons.
 	WIMA_THEME_RADIO,
+
+	/// Theme for textfields.
 	WIMA_THEME_TEXTFIELD,
+
+	/// Theme for option buttons (checkboxes).
 	WIMA_THEME_OPTION,
+
+	/// Theme for choice buttons (dropdown menus).
 	WIMA_THEME_CHOICE,
+
+	/// Theme for number fields.
 	WIMA_THEME_NUMFIELD,
+
+	/// Theme for sliders.
 	WIMA_THEME_SLIDER,
+
+	/// Theme for scrollbars.
 	WIMA_THEME_SCROLLBAR,
+
+	/// Theme for menus.
 	WIMA_THEME_MENU,
+
+	/// Theme for menu items.
 	WIMA_THEME_MENU_ITEM,
+
+	/// Theme for tooltips.
 	WIMA_THEME_TOOLTIP,
+
+	/// Theme for nodes.
 	WIMA_THEME_NODE,
 
 } WimaThemeType;
