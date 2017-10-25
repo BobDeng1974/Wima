@@ -82,9 +82,13 @@ extern "C" {
  * @file render.h
  */
 
+////////////////////////////////////////////////////////////////////////////////
+// Colors.
+////////////////////////////////////////////////////////////////////////////////
+
 /**
- * @defgroup render render
- * Functions and data structures for rendering in Wima.
+ * @defgroup color color
+ * Functions and data structures for manipulating colors in Wima.
  * @{
  */
 
@@ -118,228 +122,6 @@ typedef struct WimaColor {
 	};
 
 } WimaColor;
-
-/**
- * Represents a pattern to render. Can represent
- * linear/radial/box gradients and image patterns.
- */
-typedef struct WimaPaint {
-
-	/// How the paint is transformed.
-	WimaTransform xform;
-
-	/// The extent of the paint.
-	WimaSizef extent;
-
-	/// The radius of gradients.
-	float radius;
-
-	/// The feather of gradients.
-	float feather;
-
-	/// The inner (start) color of the gradient.
-	WimaColor innerColor;
-
-	/// The outer (end) color of the gradient.
-	WimaColor outerColor;
-
-	/// The image for an image pattern.
-	int image;
-
-} WimaPaint;
-
-/**
- * Represents winding direction for paths.
- */
-typedef enum WimaWinding {
-
-	/// Winding for solid shapes
-	WIMA_WINDING_CCW = 1,
-
-	/// Winding for holes
-	WIMA_WINDING_CW  = 2,
-
-} WimaWinding;
-
-/**
- * Represents solidarity for paths.
- */
-typedef enum WimaSolidarity {
-
-	/// CCW: Solid.
-	WIMA_SOLID_SOLID = 1,
-
-	/// CW: Hole
-	WIMA_SOLID_HOLE  = 2,
-
-} WimaSolidarity;
-
-/**
- * Represents line caps for paths.
- */
-typedef enum WimaLineCap {
-
-	/// No end cap.
-	WIMA_CAP_BUTT,
-
-	/// Round end cap.
-	WIMA_CAP_ROUND,
-
-	/// Square end cap.
-	WIMA_CAP_SQUARE,
-
-	/// Beveled end cap.
-	WIMA_CAP_BEVEL,
-
-	/// Miter end cap.
-	WIMA_CAP_MITER,
-
-} WimaLineCap;
-
-/**
- * Represents line joins for paths.
- */
-typedef enum WimaLineJoin {
-
-	/// Round join cap.
-	WIMA_JOIN_ROUND = WIMA_CAP_ROUND,
-
-	// Skip one.
-
-	/// Beveled join cap.
-	WIMA_JOIN_BEVEL = WIMA_CAP_ROUND + 2,
-
-	/// Mitered join cap.
-	WIMA_JOIN_MITER = WIMA_JOIN_BEVEL + 1,
-
-} WimaLineJoin;
-
-/**
- * Represents ways to align text.
- */
-typedef enum WimaTextAlign {
-
-	// Horizontal align
-
-	/// Default, align text horizontally to left.
-	WIMA_ALIGN_LEFT      = 1<<0,
-
-	/// Align text horizontally to center.
-	WIMA_ALIGN_CENTER    = 1<<1,
-
-	/// Align text horizontally to right.
-	WIMA_ALIGN_RIGHT     = 1<<2,
-
-	// Vertical align
-
-	/// Align text vertically to top.
-	WIMA_ALIGN_TOP       = 1<<3,
-
-	/// Align text vertically to middle.
-	WIMA_ALIGN_MIDDLE    = 1<<4,
-
-	/// Align text vertically to bottom.
-	WIMA_ALIGN_BOTTOM    = 1<<5,
-
-	/// Default, align text vertically to baseline.
-	WIMA_ALIGN_BASELINE  = 1<<6,
-
-} WimaTextAlign;
-
-/**
- * Represents different blending styles.
- */
-typedef enum WimaBlend {
-
-	/// Corresponds to OpenGL's ZERO.
-	WIMA_BLEND_ZERO                = 1<<0,
-
-	/// Corresponds to OpenGL's ONE.
-	WIMA_BLEND_ONE                 = 1<<1,
-
-	/// Corresponds to OpenGL's SRC_COLOR.
-	WIMA_BLEND_SRC_COLOR           = 1<<2,
-
-	/// Corresponds to OpenGL's ONE_MINUS_SRC_COLOR.
-	WIMA_BLEND_ONE_MINUS_SRC_COLOR = 1<<3,
-
-	/// Corresponds to OpenGL's DST_COLOR.
-	WIMA_BLEND_DST_COLOR           = 1<<4,
-
-	/// Corresponds to OpenGL's ONE_MINUS_DST_COLOR.
-	WIMA_BLEND_ONE_MINUS_DST_COLOR = 1<<5,
-
-	/// Corresponds to OpenGL's SRC_ALPHA.
-	WIMA_BLEND_SRC_ALPHA           = 1<<6,
-
-	/// Corresponds to OpenGL's ONE_MINUS_SRC_ALPHA.
-	WIMA_BLEND_ONE_MINUS_SRC_ALPHA = 1<<7,
-
-	/// Corresponds to OpenGL's DST_ALPHA.
-	WIMA_BLEND_DST_ALPHA           = 1<<8,
-
-	/// Corresponds to OpenGL's ONE_MINUS_DST_ALPHA.
-	WIMA_BLEND_ONE_MINUS_DST_ALPHA = 1<<9,
-
-	/// Corresponds to OpenGL's SRC_ALPHA_SATURATE.
-	WIMA_BLEND_SRC_ALPHA_SATURATE  = 1<<10,
-
-} WimaBlend;
-
-/**
- * Repesents a glyphs position in a string.
- */
-typedef struct WimaGlyphPosition {
-
-	/// Position of the glyph in the input string.
-	const char* str;
-
-	/// The x-coordinate of the logical glyph position.
-	float x;
-
-	/// The bounds of the glyph shape.
-	float minx, maxx;
-
-} WimaGlyphPosition;
-
-/**
- * Represents a row of text.
- */
-typedef struct WimaTextRow {
-
-	/// Pointer to the input text where the row starts.
-	const char* start;
-
-	/// Pointer to the input text where the row ends (one past the last character).
-	const char* end;
-
-	/// Pointer to the beginning of the next row.
-	const char* next;
-
-	/// Logical width of the row.
-	float width;
-
-	/// Actual bounds of the row. Logical width and bounds can
-	/// differ because of kerning and some parts over extending.
-	float minx, maxx;
-
-} WimaTextRow;
-
-/**
- * Represents text metrics for a font.
- */
-typedef struct WimaTextMetrics {
-
-	/// The amount the font goes above the mid line.
-	float ascender;
-
-	/// The amount the font goes below the base line.
-	float descender;
-
-	/// The height of a line.
-	float lineHeight;
-
-} WimaTextMetrics;
 
 /**
  * Returns a color value from red, green, and blue
@@ -450,6 +232,49 @@ WimaColor wima_color_hsla(float h, float s, float l, unsigned char a) yinline;
 WimaColor wima_color_offset(WimaColor color, int delta) yinline;
 
 /**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Paints.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup paint paint
+ * Functions and data structures for manipulating paints in Wima.
+ * @{
+ */
+
+/**
+ * Represents a pattern to render. Can represent
+ * linear/radial/box gradients and image patterns.
+ */
+typedef struct WimaPaint {
+
+	/// How the paint is transformed.
+	WimaTransform xform;
+
+	/// The extent of the paint.
+	WimaSizef extent;
+
+	/// The radius of gradients.
+	float radius;
+
+	/// The feather of gradients.
+	float feather;
+
+	/// The inner (start) color of the gradient.
+	WimaColor innerColor;
+
+	/// The outer (end) color of the gradient.
+	WimaColor outerColor;
+
+	/// The image for an image pattern.
+	int image;
+
+} WimaPaint;
+
+/**
  * Creates and returns a linear gradient starting at @a s,
  * ending at @a e, with @a icol as the start color and
  * @a ocol as the end color.
@@ -518,49 +343,14 @@ WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecf o, WimaSizef 
                                   float angle, int image, float alpha) yinline;
 
 /**
- * Flags representing which corners are sharp. This is done to align
- * (group) widgets like Blender does.
+ * @}
  */
-typedef enum WimaWidgetCorner {
-
-	/// All corners are round.
-	WIMA_CORNER_NONE = 0,
-
-	/// Sharp top left corner.
-	WIMA_CORNER_TOP_LEFT = 1,
-
-	/// Sharp top right corner.
-	WIMA_CORNER_TOP_RIGHT = 2,
-
-	/// Sharp bottom right corner.
-	WIMA_CORNER_DOWN_RIGHT = 4,
-
-	/// Sharp bottom left corner.
-	WIMA_CORNER_DOWN_LEFT = 8,
-
-	/// All corners are sharp; you can invert a
-	/// set of flags using ^= WIMA_CORNER_ALL.
-	WIMA_CORNER_ALL = 0xF,
-
-	/// Top border is sharp.
-	WIMA_CORNER_TOP = 3,
-
-	/// Bottom border is sharp.
-	WIMA_CORNER_DOWN = 0xC,
-
-	/// Left border is sharp.
-	WIMA_CORNER_LEFT = 9,
-
-	/// Right border is sharp.
-	WIMA_CORNER_RIGHT = 6
-
-} WimaWidgetCorner;
 
 // TODO: Get rid of these icon things when scalable icons come.
 
 /// Build an icon ID from two coordinates into the icon sheet, where
 /// (0,0) designates the upper-leftmost icon, (1,0) the one right next to it,
-/// and so on.
+/// and so on. This will be removed.
 #define WIMA_ICONID(x,y) ((x)|((y)<<8))
 
 /**
@@ -1076,9 +866,15 @@ typedef enum WimaIcon {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @defgroup theme theme
+ * Functions and data structures for manipulating Wima's theme.
+ * @{
+ */
+
+/**
  * The types of themes that Wima stores in properties.
  */
-typedef enum wima_theme_type {
+typedef enum WimaThemeType {
 
 	/// The main background color.
 	WIMA_THEME_BG,
@@ -1235,9 +1031,19 @@ WimaColor wima_theme_textColor(WimaWidgetTheme* theme, WimaWidgetState state);
 // BND_ACTIVE indicates dragged state
 WimaColor wima_theme_wireColor(WimaNodeTheme* theme, WimaWidgetState state);
 
+/**
+ * @}
+ */
+
 ////////////////////////////////////////////////////////////////////////////////
 // Render state functions.
 ////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup render render
+ * Functions for manipulating Wima's render state.
+ * @{
+ */
 
 // Pushes and saves the current render state into a state stack.
 // A matching nvgRestore() must be used to restore the state.
@@ -1296,16 +1102,106 @@ void wima_render_intersectScissor(WimaRenderContext* ctx, WimaRectf rect) yinlin
 // Reset and disables scissoring.
 void wima_render_resetScissor(WimaRenderContext* ctx) yinline;
 
+/**
+ * @}
+ */
+
 ////////////////////////////////////////////////////////////////////////////////
 // Render style functions.
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * @def WIMA_DISABLED_ALPHA
+ * @defgroup render render
+ * Functions and data structures for manipulating Wima's render style.
+ * @{
+ */
+
+/**
+ * @def WIMA_STYLE_DISABLED_ALPHA
  * Alpha of disabled widget groups. Can be used
  * in conjunction with wima_style_setGlobalAlpha().
  */
 #define WIMA_STYLE_DISABLED_ALPHA 0.5
+
+/**
+ * Represents line caps for paths.
+ */
+typedef enum WimaLineCap {
+
+	/// No end cap.
+	WIMA_CAP_BUTT,
+
+	/// Round end cap.
+	WIMA_CAP_ROUND,
+
+	/// Square end cap.
+	WIMA_CAP_SQUARE,
+
+	/// Beveled end cap.
+	WIMA_CAP_BEVEL,
+
+	/// Miter end cap.
+	WIMA_CAP_MITER,
+
+} WimaLineCap;
+
+/**
+ * Represents line joins for paths.
+ */
+typedef enum WimaLineJoin {
+
+	/// Round join cap.
+	WIMA_JOIN_ROUND = WIMA_CAP_ROUND,
+
+	// Skip one.
+
+	/// Beveled join cap.
+	WIMA_JOIN_BEVEL = WIMA_CAP_ROUND + 2,
+
+	/// Mitered join cap.
+	WIMA_JOIN_MITER = WIMA_JOIN_BEVEL + 1,
+
+} WimaLineJoin;
+
+/**
+ * Represents different blending styles.
+ */
+typedef enum WimaBlend {
+
+	/// Corresponds to OpenGL's ZERO.
+	WIMA_BLEND_ZERO                = 1<<0,
+
+	/// Corresponds to OpenGL's ONE.
+	WIMA_BLEND_ONE                 = 1<<1,
+
+	/// Corresponds to OpenGL's SRC_COLOR.
+	WIMA_BLEND_SRC_COLOR           = 1<<2,
+
+	/// Corresponds to OpenGL's ONE_MINUS_SRC_COLOR.
+	WIMA_BLEND_ONE_MINUS_SRC_COLOR = 1<<3,
+
+	/// Corresponds to OpenGL's DST_COLOR.
+	WIMA_BLEND_DST_COLOR           = 1<<4,
+
+	/// Corresponds to OpenGL's ONE_MINUS_DST_COLOR.
+	WIMA_BLEND_ONE_MINUS_DST_COLOR = 1<<5,
+
+	/// Corresponds to OpenGL's SRC_ALPHA.
+	WIMA_BLEND_SRC_ALPHA           = 1<<6,
+
+	/// Corresponds to OpenGL's ONE_MINUS_SRC_ALPHA.
+	WIMA_BLEND_ONE_MINUS_SRC_ALPHA = 1<<7,
+
+	/// Corresponds to OpenGL's DST_ALPHA.
+	WIMA_BLEND_DST_ALPHA           = 1<<8,
+
+	/// Corresponds to OpenGL's ONE_MINUS_DST_ALPHA.
+	WIMA_BLEND_ONE_MINUS_DST_ALPHA = 1<<9,
+
+	/// Corresponds to OpenGL's SRC_ALPHA_SATURATE.
+	WIMA_BLEND_SRC_ALPHA_SATURATE  = 1<<10,
+
+} WimaBlend;
 
 // Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
 void wima_style_antialias(WimaRenderContext* ctx, bool enabled) yinline;
@@ -1345,9 +1241,45 @@ void wima_style_globalBlendRGB(WimaRenderContext* ctx, WimaBlend src, WimaBlend 
 void wima_style_globalBlendRGBA(WimaRenderContext* ctx, WimaBlend srcRGB, WimaBlend dstRGB,
                      WimaBlend srcA, WimaBlend dstA) yinline;
 
+/**
+ * @}
+ */
+
 ////////////////////////////////////////////////////////////////////////////////
 // Paths.
 ////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup path path
+ * Functions and data structures for rendering paths in Wima.
+ * @{
+ */
+
+/**
+ * Represents winding direction for paths.
+ */
+typedef enum WimaWinding {
+
+	/// Winding for solid shapes
+	WIMA_WINDING_CCW = 1,
+
+	/// Winding for holes
+	WIMA_WINDING_CW  = 2,
+
+} WimaWinding;
+
+/**
+ * Represents solidarity for paths.
+ */
+typedef enum WimaSolidarity {
+
+	/// CCW: Solid.
+	WIMA_SOLID_SOLID = 1,
+
+	/// CW: Hole
+	WIMA_SOLID_HOLE  = 2,
+
+} WimaSolidarity;
 
 // Clears the current path and sub-paths.
 void wima_path_begin(WimaRenderContext* ctx) yinline;
@@ -1399,9 +1331,106 @@ void wima_path_fill(WimaRenderContext* ctx) yinline;
 // Fills the current path with current stroke style.
 void wima_path_stroke(WimaRenderContext* ctx) yinline;
 
+/**
+ * @}
+ */
+
 ////////////////////////////////////////////////////////////////////////////////
 // Text.
 ////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup text text
+ * Functions and data structures for rendering and manipulating text in Wima.
+ * @{
+ */
+
+/**
+ * Represents ways to align text.
+ */
+typedef enum WimaTextAlign {
+
+	// Horizontal align
+
+	/// Default, align text horizontally to left.
+	WIMA_ALIGN_LEFT      = 1<<0,
+
+	/// Align text horizontally to center.
+	WIMA_ALIGN_CENTER    = 1<<1,
+
+	/// Align text horizontally to right.
+	WIMA_ALIGN_RIGHT     = 1<<2,
+
+	// Vertical align
+
+	/// Align text vertically to top.
+	WIMA_ALIGN_TOP       = 1<<3,
+
+	/// Align text vertically to middle.
+	WIMA_ALIGN_MIDDLE    = 1<<4,
+
+	/// Align text vertically to bottom.
+	WIMA_ALIGN_BOTTOM    = 1<<5,
+
+	/// Default, align text vertically to baseline.
+	WIMA_ALIGN_BASELINE  = 1<<6,
+
+} WimaTextAlign;
+
+/**
+ * Repesents a glyphs position in a string.
+ */
+typedef struct WimaGlyphPosition {
+
+	/// Position of the glyph in the input string.
+	const char* str;
+
+	/// The x-coordinate of the logical glyph position.
+	float x;
+
+	/// The bounds of the glyph shape.
+	float minx, maxx;
+
+} WimaGlyphPosition;
+
+/**
+ * Represents a row of text.
+ */
+typedef struct WimaTextRow {
+
+	/// Pointer to the input text where the row starts.
+	const char* start;
+
+	/// Pointer to the input text where the row ends (one past the last character).
+	const char* end;
+
+	/// Pointer to the beginning of the next row.
+	const char* next;
+
+	/// Logical width of the row.
+	float width;
+
+	/// Actual bounds of the row. Logical width and bounds can
+	/// differ because of kerning and some parts over extending.
+	float minx, maxx;
+
+} WimaTextRow;
+
+/**
+ * Represents text metrics for a font.
+ */
+typedef struct WimaTextMetrics {
+
+	/// The amount the font goes above the mid line.
+	float ascender;
+
+	/// The amount the font goes below the base line.
+	float descender;
+
+	/// The height of a line.
+	float lineHeight;
+
+} WimaTextMetrics;
 
 // Sets the blur of current text style.
 void wima_text_blur(WimaRenderContext* ctx, float blur) yinline;
@@ -1452,7 +1481,58 @@ WimaTextMetrics wima_text_metrics(WimaRenderContext* ctx) yinline;
 int wima_text_breakLines(WimaRenderContext* ctx, const char* string, const char* end,
                          float breakRowWidth, WimaTextRow* rows, int maxRows) yinline;
 
+/**
+ * @}
+ */
+
 ////////////////////////////////////////////////////////////////////////////////
+// UI items.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup ui ui
+ * Functions and data structures for rendering UI items in Wima.
+ * @{
+ */
+
+/**
+ * Flags representing which corners are sharp. This is done to align
+ * (group) widgets like Blender does.
+ */
+typedef enum WimaWidgetCorner {
+
+	/// All corners are round.
+	WIMA_CORNER_NONE = 0,
+
+	/// Sharp top left corner.
+	WIMA_CORNER_TOP_LEFT = 1,
+
+	/// Sharp top right corner.
+	WIMA_CORNER_TOP_RIGHT = 2,
+
+	/// Sharp bottom right corner.
+	WIMA_CORNER_DOWN_RIGHT = 4,
+
+	/// Sharp bottom left corner.
+	WIMA_CORNER_DOWN_LEFT = 8,
+
+	/// All corners are sharp; you can invert a
+	/// set of flags using ^= WIMA_CORNER_ALL.
+	WIMA_CORNER_ALL = 0xF,
+
+	/// Top border is sharp.
+	WIMA_CORNER_TOP = 3,
+
+	/// Bottom border is sharp.
+	WIMA_CORNER_DOWN = 0xC,
+
+	/// Left border is sharp.
+	WIMA_CORNER_LEFT = 9,
+
+	/// Right border is sharp.
+	WIMA_CORNER_RIGHT = 6
+
+} WimaWidgetCorner;
 
 // High Level Functions
 // --------------------
@@ -1737,8 +1817,6 @@ void wima_ui_arrow_upDown(WimaRenderContext* ctx, float x, float y, float s, Wim
 
 // Draw a node down-arrow with its tip at (x,y) and size s
 void wima_ui_node_arrow_down(WimaRenderContext* ctx, float x, float y, float s, WimaColor color);
-
-////////////////////////////////////////////////////////////////////////////////
 
 /**
  * @}
