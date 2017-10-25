@@ -557,7 +557,8 @@ typedef enum WimaWidgetCorner {
 } WimaWidgetCorner;
 
 /**
- * @def Alpha of disabled widget groups. Can be used
+ * @def WIMA_DISABLED_ALPHA
+ * Alpha of disabled widget groups. Can be used
  * in conjunction with wima_style_setGlobalAlpha().
  */
 #define WIMA_DISABLED_ALPHA 0.5
