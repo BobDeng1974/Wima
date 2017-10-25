@@ -280,6 +280,13 @@ typedef struct WimaRectf {
 
 /**
  * A 2x3 (2D) transformation matrix.
+ * It is laid out as below:
+ *
+ * [a c e]
+ *
+ * [b d f]
+ *
+ * [0 0 1]
  */
 typedef struct WimaTransform {
 
