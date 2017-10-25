@@ -510,15 +510,19 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 
 	WimaStatus status;
 
+	// Get the area.
 	WimaAr* area = dtree_node(areas, node);
 
+	// If the area is a parent...
 	if (WIMA_AREA_IS_PARENT(area)) {
 
+		// Draw the left child and check for error.
 		status = wima_area_node_draw(ctx, areas, dtree_left(node), bg);
 		if (yunlikely(status)) {
 			return status;
 		}
 
+		// Draw the right child and return result.
 		status = wima_area_node_draw(ctx, areas, dtree_right(node), bg);
 	}
 	else {
@@ -632,13 +636,13 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
+	// Get the area.
 	WimaAr* area = dtree_node(areas, node);
 
 	WimaStatus status;
 
 	// If this is a parent node...
 	if (WIMA_AREA_IS_PARENT(area)) {
-
 
 		// Layout the left child and check for error.
 		status = wima_area_node_layout(areas, dtree_left(node));
@@ -797,6 +801,7 @@ static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVec p
 
 	bool on;
 
+	// Cache these.
 	bool vertical = area->parent.vertical;
 	int split = area->parent.spliti;
 
