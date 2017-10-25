@@ -430,102 +430,24 @@ const WimaColor colors[] = {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
+// Static functions needed for public functions.
+////////////////////////////////////////////////////////////////////////////////
 
-static void wima_theme_createName(char* buffer, const char* name1, const char* name2) {
-
-	wassert(buffer != NULL, WIMA_ASSERT_PTR_NULL);
-	wassert(name1 != NULL, WIMA_ASSERT_PTR_NULL);
-
-	// Make the buffer have no length.
-	buffer[0] = '\0';
-
-	// Concatenate the strings.
-	strcat(buffer, themePrefix);
-	strcat(buffer, name1);
-
-	// If name2 is valid, concatenate it too.
-	if (name2) {
-		strcat(buffer, name2);
-	}
-}
-
+static void wima_theme_createName(char* buffer, const char* name1, const char* name2);
 static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, const char* name2,
-                                          const char* label, const char* desc, int initial)
-{
-	wassert(name1 != NULL, WIMA_ASSERT_PTR_NULL);
+                                          const char* label, const char* desc, int initial);
+static const char** wima_theme_descs(WimaThemeType type);
 
-	char buffer[WIMA_THEME_MAX_BUFFER];
+static void wima_theme_setWidgetColor(WimaThemeType type, WimaWidgetThemeType idx, WimaColor color);
+static WimaColor wima_theme_widgetColor(WimaThemeType type, WimaWidgetThemeType idx);
+static void wima_theme_setWidgetDelta(WimaThemeType type, bool top, int delta);
+static int wima_theme_widgetDelta(WimaThemeType type, bool top);
+static void wima_theme_setNodeColor(WimaNodeThemeType type, WimaColor color);
+static WimaColor wima_theme_nodeColor(WimaNodeThemeType type);
 
-	// Create the name.
-	wima_theme_createName(buffer, name1, name2);
-
-	// Switch on the type and create the property.
-	switch (type) {
-
-		case WIMA_PROP_GROUP:
-			return wima_prop_registerGroup(buffer, label, desc);
-
-		case WIMA_PROP_BOOL:
-			return wima_prop_registerBool(buffer, label, desc, initial != 0);
-
-		case WIMA_PROP_INT:
-			return wima_prop_registerInt(buffer, label, desc, initial, -100, 100, 1);
-
-		case WIMA_PROP_COLOR:
-			return wima_prop_registerColor(buffer, label, desc, colors[initial]);
-
-		default:
-			wassert(false, WIMA_ASSERT_SWITCH_DEFAULT);
-			return WIMA_PROP_INVALID;
-	}
-}
-
-static const char** wima_theme_descs(WimaThemeType type) {
-
-	// Switch on the type to return the correct descriptions.
-	switch (type) {
-
-		case WIMA_THEME_REGULAR:
-			return regularDescs;
-
-		case WIMA_THEME_TOOL:
-			return toolDescs;
-
-		case WIMA_THEME_RADIO:
-			return radioDescs;
-
-		case WIMA_THEME_TEXTFIELD:
-			return textfieldDescs;
-
-		case WIMA_THEME_OPTION:
-			return optionDescs;
-
-		case WIMA_THEME_CHOICE:
-			return choiceDescs;
-
-		case WIMA_THEME_NUMFIELD:
-			return numfieldDescs;
-
-		case WIMA_THEME_SLIDER:
-			return sliderDescs;
-
-		case WIMA_THEME_SCROLLBAR:
-			return scrollbarDescs;
-
-		case WIMA_THEME_MENU:
-			return menuDescs;
-
-		case WIMA_THEME_MENU_ITEM:
-			return menuItemDescs;
-
-		case WIMA_THEME_TOOLTIP:
-			return tooltipDescs;
-
-		default:
-			wassert(false, WIMA_ASSERT_SWITCH_DEFAULT);
-			return NULL;
-	}
-}
+////////////////////////////////////////////////////////////////////////////////
+// Public functions.
+////////////////////////////////////////////////////////////////////////////////
 
 WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 
@@ -728,164 +650,6 @@ WimaColor wima_theme_background() {
 #endif
 
 	return wima_prop_color(wph);
-}
-
-static void wima_theme_setWidgetColor(WimaThemeType type, WimaWidgetThemeType idx, WimaColor color) {
-
-	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_WIDGET_COLOR);
-	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
-
-	// Get the property.
-	WimaProperty wph = wg.themes[type];
-
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* item = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
-	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
-#endif
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
-
-	// Get the list of child properties.
-	WimaProperty* subHandles = dvec_get(data->_group, 0);
-
-	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
-
-	wima_prop_setColor(subHandles[idx], color);
-}
-
-static WimaColor wima_theme_widgetColor(WimaThemeType type, WimaWidgetThemeType idx) {
-
-	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_WIDGET_COLOR);
-	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
-
-	// Get the property.
-	WimaProperty wph = wg.themes[type];
-
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* item = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
-	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
-#endif
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
-
-	// Get the list of child properties.
-	WimaProperty* subHandles = dvec_get(data->_group, 0);
-
-	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
-
-	return wima_prop_color(subHandles[idx]);
-}
-
-static void wima_theme_setWidgetDelta(WimaThemeType type, bool top, int delta) {
-
-	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
-
-	// Get the property.
-	WimaProperty wph = wg.themes[type];
-
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* item = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
-	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
-#endif
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
-
-	// Get the list of child properties.
-	WimaProperty* subHandles = dvec_get(data->_group, 0);
-
-	// Get the right index.
-	int idx = top ? WIMA_THEME_WIDGET_SHADE_TOP : WIMA_THEME_WIDGET_SHADE_BTM;
-
-	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
-
-	wima_prop_setInt(subHandles[idx], delta);
-}
-
-static int wima_theme_widgetDelta(WimaThemeType type, bool top) {
-
-	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
-
-	// Get the property.
-	WimaProperty wph = wg.themes[type];
-
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* item = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
-	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
-#endif
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
-
-	// Get the list of child properties.
-	WimaProperty* subHandles = dvec_get(data->_group, 0);
-
-	// Get the right index.
-	int idx = top ? WIMA_THEME_WIDGET_SHADE_TOP : WIMA_THEME_WIDGET_SHADE_BTM;
-
-	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
-
-	return wima_prop_int(subHandles[idx]);
-}
-
-static void wima_theme_setNodeColor(WimaNodeThemeType type, WimaColor color) {
-
-	wassert(type <= WIMA_THEME_NODE_WIRE_SELECTED, WIMA_ASSERT_THEME_NODE_COLOR);
-
-	// Get the property.
-	WimaProperty wph = wg.themes[WIMA_THEME_NODE];
-
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* node = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
-	wassert(node->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
-#endif
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
-
-	// Get the list of child properties.
-	WimaProperty* subHandles = dvec_get(data->_group, 0);
-
-	wassert(wima_prop_valid(subHandles[type]), WIMA_ASSERT_PROP);
-
-	wima_prop_setColor(subHandles[type], color);
-}
-
-static WimaColor wima_theme_nodeColor(WimaNodeThemeType type) {
-
-	wassert(type <= WIMA_THEME_NODE_WIRE_SELECTED, WIMA_ASSERT_THEME_NODE_COLOR);
-
-	// Get the property.
-	WimaProperty wph = wg.themes[WIMA_THEME_NODE];
-
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* node = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
-	wassert(node->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
-#endif
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
-
-	// Get the list of child properties.
-	WimaProperty* subHandles = dvec_get(data->_group, 0);
-
-	wassert(wima_prop_valid(subHandles[type]), WIMA_ASSERT_PROP);
-
-	return wima_prop_color(subHandles[type]);
 }
 
 WimaWidgetTheme* wima_theme_widget(WimaThemeType type) {
@@ -1263,4 +1027,262 @@ WimaColor wima_theme_wireColor(WimaNodeTheme* theme, WimaWidgetState state) {
 		case WIMA_ITEM_ACTIVE:
 			return t[WIMA_THEME_NODE_OUTLINE_ACTIVE]._color;
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Functions local only to this file.
+////////////////////////////////////////////////////////////////////////////////
+
+static void wima_theme_createName(char* buffer, const char* name1, const char* name2) {
+
+	wassert(buffer != NULL, WIMA_ASSERT_PTR_NULL);
+	wassert(name1 != NULL, WIMA_ASSERT_PTR_NULL);
+
+	// Make the buffer have no length.
+	buffer[0] = '\0';
+
+	// Concatenate the strings.
+	strcat(buffer, themePrefix);
+	strcat(buffer, name1);
+
+	// If name2 is valid, concatenate it too.
+	if (name2) {
+		strcat(buffer, name2);
+	}
+}
+
+static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, const char* name2,
+                                          const char* label, const char* desc, int initial)
+{
+	wassert(name1 != NULL, WIMA_ASSERT_PTR_NULL);
+
+	char buffer[WIMA_THEME_MAX_BUFFER];
+
+	// Create the name.
+	wima_theme_createName(buffer, name1, name2);
+
+	// Switch on the type and create the property.
+	switch (type) {
+
+		case WIMA_PROP_GROUP:
+			return wima_prop_registerGroup(buffer, label, desc);
+
+		case WIMA_PROP_BOOL:
+			return wima_prop_registerBool(buffer, label, desc, initial != 0);
+
+		case WIMA_PROP_INT:
+			return wima_prop_registerInt(buffer, label, desc, initial, -100, 100, 1);
+
+		case WIMA_PROP_COLOR:
+			return wima_prop_registerColor(buffer, label, desc, colors[initial]);
+
+		default:
+			wassert(false, WIMA_ASSERT_SWITCH_DEFAULT);
+			return WIMA_PROP_INVALID;
+	}
+}
+
+static const char** wima_theme_descs(WimaThemeType type) {
+
+	// Switch on the type to return the correct descriptions.
+	switch (type) {
+
+		case WIMA_THEME_REGULAR:
+			return regularDescs;
+
+		case WIMA_THEME_TOOL:
+			return toolDescs;
+
+		case WIMA_THEME_RADIO:
+			return radioDescs;
+
+		case WIMA_THEME_TEXTFIELD:
+			return textfieldDescs;
+
+		case WIMA_THEME_OPTION:
+			return optionDescs;
+
+		case WIMA_THEME_CHOICE:
+			return choiceDescs;
+
+		case WIMA_THEME_NUMFIELD:
+			return numfieldDescs;
+
+		case WIMA_THEME_SLIDER:
+			return sliderDescs;
+
+		case WIMA_THEME_SCROLLBAR:
+			return scrollbarDescs;
+
+		case WIMA_THEME_MENU:
+			return menuDescs;
+
+		case WIMA_THEME_MENU_ITEM:
+			return menuItemDescs;
+
+		case WIMA_THEME_TOOLTIP:
+			return tooltipDescs;
+
+		default:
+			wassert(false, WIMA_ASSERT_SWITCH_DEFAULT);
+			return NULL;
+	}
+}
+
+static void wima_theme_setWidgetColor(WimaThemeType type, WimaWidgetThemeType idx, WimaColor color) {
+
+	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_WIDGET_COLOR);
+	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
+
+	// Get the property.
+	WimaProperty wph = wg.themes[type];
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* item = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
+	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
+
+	// Get the list of child properties.
+	WimaProperty* subHandles = dvec_get(data->_group, 0);
+
+	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
+
+	wima_prop_setColor(subHandles[idx], color);
+}
+
+static WimaColor wima_theme_widgetColor(WimaThemeType type, WimaWidgetThemeType idx) {
+
+	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_WIDGET_COLOR);
+	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
+
+	// Get the property.
+	WimaProperty wph = wg.themes[type];
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* item = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
+	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
+
+	// Get the list of child properties.
+	WimaProperty* subHandles = dvec_get(data->_group, 0);
+
+	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
+
+	return wima_prop_color(subHandles[idx]);
+}
+
+static void wima_theme_setWidgetDelta(WimaThemeType type, bool top, int delta) {
+
+	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
+
+	// Get the property.
+	WimaProperty wph = wg.themes[type];
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* item = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
+	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
+
+	// Get the list of child properties.
+	WimaProperty* subHandles = dvec_get(data->_group, 0);
+
+	// Get the right index.
+	int idx = top ? WIMA_THEME_WIDGET_SHADE_TOP : WIMA_THEME_WIDGET_SHADE_BTM;
+
+	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
+
+	wima_prop_setInt(subHandles[idx], delta);
+}
+
+static int wima_theme_widgetDelta(WimaThemeType type, bool top) {
+
+	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
+
+	// Get the property.
+	WimaProperty wph = wg.themes[type];
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* item = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
+	wassert(item->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
+
+	// Get the list of child properties.
+	WimaProperty* subHandles = dvec_get(data->_group, 0);
+
+	// Get the right index.
+	int idx = top ? WIMA_THEME_WIDGET_SHADE_TOP : WIMA_THEME_WIDGET_SHADE_BTM;
+
+	wassert(wima_prop_valid(subHandles[idx]), WIMA_ASSERT_PROP);
+
+	return wima_prop_int(subHandles[idx]);
+}
+
+static void wima_theme_setNodeColor(WimaNodeThemeType type, WimaColor color) {
+
+	wassert(type <= WIMA_THEME_NODE_WIRE_SELECTED, WIMA_ASSERT_THEME_NODE_COLOR);
+
+	// Get the property.
+	WimaProperty wph = wg.themes[WIMA_THEME_NODE];
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* node = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
+	wassert(node->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
+
+	// Get the list of child properties.
+	WimaProperty* subHandles = dvec_get(data->_group, 0);
+
+	wassert(wima_prop_valid(subHandles[type]), WIMA_ASSERT_PROP);
+
+	wima_prop_setColor(subHandles[type], color);
+}
+
+static WimaColor wima_theme_nodeColor(WimaNodeThemeType type) {
+
+	wassert(type <= WIMA_THEME_NODE_WIRE_SELECTED, WIMA_ASSERT_THEME_NODE_COLOR);
+
+	// Get the property.
+	WimaProperty wph = wg.themes[WIMA_THEME_NODE];
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* node = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
+	wassert(node->type == WIMA_PROP_GROUP, WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
+
+	// Get the list of child properties.
+	WimaProperty* subHandles = dvec_get(data->_group, 0);
+
+	wassert(wima_prop_valid(subHandles[type]), WIMA_ASSERT_PROP);
+
+	return wima_prop_color(subHandles[type]);
 }
