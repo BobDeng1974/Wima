@@ -1399,61 +1399,118 @@ WimaColor wima_theme_wireColor(WimaNodeTheme* theme, WimaWidgetState state);
  * @{
  */
 
-// Pushes and saves the current render state into a state stack.
-// A matching nvgRestore() must be used to restore the state.
+/**
+ * Pushes and saves the current render state into a state
+ * stack. A matching wima_render_restore() must be used
+ * to restore the state.
+ * @param ctx	The @a WimaRenderContext to save state for.
+ */
 void wima_render_save(WimaRenderContext* ctx) yinline;
 
-// Pops and restores current render state.
+/**
+ * Pops and restores current render state.
+ * @param ctx	The WimaRenderContext to restore state for.
+ */
 void wima_render_restore(WimaRenderContext* ctx) yinline;
 
-// Resets current render state to default values. Does not affect the render state stack.
+/**
+ * Resets current render state to default values.Does not affect
+ * the render state stack.
+ * @param ctx	The @a WimaRenderContext whose state will be reset.
+ */
 void wima_render_reset(WimaRenderContext* ctx) yinline;
 
-// Resets current transform to a identity matrix.
+/**
+ * Resets the render state's current transform to a identity matrix.
+ * @param ctx	The @a WimaRenderContext whose transform will be reset.
+ */
 void wima_render_resetTransform(WimaRenderContext* ctx) yinline;
 
-// Premultiplies current coordinate system by specified matrix.
-// The parameters are interpreted as matrix as follows:
-//   [a c e]
-//   [b d f]
-//   [0 0 1]
+/**
+ * Premultiplies current coordinate system in the
+ * render state by specified matrix.
+ * @param ctx	The @a WimaRenderContext whose
+ *				transform will be premultiplied.
+ * @param tx	The transform to premultiply
+ *				into the transform of @a ctx.
+ */
 void wima_render_transform(WimaRenderContext* ctx, WimaTransform tx) yinline;
 
-// Translates current coordinate system.
+/**
+ * Translates the render state's current coordinate system by @a vec.
+ * @param ctx	The @a WimaRenderContext whose transform will be translated.
+ * @param vec	The amount to translate by.
+ */
 void wima_render_translate(WimaRenderContext* ctx, WimaVecf vec) yinline;
 
-// Rotates current coordinate system. Angle is specified in radians.
+/**
+ * Rotates the render state's current coordinate system by @a angle,
+ * which is specified in radians.
+ * @param ctx	The @a WimaRenderContext whose transform will be rotated.
+ * @param angle	The angle to rotate by.
+ */
 void wima_render_rotate(WimaRenderContext* ctx, float angle) yinline;
 
-// Skews the current coordinate system along X axis. Angle is specified in radians.
+/**
+ * Skews the render state's current coordinate system along X axis by
+ * @a angle, which is specified in radians.
+ * @param ctx	The @a WimaRenderContext whose transform will be skewed.
+ * @param angle	The angle to skew by.
+ */
 void wima_render_skewX(WimaRenderContext* ctx, float angle) yinline;
 
-// Skews the current coordinate system along Y axis. Angle is specified in radians.
+/**
+ * Skews the render state's current coordinate system along Y axis by
+ * @a angle, which is specified in radians.
+ * @param ctx	The @a WimaRenderContext whose transform will be skewed.
+ * @param angle	The angle to skew by.
+ */
 void wima_render_skewY(WimaRenderContext* ctx, float angle) yinline;
 
-// Scales the current coordinate system.
+/**
+ * Scales the render state's current coordinate system by
+ * @a x in the X axis and @a y in the Y axis.
+ * @param ctx	The @a WimaRenderContext whose transform will be scaled.
+ * @param x		The amount to scale by in the X axis.
+ * @param y		The amount to scale by in the Y axis.
+ */
 void wima_render_scale(WimaRenderContext* ctx, float x, float y) yinline;
 
-// Stores the top part (a-f) of the current transformation matrix in to the specified buffer.
-//   [a c e]
-//   [b d f]
-//   [0 0 1]
-// There should be space for 6 floats in the return buffer for the values a-f.
+/**
+ * Returns the current transform in use by the render state.
+ * @param ctx	The @a WimaRenderContext whose transform will
+ *				be returned.
+ * @return		The transform in @a ctx.
+ */
 WimaTransform wima_render_currentTransform(WimaRenderContext* ctx) yinline;
 
-// Sets the current scissor rectangle.
-// The scissor rectangle is transformed by the current transform.
+/**
+ * Sets the render state's current scissor rectangle to @a rect.
+ * The scissor rectangle is transformed by the current transform.
+ * @param ctx	The @a WimaRenderContext whose scissor will be set.
+ * @param rect	The new scissor for @a ctx.
+ */
 void wima_render_scissor(WimaRenderContext* ctx, WimaRectf rect) yinline;
 
-// Intersects current scissor rectangle with the specified rectangle.
-// The scissor rectangle is transformed by the current transform.
-// Note: in case the rotation of previous scissor rect differs from
-// the current one, the intersection will be done between the specified
-// rectangle and the previous scissor rectangle transformed in the current
-// transform space. The resulting shape is always rectangle.
+/**
+ * Intersects current scissor rectangle with @a rect. The scissor
+ * rectangle is transformed by the current transform.
+ *
+ * Note: in case the rotation of previous scissor rect differs
+ * from the current one, the intersection will be done between
+ * the specified rectangle and the previous scissor rectangle
+ * transformed in the current rectangle and the previous scissor
+ * rectangle transformed in the current
+ * @param ctx	The @a WimaRenderContext whose scissor will be set.
+ * @param rect	The rectangle to intersect with.
+ */
 void wima_render_intersectScissor(WimaRenderContext* ctx, WimaRectf rect) yinline;
 
-// Reset and disables scissoring.
+/**
+ * Resets and disables scissoring.
+ * @param ctx	The @a WimaRenderContext whose
+ *				scissor will be reset.
+ */
 void wima_render_resetScissor(WimaRenderContext* ctx) yinline;
 
 /**
