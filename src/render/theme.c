@@ -1143,7 +1143,7 @@ int wima_theme_node_wireCurving() {
 	return wima_prop_int(subHandles[WIMA_THEME_NODE_WIRE_CURVING]);
 }
 
-void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool flipActive,
+void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool flip,
                             WimaColor *shade_top, WimaColor *shade_btm)
 {
 	wassert(shade_top != NULL, WIMA_ASSERT_PTR_NULL);
@@ -1181,12 +1181,12 @@ void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool 
 
 			case WIMA_ITEM_ACTIVE:
 			{
-				int delta = flipActive ?
+				int delta = flip ?
 				                t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val :
 				                t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val;
 				*shade_top = wima_color_offset(t[WIMA_THEME_WIDGET_INNER_SELECTED]._color, delta);
 
-				delta = flipActive ?
+				delta = flip ?
 				            t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val :
 				            t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val;
 				*shade_btm = wima_color_offset(t[WIMA_THEME_WIDGET_INNER_SELECTED]._color, delta);

@@ -920,115 +920,469 @@ typedef enum WimaThemeType {
 
 } WimaThemeType;
 
+/**
+ * The types of widget theme items that Wima stores in properties.
+ */
 typedef enum WimaWidgetThemeType {
 
+	/// Outline of a widget.
 	WIMA_THEME_WIDGET_OUTLINE,
+
+	/// Widget color (means different things for different widgets).
 	WIMA_THEME_WIDGET_WIDGET,
+
+	/// Inner color of the widget.
 	WIMA_THEME_WIDGET_INNER,
+
+	/// Inner color of the widget when selected.
 	WIMA_THEME_WIDGET_INNER_SELECTED,
+
+	/// Text color of the widget.
 	WIMA_THEME_WIDGET_TEXT,
+
+	/// Text color of the widget when selected.
 	WIMA_THEME_WIDGET_TEXT_SELECTED,
+
+	/// Delta to use for shading at the top when shading is enabled.
 	WIMA_THEME_WIDGET_SHADE_TOP,
+
+	/// Delta to use for shading at the bottom when shading is enabled.
 	WIMA_THEME_WIDGET_SHADE_BTM,
+
+	/// Whether or not to use shading.
 	WIMA_THEME_WIDGET_SHADED
 
 } WimaWidgetThemeType;
 
+/**
+ * The types of node theme items that Wima stores in properties.
+ */
 typedef enum wima_node_theme_type {
 
+	/// Node outline.
 	WIMA_THEME_NODE_OUTLINE,
+
+	/// Node outline when selected (but not active).
 	WIMA_THEME_NODE_OUTLINE_SELECTED,
+
+	/// Node outline when active.
 	WIMA_THEME_NODE_OUTLINE_ACTIVE,
+
+	/// Node background color.
 	WIMA_THEME_NODE_BG,
+
+	/// Node text color color.
 	WIMA_THEME_NODE_TEXT,
+
+	/// Node text color when selected.
 	WIMA_THEME_NODE_TEXT_SELECTED,
+
+	/// Node wire color.
 	WIMA_THEME_NODE_WIRE,
+
+	/// Node wire outline.
 	WIMA_THEME_NODE_WIRE_OUTLINE,
+
+	/// Node wire color when selected.
 	WIMA_THEME_NODE_WIRE_SELECTED,
+
+	/// How much wires should curve (0 is straight line, 10 is 90 degrees).
 	WIMA_THEME_NODE_WIRE_CURVING
 
 } WimaNodeThemeType;
 
+/**
+ * An opaque struct that allows the user to handle widget themes.
+ */
 typedef struct WimaWidgetTheme WimaWidgetTheme;
+
+/**
+ * An opaque struct that allows the user to handle node themes.
+ */
 typedef struct WimaNodeTheme WimaNodeTheme;
 
+/**
+ * Sets the background color in the theme.
+ * @param bg	The color to set as the background.
+ */
 void wima_theme_setBackground(WimaColor bg) yinline;
+
+/**
+ * Returns the current background color.
+ * @return	The current background color.
+ */
 WimaColor wima_theme_background() yinline;
 
+/**
+ * Returns a pointer to the @a WimaWidgetTheme corresponding to @a type.
+ * @param type	The type of widget theme to return.
+ * @return		The @a WimaWidgetTheme associated with @a type.
+ * @pre			@a type must be between
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 WimaWidgetTheme* wima_theme_widget(WimaThemeType type) yinline;
 
+/**
+ * Sets the outline color in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme that will be updated.
+ * @param color	The new outline color of the widget theme.
+ * @pre			@a type must be between
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 void wima_theme_widget_setOutline(WimaThemeType type, WimaColor color) yinline;
+
+/**
+ * Gets the outline color in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme whose outline color
+ *				will be returned.
+ * @return		The outline color of the @a WimaWidgetTheme
+ *				associated with @a type.
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 WimaColor wima_theme_widget_outline(WimaThemeType type) yinline;
 
+/**
+ * Sets the main widget color in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme that will be updated.
+ * @param color	The new main wdiget color of the widget theme.
+ * @pre			@a type must be between
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 void wima_theme_widget_setColor(WimaThemeType type, WimaColor color) yinline;
+
+/**
+ * Gets the main widget color in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme whose main widget color
+ *				will be returned.
+ * @return		The main widget color of the @a WimaWidgetTheme
+ *				associated with @a type.
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 WimaColor wima_theme_widget_color(WimaThemeType type) yinline;
 
+/**
+ * Sets the inner color in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme that will be updated.
+ * @param color	The new inner color of the widget theme.
+ * @pre			@a type must be between
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 void wima_theme_widget_setInner(WimaThemeType type, WimaColor color) yinline;
+
+/**
+ * Gets the inner color in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme whose inner color
+ *				will be returned.
+ * @return		The inner color of the @a WimaWidgetTheme
+ *				associated with @a type.
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 WimaColor wima_theme_widget_inner(WimaThemeType type) yinline;
 
+/**
+ * Sets the (selected) inner color in the @a WimaWidgetTheme
+ * associated with @a type.
+ * @param type	The type of widget theme that will be updated.
+ * @param color	The new (selected) inner color of the widget
+ *				theme.
+ * @pre			@a type must be between
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 void wima_theme_widget_setInnerSelected(WimaThemeType type, WimaColor color) yinline;
+
+/**
+ * Gets the (selected) inner color in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme whose (selected) inner color
+ *				will be returned.
+ * @return		The (selected) inner color of the @a WimaWidgetTheme
+ *				associated with @a type.
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 WimaColor wima_theme_widget_innerSelected(WimaThemeType type) yinline;
 
+/**
+ * Sets the text color in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme that will be updated.
+ * @param color	The new text color of the widget theme.
+ * @pre			@a type must be between
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 void wima_theme_widget_setText(WimaThemeType type, WimaColor color) yinline;
+
+/**
+ * Gets the text color in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme whose text color
+ *				will be returned.
+ * @return		The text color of the @a WimaWidgetTheme
+ *				associated with @a type.
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 WimaColor wima_theme_widget_text(WimaThemeType type) yinline;
 
+/**
+ * Sets the (selected) text color in the @a WimaWidgetTheme
+ * associated with @a type.
+ * @param type	The type of widget theme that will be updated.
+ * @param color	The new (selected) text color of the widget
+ *				theme.
+ * @pre			@a type must be between
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 void wima_theme_widget_setTextSelected(WimaThemeType type, WimaColor color) yinline;
+
+/**
+ * Gets the (selected) text color in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme whose (selected) text color
+ *				will be returned.
+ * @return		The (selected) text color of the @a WimaWidgetTheme
+ *				associated with @a type.
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 WimaColor wima_theme_widget_textSelected(WimaThemeType type) yinline;
 
+/**
+ * Sets the top shade delta in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme that will be updated.
+ * @param delta	The new shade top delta of the widget theme.
+ * @pre			@a type must be between
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 void wima_theme_widget_setShadeTop(WimaThemeType type, int delta) yinline;
+
+/**
+ * Gets the top shade delta in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme whose top shade delta
+ *				will be returned.
+ * @return		The top shade delta of the @a WimaWidgetTheme
+ *				associated with @a type.
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 int wima_theme_widget_shadeTop(WimaThemeType type) yinline;
 
+/**
+ * Sets the top shade delta in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme that will be updated.
+ * @param delta	The new shade top delta of the widget theme.
+ * @pre			@a type must be between
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 void wima_theme_widget_setShadeBottom(WimaThemeType type, int delta) yinline;
+
+/**
+ * Gets the bottom shade delta in the @a WimaWidgetTheme associated
+ * with @a type.
+ * @param type	The type of widget theme whose bottom shade delta
+ *				will be returned.
+ * @return		The bottom shade delta of the @a WimaWidgetTheme
+ *				associated with @a type.
+ *				[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 int wima_theme_widget_shadeBottom(WimaThemeType type) yinline;
 
+/**
+ * Sets whether the @a WimaWidgetTheme associated with @a type is shaded.
+ * @param type		The type of widget theme that will be updated.
+ * @param shaded	true if the theme should be shaded, false otherwise.
+ * @pre				@a type must be between
+ *					[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 void wima_theme_widget_setShaded(WimaThemeType type, bool shaded) yinline;
+
+/**
+ * Gets whether the @a WimaWidgetTheme associated with @a type is shaded.
+ * @param type		The type of widget theme whose shading will be returned.
+ * @pre				@a type must be between
+ * @return			The shading of the @a WimaWidgetTheme associated with
+ *					@a type.
+ *					[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 bool wima_theme_widget_shaded(WimaThemeType type) yinline;
 
+/**
+ * Returns a pointer to the @a WimaNodeTheme.
+ * @return		The @a WimaNodeTheme.
+ */
 WimaNodeTheme* wima_theme_node() yinline;
 
+/**
+ * Sets the outline color in the @a WimaNodeTheme.
+ * @param color	The new outline color of the node
+ *				theme.
+ */
 void wima_theme_node_setOutline(WimaColor color) yinline;
+
+/**
+ * Gets the outline color in the @a WimaNodeTheme.
+ * @return	The outline color of the node theme.
+ */
 WimaColor wima_theme_node_outline() yinline;
 
+/**
+ * Sets the (selected) outline color in the @a WimaNodeTheme.
+ * @param color	The new (selected) outline color of the node
+ *				theme.
+ */
 void wima_theme_node_setOutlineSelected(WimaColor color) yinline;
+
+/**
+ * Gets the (selected) outline color in the @a WimaNodeTheme.
+ * @return	The (selected) outline color of the node theme.
+ */
 WimaColor wima_theme_node_outlineSelected() yinline;
 
+/**
+ * Sets the (active) outline color in the @a WimaNodeTheme.
+ * @param color	The new (active) outline color of the node
+ *				theme.
+ */
 void wima_theme_node_setOutlineActive(WimaColor color) yinline;
+
+/**
+ * Gets the (active) outline color in the @a WimaNodeTheme.
+ * @return	The (active) outline color of the node theme.
+ */
 WimaColor wima_theme_node_outlineActive() yinline;
 
+/**
+ * Sets the background color in the @a WimaNodeTheme.
+ * @param color	The new background color of the node
+ *				theme.
+ */
 void wima_theme_node_setBackground(WimaColor color) yinline;
+
+/**
+ * Gets the background color in the @a WimaNodeTheme.
+ * @return	The background color of the node theme.
+ */
 WimaColor wima_theme_node_background() yinline;
 
+/**
+ * Sets the text color in the @a WimaNodeTheme.
+ * @param color	The new text color of the node
+ *				theme.
+ */
 void wima_theme_node_setText(WimaColor color) yinline;
+
+/**
+ * Gets the text color in the @a WimaNodeTheme.
+ * @return	The text color of the node theme.
+ */
 WimaColor wima_theme_node_text() yinline;
 
+/**
+ * Sets the (selected) text color in the @a WimaNodeTheme.
+ * @param color	The new (selected) text color of the node
+ *				theme.
+ */
 void wima_theme_node_setTextSelected(WimaColor color) yinline;
+
+/**
+ * Gets the (selected) text color in the @a WimaNodeTheme.
+ * @return	The (selected) text color of the node theme.
+ */
 WimaColor wima_theme_node_textSelected() yinline;
 
+/**
+ * Sets the wire color in the @a WimaNodeTheme.
+ * @param color	The new wire color of the node
+ *				theme.
+ */
 void wima_theme_node_setWire(WimaColor color) yinline;
+
+/**
+ * Gets the  wire color in the @a WimaNodeTheme.
+ * @return	The wire color of the node theme.
+ */
 WimaColor wima_theme_node_wire() yinline;
 
+/**
+ * Sets the wire outline color in the @a WimaNodeTheme.
+ * @param color	The new wire outline color of the node
+ *				theme.
+ */
 void wima_theme_node_setWireOutline(WimaColor color) yinline;
+
+/**
+ * Gets the wire outline color in the @a WimaNodeTheme.
+ * @return	The wire outline color of the node theme.
+ */
 WimaColor wima_theme_node_wireOutline() yinline;
 
+/**
+ * Sets the (selected) wire color in the @a WimaNodeTheme.
+ * @param color	The new (selected) wire color of the node
+ *				theme.
+ */
 void wima_theme_node_setWireSelected(WimaColor color) yinline;
+
+/**
+ * Gets the (selected) wire color in the @a WimaNodeTheme.
+ * @return	The (selected) wire color of the node theme.
+ */
 WimaColor wima_theme_node_wireSelected() yinline;
 
+/**
+ * Sets the wire curvature in the @a WimaNodeTheme.
+ * @param color	The new wire curvature of the node
+ *				theme.
+ */
 void wima_theme_node_setWireCurving(int curving) yinline;
+
+/**
+ * Gets the wire curvature in the @a WimaNodeTheme.
+ * @return	The wire curvature of the node theme.
+ */
 int wima_theme_node_wireCurving() yinline;
 
-// computes the upper and lower gradient colors for the inner box from a widget
-// theme and the widgets state. If flipActive is set and the state is
-// BND_ACTIVE, the upper and lower colors will be swapped.
-void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool flipActive,
-                            WimaColor *shade_top, WimaColor *shade_down);
+/**
+ * Computes the upper and lower gradient colors for the
+ * inner box from @a theme and @a state. If @a flip is
+ * set, and @a state is WIMA_WIDGET_ACTIVE, the upper
+ * and lower colors will be swapped.
+ * @param theme		The theme whose gradient colors will be computed.
+ * @param state		The state of the widget to use.
+ * @param flip		Whether to flip the active state with the default state.
+ * @param shade_top	A pointer to a return value that will hold the top shade.
+ * @param shade_btm	A pointer to a return value that will hold the bottom shade.
+ * @pre				@a theme must not be NULL.
+ * @pre				@a shade_top must not be NULL.
+ * @pre				@a shade_btm must not be NULL.
+ */
+void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool flip,
+                            WimaColor *shade_top, WimaColor *shade_btm);
 
-// computes the text color for a widget label from a widget theme and the
-// widgets state.
+/**
+ * Computes the text color for a widget label from @a theme
+ * and @a state.
+ * @param theme	The theme whose text color will be computed.
+ * @param state	The widget state to use.
+ * @return		The text color for @a theme and @a state.
+ * @pre			@a theme must not be NULL.
+ */
 WimaColor wima_theme_textColor(WimaWidgetTheme* theme, WimaWidgetState state);
 
-// return the color of a node wire based on state
-// BND_HOVER indicates selected state,
-// BND_ACTIVE indicates dragged state
+/**
+ * Return the color of a node wire based on @a state.
+ * @a WIMA_WIDGET_HOVER indicates selected state, and
+ * @a WIMA_WIDGET_ACTIVE indicates dragged state.
+ * @param theme	The node theme whose wire color will
+ *				be computed.
+ * @param state	The state of the wire.
+ * @return		The wire color.
+ */
 WimaColor wima_theme_wireColor(WimaNodeTheme* theme, WimaWidgetState state);
 
 /**
