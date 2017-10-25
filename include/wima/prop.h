@@ -443,7 +443,7 @@ WimaProperty wima_prop_registerString(const char* name, const char* label, const
 
 /**
  * Registers and returns a @a WIMA_PROP_ENUM. Its initial
- * index value is set to @a initialIdx.
+ * index value is set to @a idx.
  *
  * Wima will draw this in the UI as a set of radio buttons.
  * @param name		The name of the property. This needs
@@ -454,15 +454,13 @@ WimaProperty wima_prop_registerString(const char* name, const char* label, const
  *					This is used as a tooltip.
  * @param names		The names of each index. Wima uses
  *					these as labels.
- * @param vals		The values of each option.
- * @param nvals		The number of values.
- * @param initalIdx	The initial index for the enum.
+ * @param num		The number of names.
+ * @param initial	The initial index for the enum.
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  */
 WimaProperty wima_prop_registerEnum(const char* name, const char* label, const char* desc,
-                                    const char* names[], const uint32_t* vals,
-                                    uint32_t nvals, uint32_t initalIdx);
+                                    const char* names[], uint32_t num, uint32_t initial);
 
 /**
  * Registers and returns a @a WIMA_PROP_LIST. It is set

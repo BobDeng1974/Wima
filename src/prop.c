@@ -398,7 +398,7 @@ void wima_prop_setEnumIdx(WimaProperty wph, uint32_t idx) {
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
-	wassert(idx < data->_enum.numVals, WIMA_ASSERT_PROP_ENUM_IDX);
+	wassert(idx < data->_enum.num, WIMA_ASSERT_PROP_ENUM_IDX);
 
 	data->_enum.idx = idx;
 }
@@ -575,20 +575,18 @@ WimaProperty wima_prop_registerString(const char* name, const char* label, const
 }
 
 WimaProperty wima_prop_registerEnum(const char* name, const char* label, const char* desc,
-                                    const char* names[], const uint32_t* vals,
-                                    uint32_t nvals, uint32_t initalIdx)
+                                    const char* names[], uint32_t num, uint32_t initial)
 {
 	assert_init;
 
-	wassert(wima_prop_enumNamesValid(names, nvals), WIMA_ASSERT_PROP_ENUM_NAMES);
+	wassert(wima_prop_enumNamesValid(names, num), WIMA_ASSERT_PROP_ENUM_NAMES);
 
 	WimaPropData prop;
 
 	// Set the data.
 	prop._enum.names = names;
-	prop._enum.vals = vals;
-	prop._enum.numVals = nvals;
-	prop._enum.idx = initalIdx;
+	prop._enum.num = num;
+	prop._enum.idx = initial;
 
 	// Register the property.
 	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_ENUM, &prop);

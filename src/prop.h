@@ -75,8 +75,7 @@ typedef struct WimaPropEnum {
 
 	const char** names;
 
-	const uint32_t* vals;
-	uint32_t numVals;
+	uint32_t num;
 
 	uint32_t idx;
 
