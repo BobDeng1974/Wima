@@ -1279,10 +1279,10 @@ void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join) yinline;
 
 // Sets the transparency applied to all rendered shapes.
 // Already transparent paths will get proportionally more transparent as well.
-void wima_style_setGlobalAlpha(WimaRenderContext* ctx, float alpha) yinline;
+void wima_style_globalAlpha(WimaRenderContext* ctx, float alpha) yinline;
 
-void wima_style_setGlobalBlendRGB(WimaRenderContext* ctx, WimaBlend src, WimaBlend dst) yinline;
-void wima_style_setGlobalBlendRGBA(WimaRenderContext* ctx, WimaBlend srcRGB, WimaBlend dstRGB,
+void wima_style_globalBlendRGB(WimaRenderContext* ctx, WimaBlend src, WimaBlend dst) yinline;
+void wima_style_globalBlendRGBA(WimaRenderContext* ctx, WimaBlend srcRGB, WimaBlend dstRGB,
                      WimaBlend srcA, WimaBlend dstA) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////

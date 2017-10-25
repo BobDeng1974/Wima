@@ -129,13 +129,13 @@ void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join) {
 	nvgLineJoin(ctx->nvg, join);
 }
 
-void wima_style_setGlobalAlpha(WimaRenderContext* ctx, float alpha) {
+void wima_style_globalAlpha(WimaRenderContext* ctx, float alpha) {
 	assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgGlobalAlpha(ctx->nvg, alpha);
 }
 
-void wima_style_setGlobalBlendRGB(WimaRenderContext* ctx, WimaBlend src, WimaBlend dst) {
+void wima_style_globalBlendRGB(WimaRenderContext* ctx, WimaBlend src, WimaBlend dst) {
 
 	assert_init;
 
@@ -144,7 +144,7 @@ void wima_style_setGlobalBlendRGB(WimaRenderContext* ctx, WimaBlend src, WimaBle
 	nvgGlobalCompositeBlendFunc(ctx->nvg, src, dst);
 }
 
-void wima_style_setGlobalBlendRGBA(WimaRenderContext* ctx, WimaBlend srcRGB, WimaBlend dstRGB,
+void wima_style_globalBlendRGBA(WimaRenderContext* ctx, WimaBlend srcRGB, WimaBlend dstRGB,
                                    WimaBlend srcA, WimaBlend dstA)
 {
 	assert_init;
