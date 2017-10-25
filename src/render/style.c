@@ -136,11 +136,8 @@ void wima_style_globalAlpha(WimaRenderContext* ctx, float alpha) {
 }
 
 void wima_style_globalBlendRGB(WimaRenderContext* ctx, WimaBlend src, WimaBlend dst) {
-
 	assert_init;
-
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
-
 	nvgGlobalCompositeBlendFunc(ctx->nvg, src, dst);
 }
 
@@ -148,8 +145,6 @@ void wima_style_globalBlendRGBA(WimaRenderContext* ctx, WimaBlend srcRGB, WimaBl
                                    WimaBlend srcA, WimaBlend dstA)
 {
 	assert_init;
-
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
-
 	nvgGlobalCompositeBlendFuncSeparate(ctx->nvg, srcRGB, dstRGB, srcA, dstA);
 }
