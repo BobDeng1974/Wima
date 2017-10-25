@@ -1536,7 +1536,7 @@ void wima_render_resetScissor(WimaRenderContext* ctx) yinline;
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * @defgroup render render
+ * @defgroup style style
  * Functions and data structures for manipulating Wima's render style.
  * @{
  */
