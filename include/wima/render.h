@@ -1628,41 +1628,129 @@ typedef enum WimaBlend {
 
 } WimaBlend;
 
-// Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
+/**
+ * Sets whether to draw antialias for wima_path_stroke() and wima_path_fill().
+ * It's enabled by default.
+ * @param ctx		The @a WimaRenderContext whose antialias style will be set.
+ * @param enabled	true if antialias should be enabled, false otherwise.
+ * @pre				@a ctx must not be NULL.
+ */
 void wima_style_antialias(WimaRenderContext* ctx, bool enabled) yinline;
 
-// Sets the stroke width of the stroke style.
+/**
+ * Sets the stroke width of the stroke style.
+ * @param ctx	The @a WimaRenderContext whose
+ *				stroke width will be set.
+ * @param size	The width to set.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_style_stroke_width(WimaRenderContext* ctx, float size) yinline;
 
-// Sets current stroke style to a solid color.
+/**
+ * Sets current stroke style to a solid color.
+ * @param ctx	The @a WimaRenderContext whose
+ *				stroke style will be set.
+ * @param color	The color to set.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color) yinline;
 
-// Sets current stroke style to a paint, which can be a one of the gradients or a pattern.
+/**
+ * Sets current stroke style to a paint, which
+ * can be a one of the gradients or a pattern.
+ * @param ctx	The @a WimaRenderContext whose
+ *				stroke style will be set.
+ * @param paint	The paint to set.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint) yinline;
 
-// Sets current fill style to a solid color.
+/**
+ * Sets current fill style to a solid color.
+ * @param ctx	The @a WimaRenderContext whose
+ *				fill style will be set.
+ * @param color	The color to set.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color) yinline;
 
-// Sets current fill style to a paint, which can be a one of the gradients or a pattern.
+/**
+ * Sets current fill style to a paint, which
+ * can be a one of the gradients or a pattern.
+ * @param ctx	The @a WimaRenderContext whose
+ *				fill style will be set.
+ * @param paint	The paint to set.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint) yinline;
 
 // Sets the miter limit of the stroke style.
 // Miter limit controls when a sharp corner is beveled.
+/**
+ * Sets the miter limit of the stroke style. Miter
+ * limit controls when a sharp corner is beveled.
+ * @param ctx	The @a WimaRenderContext whose
+ *				miter limit will be set.
+ * @param limit	The limit to set.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_style_miter_limit(WimaRenderContext* ctx, float limit) yinline;
 
-// Sets how the end of the line (cap) is drawn,
-// Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.
+/**
+ * Sets how the end of the line (cap) is drawn.
+ * WIMA_CAP_BUTT is the default.
+ * @param ctx	The @a WimaRenderContext whose
+ *				line cap will be set.
+ * @param cap	The cap to set.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_style_line_cap(WimaRenderContext* ctx, WimaLineCap cap) yinline;
 
-// Sets how sharp path corners are drawn.
-// Can be one of NVG_MITER (default), NVG_ROUND, NVG_BEVEL.
+/**
+ * Sets how sharp path corners are drawn.
+ * WIMA_JOIN_MITER is the default.
+ * @param ctx	The @a WimaRenderContext whose
+ *				line join will be set.
+ * @param join	The join to set.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join) yinline;
 
-// Sets the transparency applied to all rendered shapes.
-// Already transparent paths will get proportionally more transparent as well.
+/**
+ * Sets the transparency applied to all rendered
+ * shapes. Already transparent paths will get
+ * proportionally more transparent as well.
+ * @param ctx	The @a WimaRenderContext whose
+ *				global alpha will be set.
+ * @param alpha	The alpha to set.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_style_globalAlpha(WimaRenderContext* ctx, float alpha) yinline;
 
+/**
+ * Sets the composite operation (blend) with custom pixel
+ * arithmetic. It will set all channels, including alpha,
+ * to the same function.
+ * @param ctx	The @a WimaRenderContext whose
+ *				global blend function will be set.
+ * @param src	The blend for sources
+ * @param dst	The blend for destinations.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_style_globalBlendRGB(WimaRenderContext* ctx, WimaBlend src, WimaBlend dst) yinline;
+
+/**
+ * Sets the composite operation (blend) with custom pixel
+ * arithmetic, specifying separate functions for RBG and
+ * alpha channels.
+ * @param ctx		The @a WimaRenderContext whose
+ *					global blend function will be set.
+ * @param srcRGB	The blend for sources' RGB.
+ * @param dstRGB	The blend for destinations' RGB.
+ * @param srcA		The blend for sources' alpha.
+ * @param dstA		The blend for destinations' alpha.
+ * @pre				@a ctx must not be NULL.
+ */
 void wima_style_globalBlendRGBA(WimaRenderContext* ctx, WimaBlend srcRGB, WimaBlend dstRGB,
                      WimaBlend srcA, WimaBlend dstA) yinline;
 
