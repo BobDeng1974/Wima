@@ -79,8 +79,8 @@ WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r
 	return p.wima;
 }
 
-WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, float cx, float cy, float inr, float outr,
-                                    WimaColor icol, WimaColor ocol)
+WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecf c, float inr,
+                                    float outr, WimaColor icol, WimaColor ocol)
 {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -91,7 +91,7 @@ WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, float cx, float cy, 
 	ic.wima = icol;
 	oc.wima = ocol;
 
-	p.nvg = nvgRadialGradient(ctx->nvg, cx, cy, inr, outr, ic.nvg, oc.nvg);
+	p.nvg = nvgRadialGradient(ctx->nvg, c.x, c.y, inr, outr, ic.nvg, oc.nvg);
 
 	return p.wima;
 }

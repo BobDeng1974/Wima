@@ -285,8 +285,8 @@ WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r
 // Creates and returns a radial gradient. Parameters (cx,cy) specify the center, inr and outr specify
 // the inner and outer radius of the gradient, icol specifies the start color and ocol the end color.
 // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
-WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, float cx, float cy, float inr, float outr,
-                                    WimaColor icol, WimaColor ocol) yinline;
+WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecf c, float inr,
+                                    float outr, WimaColor icol, WimaColor ocol) yinline;
 
 // Creates and returns an image patter. Parameters (ox,oy) specify the left-top location of the image pattern,
 // (ex,ey) the size of one image, angle rotation around the top-left corner, image is handle to the image to render.
