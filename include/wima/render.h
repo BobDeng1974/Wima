@@ -98,7 +98,7 @@ typedef struct WimaColor {
 typedef struct WimaPaint {
 
 	WimaTransform xform;
-	float extent[2];
+	WimaSizef extent;
 
 	float radius;
 	float feather;
