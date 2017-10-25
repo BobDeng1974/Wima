@@ -72,21 +72,45 @@ extern "C" {
 
 #include <wima/wima.h>
 
+//! @cond Doxygen suppress
 #define WIMA_PROP_RENDER_H
 #include <wima/prop.h>
 #undef WIMA_PROP_RENDER_H
+//! @endcond Doxygen suppress
 
+/**
+ * @file render.h
+ */
+
+/**
+ * @defgroup render render
+ * Functions and data structures for rendering in Wima.
+ * @{
+ */
+
+/**
+ * A way to represent colors in Wima.
+ * It is a four channel float color.
+ */
 typedef struct WimaColor {
 
 	union {
 
+		/// Access channels as an array.
 		float rgba[4];
 
 		struct {
 
+			/// Red channel.
 			float r;
+
+			/// Green channel.
 			float g;
+
+			/// Blue channel.
 			float b;
+
+			/// Alpha channel.
 			float a;
 
 		};
@@ -95,252 +119,463 @@ typedef struct WimaColor {
 
 } WimaColor;
 
+/**
+ * Represents a pattern to render. Can represent
+ * linear/radial/box gradients and image patterns.
+ */
 typedef struct WimaPaint {
 
+	/// How the paint is transformed.
 	WimaTransform xform;
+
+	/// The extent of the paint.
 	WimaSizef extent;
 
+	/// The radius of gradients.
 	float radius;
+
+	/// The feather of gradients.
 	float feather;
 
+	/// The inner (start) color of the gradient.
 	WimaColor innerColor;
+
+	/// The outer (end) color of the gradient.
 	WimaColor outerColor;
 
+	/// The image for an image pattern.
 	int image;
 
 } WimaPaint;
 
+/**
+ * Represents winding direction for paths.
+ */
 typedef enum WimaWinding {
 
-	// Winding for solid shapes
+	/// Winding for solid shapes
 	WIMA_WINDING_CCW = 1,
 
-	// Winding for holes
+	/// Winding for holes
 	WIMA_WINDING_CW  = 2,
 
 } WimaWinding;
 
+/**
+ * Represents solidarity for paths.
+ */
 typedef enum WimaSolidarity {
 
-	// CCW
+	/// CCW: Solid.
 	WIMA_SOLID_SOLID = 1,
 
-	// CW
+	/// CW: Hole
 	WIMA_SOLID_HOLE  = 2,
 
 } WimaSolidarity;
 
+/**
+ * Represents line caps for paths.
+ */
 typedef enum WimaLineCap {
 
+	/// No end cap.
 	WIMA_CAP_BUTT,
+
+	/// Round end cap.
 	WIMA_CAP_ROUND,
+
+	/// Square end cap.
 	WIMA_CAP_SQUARE,
+
+	/// Beveled end cap.
 	WIMA_CAP_BEVEL,
+
+	/// Miter end cap.
 	WIMA_CAP_MITER,
 
 } WimaLineCap;
 
+/**
+ * Represents line joins for paths.
+ */
 typedef enum WimaLineJoin {
 
+	/// Round join cap.
 	WIMA_JOIN_ROUND = WIMA_CAP_ROUND,
+
 	// Skip one.
+
+	/// Beveled join cap.
 	WIMA_JOIN_BEVEL = WIMA_CAP_ROUND + 2,
+
+	/// Mitered join cap.
 	WIMA_JOIN_MITER = WIMA_JOIN_BEVEL + 1,
 
 } WimaLineJoin;
 
+/**
+ * Represents ways to align text.
+ */
 typedef enum WimaTextAlign {
 
 	// Horizontal align
 
-	// Default, align text horizontally to left.
+	/// Default, align text horizontally to left.
 	WIMA_ALIGN_LEFT      = 1<<0,
 
-	// Align text horizontally to center.
+	/// Align text horizontally to center.
 	WIMA_ALIGN_CENTER    = 1<<1,
 
-	// Align text horizontally to right.
+	/// Align text horizontally to right.
 	WIMA_ALIGN_RIGHT     = 1<<2,
 
 	// Vertical align
 
-	// Align text vertically to top.
+	/// Align text vertically to top.
 	WIMA_ALIGN_TOP       = 1<<3,
 
-	// Align text vertically to middle.
+	/// Align text vertically to middle.
 	WIMA_ALIGN_MIDDLE    = 1<<4,
 
-	// Align text vertically to bottom.
+	/// Align text vertically to bottom.
 	WIMA_ALIGN_BOTTOM    = 1<<5,
 
-	// Default, align text vertically to baseline.
+	/// Default, align text vertically to baseline.
 	WIMA_ALIGN_BASELINE  = 1<<6,
 
 } WimaTextAlign;
 
+/**
+ * Represents different blending styles.
+ */
 typedef enum WimaBlend {
+
+	/// Corresponds to OpenGL's ZERO.
 	WIMA_BLEND_ZERO                = 1<<0,
+
+	/// Corresponds to OpenGL's ONE.
 	WIMA_BLEND_ONE                 = 1<<1,
+
+	/// Corresponds to OpenGL's SRC_COLOR.
 	WIMA_BLEND_SRC_COLOR           = 1<<2,
+
+	/// Corresponds to OpenGL's ONE_MINUS_SRC_COLOR.
 	WIMA_BLEND_ONE_MINUS_SRC_COLOR = 1<<3,
+
+	/// Corresponds to OpenGL's DST_COLOR.
 	WIMA_BLEND_DST_COLOR           = 1<<4,
+
+	/// Corresponds to OpenGL's ONE_MINUS_DST_COLOR.
 	WIMA_BLEND_ONE_MINUS_DST_COLOR = 1<<5,
+
+	/// Corresponds to OpenGL's SRC_ALPHA.
 	WIMA_BLEND_SRC_ALPHA           = 1<<6,
+
+	/// Corresponds to OpenGL's ONE_MINUS_SRC_ALPHA.
 	WIMA_BLEND_ONE_MINUS_SRC_ALPHA = 1<<7,
+
+	/// Corresponds to OpenGL's DST_ALPHA.
 	WIMA_BLEND_DST_ALPHA           = 1<<8,
+
+	/// Corresponds to OpenGL's ONE_MINUS_DST_ALPHA.
 	WIMA_BLEND_ONE_MINUS_DST_ALPHA = 1<<9,
+
+	/// Corresponds to OpenGL's SRC_ALPHA_SATURATE.
 	WIMA_BLEND_SRC_ALPHA_SATURATE  = 1<<10,
+
 } WimaBlend;
 
+/**
+ * Repesents a glyphs position in a string.
+ */
 typedef struct WimaGlyphPosition {
 
-	// Position of the glyph in the input string.
+	/// Position of the glyph in the input string.
 	const char* str;
 
-	// The x-coordinate of the logical glyph position.
+	/// The x-coordinate of the logical glyph position.
 	float x;
 
-	// The bounds of the glyph shape.
+	/// The bounds of the glyph shape.
 	float minx, maxx;
 
 } WimaGlyphPosition;
 
+/**
+ * Represents a row of text.
+ */
 typedef struct WimaTextRow {
 
-	// Pointer to the input text where the row starts.
+	/// Pointer to the input text where the row starts.
 	const char* start;
 
-	// Pointer to the input text where the row ends (one past the last character).
+	/// Pointer to the input text where the row ends (one past the last character).
 	const char* end;
 
-	// Pointer to the beginning of the next row.
+	/// Pointer to the beginning of the next row.
 	const char* next;
 
-	// Logical width of the row.
+	/// Logical width of the row.
 	float width;
 
-	// Actual bounds of the row. Logical width and bounds can
-	// differ because of kerning and some parts over extending.
+	/// Actual bounds of the row. Logical width and bounds can
+	/// differ because of kerning and some parts over extending.
 	float minx, maxx;
 
 } WimaTextRow;
 
+/**
+ * Represents text metrics for a font.
+ */
 typedef struct WimaTextMetrics {
 
+	/// The amount the font goes above the mid line.
 	float ascender;
+
+	/// The amount the font goes below the base line.
 	float descender;
+
+	/// The height of a line.
 	float lineHeight;
 
 } WimaTextMetrics;
 
-// Returns a color value from red, green, blue values. Alpha will be set to 255 (1.0f).
+/**
+ * Returns a color value from red, green, and blue
+ * values. Alpha will be set to 255 (1.0f).
+ * @param r	The desired red channel [0-255].
+ * @param g	The desired green channel [0-255].
+ * @param b	The desired blue channel [0-255].
+ * @return	A color value constructed from the
+ *			provided params, with alpha at 255.
+ */
 WimaColor wima_color_rgb(unsigned char r, unsigned char g, unsigned char b) yinline;
 
-// Returns a color value from red, green, blue values. Alpha will be set to 1.0f.
+/**
+ * Returns a color value from red, green, and blue
+ * values. Alpha will be set to 1.0f.
+ * @param r	The desired red channel [0-1.0f].
+ * @param g	The desired green channel [0-1.0f].
+ * @param b	The desired blue channel [0-1.0f].
+ * @return	A color value constructed from the
+ *			provided params, with alpha at 1.0f.
+ */
 WimaColor wima_color_rgbf(float r, float g, float b) yinline;
 
-// Returns a color value from red, green, blue and alpha values.
+/**
+ * Returns a color value from red, green, blue,
+ * and alpha values.
+ * @param r	The desired red channel [0-255].
+ * @param g	The desired green channel [0-255].
+ * @param b	The desired blue channel [0-255].
+ * @param a	The desired alpha channel [0-255].
+ * @return	A color value constructed from the
+ *			provided params.
+ */
 WimaColor wima_color_rgba(unsigned char r, unsigned char g, unsigned char b, unsigned char a) yinline;
 
-// Returns a color value from red, green, blue and alpha values.
+/**
+ * Returns a color value from red, green, blue,
+ * and alpha values.
+ * @param r	The desired red channel [0-1.0f].
+ * @param g	The desired green channel [0-1.0f].
+ * @param b	The desired blue channel [0-1.0f].
+ * @param a	The desired alpha channel [0-1.0f].
+ * @return	A color value constructed from the
+ *			provided params.
+ */
 WimaColor wima_color_rgbaf(float r, float g, float b, float a) yinline;
 
-// Linearly interpolates from color c0 to c1, and returns resulting color value.
+/**
+ * Linearly interpolates from @a c0 to @a c1,
+ * using @a u, and returns the resulting color.
+ * @param c0	The starting color.
+ * @param c1	The ending color
+ * @param u		The amount to interpolate.
+ * @return		The interpolated color.
+ */
 WimaColor wima_color_lerp(WimaColor c0, WimaColor c1, float u) yinline;
 
-// Sets transparency of a color value.
+/**
+ * Sets transparency of a color value.
+ * @param c0	The color whose transparency will be set.
+ * @param a		The new alpha value of the color [0-255].
+ * @return		The resulting color.
+ */
 WimaColor wima_color_setAlpha(WimaColor c0, unsigned char a) yinline;
 
-// Sets transparency of a color value.
+/**
+ * Sets transparency of a color value.
+ * @param c0	The color whose transparency will be set.
+ * @param a		The new alpha value of the color [0-1.0f].
+ * @return		The resulting color.
+ */
 WimaColor wima_color_setAlphaf(WimaColor c0, float a) yinline;
 
-// make color transparent using the default alpha value
+/**
+ * Multiply @a color's alpha by @a a.
+ * @param color	The color whose alpha will by multiplied.
+ * @param a		The alpha to multiply by [0-1.0f].
+ * @return		The resulting color.
+ */
 WimaColor wima_color_multiplyAlphaf(WimaColor color, float a) yinline;
 
-// Returns color value specified by hue, saturation and lightness.
-// HSL values are all in range [0..1], alpha will be set to 255.
+/**
+ * Returns color value specified by hue, saturation and lightness.
+ * Alpha will be set to 255 (1.0f).
+ * @param h	The desired hue [0-255].
+ * @param s	The desired saturation [0-255].
+ * @param l	The desired lightness [0-255].
+ * @return	A color constructed from the provided params.
+ */
 WimaColor wima_color_hsl(float h, float s, float l) yinline;
 
-// Returns color value specified by hue, saturation and lightness and alpha.
-// HSL values are all in range [0..1], alpha in range [0..255]
+/**
+ * Returns color value specified by hue, saturation and lightness.
+ * @param h	The desired hue [0-1.0f].
+ * @param s	The desired saturation [0-1.0f].
+ * @param l	The desired lightness [0-1.0f].
+ * @param a	The desired alpha [0-255].
+ * @return	A color constructed from the provided params.
+ */
 WimaColor wima_color_hsla(float h, float s, float l, unsigned char a) yinline;
 
-// offset a color by a given integer delta in the range -100 to 100
+/**
+ * Offset a color by a given delta.
+ * @param color	The color to offset.
+ * @param delta	The delta to offset by [-100, 100].
+ * @return		The offset color.
+ */
 WimaColor wima_color_offset(WimaColor color, int delta) yinline;
 
-// Creates and returns a linear gradient. Parameters (sx,sy)-(ex,ey) specify the start and end coordinates
-// of the linear gradient, icol specifies the start color and ocol the end color.
-// The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
+/**
+ * Creates and returns a linear gradient starting at @a s,
+ * ending at @a e, with @a icol as the start color and
+ * @a ocol as the end color.
+ * @param ctx	The render context to use.
+ * @param s		The start coordinates of the gradient.
+ * @param e		The end coordinates of the gradient.
+ * @param icol	The start color of the gradient.
+ * @param ocol	The end color of the gradient.
+ * @return		The gradient as a paint.
+ * @pre			@a ctx must not be NULL.
+ */
 WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecf s, WimaVecf e,
                                     WimaColor icol, WimaColor ocol) yinline;
 
-// Creates and returns a box gradient. Box gradient is a feathered rounded rectangle, it is useful for rendering
-// drop shadows or highlights for boxes. Parameters (x,y) define the top-left corner of the rectangle,
-// (w,h) define the size of the rectangle, r defines the corner radius, and f feather. Feather defines how blurry
-// the border of the rectangle is. Parameter icol specifies the inner color and ocol the outer color of the gradient.
-// The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
+/**
+ * Creates and returns a box gradient. Box gradient is a
+ * feathered rounded rectangle; it is useful for rendering
+ * drop shadows or highlights for boxes. Param @a rect is
+ * the gradient rectangle, @a r is the corner radius, @a f
+ * is the feather (how blurry the border of the rectangle
+ * is), and @a icol and @a ocol specify the inner and outer
+ * colors, respectively.
+ * @param ctx	The render context to use.
+ * @param rect	The gradient rectangle.
+ * @param r		The corner radius of the rectangle.
+ * @param f		The feather of the rectangle.
+ * @param icol	The inner color of the gradient.
+ * @param ocol	The outer color of the gradient.
+ * @return		The gradient as a paint.
+ * @pre			@a ctx must not be NULL.
+ */
 WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r, float f,
                                  WimaColor icol, WimaColor ocol) yinline;
 
-// Creates and returns a radial gradient. Parameters (cx,cy) specify the center, inr and outr specify
-// the inner and outer radius of the gradient, icol specifies the start color and ocol the end color.
-// The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
+/**
+ * Creates and returns a radial gradient, where @a is the center point,
+ * @a inr and @a outr specify the inner and outer radius of the gradient,
+ * and @a icol and @a ocol specify the inner and outer colors, respectively.
+ * @param ctx	The render context to use.
+ * @param c		The center point.
+ * @param inr	The inner radius of the gradient.
+ * @param outr	The outer radius of the gradient.
+ * @param icol	The inner color of the gradient.
+ * @param ocol	The outer color of the gradient.
+ * @return		The gradient as a paint.
+ * @pre			@a ctx must not be NULL.
+ */
 WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecf c, float inr,
                                     float outr, WimaColor icol, WimaColor ocol) yinline;
 
-// Creates and returns an image patter. Parameters (ox,oy) specify the left-top location of the image pattern,
-// (ex,ey) the size of one image, angle rotation around the top-left corner, image is handle to the image to render.
-// The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
+/**
+ * Creates and returns an image pattern, where @a o is the top left of
+ * the image pattern, @a e is the size of one image, @a angle is rotation
+ * in radians around the top left corner, @a image is the handle to the
+ * image to render, and @a alpha is the alpha to render at.
+ * @param ctx	The render context to use.
+ * @param o		The top left corner.
+ * @param e		Size (extent) of one image.
+ * @param angle	The rotation around the top left corner in radians.
+ * @param image	The image handle for the pattern.
+ * @param alpha	The alpha to render at.
+ * @return		The image pattern as a paint.
+ * @pre			@a ctx must not be NULL.
+ */
 WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecf o, WimaSizef e,
                                   float angle, int image, float alpha) yinline;
 
-// Flags indicating which corners are sharp (for grouping widgets).
+/**
+ * Flags representing which corners are sharp. This is done to align
+ * (group) widgets like Blender does.
+ */
 typedef enum WimaWidgetCorner {
 
-	// All corners are round.
+	/// All corners are round.
 	WIMA_CORNER_NONE = 0,
 
-	// Sharp top left corner.
+	/// Sharp top left corner.
 	WIMA_CORNER_TOP_LEFT = 1,
 
-	// Sharp top right corner.
+	/// Sharp top right corner.
 	WIMA_CORNER_TOP_RIGHT = 2,
 
-	// Sharp bottom right corner.
+	/// Sharp bottom right corner.
 	WIMA_CORNER_DOWN_RIGHT = 4,
 
-	// Sharp bottom left corner.
+	/// Sharp bottom left corner.
 	WIMA_CORNER_DOWN_LEFT = 8,
 
-	// All corners are sharp; you can invert a
-	// set of flags using ^= WIMA_CORNER_ALL.
+	/// All corners are sharp; you can invert a
+	/// set of flags using ^= WIMA_CORNER_ALL.
 	WIMA_CORNER_ALL = 0xF,
 
-	// Top border is sharp.
+	/// Top border is sharp.
 	WIMA_CORNER_TOP = 3,
 
-	// Bottom border is sharp.
+	/// Bottom border is sharp.
 	WIMA_CORNER_DOWN = 0xC,
 
-	// Left border is sharp.
+	/// Left border is sharp.
 	WIMA_CORNER_LEFT = 9,
 
-	// Right border is sharp.
+	/// Right border is sharp.
 	WIMA_CORNER_RIGHT = 6
 
 } WimaWidgetCorner;
 
-// alpha of disabled widget groups
-// can be used in conjunction with nvgGlobalAlpha()
+/**
+ * @def Alpha of disabled widget groups. Can be used
+ * in conjunction with wima_style_setGlobalAlpha().
+ */
 #define WIMA_DISABLED_ALPHA 0.5
 
 // TODO: Get rid of these icon things when scalable icons come.
 
-// build an icon ID from two coordinates into the icon sheet, where
-// (0,0) designates the upper-leftmost icon, (1,0) the one right next to it,
-// and so on.
+/// Build an icon ID from two coordinates into the icon sheet, where
+/// (0,0) designates the upper-leftmost icon, (1,0) the one right next to it,
+/// and so on.
 #define WIMA_ICONID(x,y) ((x)|((y)<<8))
+
+/**
+ * All Blender icons (will be removed).
+ */
 typedef enum WimaIcon {
+
+	//! @cond Doxygen suppress.
+
 	WIMA_ICON_NONE = WIMA_ICONID(0,29),
 	WIMA_ICON_QUESTION = WIMA_ICONID(1,29),
 	WIMA_ICON_ERROR = WIMA_ICONID(2,29),
@@ -837,6 +1072,9 @@ typedef enum WimaIcon {
 	WIMA_ICON_IMAGE_ALPHA = WIMA_ICONID(11,0),
 	WIMA_ICON_IMAGE_ZDEPTH = WIMA_ICONID(12,0),
 	WIMA_ICON_IMAGEFILE = WIMA_ICONID(13,0),
+
+	//! @endcond Doxygen suppress.
+
 } WimaIcon;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1472,6 +1710,10 @@ WimaColor wima_render_textColor(WimaWidgetTheme* theme, WimaWidgetState state);
 WimaColor wima_render_node_wireColor(WimaNodeTheme* theme, WimaWidgetState state);
 
 ////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }
