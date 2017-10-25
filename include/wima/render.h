@@ -1794,54 +1794,162 @@ typedef enum WimaSolidarity {
 
 } WimaSolidarity;
 
-// Clears the current path and sub-paths.
+/**
+ * Clears the current path and sub-paths in the @a WimaRenderContext.
+ * @param ctx	The @a WimaRenderContext to clear.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_begin(WimaRenderContext* ctx) yinline;
 
-// Starts new sub-path with specified point as first point.
+/**
+ * Starts new sub-path in the @a WimaRenderContext
+ * with @a pt as first point.
+ * @param ctx	The @a WimaRenderContext to start.
+ * @param pt	The point to start at.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_moveTo(WimaRenderContext* ctx, WimaVecf pt) yinline;
 
-// Adds line segment from the last point in the path to the specified point.
+/**
+ * Adds line segment from the last point in the path to
+ * the specified point.
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param pt	The point to create a line to.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_lineTo(WimaRenderContext* ctx, WimaVecf pt) yinline;
 
-// Adds cubic bezier segment from last point in the path via two control points to the specified point.
+/**
+ * Adds cubic bezier segment from last point in the path
+ * via two control points to the specified point.
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param pt	The point to create a curve to.
+ * @param c1	The first control point.
+ * @param c2	The second control point.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_bezierTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c1, WimaVecf c2) yinline;
 
-// Adds quadratic bezier segment from last point in the path via a control point to the specified point.
+/**
+ * Adds quadratic bezier segment from last point in the
+ * path via a control point to the specified point.
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param pt	The point to create a curve to.
+ * @param c1	The control point.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_quadTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c) yinline;
 
-// Adds an arc segment at the corner defined by the last path point, and two specified points.
+/**
+ * Adds an arc segment at the corner defined by
+ * the last path point, and two specified points.
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param pt1		The first point to define the arc.
+ * @param pt2		The second point to define the arc.
+ * @param radius	The radius of the arc.
+ * @pre				@a ctx must not be NULL.
+ */
 void wima_path_arcTo(WimaRenderContext* ctx, WimaVecf pt1, WimaVecf pt2, float radius) yinline;
 
-// Closes current sub-path with a line segment.
+/**
+ * Closes current sub-path with a line segment.
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_close(WimaRenderContext* ctx) yinline;
 
-// Sets the current sub-path winding, see NVGwinding and NVGsolidity.
+/**
+ *Sets the current sub-path winding. Both
+ * @a WimaWinding and @a WimaSolidarity work.
+ * @param ctx	The @a WimaRenderContext whose
+ *				path winding will be set.
+ * @param dir	The winding direction to set.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_winding(WimaRenderContext* ctx, WimaWinding dir) yinline;
 
-// Creates new circle arc shaped sub-path. The arc center is at cx,cy, the arc radius is r,
-// and the arc is drawn from angle a0 to a1, and swept in direction dir (NVG_CCW, or NVG_CW).
-// Angles are specified in radians.
+/**
+ * Creates new circle arc shaped sub-path. The arc
+ * center is at @a c, the arc radius is @a r, and
+ * the arc is drawn from angle @a a0 to @a a1, and
+ * swept in direction @a dir. Angles are specified
+ * in radians.
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param c		The center of the circle arc.
+ * @param r		The radius of the circle arc.
+ * @param a0	The starting angle of the sweep.
+ * @param a1	The ending angle of the sweep.
+ * @param dir	The sweep direction.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_arc(WimaRenderContext* ctx, WimaVecf c, float r, float a0, float a1, WimaWinding dir) yinline;
 
-// Creates new rectangle shaped sub-path.
+/**
+ * Creates new rectangle shaped sub-path.
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param rect	The rectangle to render.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_rect(WimaRenderContext* ctx, WimaRectf rect) yinline;
 
 // Creates new rounded rectangle shaped sub-path.
+/**
+ * Creates new rounded rectangle shaped sub-path
+ * whose corners have @a r radius.
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param rect	The rectangle to render.
+ * @param r		The radius of all corners.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_roundedRect(WimaRenderContext* ctx, WimaRectf rect, float r) yinline;
 
-// Creates new rounded rectangle shaped sub-path with varying radii for each corner.
-void wima_path_roundedRectVary(WimaRenderContext* ctx, WimaRectf rect, float tl, float tr, float br, float bl) yinline;
+/**
+ * Creates new rounded rectangle shaped sub-path with varying radii for each corner.
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param rect	The rectangle to render.
+ * @param tl	The radius of the top left corner.
+ * @param tr	The radius of the top right corner.
+ * @param br	The radius of the bottom left corner.
+ * @param bl	The radius of the bottom right corner.
+ * @pre			@a ctx must not be NULL.
+ */
+void wima_path_roundedRectVary(WimaRenderContext* ctx, WimaRectf rect,
+                               float tl, float tr, float br, float bl) yinline;
 
-// Creates new ellipse shaped sub-path.
+/**
+ * Creates new ellipse shaped sub-path with @a c
+ * as the center, @a rx radius on the X axis, and
+ * @a ry radius on the Y axis.
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param c		The center of the ellipse.
+ * @param rx	The radius on the X axis.
+ * @param ry	The radius on the Y axis.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_ellipse(WimaRenderContext* ctx, WimaVecf c, float rx, float ry) yinline;
 
-// Creates new circle shaped sub-path.
+/**
+ * Creates new circle shaped sub-path centered at @a c
+ * with radius @a r.
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param c		The center of the circle.
+ * @param r		The radius of the circle.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_circle(WimaRenderContext* ctx, WimaVecf c, float r) yinline;
 
-// Fills the current path with current fill style.
+/**
+ * Fills the current path with current fill style.
+ * @param ctx	The @a WimaRenderContext to fill.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_fill(WimaRenderContext* ctx) yinline;
 
-// Fills the current path with current stroke style.
+/**
+ * Strokes the current path with current stroke style.
+ * @param ctx	The @a WimaRenderContext to stroke.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_path_stroke(WimaRenderContext* ctx) yinline;
 
 /**
