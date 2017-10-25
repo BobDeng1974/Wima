@@ -95,19 +95,19 @@ typedef struct WimaPropGroup WimaPropGroup;
 
 /**
  * A function to allow a pointer property to draw itself.
- * @param wdgt	The widget that will contain the property.
- * @param ptr	The pointer of the widget.
- * @return		WIMA_STATUS_SUCCESS if the drawing was successful.
+ * @param layout	The widget that will contain the property.
+ * @param ptr		The pointer of the widget.
+ * @return			WIMA_STATUS_SUCCESS if the drawing was successful.
  */
-typedef WimaStatus (*WimaPropPtrDrawFunc)(WimaWidget, void*);
+typedef WimaStatus (*WimaPropPtrDrawFunc)(WimaLayout, void*);
 
 /**
  * A function to allow a list property to draw itself.
- * @param wdgt	The widget that will contain the property.
- * @param vec	The vector (list) in the property.
- * @return		WIMA_STATUS_SUCCESS if the drawing was successful.
+ * @param layout	The widget that will contain the property.
+ * @param vec		The vector (list) in the property.
+ * @return			WIMA_STATUS_SUCCESS if the drawing was successful.
  */
-typedef WimaStatus (*WimaPropListDrawFunc)(WimaWidget, DynaVector);
+typedef WimaStatus (*WimaPropListDrawFunc)(WimaLayout, DynaVector);
 
 /**
  * A function to allow Wima to free a pointer associated with a property.
