@@ -346,24 +346,212 @@ WimaColor wima_prop_color(WimaProperty wph) yinline;
  */
 void* wima_prop_ptr(WimaProperty wph) yinline;
 
+/**
+ * Registers and returns a @a WIMA_PROP_GROUP. It is
+ * initially empty.
+ *
+ * Wima will not allow this to be drawn in the UI.
+ * @param name	The name of the property. This needs
+ *				to be a unique string identifier.
+ * @param label	The label of the property. This is
+ *				used as a label in the UI.
+ * @param desc	The description of the property.
+ *				This is used as a tooltip.
+ * @return		The newly-created @a WimaProperty.
+ * @pre			@a name must not be NULL.
+ */
 WimaProperty wima_prop_registerGroup(const char* name, const char* label, const char* desc);
+
+/**
+ * Registers and returns a @a WIMA_PROP_BOOL. Its
+ * initial value is set to @a initial.
+ *
+ * Wima will draw this in the UI as a checkbox.
+ * @param name		The name of the property. This needs
+ *					to be a unique string identifier.
+ * @param label		The label of the property. This is
+ *					used as a label in the UI.
+ * @param desc		The description of the property.
+ *					This is used as a tooltip.
+ * @param initial	The initial value of the property.
+ * @return			The newly-created @a WimaProperty.
+ * @pre				@a name must not be NULL.
+ */
 WimaProperty wima_prop_registerBool(const char* name, const char* label, const char* desc, bool initial);
+
+/**
+ * Registers and returns a @a WIMA_PROP_INT. Its
+ * initial value is set to @a initial, while @a min
+ * and @a max set the range and @a step sets the
+ * step amount.
+ *
+ * Wima will draw this in the UI in one of two ways: if
+ * the min is 0 and the max is 100, it will be drawn as a
+ * slider. Otherwise, it will be drawn as a number field.
+ * @param name		The name of the property. This needs
+ *					to be a unique string identifier.
+ * @param label		The label of the property. This is
+ *					used as a label in the UI.
+ * @param desc		The description of the property.
+ *					This is used as a tooltip.
+ * @param initial	The initial value of the property.
+ * @param min		The min value of the property.
+ * @param max		The max value of the property.
+ * @param step		The step for the property.
+ * @return			The newly-created @a WimaProperty.
+ * @pre				@a name must not be NULL.
+ */
 WimaProperty wima_prop_registerInt(const char* name, const char* label, const char* desc,
                                    int initial, int min, int max, uint32_t step);
+
+/**
+ * Registers and returns a @a WIMA_PROP_FLOAT. Its
+ * initial value is set to @a initial, while @a min
+ * and @a max set the range and @a step sets the
+ * step amount.
+ *
+ * Wima will draw this in the UI in one of two ways: if
+ * the min is 0 and the max is 1, it will be drawn as a
+ * slider. Otherwise, it will be drawn as a number field.
+ * @param name		The name of the property. This needs
+ *					to be a unique string identifier.
+ * @param label		The label of the property. This is
+ *					used as a label in the UI.
+ * @param desc		The description of the property.
+ *					This is used as a tooltip.
+ * @param initial	The initial value of the property.
+ * @param min		The min value of the property.
+ * @param max		The max value of the property.
+ * @param step		The step for the property.
+ * @return			The newly-created @a WimaProperty.
+ * @pre				@a name must not be NULL.
+ */
 WimaProperty wima_prop_registerFloat(const char* name, const char* label, const char* desc,
                                      float initial, float min, float max, uint32_t step);
+
+/**
+ * Registers and returns a @a WIMA_PROP_STRING. Its
+ * initial value is set to @a str.
+ *
+ * Wima will draw this in the UI as a text box.
+ * @param name	The name of the property. This needs
+ *				to be a unique string identifier.
+ * @param label	The label of the property. This is
+ *				used as a label in the UI.
+ * @param desc	The description of the property.
+ *				This is used as a tooltip.
+ * @param str	The initial string.
+ * @return		The newly-created @a WimaProperty.
+ * @pre			@a name must not be NULL.
+ * @pre			@a str must not be NULL.
+ */
 WimaProperty wima_prop_registerString(const char* name, const char* label, const char* desc, DynaString str);
+
+/**
+ * Registers and returns a @a WIMA_PROP_ENUM. Its initial
+ * index value is set to @a initialIdx.
+ *
+ * Wima will draw this in the UI as a set of radio buttons.
+ * @param name		The name of the property. This needs
+ *					to be a unique string identifier.
+ * @param label		The label of the property. This is
+ *					used as a label in the UI.
+ * @param desc		The description of the property.
+ *					This is used as a tooltip.
+ * @param names		The names of each index. Wima uses
+ *					these as labels.
+ * @param vals		The values of each option.
+ * @param nvals		The number of values.
+ * @param initalIdx	The initial index for the enum.
+ * @return			The newly-created @a WimaProperty.
+ * @pre				@a name must not be NULL.
+ */
 WimaProperty wima_prop_registerEnum(const char* name, const char* label, const char* desc,
                                     const char* names[], const uint32_t* vals,
                                     uint32_t nvals, uint32_t initalIdx);
+
+/**
+ * Registers and returns a @a WIMA_PROP_LIST. It is set
+ * to @a list.
+ *
+ * Wima will draw this is the UI as a dropdown.
+ * @param name	The name of the property. This needs
+ *				to be a unique string identifier.
+ * @param label	The label of the property. This is
+ *				used as a label in the UI.
+ * @param desc	The description of the property.
+ *				This is used as a tooltip.
+ * @param list	The initial list.
+ * @param draw	The function to draw the list.
+ * @return		The newly-created @a WimaProperty.
+ * @pre			@a name must not be NULL.
+ * @pre			@a list must not be NULL.
+ */
 WimaProperty wima_prop_registerList(const char* name, const char* label, const char* desc,
                                     DynaVector list, WimaPropListDrawFunc draw);
+
+/**
+ * Registers and returns a @a WIMA_PROP_COLOR. It is set
+ * to @a initial.
+ *
+ * Wima will draw this in the UI as a color button that
+ * will bring up a color picker when clicked.
+ * @param name		The name of the property. This needs
+ *					to be a unique string identifier.
+ * @param label		The label of the property. This is
+ *					used as a label in the UI.
+ * @param desc		The description of the property.
+ *					This is used as a tooltip.
+ * @param initial	The initial color of the property.
+ * @return			The newly-created @a WimaProperty.
+ * @pre				@a name must not be NULL.
+ */
 WimaProperty wima_prop_registerColor(const char* name, const char* label, const char* desc, WimaColor initial);
+
+/**
+ * Registers and returns a @a WIMA_PROP_PTR. It is set
+ * to @a ptr.
+ *
+ * Wima will use @a draw to draw this in the UI.
+ * @param name	The name of the property. This needs
+ *				to be a unique string identifier.
+ * @param label	The label of the property. This is
+ *				used as a label in the UI.
+ * @param desc	The description of the property.
+ *				This is used as a tooltip.
+ * @param ptr	The initial pointer.
+ * @param draw	The function to draw this property.
+ * @param free	The function to free this property.
+ * @return		The newly-created @a WimaProperty.
+ * @pre			@a name must not be NULL.
+ */
 WimaProperty wima_prop_registerPtr(const char* name, const char* label, const char* desc,
                                    void* ptr, WimaPropPtrDrawFunc draw, WimaPropFreeFunc free);
+
+/**
+ * Registers and returns a @a WIMA_PROP_OPERATOR. It
+ * is set to @a op.
+ *
+ * Wima will draw this as a button in the UI.
+ * @param name	The name of the property. This needs
+ *				to be a unique string identifier.
+ * @param label	The label of the property. This is
+ *				used as a label in the UI.
+ * @param desc	The description of the property.
+ *				This is used as a tooltip.
+ * @param op	The function to call when this prop
+ *				is clicked.
+ * @return		The newly-created @a WimaProperty.
+ * @pre			@a name must not be NULL.
+ */
 WimaProperty wima_prop_registerOperator(const char* name, const char* label,
                                         const char* desc, WimaItemMouseClickFunc op);
 
+/**
+ * Unregisters @a wph and removes all memory
+ * associated with it.
+ * @param wph	The @a WimaProperty to remove.
+ */
 void wima_prop_unregister(WimaProperty wph);
 
 /**
