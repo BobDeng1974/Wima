@@ -106,11 +106,11 @@ typedef struct WimaPropInfo {
 
 	uint64_t hash;
 
-	DynaString name;
+	char* name;
 
-	DynaString label;
+	char* label;
 
-	DynaString desc;
+	char* desc;
 
 } WimaPropInfo;
 

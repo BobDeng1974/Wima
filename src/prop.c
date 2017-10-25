@@ -38,6 +38,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <yc/mem.h>
+
 #include <dyna/hash.h>
 #include <dyna/vector.h>
 #include <dyna/nvector.h>
@@ -123,10 +125,7 @@ WimaProperty wima_prop_find(const char* name) {
 
 	for (size_t i = 0; i < len; ++i) {
 
-		if (props[i].idx == i &&
-		    hash == props[i].hash &&
-		    !strcmp(name, dstr_str(props[i].name)))
-		{
+		if (props[i].idx == i && hash == props[i].hash && !strcmp(name, props[i].name)) {
 			return (WimaProperty) i;
 		}
 	}
@@ -763,16 +762,11 @@ void wima_prop_free(WimaProperty wph) {
 			break;
 	}
 
-	dstr_free(prop->name);
+	// Only free the name because the label
+	// and desc are jointly allocated.
+	yfree(prop->name);
 
-	if (prop->desc) {
-		dstr_free(prop->desc);
-	}
-
-	if (prop->label) {
-		dstr_free(prop->label);
-	}
-
+	// Set the index as invalid to tell Wima it's available.
 	prop->idx = WIMA_PROP_INVALID;
 }
 
@@ -828,19 +822,38 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 
 	WimaPropInfo prop;
 
-	prop.name = dstr_create(name);
+	// Calculate the name length and add it to the sum.
+	size_t nameLen = slen + 1;
+	size_t sum = nameLen;
+
+	// Calculate the label length and add it to the sum.
+	size_t labelLen = label ? strlen(label) + 1 : 0;
+	sum += labelLen;
+
+	// Calculate the desc length and add it to the sum.
+	size_t descLen = desc ? strlen(desc) + 1 : 0;
+	sum += descLen;
+
+	// Allocate the space.
+	prop.name = ymalloc(sum);
+
+	// Check for failure.
 	if (yunlikely(!prop.name)) {
 		return WIMA_PROP_INVALID;
 	}
 
+	// Copy into the name.
+	prop.name[0] = '\0';
+	strcat(prop.name, name);
+
 	if (label) {
 
-		prop.label = dstr_create(label);
+		// Calculate the pointer.
+		prop.label = prop.name + nameLen;
 
-		if (yunlikely(!prop.label)) {
-			dstr_free(prop.name);
-			return WIMA_PROP_INVALID;
-		}
+		// Copy into the label.
+		prop.label[0] = '\0';
+		strcat(prop.label, label);
 	}
 	else {
 
@@ -850,13 +863,12 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 
 	if (desc) {
 
-		prop.desc = dstr_create(desc);
+		// Calculate the pointer.
+		prop.label = prop.name + nameLen + labelLen;
 
-		if (yunlikely(!prop.desc)) {
-			dstr_free(prop.label);
-			dstr_free(prop.name);
-			return WIMA_PROP_INVALID;
-		}
+		// Copy into the label.
+		prop.desc[0] = '\0';
+		strcat(prop.desc, label);
 	}
 	else {
 
