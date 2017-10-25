@@ -556,13 +556,6 @@ typedef enum WimaWidgetCorner {
 
 } WimaWidgetCorner;
 
-/**
- * @def WIMA_DISABLED_ALPHA
- * Alpha of disabled widget groups. Can be used
- * in conjunction with wima_style_setGlobalAlpha().
- */
-#define WIMA_DISABLED_ALPHA 0.5
-
 // TODO: Get rid of these icon things when scalable icons come.
 
 /// Build an icon ID from two coordinates into the icon sheet, where
@@ -1243,52 +1236,6 @@ void wima_render_restore(WimaRenderContext* ctx) yinline;
 // Resets current render state to default values. Does not affect the render state stack.
 void wima_render_reset(WimaRenderContext* ctx) yinline;
 
-////////////////////////////////////////////////////////////////////////////////
-// Render style functions.
-////////////////////////////////////////////////////////////////////////////////
-
-// Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
-void wima_style_antialias(WimaRenderContext* ctx, bool enabled) yinline;
-
-// Sets the stroke width of the stroke style.
-void wima_style_stroke_width(WimaRenderContext* ctx, float size) yinline;
-
-// Sets current stroke style to a solid color.
-void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color) yinline;
-
-// Sets current stroke style to a paint, which can be a one of the gradients or a pattern.
-void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint) yinline;
-
-// Sets current fill style to a solid color.
-void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color) yinline;
-
-// Sets current fill style to a paint, which can be a one of the gradients or a pattern.
-void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint) yinline;
-
-// Sets the miter limit of the stroke style.
-// Miter limit controls when a sharp corner is beveled.
-void wima_style_miter_limit(WimaRenderContext* ctx, float limit) yinline;
-
-// Sets how the end of the line (cap) is drawn,
-// Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.
-void wima_style_line_cap(WimaRenderContext* ctx, WimaLineCap cap) yinline;
-
-// Sets how sharp path corners are drawn.
-// Can be one of NVG_MITER (default), NVG_ROUND, NVG_BEVEL.
-void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join) yinline;
-
-// Sets the transparency applied to all rendered shapes.
-// Already transparent paths will get proportionally more transparent as well.
-void wima_style_globalAlpha(WimaRenderContext* ctx, float alpha) yinline;
-
-void wima_style_globalBlendRGB(WimaRenderContext* ctx, WimaBlend src, WimaBlend dst) yinline;
-void wima_style_globalBlendRGBA(WimaRenderContext* ctx, WimaBlend srcRGB, WimaBlend dstRGB,
-                     WimaBlend srcA, WimaBlend dstA) yinline;
-
-////////////////////////////////////////////////////////////////////////////////
-// Render transform functions.
-////////////////////////////////////////////////////////////////////////////////
-
 // Resets current transform to a identity matrix.
 void wima_render_resetTransform(WimaRenderContext* ctx) yinline;
 
@@ -1335,6 +1282,55 @@ void wima_render_intersectScissor(WimaRenderContext* ctx, WimaRectf rect) yinlin
 
 // Reset and disables scissoring.
 void wima_render_resetScissor(WimaRenderContext* ctx) yinline;
+
+////////////////////////////////////////////////////////////////////////////////
+// Render style functions.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @def WIMA_DISABLED_ALPHA
+ * Alpha of disabled widget groups. Can be used
+ * in conjunction with wima_style_setGlobalAlpha().
+ */
+#define WIMA_STYLE_DISABLED_ALPHA 0.5
+
+// Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
+void wima_style_antialias(WimaRenderContext* ctx, bool enabled) yinline;
+
+// Sets the stroke width of the stroke style.
+void wima_style_stroke_width(WimaRenderContext* ctx, float size) yinline;
+
+// Sets current stroke style to a solid color.
+void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color) yinline;
+
+// Sets current stroke style to a paint, which can be a one of the gradients or a pattern.
+void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint) yinline;
+
+// Sets current fill style to a solid color.
+void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color) yinline;
+
+// Sets current fill style to a paint, which can be a one of the gradients or a pattern.
+void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint) yinline;
+
+// Sets the miter limit of the stroke style.
+// Miter limit controls when a sharp corner is beveled.
+void wima_style_miter_limit(WimaRenderContext* ctx, float limit) yinline;
+
+// Sets how the end of the line (cap) is drawn,
+// Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.
+void wima_style_line_cap(WimaRenderContext* ctx, WimaLineCap cap) yinline;
+
+// Sets how sharp path corners are drawn.
+// Can be one of NVG_MITER (default), NVG_ROUND, NVG_BEVEL.
+void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join) yinline;
+
+// Sets the transparency applied to all rendered shapes.
+// Already transparent paths will get proportionally more transparent as well.
+void wima_style_globalAlpha(WimaRenderContext* ctx, float alpha) yinline;
+
+void wima_style_globalBlendRGB(WimaRenderContext* ctx, WimaBlend src, WimaBlend dst) yinline;
+void wima_style_globalBlendRGBA(WimaRenderContext* ctx, WimaBlend srcRGB, WimaBlend dstRGB,
+                     WimaBlend srcA, WimaBlend dstA) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Paths.
