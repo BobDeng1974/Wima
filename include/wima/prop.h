@@ -221,7 +221,7 @@ void wima_prop_setBool(WimaProperty wph, bool val) yinline;
 
 /**
  * Returns the bool contained in @a wph.
- * @param wph	The @WimaProperty whose bool will be
+ * @param wph	The @a WimaProperty whose bool will be
  *				returned.
  * @return		The value contained in @a wph.
  * @pre			@a wph must be a valid @a WimaProperty.
@@ -240,7 +240,7 @@ void wima_prop_setInt(WimaProperty wph, int val) yinline;
 
 /**
  * Returns the int contained in @a wph.
- * @param wph	The @WimaProperty whose int will be
+ * @param wph	The @a WimaProperty whose int will be
  *				returned.
  * @return		The value contained in @a wph.
  * @pre			@a wph must be a valid @a WimaProperty.
@@ -259,7 +259,7 @@ void wima_prop_setFloat(WimaProperty wph, float val) yinline;
 
 /**
  * Returns the float contained in @a wph.
- * @param wph	The @WimaProperty whose float will be
+ * @param wph	The @a WimaProperty whose float will be
  *				returned.
  * @return		The value contained in @a wph.
  * @pre			@a wph must be a valid @a WimaProperty.
@@ -271,7 +271,7 @@ float wima_prop_float(WimaProperty wph) yinline;
  * Returns the DynaString contained in @a wph. The actual
  * DynaString will be returned, so the user can edit it
  * how they wish, and the changes will be reflected in Wima.
- * @param wph	The @WimaProperty whose DynaString will be
+ * @param wph	The @a WimaProperty whose DynaString will be
  *				returned.
  * @return		The value contained in @a wph.
  * @pre			@a wph must be a valid @a WimaProperty.
@@ -290,7 +290,7 @@ void wima_prop_setEnumIdx(WimaProperty wph, uint32_t idx) yinline;
 
 /**
  * Returns the enum index contained in @a wph.
- * @param wph	The @WimaProperty whose enum index will be
+ * @param wph	The @a WimaProperty whose enum index will be
  *				returned.
  * @return		The value contained in @a wph.
  * @pre			@a wph must be a valid @a WimaProperty.
@@ -303,7 +303,7 @@ uint32_t wima_prop_enumIdx(WimaProperty wph) yinline;
  * DynaVector will be returned, so the user can manipulate
  * it however they like, and the changes will be reflected
  * in Wima.
- * @param wph	The @WimaProperty whose DynaVector will be
+ * @param wph	The @a WimaProperty whose DynaVector will be
  *				returned.
  * @return		The value contained in @a wph.
  * @pre			@a wph must be a valid @a WimaProperty.
@@ -322,7 +322,7 @@ void wima_prop_setColor(WimaProperty wph, WimaColor color) yinline;
 
 /**
  * Returns the color contained in @a wph.
- * @param wph	The @WimaProperty whose color will be
+ * @param wph	The @a WimaProperty whose color will be
  *				returned.
  * @return		The value contained in @a wph.
  * @pre			@a wph must be a valid @a WimaProperty.
@@ -332,7 +332,7 @@ WimaColor wima_prop_color(WimaProperty wph) yinline;
 
 /**
  * Returns the pointer contained in @a wph.
- * @param wph	The @WimaProperty whose pointer will be
+ * @param wph	The @a WimaProperty whose pointer will be
  *				returned.
  * @return		The value contained in @a wph.
  * @pre			@a wph must be a valid @a WimaProperty.
