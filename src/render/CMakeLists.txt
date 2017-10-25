@@ -36,11 +36,11 @@ set(WIMA_RENDER_SRC
 	"color.c"
 	"paint.c"
 	"theme.c"
-	"state.c"
 	"style.c"
 	"path.c"
 	"text.c"
 	"render.c"
+	"ui.c"
 )
 
 set(WIMA_MATH "${PROJECT_NAME}_math")
