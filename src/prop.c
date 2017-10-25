@@ -59,7 +59,6 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
                                        WimaPropType type, const WimaPropData* data);
 
 #ifdef __YASSERT__
-bool wima_prop_valid(WimaProperty wph);
 static bool wima_prop_enumNamesValid(const char* names[], uint32_t numNames);
 #endif
 
