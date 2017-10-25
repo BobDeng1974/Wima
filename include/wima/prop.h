@@ -124,6 +124,37 @@ typedef void (*WimaPropFreeFunc)(void*);
 WimaPropType wima_prop_type(WimaProperty wph) yinline;
 
 /**
+ * Returns the name of @a wph. The name is a non-editable
+ * string that *must* be a unique identifier. It is used
+ * to search.
+ * @param wph	The @a WimaProperty whose name will be
+ *				returned.
+ * @return		The name of @a wph.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ */
+const char* wima_prop_name(WimaProperty wph) yinline;
+
+/**
+ * Returns the label of @a wph. The label is what Wima
+ * uses as the label in the UI (if appropriate).
+ * @param wph	The @a WimaProperty whose label will be
+ *				returned.
+ * @return		The label of @a wph.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ */
+const char* wima_prop_label(WimaProperty wph) yinline;
+
+/**
+ * Returns the description of @a wph. The description is
+ * what Wima uses as the tooltip in the UI (if appropriate).
+ * @param wph	The @a WimaProperty whose description will
+ *				be returned.
+ * @return		The description of @a wph.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ */
+const char* wima_prop_desc(WimaProperty wph) yinline;
+
+/**
  * Returns the @a WimaProperty with @a name. If there is no
  * WimaProperty with @a name, it returns @a WIMA_PROP_INVALID.
  * @param name	The name of the WimaProperty to find.

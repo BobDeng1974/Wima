@@ -78,6 +78,39 @@ WimaPropType wima_prop_type(WimaProperty wph) {
 	return prop->type;
 }
 
+const char* wima_prop_name(WimaProperty wph) {
+
+	assert_init;
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+	WimaPropInfo* prop = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
+
+	return prop->name;
+}
+
+const char* wima_prop_label(WimaProperty wph) {
+
+	assert_init;
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+	WimaPropInfo* prop = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
+
+	return prop->label;
+}
+
+const char* wima_prop_desc(WimaProperty wph) {
+
+	assert_init;
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+	WimaPropInfo* prop = dnvec_get(wg.props, wph, WIMA_PROP_INFO_IDX);
+
+	return prop->desc;
+}
+
 WimaProperty wima_prop_find(const char* name) {
 
 	assert_init;
