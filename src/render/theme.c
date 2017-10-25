@@ -1142,3 +1142,122 @@ int wima_theme_node_wireCurving() {
 
 	return wima_prop_int(subHandles[WIMA_THEME_NODE_WIRE_CURVING]);
 }
+
+void wima_theme_shadeColors(WimaColor *shade_top, WimaColor *shade_btm, WimaWidgetTheme* theme,
+                            WimaWidgetState state, bool flipActive)
+{
+	wassert(shade_top != NULL, WIMA_ASSERT_PTR_NULL);
+	wassert(shade_btm != NULL, WIMA_ASSERT_PTR_NULL);
+
+	wassert(theme != NULL, WIMA_ASSERT_THEME);
+
+	WimaPropData* t = (WimaPropData*) theme;
+
+	if (t[WIMA_THEME_WIDGET_SHADED]._bool) {
+
+		switch(state) {
+
+			default:
+
+			case WIMA_ITEM_DEFAULT:
+			{
+				*shade_top = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color,
+				                               t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
+				*shade_btm = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color,
+				                               t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
+
+				break;
+			}
+
+			case WIMA_ITEM_HOVER:
+			{
+				WimaColor color = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color, WIMA_HOVER_SHADE);
+
+				*shade_top = wima_color_offset(color, t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
+				*shade_btm = wima_color_offset(color, t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
+
+				break;
+			}
+
+			case WIMA_ITEM_ACTIVE:
+			{
+				int delta = flipActive ?
+				                t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val :
+				                t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val;
+				*shade_top = wima_color_offset(t[WIMA_THEME_WIDGET_INNER_SELECTED]._color, delta);
+
+				delta = flipActive ?
+				            t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val :
+				            t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val;
+				*shade_btm = wima_color_offset(t[WIMA_THEME_WIDGET_INNER_SELECTED]._color, delta);
+
+				break;
+			}
+		}
+	}
+	else {
+
+		switch(state) {
+
+			default:
+
+			case WIMA_ITEM_DEFAULT:
+			{
+				*shade_top = t[WIMA_THEME_WIDGET_INNER]._color;
+				*shade_btm = t[WIMA_THEME_WIDGET_INNER]._color;
+
+				break;
+			}
+
+			case WIMA_ITEM_HOVER:
+			{
+				WimaColor color = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color, WIMA_HOVER_SHADE);
+
+				*shade_top = color;
+				*shade_btm = color;
+
+				break;
+			}
+
+			case WIMA_ITEM_ACTIVE:
+			{
+				*shade_top = t[WIMA_THEME_WIDGET_INNER_SELECTED]._color;
+				*shade_btm = t[WIMA_THEME_WIDGET_INNER_SELECTED]._color;
+
+				break;
+			}
+		}
+	}
+}
+
+WimaColor wima_theme_textColor(WimaWidgetTheme* theme, WimaWidgetState state) {
+
+	wassert(theme != NULL, WIMA_ASSERT_THEME);
+
+	WimaPropData* t = (WimaPropData*) theme;
+
+	return (state == WIMA_ITEM_ACTIVE) ?
+	            t[WIMA_THEME_WIDGET_TEXT_SELECTED]._color :
+	            t[WIMA_THEME_WIDGET_TEXT]._color;
+}
+
+WimaColor wima_theme_wireColor(WimaNodeTheme* theme, WimaWidgetState state) {
+
+	wassert(theme != NULL, WIMA_ASSERT_THEME);
+
+	WimaPropData* t = (WimaPropData*) theme;
+
+	switch(state) {
+
+		default:
+
+		case WIMA_ITEM_DEFAULT:
+			return t[WIMA_THEME_NODE_WIRE]._color;
+
+		case WIMA_ITEM_HOVER:
+			return t[WIMA_THEME_NODE_WIRE_SELECTED]._color;
+
+		case WIMA_ITEM_ACTIVE:
+			return t[WIMA_THEME_NODE_OUTLINE_ACTIVE]._color;
+	}
+}

@@ -1411,13 +1411,13 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 
 	// If the menu has a title, factor the title into the width.
 	if (hasTitle) {
-		width = wima_render_label_estimateWidth(&win->render, win->menuIcon, win->menuTitle);
+		width = wima_ui_label_estimateWidth(&win->render, win->menuIcon, win->menuTitle);
 	}
 
 	float w, h;
 
 	// Estimate the submenu arrow width.
-	float arrowWidth = wima_render_label_estimateWidth(&win->render, WIMA_ICONID(28,2), NULL);
+	float arrowWidth = wima_ui_label_estimateWidth(&win->render, WIMA_ICONID(28,2), NULL);
 
 	WimaMenuItem* item = menu->items;
 
@@ -1426,7 +1426,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 
 		// If there is a label, factor it in, as well as the arrow if necessary.
 		if (item->label) {
-			w = wima_render_label_estimateWidth(&win->render, item->icon, item->label);
+			w = wima_ui_label_estimateWidth(&win->render, item->icon, item->label);
 			w += item->hasSubMenu ? arrowWidth : 0;
 		}
 		else {
@@ -1444,7 +1444,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 
 	// Set the above heights based on estimation.
 	if (hasTitle) {
-		titleHeight = wima_render_label_estimateHeight(&win->render, win->menuIcon, win->menuTitle, width) + 5;
+		titleHeight = wima_ui_label_estimateHeight(&win->render, win->menuIcon, win->menuTitle, width) + 5;
 		height = titleHeight + WIMA_MENU_SEPARATOR_HEIGHT;
 	}
 	else {
@@ -1459,7 +1459,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 
 		// If there is a label, estimate. Otherwise, it's a separator.
 		if (item->label) {
-			h = wima_render_label_estimateHeight(&win->render, item->icon, item->label, width);
+			h = wima_ui_label_estimateHeight(&win->render, item->icon, item->label, width);
 		}
 		else {
 			h = WIMA_MENU_SEPARATOR_HEIGHT;
@@ -1527,12 +1527,12 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	nvgScissor(win->render.nvg, 0, 0, menu->size.w, menu->size.h);
 
 	// Draw the background.
-	wima_render_menu_background(&win->render, 0, 0, menu->size.w, menu->size.h, WIMA_CORNER_NONE);
+	wima_ui_menu_background(&win->render, 0, 0, menu->size.w, menu->size.h, WIMA_CORNER_NONE);
 
 	// If it has a title, draw it.
 	if (hasTitle) {
 		wima_render_menu_label(&win->render, 0, 5, width, titleHeight, win->menuIcon, win->menuTitle);
-		wima_render_menu_separator(&win->render, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
+		wima_ui_menu_separator(&win->render, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
 	}
 
 	// Get the menu that contains the mouse.
@@ -1575,13 +1575,13 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 			}
 
 			// Actually render the menu item.
-			wima_render_menu_item(&win->render, item->rect.x, item->rect.y, item->rect.w, item->rect.h,
+			wima_ui_menu_item(&win->render, item->rect.x, item->rect.y, item->rect.w, item->rect.h,
 			                      item->state, item->icon, item->label, item->hasSubMenu);
 		}
 
 		// If the item doesn't have a label (it's a separator)...
 		else {
-			wima_render_menu_separator(&win->render, item->rect.x, item->rect.y, item->rect.w, item->rect.h);
+			wima_ui_menu_separator(&win->render, item->rect.x, item->rect.y, item->rect.w, item->rect.h);
 		}
 	}
 
