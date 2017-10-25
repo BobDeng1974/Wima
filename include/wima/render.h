@@ -1404,12 +1404,14 @@ WimaColor wima_theme_wireColor(WimaNodeTheme* theme, WimaWidgetState state);
  * stack. A matching wima_render_restore() must be used
  * to restore the state.
  * @param ctx	The @a WimaRenderContext to save state for.
+ * @pre			@a ctx must not be NULL.
  */
 void wima_render_save(WimaRenderContext* ctx) yinline;
 
 /**
  * Pops and restores current render state.
  * @param ctx	The WimaRenderContext to restore state for.
+ * @pre			@a ctx must not be NULL.
  */
 void wima_render_restore(WimaRenderContext* ctx) yinline;
 
@@ -1417,12 +1419,14 @@ void wima_render_restore(WimaRenderContext* ctx) yinline;
  * Resets current render state to default values.Does not affect
  * the render state stack.
  * @param ctx	The @a WimaRenderContext whose state will be reset.
+ * @pre			@a ctx must not be NULL.
  */
 void wima_render_reset(WimaRenderContext* ctx) yinline;
 
 /**
  * Resets the render state's current transform to a identity matrix.
  * @param ctx	The @a WimaRenderContext whose transform will be reset.
+ * @pre			@a ctx must not be NULL.
  */
 void wima_render_resetTransform(WimaRenderContext* ctx) yinline;
 
@@ -1433,6 +1437,7 @@ void wima_render_resetTransform(WimaRenderContext* ctx) yinline;
  *				transform will be premultiplied.
  * @param tx	The transform to premultiply
  *				into the transform of @a ctx.
+ * @pre			@a ctx must not be NULL.
  */
 void wima_render_transform(WimaRenderContext* ctx, WimaTransform tx) yinline;
 
@@ -1440,6 +1445,7 @@ void wima_render_transform(WimaRenderContext* ctx, WimaTransform tx) yinline;
  * Translates the render state's current coordinate system by @a vec.
  * @param ctx	The @a WimaRenderContext whose transform will be translated.
  * @param vec	The amount to translate by.
+ * @pre			@a ctx must not be NULL.
  */
 void wima_render_translate(WimaRenderContext* ctx, WimaVecf vec) yinline;
 
@@ -1448,6 +1454,7 @@ void wima_render_translate(WimaRenderContext* ctx, WimaVecf vec) yinline;
  * which is specified in radians.
  * @param ctx	The @a WimaRenderContext whose transform will be rotated.
  * @param angle	The angle to rotate by.
+ * @pre			@a ctx must not be NULL.
  */
 void wima_render_rotate(WimaRenderContext* ctx, float angle) yinline;
 
@@ -1456,6 +1463,7 @@ void wima_render_rotate(WimaRenderContext* ctx, float angle) yinline;
  * @a angle, which is specified in radians.
  * @param ctx	The @a WimaRenderContext whose transform will be skewed.
  * @param angle	The angle to skew by.
+ * @pre			@a ctx must not be NULL.
  */
 void wima_render_skewX(WimaRenderContext* ctx, float angle) yinline;
 
@@ -1464,6 +1472,7 @@ void wima_render_skewX(WimaRenderContext* ctx, float angle) yinline;
  * @a angle, which is specified in radians.
  * @param ctx	The @a WimaRenderContext whose transform will be skewed.
  * @param angle	The angle to skew by.
+ * @pre			@a ctx must not be NULL.
  */
 void wima_render_skewY(WimaRenderContext* ctx, float angle) yinline;
 
@@ -1473,6 +1482,7 @@ void wima_render_skewY(WimaRenderContext* ctx, float angle) yinline;
  * @param ctx	The @a WimaRenderContext whose transform will be scaled.
  * @param x		The amount to scale by in the X axis.
  * @param y		The amount to scale by in the Y axis.
+ * @pre			@a ctx must not be NULL.
  */
 void wima_render_scale(WimaRenderContext* ctx, float x, float y) yinline;
 
@@ -1481,6 +1491,7 @@ void wima_render_scale(WimaRenderContext* ctx, float x, float y) yinline;
  * @param ctx	The @a WimaRenderContext whose transform will
  *				be returned.
  * @return		The transform in @a ctx.
+ * @pre			@a ctx must not be NULL.
  */
 WimaTransform wima_render_currentTransform(WimaRenderContext* ctx) yinline;
 
@@ -1489,6 +1500,7 @@ WimaTransform wima_render_currentTransform(WimaRenderContext* ctx) yinline;
  * The scissor rectangle is transformed by the current transform.
  * @param ctx	The @a WimaRenderContext whose scissor will be set.
  * @param rect	The new scissor for @a ctx.
+ * @pre			@a ctx must not be NULL.
  */
 void wima_render_scissor(WimaRenderContext* ctx, WimaRectf rect) yinline;
 
@@ -1503,6 +1515,7 @@ void wima_render_scissor(WimaRenderContext* ctx, WimaRectf rect) yinline;
  * rectangle transformed in the current
  * @param ctx	The @a WimaRenderContext whose scissor will be set.
  * @param rect	The rectangle to intersect with.
+ * @pre			@a ctx must not be NULL.
  */
 void wima_render_intersectScissor(WimaRenderContext* ctx, WimaRectf rect) yinline;
 
@@ -1510,6 +1523,7 @@ void wima_render_intersectScissor(WimaRenderContext* ctx, WimaRectf rect) yinlin
  * Resets and disables scissoring.
  * @param ctx	The @a WimaRenderContext whose
  *				scissor will be reset.
+ * @pre			@a ctx must not be NULL.
  */
 void wima_render_resetScissor(WimaRenderContext* ctx) yinline;
 
