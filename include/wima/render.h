@@ -2053,52 +2053,158 @@ typedef struct WimaTextMetrics {
 
 } WimaTextMetrics;
 
-// Sets the blur of current text style.
+/**
+ * Sets the blur of current text style.
+ * @param ctx	The @a WimaRenderContext whose
+ *				text style will be set.
+ * @param blur	The blur to set.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_text_blur(WimaRenderContext* ctx, float blur) yinline;
 
 // Sets the letter spacing of current text style.
+/**
+ * Sets the letter spacing of current text style.
+ * @param ctx		The @a WimaRenderContext whose
+ *					text style will be set.
+ * @param spacing	The spacing to set.
+ * @pre				@a ctx must not be NULL.
+ */
 void wima_text_letterSpacing(WimaRenderContext* ctx, float spacing) yinline;
 
-// Sets the proportional line height of current text style. The line height is specified as multiple of font size.
-void wima_text_lineHeight(WimaRenderContext* ctx, float lineHeight) yinline;
+/**
+ * Sets the proportional line height of current text style.
+ * The line height is specified as multiple of font size.
+ * @param ctx	The @a WimaRenderContext whose text style
+ *				will be set.
+ * @param lineH	The line height to set.
+ * @pre			@a ctx must not be NULL.
+ */
+void wima_text_lineHeight(WimaRenderContext* ctx, float lineH) yinline;
 
-// Sets the text align of current text style, see NVGalign for options.
+/**
+ * Sets the text alignment of current text style.
+ * @param ctx	The @a WimaRenderContext whose
+ *				text style will be set.
+ * @param align	The alignment to set.
+ * @pre			@a ctx must not be NULL.
+ */
 void wima_text_align(WimaRenderContext* ctx, WimaTextAlign align) yinline;
 
-// Draws text string at specified location. If end is specified only the sub-string up to the end is drawn.
+/**
+ * Draws text string at specified location. If @a end is
+ * specified only the sub-string up to @a end is drawn.
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param pt		The point to render at (top left corner).
+ * @param string	The string to render.
+ * @param end		A pointer after the last character to
+ *					render, or NULL if the whole string
+ *					should be rendered.
+ * @return			The horizontal text advance.
+ * @pre				@a ctx must not be NULL.
+ */
 float wima_text(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end) yinline;
 
-// Draws multi-line text string at specified location wrapped at the specified width. If end is specified only the sub-string up to the end is drawn.
-// White space is stripped at the beginning of the rows, the text is split at word boundaries or when new-line characters are encountered.
-// Words longer than the max width are slit at nearest character (i.e. no hyphenation).
+/**
+ * Draws multi-line text string at @a pt (top left corner) wrapped
+ * at @a breakRowWidth. If @a end is specified only the sub-string
+ * up to @a end is drawn. White space is stripped at the beginning
+ * of the rows, the text is split at word boundaries or when any
+ * new-line characters are encountered. Words longer than the max
+ * width are slit at nearest character (i.e. no hyphenation).
+ * @param ctx			The @a WimaRenderContext to render to.
+ * @param pt			The point to render at (top left corner).
+ * @param breakRowWidth	The width to break rows at.
+ * @param string		The string to render.
+ * @param end			A pointer after the last character to
+ *						render, or NULL if the whole string
+ *						should be rendered.
+ * @pre					@a ctx must not be NULL.
+ */
 void wima_text_box(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth,
                    const char* string, const char* end) yinline;
 
-// Measures the specified text string. Parameter bounds should be a pointer to float[4],
-// if the bounding box of the text should be returned. The bounds value are [xmin,ymin, xmax,ymax]
-// Returns the horizontal advance of the measured text (i.e. where the next character should drawn).
-// Measured values are returned in local coordinate space.
+/**
+ * Measures the specified text string. Parameter bounds shouldn't
+ * be NULL, if the bounding box of the text should be returned.
+ * Returns the horizontal advance of the measured text (i.e. where
+ * the next character should drawn). Measured values are returned
+ * in local coordinate space.
+ * @param ctx		The @a WimaRenderContext to measure with.
+ * @param pt		The point to measure from (top left corner).
+ * @param string	The string to measure.
+ * @param end		A pointer after the last character to
+ *					render, or NULL if the whole string
+ *					should be measured.
+ * @param bounds	A pointer to a WimaRectf is bounds should be
+ *					returned, or NULL otherwise.
+ * @return			The horizontal text advance.
+ * @pre				@a ctx must not be NULL.
+ */
 float wima_text_bounds(WimaRenderContext* ctx, WimaVecf pt, const char* string,
                        const char* end, WimaRectf* bounds) yinline;
 
-// Measures the specified multi-text string. Parameter bounds should be a pointer to float[4],
-// if the bounding box of the text should be returned. The bounds value are [xmin,ymin, xmax,ymax]
-// Measured values are returned in local coordinate space.
+/**
+ * Measures the specified multi-text string. Measured values are
+ * returned in local coordinate space.
+ * @param ctx			The @a WimaRenderContext to measure with.
+ * @param pt			The point to measure from (top left corner).
+ * @param breakRowWidth	The width to break rows at.
+ * @param string		The string to measure.
+ * @param end			A pointer after the last character to
+ *						render, or NULL if the whole string
+ *						should be measured.
+ * @return				The text bounds.
+ * @pre					@a ctx must not be NULL.
+ */
 WimaRectf wima_text_box_bounds(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth,
                                const char* string, const char* end) yinline;
 
-// Calculates the glyph x positions of the specified text. If end is specified only the sub-string will be used.
-// Measured values are returned in local coordinate space.
+/**
+ * Calculates the glyph x positions of the specified text.
+ * If end is specified only the sub-string will be used.
+ * Measured values are returned in local coordinate space.
+ * @param ctx		The @a WimaRenderContext to measure with.
+ * @param pt		The point to measure from (top left corner).
+ * @param string	The string to measure.
+ * @param end		A pointer after the last character to
+ *					render, or NULL if the whole string
+ *					should be measured.
+ * @param poss		An array of WimaGlyphPositions to fill.
+ * @param maxPoss	The max number of positions in the array.
+ * @return			The number of positions returned.
+ * @pre				@a ctx must not be NULL.
+ */
 int wima_text_glyphPositions(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end,
-                             WimaGlyphPosition* positions, int maxPositions) yinline;
+                             WimaGlyphPosition* poss, int maxPoss) yinline;
 
-// Returns the vertical metrics based on the current text style.
-// Measured values are returned in local coordinate space.
+/**
+ * Returns the vertical metrics based on the current text style.
+ * Measured values are returned in local coordinate space.
+ * @param ctx	The @a WimaRenderContext to measure with.
+ * @return		The current style's vertical text metrics.
+ * @pre			@a ctx must not be NULL.
+ */
 WimaTextMetrics wima_text_metrics(WimaRenderContext* ctx) yinline;
 
-// Breaks the specified text into lines. If end is specified only the sub-string will be used.
-// White space is stripped at the beginning of the rows, the text is split at word boundaries or when new-line characters are encountered.
-// Words longer than the max width are slit at nearest character (i.e. no hyphenation).
+/**
+ * Breaks the specified text into lines. If @a end is specified
+ * only the sub-string will be used. White space is stripped at
+ * the beginning of the rows, the text is split at word boundaries
+ * or when any new-line characters are encountered. Words longer
+ * than the max width are slit at nearest character (i.e. no
+ * hyphenation).
+ * @param ctx			The @a WimaRenderContext to use.
+ * @param string		The string to break.
+ * @param end			A pointer after the last character to
+ *						render, or NULL if the whole string
+ *						should be broken.
+ * @param breakRowWidth	The width to break rows at.
+ * @param rows			An array of WimaTextRows to fill.
+ * @param maxRows		The max number of rows in the array.
+ * @return				The number of rows returned.
+ * @pre					@a ctx must not be NULL.
+ */
 int wima_text_breakLines(WimaRenderContext* ctx, const char* string, const char* end,
                          float breakRowWidth, WimaTextRow* rows, int maxRows) yinline;
 

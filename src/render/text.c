@@ -58,9 +58,9 @@ void wima_text_letterSpacing(WimaRenderContext* ctx, float spacing) {
 	nvgTextLetterSpacing(ctx->nvg, spacing);
 }
 
-void wima_text_lineHeight(WimaRenderContext* ctx, float lineHeight) {
+void wima_text_lineHeight(WimaRenderContext* ctx, float lineH) {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
-	nvgTextLineHeight(ctx->nvg, lineHeight);
+	nvgTextLineHeight(ctx->nvg, lineH);
 }
 
 void wima_text_align(WimaRenderContext* ctx, WimaTextAlign align) {
@@ -111,10 +111,10 @@ WimaRectf wima_text_box_bounds(WimaRenderContext* ctx, WimaVecf pt, float breakR
 }
 
 int wima_text_glyphPositions(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end,
-                             WimaGlyphPosition* positions, int maxPositions)
+                             WimaGlyphPosition* poss, int maxPoss)
 {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
-	return nvgTextGlyphPositions(ctx->nvg, pt.x, pt.y, string, end, (NVGglyphPosition*) positions, maxPositions);
+	return nvgTextGlyphPositions(ctx->nvg, pt.x, pt.y, string, end, (NVGglyphPosition*) poss, maxPoss);
 }
 
 WimaTextMetrics wima_text_metrics(WimaRenderContext* ctx) {
