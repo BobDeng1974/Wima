@@ -1250,6 +1250,9 @@ void wima_render_reset(WimaRenderContext* ctx) yinline;
 // Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
 void wima_style_antialias(WimaRenderContext* ctx, bool enabled) yinline;
 
+// Sets the stroke width of the stroke style.
+void wima_style_stroke_width(WimaRenderContext* ctx, float size) yinline;
+
 // Sets current stroke style to a solid color.
 void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color) yinline;
 
@@ -1265,9 +1268,6 @@ void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint) yinline;
 // Sets the miter limit of the stroke style.
 // Miter limit controls when a sharp corner is beveled.
 void wima_style_miter_limit(WimaRenderContext* ctx, float limit) yinline;
-
-// Sets the stroke width of the stroke style.
-void wima_style_stroke_width(WimaRenderContext* ctx, float size) yinline;
 
 // Sets how the end of the line (cap) is drawn,
 // Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.

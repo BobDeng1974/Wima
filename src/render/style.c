@@ -53,6 +53,12 @@ void wima_style_antialias(WimaRenderContext* ctx, bool enabled) {
 	nvgShapeAntiAlias(ctx->nvg, enabled);
 }
 
+void wima_style_stroke_width(WimaRenderContext* ctx, float size) {
+	assert_init;
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	nvgStrokeWidth(ctx->nvg, size);
+}
+
 void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color) {
 
 	assert_init;
@@ -109,12 +115,6 @@ void wima_style_miter_limit(WimaRenderContext* ctx, float limit) {
 	assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgMiterLimit(ctx->nvg, limit);
-}
-
-void wima_style_stroke_width(WimaRenderContext* ctx, float size) {
-	assert_init;
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
-	nvgStrokeWidth(ctx->nvg, size);
 }
 
 void wima_style_line_cap(WimaRenderContext* ctx, WimaLineCap cap) {
