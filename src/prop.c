@@ -418,7 +418,7 @@ uint32_t wima_prop_enumIdx(WimaProperty wph) {
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
-	return data->_enum.vals ? data->_enum.vals[data->_enum.idx] : data->_enum.idx;
+	return data->_enum.idx;
 }
 
 DynaVector wima_prop_list(WimaProperty wph) {
