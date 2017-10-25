@@ -45,7 +45,7 @@
 
 assert_msgs_decl;
 
-WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, float sx, float sy, float ex, float ey,
+WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecf s, WimaVecf e,
                                     WimaColor icol, WimaColor ocol)
 {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -57,13 +57,13 @@ WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, float sx, float sy, 
 	ic.wima = icol;
 	oc.wima = ocol;
 
-	p.nvg = nvgLinearGradient(ctx->nvg, sx, sy, ex, ey, ic.nvg, oc.nvg);
+	p.nvg = nvgLinearGradient(ctx->nvg, s.x, s.y, e.x, e.y, ic.nvg, oc.nvg);
 
 	return p.wima;
 }
 
-WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, float x, float y, float w, float h,
-                                 float r, float f, WimaColor icol, WimaColor ocol)
+WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r, float f,
+                                 WimaColor icol, WimaColor ocol)
 {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -74,7 +74,7 @@ WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, float x, float y, float
 	ic.wima = icol;
 	oc.wima = ocol;
 
-	p.nvg = nvgBoxGradient(ctx->nvg, x, y, w, h, r, f, ic.nvg, oc.nvg);
+	p.nvg = nvgBoxGradient(ctx->nvg, rect.x, rect.y, rect.w, rect.h, r, f, ic.nvg, oc.nvg);
 
 	return p.wima;
 }
@@ -96,7 +96,7 @@ WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, float cx, float cy, 
 	return p.wima;
 }
 
-WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, float ox, float oy, float ex, float ey,
+WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecf o, WimaSizef e,
                                   float angle, int image, float alpha)
 {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);

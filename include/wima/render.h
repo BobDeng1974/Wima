@@ -271,7 +271,7 @@ WimaColor wima_color_offset(WimaColor color, int delta) yinline;
 // Creates and returns a linear gradient. Parameters (sx,sy)-(ex,ey) specify the start and end coordinates
 // of the linear gradient, icol specifies the start color and ocol the end color.
 // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
-WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, float sx, float sy, float ex, float ey,
+WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecf s, WimaVecf e,
                                     WimaColor icol, WimaColor ocol) yinline;
 
 // Creates and returns a box gradient. Box gradient is a feathered rounded rectangle, it is useful for rendering
@@ -279,8 +279,8 @@ WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, float sx, float sy, 
 // (w,h) define the size of the rectangle, r defines the corner radius, and f feather. Feather defines how blurry
 // the border of the rectangle is. Parameter icol specifies the inner color and ocol the outer color of the gradient.
 // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
-WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, float x, float y, float w, float h,
-                                 float r, float f, WimaColor icol, WimaColor ocol) yinline;
+WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r, float f,
+                                 WimaColor icol, WimaColor ocol) yinline;
 
 // Creates and returns a radial gradient. Parameters (cx,cy) specify the center, inr and outr specify
 // the inner and outer radius of the gradient, icol specifies the start color and ocol the end color.
@@ -291,7 +291,7 @@ WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, float cx, float cy, 
 // Creates and returns an image patter. Parameters (ox,oy) specify the left-top location of the image pattern,
 // (ex,ey) the size of one image, angle rotation around the top-left corner, image is handle to the image to render.
 // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
-WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, float ox, float oy, float ex, float ey,
+WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecf o, WimaSizef e,
                                   float angle, int image, float alpha) yinline;
 
 // Flags indicating which corners are sharp (for grouping widgets).
