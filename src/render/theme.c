@@ -1243,6 +1243,9 @@ WimaColor wima_theme_textColor(WimaWidgetTheme* theme, WimaWidgetState state) {
 
 WimaColor wima_theme_wireColor(WimaNodeTheme* theme, WimaWidgetState state) {
 
+	// TODO: This might need to return two
+	// colors, like wima_theme_shadeColors().
+
 	wassert(theme != NULL, WIMA_ASSERT_THEME);
 
 	WimaPropData* t = (WimaPropData*) theme;
