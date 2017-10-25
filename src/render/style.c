@@ -44,14 +44,18 @@
 
 #include "../global.h"
 
+global_decl;
 assert_msgs_decl;
 
 void wima_style_antialias(WimaRenderContext* ctx, bool enabled) {
+	assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgShapeAntiAlias(ctx->nvg, enabled);
 }
 
 void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color) {
+
+	assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -64,6 +68,8 @@ void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color) {
 
 void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint) {
 
+	assert_init;
+
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	// Translate between Wima and NanoVG.
@@ -74,6 +80,8 @@ void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint) {
 }
 
 void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color) {
+
+	assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -86,6 +94,8 @@ void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color) {
 
 void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint) {
 
+	assert_init;
+
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	// Translate between Wima and NanoVG.
@@ -96,26 +106,31 @@ void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint) {
 }
 
 void wima_style_miter_limit(WimaRenderContext* ctx, float limit) {
+	assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgMiterLimit(ctx->nvg, limit);
 }
 
 void wima_style_stroke_width(WimaRenderContext* ctx, float size) {
+	assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgStrokeWidth(ctx->nvg, size);
 }
 
 void wima_style_line_cap(WimaRenderContext* ctx, WimaLineCap cap) {
+	assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgLineCap(ctx->nvg, cap);
 }
 
 void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join) {
+	assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgLineJoin(ctx->nvg, join);
 }
 
 void wima_style_setGlobalAlpha(WimaRenderContext* ctx, float alpha) {
+	assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgGlobalAlpha(ctx->nvg, alpha);
 }
