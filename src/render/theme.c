@@ -1143,8 +1143,8 @@ int wima_theme_node_wireCurving() {
 	return wima_prop_int(subHandles[WIMA_THEME_NODE_WIRE_CURVING]);
 }
 
-void wima_theme_shadeColors(WimaColor *shade_top, WimaColor *shade_btm, WimaWidgetTheme* theme,
-                            WimaWidgetState state, bool flipActive)
+void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool flipActive,
+                            WimaColor *shade_top, WimaColor *shade_btm)
 {
 	wassert(shade_top != NULL, WIMA_ASSERT_PTR_NULL);
 	wassert(shade_btm != NULL, WIMA_ASSERT_PTR_NULL);
