@@ -222,6 +222,23 @@ typedef struct WimaSize {
 
 } WimaSize;
 
+typedef struct WimaSizef {
+
+	union {
+
+		float v[2];
+
+		struct {
+
+			float w;
+			float h;
+
+		};
+
+	};
+
+} WimaSizef;
+
 // Layout rectangle.
 typedef struct WimaRect {
 
