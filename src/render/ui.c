@@ -84,7 +84,7 @@ void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, i
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h, int flags,
+void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCorner flags,
                          WimaWidgetState state, int iconid, const char *label)
 {
 	assert_init;
@@ -110,7 +110,7 @@ void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h, int flags,
+void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCorner flags,
                           WimaWidgetState state, int iconid, const char *label)
 {
 	assert_init;
@@ -146,7 +146,7 @@ int wima_ui_textField_pos(WimaRenderContext* ctx, float x, float y, float w, flo
 }
 
 void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float h,
-                           int flags, WimaWidgetState state, int iconid, const char *text,
+                           WimaWidgetCorner flags, WimaWidgetState state, int iconid, const char *text,
                            int cbegin, int cend)
 {
 	assert_init;
@@ -221,7 +221,7 @@ void wima_ui_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float h, int flags,
+void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCorner flags,
                            WimaWidgetState state, int iconid, const char *label)
 {
 	assert_init;
@@ -251,7 +251,7 @@ void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 	wima_ui_arrow_upDown(ctx, x + w - 10, y + 10, 5, arrowTrans);
 }
 
-void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h, int flags, WimaColor color) {
+void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCorner flags, WimaColor color) {
 
 	assert_init;
 
@@ -270,7 +270,7 @@ void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 	wima_ui_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
 }
 
-void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h, int flags,
+void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCorner flags,
                           WimaWidgetState state, const char *label, const char *value)
 {
 	assert_init;
@@ -303,7 +303,7 @@ void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h
 }
 
 void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
-                        int flags, WimaWidgetState state, float progress,
+                        WimaWidgetCorner flags, WimaWidgetState state, float progress,
                         const char *label, const char *value)
 {
 	assert_init;
@@ -465,7 +465,7 @@ void wima_ui_menu_separator(WimaRenderContext* ctx, float x, float y, float w, f
 
 void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float h,
                            WimaWidgetState state, int iconid, const char *label,
-                           bool hasSubMenu)
+                           bool hasSub)
 {
 	assert_init;
 
@@ -489,7 +489,7 @@ void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float 
 	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, textColor, WIMA_ALIGN_LEFT,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
 
-	if (hasSubMenu) {
+	if (hasSub) {
 		wima_ui_icon(ctx, w - WIMA_ICON_SHEET_RES, y + 5, WIMA_ICONID(2,28));
 	}
 }
@@ -571,7 +571,7 @@ void wima_ui_node_wire(WimaRenderContext* ctx, float x0, float y0, float x1, flo
 
 void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, float h,
                                  WimaWidgetState state, int iconid, const char *label,
-                                 WimaColor titleColor)
+                                 WimaColor titleCol)
 {
 	assert_init;
 
@@ -580,8 +580,8 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 	WimaPropData* t = (WimaPropData*) wima_theme_node();
 	WimaPropData* reg = (WimaPropData*) wima_theme_widget(WIMA_THEME_REGULAR);
 
-	WimaColor top = wima_color_multiplyAlphaf(wima_color_offset(titleColor, WIMA_BEVEL_SHADE), WIMA_TRANSPARENT_ALPHA);
-	WimaColor bottom = wima_color_multiplyAlphaf(titleColor, WIMA_TRANSPARENT_ALPHA);
+	WimaColor top = wima_color_multiplyAlphaf(wima_color_offset(titleCol, WIMA_BEVEL_SHADE), WIMA_TRANSPARENT_ALPHA);
+	WimaColor bottom = wima_color_multiplyAlphaf(titleCol, WIMA_TRANSPARENT_ALPHA);
 
 	wima_ui_box_inner(ctx, x, y, w, WIMA_NODE_TITLE_HEIGHT + 2,
 	                      WIMA_NODE_RADIUS, WIMA_NODE_RADIUS, 0, 0,
@@ -592,7 +592,7 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 	wima_ui_box_inner(ctx, x, y + WIMA_NODE_TITLE_HEIGHT - 1, w, h + 2 - WIMA_NODE_TITLE_HEIGHT,
 	                      0, 0, WIMA_NODE_RADIUS, WIMA_NODE_RADIUS, shadeTop, shadeBottom);
 
-	WimaColor shadow = wima_color_offset(titleColor, WIMA_BEVEL_SHADE);
+	WimaColor shadow = wima_color_offset(titleCol, WIMA_BEVEL_SHADE);
 	wima_ui_node_label_icon(ctx, x + WIMA_NODE_ARROW_AREA_WIDTH, y,
 	                            w - WIMA_NODE_ARROW_AREA_WIDTH - WIMA_NODE_MARGIN_SIDE,
 	                            WIMA_NODE_TITLE_HEIGHT, iconid, reg[WIMA_THEME_WIDGET_TEXT]._color,
@@ -608,7 +608,7 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 		case WIMA_ITEM_DEFAULT:
 		{
 			borderColor = t[WIMA_THEME_NODE_OUTLINE]._color;
-			arrowColor = wima_color_offset(titleColor, -WIMA_BEVEL_SHADE);
+			arrowColor = wima_color_offset(titleCol, -WIMA_BEVEL_SHADE);
 
 			break;
 		}
@@ -721,7 +721,7 @@ float wima_ui_label_estimateHeight(WimaRenderContext* ctx, int iconid, const cha
 ////////////////////////////////////////////////////////////////////////////////
 
 void wima_ui_box_rounded(WimaRenderContext* ctx, float x, float y, float w, float h,
-                             float cr0, float cr1, float cr2, float cr3)
+                             float tl, float tr, float br, float bl)
 {
 	assert_init;
 
@@ -735,10 +735,10 @@ void wima_ui_box_rounded(WimaRenderContext* ctx, float x, float y, float w, floa
 
 	nvgMoveTo(ctx->nvg, x, y + h * 0.5f);
 
-	nvgArcTo(ctx->nvg, x, y, x + w, y, wima_fminf(cr0, d / 2));
-	nvgArcTo(ctx->nvg, x + w, y, x + w, y + h, wima_fminf(cr1, d / 2));
-	nvgArcTo(ctx->nvg, x + w, y + h, x, y + h, wima_fminf(cr2, d / 2));
-	nvgArcTo(ctx->nvg, x, y + h, x, y, wima_fminf(cr3, d / 2));
+	nvgArcTo(ctx->nvg, x, y, x + w, y, wima_fminf(tl, d / 2));
+	nvgArcTo(ctx->nvg, x + w, y, x + w, y + h, wima_fminf(tr, d / 2));
+	nvgArcTo(ctx->nvg, x + w, y + h, x, y + h, wima_fminf(br, d / 2));
+	nvgArcTo(ctx->nvg, x, y + h, x, y, wima_fminf(bl, d / 2));
 
 	nvgClosePath(ctx->nvg);
 }
@@ -783,7 +783,7 @@ void wima_ui_bevel(WimaRenderContext* ctx, float x, float y, float w, float h) {
 	nvgStroke(ctx->nvg);
 }
 
-void wima_ui_inset(WimaRenderContext* ctx, float x, float y, float w, float h, float cr2, float cr3) {
+void wima_ui_inset(WimaRenderContext* ctx, float x, float y, float w, float h, float br, float bl) {
 
 	assert_init;
 
@@ -793,13 +793,13 @@ void wima_ui_inset(WimaRenderContext* ctx, float x, float y, float w, float h, f
 
 	y -= 0.5f;
 	d = wima_fminf(w, h);
-	cr2 = wima_fminf(cr2, d / 2);
-	cr3 = wima_fminf(cr3, d / 2);
+	br = wima_fminf(br, d / 2);
+	bl = wima_fminf(bl, d / 2);
 
 	nvgBeginPath(ctx->nvg);
-	nvgMoveTo(ctx->nvg, x + w, y + h - cr2);
-	nvgArcTo(ctx->nvg, x + w, y + h, x,y + h, cr2);
-	nvgArcTo(ctx->nvg, x, y + h, x, y, cr3);
+	nvgMoveTo(ctx->nvg, x + w, y + h - br);
+	nvgArcTo(ctx->nvg, x + w, y + h, x,y + h, br);
+	nvgArcTo(ctx->nvg, x, y + h, x, y, bl);
 
 	WimaCol bevelColor;
 	bevelColor.wima = wima_color_offset(wima_theme_background(), WIMA_INSET_BEVEL_SHADE);
@@ -807,7 +807,7 @@ void wima_ui_inset(WimaRenderContext* ctx, float x, float y, float w, float h, f
 	nvgStrokeWidth(ctx->nvg, 1);
 
 	NVGcolor innerColor = nvgRGBAf(bevelColor.wima.r, bevelColor.wima.g, bevelColor.wima.b, 0);
-	NVGpaint paint = nvgLinearGradient(ctx->nvg, x, y + h - wima_fmaxf(cr2,cr3) - 1,
+	NVGpaint paint = nvgLinearGradient(ctx->nvg, x, y + h - wima_fmaxf(br,bl) - 1,
 	                                   x, y + h - 1, innerColor, bevelColor.nvg);
 
 	nvgStrokePaint(ctx->nvg, paint);
@@ -840,32 +840,32 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, int iconid) {
 }
 
 void wima_ui_dropShadow(WimaRenderContext* ctx, float x, float y, float w, float h,
-                            float r, float feather, float alpha)
+                            float r, float f, float alpha)
 {
 	assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	nvgBeginPath(ctx->nvg);
-	y += feather;
-	h -= feather;
+	y += f;
+	h -= f;
 
-	nvgMoveTo(ctx->nvg, x - feather, y - feather);
-	nvgLineTo(ctx->nvg, x, y - feather);
-	nvgLineTo(ctx->nvg, x, y + h - feather);
+	nvgMoveTo(ctx->nvg, x - f, y - f);
+	nvgLineTo(ctx->nvg, x, y - f);
+	nvgLineTo(ctx->nvg, x, y + h - f);
 	nvgArcTo(ctx->nvg, x, y + h, x + r, y + h, r);
 	nvgArcTo(ctx->nvg, x + w, y + h, x + w, y + h - r, r);
-	nvgLineTo(ctx->nvg, x + w, y - feather);
-	nvgLineTo(ctx->nvg, x + w + feather, y - feather);
-	nvgLineTo(ctx->nvg, x + w + feather, y + h + feather);
-	nvgLineTo(ctx->nvg, x - feather, y + h + feather);
+	nvgLineTo(ctx->nvg, x + w, y - f);
+	nvgLineTo(ctx->nvg, x + w + f, y - f);
+	nvgLineTo(ctx->nvg, x + w + f, y + h + f);
+	nvgLineTo(ctx->nvg, x - f, y + h + f);
 	nvgClosePath(ctx->nvg);
 
 	NVGcolor innerColor = nvgRGBAf(0, 0, 0, alpha * alpha);
 	NVGcolor outerColor = nvgRGBAf(0, 0, 0, 0);
 
-	NVGpaint paint = nvgBoxGradient(ctx->nvg, x - feather * 0.5f, y - feather * 0.5f,
-	                                w + feather, h + feather, r + feather*0.5f, feather,
+	NVGpaint paint = nvgBoxGradient(ctx->nvg, x - f * 0.5f, y - f * 0.5f,
+	                                w + f, h + f, r + f*0.5f, f,
 	                                innerColor, outerColor);
 
 	nvgFillPaint(ctx->nvg, paint);
@@ -874,7 +874,7 @@ void wima_ui_dropShadow(WimaRenderContext* ctx, float x, float y, float w, float
 
 void wima_ui_box_inner(WimaRenderContext* ctx,
                        float x, float y, float w, float h,
-                       float cr0, float cr1, float cr2, float cr3,
+                       float tl, float tr, float br, float bl,
                        WimaColor shade_top, WimaColor shade_btm)
 {
 	assert_init;
@@ -888,8 +888,8 @@ void wima_ui_box_inner(WimaRenderContext* ctx,
 	nvgBeginPath(ctx->nvg);
 
 	wima_ui_box_rounded(ctx, x + 1, y + 1, w - 2, h - 3,
-	                        wima_fmaxf(0, cr0 - 1), wima_fmaxf(0, cr1 - 1),
-	                        wima_fmaxf(0, cr2 - 1), wima_fmaxf(0, cr3 - 1));
+	                        wima_fmaxf(0, tl - 1), wima_fmaxf(0, tr - 1),
+	                        wima_fmaxf(0, br - 1), wima_fmaxf(0, bl - 1));
 
 	NVGpaint paint;
 	if (h - 2 > w) {
@@ -904,7 +904,7 @@ void wima_ui_box_inner(WimaRenderContext* ctx,
 }
 
 void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, float h,
-                           float cr0, float cr1, float cr2, float cr3, WimaColor color)
+                           float tl, float tr, float br, float bl, WimaColor color)
 {
 	assert_init;
 
@@ -915,7 +915,7 @@ void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, floa
 
 	nvgBeginPath(ctx->nvg);
 
-	wima_ui_box_rounded(ctx, x + 0.5f, y + 0.5f, w - 1, h - 2, cr0, cr1, cr2, cr3);
+	wima_ui_box_rounded(ctx, x + 0.5f, y + 0.5f, w - 1, h - 2, tl, tr, br, bl);
 	nvgStrokeColor(ctx->nvg, c.nvg);
 	nvgStrokeWidth(ctx->nvg,1);
 	nvgStroke(ctx->nvg);
@@ -1002,16 +1002,16 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
 }
 
 void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, float h,
-                               int iconid, WimaColor color, WimaColor shadowColor,
+                               int iconid, WimaColor color, WimaColor shadow,
                                WimaTextAlign align, float fontsize, const char *label)
 {
 	assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
-	WimaCol c, shadow;
+	WimaCol c, s;
 	c.wima = color;
-	shadow.wima = shadowColor;
+	s.wima = shadow;
 
 	if (label && (ctx->font >= 0)) {
 
@@ -1020,8 +1020,8 @@ void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, 
 
 		nvgBeginPath(ctx->nvg);
 
-		nvgTextAlign(ctx->nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
-		nvgFillColor(ctx->nvg, shadow.nvg);
+		nvgTextAlign(ctx->nvg, align);
+		nvgFillColor(ctx->nvg, s.nvg);
 		nvgFontBlur(ctx->nvg, WIMA_NODE_TITLE_FEATHER);
 
 		nvgTextBox(ctx->nvg, x + 1, y + h + 3 - WIMA_TEXT_PAD_DOWN, w, label, NULL);
@@ -1144,7 +1144,7 @@ static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float de
 
 void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, float h,
                              int iconid, WimaColor color, float fontsize,
-                             const char *label, WimaColor caretColor,
+                             const char *label, WimaColor caretCol,
                              int cbegin, int cend)
 {
 	assert_init;
@@ -1198,7 +1198,7 @@ void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, floa
 		}
 		else {
 
-			c.wima = caretColor;
+			c.wima = caretCol;
 
 			nvgFillColor(ctx->nvg, c.nvg);
 

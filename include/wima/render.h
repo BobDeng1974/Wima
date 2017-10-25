@@ -2263,60 +2263,132 @@ typedef enum WimaWidgetCorner {
 
 // High Level Functions
 // --------------------
-// Use these functions to draw themed widgets with your NVGcontext.
+// Use these functions to draw themed widgets.
 
-// Draw a label with its lower left origin at (x,y) and size of (w,h).
-// if iconid >= 0, an icon will be added to the widget
-// if label is not NULL, a label will be added to the widget
-// widget looks best when height is WIMA_WIDGET_HEIGHT
+/**
+ * Draw a label with its upper left origin at (x,y) and size of
+ * (w,h). If iconid >= 0, an icon will be added to the widget.
+ * If label is not NULL, a label will be added to the widget.
+ * Widget looks best when @a h is @a WIMA_WIDGET_HEIGHT.
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param label		The label to draw, or NULL if none.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_label(WimaRenderContext* ctx,
     float x, float y, float w, float h, int iconid, const char *label);
 
-// Draw a tool button  with its lower left origin at (x,y) and size of (w,h),
-// where flags is one or multiple flags from BNDcornerFlags and state denotes
-// the widgets current UI state.
-// if iconid >= 0, an icon will be added to the widget
-// if label is not NULL, a label will be added to the widget
-// widget looks best when height is WIMA_WIDGET_HEIGHT
+/**
+ * Draw a tool button  with its upper left origin at (x,y) and
+ * size of (w,h), where @a flags is one or multiple flags from
+ * @a WimaWidgetCorner and @a state denotes the widget's current
+ * state. If @a iconid >= 0, an icon will be added to the widget.
+ * If @a label is not NULL, a label will be added to the widget.
+ * Widget looks best when @a h is @a WIMA_WIDGET_HEIGHT.
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param flags		Which corners should be sharp.
+ * @param state		The widget state.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param label		The label to draw, or NULL if none.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_toolBtn(WimaRenderContext* ctx,
-    float x, float y, float w, float h, int flags, WimaWidgetState state,
+    float x, float y, float w, float h, WimaWidgetCorner flags, WimaWidgetState state,
     int iconid, const char *label);
 
-// Draw a radio button with its lower left origin at (x,y) and size of (w,h),
-// where flags is one or multiple flags from BNDcornerFlags and state denotes
-// the widgets current UI state.
-// if iconid >= 0, an icon will be added to the widget
-// if label is not NULL, a label will be added to the widget
-// widget looks best when height is WIMA_WIDGET_HEIGHT
+/**
+ * Draw a radio button with its upper left origin at (x,y) and
+ * size of (w,h), where @a flags is one or multiple flags from
+ * @a WimaWidgetCorner and @a state denotes the widget's current
+ * state. If @a iconid >= 0, an icon will be added to the widget.
+ * If @a label is not NULL, a label will be added to the widget.
+ * Widget looks best when @a h is @a WIMA_WIDGET_HEIGHT.
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param flags		Which corners should be sharp.
+ * @param state		The widget state.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param label		The label to draw, or NULL if none.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_radioBtn(WimaRenderContext* ctx,
-    float x, float y, float w, float h, int flags, WimaWidgetState state,
+    float x, float y, float w, float h, WimaWidgetCorner flags, WimaWidgetState state,
     int iconid, const char *label);
 
-
-// Calculate the corresponding text position for given coordinates px/py
-// in a text field.
-// See bndTextField for more info.
+/**
+ * Calculate the corresponding text position for given
+ * coordinates @a px and @a py in a text field. See
+ * @a wima_ui_textfield() for more info.
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param px		The X coordinate of the pos whose index will
+ *					be computed.
+ * @param py		The Y coordinate of the pos whose index will
+ *					be computed.
+ * @return			The corresponding text position for @a px and
+ *					@a py.
+ * @pre				ctx must not be NULL.
+ */
 int wima_ui_textField_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
     int iconid, const char *text, int px, int py);
 
-// Draw a text field with its lower left origin at (x,y) and size of (w,h),
-// where flags is one or multiple flags from BNDcornerFlags and state denotes
-// the widgets current UI state.
-// if iconid >= 0, an icon will be added to the widget
-// if text is not NULL, text will be printed to the widget
-// cbegin must be >= 0 and <= strlen(text) and denotes the beginning of the caret
-// cend must be >= cbegin and <= strlen(text) and denotes the end of the caret
-// if cend < cbegin, then no caret will be drawn
-// widget looks best when height is WIMA_WIDGET_HEIGHT
+/**
+ * Draw a text field with its upper left origin at (x,y) and size of (w,h),
+ * where @a flags is one or multiple flags from @a WimaWidgetCorner and
+ * @a state denotes the widget's current state. If @a iconid >= 0, an icon
+ * will be added to the widget. If @a text is not NULL, it will be printed
+ * to the widget. The param @a cbegin must be >= 0 and <= strlen(@a text)
+ * and denotes the beginning of the caret; @a cend must be >= @a cbegin
+ * and <= strlen(@a text) and denotes the end of the caret. If @a cend
+ * < @a cbegin, then no caret will be drawn. Widget looks best when
+ * @a h is @a WIMA_WIDGET_HEIGHT.
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param flags		Which corners should be sharp.
+ * @param state		The widget state.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param text		The text to draw, or NULL if none.
+ * @param cbegin	The index of the start of the caret.
+ * @param cend		The index of the end of the caret (can be highlighting).
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_textField(WimaRenderContext* ctx,
-    float x, float y, float w, float h, int flags, WimaWidgetState state,
+    float x, float y, float w, float h, WimaWidgetCorner flags, WimaWidgetState state,
     int iconid, const char *text, int cbegin, int cend);
 
-// Draw an option button with its lower left origin at (x,y) and size of (w,h),
-// where flags is one or multiple flags from BNDcornerFlags and state denotes
-// the widgets current UI state.
-// if label is not NULL, a label will be added to the widget
-// widget looks best when height is WIMA_WIDGET_HEIGHT
+/**
+ * Draw an option button with its upper left origin at (x,y) and
+ * size of (w,h), where @a flags is one or multiple flags from
+ * @a WimaWidgetCorner and @a state denotes the widget's current
+ * state. If @a label is not NULL, a label will be added to the
+ * widget. Widget looks best when @a h is @a WIMA_WIDGET_HEIGHT.
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param state		The widget state.
+ * @param label		The label to draw, or NULL if none.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_optionBtn(WimaRenderContext* ctx,
     float x, float y, float w, float h, WimaWidgetState state,
     const char *label);
@@ -2327,16 +2399,40 @@ void wima_ui_optionBtn(WimaRenderContext* ctx,
 // if iconid >= 0, an icon will be added to the widget
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is WIMA_WIDGET_HEIGHT
+/**
+ * @brief wima_ui_choiceBtn
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param flags		Which corners should be sharp.
+ * @param state		The widget state.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param label		The label to draw, or NULL if none.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_choiceBtn(WimaRenderContext* ctx,
-    float x, float y, float w, float h, int flags, WimaWidgetState state,
+    float x, float y, float w, float h, WimaWidgetCorner flags, WimaWidgetState state,
     int iconid, const char *label);
 
 // Draw a color button  with its lower left origin at (x,y) and size of (w,h),
 // where flags is one or multiple flags from BNDcornerFlags and state denotes
 // the widgets current UI state.
 // widget looks best when height is WIMA_WIDGET_HEIGHT
+/**
+ * @brief wima_ui_colorBtn
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param flags		Which corners should be sharp.
+ * @param color		The color to render the button with.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_colorBtn(WimaRenderContext* ctx,
-    float x, float y, float w, float h, int flags, WimaColor color);
+    float x, float y, float w, float h, WimaWidgetCorner flags, WimaColor color);
 
 // Draw a number field with its lower left origin at (x,y) and size of (w,h),
 // where flags is one or multiple flags from BNDcornerFlags and state denotes
@@ -2345,8 +2441,21 @@ void wima_ui_colorBtn(WimaRenderContext* ctx,
 // if value is not NULL, a value will be added to the widget, along with
 // a ":" separator
 // widget looks best when height is WIMA_WIDGET_HEIGHT
+/**
+ * @brief wima_ui_numField
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param flags		Which corners should be sharp.
+ * @param state		The widget state.
+ * @param label		The label to draw, or NULL if none.
+ * @param value		The value to add to the label with a separator.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_numField(WimaRenderContext* ctx,
-    float x, float y, float w, float h, int flags, WimaWidgetState state,
+    float x, float y, float w, float h, WimaWidgetCorner flags, WimaWidgetState state,
     const char *label, const char *value);
 
 // Draw slider control with its lower left origin at (x,y) and size of (w,h),
@@ -2357,8 +2466,22 @@ void wima_ui_numField(WimaRenderContext* ctx,
 // if value is not NULL, a value will be added to the widget, along with
 // a ":" separator
 // widget looks best when height is WIMA_WIDGET_HEIGHT
+/**
+ * @brief wima_ui_slider
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param flags		Which corners should be sharp.
+ * @param state		The widget state.
+ * @param progress	How far the slider should be.
+ * @param label		The label to draw, or NULL if none.
+ * @param value		The value to add to the label with a separator.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_slider(WimaRenderContext* ctx,
-    float x, float y, float w, float h, int flags, WimaWidgetState state,
+    float x, float y, float w, float h, WimaWidgetCorner flags, WimaWidgetState state,
     float progress, const char *label, const char *value);
 
 // Draw scrollbar with its lower left origin at (x,y) and size of (w,h),
@@ -2367,12 +2490,34 @@ void wima_ui_slider(WimaRenderContext* ctx,
 // size is in the range 0..1 and controls the size of the scroll handle
 // horizontal widget looks best when height is WIMA_SCROLLBAR_HEIGHT,
 // vertical looks best when width is WIMA_SCROLLBAR_WIDTH
+/**
+ * @brief wima_ui_scrollbar
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param state		The widget state.
+ * @param offset	The offset of the handle.
+ * @param size		The size of the handle.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_scrollbar(WimaRenderContext* ctx,
     float x, float y, float w, float h, WimaWidgetState state,
     float offset, float size);
 
 // Draw a menu background with its lower left origin at (x,y) and size of (w,h),
 // where flags is one or multiple flags from BNDcornerFlags.
+/**
+ * @brief wima_ui_menu_background
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param flags		Which corners should be sharp.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_menu_background(WimaRenderContext* ctx,
     float x, float y, float w, float h, int flags);
 
@@ -2380,10 +2525,30 @@ void wima_ui_menu_background(WimaRenderContext* ctx,
 // if iconid >= 0, an icon will be added to the widget
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is WIMA_WIDGET_HEIGHT
+/**
+ * @brief wima_ui_menu_label
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param label		The label to draw, or NULL if none.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_menu_label(WimaRenderContext* ctx,
     float x, float y, float w, float h, int iconid, const char *label);
 
 // Draw a menu separator.
+/**
+ * @brief wima_ui_menu_separator
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param x		X coordinate of the upper left corner.
+ * @param y		Y coordinate of the upper left corner.
+ * @param w		Width of the widget.
+ * @param h		Height of the widget.
+ * @pre			ctx must not be NULL.
+ */
 void wima_ui_menu_separator(WimaRenderContext* ctx, float x, float y, float w, float h);
 
 // Draw a menu item with its lower left origin at (x,y) and size of (w,h),
@@ -2391,14 +2556,47 @@ void wima_ui_menu_separator(WimaRenderContext* ctx, float x, float y, float w, f
 // if iconid >= 0, an icon will be added to the widget
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is WIMA_WIDGET_HEIGHT
+/**
+ * @brief wima_ui_menu_item
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param state		The widget state.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param label		The label to draw, or NULL if none.
+ * @param hasSub	true when the menu item has a submenu, false
+ *					otherwise
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_menu_item(WimaRenderContext* ctx,
     float x, float y, float w, float h, WimaWidgetState state,
-    int iconid, const char *label, bool hasSubMenu);
+    int iconid, const char *label, bool hasSub);
 
 // Draw a tooltip background with its lower left origin at (x,y) and size of (w,h)
+/**
+ * @brief wima_ui_tooltip_background
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param x		X coordinate of the upper left corner.
+ * @param y		Y coordinate of the upper left corner.
+ * @param w		Width of the widget.
+ * @param h		Height of the widget.
+ * @pre			ctx must not be NULL.
+ */
 void wima_ui_tooltip_background(WimaRenderContext* ctx, float x, float y, float w, float h);
 
 // Draw a node port at the given position filled with the given color
+/**
+ * @brief wima_ui_node_port
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param x		X coordinate of the upper left corner.
+ * @param y		Y coordinate of the upper left corner.
+ * @param state	The widget state.
+ * @param color	The color the node port should be rendered
+ *				with.
+ * @pre			ctx must not be NULL.
+ */
 void wima_ui_node_port(WimaRenderContext* ctx, float x, float y, WimaWidgetState state,
     WimaColor color);
 
@@ -2407,18 +2605,53 @@ void wima_ui_node_port(WimaRenderContext* ctx, float x, float y, WimaWidgetState
 // WIMA_DEFAULT: default wire color
 // WIMA_HOVER: selected wire color
 // WIMA_ACTIVE: dragged wire color
+/**
+ * @brief wima_ui_node_wire
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x0		The X coordinate of the first point.
+ * @param y0		The Y coordinate of the first point.
+ * @param x1		The X coordinate of the second point.
+ * @param y1		The Y coordinate of the second point.
+ * @param state0	The state of the node at the first point.
+ * @param state1	The state of the node at the second point.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_node_wire(WimaRenderContext* ctx, float x0, float y0, float x1, float y1,
     WimaWidgetState state0, WimaWidgetState state1);
 
 // Draw a node wire originating at (x0,y0) and floating to (x1,y1), with
 // a colored gradient based on the two colors color0 and color1
+/**
+ * @brief wima_ui_node_wire_colored
+ * @param ctx
+ * @param x0		The X coordinate of the first point.
+ * @param y0		The Y coordinate of the first point.
+ * @param x1		The X coordinate of the second point.
+ * @param y1		The Y coordinate of the second point.
+ * @param color0	The color of the wire at the first point.
+ * @param color1	The color of the wire at the second point.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_node_wire_colored(WimaRenderContext* ctx, float x0, float y0, float x1, float y1,
     WimaColor color0, WimaColor color1);
 
 // Draw a node background with its upper left origin at (x,y) and size of (w,h)
 // where titleColor provides the base color for the title bar
+/**
+ * @brief wima_ui_node_background
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param state		The widget state.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param label		The label to draw, or NULL if none.
+ * @param titleCol	The color to render the title in.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, float h,
-    WimaWidgetState state, int iconid, const char *label, WimaColor titleColor);
+    WimaWidgetState state, int iconid, const char *label, WimaColor titleCol);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -2427,10 +2660,27 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 // Use these functions to estimate sizes for widgets with your NVGcontext.
 
 // returns the ideal width for a label with given icon and text
+/**
+ * @brief wima_ui_label_estimateWidth
+ * @param ctx		The @a WimaRenderContext to measure with.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param label		The label to draw, or NULL if none.
+ * @return			The ideal width of the label.
+ * @pre				ctx must not be NULL.
+ */
 float wima_ui_label_estimateWidth(WimaRenderContext* ctx, int iconid, const char *label);
 
 // returns the height for a label with given icon, text and width; this
 // function is primarily useful in conjunction with multiline labels and textboxes
+/**
+ * @brief wima_ui_label_estimateHeight
+ * @param ctx		The @a WimaRenderContext to measure with.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param label		The label to draw, or NULL if none.
+ * @param width		The width (should already be estimated).
+ * @return			The ideal height of the label.
+ * @pre				ctx must not be NULL.
+ */
 float wima_ui_label_estimateHeight(WimaRenderContext* ctx, int iconid, const char *label, float width);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2443,12 +2693,30 @@ float wima_ui_label_estimateHeight(WimaRenderContext* ctx, int iconid, const cha
 // assigns radius r to the four entries of array radiuses depending on whether
 // the corner is marked as sharp or not; see BNDcornerFlags for possible
 // flag values.
+/**
+ * @brief wima_ui_corners_rounded
+ * @param radiuses
+ * @param r			The radius to assign to all four corners.
+ * @param flags		Which corners should be sharp.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_corners_rounded(float *radiuses, float r, int flags);
 
 // computes the bounds of the scrollbar handle from the scrollbar size
 // and the handles offset and size.
 // offset is in the range 0..1 and defines the position of the scroll handle
 // size is in the range 0..1 and defines the size of the scroll handle
+/**
+ * @brief wima_ui_scroll_handle_rect
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param offset	The offset of the handle.
+ * @param size		The size of the handle.
+ * @return			The rectangle of the scroll handle.
+ * @pre				ctx must not be NULL.
+ */
 WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float offset, float size);
 
 // Add a rounded box path at position (x,y) with size (w,h) and a separate
@@ -2456,40 +2724,122 @@ WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float of
 // cr1 = top right, cr2 = bottom right, cr3 = bottom left;
 // this is a low level drawing function: the path must be stroked or filled
 // to become visible.
+/**
+ * @brief wima_ui_box_rounded
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param x		X coordinate of the upper left corner.
+ * @param y		Y coordinate of the upper left corner.
+ * @param w		Width of the widget.
+ * @param h		Height of the widget.
+ * @param tl	Radius of the top left corner.
+ * @param tr	Radius of the top right corner.
+ * @param br	Radius of the bottom right corner.
+ * @param bl	Radius of the bottom left corner.
+ * @pre			ctx must not be NULL.
+ */
 void wima_ui_box_rounded(WimaRenderContext* ctx, float x, float y, float w, float h,
-    float cr0, float cr1, float cr2, float cr3);
+    float tl, float tr, float br, float bl);
 
 // Draw a beveled border at position (x,y) with size (w,h) shaded with
 // lighter and darker versions of backgroundColor
+/**
+ * @brief wima_ui_bevel
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param x		X coordinate of the upper left corner.
+ * @param y		Y coordinate of the upper left corner.
+ * @param w		Width of the widget.
+ * @param h		Height of the widget.
+ * @pre			ctx must not be NULL.
+ */
 void wima_ui_bevel(WimaRenderContext* ctx, float x, float y, float w, float h);
 
 // Draw a lower inset for a rounded box at position (x,y) with size (w,h)
 // that gives the impression the surface has been pushed in.
 // cr2 and cr3 contain the radiuses of the bottom right and bottom left
 // corners of the rounded box.
+/**
+ * @brief wima_ui_inset
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param x		X coordinate of the upper left corner.
+ * @param y		Y coordinate of the upper left corner.
+ * @param w		Width of the widget.
+ * @param h		Height of the widget.
+ * @param br	Radius of the bottom right corner.
+ * @param bl	Radius of the bottom left corner.
+ * @pre			ctx must not be NULL.
+ */
 void wima_ui_inset(WimaRenderContext* ctx, float x, float y, float w, float h,
-    float cr2, float cr3);
+    float br, float bl);
 
 // Draw an icon with (x,y) as its upper left coordinate; the iconid selects
 // the icon from the sheet; use the WIMA_ICONID macro to build icon IDs.
+/**
+ * @brief wima_ui_icon
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_icon(WimaRenderContext* ctx, float x, float y, int iconid);
 
 // Draw a drop shadow around the rounded box at (x,y) with size (w,h) and
 // radius r, with feather as its maximum range in pixels.
 // No shadow will be painted inside the rounded box.
+/**
+ * @brief wima_ui_dropShadow
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param x		X coordinate of the upper left corner.
+ * @param y		Y coordinate of the upper left corner.
+ * @param w		Width of the widget.
+ * @param h		Height of the widget.
+ * @param r		The radius of the corners of the shadow.
+ * @param f		The feather (blurriness) of the shadow.
+ * @param alpha	The alpha to start the drop shadow at.
+ * @pre			ctx must not be NULL.
+ */
 void wima_ui_dropShadow(WimaRenderContext* ctx, float x, float y, float w, float h,
-    float r, float feather, float alpha);
+    float r, float f, float alpha);
 
 // Draw the inner part of a widget box, with a gradient from shade_top to
 // shade_down. If h>w, the gradient will be horizontal instead of
 // vertical.
+/**
+ * @brief wima_ui_box_inner
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param tl		Radius of the top left corner.
+ * @param tr		Radius of the top right corner.
+ * @param br		Radius of the bottom right corner.
+ * @param bl		Radius of the bottom left corner.
+ * @param shade_top	The color of the top of the shading.
+ * @param shade_btm	The color of the bottom of the shading.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_box_inner(WimaRenderContext* ctx, float x, float y, float w, float h,
-    float cr0, float cr1, float cr2, float cr3,
-    WimaColor shade_top, WimaColor shade_down);
+    float tl, float tr, float br, float bl,
+    WimaColor shade_top, WimaColor shade_btm);
 
 // Draw the outline part of a widget box with the given color
+/**
+ * @brief wima_ui_box_outline
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param x		X coordinate of the upper left corner.
+ * @param y		Y coordinate of the upper left corner.
+ * @param w		Width of the widget.
+ * @param h		Height of the widget.
+ * @param tl	Radius of the top left corner.
+ * @param tr	Radius of the top right corner.
+ * @param br	Radius of the bottom right corner.
+ * @param bl	Radius of the bottom left corner.
+ * @param color	The color to draw the outline with.
+ * @pre			ctx must not be NULL.
+ */
 void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, float h,
-    float cr0, float cr1, float cr2, float cr3, WimaColor color);
+    float tl, float tr, float br, float bl, WimaColor color);
 
 // Draw an optional icon specified by <iconid> and an optional label with
 // given alignment (BNDtextAlignment), fontsize and color within a widget box.
@@ -2499,6 +2849,21 @@ void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, floa
 // and color.
 // if value is not NULL, label and value will be drawn with a ":" separator
 // inbetween.
+/**
+ * @brief wima_ui_label_icon_value
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param color		The color to render the text in.
+ * @param align		The alignment to render the text to.
+ * @param fontsize	The font size to use to render the text.
+ * @param label		The label to draw, or NULL if none.
+ * @param value		The value to add to the label with a separator.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w, float h,
     int iconid, WimaColor color, WimaTextAlign align, float fontsize, const char *label,
     const char *value);
@@ -2508,13 +2873,45 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
 // if iconid is >= 0, an icon will be drawn
 // if label is not NULL, it will be drawn with the specified alignment, fontsize
 // and color.
+/**
+ * @brief wima_ui_node_label_icon
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param shadow	Color to render the shadow at.
+ * @param align		The alignment to render the text to.
+ * @param fontsize	The font size to use to render the text.
+ * @param label		The label to draw, or NULL if none.
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, float h,
-    int iconid, WimaColor color, WimaColor shadowColor, WimaTextAlign align,
+    int iconid, WimaColor color, WimaColor shadow, WimaTextAlign align,
     float fontsize, const char *label);
 
 // Calculate the corresponding text position for given coordinates px/py
 // in an iconLabel.
 // See bndIconLabelCaret for more info.
+/**
+ * @brief wima_ui_text_pos
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param fontsize	The font size to use to render the text.
+ * @param label		The label to draw, or NULL if none.
+ * @param px		The X coordinate of the pos whose index will
+ *					be computed.
+ * @param py		The Y coordinate of the pos whose index will
+ *					be computed.
+ * @return			The corresponding text position for @a px and
+ *					@a py.
+ * @pre				ctx must not be NULL.
+ */
 int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
     int iconid, float fontsize, const char *label, int px, int py);
 
@@ -2527,22 +2924,75 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
 // cbegin must be >= 0 and <= strlen(text) and denotes the beginning of the caret
 // cend must be >= cbegin and <= strlen(text) and denotes the end of the caret
 // if cend < cbegin, then no caret will be drawn
+/**
+ * @brief wima_ui_label_caret
+ * @param ctx		The @a WimaRenderContext to render to.
+ * @param x			X coordinate of the upper left corner.
+ * @param y			Y coordinate of the upper left corner.
+ * @param w			Width of the widget.
+ * @param h			Height of the widget.
+ * @param iconid	The icon to draw with the label, or -1 if none.
+ * @param color		The color to draw the text in.
+ * @param fontsize	The font size to use to render the text.
+ * @param label		The label to draw, or NULL if none.
+ * @param caretCol	The color to render the caret with.
+ * @param cbegin	The index of the start of the caret.
+ * @param cend		The index of the end of the caret (can be highlighting).
+ * @pre				ctx must not be NULL.
+ */
 void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, float h,
     int iconid, WimaColor color, float fontsize, const char *label,
-    WimaColor caretColor, int cbegin, int cend);
+    WimaColor caretCol, int cbegin, int cend);
 
 // Draw a checkmark for an option box with the given upper left coordinates
 // (ox,oy) with the specified color.
+/**
+ * @brief wima_ui_check
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param ox	The X coordinate of the check.
+ * @param oy	The Y coordinate of the check.
+ * @param color	The color to draw the check in.
+ * @pre			ctx must not be NULL.
+ */
 void wima_ui_check(WimaRenderContext* ctx, float ox, float oy, WimaColor color);
 
 // Draw a horizontal arrow for a number field with its center at (x,y) and
 // size s; if s is negative, the arrow points to the left.
+/**
+ * @brief wima_ui_arrow
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param x		X coordinate of the upper left corner.
+ * @param y		Y coordinate of the upper left corner.
+ * @param s		The size (width) of the arrow to draw.
+ * @param color	The color to draw the arrow in.
+ * @pre			ctx must not be NULL.
+ */
 void wima_ui_arrow(WimaRenderContext* ctx, float x, float y, float s, WimaColor color);
 
 // Draw an up/down arrow for a choice box with its center at (x,y) and size s
+/**
+ * @brief wima_ui_arrow_upDown
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param x		X coordinate of the upper left corner.
+ * @param y		Y coordinate of the upper left corner.
+ * @param w		Width of the widget.
+ * @param h		Height of the widget.
+ * @param s		The size (width) of the arrow to draw.
+ * @param color	The color to draw the arrow in.
+ * @pre			ctx must not be NULL.
+ */
 void wima_ui_arrow_upDown(WimaRenderContext* ctx, float x, float y, float s, WimaColor color);
 
 // Draw a node down-arrow with its tip at (x,y) and size s
+/**
+ * @brief wima_ui_node_arrow_down
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param x		X coordinate of the upper left corner.
+ * @param y		Y coordinate of the upper left corner.
+ * @param s		The size (width) of the arrow to draw.
+ * @param color	The color to draw the arrow in.
+ * @pre			ctx must not be NULL.
+ */
 void wima_ui_node_arrow_down(WimaRenderContext* ctx, float x, float y, float s, WimaColor color);
 
 /**
