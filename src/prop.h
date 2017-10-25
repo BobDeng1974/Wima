@@ -92,7 +92,6 @@ typedef struct WimaPropList {
 typedef struct WimaPropPtr {
 
 	WimaPropPtrDrawFunc draw;
-	WimaPropFreeFunc free;
 
 	void* ptr;
 

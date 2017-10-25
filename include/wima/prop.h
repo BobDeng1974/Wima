@@ -110,12 +110,6 @@ typedef WimaStatus (*WimaPropPtrDrawFunc)(WimaLayout, void*);
 typedef WimaStatus (*WimaPropListDrawFunc)(WimaLayout, DynaVector);
 
 /**
- * A function to allow Wima to free a pointer associated with a property.
- * @param ptr	The pointer to free.
- */
-typedef void (*WimaPropFreeFunc)(void*);
-
-/**
  * Returns the type of @a wph.
  * @param wph	The @a WimaProperty to return the type of.
  * @return		The type of @a wph.
@@ -521,12 +515,11 @@ WimaProperty wima_prop_registerColor(const char* name, const char* label, const 
  *				This is used as a tooltip.
  * @param ptr	The initial pointer.
  * @param draw	The function to draw this property.
- * @param free	The function to free this property.
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
  */
 WimaProperty wima_prop_registerPtr(const char* name, const char* label, const char* desc,
-                                   void* ptr, WimaPropPtrDrawFunc draw, WimaPropFreeFunc free);
+                                   void* ptr, WimaPropPtrDrawFunc draw);
 
 /**
  * Registers and returns a @a WIMA_PROP_OPERATOR. It

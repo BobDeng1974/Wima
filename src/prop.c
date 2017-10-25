@@ -631,7 +631,7 @@ WimaProperty wima_prop_registerColor(const char* name, const char* label, const 
 }
 
 WimaProperty wima_prop_registerPtr(const char* name, const char* label, const char* desc,
-                                   void* ptr, WimaPropPtrDrawFunc draw, WimaPropFreeFunc free)
+                                   void* ptr, WimaPropPtrDrawFunc draw)
 {
 	assert_init;
 
@@ -642,7 +642,6 @@ WimaProperty wima_prop_registerPtr(const char* name, const char* label, const ch
 
 	// Set the data.
 	prop._ptr.draw = draw;
-	prop._ptr.free = free;
 	prop._ptr.ptr = ptr;
 
 	// Register the property.
@@ -747,17 +746,7 @@ void wima_prop_free(WimaProperty wph) {
 			break;
 
 		case WIMA_PROP_COLOR:
-			break;
-
 		case WIMA_PROP_PTR:
-		{
-			if (data->_ptr.free) {
-				data->_ptr.free(data->_ptr.ptr);
-			}
-
-			break;
-		}
-
 		case WIMA_PROP_OPERATOR:
 			break;
 	}
