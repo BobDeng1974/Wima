@@ -84,7 +84,7 @@ void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, i
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_render_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h, int flags,
+void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h, int flags,
                          WimaWidgetState state, int iconid, const char *label)
 {
 	assert_init;
@@ -98,7 +98,7 @@ void wima_render_toolBtn(WimaRenderContext* ctx, float x, float y, float w, floa
 
 	wima_ui_corners_rounded(cr, WIMA_TOOL_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
-	wima_theme_shadeColors(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, 1);
+	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
@@ -125,7 +125,7 @@ void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 	wima_ui_corners_rounded(cr, WIMA_OPTION_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
 
-	wima_theme_shadeColors(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, 1);
+	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
@@ -161,7 +161,7 @@ void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float 
 	wima_ui_corners_rounded(cr, WIMA_TEXT_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
 
-	wima_theme_shadeColors(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, 0);
+	wima_theme_shadeColors((WimaWidgetTheme*) t, state, false, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
@@ -196,7 +196,7 @@ void wima_ui_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 	                  WIMA_OPTION_WIDTH,  WIMA_OPTION_HEIGHT,
 	                  WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS);
 
-	wima_theme_shadeColors(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, true);
+	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, ox, oy,
 	                      WIMA_OPTION_WIDTH,  WIMA_OPTION_HEIGHT,
@@ -236,7 +236,7 @@ void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 	wima_ui_corners_rounded(cr, WIMA_OPTION_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
 
-	wima_theme_shadeColors(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, 1);
+	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
@@ -285,7 +285,7 @@ void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h
 	wima_ui_corners_rounded(cr, WIMA_NUMBER_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
 
-	wima_theme_shadeColors(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, 0);
+	wima_theme_shadeColors((WimaWidgetTheme*) t, state, false, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
@@ -318,7 +318,7 @@ void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
 	wima_ui_corners_rounded(cr, WIMA_NUMBER_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
 
-	wima_theme_shadeColors(&shade_top, &shade_btm, (WimaWidgetTheme*) t, state, 0);
+	wima_theme_shadeColors((WimaWidgetTheme*) t, state, false, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
@@ -402,7 +402,7 @@ void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, 
 
 	wima_ui_corners_rounded(cr, WIMA_MENU_RADIUS, flags);
 
-	wima_theme_shadeColors(&shade_top, &shade_btm, (WimaWidgetTheme*) t, WIMA_ITEM_DEFAULT, 0);
+	wima_theme_shadeColors((WimaWidgetTheme*) t, WIMA_ITEM_DEFAULT, false, &shade_top, &shade_btm);
 	wima_ui_box_inner(ctx, x, y, w, h + 1, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
 
 	WimaColor color = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
@@ -420,7 +420,7 @@ void wima_ui_tooltip_background(WimaRenderContext* ctx, float x, float y, float 
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TOOLTIP);
 
-	wima_theme_shadeColors(&shade_top, &shade_btm, (WimaWidgetTheme*) t, WIMA_ITEM_DEFAULT, 0);
+	wima_theme_shadeColors((WimaWidgetTheme*) t, WIMA_ITEM_DEFAULT, false, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, x, y, w, h + 1,
 	                      WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
@@ -436,7 +436,7 @@ void wima_ui_tooltip_background(WimaRenderContext* ctx, float x, float y, float 
 	wima_ui_dropShadow(ctx, x, y, w, h, WIMA_MENU_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
 }
 
-void wima_render_menu_label(WimaRenderContext* ctx, float x, float y, float w, float h, int iconid, const char *label) {
+void wima_ui_menu_label(WimaRenderContext* ctx, float x, float y, float w, float h, int iconid, const char *label) {
 
 	assert_init;
 
@@ -637,7 +637,7 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 	                        transparent);
 
 #if 0
-	wima_render_node_arrow_down(ctx, x + WIMA_NODE_MARGIN_SIDE, y + WIMA_NODE_TITLE_HEIGHT - 4,
+	wima_ui_node_arrow_down(ctx, x + WIMA_NODE_MARGIN_SIDE, y + WIMA_NODE_TITLE_HEIGHT - 4,
 	                            WIMA_NODE_ARROW_SIZE, arrowColor);
 #endif
 
@@ -1105,7 +1105,7 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
 	return p;
 }
 
-static void wima_render_caret_pos(WimaRenderContext* ctx, float x, float y, float desc,
+static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float desc,
                                   float lineHeight,    const char *caret,
                                   NVGtextRow *rows,    int nrows,
                                   int *cr, float *cx,  float *cy)
@@ -1188,8 +1188,8 @@ void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, floa
 		int nrows = nvgTextBreakLines(ctx->nvg, label, label + cend + 1, w, rows, WIMA_MAX_ROWS);
 		nvgTextMetrics(ctx->nvg, NULL, &desc, &lh);
 
-		wima_render_caret_pos(ctx, x, y, desc, lh, label + cbegin, rows, nrows, &c0r, &c0x, &c0y);
-		wima_render_caret_pos(ctx, x, y, desc, lh, label + cend,   rows, nrows, &c1r, &c1x, &c1y);
+		wima_ui_caret_pos(ctx, x, y, desc, lh, label + cbegin, rows, nrows, &c0r, &c0x, &c0y);
+		wima_ui_caret_pos(ctx, x, y, desc, lh, label + cend,   rows, nrows, &c1r, &c1x, &c1y);
 
 		nvgBeginPath(ctx->nvg);
 		if (cbegin == cend) {

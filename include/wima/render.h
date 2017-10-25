@@ -1473,7 +1473,7 @@ void wima_ui_label(WimaRenderContext* ctx,
 // if iconid >= 0, an icon will be added to the widget
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is WIMA_WIDGET_HEIGHT
-void wima_render_toolBtn(WimaRenderContext* ctx,
+void wima_ui_toolBtn(WimaRenderContext* ctx,
     float x, float y, float w, float h, int flags, WimaWidgetState state,
     int iconid, const char *label);
 
@@ -1575,7 +1575,7 @@ void wima_ui_menu_background(WimaRenderContext* ctx,
 // if iconid >= 0, an icon will be added to the widget
 // if label is not NULL, a label will be added to the widget
 // widget looks best when height is WIMA_WIDGET_HEIGHT
-void wima_render_menu_label(WimaRenderContext* ctx,
+void wima_ui_menu_label(WimaRenderContext* ctx,
     float x, float y, float w, float h, int iconid, const char *label);
 
 // Draw a menu separator.

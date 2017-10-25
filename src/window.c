@@ -1531,7 +1531,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 
 	// If it has a title, draw it.
 	if (hasTitle) {
-		wima_render_menu_label(&win->render, 0, 5, width, titleHeight, win->menuIcon, win->menuTitle);
+		wima_ui_menu_label(&win->render, 0, 5, width, titleHeight, win->menuIcon, win->menuTitle);
 		wima_ui_menu_separator(&win->render, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
 	}
 
