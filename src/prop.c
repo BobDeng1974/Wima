@@ -851,7 +851,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 	if (desc) {
 
 		// Calculate the pointer.
-		prop.label = prop.name + nameLen + labelLen;
+		prop.desc = prop.name + nameLen + labelLen;
 
 		// Copy into the label.
 		prop.desc[0] = '\0';
