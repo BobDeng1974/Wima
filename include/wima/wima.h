@@ -1085,6 +1085,11 @@ typedef struct WimaMenu {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @defgroup widget widget
+ * @{
+ */
+
+/**
  * Container flags to pass to @a wima_widget_setBox().
  */
 typedef enum WimaWidgetBox {
@@ -1186,24 +1191,79 @@ typedef enum WimaWidgetLayoutFlags {
 } WimaWidgetLayoutFlags;
 
 /**
- *These typedefs are here to make the following procedures shorter to write.
+ * A function to run when a widget has a mouse button event.
+ * @param wdgt	The widget that received the event.
+ * @param event	The event.
+ * @returns		true if the event was consumed, false otherwise.
+ *				This is so Wima can pass the event on.
  */
 typedef bool (*WimaWidgetMouseBtnFunc)(WimaWidget, WimaMouseBtnEvent);
+
+/**
+ * A function to run when a widget has a mouse click event.
+ * @param wdgt	The widget that received the event.
+ * @param event	The event.
+ * @returns		true if the event was consumed, false otherwise.
+ *				This is so Wima can pass the event on.
+ */
 typedef bool (*WimaWidgetMouseClickFunc)(WimaWidget, WimaMouseClickEvent);
+
+/**
+ * A function to run when a widget has a mouse drag event.
+ * @param wdgt	The widget that received the event.
+ * @param event	The event.
+ * @returns		true if the event was consumed, false otherwise.
+ *				This is so Wima can pass the event on.
+ */
 typedef bool (*WimaWidgetMouseDragFunc)(WimaWidget, WimaMouseDragEvent);
+
+/**
+ * A function to run when a widget has a scroll event.
+ * @param wdgt	The widget that received the event.
+ * @param event	The event.
+ * @returns		true if the event was consumed, false otherwise.
+ *				This is so Wima can pass the event on.
+ */
 typedef bool (*WimaWidgetScrollFunc)(WimaWidget, WimaScrollEvent);
+
+/**
+ * A function to run when a widget has a char event.
+ * @param wdgt	The widget that received the event.
+ * @param event	The event.
+ * @returns		true if the event was consumed, false otherwise.
+ *				This is so Wima can pass the event on.
+ */
 typedef bool (*WimaWidgetCharEvent)(WimaWidget, WimaCharEvent);
 
+/**
+ * A collection of widget event functions.
+ */
 typedef struct WimaWidgetFuncs {
 
+	/// The mouse button event function.
 	WimaWidgetMouseBtnFunc mouse;
+
+	/// The mouse click event function.
 	WimaWidgetMouseClickFunc click;
+
+	/// The mouse drag event function.
 	WimaWidgetMouseDragFunc drag;
+
+	/// The scroll event function.
 	WimaWidgetScrollFunc scroll;
+
+	/// The char event function.
 	WimaWidgetCharEvent char_event;
 
 } WimaWidgetFuncs;
 
+/**
+ * Creates a new widget. TODO: Get rid of this and just have functions
+ * that take a layout and inserts a particular kind of item.
+ * @param wah	The area to insert in.
+ * @param funcs	The widget's functions.
+ * @return		The created widget.
+ */
 WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs);
 // set an items state to frozen; the UI will not recurse into frozen items
 // when searching for hover or active items; subsequently, frozen items and
@@ -1272,6 +1332,10 @@ bool wima_widget_compare(WimaWidget wdgt1, WimaWidget wdgt2) yinline;
 bool wima_widget_isActive(WimaWidget wdgt) yinline;
 bool wima_widget_isHovered(WimaWidget wdgt yinline);
 bool wima_widget_isFocused(WimaWidget wdgt) yinline;
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Region functions and data structures.
