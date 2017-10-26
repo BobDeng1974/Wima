@@ -374,53 +374,121 @@ typedef enum WimaAction {
 // Data structures for events.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @defgroup events events
+ * Data structures for events.
+ * @{
+ */
+
+/**
+ * A key event.
+ */
 typedef struct WimaKeyEvent {
 
-	// This might be bigger than the others.
-	int scancode;
-
+	/// The key for the event.
 	WimaKey key;
+
+	/// What type of event (action) happened
+	/// with the key.
 	WimaAction action;
+
+	/// The modifiers that were pressed when
+	/// the event happened.
 	WimaMods mods;
+
+	/// A platform-dependent value.
+	int scancode;
 
 } WimaKeyEvent;
 
+/**
+ * A mouse button event.
+ */
 typedef struct WimaMouseBtnEvent {
 
+	/// The mouse button for the event.
 	WimaMouseBtn button;
+
+	/// What type of event (action) happened
+	/// with the button.
 	WimaAction action;
+
+	/// The modifiers that were pressed
+	/// when the event happened.
 	WimaMods mods;
 
 } WimaMouseBtnEvent;
 
+/**
+ * A mouse click event. A mouse click is when a
+ * mouse button is pressed and released quickly.
+ */
 typedef struct WimaMouseClickEvent {
 
+	/// The timestamp for the event. Wima
+	/// uses this to figure out when to
+	/// count 2+ clicks.
 	uint64_t timestamp;
+
+	/// The modifiers that were pressed
+	/// when the event happened.
 	WimaMods mods;
+
+	/// The number of consecutive clicks
+	/// so far. This allows users to do
+	/// double clicks, and even more.
 	uint16_t clicks;
 
 } WimaMouseClickEvent;
 
+/**
+ * A mouse drag event. A mouse drag event
+ * is when the mouse is moved when one or
+ * more of its buttons are pressed.
+ */
 typedef struct WimaMouseDragEvent {
 
+	/// The button that is pressed.
 	WimaMouseBtn button;
+
+	/// The modifiers that were pressed
+	/// when the event happened.
 	WimaMods mods;
+
+	/// The position that the mouse was
+	/// dragged to.
 	WimaVec pos;
 
 } WimaMouseDragEvent;
 
+/**
+ * A scroll (scrollwheel) event.
+ */
 typedef struct WimaScrollEvent {
 
+	/// The amount scrolled in the X axis.
 	int xoffset;
+
+	/// The amount scrolled in the Y axis.
 	int yoffset;
 
+	/// The modifiers that were pressed
+	/// when the event happened.
 	WimaMods mods;
 
 } WimaScrollEvent;
 
+/**
+ * A char (text input) event.
+ */
 typedef struct WimaCharEvent {
 
+	/// The character that was input.
+	/// This is in UTF-32.
 	uint32_t code;
+
+	/// The modifiers that were pressed
+	/// when the event happened.
 	WimaMods mods;
 
 } WimaCharEvent;
@@ -438,6 +506,9 @@ typedef struct WimaCharEvent {
  */
 typedef struct WimaCursor WimaCursor;
 
+/**
+ * The possible standard cursor types.
+ */
 typedef enum WimaCursorType {
 
 	/// Standard arrow cursor.
@@ -460,15 +531,49 @@ typedef enum WimaCursorType {
 
 } WimaCursorType;
 
+/**
+ * The possible cursor modes.
+ */
 typedef enum WimaCursorMode {
 
+	/// Normal cursor.
 	WIMA_CURSOR_NORMAL,
+
+	/// Cursor is hidden, but can move normally.
 	WIMA_CURSOR_HIDDEN,
+
+	/// Cursor is hidden and locked to a window.
+	/// This is useful for implementing mouse
+	/// motion based camera controls or other
+	/// input requiring unlimited cursor movement.
 	WIMA_CURSOR_DISABLED
 
 } WimaCursorMode;
 
+/**
+ * Creates a new custom cursor image that can be set for
+ * a window with wima_window_setCursorType(). The cursor
+ * can be destroyed with @a wima_cursor_destroy(). Any
+ * remaining cursors are destroyed by @a wima_exit().
+ * The cursor hotspot is specified in pixels, relative
+ * to the upper-left corner of the cursor image. Like
+ * all other coordinate systems in Wima, the X-axis
+ * points to the right and the Y-axis points down.
+ * @param img	The cursor image.
+ * @param xhot	The X coordinate of the hotspot.
+ * @param yhot	The Y coordinate of the hotspot.
+ * @return		The created cursor.
+ * @pre			@a xhot must be less than @a img width.
+ * @pre			@a yhot must be less than @a img height.
+ */
 WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) yinline;
+
+/**
+ * This function destroys a cursor previously created
+ * with @a wima_cursor_create(). Any remaining cursors
+ * will be destroyed by @a wima_exit().
+ * @param cursor	The cursor to destroy.
+ */
 void wima_cursor_destroy(WimaCursor* cursor) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////

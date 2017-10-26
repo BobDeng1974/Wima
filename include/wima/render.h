@@ -113,7 +113,11 @@ typedef struct WimaRenderContext WimaRenderContext;
  */
 
 /**
- * An uncompressed, in-memory image.
+ * An uncompressed, in-memory image. The pixels are
+ * 32-bit, little-endian, non-premultiplied RGBA,
+ * i.e. eight bits per channel. They are arranged
+ * canonically as packed sequential rows, starting
+ * from the top-left corner.
  */
 typedef struct WimaImage {
 
