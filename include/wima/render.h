@@ -127,9 +127,9 @@ typedef struct WimaImage {
 	/// The height of the image.
 	int height;
 
-	/// An array of RGB (three channel) pixels.
+	/// An array of RGBA (four channel) pixels.
 	/// Thus, this array should have space for
-	/// 3 * @a width * @a height bytes.
+	/// 4 * @a width * @a height bytes.
 	unsigned char* pixels;
 
 } WimaImage;
