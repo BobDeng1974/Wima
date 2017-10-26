@@ -1557,8 +1557,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 				if (contained && m == menu) {
 
 					// Set the menu submenu.
-					menu->subMenu = item->subMenu;
-					menu->hasSubMenu = item->hasSubMenu;
+					menu->subMenu = item->hasSubMenu ? item->subMenu : NULL;
 
 					// If the item has a submenu...
 					if (item->hasSubMenu) {
@@ -1587,7 +1586,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	}
 
 	// If the menu has a submenu, draw it.
-	if (menu->hasSubMenu) {
+	if (menu->subMenu) {
 		wima_window_drawMenu(win, menu->subMenu, width);
 	}
 
@@ -1604,7 +1603,7 @@ static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos) {
 	WimaMenu* child;
 
 	// If the menu has a submenu, check it.
-	if (menu->hasSubMenu) {
+	if (menu->subMenu) {
 		child = wima_window_menu_contains(menu->subMenu, pos);
 	}
 	else {
@@ -1975,7 +1974,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih,
 						menu->rect.y = win->menuOffset.y;
 
 						// Also clear the sub menu.
-						menu->hasSubMenu = false;
+						menu->subMenu = NULL;
 					}
 
 					// Call the item's function.
@@ -1989,17 +1988,18 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih,
 			}
 
 			// If the menu has submenus...
-			if (m->hasSubMenu) {
+			if (m->subMenu) {
 
 				// Dismiss sub menus.
 				WimaMenu* subMenu = m->subMenu;
-				while (subMenu && subMenu->hasSubMenu) {
-					subMenu->hasSubMenu = false;
-					subMenu = subMenu->subMenu;
+				while (subMenu && subMenu->subMenu) {
+					WimaMenu* temp = subMenu->subMenu;
+					subMenu->subMenu = NULL;
+					subMenu = temp;
 				}
 
 				// Clear the submenu flag.
-				m->hasSubMenu = false;
+				m->subMenu = NULL;
 			}
 		}
 

@@ -1036,15 +1036,13 @@ typedef struct WimaMenu {
 
 	WimaRect rect;
 
-	union {
-		WimaMenu* subMenu;
-		WimaMenuItemFunc func;
-	};
+	/// The current visible submenu, or NULL if none.
+	WimaMenu* subMenu;
 
 	WimaMenuItem* items;
-	int numItems;
 
-	bool hasSubMenu;
+	/// Number of items in the menu items array.
+	uint32_t numItems;
 
 } WimaMenu;
 

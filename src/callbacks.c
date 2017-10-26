@@ -108,7 +108,6 @@ WimaMenu splitSubSub = {
     NULL,
     splitSubSubItems,
     1,
-    false
 
 };
 
@@ -127,7 +126,6 @@ WimaMenu splitSub = {
     NULL,
     splitSubItems,
     6,
-    false
 
 };
 
@@ -143,7 +141,6 @@ WimaMenu areaOptionMenu = {
     NULL,
     areaOptionMenuItems,
     3,
-    false
 };
 
 // TODO: Comments here.
@@ -298,7 +295,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 				wima_window_setContextMenu(wwh, &areaOptionMenu, "Area Options", -1);
 
 				// Make sure the sub sub menu won't be drawn.
-				splitSub.hasSubMenu = false;
+				splitSub.subMenu = NULL;
 			}
 
 			// Don't return an event to the user.
