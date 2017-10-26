@@ -268,47 +268,32 @@ typedef struct WimaTransform {
  */
 
 /**
- * Opaque struct type
+ * @defgroup image image
+ * Data structures for handling images.
+ * @{
  */
-typedef struct WimaCursor WimaCursor;
 
+/**
+ * An uncompressed, in-memory image.
+ */
 typedef struct WimaImage {
 
+	/// The width of the image.
 	int width;
+
+	/// The height of the image.
 	int height;
+
+	/// An array of RGB (three channel) pixels.
+	/// Thus, this array should have space for
+	/// 3 * @a width * @a height bytes.
 	unsigned char* pixels;
 
 } WimaImage;
 
-typedef enum WimaCursorType {
-
-	/// Standard arrow cursor.
-	WIMA_CURSOR_ARROW		= 0,
-
-	/// Ibeam cursor.
-	WIMA_CURSOR_IBEAM,
-
-	/// Crosshair cursor.
-	WIMA_CURSOR_CROSSHAIR,
-
-	/// Hand cursor.
-	WIMA_CURSOR_HAND,
-
-	/// Horizontal resize cursor.
-	WIMA_CURSOR_HRESIZE,
-
-	/// Vertical resize cursor.
-	WIMA_CURSOR_VRESIZE
-
-} WimaCursorType;
-
-typedef enum WimaCursorMode {
-
-	WIMA_CURSOR_NORMAL,
-	WIMA_CURSOR_HIDDEN,
-	WIMA_CURSOR_DISABLED
-
-} WimaCursorMode;
+/**
+ * @}
+ */
 
 /**
  * A handle to a region (area template) type.
@@ -713,11 +698,50 @@ typedef struct WimaRegionFuncs {
 typedef struct WimaRenderContext WimaRenderContext;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Cursor and key functions.
+// Cursor functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Opaque struct type
+ */
+typedef struct WimaCursor WimaCursor;
+
+typedef enum WimaCursorType {
+
+	/// Standard arrow cursor.
+	WIMA_CURSOR_ARROW		= 0,
+
+	/// Ibeam cursor.
+	WIMA_CURSOR_IBEAM,
+
+	/// Crosshair cursor.
+	WIMA_CURSOR_CROSSHAIR,
+
+	/// Hand cursor.
+	WIMA_CURSOR_HAND,
+
+	/// Horizontal resize cursor.
+	WIMA_CURSOR_HRESIZE,
+
+	/// Vertical resize cursor.
+	WIMA_CURSOR_VRESIZE
+
+} WimaCursorType;
+
+typedef enum WimaCursorMode {
+
+	WIMA_CURSOR_NORMAL,
+	WIMA_CURSOR_HIDDEN,
+	WIMA_CURSOR_DISABLED
+
+} WimaCursorMode;
 
 WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) yinline;
 void wima_cursor_destroy(WimaCursor* cursor) yinline;
+
+////////////////////////////////////////////////////////////////////////////////
+// Key functions and data structures.
+////////////////////////////////////////////////////////////////////////////////
 
 const char* wima_key_name(WimaKey key, int scancode) yinline;
 
