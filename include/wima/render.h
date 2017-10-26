@@ -2271,7 +2271,7 @@ typedef enum WimaWidgetCornerFlags {
 /**
  * A struct allowing Wima to manipulate corner radii.
  */
-typedef struct WimaWidgetCorners {
+typedef struct WimaUiCorners {
 
 	union {
 
@@ -2296,7 +2296,7 @@ typedef struct WimaWidgetCorners {
 
 	};
 
-} WimaWidgetCorners;
+} WimaUiCorners;
 
 // High Level Functions
 // --------------------
@@ -2728,7 +2728,7 @@ float wima_ui_label_estimateHeight(WimaRenderContext* ctx, int iconid, const cha
  * @param flags		Which corners should be sharp.
  * @pre				ctx must not be NULL.
  */
-WimaWidgetCorners wima_ui_corners_rounded(float r, WimaWidgetCornerFlags flags);
+WimaUiCorners wima_ui_corners_rounded(float r, WimaWidgetCornerFlags flags);
 
 /**
  * Computes the bounds of the scrollbar handle from (w, h) and the
