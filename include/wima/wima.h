@@ -590,7 +590,51 @@ void wima_cursor_destroy(WimaCursor* cursor) yinline;
 // Key functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * This function returns the localized name of the specified
+ * printable key. This is intended for displaying key bindings
+ * to the user. If the key is WIMA_KEY_UNKNOWN, the scancode
+ * is used instead, otherwise the scancode is ignored. If a
+ * non-printable key or (if the key is WIMA_KEY_UNKNOWN) a
+ * scancode that maps to a non-printable key is specified,
+ * this function returns NULL.
+ *
+ * This behavior allows you to pass in the arguments passed
+ * to key callbacks without modification.
+ *
+ * The printable keys are:
+ *	- WIMA_KEY_APOSTROPHE
+ *	- WIMA_KEY_COMMA
+ *	- WIMA_KEY_MINUS
+ *	- WIMA_KEY_PERIOD
+ *	- WIMA_KEY_SLASH
+ *	- WIMA_KEY_SEMICOLON
+ *	- WIMA_KEY_EQUAL
+ *	- WIMA_KEY_LEFT_BRACKET
+ *	- WIMA_KEY_RIGHT_BRACKET
+ *	- WIMA_KEY_BACKSLASH
+ *	- WIMA_KEY_WORLD_1
+ *	- WIMA_KEY_WORLD_2
+ *	- WIMA_KEY_0 to WIMA_KEY_9
+ *	- WIMA_KEY_A to WIMA_KEY_Z
+ *	- WIMA_KEY_KP_0 to WIMA_KEY_KP_9
+ *	- WIMA_KEY_KP_DECIMAL
+ *	- WIMA_KEY_KP_DIVIDE
+ *	- WIMA_KEY_KP_MULTIPLY
+ *	- WIMA_KEY_KP_SUBTRACT
+ *	- WIMA_KEY_KP_ADD
+ *	- WIMA_KEY_KP_EQUAL
+ *
+ * Do not free the returned string.
+ * @param key		The key to query, or WIMA_KEY_UNKNOWN.
+ * @param scancode	The scancode of the key to query.
+ * @return			The localized name of the key, or NULL.
+ */
 const char* wima_key_name(WimaKey key, int scancode) yinline;
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Monitor functions and data structures.
