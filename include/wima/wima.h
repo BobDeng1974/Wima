@@ -54,16 +54,32 @@ extern "C" {
 #include <dyna/string.h>
 #include <dyna/tree.h>
 
-// For cursor positions, mainly.
+/**
+ * @file render.h
+ */
+
+/**
+ * @defgroup 2D 2D
+ * Data structures for handling 2D graphics.
+ * @{
+ */
+
+/**
+ * A 2-coordinate vector of ints.
+ */
 typedef struct WimaVec {
 
 	union {
 
+		/// Access members as an array.
 		int v[2];
 
 		struct {
 
+			/// The X coordinate.
 			int x;
+
+			/// The Y coordinate.
 			int y;
 
 		};
@@ -72,16 +88,22 @@ typedef struct WimaVec {
 
 } WimaVec;
 
-// For cursor positions, mainly.
+/**
+ * A 2-coordinate vector of floats.
+ */
 typedef struct WimaVecf {
 
 	union {
 
+		/// Access members as an array.
 		float v[2];
 
 		struct {
 
+			/// The X coordinate.
 			float x;
+
+			/// The Y coordinate.
 			float y;
 
 		};
@@ -90,15 +112,22 @@ typedef struct WimaVecf {
 
 } WimaVecf;
 
+/**
+ * A 2D size using ints.
+ */
 typedef struct WimaSize {
 
 	union {
 
+		/// Access members as an array.
 		int v[2];
 
 		struct {
 
+			/// The width.
 			int w;
+
+			/// The height.
 			int h;
 
 		};
@@ -107,15 +136,22 @@ typedef struct WimaSize {
 
 } WimaSize;
 
+/**
+ * A 2D size using floats.
+ */
 typedef struct WimaSizef {
 
 	union {
 
+		/// Access members as an array.
 		float v[2];
 
 		struct {
 
+			/// The width.
 			float w;
+
+			/// The height.
 			float h;
 
 		};
@@ -124,18 +160,28 @@ typedef struct WimaSizef {
 
 } WimaSizef;
 
-// Layout rectangle.
+/**
+ * A 2D rectangle using ints.
+ */
 typedef struct WimaRect {
 
 	union {
 
+		/// Access members as an array.
 		int v[4];
 
 		struct {
 
+			/// The X coordinate of the upper left corner.
 			int x;
+
+			/// The Y coordinate of the upper left corner.
 			int y;
+
+			/// The width.
 			int w;
+
+			/// The height.
 			int h;
 
 		};
@@ -144,17 +190,28 @@ typedef struct WimaRect {
 
 } WimaRect;
 
+/**
+ * A 2D rectangle using floats.
+ */
 typedef struct WimaRectf {
 
 	union {
 
+		/// Access members as an array.
 		float v[4];
 
 		struct {
 
+			/// The X coordinate of the upper left corner.
 			float x;
+
+			/// The Y coordinate of the upper left corner.
 			float y;
+
+			/// The width.
 			float w;
+
+			/// The height.
 			float h;
 
 		};
@@ -205,6 +262,10 @@ typedef struct WimaTransform {
 	};
 
 } WimaTransform;
+
+/**
+ * @}
+ */
 
 /**
  * Opaque struct type
