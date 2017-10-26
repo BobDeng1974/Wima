@@ -66,8 +66,3 @@ void wima_cursor_destroy(WimaCursor* cursor) {
 	wassert(cursor != NULL, WIMA_ASSERT_CURSOR);
 	glfwDestroyCursor((GLFWcursor*) cursor);
 }
-
-const char* wima_key_name(WimaKey key, int scancode) {
-	assert_init;
-	return glfwGetKeyName(key, scancode);
-}
