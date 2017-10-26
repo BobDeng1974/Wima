@@ -91,7 +91,7 @@ WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap) {
 	return (WimaRegion) idx;
 }
 
-WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr) {
+void wima_region_setUserPointer(WimaRegion reg, void* ptr) {
 
 	assert_init;
 
@@ -102,8 +102,6 @@ WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr) {
 
 	// Set the user pointer.
 	region->user = ptr;
-
-	return WIMA_STATUS_SUCCESS;
 }
 
 void* wima_region_userPointer(WimaRegion reg) {
