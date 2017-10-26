@@ -232,7 +232,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	assert_init;
 
 	double time = glfwGetTime();
-	uint32_t ts = (uint32_t) (time * 1000);
+	uint64_t ts = (time * 1000);
 
 	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
