@@ -1540,7 +1540,7 @@ typedef struct WimaRegionFuncs {
 } WimaRegionFuncs;
 
 WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap);
-WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr) yinline;
+void wima_region_setUserPointer(WimaRegion reg, void* ptr) yinline;
 void* wima_region_userPointer(WimaRegion reg) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
