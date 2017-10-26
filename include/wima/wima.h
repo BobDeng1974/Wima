@@ -1387,7 +1387,7 @@ uint32_t wima_widget_events(WimaWidget wdgt) yinline;
 WimaWidgetState wima_widget_state(WimaWidget wdgt);
 
 /**
- * Returns true if @pos is within the rectangle for @a wdgt.
+ * Returns true if @a pos is within the rectangle for @a wdgt.
  * @param wdgt	The widget to query.
  * @param pos	The pos to test against.
  * @return		true if @a pos is in the rectangle, false
