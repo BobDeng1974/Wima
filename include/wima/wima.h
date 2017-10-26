@@ -1573,7 +1573,7 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion
 // Window functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize size,
+WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size,
                               bool maximized, bool resizable, bool decorated);
 WimaStatus wima_window_close(WimaWindow wwh);
 

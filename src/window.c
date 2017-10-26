@@ -69,9 +69,9 @@ static void wima_window_clearContext(WimaWinCtx* ctx);
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize size,
-                              bool maximized, bool resizable, bool decorated) {
-
+WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized,
+                              bool resizable, bool decorated)
+{
 	assert_init;
 
 	wassert(wima_area_valid(*((DynaTree*) dvec_get(wg.workspaces, wksph))), WIMA_ASSERT_WKSP);
@@ -115,13 +115,13 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize siz
 	// Create the window name.
 	wwin.name = dstr_create(name);
 	if (yunlikely(!wwin.name)) {
-		return WIMA_STATUS_WINDOW_ERR;
+		return WIMA_WINDOW_INVALID;
 	}
 
 	// Create the window, and check for error.
 	GLFWwindow* win = glfwCreateWindow(size.w, size.h, name, NULL, NULL);
 	if (yunlikely(!win)) {
-		return WIMA_STATUS_WINDOW_ERR;
+		return WIMA_WINDOW_INVALID;
 	}
 
 	// Set the sizes.
@@ -191,18 +191,15 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize siz
 
 		// Push it onto the list and check for error.
 		if (yunlikely(dvec_push(wg.windows, &wwin))) {
-			return WIMA_STATUS_WINDOW_ERR;
+			return WIMA_WINDOW_INVALID;
 		}
 	}
 
 	// Put the workspace into the window and check for error.
 	WimaStatus status = wima_window_areas_replace(idx, wksph);
 	if (yunlikely(status)) {
-		return status;
+		return WIMA_WINDOW_INVALID;
 	}
-
-	// Fill the return value.
-	*wwh = idx;
 
 	// Set the user pointer to the handle.
 	glfwSetWindowUserPointer(win, (void*) (long) idx);
@@ -216,7 +213,7 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize siz
 	// Load the context.
 	if (yunlikely(!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))) {
 		glfwTerminate();
-		return -1;
+		return WIMA_WINDOW_INVALID;
 	}
 
 	// Get a pointer to the new window.
@@ -237,7 +234,7 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize siz
 	// Set the clear color for this context.
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	return WIMA_STATUS_SUCCESS;
+	return idx;
 }
 
 WimaStatus wima_window_close(WimaWindow wwh) {
