@@ -390,7 +390,7 @@ static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 	else {
 
 		// Free the items arrays.
-		dallocx(area->area.ctx.items, 0);
+		yfree(area->area.ctx.items);
 
 		// If the user didn't allocate anything, just return.
 		if (!area->area.user) {
