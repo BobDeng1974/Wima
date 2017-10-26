@@ -68,8 +68,10 @@ WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap) {
 
 	WimaReg reg;
 
+	// Make sure to null the user pointer.
 	reg.user = NULL;
 
+	// Set up the functions.
 	reg.gen_ptr = funcs.gen_ptr;
 	reg.free_ptr = funcs.free_ptr;
 	reg.layout = funcs.layout;
@@ -77,8 +79,10 @@ WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap) {
 	reg.mouse_pos = funcs.pos;
 	reg.mouse_enter = funcs.enter;
 
+	// Set up the item cap.
 	reg.itemCap = itemCap;
 
+	// Push onto the vector and check for error.
 	DynaStatus status = dvec_push(wg.regions, &reg);
 	if (yunlikely(status)) {
 		return WIMA_REGION_INVALID;
@@ -93,8 +97,10 @@ WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr) {
 
 	wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
 
+	// Get the region pointer.
 	WimaReg* region = dvec_get(wg.regions, reg);
 
+	// Set the user pointer.
 	region->user = ptr;
 
 	return WIMA_STATUS_SUCCESS;
@@ -106,6 +112,7 @@ void* wima_region_userPointer(WimaRegion reg) {
 
 	wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
 
+	// Get the region pointer.
 	WimaReg* region = dvec_get(wg.regions, reg);
 
 	return region->user;
