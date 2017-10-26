@@ -42,11 +42,12 @@
 extern "C" {
 #endif
 
-#include <GLFW/glfw3.h>
-
 #include <nanovg.h>
 
+#include <wima/wima.h>
 #include <wima/render.h>
+
+#include <GLFW/glfw3.h>
 
 typedef struct WimaRenderContext {
 

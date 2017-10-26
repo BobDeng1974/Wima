@@ -136,7 +136,7 @@ WimaStatus cb_layout(WimaArea wah, WimaLayout wlh, WimaSize size) {
 	printf("    Size: { w: %4d, h: %4d }\n", size.w, size.h);
 #endif
 
-	WimaItemFuncs funcs;
+	WimaWidgetFuncs funcs;
 
 	funcs.mouse = cb_mouseBtn;
 	funcs.click = NULL;

@@ -145,7 +145,7 @@ typedef struct WimaWdgt {
 	WimaProperty prop;
 
 	/// Event functions.
-	WimaItemFuncs funcs;
+	WimaWidgetFuncs funcs;
 
 } WimaWdgt;
 

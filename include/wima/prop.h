@@ -34,10 +34,7 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-// This is to resolve a circular dependency with render.h.
-#ifdef WIMA_PROP_RENDER_H
-typedef uint32_t WimaProperty;
-#elif !defined(WIMA_PROP_H)
+#ifndef WIMA_PROP_H
 #define WIMA_PROP_H
 
 /* For C++ compatibility. */
@@ -536,7 +533,7 @@ WimaProperty wima_prop_registerPtr(const char* name, const char* label, const ch
  * @pre			@a name must not be NULL.
  */
 WimaProperty wima_prop_registerOperator(const char* name, const char* label,
-                                        const char* desc, WimaItemMouseClickFunc op);
+                                        const char* desc, WimaWidgetMouseClickFunc op);
 
 /**
  * Unregisters @a wph and removes all memory

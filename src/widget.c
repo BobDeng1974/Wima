@@ -73,7 +73,7 @@ assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaWidget wima_widget_new(WimaArea wah, WimaItemFuncs funcs) {
+WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
 
 	assert_init;
 

@@ -133,7 +133,7 @@ typedef union WimaPropData {
 
 	WimaPropPtr _ptr;
 
-	WimaItemMouseClickFunc _op;
+	WimaWidgetMouseClickFunc _op;
 
 } WimaPropData;
 

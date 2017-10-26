@@ -56,7 +56,7 @@ extern "C" {
 
 /**
  * @defgroup layout layout
- * Functions for manipulating layouts.
+ * Functions and data structures for manipulating layouts.
  * @{
  */
 

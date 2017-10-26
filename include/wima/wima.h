@@ -54,302 +54,21 @@ extern "C" {
 #include <dyna/string.h>
 #include <dyna/tree.h>
 
-/**
- * @file render.h
- */
+#include <wima/render.h>
 
 /**
- * @defgroup graphics2d graphics2d
- * Data structures for handling 2D graphics.
+ * @file wima.h
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Data structures common to all of Wima.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup wima wima
+ * Data structures and functions common (global) to all of Wima.
  * @{
  */
-
-/**
- * A 2-coordinate vector of ints.
- */
-typedef struct WimaVec {
-
-	union {
-
-		/// Access members as an array.
-		int v[2];
-
-		struct {
-
-			/// The X coordinate.
-			int x;
-
-			/// The Y coordinate.
-			int y;
-
-		};
-
-	};
-
-} WimaVec;
-
-/**
- * A 2-coordinate vector of floats.
- */
-typedef struct WimaVecf {
-
-	union {
-
-		/// Access members as an array.
-		float v[2];
-
-		struct {
-
-			/// The X coordinate.
-			float x;
-
-			/// The Y coordinate.
-			float y;
-
-		};
-
-	};
-
-} WimaVecf;
-
-/**
- * A 2D size using ints.
- */
-typedef struct WimaSize {
-
-	union {
-
-		/// Access members as an array.
-		int v[2];
-
-		struct {
-
-			/// The width.
-			int w;
-
-			/// The height.
-			int h;
-
-		};
-
-	};
-
-} WimaSize;
-
-/**
- * A 2D size using floats.
- */
-typedef struct WimaSizef {
-
-	union {
-
-		/// Access members as an array.
-		float v[2];
-
-		struct {
-
-			/// The width.
-			float w;
-
-			/// The height.
-			float h;
-
-		};
-
-	};
-
-} WimaSizef;
-
-/**
- * A 2D rectangle using ints.
- */
-typedef struct WimaRect {
-
-	union {
-
-		/// Access members as an array.
-		int v[4];
-
-		struct {
-
-			/// The X coordinate of the upper left corner.
-			int x;
-
-			/// The Y coordinate of the upper left corner.
-			int y;
-
-			/// The width.
-			int w;
-
-			/// The height.
-			int h;
-
-		};
-
-	};
-
-} WimaRect;
-
-/**
- * A 2D rectangle using floats.
- */
-typedef struct WimaRectf {
-
-	union {
-
-		/// Access members as an array.
-		float v[4];
-
-		struct {
-
-			/// The X coordinate of the upper left corner.
-			float x;
-
-			/// The Y coordinate of the upper left corner.
-			float y;
-
-			/// The width.
-			float w;
-
-			/// The height.
-			float h;
-
-		};
-
-	};
-
-} WimaRectf;
-
-/**
- * A 2x3 (2D) transformation matrix.
- * It is laid out as below:
- *
- * [a c e]
- *
- * [b d f]
- *
- * [0 0 1]
- */
-typedef struct WimaTransform {
-
-	union {
-
-		/// The six members accessible as an array.
-		float v[6];
-
-		struct {
-
-			/// The x scale factor.
-			float sx;
-
-			/// The x skew factor.
-			float kx;
-
-			/// The x translate factor.
-			float tx;
-
-			/// The y skew factor.
-			float ky;
-
-			/// The y scale factor.
-			float sy;
-
-			/// The y translate factor.
-			float ty;
-
-		};
-
-	};
-
-} WimaTransform;
-
-/**
- * @}
- */
-
-/**
- * @defgroup image image
- * Data structures for handling images.
- * @{
- */
-
-/**
- * An uncompressed, in-memory image.
- */
-typedef struct WimaImage {
-
-	/// The width of the image.
-	int width;
-
-	/// The height of the image.
-	int height;
-
-	/// An array of RGB (three channel) pixels.
-	/// Thus, this array should have space for
-	/// 3 * @a width * @a height bytes.
-	unsigned char* pixels;
-
-} WimaImage;
-
-/**
- * @}
- */
-
-/**
- * A handle to a region (area template) type.
- */
-typedef uint8_t WimaRegion;
-
-/**
- * A handle to a window.
- */
-typedef uint8_t WimaWindow;
-
-/**
- * A handle to a workspace (window template) type.
- */
-typedef uint8_t WimaWorkspace;
-
-/**
- * A handle to a node. This is to make the node size
- * smaller than the 64 bits that Dyna uses. I am pretty
- * sure that nothing will go over the limit, so I feel
- * comfortable doing this.
- */
-typedef uint16_t WimaAreaNode;
-
-/**
- * A handle to a area.
- */
-typedef struct WimaArea {
-
-	// Put this first because it's bigger.
-	WimaAreaNode area;
-
-	WimaWindow window;
-
-} WimaArea;
-
-/**
- * A handle to a UI item.
- */
-typedef struct WimaWidget {
-
-	uint16_t widget;
-
-	WimaAreaNode area;
-	WimaWindow window;
-
-} WimaWidget;
-
-typedef struct WimaLayout {
-
-	uint16_t layout;
-
-	WimaAreaNode area;
-	WimaWindow window;
-
-} WimaLayout;
 
 /**
  * The possible status codes that Wima can return after
@@ -404,6 +123,42 @@ typedef enum WimaStatus {
 	WIMA_STATUS_EVENT_DROPPED  = 141,
 
 } WimaStatus;
+
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Data structures for images.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup image image
+ * Data structures for handling images.
+ * @{
+ */
+
+/**
+ * An uncompressed, in-memory image.
+ */
+typedef struct WimaImage {
+
+	/// The width of the image.
+	int width;
+
+	/// The height of the image.
+	int height;
+
+	/// An array of RGB (three channel) pixels.
+	/// Thus, this array should have space for
+	/// 3 * @a width * @a height bytes.
+	unsigned char* pixels;
+
+} WimaImage;
+
+/**
+ * @}
+ */
 
 /**
  * The possible options for mouse buttons.
@@ -658,45 +413,6 @@ typedef struct WimaCharEvent {
 
 } WimaCharEvent;
 
-/**
- *These typedefs are here to make the following procedures shorter to write.
- */
-typedef bool (*WimaItemMouseBtnFunc)(WimaWidget, WimaMouseBtnEvent);
-typedef bool (*WimaItemMouseClickFunc)(WimaWidget, WimaMouseClickEvent);
-typedef bool (*WimaItemMouseDragFunc)(WimaWidget, WimaMouseDragEvent);
-typedef bool (*WimaItemScrollFunc)(WimaWidget, WimaScrollEvent);
-typedef bool (*WimaItemCharEvent)(WimaWidget, WimaCharEvent);
-
-typedef struct WimaItemFuncs {
-
-	WimaItemMouseBtnFunc mouse;
-	WimaItemMouseClickFunc click;
-	WimaItemMouseDragFunc drag;
-	WimaItemScrollFunc scroll;
-	WimaItemCharEvent char_event;
-
-} WimaItemFuncs;
-
-typedef void* (*WimaAreaGenUserPointerFunc)(WimaArea);
-typedef void (*WimaAreaFreeUserPointerFunc)(void*);
-typedef WimaStatus (*WimaAreaLayoutFunc)(WimaArea, WimaLayout, WimaSize);
-typedef bool (*WimaAreaKeyFunc)(WimaArea, WimaKeyEvent);
-typedef bool (*WimaAreaMousePosFunc)(WimaArea, WimaVec);
-typedef bool (*WimaAreaMouseEnterFunc)(WimaArea, bool);
-
-typedef struct WimaRegionFuncs {
-
-	WimaAreaGenUserPointerFunc gen_ptr;
-	WimaAreaFreeUserPointerFunc free_ptr;
-	WimaAreaLayoutFunc layout;
-	WimaAreaKeyFunc key;
-	WimaAreaMousePosFunc pos;
-	WimaAreaMouseEnterFunc enter;
-
-} WimaRegionFuncs;
-
-typedef struct WimaRenderContext WimaRenderContext;
-
 ////////////////////////////////////////////////////////////////////////////////
 // Cursor functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
@@ -740,7 +456,7 @@ WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) yinline;
 void wima_cursor_destroy(WimaCursor* cursor) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Key functions and data structures.
+// Key functions.
 ////////////////////////////////////////////////////////////////////////////////
 
 const char* wima_key_name(WimaKey key, int scancode) yinline;
@@ -809,6 +525,332 @@ void wima_setTime(double time) yinline;
 double wima_time() yinline;
 uint64_t wima_time_raw() yinline;
 uint64_t wima_time_freq() yinline;
+
+////////////////////////////////////////////////////////////////////////////////
+// Forward declarations for handles.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup region region
+ * @{
+ */
+
+/**
+ * A handle to a region (area template) type.
+ */
+typedef uint8_t WimaRegion;
+
+/**
+ * @}
+ */
+
+/**
+ * @defgroup window window
+ * @{
+ */
+
+/**
+ * A handle to a window.
+ */
+typedef uint8_t WimaWindow;
+
+/**
+ * @}
+ */
+
+/**
+ * @defgroup area area
+ * @{
+ */
+
+/**
+ * A handle to a node. This is to make the node size
+ * smaller than the 64 bits that Dyna uses. I am pretty
+ * sure that nothing will go over the limit, so I feel
+ * comfortable doing this.
+ */
+typedef uint16_t WimaAreaNode;
+
+/**
+ * A handle to a area.
+ */
+typedef struct WimaArea {
+
+	/// The area's node. It's first because it's bigger.
+	WimaAreaNode area;
+
+	/// The area's window.
+	WimaWindow window;
+
+} WimaArea;
+
+/**
+ * @}
+ */
+
+/**
+ * @defgroup widget widget
+ * @{
+ */
+
+/**
+ * A handle to a widget.
+ */
+typedef struct WimaWidget {
+
+	/// A handle to the widget itself.
+	uint16_t widget;
+
+	/// The area that the widget is in.
+	WimaAreaNode area;
+
+	/// The window that the widget is in.
+	WimaWindow window;
+
+} WimaWidget;
+
+/**
+ * Item states as returned by @a wima_widget_state().
+ */
+typedef enum WimaWidgetState {
+
+	/// The item is inactive.
+	WIMA_ITEM_DEFAULT = 0,
+
+	/// The item is inactive, but the cursor is hovering over this item.
+	WIMA_ITEM_HOVER   = 1 << 0,
+
+	/// The item is toggled, activated, focused (depends on item kind).
+	WIMA_ITEM_ACTIVE  = 1 << 1,
+
+	/// The item is unresponsive.
+	WIMA_ITEM_FROZEN  = 1 << 2,
+
+} WimaWidgetState;
+
+/**
+ * @}
+ */
+
+/**
+ * @defgroup layout layout
+ * @{
+ */
+
+/**
+ * A handle to a layout.
+ */
+typedef struct WimaLayout {
+
+	/// The ID of the layout.
+	uint16_t layout;
+
+	/// The area the layout is in.
+	WimaAreaNode area;
+
+	/// The window the layout is in.
+	WimaWindow window;
+
+} WimaLayout;
+
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Menu data structures.
+////////////////////////////////////////////////////////////////////////////////
+
+typedef struct WimaMenu WimaMenu;
+
+typedef WimaStatus (*WimaMenuItemFunc)(WimaWidget);
+
+typedef struct WimaMenuItem {
+
+	const char* label;
+
+	union {
+		WimaMenu* subMenu;
+		WimaMenuItemFunc func;
+	};
+
+	WimaRect rect;
+
+	WimaWidgetState state;
+
+	int icon;
+
+	bool hasSubMenu;
+
+} WimaMenuItem;
+
+typedef struct WimaMenu {
+
+	WimaVec pos;
+	WimaSize size;
+
+	union {
+		WimaMenu* subMenu;
+		WimaMenuItemFunc func;
+	};
+
+	WimaMenuItem* items;
+	int numItems;
+
+	bool hasSubMenu;
+
+} WimaMenu;
+
+////////////////////////////////////////////////////////////////////////////////
+// Area functions.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaArea wima_area(WimaWindow wwh, WimaAreaNode node) yinline;
+
+void* wima_area_userPointer(WimaArea wah) yinline;
+WimaRect wima_area_rect(WimaArea wah) yinline;
+void wima_area_setScale(WimaArea wah, float scale) yinline;
+float wima_area_scale(WimaArea wah) yinline;
+void wima_area_setType(WimaArea wah, WimaRegion type) yinline;
+WimaRegion wima_area_type(WimaArea wah) yinline;
+
+// return the total number of allocated items
+int wima_area_itemCount(WimaArea wah) yinline;
+
+bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
+
+////////////////////////////////////////////////////////////////////////////////
+// Region functions and data structures.
+////////////////////////////////////////////////////////////////////////////////
+
+typedef void* (*WimaAreaGenUserPointerFunc)(WimaArea);
+typedef void (*WimaAreaFreeUserPointerFunc)(void*);
+typedef WimaStatus (*WimaAreaLayoutFunc)(WimaArea, WimaLayout, WimaSize);
+typedef bool (*WimaAreaKeyFunc)(WimaArea, WimaKeyEvent);
+typedef bool (*WimaAreaMousePosFunc)(WimaArea, WimaVec);
+typedef bool (*WimaAreaMouseEnterFunc)(WimaArea, bool);
+
+typedef struct WimaRegionFuncs {
+
+	WimaAreaGenUserPointerFunc gen_ptr;
+	WimaAreaFreeUserPointerFunc free_ptr;
+	WimaAreaLayoutFunc layout;
+	WimaAreaKeyFunc key;
+	WimaAreaMousePosFunc pos;
+	WimaAreaMouseEnterFunc enter;
+
+} WimaRegionFuncs;
+
+WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t itemCapacity);
+WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr) yinline;
+void* wima_region_userPointer(WimaRegion reg) yinline;
+
+////////////////////////////////////////////////////////////////////////////////
+// Workspace functions and data structures.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A handle to a workspace (window template) type.
+ */
+typedef uint8_t WimaWorkspace;
+
+WimaStatus wima_workspace_register(WimaWorkspace* type);
+WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node, float split, bool vertical);
+WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion reg);
+
+////////////////////////////////////////////////////////////////////////////////
+// Window functions and data structures.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize size,
+                              bool maximized, bool resizable, bool decorated);
+WimaStatus wima_window_close(WimaWindow wwh);
+
+void wima_window_setFocused(WimaWindow wwh) yinline;
+bool wima_window_focused(WimaWindow wwh) yinline;
+
+void wima_window_minimize(WimaWindow wwh) yinline;
+bool wima_window_minimized(WimaWindow wwh yinline);
+
+void wima_window_maximize(WimaWindow wwh) yinline;
+bool wima_window_maximized(WimaWindow wwh) yinline;
+void wima_window_fullscreen(WimaWindow wwh, WimaMonitor* monitor) yinline;
+void wima_window_restore(WimaWindow wwh) yinline;
+
+void wima_window_hide(WimaWindow wwh) yinline;
+void wima_window_show(WimaWindow wwh) yinline;
+bool wima_window_visible(WimaWindow wwh) yinline;
+
+bool wima_window_decorated(WimaWindow wwh) yinline;
+bool wima_window_resizable(WimaWindow wwh) yinline;
+
+WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) yinline;
+DynaString wima_window_title(WimaWindow wwh) yinline;
+void wima_window_setPosition(WimaWindow wwh, WimaVec pos) yinline;
+WimaVec wima_window_position(WimaWindow wwh) yinline;
+void wima_window_setSize(WimaWindow wwh, WimaSize size) yinline;
+WimaSize wima_window_size(WimaWindow wwh) yinline;
+void wima_window_setSizeLimits(WimaWindow wwh, WimaSize min, WimaSize max) yinline;
+void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator) yinline;
+WimaSize wima_window_framebufferSize(WimaWindow wwh) yinline;
+WimaStatus wima_window_setUserPointer(WimaWindow win, void* user) yinline;
+void* wima_window_userPointer(WimaWindow win) yinline;
+
+void wima_window_setMods(WimaWindow wwh, WimaMods mods) yinline;
+WimaMods wima_window_mods(WimaWindow wwh) yinline;
+WimaVec wima_window_scroll(WimaWindow wwh) yinline;
+uint32_t wima_window_clicks(WimaWindow wwh) yinline;
+
+void wima_window_setHover(WimaWindow wwh, WimaWidget wih) yinline;
+WimaWidget wima_window_hover(WimaWindow wwh) yinline;
+void wima_window_setActive(WimaWindow wwh, WimaWidget wih) yinline;
+WimaWidget wima_window_actve(WimaWindow wwh) yinline;
+void wima_window_setFocus(WimaWindow wwh, WimaWidget wih) yinline;
+WimaWidget wima_window_focus(WimaWindow wwh) yinline;
+
+void wima_window_clearEvents(WimaWindow wwh) yinline;
+
+void wima_window_refresh(WimaWindow wwh) yinline;
+void wima_window_cancelRefresh(WimaWindow wwh) yinline;
+bool wima_window_needsRefresh(WimaWindow wwh) yinline;
+void wima_window_layout(WimaWindow wwh) yinline;
+void wima_window_cancelLayout(WimaWindow wwh) yinline;
+bool wima_window_needsLayout(WimaWindow wwh) yinline;
+
+DynaTree wima_window_areas(WimaWindow wwh);
+WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksp);
+WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas);
+
+WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) yinline;
+WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) yinline;
+WimaMenu* wima_window_menu(WimaWindow wwh) yinline;
+const char* wima_window_menuTitle(WimaWindow wwh) yinline;
+int wima_window_menuIcon(WimaWindow wwh) yinline;
+WimaStatus wima_window_removeMenu(WimaWindow wwh) yinline;
+
+void wima_window_setCursorType(WimaWindow wwh, WimaCursor* c) yinline;
+void wima_window_setStandardCursorType(WimaWindow wwh, WimaCursorType c) yinline;
+WimaCursor* wima_window_cursorType(WimaWindow wwh) yinline;
+
+void wima_window_setCursorMode(WimaWindow wwh, WimaCursorMode mode) yinline;
+WimaCursorMode wima_window_cursorMode(WimaWindow wwh) yinline;
+
+void wima_window_setCursorPos(WimaWindow wwh, WimaVec pos) yinline;
+WimaVec wima_window_cursorPos(WimaWindow wwh) yinline;
+WimaVec wima_window_cursorStart(WimaWindow wwh) yinline;
+WimaVec wima_window_cursorDelta(WimaWindow wwh) yinline;
+
+void wima_window_setStickyKeys(WimaWindow wwh, bool enabled) yinline;
+bool wima_window_stickyKeys(WimaWindow wwh) yinline;
+void wima_window_setStickyMouseBtns(WimaWindow wwh, bool enabled) yinline;
+bool wima_window_stickyMouseBtns(WimaWindow wwh) yinline;
+
+WimaAction wima_window_keyState(WimaWindow wwh, WimaKey key) yinline;
+
+WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) yinline;
+
+void wima_window_setClipboard(WimaWindow wwh, const char* string) yinline;
+const char* wima_window_clipboard(WimaWindow wwh) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Widget functions and data structures.
@@ -915,24 +957,26 @@ typedef enum WimaWidgetLayoutFlags {
 
 } WimaWidgetLayoutFlags;
 
-// Item states as returned by uiGetState().
-typedef enum WimaWidgetState {
+/**
+ *These typedefs are here to make the following procedures shorter to write.
+ */
+typedef bool (*WimaWidgetMouseBtnFunc)(WimaWidget, WimaMouseBtnEvent);
+typedef bool (*WimaWidgetMouseClickFunc)(WimaWidget, WimaMouseClickEvent);
+typedef bool (*WimaWidgetMouseDragFunc)(WimaWidget, WimaMouseDragEvent);
+typedef bool (*WimaWidgetScrollFunc)(WimaWidget, WimaScrollEvent);
+typedef bool (*WimaWidgetCharEvent)(WimaWidget, WimaCharEvent);
 
-	/// The item is inactive.
-	WIMA_ITEM_DEFAULT = 0,
+typedef struct WimaWidgetFuncs {
 
-	/// The item is inactive, but the cursor is hovering over this item.
-	WIMA_ITEM_HOVER   = 1 << 0,
+	WimaWidgetMouseBtnFunc mouse;
+	WimaWidgetMouseClickFunc click;
+	WimaWidgetMouseDragFunc drag;
+	WimaWidgetScrollFunc scroll;
+	WimaWidgetCharEvent char_event;
 
-	/// The item is toggled, activated, focused (depends on item kind).
-	WIMA_ITEM_ACTIVE  = 1 << 1,
+} WimaWidgetFuncs;
 
-	/// The item is unresponsive.
-	WIMA_ITEM_FROZEN  = 1 << 2,
-
-} WimaWidgetState;
-
-WimaWidget wima_widget_new(WimaArea wah, WimaItemFuncs funcs);
+WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs);
 // set an items state to frozen; the UI will not recurse into frozen items
 // when searching for hover or active items; subsequently, frozen items and
 // their child items will not cause mouse event notifications.
@@ -1002,180 +1046,13 @@ bool wima_widget_isHovered(WimaWidget wdgt yinline);
 bool wima_widget_isFocused(WimaWidget wdgt) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Menu data structures.
+// More Wima global functions and data definitions.
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef struct WimaMenu WimaMenu;
-
-typedef WimaStatus (*WimaMenuItemFunc)(WimaWidget);
-
-typedef struct WimaMenuItem {
-
-	const char* label;
-
-	union {
-		WimaMenu* subMenu;
-		WimaMenuItemFunc func;
-	};
-
-	WimaRect rect;
-
-	WimaWidgetState state;
-
-	int icon;
-
-	bool hasSubMenu;
-
-} WimaMenuItem;
-
-typedef struct WimaMenu {
-
-	WimaVec pos;
-	WimaSize size;
-
-	union {
-		WimaMenu* subMenu;
-		WimaMenuItemFunc func;
-	};
-
-	WimaMenuItem* items;
-	int numItems;
-
-	bool hasSubMenu;
-
-} WimaMenu;
-
-////////////////////////////////////////////////////////////////////////////////
-// Region functions.
-////////////////////////////////////////////////////////////////////////////////
-
-WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t itemCapacity);
-WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr) yinline;
-void* wima_region_userPointer(WimaRegion reg) yinline;
-
-////////////////////////////////////////////////////////////////////////////////
-// Area functions.
-////////////////////////////////////////////////////////////////////////////////
-
-WimaArea wima_area(WimaWindow wwh, WimaAreaNode node) yinline;
-
-void* wima_area_userPointer(WimaArea wah) yinline;
-WimaRect wima_area_rect(WimaArea wah) yinline;
-void wima_area_setScale(WimaArea wah, float scale) yinline;
-float wima_area_scale(WimaArea wah) yinline;
-void wima_area_setType(WimaArea wah, WimaRegion type) yinline;
-WimaRegion wima_area_type(WimaArea wah) yinline;
-
-// return the total number of allocated items
-int wima_area_itemCount(WimaArea wah) yinline;
-
-bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
-
-////////////////////////////////////////////////////////////////////////////////
-// Workspace functions.
-////////////////////////////////////////////////////////////////////////////////
-
-WimaStatus wima_workspace_register(WimaWorkspace* type);
-WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node, float split, bool vertical);
-WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion reg);
-
-////////////////////////////////////////////////////////////////////////////////
-// Window functions and definitions.
-////////////////////////////////////////////////////////////////////////////////
-
-WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize size,
-                              bool maximized, bool resizable, bool decorated);
-WimaStatus wima_window_close(WimaWindow wwh);
-
-void wima_window_setFocused(WimaWindow wwh) yinline;
-bool wima_window_focused(WimaWindow wwh) yinline;
-
-void wima_window_minimize(WimaWindow wwh) yinline;
-bool wima_window_minimized(WimaWindow wwh yinline);
-
-void wima_window_maximize(WimaWindow wwh) yinline;
-bool wima_window_maximized(WimaWindow wwh) yinline;
-void wima_window_fullscreen(WimaWindow wwh, WimaMonitor* monitor) yinline;
-void wima_window_restore(WimaWindow wwh) yinline;
-
-void wima_window_hide(WimaWindow wwh) yinline;
-void wima_window_show(WimaWindow wwh) yinline;
-bool wima_window_visible(WimaWindow wwh) yinline;
-
-bool wima_window_decorated(WimaWindow wwh) yinline;
-bool wima_window_resizable(WimaWindow wwh) yinline;
-
-WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) yinline;
-DynaString wima_window_title(WimaWindow wwh) yinline;
-void wima_window_setPosition(WimaWindow wwh, WimaVec pos) yinline;
-WimaVec wima_window_position(WimaWindow wwh) yinline;
-void wima_window_setSize(WimaWindow wwh, WimaSize size) yinline;
-WimaSize wima_window_size(WimaWindow wwh) yinline;
-void wima_window_setSizeLimits(WimaWindow wwh, WimaSize min, WimaSize max) yinline;
-void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator) yinline;
-WimaSize wima_window_framebufferSize(WimaWindow wwh) yinline;
-WimaStatus wima_window_setUserPointer(WimaWindow win, void* user) yinline;
-void* wima_window_userPointer(WimaWindow win) yinline;
-
-void wima_window_setMods(WimaWindow wwh, WimaMods mods) yinline;
-WimaMods wima_window_mods(WimaWindow wwh) yinline;
-WimaVec wima_window_scroll(WimaWindow wwh) yinline;
-uint32_t wima_window_clicks(WimaWindow wwh) yinline;
-
-void wima_window_setHover(WimaWindow wwh, WimaWidget wih) yinline;
-WimaWidget wima_window_hover(WimaWindow wwh) yinline;
-void wima_window_setActive(WimaWindow wwh, WimaWidget wih) yinline;
-WimaWidget wima_window_actve(WimaWindow wwh) yinline;
-void wima_window_setFocus(WimaWindow wwh, WimaWidget wih) yinline;
-WimaWidget wima_window_focus(WimaWindow wwh) yinline;
-
-void wima_window_clearEvents(WimaWindow wwh) yinline;
-
-void wima_window_refresh(WimaWindow wwh) yinline;
-void wima_window_cancelRefresh(WimaWindow wwh) yinline;
-bool wima_window_needsRefresh(WimaWindow wwh) yinline;
-void wima_window_layout(WimaWindow wwh) yinline;
-void wima_window_cancelLayout(WimaWindow wwh) yinline;
-bool wima_window_needsLayout(WimaWindow wwh) yinline;
-
-DynaTree wima_window_areas(WimaWindow wwh);
-WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksp);
-WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas);
-
-WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) yinline;
-WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) yinline;
-WimaMenu* wima_window_menu(WimaWindow wwh) yinline;
-const char* wima_window_menuTitle(WimaWindow wwh) yinline;
-int wima_window_menuIcon(WimaWindow wwh) yinline;
-WimaStatus wima_window_removeMenu(WimaWindow wwh) yinline;
-
-void wima_window_setCursorType(WimaWindow wwh, WimaCursor* c) yinline;
-void wima_window_setStandardCursorType(WimaWindow wwh, WimaCursorType c) yinline;
-WimaCursor* wima_window_cursorType(WimaWindow wwh) yinline;
-
-void wima_window_setCursorMode(WimaWindow wwh, WimaCursorMode mode) yinline;
-WimaCursorMode wima_window_cursorMode(WimaWindow wwh) yinline;
-
-void wima_window_setCursorPos(WimaWindow wwh, WimaVec pos) yinline;
-WimaVec wima_window_cursorPos(WimaWindow wwh) yinline;
-WimaVec wima_window_cursorStart(WimaWindow wwh) yinline;
-WimaVec wima_window_cursorDelta(WimaWindow wwh) yinline;
-
-void wima_window_setStickyKeys(WimaWindow wwh, bool enabled) yinline;
-bool wima_window_stickyKeys(WimaWindow wwh) yinline;
-void wima_window_setStickyMouseBtns(WimaWindow wwh, bool enabled) yinline;
-bool wima_window_stickyMouseBtns(WimaWindow wwh) yinline;
-
-WimaAction wima_window_keyState(WimaWindow wwh, WimaKey key) yinline;
-
-WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) yinline;
-
-void wima_window_setClipboard(WimaWindow wwh, const char* string) yinline;
-const char* wima_window_clipboard(WimaWindow wwh) yinline;
-
-////////////////////////////////////////////////////////////////////////////////
-// Wima global functions and data definitions.
-////////////////////////////////////////////////////////////////////////////////
+/**
+ * @defgroup wima wima
+ * @{
+ */
 
 typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaRenderContext*);
 typedef void (*WimaErrorFunc)(WimaStatus, const char*);
@@ -1210,6 +1087,10 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
                      const char* fontPath, const char* iconSheetPath);
 WimaStatus wima_main();
 void wima_exit();
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }

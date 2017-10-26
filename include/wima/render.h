@@ -67,19 +67,252 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
+#include <stdint.h>
+
+#include <yc/opt.h>
 
 #include <nanovg.h>
 
-#include <wima/wima.h>
-
 //! @cond Doxygen suppress
-#define WIMA_PROP_RENDER_H
-#include <wima/prop.h>
-#undef WIMA_PROP_RENDER_H
+// Opaque forward declarations.
+typedef uint32_t WimaProperty;
+typedef enum WimaWidgetState WimaWidgetState;
 //! @endcond Doxygen suppress
 
 /**
  * @file render.h
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Data structure for render state.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup render render
+ * Functions for manipulating Wima's render state.
+ * @{
+ */
+
+/**
+ * An opaque struct representing render state/context.
+ */
+typedef struct WimaRenderContext WimaRenderContext;
+
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Data structures for 2D graphics.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup graphics2d graphics2d
+ * Data structures for handling 2D graphics.
+ * @{
+ */
+
+/**
+ * A 2-coordinate vector of ints.
+ */
+typedef struct WimaVec {
+
+	union {
+
+		/// Access members as an array.
+		int v[2];
+
+		struct {
+
+			/// The X coordinate.
+			int x;
+
+			/// The Y coordinate.
+			int y;
+
+		};
+
+	};
+
+} WimaVec;
+
+/**
+ * A 2-coordinate vector of floats.
+ */
+typedef struct WimaVecf {
+
+	union {
+
+		/// Access members as an array.
+		float v[2];
+
+		struct {
+
+			/// The X coordinate.
+			float x;
+
+			/// The Y coordinate.
+			float y;
+
+		};
+
+	};
+
+} WimaVecf;
+
+/**
+ * A 2D size using ints.
+ */
+typedef struct WimaSize {
+
+	union {
+
+		/// Access members as an array.
+		int v[2];
+
+		struct {
+
+			/// The width.
+			int w;
+
+			/// The height.
+			int h;
+
+		};
+
+	};
+
+} WimaSize;
+
+/**
+ * A 2D size using floats.
+ */
+typedef struct WimaSizef {
+
+	union {
+
+		/// Access members as an array.
+		float v[2];
+
+		struct {
+
+			/// The width.
+			float w;
+
+			/// The height.
+			float h;
+
+		};
+
+	};
+
+} WimaSizef;
+
+/**
+ * A 2D rectangle using ints.
+ */
+typedef struct WimaRect {
+
+	union {
+
+		/// Access members as an array.
+		int v[4];
+
+		struct {
+
+			/// The X coordinate of the upper left corner.
+			int x;
+
+			/// The Y coordinate of the upper left corner.
+			int y;
+
+			/// The width.
+			int w;
+
+			/// The height.
+			int h;
+
+		};
+
+	};
+
+} WimaRect;
+
+/**
+ * A 2D rectangle using floats.
+ */
+typedef struct WimaRectf {
+
+	union {
+
+		/// Access members as an array.
+		float v[4];
+
+		struct {
+
+			/// The X coordinate of the upper left corner.
+			float x;
+
+			/// The Y coordinate of the upper left corner.
+			float y;
+
+			/// The width.
+			float w;
+
+			/// The height.
+			float h;
+
+		};
+
+	};
+
+} WimaRectf;
+
+/**
+ * A 2x3 (2D) transformation matrix.
+ * It is laid out as below:
+ *
+ * [a c e]
+ *
+ * [b d f]
+ *
+ * [0 0 1]
+ */
+typedef struct WimaTransform {
+
+	union {
+
+		/// The six members accessible as an array.
+		float v[6];
+
+		struct {
+
+			/// The x scale factor.
+			float sx;
+
+			/// The x skew factor.
+			float kx;
+
+			/// The x translate factor.
+			float tx;
+
+			/// The y skew factor.
+			float ky;
+
+			/// The y scale factor.
+			float sy;
+
+			/// The y translate factor.
+			float ty;
+
+		};
+
+	};
+
+} WimaTransform;
+
+/**
+ * @}
  */
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1395,7 +1628,6 @@ WimaColor wima_theme_wireColor(WimaNodeTheme* theme, WimaWidgetState state);
 
 /**
  * @defgroup render render
- * Functions for manipulating Wima's render state.
  * @{
  */
 

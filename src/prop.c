@@ -649,7 +649,7 @@ WimaProperty wima_prop_registerPtr(const char* name, const char* label, const ch
 }
 
 WimaProperty wima_prop_registerOperator(const char* name, const char* label,
-                                        const char* desc, WimaItemMouseClickFunc op)
+                                        const char* desc, WimaWidgetMouseClickFunc op)
 {
 	assert_init;
 
