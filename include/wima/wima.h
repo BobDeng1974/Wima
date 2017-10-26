@@ -1565,7 +1565,7 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
 // Workspace functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_workspace_register(WimaWorkspace* type);
+WimaWorkspace wima_workspace_register();
 WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node, float split, bool vertical);
 WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion reg);
 

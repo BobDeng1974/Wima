@@ -54,7 +54,7 @@ assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_workspace_register(WimaWorkspace* wth) {
+WimaWorkspace wima_workspace_register() {
 
 	assert_init;
 
@@ -69,19 +69,16 @@ WimaStatus wima_workspace_register(WimaWorkspace* wth) {
 	// Create the workspace and check for error.
 	WimaWksp wksp = dtree_create(0, sizeof(WimaAr), NULL);
 	if (yunlikely(!wksp)) {
-		return WIMA_STATUS_WORKSPACE_ERR;
+		return WIMA_WORKSPACE_INVALID;
 	}
 
 	// Push the workspace onto the list.
 	DynaStatus status = dvec_push(wg.workspaces, &wksp);
 	if (yunlikely(status)) {
-		return WIMA_STATUS_WORKSPACE_ERR;
+		return WIMA_WORKSPACE_INVALID;
 	}
 
-	// Fill the return value.
-	*wth = len;
-
-	return WIMA_STATUS_SUCCESS;
+	return len;
 }
 
 WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
