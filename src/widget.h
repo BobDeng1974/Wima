@@ -144,6 +144,9 @@ typedef struct WimaWdgt {
 	/// The property that this refers to.
 	WimaProperty prop;
 
+	/// The user pointer.
+	void* user;
+
 	/// Event functions.
 	WimaWidgetFuncs funcs;
 

@@ -206,6 +206,24 @@ uint32_t wima_widget_box(WimaWidget wdgt) {
 	return wima_widget_ptr(wdgt)->widget.flags & WIMA_ITEM_BOX_MASK;
 }
 
+void wima_widget_setUserPointer(WimaWidget wdgt, void* user) {
+
+	assert_init;
+
+	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	pwdgt->widget.user = user;
+}
+
+void* wima_widget_userPointer(WimaWidget wdgt) {
+
+	assert_init;
+
+	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	return pwdgt->widget.user;
+}
+
 void wima_widget_setFlags(WimaWidget wdgt, uint32_t flags) {
 
 	assert_init;
