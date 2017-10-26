@@ -1470,6 +1470,12 @@ bool wima_widget_isFocused(WimaWidget wdgt) yinline;
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @defgroup region region
+ * Functions and data structures for manipulating regions
+ * (templates for areas).
+ */
+
+/**
  * A function to generate an area's user pointer.
  * @param area	The area to generate the user pointer for.
  * @returns		The user pointer.
@@ -1565,6 +1571,10 @@ void wima_region_setUserPointer(WimaRegion reg, void* ptr) yinline;
  * @return		The user pointer for the region.
  */
 void* wima_region_userPointer(WimaRegion reg) yinline;
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Area functions.
