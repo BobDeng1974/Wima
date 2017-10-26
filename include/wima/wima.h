@@ -143,6 +143,18 @@ typedef enum WimaStatus {
 typedef uint8_t WimaRegion;
 
 /**
+ * @def WIMA_REGION_INVALID
+ * A handle indicating an invalid region.
+ */
+#define WIMA_REGION_INVALID ((uint8_t) -1)
+
+/**
+ * @def WIMA_REGION_MAX
+ * The max number of regions that can be registered.
+ */
+#define WIMA_REGION_MAX WIMA_REGION_INVALID
+
+/**
  * @}
  */
 
@@ -157,6 +169,18 @@ typedef uint8_t WimaRegion;
 typedef uint8_t WimaWindow;
 
 /**
+ * @def WIMA_WINDOW_INVALID
+ * A handle indicating an invalid window.
+ */
+#define WIMA_WINDOW_INVALID ((uint8_t) -1)
+
+/**
+ * @def WIMA_WINDOW_MAX
+ * The max number of windows that can be created.
+ */
+#define WIMA_WINDOW_MAX WIMA_WINDOW_INVALID
+
+/**
  * @}
  */
 
@@ -169,6 +193,18 @@ typedef uint8_t WimaWindow;
  * A handle to a workspace (window template) type.
  */
 typedef uint8_t WimaWorkspace;
+
+/**
+ * @def WIMA_WORKSPACE_INVALID
+ * A handle indicating an invalid workspace.
+ */
+#define WIMA_WORKSPACE_INVALID ((uint8_t) -1)
+
+/**
+ * @def WIMA_WORKSPACE_MAX
+ * The max number of workspaces that can be registered.
+ */
+#define WIMA_WORKSPACE_MAX WIMA_WORKSPACE_INVALID
 
 /**
  * @}
@@ -1503,7 +1539,7 @@ typedef struct WimaRegionFuncs {
 
 } WimaRegionFuncs;
 
-WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t itemCap);
+WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap);
 WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr) yinline;
 void* wima_region_userPointer(WimaRegion reg) yinline;
 

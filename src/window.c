@@ -76,6 +76,14 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize siz
 
 	wassert(wima_area_valid(*((DynaTree*) dvec_get(wg.workspaces, wksph))), WIMA_ASSERT_WKSP);
 
+	// Get the index of the new window.
+	size_t len = dvec_len(wg.windows);
+
+	// Make sure we have enough space.
+	if (yunlikely(len >= WIMA_WINDOW_MAX)) {
+		return WIMA_WINDOW_INVALID;
+	}
+
 	WimaWin wwin;
 
 	// Clear these before assigning.
@@ -151,11 +159,10 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize siz
 
 	WimaWindow idx;
 
-	// Cache these for the upcoming loop. The
+	// Cache this for the upcoming loop. The
 	// var "done" is for telling us whether
 	// or not we filled a previous hole.
 	bool done = false;
-	size_t len = dvec_len(wg.windows);
 
 	// Loop over all the windows...
 	for (int i = 0; i < len; ++i) {

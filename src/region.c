@@ -51,14 +51,22 @@ assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t itemCap) {
+WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap) {
 
 	assert_init;
 
-	WimaReg reg;
-
 	wassert(funcs.layout != NULL, WIMA_ASSERT_REG_LAYOUT);
 	wassert(itemCap > 0, WIMA_ASSERT_REG_ITEM_CAP);
+
+	// Get the index of the new region.
+	size_t idx = dvec_len(wg.regions);
+
+	// Make sure we have enough space.
+	if (yunlikely(idx >= WIMA_REGION_MAX)) {
+		return WIMA_REGION_INVALID;
+	}
+
+	WimaReg reg;
 
 	reg.user = NULL;
 
@@ -71,16 +79,12 @@ WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t
 
 	reg.itemCap = itemCap;
 
-	size_t idx = dvec_len(wg.regions);
-
 	DynaStatus status = dvec_push(wg.regions, &reg);
 	if (yunlikely(status)) {
-		return WIMA_STATUS_AREA_ERR;
+		return WIMA_REGION_INVALID;
 	}
 
-	*wrh = idx;
-
-	return WIMA_STATUS_SUCCESS;
+	return (WimaRegion) idx;
 }
 
 WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr) {

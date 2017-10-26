@@ -58,14 +58,19 @@ WimaStatus wima_workspace_register(WimaWorkspace* wth) {
 
 	assert_init;
 
+	// Get the index of the new workspace.
+	size_t len = dvec_len(wg.workspaces);
+
+	// Make sure we have enough space.
+	if (yunlikely(len >= WIMA_WORKSPACE_MAX)) {
+		return WIMA_WORKSPACE_INVALID;
+	}
+
 	// Create the workspace and check for error.
 	WimaWksp wksp = dtree_create(0, sizeof(WimaAr), NULL);
 	if (yunlikely(!wksp)) {
 		return WIMA_STATUS_WORKSPACE_ERR;
 	}
-
-	// Get the index of the new workspace.
-	size_t len = dvec_len(wg.workspaces);
 
 	// Push the workspace onto the list.
 	DynaStatus status = dvec_push(wg.workspaces, &wksp);
