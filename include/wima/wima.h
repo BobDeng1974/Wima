@@ -1819,38 +1819,165 @@ const char* wima_window_clipboard(WimaWindow wwh) yinline;
  * @{
  */
 
+/**
+ * A callback type to draw custom widgets.
+ * @param wdgt	The widget to draw.
+ * @param ctx	The context to render to.
+ * @returns		WIMA_STATUS_SUCCESS on success,
+ *				an error code otherwise.
+ */
 typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaRenderContext*);
+
+/**
+ * A callback type to allow Wima to report errors to the user.
+ * @param status	The error code.
+ * @param desc		The error description.
+ */
 typedef void (*WimaErrorFunc)(WimaStatus, const char*);
+
+/**
+ * A callback type to handle file drop events.
+ * @param window	The window that the files were dropped onto.
+ * @param filec		The number of files dropped.
+ * @param filev		The array of file names.
+ */
 typedef void (*WimaWindowFileDropFunc)(WimaWindow, int, const char**);
+
+/**
+ * A callback type to handle window pos events.
+ * @param window	The window that was moved.
+ * @param pos		The new position of the window.
+ */
 typedef void (*WimaWindowPosFunc)(WimaWindow, WimaVec);
+
+/**
+ * A callback type to handle window framebuffer size events.
+ * @param window	The window the was resized.
+ * @param size		The new framebuffer size.
+ */
 typedef void (*WimaFramebufferSizeFunc)(WimaWindow, WimaSize);
+
+/**
+ * A callback type to handle window size events.
+ * @param window	The window the was resized.
+ * @param size		The new size.
+ */
 typedef void (*WimaWindowSizeFunc)(WimaWindow, WimaSize);
+
+/**
+ * A callback type to handle window mouse enter/exit
+ * events.
+ * @param window	The window that was affected.
+ * @param entered	true if the window was entered,
+ *					false otherwise.
+ */
 typedef void (*WimaWindowMouseEnterFunc)(WimaWindow, bool);
+
+/**
+ * A callback type to handle window minimization
+ * events.
+ * @param window	The window that was minimized.
+ * @param minimized	true if the window was minimized,
+ *					false otherwise.
+ */
 typedef void (*WimaWindowMinimizeFunc)(WimaWindow, bool);
+
+/**
+ * A callback type to handle window focus events.
+ * @param window	The window that was focused.
+ * @param minimized	true if the window was focused,
+ *					false otherwise.
+ */
 typedef void (*WimaWindowFocusFunc)(WimaWindow, bool);
+
+/**
+ * A callback type to handle window close events.
+ * @param window	The window that received the close event.
+ * @returns			true if the window should be closed,
+ *					false otherwise.
+ */
 typedef bool (*WimaWindowCloseFunc)(WimaWindow);
+
+/**
+ * A callback type to handle monitor connection and
+ * disconnection events.
+ * @param monitor	The monitor that was connected or
+ *					disconnected.
+ * @param connected	true if the monitor was connected,
+ *					false otherwise.
+ */
 typedef void (*WimaMonitorConnectedFunc)(WimaMonitor*, bool);
 
+/**
+ * A collection of app-wide event callbacks.
+ */
 typedef struct WimaAppFuncs {
 
+	/// The app draw function.
 	WimaDrawFunc draw;
+
+	/// The app error callback.
 	WimaErrorFunc error;
+
+	/// The app window file drop callback.
 	WimaWindowFileDropFunc file_drop;
+
+	/// The app window position callback.
 	WimaWindowPosFunc pos;
+
+	/// The app window framebuffer size callback.
 	WimaFramebufferSizeFunc fbsize;
+
+	/// The app window size callback.
 	WimaWindowSizeFunc winsize;
+
+	/// The app window mouse enter/exit callback.
 	WimaWindowMouseEnterFunc enter;
+
+	/// The app window minimize callback.
 	WimaWindowMinimizeFunc minimize;
+
+	/// The app window focus callback.
 	WimaWindowFocusFunc focus;
+
+	/// The app window close callback.
 	WimaWindowCloseFunc close;
+
+	/// The app monitor connection callback.
 	WimaMonitorConnectedFunc monitor;
 
 } WimaAppFuncs;
 
+/**
+ * Initializes Wima.
+ *
+ * ***THIS FUNCTION MUST BE CALLED BEFORE ANY OTHERS, EXCEPT
+ * FOR THE MATH FUNCTIONS!!!***
+ * @param name			The app name.
+ * @param funcs			The global app callbacks.
+ * @param numIcons		The number of app icons in @a iconPaths.
+ * @param iconPaths		An array of file names, where each is an
+ *						app icon of different size.
+ * @param fontPath		The path to the font to use.
+ * @param iconSheetPath	The path to the icon sheet to use.
+ * @return				WIMA_STATUS_SUCCESS on success, or an
+ *						error code otherwise.
+ */
 WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
                      uint32_t numIcons,    const char* iconPaths[],
                      const char* fontPath, const char* iconSheetPath);
+
+/**
+ * The main rendering and event loop.
+ * @return	WIMA_STATUS_SUCCESS on success, or an
+ *			error code otherwise if the app closed
+ *			unexpectedly.
+ */
 WimaStatus wima_main();
+
+/**
+ * Terminates Wima and frees all resources.
+ */
 void wima_exit();
 
 /**
