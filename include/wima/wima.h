@@ -736,6 +736,12 @@ void wima_cursor_destroy(WimaCursor* cursor) yinline;
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @defgroup key key
+ * Functions for keys.
+ * @{
+ */
+
+/**
  * This function returns the localized name of the specified
  * printable key. This is intended for displaying key bindings
  * to the user. If the key is WIMA_KEY_UNKNOWN, the scancode
@@ -748,32 +754,33 @@ void wima_cursor_destroy(WimaCursor* cursor) yinline;
  * to key callbacks without modification.
  *
  * The printable keys are:
- *	- WIMA_KEY_APOSTROPHE
- *	- WIMA_KEY_COMMA
- *	- WIMA_KEY_MINUS
- *	- WIMA_KEY_PERIOD
- *	- WIMA_KEY_SLASH
- *	- WIMA_KEY_SEMICOLON
- *	- WIMA_KEY_EQUAL
- *	- WIMA_KEY_LEFT_BRACKET
- *	- WIMA_KEY_RIGHT_BRACKET
- *	- WIMA_KEY_BACKSLASH
- *	- WIMA_KEY_WORLD_1
- *	- WIMA_KEY_WORLD_2
- *	- WIMA_KEY_0 to WIMA_KEY_9
- *	- WIMA_KEY_A to WIMA_KEY_Z
- *	- WIMA_KEY_KP_0 to WIMA_KEY_KP_9
- *	- WIMA_KEY_KP_DECIMAL
- *	- WIMA_KEY_KP_DIVIDE
- *	- WIMA_KEY_KP_MULTIPLY
- *	- WIMA_KEY_KP_SUBTRACT
- *	- WIMA_KEY_KP_ADD
- *	- WIMA_KEY_KP_EQUAL
- *
- * Do not free the returned string.
- * @param key		The key to query, or WIMA_KEY_UNKNOWN.
- * @param scancode	The scancode of the key to query.
- * @return			The localized name of the key, or NULL.
+ *	- @a WIMA_KEY_APOSTROPHE
+ *	- @a WIMA_KEY_COMMA
+ *	- @a WIMA_KEY_MINUS
+ *	- @a WIMA_KEY_PERIOD
+ *	- @a WIMA_KEY_SLASH
+ *	- @a WIMA_KEY_SEMICOLON
+ *	- @a WIMA_KEY_EQUAL
+ *	- @a WIMA_KEY_LEFT_BRACKET
+ *	- @a WIMA_KEY_RIGHT_BRACKET
+ *	- @a WIMA_KEY_BACKSLASH
+ *	- @a WIMA_KEY_WORLD_1
+ *	- @a WIMA_KEY_WORLD_2
+ *	- @a WIMA_KEY_0 to @a WIMA_KEY_9
+ *	- @a WIMA_KEY_A to @a WIMA_KEY_Z
+ *	- @a WIMA_KEY_KP_0 to @a WIMA_KEY_KP_9
+ *	- @a WIMA_KEY_KP_DECIMAL
+ *	- @a WIMA_KEY_KP_DIVIDE
+ *	- @a WIMA_KEY_KP_MULTIPLY
+ *	- @a WIMA_KEY_KP_SUBTRACT
+ *	- @a WIMA_KEY_KP_ADD
+ *	- @a WIMA_KEY_KP_EQUAL
+ * @param key			The key to query, or WIMA_KEY_UNKNOWN.
+ * @param scancode		The scancode of the key to query.
+ * @return				The localized name of the key, or NULL.
+ * @pointer_lifetime	The string is allocated and freed by Wima,
+ *						and is guaranteed to be valid until the
+ *						next call to @a wima_key_name().
  */
 const char* wima_key_name(WimaKey key, int scancode) yinline;
 
