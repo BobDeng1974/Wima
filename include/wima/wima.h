@@ -1675,6 +1675,12 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @defgroup workspace workspace
+ * Functions and data structures to manipulate workspaces.
+ * @{
+ */
+
+/**
  * Registers a new workspace. The workspace is empty and
  * needs to be filled using @a wima_workspace_addParent()
  * and @a wima_workspace_addRegion().
@@ -1716,9 +1722,19 @@ WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node, float sp
  */
 WimaStatus wima_workspace_addRegion(WimaWorkspace wwksp, DynaNode node, WimaRegion reg);
 
+/**
+ * @}
+ */
+
 ////////////////////////////////////////////////////////////////////////////////
 // Window functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup window window
+ * Functions and data structures to manipulate windows.
+ * @{
+ */
 
 /**
  * Creates a window of @a size size using @a wksph. The window
@@ -2216,6 +2232,10 @@ void wima_window_setClipboard(WimaWindow wwh, const char* string) yinline;
  * @return
  */
 const char* wima_window_clipboard(WimaWindow wwh) yinline;
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // More Wima global functions and data definitions.
