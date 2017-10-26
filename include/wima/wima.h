@@ -502,6 +502,12 @@ typedef struct WimaCharEvent {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @defgroup cursor cursor
+ * Functions and data structures for manipulating cursors.
+ * @{
+ */
+
+/**
  * Opaque struct type
  */
 typedef struct WimaCursor WimaCursor;
@@ -575,6 +581,10 @@ WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) yinline;
  * @param cursor	The cursor to destroy.
  */
 void wima_cursor_destroy(WimaCursor* cursor) yinline;
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Key functions.
