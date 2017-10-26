@@ -430,12 +430,11 @@ WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e) {
 	WimaAreaKeyFunc key_event = region->key_event;
 
 	// If the handler exists, run it.
-	if (key_event) {
-		status = key_event(wima_area(area->window, area->node), e);
+	if (!key_event || !key_event(wima_area(area->window, area->node), e)) {
+		// TODO: Send the event up the chain.
 	}
-	else {
-		status = WIMA_STATUS_SUCCESS;
-	}
+
+	status = WIMA_STATUS_SUCCESS;
 
 	return status;
 }
