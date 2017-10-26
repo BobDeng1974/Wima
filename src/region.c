@@ -72,12 +72,7 @@ WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap) {
 	reg.user = NULL;
 
 	// Set up the functions.
-	reg.gen_ptr = funcs.gen_ptr;
-	reg.free_ptr = funcs.free_ptr;
-	reg.layout = funcs.layout;
-	reg.key_event = funcs.key;
-	reg.mouse_pos = funcs.pos;
-	reg.mouse_enter = funcs.enter;
+	reg.funcs = funcs;
 
 	// Set up the item cap.
 	reg.itemCap = itemCap;

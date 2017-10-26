@@ -48,14 +48,7 @@ typedef struct WimaReg {
 
 	void* user;
 
-	WimaAreaGenUserPointerFunc gen_ptr;
-	WimaAreaFreeUserPointerFunc free_ptr;
-
-	WimaAreaLayoutFunc layout;
-
-	WimaAreaKeyFunc key_event;
-	WimaAreaMousePosFunc mouse_pos;
-	WimaAreaMouseEnterFunc mouse_enter;
+	WimaRegionFuncs funcs;
 
 	uint16_t itemCap;
 

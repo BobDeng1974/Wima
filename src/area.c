@@ -264,7 +264,7 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 		WimaReg* region = dvec_get(wg.regions, reg);
 
 		// Get the particular user function setter.
-		WimaAreaGenUserPointerFunc get_user_ptr = region->gen_ptr;
+		WimaAreaGenUserPointerFunc get_user_ptr = region->funcs.gen_ptr;
 
 		// If the user didn't specify one, don't call it.
 		if (!get_user_ptr) {
@@ -402,7 +402,7 @@ static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 		WimaReg* region = dvec_get(wg.regions, reg);
 
 		// Get the particular user function setter.
-		WimaAreaFreeUserPointerFunc free_user_ptr = region->free_ptr;
+		WimaAreaFreeUserPointerFunc free_user_ptr = region->funcs.free_ptr;
 
 		// If the user didn't specify one, don't call it.
 		if (!free_user_ptr) {
@@ -427,7 +427,7 @@ WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e) {
 
 	// Get the region's event handler.
 	WimaReg* region = dvec_get(wg.regions, area->area.type);
-	WimaAreaKeyFunc key_event = region->key_event;
+	WimaAreaKeyFunc key_event = region->funcs.key;
 
 	// If the handler exists, run it.
 	if (!key_event || !key_event(wima_area(area->window, area->node), e)) {
@@ -450,7 +450,7 @@ WimaStatus wima_area_mousePos(WimaAr* area, WimaVec pos) {
 
 	// Get the region's event handler.
 	WimaReg* region = dvec_get(wg.regions, area->area.type);
-	WimaAreaMousePosFunc mouse_pos = region->mouse_pos;
+	WimaAreaMousePosFunc mouse_pos = region->funcs.pos;
 
 	// If the handler exists, run it.
 	if (mouse_pos) {
@@ -474,7 +474,7 @@ WimaStatus wima_area_mouseEnter(WimaAr* area, bool enter) {
 
 	// Get the region's event handler.
 	WimaReg* region = dvec_get(wg.regions, area->area.type);
-	WimaAreaMouseEnterFunc mouse_enter = region->mouse_enter;
+	WimaAreaMouseEnterFunc mouse_enter = region->funcs.enter;
 
 	// If the handler exists, run it.
 	if (mouse_enter) {
@@ -682,7 +682,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 		// Get the region layout function.
 		WimaReg* region = dvec_get(wg.regions, area->area.type);
-		WimaAreaLayoutFunc layout = region->layout;
+		WimaAreaLayoutFunc layout = region->funcs.layout;
 
 		// Do the layout. The layout function is guaranteed to be non-null.
 		status = layout(wah, wlh, size);
