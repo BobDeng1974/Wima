@@ -57,7 +57,7 @@ extern "C" {
 #define WIMA_GAMMA_RAMP_SIZE 256
 
 // Container flags to pass to uiSetBox().
-typedef enum WimaItemBox {
+typedef enum WimaWidgetBox {
 
 	// Flex direction (bit 0+1).
 
@@ -106,7 +106,7 @@ typedef enum WimaItemBox {
 	// UI_TOP, UI_DOWN, UI_VFILL, UI_VCENTER, etc. FILL is equivalent
 	// to stretch; space-between is not supported.
 
-} WimaItemBox;
+} WimaWidgetBox;
 
 // Child layout flags to pass to uiSetLayout().
 typedef enum WimaItemLayoutFlags {
