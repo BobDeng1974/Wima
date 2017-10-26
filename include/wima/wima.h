@@ -1272,8 +1272,8 @@ WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs);
 // UI_COLD for child items. Upon encountering a frozen item, the drawing
 // routine needs to handle rendering of child items appropriately.
 // see example.cpp for a demonstration.
-void wima_widget_setFrozen(WimaWidget wdgt, bool enable) yinline;
-bool wima_widget_frozen(WimaWidget wdgt) yinline;
+void wima_widget_setEnabled(WimaWidget wdgt, bool enable) yinline;
+bool wima_widget_enabled(WimaWidget wdgt) yinline;
 
 // set the size of the item; a size of 0 indicates the dimension to be
 // dynamic; if the size is set, the item can not expand beyond that size.

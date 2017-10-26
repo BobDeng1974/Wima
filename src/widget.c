@@ -115,7 +115,7 @@ WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
 	return wih;
 }
 
-void wima_widget_setFrozen(WimaWidget wdgt, bool enable) {
+void wima_widget_setEnabled(WimaWidget wdgt, bool enable) {
 
 	assert_init;
 
@@ -129,7 +129,7 @@ void wima_widget_setFrozen(WimaWidget wdgt, bool enable) {
 	}
 }
 
-bool wima_widget_frozen(WimaWidget wdgt) {
+bool wima_widget_enabled(WimaWidget wdgt) {
 
 	assert_init;
 
