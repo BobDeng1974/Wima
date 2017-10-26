@@ -1433,25 +1433,77 @@ bool wima_widget_isFocused(WimaWidget wdgt) yinline;
 // Region functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * A function to generate an area's user pointer.
+ * @param area	The area to generate the user pointer for.
+ * @returns		The user pointer.
+ */
 typedef void* (*WimaAreaGenUserPointerFunc)(WimaArea);
+
+/**
+ * A function to free an area's user pointer.
+ * @param ptr	The pointer to free.
+ */
 typedef void (*WimaAreaFreeUserPointerFunc)(void*);
+
+/**
+ * A function to layout an area.
+ * @param area		The area to layout.
+ * @param layout	The root layout.
+ * @param size		The size of the area.
+ */
 typedef WimaStatus (*WimaAreaLayoutFunc)(WimaArea, WimaLayout, WimaSize);
+
+/**
+ * A function callback for key presses inside an area.
+ * @param area	The area where the event happened.
+ * @param event	The event.
+ * @returns		true if the event was consumed, false otherwise.
+ */
 typedef bool (*WimaAreaKeyFunc)(WimaArea, WimaKeyEvent);
+
+/**
+ * A function callback for mouse moves inside an area.
+ * @param area	The area where the event happened.
+ * @param event	The event.
+ * @returns		true if the event was consumed, false otherwise.
+ */
 typedef bool (*WimaAreaMousePosFunc)(WimaArea, WimaVec);
+
+/**
+ * A function callback for mouse entering or exiting an area.
+ * @param area		The area where the event happened.
+ * @param entered	Whether or not the mouse entered.
+ * @returns			true if the event was consumed, false otherwise.
+ */
 typedef bool (*WimaAreaMouseEnterFunc)(WimaArea, bool);
 
+/**
+ * A collection of callbacks for areas.
+ */
 typedef struct WimaRegionFuncs {
 
+	/// The function to generate the user pointer.
 	WimaAreaGenUserPointerFunc gen_ptr;
+
+	/// The function to free the user pointer.
 	WimaAreaFreeUserPointerFunc free_ptr;
+
+	/// The function to layout an area.
 	WimaAreaLayoutFunc layout;
+
+	/// The function to handle key presses.
 	WimaAreaKeyFunc key;
+
+	/// The function to handle mouse moves.
 	WimaAreaMousePosFunc pos;
+
+	/// The function to handle mouse enter/exit.
 	WimaAreaMouseEnterFunc enter;
 
 } WimaRegionFuncs;
 
-WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t itemCapacity);
+WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t itemCap);
 WimaStatus wima_region_setUserPointer(WimaRegion reg, void* ptr) yinline;
 void* wima_region_userPointer(WimaRegion reg) yinline;
 

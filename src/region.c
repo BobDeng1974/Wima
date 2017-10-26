@@ -51,14 +51,14 @@ assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t itemCapacity) {
+WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t itemCap) {
 
 	assert_init;
 
 	WimaReg reg;
 
 	wassert(funcs.layout != NULL, WIMA_ASSERT_REG_LAYOUT);
-	wassert(itemCapacity > 0, WIMA_ASSERT_REG_ITEM_CAP);
+	wassert(itemCap > 0, WIMA_ASSERT_REG_ITEM_CAP);
 
 	reg.user = NULL;
 
@@ -69,7 +69,7 @@ WimaStatus wima_region_register(WimaRegion* wrh, WimaRegionFuncs funcs, uint32_t
 	reg.mouse_pos = funcs.pos;
 	reg.mouse_enter = funcs.enter;
 
-	reg.itemCap = itemCapacity;
+	reg.itemCap = itemCap;
 
 	size_t idx = dvec_len(wg.regions);
 
