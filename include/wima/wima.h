@@ -1759,12 +1759,12 @@ WimaMods wima_window_mods(WimaWindow wwh) yinline;
 WimaVec wima_window_scroll(WimaWindow wwh) yinline;
 uint32_t wima_window_clicks(WimaWindow wwh) yinline;
 
-void wima_window_setHover(WimaWindow wwh, WimaWidget wih) yinline;
-WimaWidget wima_window_hover(WimaWindow wwh) yinline;
-void wima_window_setActive(WimaWindow wwh, WimaWidget wih) yinline;
-WimaWidget wima_window_actve(WimaWindow wwh) yinline;
-void wima_window_setFocus(WimaWindow wwh, WimaWidget wih) yinline;
-WimaWidget wima_window_focus(WimaWindow wwh) yinline;
+void wima_window_setHoverWidget(WimaWindow wwh, WimaWidget wih) yinline;
+WimaWidget wima_window_hoverWidget(WimaWindow wwh) yinline;
+void wima_window_setActiveWidget(WimaWindow wwh, WimaWidget wih) yinline;
+WimaWidget wima_window_actveWidget(WimaWindow wwh) yinline;
+void wima_window_setFocusWidget(WimaWindow wwh, WimaWidget wih) yinline;
+WimaWidget wima_window_focusWidget(WimaWindow wwh) yinline;
 
 void wima_window_clearEvents(WimaWindow wwh) yinline;
 

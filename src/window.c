@@ -589,7 +589,7 @@ uint32_t wima_window_clicks(WimaWindow wwh) {
 	return win->ctx.clicks;
 }
 
-void wima_window_setHover(WimaWindow wwh, WimaWidget wih) {
+void wima_window_setHoverWidget(WimaWindow wwh, WimaWidget wih) {
 
 	assert_init;
 
@@ -615,7 +615,7 @@ void wima_window_setHover(WimaWindow wwh, WimaWidget wih) {
 	win->ctx.hover = wih;
 }
 
-WimaWidget wima_window_hover(WimaWindow wwh) {
+WimaWidget wima_window_hoverWidget(WimaWindow wwh) {
 
 	assert_init;
 
@@ -626,7 +626,7 @@ WimaWidget wima_window_hover(WimaWindow wwh) {
 	return win->ctx.hover;
 }
 
-void wima_window_setActive(WimaWindow wwh, WimaWidget wih) {
+void wima_window_setActiveWidget(WimaWindow wwh, WimaWidget wih) {
 
 	assert_init;
 
@@ -651,7 +651,7 @@ void wima_window_setActive(WimaWindow wwh, WimaWidget wih) {
 	win->ctx.active = wih;
 }
 
-WimaWidget wima_window_actve(WimaWindow wwh) {
+WimaWidget wima_window_actveWidget(WimaWindow wwh) {
 
 	assert_init;
 
@@ -662,7 +662,7 @@ WimaWidget wima_window_actve(WimaWindow wwh) {
 	return win->ctx.active;
 }
 
-void wima_window_setFocus(WimaWindow wwh, WimaWidget wih) {
+void wima_window_setFocusWidget(WimaWindow wwh, WimaWidget wih) {
 
 	assert_init;
 
@@ -687,7 +687,7 @@ void wima_window_setFocus(WimaWindow wwh, WimaWidget wih) {
 	win->ctx.focus = wih;
 }
 
-WimaWidget wima_window_focus(WimaWindow wwh) {
+WimaWidget wima_window_focusWidget(WimaWindow wwh) {
 
 	assert_init;
 
