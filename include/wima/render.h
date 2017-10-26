@@ -2233,7 +2233,7 @@ int wima_text_breakLines(WimaRenderContext* ctx, const char* string, const char*
  * Flags representing which corners are sharp. This is done to align
  * (group) widgets like Blender does.
  */
-typedef enum WimaWidgetCorner {
+typedef enum WimaWidgetCornerFlags {
 
 	/// All corners are round.
 	WIMA_CORNER_NONE = 0,
@@ -2266,7 +2266,37 @@ typedef enum WimaWidgetCorner {
 	/// Right border is sharp.
 	WIMA_CORNER_RIGHT = 6
 
-} WimaWidgetCorner;
+} WimaWidgetCornerFlags;
+
+/**
+ * A struct allowing Wima to manipulate corner radii.
+ */
+typedef struct WimaWidgetCorners {
+
+	union {
+
+		/// Access the fields as an array.
+		float v[4];
+
+		struct {
+
+			/// The radius of the top left corner.
+			float tl;
+
+			/// The radius of the top right corner.
+			float tr;
+
+			/// The radius of the bottom right corner.
+			float br;
+
+			/// The radius of the bottom left corner.
+			float bl;
+
+		};
+
+	};
+
+} WimaWidgetCorners;
 
 // High Level Functions
 // --------------------
@@ -2308,7 +2338,7 @@ void wima_ui_label(WimaRenderContext* ctx,
  * @pre				ctx must not be NULL.
  */
 void wima_ui_toolBtn(WimaRenderContext* ctx,
-    float x, float y, float w, float h, WimaWidgetCorner flags, WimaWidgetState state,
+    float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaWidgetState state,
     int iconid, const char *label);
 
 /**
@@ -2330,7 +2360,7 @@ void wima_ui_toolBtn(WimaRenderContext* ctx,
  * @pre				ctx must not be NULL.
  */
 void wima_ui_radioBtn(WimaRenderContext* ctx,
-    float x, float y, float w, float h, WimaWidgetCorner flags, WimaWidgetState state,
+    float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaWidgetState state,
     int iconid, const char *label);
 
 /**
@@ -2379,7 +2409,7 @@ int wima_ui_textField_pos(WimaRenderContext* ctx, float x, float y, float w, flo
  * @pre				ctx must not be NULL.
  */
 void wima_ui_textField(WimaRenderContext* ctx,
-    float x, float y, float w, float h, WimaWidgetCorner flags, WimaWidgetState state,
+    float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaWidgetState state,
     int iconid, const char *text, int cbegin, int cend);
 
 /**
@@ -2419,7 +2449,7 @@ void wima_ui_optionBtn(WimaRenderContext* ctx,
  * @pre				ctx must not be NULL.
  */
 void wima_ui_choiceBtn(WimaRenderContext* ctx,
-    float x, float y, float w, float h, WimaWidgetCorner flags, WimaWidgetState state,
+    float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaWidgetState state,
     int iconid, const char *label);
 
 /**
@@ -2437,7 +2467,7 @@ void wima_ui_choiceBtn(WimaRenderContext* ctx,
  * @pre				ctx must not be NULL.
  */
 void wima_ui_colorBtn(WimaRenderContext* ctx,
-    float x, float y, float w, float h, WimaWidgetCorner flags, WimaColor color);
+    float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaColor color);
 
 /**
  * Draw a number field with its upper left origin at (x,y) and
@@ -2459,7 +2489,7 @@ void wima_ui_colorBtn(WimaRenderContext* ctx,
  * @pre				ctx must not be NULL.
  */
 void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h,
-                      WimaWidgetCorner flags, WimaWidgetState state,
+                      WimaWidgetCornerFlags flags, WimaWidgetState state,
                       const char *label, const char *value);
 
 /**
@@ -2483,7 +2513,7 @@ void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h
  * @pre				ctx must not be NULL.
  */
 void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
-                    WimaWidgetCorner flags, WimaWidgetState state,
+                    WimaWidgetCornerFlags flags, WimaWidgetState state,
                     float progress, const char *label, const char *value);
 
 /**
@@ -2520,7 +2550,7 @@ void wima_ui_scrollbar(WimaRenderContext* ctx,
  * @pre				ctx must not be NULL.
  */
 void wima_ui_menu_background(WimaRenderContext* ctx,
-    float x, float y, float w, float h, WimaWidgetCorner flags);
+    float x, float y, float w, float h, WimaWidgetCornerFlags flags);
 
 /**
  * Draw a menu background with its upper left origin at (x,y) and
@@ -2698,7 +2728,7 @@ float wima_ui_label_estimateHeight(WimaRenderContext* ctx, int iconid, const cha
  * @param flags		Which corners should be sharp.
  * @pre				ctx must not be NULL.
  */
-WimaCorners wima_ui_corners_rounded(float r, WimaWidgetCorner flags);
+WimaWidgetCorners wima_ui_corners_rounded(float r, WimaWidgetCornerFlags flags);
 
 /**
  * Computes the bounds of the scrollbar handle from (w, h) and the

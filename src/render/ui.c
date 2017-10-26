@@ -84,7 +84,7 @@ void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, i
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCorner flags,
+void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
                          WimaWidgetState state, int iconid, const char *label)
 {
 	assert_init;
@@ -95,7 +95,7 @@ void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_OPERATOR);
 
-	WimaCorners cr = wima_ui_corners_rounded(WIMA_TOOL_RADIUS, flags);
+	WimaWidgetCorners cr = wima_ui_corners_rounded(WIMA_TOOL_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
 
@@ -109,7 +109,7 @@ void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCorner flags,
+void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
                           WimaWidgetState state, int iconid, const char *label)
 {
 	assert_init;
@@ -120,7 +120,7 @@ void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_RADIO);
 
-	WimaCorners cr = wima_ui_corners_rounded(WIMA_OPTION_RADIUS, flags);
+	WimaWidgetCorners cr = wima_ui_corners_rounded(WIMA_OPTION_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
@@ -144,7 +144,7 @@ int wima_ui_textField_pos(WimaRenderContext* ctx, float x, float y, float w, flo
 }
 
 void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float h,
-                           WimaWidgetCorner flags, WimaWidgetState state, int iconid, const char *text,
+                           WimaWidgetCornerFlags flags, WimaWidgetState state, int iconid, const char *text,
                            int cbegin, int cend)
 {
 	assert_init;
@@ -155,7 +155,7 @@ void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TEXTFIELD);
 
-	WimaCorners cr = wima_ui_corners_rounded(WIMA_TEXT_RADIUS, flags);
+	WimaWidgetCorners cr = wima_ui_corners_rounded(WIMA_TEXT_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, false, &shade_top, &shade_btm);
@@ -218,7 +218,7 @@ void wima_ui_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCorner flags,
+void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
                            WimaWidgetState state, int iconid, const char *label)
 {
 	assert_init;
@@ -229,7 +229,7 @@ void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_CHOICE);
 
-	WimaCorners cr = wima_ui_corners_rounded(WIMA_OPTION_RADIUS, flags);
+	WimaWidgetCorners cr = wima_ui_corners_rounded(WIMA_OPTION_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
@@ -247,7 +247,7 @@ void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 	wima_ui_arrow_upDown(ctx, x + w - 10, y + 10, 5, arrowTrans);
 }
 
-void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCorner flags, WimaColor color) {
+void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaColor color) {
 
 	assert_init;
 
@@ -255,7 +255,7 @@ void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_OPERATOR);
 
-	WimaCorners cr = wima_ui_corners_rounded(WIMA_TOOL_RADIUS, flags);
+	WimaWidgetCorners cr = wima_ui_corners_rounded(WIMA_TOOL_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
 	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], color, color);
@@ -264,7 +264,7 @@ void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 	wima_ui_box_outline(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], transparent);
 }
 
-void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCorner flags,
+void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
                           WimaWidgetState state, const char *label, const char *value)
 {
 	assert_init;
@@ -275,7 +275,7 @@ void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_NUMFIELD);
 
-	WimaCorners cr = wima_ui_corners_rounded(WIMA_NUMBER_RADIUS, flags);
+	WimaWidgetCorners cr = wima_ui_corners_rounded(WIMA_NUMBER_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, false, &shade_top, &shade_btm);
@@ -296,7 +296,7 @@ void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h
 }
 
 void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
-                        WimaWidgetCorner flags, WimaWidgetState state, float progress,
+                        WimaWidgetCornerFlags flags, WimaWidgetState state, float progress,
                         const char *label, const char *value)
 {
 	assert_init;
@@ -307,7 +307,7 @@ void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_SLIDER);
 
-	WimaCorners cr = wima_ui_corners_rounded(WIMA_NUMBER_RADIUS, flags);
+	WimaWidgetCorners cr = wima_ui_corners_rounded(WIMA_NUMBER_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, false, &shade_top, &shade_btm);
@@ -381,7 +381,7 @@ void wima_ui_scrollbar(WimaRenderContext* ctx,float x, float y, float w, float h
 	                        transparent);
 }
 
-void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCorner flags) {
+void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags) {
 
 	assert_init;
 
@@ -391,7 +391,7 @@ void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, 
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_MENU);
 
-	WimaCorners cr = wima_ui_corners_rounded(WIMA_MENU_RADIUS, flags);
+	WimaWidgetCorners cr = wima_ui_corners_rounded(WIMA_MENU_RADIUS, flags);
 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, WIMA_ITEM_DEFAULT, false, &shade_top, &shade_btm);
 	wima_ui_box_inner(ctx, x, y, w, h + 1, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
@@ -912,11 +912,11 @@ void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, floa
 	nvgStroke(ctx->nvg);
 }
 
-WimaCorners wima_ui_corners_rounded(float r, WimaWidgetCorner flags) {
+WimaWidgetCorners wima_ui_corners_rounded(float r, WimaWidgetCornerFlags flags) {
 
 	assert_init;
 
-	WimaCorners radiuses;
+	WimaWidgetCorners radiuses;
 
 	radiuses.v[0] = (flags & WIMA_CORNER_TOP_LEFT) ? 0 : r;
 	radiuses.v[1] = (flags & WIMA_CORNER_TOP_RIGHT) ? 0 : r;
