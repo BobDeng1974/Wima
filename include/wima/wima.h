@@ -1539,8 +1539,31 @@ typedef struct WimaRegionFuncs {
 
 } WimaRegionFuncs;
 
+/**
+ * Registers a region type that can then be used to create a WimaWorkspace.
+ * @param funcs		The functions that the region/area will use.
+ * @param itemCap	The total capacity for items (layouts and widgets)
+ *					that the region can handle.
+ * @return			The region.
+ */
 WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap);
+
+/**
+ * Sets the global user pointer for the region. All areas created from
+ * this region will be able to access it. This is the place to put
+ * common data for all of the areas.
+ * @param reg	The region to set the user pointer for.
+ * @param ptr	The pointer to set.
+ */
 void wima_region_setUserPointer(WimaRegion reg, void* ptr) yinline;
+
+/**
+ * Gets the global user pointer for the region. All areas created from
+ * this region will be able to access it. This is the place to put
+ * common data for all of the areas.
+ * @param reg	The region to query.
+ * @return		The user pointer for the region.
+ */
 void* wima_region_userPointer(WimaRegion reg) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
