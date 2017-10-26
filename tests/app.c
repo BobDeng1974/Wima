@@ -380,17 +380,15 @@ int main() {
 	funcs.enter = cb_mouseEnterArea;
 
 	// Register a region.
-	WimaRegion region;
-	status = wima_region_register(&region, funcs, 4096);
-	if (status) {
-		return status;
+	WimaRegion region = wima_region_register(funcs, 4096);
+	if (region == WIMA_REGION_INVALID) {
+		return WIMA_REGION_INVALID;
 	}
 
 	// Register a workspace.
-	WimaWorkspace wksp;
-	status = wima_workspace_register(&wksp);
-	if (status) {
-		return status;
+	WimaWorkspace wksp = wima_workspace_register();
+	if (wksp == WIMA_WORKSPACE_INVALID) {
+		return WIMA_WORKSPACE_INVALID;
 	}
 
 	// Cache these.
@@ -477,16 +475,14 @@ int main() {
 		return status;
 	}
 
-	WimaWindow wwh;
-
 	WimaSize size;
 	size.w = 640;
 	size.h = 480;
 
 	// Create the window and check for error.
-	status = wima_window_create(&wwh, wksp, size, true, true, true);
-	if (status) {
-		return status;
+	WimaWindow wwh = wima_window_create(wksp, size, true, true, true);
+	if (wwh == WIMA_WINDOW_INVALID) {
+		return WIMA_WINDOW_INVALID;
 	}
 
 	// Run the app.
