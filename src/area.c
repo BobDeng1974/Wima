@@ -70,6 +70,13 @@ WimaArea wima_area(WimaWindow wwh, WimaAreaNode node) {
 
 	assert_init;
 
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+#ifdef __YASSERT__
+	WimaWin* win = dvec_get(wg.windows, wwh);
+	wassert(dtree_exists(win->areas, node), WIMA_ASSERT_AREA);
+#endif
+
 	WimaArea wah;
 
 	wah.area = node;
