@@ -792,57 +792,218 @@ const char* wima_key_name(WimaKey key, int scancode) yinline;
 // Monitor functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @defgroup monitor monitor
+ * Functions and data structures for manipulating
+ * monitors with Wima.
+ * @{
+ */
+
+/**
+ * @def WIMA_MONITOR_GAMMA_RAMP_SIZE
+ * The number of items in a monitor gamma ramp.
+ */
 #define WIMA_MONITOR_GAMMA_RAMP_SIZE 256
 
+/**
+ * An opaque struct representing a monitor.
+ */
 typedef struct WimaMonitor WimaMonitor;
 
+/**
+ * An array of WimaMonitor pointers.
+ * Used to return a list of monitors.
+ */
 typedef struct WimaMonitorArray {
 
+	/// An array of monitors.
 	WimaMonitor** monitors;
+
+	/// Number of items in the array.
 	int count;
 
 } WimaMonitorArray;
 
+/**
+ * A video mode for a monitor.
+ */
 typedef struct WimaVideoMode {
 
+	/// The width of the monitor, in screen coordinates.
 	int width;
+
+	/// The height of the monitor, in screen coordinates.
 	int height;
+
+	/// The bit depth in the red channel.
 	int redBits;
+
+	/// The bit depth in the red channel.
 	int greenBits;
+
+	/// The bit depth in the red channel.
 	int blueBits;
+
+	/// The refresh rate, in Hz.
 	int refreshRate;
 
 } WimaVideoMode;
 
+/**
+ * An array of WimaVideoModes. Used to
+ * return a list of video modes that a
+ * monitor supports.
+ */
 typedef struct WimaVideoModeArray {
 
+	/// An array of modes.
 	WimaVideoMode* modes;
+
+	/// The number of elements in the array.
 	int count;
 
 } WimaVideoModeArray;
 
+/**
+ * Gamma ramp (quantized gamma reaction graph) for monitors.
+ */
 typedef struct WimaGammaRamp {
 
+	/// An array of value describing the response of the red channel.
 	unsigned short red[WIMA_MONITOR_GAMMA_RAMP_SIZE];
+
+	/// An array of value describing the response of the green channel.
 	unsigned short green[WIMA_MONITOR_GAMMA_RAMP_SIZE];
+
+	/// An array of value describing the response of the blue channel.
 	unsigned short blue[WIMA_MONITOR_GAMMA_RAMP_SIZE];
+
+	/// The number of elements in each array.
 	int size;
 
 } WimaGammaRamp;
 
+/**
+ * This function returns an array of handles for all currently
+ * connected monitors. The primary monitor is always first in
+ * the returned array. If no monitors were found, this function
+ * returns a NULL array.
+ * @return	An array of monitor handles, or NULL if no monitors
+ *			were found or if an error occurred.
+ */
 WimaMonitorArray wima_monitor_list() yinline;
+
+/**
+ * This function returns the primary monitor. This is usually
+ * the monitor where elements like the task bar or global menu
+ * bar are located.
+ * @return	The primary monitor, or NULL if no monitors were
+ *			found or if an error occurred.
+ */
 WimaMonitor* wima_monitor_primary() yinline;
 
+/**
+ * This function returns the position, in screen coordinates,
+ * of the upper-left corner of the specified monitor. If an
+ * error occurs, the return value will be set to zeroes.
+ * @param monitor	The monitor to query.
+ * @return			The position of the monitor.
+ */
 WimaVec wima_monitor_pos(WimaMonitor* monitor) yinline;
+
+/**
+ * This function returns the size, in millimetres, of the display area
+ * of @a monitor.
+ *
+ * Some systems do not provide accurate monitor size information, either
+ * because the monitor EDID data is incorrect or because the driver does
+ * not report it accurately.
+ *
+ * If an error occurs, the return value will be set to zeros.
+ * @param monitor	The monitor to query.
+ * @return			The size of the display area, in millimeters.
+ */
 WimaSize wima_monitor_size(WimaMonitor* monitor) yinline;
+
+/**
+ * This function returns a human-readable name, encoded as UTF-8,
+ * of the specified monitor. The name typically reflects the make
+ * and model of the monitor and is not guaranteed to be unique
+ * among the connected monitors.
+ * @param monitor		The monitor to query.
+ * @return				The UTF-8 encoded name of the monitor, or
+ *						NULL if an error occurred.
+ * @pointer_lifetime	The returned string is allocated and freed
+ *						by Wima. You should not free it yourself.
+ *						It is valid until the specified monitor is
+ *						disconnected or the library is terminated.
+ */
 const char* wima_monitor_name(WimaMonitor* monitor) yinline;
 
+/**
+ * This function returns the current video mode of the
+ * specified monitor. If you have created a full screen
+ * window for that monitor, the return value will depend
+ * on whether that window is iconified.
+ * @param monitor	The monitor to query.
+ * @return			The current mode of the monitor, or
+ *					NULL if an error occurred.
+ */
 WimaVideoMode wima_monitor_mode(WimaMonitor* monitor) yinline;
+
+/**
+ * This function returns an array of all video modes supported by
+ * the specified monitor. The returned array is sorted in ascending
+ * order, first by color bit depth (the sum of all channel depths)
+ * and then by resolution area (the product of width and height).
+ * @param monitor		The monitor to query.
+ * @return				An array of video modes, or NULL if an
+ *						error occurred.
+ * @pointer_lifetime	The returned array is allocated and freed
+ *						by Wima. You should not free it yourself.
+ *						It is valid until the specified monitor
+ *						is disconnected, this function is called
+ *						again for that monitor or the library is
+ *						terminated.
+ */
 WimaVideoModeArray wima_monitor_modes(WimaMonitor* monitor) yinline;
 
+/**
+ * This function generates a 256-element gamma ramp from @a gamma
+ * and then calls @a wima_monitor_setGammaRamp() with it. The
+ * value must be a finite number greater than zero.
+ * @param monitor	The monitor whose gamma ramp will be set.
+ * @param gamma		The desired exponent.
+ */
 void wima_monitor_setGamma(WimaMonitor* monitor, float gamma) yinline;
+
+/**
+ * This function sets the current gamma ramp for the specified monitor.
+ * The original gamma ramp for that monitor is saved by Wima the first
+ * time this function is called and is restored by @a wima_exit().
+ * @param monitor	The monitor whose gamma ramp will be set.
+ * @param ramp		The gamma ramp to use.
+ */
 void wima_monitor_setGammaRamp(WimaMonitor* monitor, WimaGammaRamp* ramp) yinline;
+
+/**
+ * This function returns the current gamma ramp of the specified
+ * monitor.
+ * @param monitor		The monitor to query.
+ * @return				The current gamma ramp, or NULL if an error
+ *						occurred.
+ * @pointer_lifetime	The returned structure and its arrays are
+ *						allocated and freed by Wima. You should not
+ *						free them yourself. They are valid until
+ *						the specified monitor is disconnected, this
+ *						function is called again for that monitor
+ *						or the library is terminated.
+ */
 WimaGammaRamp wima_monitor_gammaRamp(WimaMonitor* monitor) yinline;
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Time functions.
