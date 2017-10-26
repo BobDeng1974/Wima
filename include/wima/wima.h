@@ -1265,72 +1265,164 @@ typedef struct WimaWidgetFuncs {
  * @return		The created widget.
  */
 WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs);
-// set an items state to frozen; the UI will not recurse into frozen items
-// when searching for hover or active items; subsequently, frozen items and
-// their child items will not cause mouse event notifications.
-// The frozen state is not applied recursively; uiGetState() will report
-// UI_COLD for child items. Upon encountering a frozen item, the drawing
-// routine needs to handle rendering of child items appropriately.
-// see example.cpp for a demonstration.
+
+/**
+ * Sets whether the widget is enabled or not.
+ * @param wdgt		The widget to enable or disable.
+ * @param enable	true if enabled, false otherwise.
+ */
 void wima_widget_setEnabled(WimaWidget wdgt, bool enable) yinline;
+
+/**
+ * Returns whether or not @a wdgt is enabled.
+ * @param wdgt	The widget to query.
+ * @return		true if enabled, false otherwise.
+ */
 bool wima_widget_enabled(WimaWidget wdgt) yinline;
 
-// set the size of the item; a size of 0 indicates the dimension to be
-// dynamic; if the size is set, the item can not expand beyond that size.
+/**
+ * Set the size of the item; a size of 0 indicates the dimension
+ * to be dynamic; if the size is set, the item can not expand
+ * beyond that size.
+ * @param wdgt	The widget whose size will be set.
+ * @param size	The size to set.
+ */
 void wima_widget_setSize(WimaWidget wdgt, WimaSize size);
 
-// return the width of the item as set by uiSetSize()
+/**
+ * Return the width of @a wdgt.
+ * @param wdgt	The widget to query.
+ * @return		The width of the widget.
+ */
 int wima_widget_width(WimaWidget wdgt) yinline;
 
-// return the height of the item as set by uiSetSize()
+/**
+ * Return the height of @a wdgt.
+ * @param wdgt	The widget to query.
+ * @return		The height of the widget.
+ */
 int wima_widget_height(WimaWidget wdgt) yinline;
 
-// set the anchoring behavior of the item to one or multiple UIlayoutFlags
+/**
+ * Set the anchoring behavior of the item to one or
+ * multiple @a WimaWidgetLayoutFlags.
+ * @param wdgt	The widget to set.
+ * @param flags	The layout flags to set.
+ */
 void wima_widget_setLayout(WimaWidget wdgt, uint32_t flags) yinline;
 
-// return the anchoring behavior as set by uiSetLayout()
+/**
+ * Return the anchoring behavior as set by @a wima_widget_setLayout().
+ * @param wdgt	The widget to query.
+ * @return		The layout flags.
+ */
 uint32_t wima_widget_layout(WimaWidget wdgt) yinline;
 
-// set the box model behavior of the item to one or multiple UIboxFlags
+/**
+ * Set the box model behavior of the item to one or
+ * multiple @a WimaWidgetBoxFlags.
+ * @param wdgt	The widget to set.
+ * @param flags	The flags to set.
+ */
 void wima_widget_setBox(WimaWidget wdgt, uint32_t flags) yinline;
 
-// return the box model as set by uiSetBox()
+/**
+ * Return the box model as set by @a wima_widget_setBox().
+ * @param wdgt	The widget to query.
+ * @return		The box flags.
+ */
 uint32_t wima_widget_box(WimaWidget wdgt) yinline;
 
-// set the application-dependent handle of an item.
-// handle is an application defined 64-bit handle. If handle is NULL, the item
-// will not be interactive.
-void wima_widget_setUserPointer(WimaWidget wdgt, void* handle) yinline;
+/**
+ * Set the user pointer for @a wdgt.
+ * @param wdgt		The widget to set.
+ * @param handle	The handle to set.
+ */
+void wima_widget_setUserPointer(WimaWidget wdgt, void* user) yinline;
 
-// return the application-dependent handle of the item as passed to uiSetHandle()
-// or uiAllocHandle().
+/**
+ * Return the user pointer as set by @a wima_widget_setUserPointer().
+ * @param wdgt	The widget to query.
+ * @return		The user pointer of the widget.
+ */
 void* wima_widget_userPointer(WimaWidget wdgt) yinline;
 
-// flags is a user-defined set of flags defined by UI_USERMASK.
+/**
+ * Sets the flags on @a wdgt.
+ * @param wdgt	The widget to set.
+ * @param flags	The flags to set.
+ */
 void wima_widget_setFlags(WimaWidget wdgt, uint32_t flags) yinline;
 
-// return the user-defined flags for an item as passed to uiSetFlags()
+/**
+ * Return the user-defined flags for an item as passed
+ * to @a wima_widget_setFlags().
+ * @param wdgt	The widget to query.
+ * @return		The widget flags.
+ */
 uint32_t wima_widget_flags(WimaWidget wdgt) yinline;
 
-// returns the items layout rectangle in absolute coordinates. If
-// uiGetRect() is called before uiEndLayout(), the values of the returned
-// rectangle are undefined.
+/**
+ * Returns the items layout rectangle relative its area.
+ * @param wdgt	The widget to query.
+ * @return		The widget rectangle.
+ */
 WimaRect wima_widget_rect(WimaWidget wdgt) yinline;
 
+/**
+ * Returns a set of flags indicating which events this
+ * widget responds to. TODO: Make event types public?
+ * @param wdgt	The widget to query.
+ * @return		The events that this widget responds to.
+ */
 uint32_t wima_widget_events(WimaWidget wdgt) yinline;
 
-// return the current state of the item. This state is only valid after
-// a call to uiProcess().
-// The returned value is one of WIMA_ITEM_DEFAULT, WIMA_ITEM_HOVER,
-// WIMA_ITEM_ACTIVE, WIMA_ITEM_FROZEN.
+/**
+ * Returns the current state of the item. The returned
+ * value is one of WIMA_WIDGET_DEFAULT, WIMA_WIDGET_HOVER,
+ * WIMA_WIDGET_ACTIVE, and WIMA_WIDGET_DISABLED.
+ * @param wdgt	The widget to query.
+ * @return		The widget state.
+ */
 WimaWidgetState wima_widget_state(WimaWidget wdgt);
 
-// returns 1 if an items absolute rectangle contains a given coordinate
-// otherwise 0
+/**
+ * Returns true if @pos is within the rectangle for @a wdgt.
+ * @param wdgt	The widget to query.
+ * @param pos	The pos to test against.
+ * @return		true if @a pos is in the rectangle, false
+ *				otherwise.
+ */
 bool wima_widget_contains(WimaWidget wdgt, WimaVec pos) yinline;
+
+/**
+ * Compares two widget handles and returns true if they are
+ * equal. false otherwise.
+ * @param wdgt1	The first widget to compare.
+ * @param wdgt2	The second widget to compare.
+ * @return		true if equal, false otherwise.
+ */
 bool wima_widget_compare(WimaWidget wdgt1, WimaWidget wdgt2) yinline;
+
+/**
+ * Returns true if @a wdgt is active.
+ * @param wdgt	The widget to query.
+ * @return		true if active, false otherwise.
+ */
 bool wima_widget_isActive(WimaWidget wdgt) yinline;
+
+/**
+ * Returns true if @a wdgt is hovered.
+ * @param wdgt	The widget to query.
+ * @return		true if hovered, false otherwise.
+ */
 bool wima_widget_isHovered(WimaWidget wdgt yinline);
+
+/**
+ * Returns true if @a wdgt is focused.
+ * @param wdgt	The widget to query.
+ * @return		true if focused, false otherwise.
+ */
 bool wima_widget_isFocused(WimaWidget wdgt) yinline;
 
 /**
