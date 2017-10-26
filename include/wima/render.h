@@ -1336,8 +1336,8 @@ WimaColor wima_theme_node_wireSelected() yinline;
 
 /**
  * Sets the wire curvature in the @a WimaNodeTheme.
- * @param color	The new wire curvature of the node
- *				theme.
+ * @param curving	The new wire curvature of the node
+ *					theme.
  */
 void wima_theme_node_setWireCurving(int curving) yinline;
 
@@ -1835,7 +1835,7 @@ void wima_path_bezierTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c1, WimaVe
  * path via a control point to the specified point.
  * @param ctx	The @a WimaRenderContext to render to.
  * @param pt	The point to create a curve to.
- * @param c1	The control point.
+ * @param c		The control point.
  * @pre			@a ctx must not be NULL.
  */
 void wima_path_quadTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c) yinline;
@@ -2009,8 +2009,11 @@ typedef struct WimaGlyphPosition {
 	/// The x-coordinate of the logical glyph position.
 	float x;
 
-	/// The bounds of the glyph shape.
-	float minx, maxx;
+	/// The min x coordinate of the glyph shape.
+	float minx;
+
+	/// The max x coordinate of the glyph shape.
+	float maxx;
 
 } WimaGlyphPosition;
 
@@ -2031,9 +2034,13 @@ typedef struct WimaTextRow {
 	/// Logical width of the row.
 	float width;
 
-	/// Actual bounds of the row. Logical width and bounds can
-	/// differ because of kerning and some parts over extending.
-	float minx, maxx;
+	/// Actual min x coordinate of the row. Logical width and bounds
+	/// can differ because of kerning and some parts over extending.
+	float minx;
+
+	/// Actual min x coordinate of the row. Logical width and bounds
+	/// can differ because of kerning and some parts over extending.
+	float maxx;
 
 } WimaTextRow;
 
@@ -2335,6 +2342,7 @@ void wima_ui_radioBtn(WimaRenderContext* ctx,
  * @param y			Y coordinate of the upper left corner.
  * @param w			Width of the widget.
  * @param h			Height of the widget.
+ * @param text		The text to find the position in.
  * @param iconid	The icon to draw with the label, or -1 if none.
  * @param px		The X coordinate of the pos whose index will
  *					be computed.
@@ -2850,15 +2858,16 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
     const char *value);
 
 /**
- * Draw an optional icon @a iconid, an optional @a label and a
- * caret with @a align text alignment, @a fontsize, and @a color
- * within a node title bar. If iconid is >= 0, an icon will be
- * drawn. If label is not NULL, it will be drawn with @a align,
- * @a fontsize, and @a color.
+ * Draw an optional icon @a iconid and an optional @a label with
+ * @a align text alignment, @a fontsize, and @a color within a
+ * node title bar. If iconid is >= 0, an icon will be drawn. If
+ * label is not NULL, it will be drawn with @a align, @a fontsize,
+ * and @a color.
  * @param ctx		The @a WimaRenderContext to render to.
  * @param x			X coordinate of the upper left corner.
  * @param y			Y coordinate of the upper left corner.
  * @param w			Width of the widget.
+ * @param color		The color to draw the text in.
  * @param h			Height of the widget.
  * @param iconid	The icon to draw with the label, or -1 if none.
  * @param shadow	Color to render the shadow at.
@@ -2952,8 +2961,6 @@ void wima_ui_arrow(WimaRenderContext* ctx, float x, float y, float s, WimaColor 
  * @param ctx	The @a WimaRenderContext to render to.
  * @param x		X coordinate of the upper left corner.
  * @param y		Y coordinate of the upper left corner.
- * @param w		Width of the widget.
- * @param h		Height of the widget.
  * @param s		The size (width) of the arrow to draw.
  * @param color	The color to draw the arrow in.
  * @pre			ctx must not be NULL.
