@@ -128,38 +128,6 @@ typedef enum WimaStatus {
  * @}
  */
 
-////////////////////////////////////////////////////////////////////////////////
-// Data structures for images.
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- * @defgroup image image
- * Data structures for handling images.
- * @{
- */
-
-/**
- * An uncompressed, in-memory image.
- */
-typedef struct WimaImage {
-
-	/// The width of the image.
-	int width;
-
-	/// The height of the image.
-	int height;
-
-	/// An array of RGB (three channel) pixels.
-	/// Thus, this array should have space for
-	/// 3 * @a width * @a height bytes.
-	unsigned char* pixels;
-
-} WimaImage;
-
-/**
- * @}
- */
-
 /**
  * The possible options for mouse buttons.
  */
