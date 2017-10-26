@@ -52,7 +52,8 @@ set(WIMA_SRC
 
 	# Put all source files here.
 	"time.c"
-	"input.c"
+	"cursor.c"
+	"key.c"
 	"monitor.c"
 	"prop.c"
 	"widget.c"
