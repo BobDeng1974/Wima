@@ -153,6 +153,9 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol
 	// Must run between uiBeginLayout() and uiEndLayout().
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 
+	// Make sure the layout starts enabled.
+	flags |= WIMA_LAYOUT_ENABLE;
+
 	// Get the first unused index and increment the count.
 	uint32_t idx = (area->area.ctx.itemCount)++;
 
@@ -225,6 +228,60 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol
 	playout->layout.flags = flags;
 
 	return wlh;
+}
+
+void wima_layout_setEnabled(WimaLayout wlh, bool enabled) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
+
+	// Get a pointer to the window.
+	WimaWin* win = dvec_get(wg.windows, wlh.window);
+
+	wassert(dtree_exists(win->areas, wlh.area), WIMA_ASSERT_AREA);
+
+	// Get a pointer to the area.
+	WimaAr* area = dtree_node(win->areas, wlh.area);
+
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
+
+	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
+
+	// Get a pointer to the layout.
+	WimaItem* layout = area->area.ctx.items + wlh.layout;
+
+	// Sets the enabled bit.
+	if (enabled) {
+		layout->layout.flags |= WIMA_LAYOUT_ENABLE;
+	}
+	else {
+		layout->layout.flags &= ~(WIMA_LAYOUT_ENABLE);
+	}
+}
+
+bool wima_layout_enabled(WimaLayout wlh) {
+
+	assert_init;
+
+	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
+
+	// Get a pointer to the window.
+	WimaWin* win = dvec_get(wg.windows, wlh.window);
+
+	wassert(dtree_exists(win->areas, wlh.area), WIMA_ASSERT_AREA);
+
+	// Get a pointer to the area.
+	WimaAr* area = dtree_node(win->areas, wlh.area);
+
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
+
+	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
+
+	// Get a pointer to the layout.
+	WimaItem* layout = area->area.ctx.items + wlh.layout;
+
+	return layout->layout.flags & WIMA_LAYOUT_ENABLE;
 }
 
 void wima_layout_setBackgroundColor(WimaLayout wlh, WimaColor color) {

@@ -125,6 +125,21 @@ uint16_t wima_layout_setBoxFlag(uint16_t flags) yinline;
 uint16_t wima_layout_clearBoxFlag(uint16_t flags) yinline;
 
 /**
+ * Sets whether @a wlh (and its children) are enabled.
+ * If a layout is not enabled, none of its children are.
+ * @param wlh		The layout to set as enabled or not.
+ * @param enabled	true for enabled, false otherwise.
+ */
+void wima_layout_setEnabled(WimaLayout wlh, bool enabled);
+
+/**
+ * Returns true if @a wlh is enabled, false otherwise.
+ * @param wlh	The layout to query.
+ * @return		true if enabled, false otherwise.
+ */
+bool wima_layout_enabled(WimaLayout wlh);
+
+/**
  * Sets the background color of the provided layout.
  * @param wlh	The layout whose background color will be set.
  * @param color	The new background color for the layout.
