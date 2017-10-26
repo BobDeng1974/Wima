@@ -1580,19 +1580,95 @@ void* wima_region_userPointer(WimaRegion reg) yinline;
 // Area functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @defgroup area area
+ * Functions and data structures for
+ * areas (spaces within a window).
+ * @{
+ */
+
+/**
+ * Returns a WimaArea for @a wwh and the area node @a node.
+ * @param wwh	The window of the area.
+ * @param node	The node of the area
+ * @return		A WimaArea with the specified info.
+ * @pre			@a wwh must be a valid @a WimaWindow.
+ * @pre			@a node must be a vlaid node within @a wwh.
+ */
 WimaArea wima_area(WimaWindow wwh, WimaAreaNode node) yinline;
 
+/**
+ * Returns the user pointer associated with *just* this area.
+ * For a user pointer that is common to all areas of the same
+ * type, see @a wima_region_userPointer().
+ * @param wah	The area to query.
+ * @return		The user pointer.
+ * @pre			@a wah must be valid.
+ */
 void* wima_area_userPointer(WimaArea wah) yinline;
+
+/**
+ * Returns the rectangle for @a wah.
+ * @param wah	The area to query.
+ * @return		The area's rectangle.
+ * @pre			@a wah must be valid.
+ */
 WimaRect wima_area_rect(WimaArea wah) yinline;
+
+/**
+ * Sets the scale that @a wah should be drawn at.
+ * This allows clients to scale their UI's.
+ * @param wah	The area to set the scale for.
+ * @param scale	The scale to set.
+ * @pre			@a wah must be valid.
+ */
 void wima_area_setScale(WimaArea wah, float scale) yinline;
+
+/**
+ * Returns the scale that @a wah is drawn at.
+ * @param wah	The area to query.
+ * @return		The area's scale.
+ * @pre			@a wah must be valid.
+ */
 float wima_area_scale(WimaArea wah) yinline;
+
+/**
+ * Sets the type for @a wah. Areas are always
+ * automatically created with a type, so this
+ * allows clients to change the type at runtime.
+ * @param wah	The area to change.
+ * @param type	The type to change to.
+ * @pre			@a wah must be valid.
+ */
 void wima_area_setType(WimaArea wah, WimaRegion type) yinline;
+
+/**
+ * eturns the region type of @a wah.
+ * @param wah	The area to query.
+ * @return		The area's region type.
+ * @pre			@a wah must be valid.
+ */
 WimaRegion wima_area_type(WimaArea wah) yinline;
 
-// return the total number of allocated items
+/**
+ * Returns the total number of items (layouts
+ * and widgets) already allocated in @a wah.
+ * @param wah	The area to query.
+ * @return		The total number of allocated items.
+ */
 int wima_area_itemCount(WimaArea wah) yinline;
 
+/**
+ * Returns true if @a pos is in @a wah, false otherwise.
+ * @param wah	The area to query.
+ * @param pos	The position to test against.
+ * @return		true if @a pos is inside @a wah, false otherwise.
+ */
 bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Workspace functions and data structures.
