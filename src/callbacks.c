@@ -104,8 +104,7 @@ WimaMenuItem splitSubSubItems[] = {
 
 WimaMenu splitSubSub = {
 
-    {{ 0, 0 }},
-    {{ 0, 0 }},
+    {{ 0, 0, 0, 0 }},
     NULL,
     splitSubSubItems,
     1,
@@ -124,8 +123,7 @@ WimaMenuItem splitSubItems[] = {
 
 WimaMenu splitSub = {
 
-    {{ 0, 0 }},
-    {{ 0, 0 }},
+    {{ 0, 0, 0, 0 }},
     NULL,
     splitSubItems,
     6,
@@ -141,8 +139,7 @@ WimaMenuItem areaOptionMenuItems[] = {
 
 WimaMenu areaOptionMenu = {
 
-    {{ 0, 0 }},
-    {{ 0, 0 }},
+    {{ 0, 0, 0, 0 }},
     NULL,
     areaOptionMenuItems,
     3,

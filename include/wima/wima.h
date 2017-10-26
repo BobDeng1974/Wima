@@ -1034,8 +1034,7 @@ typedef struct WimaMenuItem {
 
 typedef struct WimaMenu {
 
-	WimaVec pos;
-	WimaSize size;
+	WimaRect rect;
 
 	union {
 		WimaMenu* subMenu;
