@@ -128,6 +128,16 @@ typedef enum WimaStatus {
  * @}
  */
 
+////////////////////////////////////////////////////////////////////////////////
+// Data structures for input.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup input input
+ * Data structures for input.
+ * @{
+ */
+
 /**
  * The possible options for mouse buttons.
  */
@@ -171,7 +181,12 @@ typedef enum WimaMouseBtn {
 
 } WimaMouseBtn;
 
+/**
+ * The possible keys Wima can handle.
+ */
 typedef enum WimaKey {
+
+	//! @cond Doxygen suppress.
 
 	WIMA_KEY_UNKNOWN     = -1,
 
@@ -309,26 +324,55 @@ typedef enum WimaKey {
 	WIMA_KEY_MENU           = 348,
 	WIMA_KEY_LAST           = WIMA_KEY_MENU
 
+	//! @endcond Doxygen suppress.
+
 } WimaKey;
 
+/**
+ * The possible key and click modifiers Wima can handle.
+ */
 typedef enum WimaMods {
 
+	/// No modifier.
 	WIMA_MOD_NONE     = 0,
 
+	/// Shift key.
 	WIMA_MOD_SHIFT    = 1 << 0,
+
+	/// Control key.
 	WIMA_MOD_CTRL     = 1 << 1,
+
+	/// Alt key.
 	WIMA_MOD_ALT      = 1 << 2,
+
+	/// Super (Windows) key.
 	WIMA_MOD_SUPER    = 1 << 3
 
 } WimaMods;
 
+/**
+ * The type of action that can happen to keys and mouse buttons.
+ */
 typedef enum WimaAction {
 
+	/// Key/button was released.
 	WIMA_ACTION_RELEASE  = 0,
+
+	/// Key/button was pressed.
 	WIMA_ACTION_PRESS    = 1,
+
+	/// Key/button was held down until repeat.
 	WIMA_ACTION_REPEAT   = 2
 
 } WimaAction;
+
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Data structures for events.
+////////////////////////////////////////////////////////////////////////////////
 
 typedef struct WimaKeyEvent {
 
@@ -380,6 +424,10 @@ typedef struct WimaCharEvent {
 	WimaMods mods;
 
 } WimaCharEvent;
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Cursor functions and data structures.
