@@ -1720,94 +1720,501 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwksp, DynaNode node, WimaRegi
 // Window functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Creates a window of @a size size using @a wksph. The window
+ * is automatically given the app name as its name.
+ * @param wksph		The workspace to create the window with.
+ * @param size		The initial size, or if maximized, the
+ *					size of the window when restored.
+ * @param maximized	Whether the window should be maximized.
+ * @param resizable	Whether the window should be resizable.
+ * @param decorated	Whether the window should be decorated.
+ * @return	The created window.
+ * @pre		@a wksph must be valid. See @a wima_workspace_register().
+ */
 WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size,
                               bool maximized, bool resizable, bool decorated);
+
+/**
+ * Close the given window
+ * @param wwh	The window to close.
+ * @return		WIMA_STATUS_SUCCESS on success,
+ *				an error code otherwise.
+ */
 WimaStatus wima_window_close(WimaWindow wwh);
 
+/**
+ * Gives the current window focus.
+ * @param wwh	The window to focus.
+ */
 void wima_window_setFocused(WimaWindow wwh) yinline;
+
+/**
+ * Returns the focused state of @a wwh.
+ * @param wwh	The window to query.
+ * @return		true if @a wwh is focused,
+ *				false otherwise.
+ */
 bool wima_window_focused(WimaWindow wwh) yinline;
 
+/**
+ * Minimizes the window.
+ * @param wwh	The window to minimize.
+ */
 void wima_window_minimize(WimaWindow wwh) yinline;
+
+/**
+ * Returns whether or not the window is minimized.
+ * @param wwh	The window to query.
+ * @return		true if @a is minimized, false
+ *				otherwise.
+ */
 bool wima_window_minimized(WimaWindow wwh yinline);
 
+/**
+ * Maximizes the window.
+ * @param wwh	The window to maximize.
+ */
 void wima_window_maximize(WimaWindow wwh) yinline;
+
+/**
+ * Returns whether or not the window is maximized.
+ * @param wwh	The window to query.
+ * @return		true if @a is maximized, false
+ *				otherwise.
+ */
 bool wima_window_maximized(WimaWindow wwh) yinline;
+
+/**
+ * Makes the window full screen on @a monitor.
+ * @param wwh		The window to make fullscreen.
+ * @param monitor	The monitor to be fullscreen on.
+ */
 void wima_window_fullscreen(WimaWindow wwh, WimaMonitor* monitor) yinline;
+
+/**
+ * Restores the window from either fullscreen,
+ * minimization, or maximization.
+ * @param wwh	The window to restore.
+ */
 void wima_window_restore(WimaWindow wwh) yinline;
 
+/**
+ * Hides the window.
+ * @param wwh	The window to hide.
+ */
 void wima_window_hide(WimaWindow wwh) yinline;
+
+/**
+ * Shows the window.
+ * @param wwh	The window to show.
+ */
 void wima_window_show(WimaWindow wwh) yinline;
+
+/**
+ * Returns whether or not the window is visible.
+ * @param wwh	The window to query.
+ * @return		true if visible, false otherwise.
+ */
 bool wima_window_visible(WimaWindow wwh) yinline;
 
+/**
+ * Returns whether or not the window is decorated.
+ * @param wwh	The window to query.
+ * @return		true if decorated, false otherwise.
+ */
 bool wima_window_decorated(WimaWindow wwh) yinline;
+
+/**
+ * Returns whether or not the window is resizable.
+ * @param wwh	The window to query.
+ * @return		true if resizable, false otherwise.
+ */
 bool wima_window_resizable(WimaWindow wwh) yinline;
 
+/**
+ * Sets the window's title. The data is copied.
+ * @param wwh	The window whose title will be set.
+ * @param title	The new title for the window.
+ * @return
+ */
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) yinline;
+
+/**
+ * @brief wima_window_title
+ * @param wwh
+ * @return
+ */
 DynaString wima_window_title(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_setPosition
+ * @param wwh
+ * @param pos
+ */
 void wima_window_setPosition(WimaWindow wwh, WimaVec pos) yinline;
+
+/**
+ * @brief wima_window_position
+ * @param wwh
+ * @return
+ */
 WimaVec wima_window_position(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_setSize
+ * @param wwh
+ * @param size
+ */
 void wima_window_setSize(WimaWindow wwh, WimaSize size) yinline;
+
+/**
+ * @brief wima_window_size
+ * @param wwh
+ * @return
+ */
 WimaSize wima_window_size(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_setSizeLimits
+ * @param wwh
+ * @param min
+ * @param max
+ */
 void wima_window_setSizeLimits(WimaWindow wwh, WimaSize min, WimaSize max) yinline;
+
+/**
+ * @brief wima_window_setAspectRatio
+ * @param wwh
+ * @param numerator
+ * @param denominator
+ */
 void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator) yinline;
+
+/**
+ * @brief wima_window_framebufferSize
+ * @param wwh
+ * @return
+ */
 WimaSize wima_window_framebufferSize(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_setUserPointer
+ * @param win
+ * @param user
+ * @return
+ */
 WimaStatus wima_window_setUserPointer(WimaWindow win, void* user) yinline;
+
+/**
+ * @brief wima_window_userPointer
+ * @param win
+ * @return
+ */
 void* wima_window_userPointer(WimaWindow win) yinline;
 
+/**
+ * @brief wima_window_setMods
+ * @param wwh
+ * @param mods
+ */
 void wima_window_setMods(WimaWindow wwh, WimaMods mods) yinline;
+
+/**
+ * @brief wima_window_mods
+ * @param wwh
+ * @return
+ */
 WimaMods wima_window_mods(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_scroll
+ * @param wwh
+ * @return
+ */
 WimaVec wima_window_scroll(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_clicks
+ * @param wwh
+ * @return
+ */
 uint32_t wima_window_clicks(WimaWindow wwh) yinline;
 
+/**
+ * @brief wima_window_setHoverWidget
+ * @param wwh
+ * @param wih
+ */
 void wima_window_setHoverWidget(WimaWindow wwh, WimaWidget wih) yinline;
+
+/**
+ * @brief wima_window_hoverWidget
+ * @param wwh
+ * @return
+ */
 WimaWidget wima_window_hoverWidget(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_setActiveWidget
+ * @param wwh
+ * @param wih
+ */
 void wima_window_setActiveWidget(WimaWindow wwh, WimaWidget wih) yinline;
+
+/**
+ * @brief wima_window_actveWidget
+ * @param wwh
+ * @return
+ */
 WimaWidget wima_window_actveWidget(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_setFocusWidget
+ * @param wwh
+ * @param wih
+ */
 void wima_window_setFocusWidget(WimaWindow wwh, WimaWidget wih) yinline;
+
+/**
+ * @brief wima_window_focusWidget
+ * @param wwh
+ * @return
+ */
 WimaWidget wima_window_focusWidget(WimaWindow wwh) yinline;
 
+/**
+ * @brief wima_window_clearEvents
+ * @param wwh
+ */
 void wima_window_clearEvents(WimaWindow wwh) yinline;
 
+/**
+ * @brief wima_window_refresh
+ * @param wwh
+ */
 void wima_window_refresh(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_cancelRefresh
+ * @param wwh
+ */
 void wima_window_cancelRefresh(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_needsRefresh
+ * @param wwh
+ * @return
+ */
 bool wima_window_needsRefresh(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_layout
+ * @param wwh
+ */
 void wima_window_layout(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_cancelLayout
+ * @param wwh
+ */
 void wima_window_cancelLayout(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_needsLayout
+ * @param wwh
+ * @return
+ */
 bool wima_window_needsLayout(WimaWindow wwh) yinline;
 
+/**
+ * @brief wima_window_areas
+ * @param wwh
+ * @return
+ */
 DynaTree wima_window_areas(WimaWindow wwh);
+
+/**
+ * @brief wima_window_areas_replace
+ * @param wwh
+ * @param wksp
+ * @return
+ */
 WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksp);
+
+/**
+ * @brief wima_window_areas_restore
+ * @param wwh
+ * @param areas
+ * @return
+ */
 WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas);
 
+/**
+ * @brief wima_window_setContextMenu
+ * @param wwh
+ * @param menu
+ * @param title
+ * @param icon
+ * @return
+ */
 WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) yinline;
+
+/**
+ * @brief wima_window_setMenu
+ * @param wwh
+ * @param menu
+ * @return
+ */
 WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) yinline;
+
+/**
+ * @brief wima_window_menu
+ * @param wwh
+ * @return
+ */
 WimaMenu* wima_window_menu(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_menuTitle
+ * @param wwh
+ * @return
+ */
 const char* wima_window_menuTitle(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_menuIcon
+ * @param wwh
+ * @return
+ */
 int wima_window_menuIcon(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_removeMenu
+ * @param wwh
+ * @return
+ */
 WimaStatus wima_window_removeMenu(WimaWindow wwh) yinline;
 
+/**
+ * @brief wima_window_setCursorType
+ * @param wwh
+ * @param c
+ */
 void wima_window_setCursorType(WimaWindow wwh, WimaCursor* c) yinline;
+
+/**
+ * @brief wima_window_setStandardCursorType
+ * @param wwh
+ * @param c
+ */
 void wima_window_setStandardCursorType(WimaWindow wwh, WimaCursorType c) yinline;
+
+/**
+ * @brief wima_window_cursorType
+ * @param wwh
+ * @return
+ */
 WimaCursor* wima_window_cursorType(WimaWindow wwh) yinline;
 
+/**
+ * @brief wima_window_setCursorMode
+ * @param wwh
+ * @param mode
+ */
 void wima_window_setCursorMode(WimaWindow wwh, WimaCursorMode mode) yinline;
+
+/**
+ * @brief wima_window_cursorMode
+ * @param wwh
+ * @return
+ */
 WimaCursorMode wima_window_cursorMode(WimaWindow wwh) yinline;
 
+/**
+ * @brief wima_window_setCursorPos
+ * @param wwh
+ * @param pos
+ */
 void wima_window_setCursorPos(WimaWindow wwh, WimaVec pos) yinline;
+
+/**
+ * @brief wima_window_cursorPos
+ * @param wwh
+ * @return
+ */
 WimaVec wima_window_cursorPos(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_cursorStart
+ * @param wwh
+ * @return
+ */
 WimaVec wima_window_cursorStart(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_cursorDelta
+ * @param wwh
+ * @return
+ */
 WimaVec wima_window_cursorDelta(WimaWindow wwh) yinline;
 
+/**
+ * @brief wima_window_setStickyKeys
+ * @param wwh
+ * @param enabled
+ */
 void wima_window_setStickyKeys(WimaWindow wwh, bool enabled) yinline;
+
+/**
+ * @brief wima_window_stickyKeys
+ * @param wwh
+ * @return
+ */
 bool wima_window_stickyKeys(WimaWindow wwh) yinline;
+
+/**
+ * @brief wima_window_setStickyMouseBtns
+ * @param wwh
+ * @param enabled
+ */
 void wima_window_setStickyMouseBtns(WimaWindow wwh, bool enabled) yinline;
+
+/**
+ * @brief wima_window_stickyMouseBtns
+ * @param wwh
+ * @return
+ */
 bool wima_window_stickyMouseBtns(WimaWindow wwh) yinline;
 
+/**
+ * @brief wima_window_keyState
+ * @param wwh
+ * @param key
+ * @return
+ */
 WimaAction wima_window_keyState(WimaWindow wwh, WimaKey key) yinline;
 
+/**
+ * @brief wima_window_mouseBtnState
+ * @param wwh
+ * @param btn
+ * @return
+ */
 WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) yinline;
 
+/**
+ * @brief wima_window_setClipboard
+ * @param wwh
+ * @param string
+ */
 void wima_window_setClipboard(WimaWindow wwh, const char* string) yinline;
+
+/**
+ * @brief wima_window_clipboard
+ * @param wwh
+ * @return
+ */
 const char* wima_window_clipboard(WimaWindow wwh) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
