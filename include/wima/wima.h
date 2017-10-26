@@ -240,7 +240,7 @@ typedef enum WimaWidgetState {
 	WIMA_ITEM_ACTIVE  = 1 << 1,
 
 	/// The item is unresponsive.
-	WIMA_ITEM_FROZEN  = 1 << 2,
+	WIMA_ITEM_DISABLED  = 1 << 2,
 
 } WimaWidgetState;
 
