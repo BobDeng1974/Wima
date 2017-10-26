@@ -1009,42 +1009,76 @@ WimaGammaRamp wima_monitor_gammaRamp(WimaMonitor* monitor) yinline;
 // Menu data structures.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @defgroup menu menu
+ * Data structures for menus.
+ * @{
+ */
+
+/// Forward declaration.
 typedef struct WimaMenu WimaMenu;
 
+/**
+ * A function for handling a menu item click.
+ * @param wdgt	The menu item that was clicked.
+ */
 typedef WimaStatus (*WimaMenuItemFunc)(WimaWidget);
 
+/**
+ * A menu item.
+ */
 typedef struct WimaMenuItem {
 
+	/// The human-readable label, or
+	/// NULL if this is a separator.
 	const char* label;
 
 	union {
+
+		/// The submenu.
 		WimaMenu* subMenu;
+
+		/// The function to call when clicked.
 		WimaMenuItemFunc func;
 	};
 
+	/// The item's rectangle.
 	WimaRect rect;
 
+	/// The state of the item.
 	WimaWidgetState state;
 
+	/// The item's icon, or -1 for none.
 	int icon;
 
+	/// Whether or not the item has a submenu,
+	/// or is a clickable item.
 	bool hasSubMenu;
 
 } WimaMenuItem;
 
+/**
+ * A menu.
+ */
 typedef struct WimaMenu {
 
+	/// The menu's rectangle.
 	WimaRect rect;
 
 	/// The current visible submenu, or NULL if none.
 	WimaMenu* subMenu;
 
+	/// An array of menu items.
 	WimaMenuItem* items;
 
 	/// Number of items in the menu items array.
 	uint32_t numItems;
 
 } WimaMenu;
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Widget functions and data structures.
