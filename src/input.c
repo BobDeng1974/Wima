@@ -46,24 +46,28 @@ assert_msgs_decl;
 
 WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) {
 
-	// Create a go-between image.
-	WimaImg i;
-	i.wima = img;
+	assert_init;
 
 	wassert(img.pixels != NULL, WIMA_ASSERT_IMG_DATA);
 
 	wassert(img.width > 0 && img.height > 0, WIMA_ASSERT_CURSOR_DIM);
 	wassert(img.width > xhot && img.height > yhot, WIMA_ASSERT_CURSOR_HOT);
 
+	// Create a go-between image.
+	WimaImg i;
+	i.wima = img;
+
 	// Cast the WimaImage to GLFWimage and have GLFW create the cursor.
 	return (WimaCursor*) glfwCreateCursor(&i.glfw, xhot, yhot);
 }
 
 void wima_cursor_destroy(WimaCursor* cursor) {
+	assert_init;
 	wassert(cursor != NULL, WIMA_ASSERT_CURSOR);
 	glfwDestroyCursor((GLFWcursor*) cursor);
 }
 
 const char* wima_key_name(WimaKey key, int scancode) {
+	assert_init;
 	return glfwGetKeyName(key, scancode);
 }
