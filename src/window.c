@@ -101,9 +101,10 @@ WimaStatus wima_window_create(WimaWindow* wwh, WimaWorkspace wksph, WimaSize siz
 	glfwWindowHint(GLFW_DECORATED, decorated ? GLFW_TRUE : GLFW_FALSE);
 	glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
 
-
+	// Get the pointer to the app name.
 	const char* name = dstr_str(wg.name);
 
+	// Create the window name.
 	wwin.name = dstr_create(name);
 	if (yunlikely(!wwin.name)) {
 		return WIMA_STATUS_WINDOW_ERR;
