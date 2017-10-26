@@ -129,6 +129,137 @@ typedef enum WimaStatus {
  */
 
 ////////////////////////////////////////////////////////////////////////////////
+// Forward declarations for handles.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup region region
+ * @{
+ */
+
+/**
+ * A handle to a region (area template) type.
+ */
+typedef uint8_t WimaRegion;
+
+/**
+ * @}
+ */
+
+/**
+ * @defgroup window window
+ * @{
+ */
+
+/**
+ * A handle to a window.
+ */
+typedef uint8_t WimaWindow;
+
+/**
+ * @}
+ */
+
+/**
+ * @defgroup area area
+ * @{
+ */
+
+/**
+ * A handle to a node. This is to make the node size
+ * smaller than the 64 bits that Dyna uses. I am pretty
+ * sure that nothing will go over the limit, so I feel
+ * comfortable doing this.
+ */
+typedef uint16_t WimaAreaNode;
+
+/**
+ * A handle to a area.
+ */
+typedef struct WimaArea {
+
+	/// The area's node. It's first because it's bigger.
+	WimaAreaNode area;
+
+	/// The area's window.
+	WimaWindow window;
+
+} WimaArea;
+
+/**
+ * @}
+ */
+
+/**
+ * @defgroup widget widget
+ * @{
+ */
+
+/**
+ * A handle to a widget.
+ */
+typedef struct WimaWidget {
+
+	/// A handle to the widget itself.
+	uint16_t widget;
+
+	/// The area that the widget is in.
+	WimaAreaNode area;
+
+	/// The window that the widget is in.
+	WimaWindow window;
+
+} WimaWidget;
+
+/**
+ * Item states as returned by @a wima_widget_state().
+ */
+typedef enum WimaWidgetState {
+
+	/// The item is inactive.
+	WIMA_ITEM_DEFAULT = 0,
+
+	/// The item is inactive, but the cursor is hovering over this item.
+	WIMA_ITEM_HOVER   = 1 << 0,
+
+	/// The item is toggled, activated, focused (depends on item kind).
+	WIMA_ITEM_ACTIVE  = 1 << 1,
+
+	/// The item is unresponsive.
+	WIMA_ITEM_FROZEN  = 1 << 2,
+
+} WimaWidgetState;
+
+/**
+ * @}
+ */
+
+/**
+ * @defgroup layout layout
+ * @{
+ */
+
+/**
+ * A handle to a layout.
+ */
+typedef struct WimaLayout {
+
+	/// The ID of the layout.
+	uint16_t layout;
+
+	/// The area the layout is in.
+	WimaAreaNode area;
+
+	/// The window the layout is in.
+	WimaWindow window;
+
+} WimaLayout;
+
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
 // Data structures for input.
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -700,137 +831,6 @@ void wima_setTime(double time) yinline;
 double wima_time() yinline;
 uint64_t wima_time_raw() yinline;
 uint64_t wima_time_freq() yinline;
-
-////////////////////////////////////////////////////////////////////////////////
-// Forward declarations for handles.
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- * @defgroup region region
- * @{
- */
-
-/**
- * A handle to a region (area template) type.
- */
-typedef uint8_t WimaRegion;
-
-/**
- * @}
- */
-
-/**
- * @defgroup window window
- * @{
- */
-
-/**
- * A handle to a window.
- */
-typedef uint8_t WimaWindow;
-
-/**
- * @}
- */
-
-/**
- * @defgroup area area
- * @{
- */
-
-/**
- * A handle to a node. This is to make the node size
- * smaller than the 64 bits that Dyna uses. I am pretty
- * sure that nothing will go over the limit, so I feel
- * comfortable doing this.
- */
-typedef uint16_t WimaAreaNode;
-
-/**
- * A handle to a area.
- */
-typedef struct WimaArea {
-
-	/// The area's node. It's first because it's bigger.
-	WimaAreaNode area;
-
-	/// The area's window.
-	WimaWindow window;
-
-} WimaArea;
-
-/**
- * @}
- */
-
-/**
- * @defgroup widget widget
- * @{
- */
-
-/**
- * A handle to a widget.
- */
-typedef struct WimaWidget {
-
-	/// A handle to the widget itself.
-	uint16_t widget;
-
-	/// The area that the widget is in.
-	WimaAreaNode area;
-
-	/// The window that the widget is in.
-	WimaWindow window;
-
-} WimaWidget;
-
-/**
- * Item states as returned by @a wima_widget_state().
- */
-typedef enum WimaWidgetState {
-
-	/// The item is inactive.
-	WIMA_ITEM_DEFAULT = 0,
-
-	/// The item is inactive, but the cursor is hovering over this item.
-	WIMA_ITEM_HOVER   = 1 << 0,
-
-	/// The item is toggled, activated, focused (depends on item kind).
-	WIMA_ITEM_ACTIVE  = 1 << 1,
-
-	/// The item is unresponsive.
-	WIMA_ITEM_FROZEN  = 1 << 2,
-
-} WimaWidgetState;
-
-/**
- * @}
- */
-
-/**
- * @defgroup layout layout
- * @{
- */
-
-/**
- * A handle to a layout.
- */
-typedef struct WimaLayout {
-
-	/// The ID of the layout.
-	uint16_t layout;
-
-	/// The area the layout is in.
-	WimaAreaNode area;
-
-	/// The window the layout is in.
-	WimaWindow window;
-
-} WimaLayout;
-
-/**
- * @}
- */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Menu data structures.
