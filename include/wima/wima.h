@@ -1674,9 +1674,47 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
 // Workspace functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Registers a new workspace. The workspace is empty and
+ * needs to be filled using @a wima_workspace_addParent()
+ * and @a wima_workspace_addRegion().
+ *
+ * An empty workspace cannot be used to create a window.
+ * Also, it is an error to create a window if the workspace
+ * has any parent nodes with no or only one child.
+ * @return	The registered workspace.
+ */
 WimaWorkspace wima_workspace_register();
+
+/**
+ * Adds a parent node to @a wwksp.
+ * @param wwksp		The workspace to add to.
+ * @param node		The node to add, which should be either
+ *					the root, or a child of a node that has
+ *					already been added.
+ * @param split		A value between [0, 1] that indicates
+ *					where the split between this parent's
+ *					children will be.
+ * @param vertical	Whether the split is vertical (splitting
+ *					width) or not.
+ * @return			WIMA_STATUS_SUCCESS on success, or an
+ *					error code.
+ * @pre				@a wwksp must be valid.
+ */
 WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node, float split, bool vertical);
-WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion reg);
+
+/**
+ * Adds a region (leaf) to a workspace.
+ * @param wwksp	The workspace to add to.
+ * @param node	The node to add, which should be either
+ *				the root, or a child of a node that has
+ *				already been added.
+ * @param reg	The region to set the type as.
+ * @return		WIMA_STATUS_SUCCESS on success, or an
+ *				error code.
+ * @pre			@a wwksp must be valid.
+ */
+WimaStatus wima_workspace_addRegion(WimaWorkspace wwksp, DynaNode node, WimaRegion reg);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Window functions and data structures.

@@ -115,17 +115,17 @@ WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus wima_workspace_addRegion(WimaWorkspace wwh, DynaNode node, WimaRegion reg) {
+WimaStatus wima_workspace_addRegion(WimaWorkspace wwksp, DynaNode node, WimaRegion reg) {
 
 	assert_init;
 
-	wassert(wwh < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
+	wassert(wwksp < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
 
 	// Get the workspace.
-	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwh));
+	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwksp));
 
 	// Check that the node is valid so far.
-	if (!wima_workspace_nodeValid(wwh, node)) {
+	if (!wima_workspace_nodeValid(wwksp, node)) {
 		return WIMA_STATUS_INVALID_PARAM;
 	}
 
