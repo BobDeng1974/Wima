@@ -59,7 +59,7 @@ extern "C" {
  */
 
 /**
- * @defgroup 2D 2D
+ * @defgroup graphics2d graphics2d
  * Data structures for handling 2D graphics.
  * @{
  */
