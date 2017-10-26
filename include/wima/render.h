@@ -882,8 +882,8 @@ typedef enum WimaThemeType {
 	/// Theme for anything that doesn't have a specialized theme.
 	WIMA_THEME_REGULAR,
 
-	/// Theme for tools.
-	WIMA_THEME_TOOL,
+	/// Theme for operators.
+	WIMA_THEME_OPERATOR,
 
 	/// Theme for radio buttons.
 	WIMA_THEME_RADIO,

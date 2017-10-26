@@ -96,7 +96,7 @@ const char* bgDesc = "Default background color";
 const char* widgetParentNames[] = {
     "background",
     "regular",
-    "tool",
+    "operator",
     "radio",
     "textfield",
     "option",
@@ -113,7 +113,7 @@ const char* widgetParentNames[] = {
 const char* widgetParentLabels[] = {
     "Background",
     "Regular",
-    "Tool",
+    "Operator",
     "Radio",
     "Text Field",
     "Option (Checkbox)",
@@ -198,15 +198,15 @@ const char* regularDescs[] = {
 };
 
 const char* toolDescs[] = {
-    "Outline color of tool UI items",
-    "Color of tool UI items",
-    "Inner color of tool UI items",
-    "Inner color of tool UI items when selected",
-    "Text color of tool UI items",
-    "Text color of tool UI items when selected"
-    "Top delta modifier for shading when enabled for tool UI items (-100 to 100)",
-    "Bottom delta modifier for shading when enabled for tool UI items (-100 to 100)",
-    "Whether shading is enabled for tool UI items"
+    "Outline color of operators (buttons)",
+    "Color of operators (buttons)",
+    "Inner color of operators (buttons)",
+    "Inner color of operators (buttons) when selected",
+    "Text color of operators (buttons)",
+    "Text color of operators (buttons) when selected"
+    "Top delta modifier for shading when enabled for operators (buttons) (-100 to 100)",
+    "Bottom delta modifier for shading when enabled for operators (buttons) (-100 to 100)",
+    "Whether shading is enabled for operators (buttons)"
 };
 
 const char* radioDescs[] = {
@@ -1090,7 +1090,7 @@ static const char** wima_theme_descs(WimaThemeType type) {
 		case WIMA_THEME_REGULAR:
 			return regularDescs;
 
-		case WIMA_THEME_TOOL:
+		case WIMA_THEME_OPERATOR:
 			return toolDescs;
 
 		case WIMA_THEME_RADIO:

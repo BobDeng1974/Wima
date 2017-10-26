@@ -94,7 +94,7 @@ void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
 	float cr[4];
 	WimaColor shade_top, shade_btm;
 
-	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TOOL);
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_OPERATOR);
 
 	wima_ui_corners_rounded(cr, WIMA_TOOL_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
@@ -259,7 +259,7 @@ void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 
 	float cr[4];
 
-	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TOOL);
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_OPERATOR);
 
 	wima_ui_corners_rounded(cr, WIMA_TOOL_RADIUS, flags);
 	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
