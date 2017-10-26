@@ -54,121 +54,6 @@ extern "C" {
 #include <dyna/string.h>
 #include <dyna/tree.h>
 
-#define WIMA_GAMMA_RAMP_SIZE 256
-
-// Container flags to pass to uiSetBox().
-typedef enum WimaWidgetBox {
-
-	// Flex direction (bit 0+1).
-
-	// Left to right.
-	WIMA_ITEM_ROW      = 0x002,
-
-	// Top to bottom.
-	WIMA_ITEM_COLUMN   = 0x003,
-
-	// Model (bit 1).
-
-	// Free layout.
-	WIMA_ITEM_LAYOUT   = 0x000,
-
-	// Flex model.
-	WIMA_ITEM_FLEX     = 0x002,
-
-	// Flex-wrap (bit 2).
-
-	// Single-line.
-	WIMA_ITEM_NOWRAP   = 0x000,
-
-	// Multi-line, wrap left to right.
-	WIMA_ITEM_WRAP     = 0x004,
-
-	// Justify content (start, end, center, space-between)...
-
-	// ...at start of row/column...
-	WIMA_ITEM_START    = 0x008,
-
-	// ...at center of row/column...
-	WIMA_ITEM_MIDDLE   = 0x000,
-
-	// ...at end of row/column...
-	WIMA_ITEM_END      = 0x010,
-
-	// Insert spacing to stretch across whole row/column.
-	WIMA_ITEM_JUSTIFY  = 0x018,
-
-	// Align items can be implemented by putting a flex container
-	// in a layout container, then using UI_TOP, UI_DOWN, UI_VFILL,
-	// UI_VCENTER, etc. FILL is equivalent to stretch/grow.
-
-	// Align content (start, end, center, stretch) can be implemented
-	// by putting a flex container in a layout container, then using
-	// UI_TOP, UI_DOWN, UI_VFILL, UI_VCENTER, etc. FILL is equivalent
-	// to stretch; space-between is not supported.
-
-} WimaWidgetBox;
-
-// Child layout flags to pass to uiSetLayout().
-typedef enum WimaItemLayoutFlags {
-
-	// Attachments (bit 5-8):
-	// Fully valid when parent uses UI_LAYOUT model
-	// partially valid when in UI_FLEX model.
-
-	// Anchor to left item or left side of parent.
-	WIMA_LAYOUT_LEFT     = 0x020,
-
-	// Anchor to top item or top side of parent.
-	WIMA_LAYOUT_TOP      = 0x040,
-
-	// Anchor to right item or right side of parent.
-	WIMA_LAYOUT_RIGHT    = 0x080,
-
-	// Anchor to bottom item or bottom side of parent.
-	WIMA_LAYOUT_DOWN     = 0x100,
-
-	// Anchor to both left and right item or parent borders.
-	WIMA_LAYOUT_HFILL    = 0x0a0,
-
-	// Anchor to both top and bottom item or parent borders.
-	WIMA_LAYOUT_VFILL    = 0x140,
-
-	// Center horizontally, with left margin as offset.
-	WIMA_LAYOUT_HCENTER  = 0x000,
-
-	// Center vertically, with top margin as offset.
-	WIMA_LAYOUT_VCENTER  = 0x000,
-
-	// Center in both directions, with left/top margin as offset.
-	WIMA_LAYOUT_CENTER   = 0x000,
-
-	// Anchor to all four directions.
-	WIMA_LAYOUT_FILL     = 0x1e0,
-
-	// When wrapping, put this element on a new line.
-	// Wrapping layout code auto-inserts UI_BREAK flags.
-	// Drawing routines can read them with wima_ui_item_layout().
-	WIMA_LAYOUT_BREAK    = 0x200
-
-} WimaItemLayout;
-
-// Item states as returned by uiGetState().
-typedef enum WimaWidgetState {
-
-	// The item is inactive.
-	WIMA_ITEM_DEFAULT = 0,
-
-	// The item is inactive, but the cursor is hovering over this item.
-	WIMA_ITEM_HOVER   = 1 << 0,
-
-	// The item is toggled, activated, focused (depends on item kind).
-	WIMA_ITEM_ACTIVE  = 1 << 1,
-
-	// The item is unresponsive.
-	WIMA_ITEM_FROZEN  = 1 << 2,
-
-} WimaWidgetState;
-
 // For cursor positions, mainly.
 typedef struct WimaVec {
 
@@ -363,42 +248,6 @@ typedef enum WimaCursorMode {
 	WIMA_CURSOR_DISABLED
 
 } WimaCursorMode;
-
-typedef struct WimaMonitor WimaMonitor;
-
-typedef struct WimaMonitorArray {
-
-	WimaMonitor** monitors;
-	int count;
-
-} WimaMonitorArray;
-
-typedef struct WimaVideoMode {
-
-	int width;
-	int height;
-	int redBits;
-	int greenBits;
-	int blueBits;
-	int refreshRate;
-
-} WimaVideoMode;
-
-typedef struct WimaVideoModeArray {
-
-	WimaVideoMode* modes;
-	int count;
-
-} WimaVideoModeArray;
-
-typedef struct WimaGammaRamp {
-
-	unsigned short red[WIMA_GAMMA_RAMP_SIZE];
-	unsigned short green[WIMA_GAMMA_RAMP_SIZE];
-	unsigned short blue[WIMA_GAMMA_RAMP_SIZE];
-	int size;
-
-} WimaGammaRamp;
 
 /**
  * A handle to a region (area template) type.
@@ -763,46 +612,6 @@ typedef struct WimaCharEvent {
 
 } WimaCharEvent;
 
-typedef struct WimaMenu WimaMenu;
-
-typedef WimaStatus (*WimaMenuItemFunc)(WimaWidget);
-
-typedef struct WimaMenuItem {
-
-	const char* label;
-
-	union {
-		WimaMenu* subMenu;
-		WimaMenuItemFunc func;
-	};
-
-	WimaRect rect;
-
-	WimaWidgetState state;
-
-	int icon;
-
-	bool hasSubMenu;
-
-} WimaMenuItem;
-
-typedef struct WimaMenu {
-
-	WimaVec pos;
-	WimaSize size;
-
-	union {
-		WimaMenu* subMenu;
-		WimaMenuItemFunc func;
-	};
-
-	WimaMenuItem* items;
-	int numItems;
-
-	bool hasSubMenu;
-
-} WimaMenu;
-
 /**
  *These typedefs are here to make the following procedures shorter to write.
  */
@@ -842,34 +651,6 @@ typedef struct WimaRegionFuncs {
 
 typedef struct WimaRenderContext WimaRenderContext;
 
-typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaRenderContext*);
-typedef void (*WimaErrorFunc)(WimaStatus, const char*);
-typedef void (*WimaWindowFileDropFunc)(WimaWindow, int, const char**);
-typedef void (*WimaWindowPosFunc)(WimaWindow, WimaVec);
-typedef void (*WimaFramebufferSizeFunc)(WimaWindow, WimaSize);
-typedef void (*WimaWindowSizeFunc)(WimaWindow, WimaSize);
-typedef void (*WimaWindowMouseEnterFunc)(WimaWindow, bool);
-typedef void (*WimaWindowMinimizeFunc)(WimaWindow, bool);
-typedef void (*WimaWindowFocusFunc)(WimaWindow, bool);
-typedef bool (*WimaWindowCloseFunc)(WimaWindow);
-typedef void (*WimaMonitorConnectedFunc)(WimaMonitor*, bool);
-
-typedef struct WimaAppFuncs {
-
-	WimaDrawFunc draw;
-	WimaErrorFunc error;
-	WimaWindowFileDropFunc file_drop;
-	WimaWindowPosFunc pos;
-	WimaFramebufferSizeFunc fbsize;
-	WimaWindowSizeFunc winsize;
-	WimaWindowMouseEnterFunc enter;
-	WimaWindowMinimizeFunc minimize;
-	WimaWindowFocusFunc focus;
-	WimaWindowCloseFunc close;
-	WimaMonitorConnectedFunc monitor;
-
-} WimaAppFuncs;
-
 ////////////////////////////////////////////////////////////////////////////////
 // Cursor and key functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -880,8 +661,46 @@ void wima_cursor_destroy(WimaCursor* cursor) yinline;
 const char* wima_key_name(WimaKey key, int scancode) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Monitor functions.
+// Monitor functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
+
+#define WIMA_MONITOR_GAMMA_RAMP_SIZE 256
+
+typedef struct WimaMonitor WimaMonitor;
+
+typedef struct WimaMonitorArray {
+
+	WimaMonitor** monitors;
+	int count;
+
+} WimaMonitorArray;
+
+typedef struct WimaVideoMode {
+
+	int width;
+	int height;
+	int redBits;
+	int greenBits;
+	int blueBits;
+	int refreshRate;
+
+} WimaVideoMode;
+
+typedef struct WimaVideoModeArray {
+
+	WimaVideoMode* modes;
+	int count;
+
+} WimaVideoModeArray;
+
+typedef struct WimaGammaRamp {
+
+	unsigned short red[WIMA_MONITOR_GAMMA_RAMP_SIZE];
+	unsigned short green[WIMA_MONITOR_GAMMA_RAMP_SIZE];
+	unsigned short blue[WIMA_MONITOR_GAMMA_RAMP_SIZE];
+	int size;
+
+} WimaGammaRamp;
 
 WimaMonitorArray wima_monitor_list() yinline;
 WimaMonitor* wima_monitor_primary() yinline;
@@ -907,8 +726,126 @@ uint64_t wima_time_raw() yinline;
 uint64_t wima_time_freq() yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Widget functions.
+// Widget functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Container flags to pass to @a wima_widget_setBox().
+ */
+typedef enum WimaWidgetBox {
+
+	// Flex direction (bit 0+1).
+
+	/// Left to right.
+	WIMA_ITEM_ROW      = 0x002,
+
+	/// Top to bottom.
+	WIMA_ITEM_COLUMN   = 0x003,
+
+	// Model (bit 1).
+
+	/// Free layout.
+	WIMA_ITEM_LAYOUT   = 0x000,
+
+	/// Flex model.
+	WIMA_ITEM_FLEX     = 0x002,
+
+	// Flex-wrap (bit 2).
+
+	/// Single-line.
+	WIMA_ITEM_NOWRAP   = 0x000,
+
+	/// Multi-line, wrap left to right.
+	WIMA_ITEM_WRAP     = 0x004,
+
+	// Justify content (start, end, center, space-between)...
+
+	/// Justify content at start of row/column.
+	WIMA_ITEM_START    = 0x008,
+
+	/// Justify content at center of row/column.
+	WIMA_ITEM_MIDDLE   = 0x000,
+
+	/// Justify content at end of row/column.
+	WIMA_ITEM_END      = 0x010,
+
+	/// Insert spacing to stretch across whole row/column.
+	WIMA_ITEM_JUSTIFY  = 0x018,
+
+	// Align items can be implemented by putting a flex container
+	// in a layout container, then using UI_TOP, UI_DOWN, UI_VFILL,
+	// UI_VCENTER, etc. FILL is equivalent to stretch/grow.
+
+	// Align content (start, end, center, stretch) can be implemented
+	// by putting a flex container in a layout container, then using
+	// UI_TOP, UI_DOWN, UI_VFILL, UI_VCENTER, etc. FILL is equivalent
+	// to stretch; space-between is not supported.
+
+} WimaWidgetBox;
+
+/**
+ * Child layout flags to pass to @a wima_widget_setLayout().
+ */
+typedef enum WimaWidgetLayoutFlags {
+
+	// Attachments (bit 5-8):
+	// Fully valid when parent uses UI_LAYOUT model
+	// partially valid when in UI_FLEX model.
+
+	/// Anchor to left item or left side of parent.
+	WIMA_LAYOUT_LEFT     = 0x020,
+
+	/// Anchor to top item or top side of parent.
+	WIMA_LAYOUT_TOP      = 0x040,
+
+	/// Anchor to right item or right side of parent.
+	WIMA_LAYOUT_RIGHT    = 0x080,
+
+	/// Anchor to bottom item or bottom side of parent.
+	WIMA_LAYOUT_DOWN     = 0x100,
+
+	/// Anchor to both left and right item or parent borders.
+	WIMA_LAYOUT_HFILL    = 0x0a0,
+
+	/// Anchor to both top and bottom item or parent borders.
+	WIMA_LAYOUT_VFILL    = 0x140,
+
+	/// Center horizontally, with left margin as offset.
+	WIMA_LAYOUT_HCENTER  = 0x000,
+
+	/// Center vertically, with top margin as offset.
+	WIMA_LAYOUT_VCENTER  = 0x000,
+
+	/// Center in both directions, with left/top margin as offset.
+	WIMA_LAYOUT_CENTER   = 0x000,
+
+	/// Anchor to all four directions.
+	WIMA_LAYOUT_FILL     = 0x1e0,
+
+	/// When wrapping, put this element on a new line.
+	/// Wrapping layout code auto-inserts UI_BREAK
+	/// flags. Drawing routines can read them with
+	/// @a wima_widget_layout().
+	WIMA_LAYOUT_BREAK    = 0x200
+
+} WimaWidgetLayoutFlags;
+
+// Item states as returned by uiGetState().
+typedef enum WimaWidgetState {
+
+	/// The item is inactive.
+	WIMA_ITEM_DEFAULT = 0,
+
+	/// The item is inactive, but the cursor is hovering over this item.
+	WIMA_ITEM_HOVER   = 1 << 0,
+
+	/// The item is toggled, activated, focused (depends on item kind).
+	WIMA_ITEM_ACTIVE  = 1 << 1,
+
+	/// The item is unresponsive.
+	WIMA_ITEM_FROZEN  = 1 << 2,
+
+} WimaWidgetState;
 
 WimaWidget wima_widget_new(WimaArea wah, WimaItemFuncs funcs);
 // set an items state to frozen; the UI will not recurse into frozen items
@@ -979,6 +916,49 @@ bool wima_widget_isActive(WimaWidget wdgt) yinline;
 bool wima_widget_isHovered(WimaWidget wdgt yinline);
 bool wima_widget_isFocused(WimaWidget wdgt) yinline;
 
+////////////////////////////////////////////////////////////////////////////////
+// Menu data structures.
+////////////////////////////////////////////////////////////////////////////////
+
+typedef struct WimaMenu WimaMenu;
+
+typedef WimaStatus (*WimaMenuItemFunc)(WimaWidget);
+
+typedef struct WimaMenuItem {
+
+	const char* label;
+
+	union {
+		WimaMenu* subMenu;
+		WimaMenuItemFunc func;
+	};
+
+	WimaRect rect;
+
+	WimaWidgetState state;
+
+	int icon;
+
+	bool hasSubMenu;
+
+} WimaMenuItem;
+
+typedef struct WimaMenu {
+
+	WimaVec pos;
+	WimaSize size;
+
+	union {
+		WimaMenu* subMenu;
+		WimaMenuItemFunc func;
+	};
+
+	WimaMenuItem* items;
+	int numItems;
+
+	bool hasSubMenu;
+
+} WimaMenu;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Region functions.
@@ -1109,8 +1089,36 @@ void wima_window_setClipboard(WimaWindow wwh, const char* string) yinline;
 const char* wima_window_clipboard(WimaWindow wwh) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Wima global functions.
+// Wima global functions and data definitions.
 ////////////////////////////////////////////////////////////////////////////////
+
+typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaRenderContext*);
+typedef void (*WimaErrorFunc)(WimaStatus, const char*);
+typedef void (*WimaWindowFileDropFunc)(WimaWindow, int, const char**);
+typedef void (*WimaWindowPosFunc)(WimaWindow, WimaVec);
+typedef void (*WimaFramebufferSizeFunc)(WimaWindow, WimaSize);
+typedef void (*WimaWindowSizeFunc)(WimaWindow, WimaSize);
+typedef void (*WimaWindowMouseEnterFunc)(WimaWindow, bool);
+typedef void (*WimaWindowMinimizeFunc)(WimaWindow, bool);
+typedef void (*WimaWindowFocusFunc)(WimaWindow, bool);
+typedef bool (*WimaWindowCloseFunc)(WimaWindow);
+typedef void (*WimaMonitorConnectedFunc)(WimaMonitor*, bool);
+
+typedef struct WimaAppFuncs {
+
+	WimaDrawFunc draw;
+	WimaErrorFunc error;
+	WimaWindowFileDropFunc file_drop;
+	WimaWindowPosFunc pos;
+	WimaFramebufferSizeFunc fbsize;
+	WimaWindowSizeFunc winsize;
+	WimaWindowMouseEnterFunc enter;
+	WimaWindowMinimizeFunc minimize;
+	WimaWindowFocusFunc focus;
+	WimaWindowCloseFunc close;
+	WimaMonitorConnectedFunc monitor;
+
+} WimaAppFuncs;
 
 WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
                      uint32_t numIcons,    const char* iconPaths[],

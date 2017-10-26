@@ -141,7 +141,7 @@ void wima_monitor_setGammaRamp(WimaMonitor* monitor, WimaGammaRamp* ramp) {
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
 
-	wassert(ramp->size == WIMA_GAMMA_RAMP_SIZE, WIMA_ASSERT_MONITOR_RAMP_SIZE);
+	wassert(ramp->size == WIMA_MONITOR_GAMMA_RAMP_SIZE, WIMA_ASSERT_MONITOR_RAMP_SIZE);
 
 	GLFWgammaramp glfw;
 	glfw.red = ramp->red;
