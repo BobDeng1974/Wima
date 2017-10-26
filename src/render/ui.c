@@ -91,19 +91,18 @@ void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
-	float cr[4];
 	WimaColor shade_top, shade_btm;
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_OPERATOR);
 
-	wima_ui_corners_rounded(cr, WIMA_TOOL_RADIUS, flags);
-	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
+	WimaCorners cr = wima_ui_corners_rounded(WIMA_TOOL_RADIUS, flags);
+	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
 
-	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
+	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
 	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
-	wima_ui_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
+	wima_ui_box_outline(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], transparent);
 
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
 	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, textColor, WIMA_ALIGN_CENTER,
@@ -117,20 +116,19 @@ void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
-	float cr[4];
 	WimaColor shade_top, shade_btm;
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_RADIO);
 
-	wima_ui_corners_rounded(cr, WIMA_OPTION_RADIUS, flags);
-	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
+	WimaCorners cr = wima_ui_corners_rounded(WIMA_OPTION_RADIUS, flags);
+	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
 
-	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
+	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
 	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
-	wima_ui_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
+	wima_ui_box_outline(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], transparent);
 
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
 	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, textColor, WIMA_ALIGN_CENTER,
@@ -153,20 +151,19 @@ void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
-	float cr[4];
 	WimaColor shade_top, shade_btm;
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TEXTFIELD);
 
-	wima_ui_corners_rounded(cr, WIMA_TEXT_RADIUS, flags);
-	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
+	WimaCorners cr = wima_ui_corners_rounded(WIMA_TEXT_RADIUS, flags);
+	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, false, &shade_top, &shade_btm);
 
-	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
+	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
 	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
-	wima_ui_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
+	wima_ui_box_outline(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], transparent);
 
 	if (state != WIMA_ITEM_ACTIVE) {
 		cend = -1;
@@ -228,20 +225,19 @@ void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
-	float cr[4];
 	WimaColor shade_top, shade_btm;
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_CHOICE);
 
-	wima_ui_corners_rounded(cr, WIMA_OPTION_RADIUS, flags);
-	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
+	WimaCorners cr = wima_ui_corners_rounded(WIMA_OPTION_RADIUS, flags);
+	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
 
-	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
+	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
 	WimaColor boxTrans = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
-	wima_ui_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], boxTrans);
+	wima_ui_box_outline(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], boxTrans);
 
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
 	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, textColor,
@@ -257,17 +253,15 @@ void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
-	float cr[4];
-
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_OPERATOR);
 
-	wima_ui_corners_rounded(cr, WIMA_TOOL_RADIUS, flags);
-	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
+	WimaCorners cr = wima_ui_corners_rounded(WIMA_TOOL_RADIUS, flags);
+	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
-	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], color, color);
+	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], color, color);
 
 	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
-	wima_ui_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
+	wima_ui_box_outline(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], transparent);
 }
 
 void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCorner flags,
@@ -277,20 +271,19 @@ void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
-	float cr[4];
 	WimaColor shade_top, shade_btm;
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_NUMFIELD);
 
-	wima_ui_corners_rounded(cr, WIMA_NUMBER_RADIUS, flags);
-	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
+	WimaCorners cr = wima_ui_corners_rounded(WIMA_NUMBER_RADIUS, flags);
+	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, false, &shade_top, &shade_btm);
 
-	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
+	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
 	WimaColor boxTrans = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
-	wima_ui_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], boxTrans);
+	wima_ui_box_outline(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], boxTrans);
 
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
 	wima_ui_label_icon_value(ctx, x, y, w, h, -1, textColor,
@@ -310,17 +303,16 @@ void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
-	float cr[4];
 	WimaColor shade_top, shade_btm;
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_SLIDER);
 
-	wima_ui_corners_rounded(cr, WIMA_NUMBER_RADIUS, flags);
-	wima_ui_inset(ctx, x, y, w, h, cr[2], cr[3]);
+	WimaCorners cr = wima_ui_corners_rounded(WIMA_NUMBER_RADIUS, flags);
+	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, false, &shade_top, &shade_btm);
 
-	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
+	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
 	if (state == WIMA_ITEM_ACTIVE) {
 		shade_top = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
@@ -332,11 +324,11 @@ void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
 	}
 
 	nvgScissor(ctx->nvg, x, y, 8 + (w - 8) * wima_clamp(progress, 0, 1), h);
-	wima_ui_box_inner(ctx, x, y, w, h, cr[0], cr[1], cr[2],cr[3], shade_top, shade_btm);
+	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2],cr.v[3], shade_top, shade_btm);
 	nvgResetScissor(ctx->nvg);
 
 	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
-	wima_ui_box_outline(ctx, x, y, w, h, cr[0], cr[1], cr[2], cr[3], transparent);
+	wima_ui_box_outline(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], transparent);
 
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
 	wima_ui_label_icon_value(ctx, x, y, w, h, -1, textColor, WIMA_ALIGN_CENTER,
@@ -389,24 +381,23 @@ void wima_ui_scrollbar(WimaRenderContext* ctx,float x, float y, float w, float h
 	                        transparent);
 }
 
-void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, float h, int flags) {
+void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCorner flags) {
 
 	assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
-	float cr[4];
 	WimaColor shade_top, shade_btm;
 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_MENU);
 
-	wima_ui_corners_rounded(cr, WIMA_MENU_RADIUS, flags);
+	WimaCorners cr = wima_ui_corners_rounded(WIMA_MENU_RADIUS, flags);
 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, WIMA_ITEM_DEFAULT, false, &shade_top, &shade_btm);
-	wima_ui_box_inner(ctx, x, y, w, h + 1, cr[0], cr[1], cr[2], cr[3], shade_top, shade_btm);
+	wima_ui_box_inner(ctx, x, y, w, h + 1, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
 	WimaColor color = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
-	wima_ui_box_outline(ctx, x, y, w, h + 1, cr[0], cr[1], cr[2], cr[3], color);
+	wima_ui_box_outline(ctx, x, y, w, h + 1, cr.v[0], cr.v[1], cr.v[2], cr.v[3], color);
 	wima_ui_dropShadow(ctx, x, y, w, h, WIMA_MENU_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
 }
 
@@ -921,19 +912,23 @@ void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, floa
 	nvgStroke(ctx->nvg);
 }
 
-void wima_ui_corners_rounded(float* radiuses, float r, int flags) {
+WimaCorners wima_ui_corners_rounded(float r, WimaWidgetCorner flags) {
 
 	assert_init;
 
-	radiuses[0] = (flags & WIMA_CORNER_TOP_LEFT) ? 0 : r;
-	radiuses[1] = (flags & WIMA_CORNER_TOP_RIGHT) ? 0 : r;
-	radiuses[2] = (flags & WIMA_CORNER_DOWN_RIGHT) ? 0 : r;
-	radiuses[3] = (flags & WIMA_CORNER_DOWN_LEFT) ? 0 : r;
+	WimaCorners radiuses;
+
+	radiuses.v[0] = (flags & WIMA_CORNER_TOP_LEFT) ? 0 : r;
+	radiuses.v[1] = (flags & WIMA_CORNER_TOP_RIGHT) ? 0 : r;
+	radiuses.v[2] = (flags & WIMA_CORNER_DOWN_RIGHT) ? 0 : r;
+	radiuses.v[3] = (flags & WIMA_CORNER_DOWN_LEFT) ? 0 : r;
+
+	return radiuses;
 }
 
 void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w, float h,
-                                  int iconid, WimaColor color, WimaTextAlign align, float fontsize,
-                                  const char *label, const char *value)
+                              int iconid, WimaColor color, WimaTextAlign align, float fontsize,
+                              const char *label, const char *value)
 {
 	assert_init;
 

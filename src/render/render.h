@@ -104,7 +104,7 @@ typedef union WimaImg {
 #define WIMA_LABEL_SEPARATOR ": "
 
 // The height of a menu separator.
-#define WIMA_MENU_SEPARATOR_HEIGHT (9)
+#define WIMA_WIDGET_MENU_SEP_HEIGHT (9)
 
 // Alpha intensity of transparent items (0xa4).
 #define WIMA_TRANSPARENT_ALPHA 0.643

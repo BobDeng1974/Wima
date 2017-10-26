@@ -205,6 +205,25 @@ typedef struct WimaVecf {
 
 } WimaVecf;
 
+typedef struct WimaCorners {
+
+	union {
+
+		float v[4];
+
+		struct {
+
+			float tl;
+			float tr;
+			float br;
+			float bl;
+
+		};
+
+	};
+
+} WimaCorners;
+
 typedef struct WimaSize {
 
 	union {

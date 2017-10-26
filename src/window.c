@@ -1445,7 +1445,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	// Set the above heights based on estimation.
 	if (hasTitle) {
 		titleHeight = wima_ui_label_estimateHeight(&win->render, win->menuIcon, win->menuTitle, width) + 5;
-		height = titleHeight + WIMA_MENU_SEPARATOR_HEIGHT;
+		height = titleHeight + WIMA_WIDGET_MENU_SEP_HEIGHT;
 	}
 	else {
 		height = 5.0f;
@@ -1462,7 +1462,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 			h = wima_ui_label_estimateHeight(&win->render, item->icon, item->label, width);
 		}
 		else {
-			h = WIMA_MENU_SEPARATOR_HEIGHT;
+			h = WIMA_WIDGET_MENU_SEP_HEIGHT;
 		}
 
 		// We want to make sure all items have the same width.
@@ -1532,7 +1532,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	// If it has a title, draw it.
 	if (hasTitle) {
 		wima_ui_menu_label(&win->render, 0, 5, width, titleHeight, win->menuIcon, win->menuTitle);
-		wima_ui_menu_separator(&win->render, 0, titleHeight, width, WIMA_MENU_SEPARATOR_HEIGHT);
+		wima_ui_menu_separator(&win->render, 0, titleHeight, width, WIMA_WIDGET_MENU_SEP_HEIGHT);
 	}
 
 	// Get the menu that contains the mouse.
