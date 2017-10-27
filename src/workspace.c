@@ -71,12 +71,14 @@ WimaWorkspace wima_workspace_register() {
 	// Create the workspace and check for error.
 	WimaWksp wksp = dtree_create(0, sizeof(WimaAr), NULL);
 	if (yunlikely(!wksp)) {
+		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_WORKSPACE_INVALID;
 	}
 
 	// Push the workspace onto the list.
 	DynaStatus status = dvec_push(wg.workspaces, &wksp);
 	if (yunlikely(status)) {
+		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_WORKSPACE_INVALID;
 	}
 
@@ -111,7 +113,7 @@ WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
 	// Add the node to the tree and check for error.
 	DynaStatus status = dtree_add(wksp, node, &wan);
 	if (yunlikely(status)) {
-		return WIMA_STATUS_WORKSPACE_ERR;
+		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	return WIMA_STATUS_SUCCESS;
@@ -143,7 +145,7 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwksp, DynaNode node, WimaRegi
 	// Add the node to the tree and check for error.
 	DynaStatus status = dtree_add(wksp, node, &wan);
 	if (yunlikely(status)) {
-		return WIMA_STATUS_WORKSPACE_ERR;
+		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	return WIMA_STATUS_SUCCESS;

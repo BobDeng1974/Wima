@@ -123,6 +123,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Create the window, and check for error.
 	GLFWwindow* win = glfwCreateWindow(size.w, size.h, name, NULL, NULL);
 	if (yunlikely(!win)) {
+		wima_error(WIMA_STATUS_WINDOW_ERR);
 		return WIMA_WINDOW_INVALID;
 	}
 
@@ -193,6 +194,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 		// Push it onto the list and check for error.
 		if (yunlikely(dvec_push(wg.windows, &wwin))) {
+			wima_error(WIMA_STATUS_MALLOC_ERR);
 			return WIMA_WINDOW_INVALID;
 		}
 	}
@@ -200,6 +202,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Put the workspace into the window and check for error.
 	WimaStatus status = wima_window_areas_replace(idx, wksph);
 	if (yunlikely(status)) {
+		wima_error(status);
 		return WIMA_WINDOW_INVALID;
 	}
 
@@ -215,6 +218,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Load the context.
 	if (yunlikely(!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))) {
 		glfwTerminate();
+		wima_error(WIMA_STATUS_OPENGL_ERR);
 		return WIMA_WINDOW_INVALID;
 	}
 

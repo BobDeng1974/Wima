@@ -82,6 +82,7 @@ WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap) {
 	// Push onto the vector and check for error.
 	DynaStatus status = dvec_push(wg.regions, &reg);
 	if (yunlikely(status)) {
+		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_REGION_INVALID;
 	}
 
