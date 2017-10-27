@@ -101,3 +101,32 @@ create_pic_library(
 	"${MATH_LIB}"
 	"${PTHREAD_LIB}"
 )
+
+if (BUILD_SHARED_LIBS)
+	create_shared_library(
+		"${PROJECT_NAME}" "${PROJECT_NAME}" "${WIMA_SRC}" "YES"
+
+		# Put the needed libraries here.
+		"${WIMA_INPUT}"
+		"${WIMA_DRAW}"
+		"${WIMA_GLOBAL}"
+		"${NANOVG_PIC}"
+		"${WIMA_MATH}"
+		"${DYNA_LIB}"
+		"${YC_LIB}"
+		"${GLFW_LIB}"
+		"${WIMA_GLAD}"
+		"${JEMALLOC_LIB}"
+		"${DL_LIB}"
+		"${OPENGL_LIBRARIES}"
+		"${X11_X11_LIB}"
+		"${X11_Xi_LIB}"
+		"${X11_Xrandr_LIB}"
+		"${X11_Xxf86vm_LIB}"
+		"${X11_Xinerama_LIB}"
+		"${X11_Xcursor_LIB}"
+		"${RT_LIB}"
+		"${MATH_LIB}"
+		"${PTHREAD_LIB}"
+	)
+endif()
