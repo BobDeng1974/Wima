@@ -744,14 +744,14 @@ typedef enum WimaCursorMode {
 } WimaCursorMode;
 
 /**
- * Creates a new custom cursor image that can be set for
- * a window with wima_window_setCursorType(). The cursor
- * can be destroyed with @a wima_cursor_destroy(). Any
- * remaining cursors are destroyed by @a wima_exit().
- * The cursor hotspot is specified in pixels, relative
- * to the upper-left corner of the cursor image. Like
- * all other coordinate systems in Wima, the X-axis
- * points to the right and the Y-axis points down.
+ * Creates a new custom cursor image that can be set for a
+ * window with @a wima_window_setCursor(). The cursor can be
+ * destroyed with @a wima_cursor_destroy(). Any remaining
+ * cursors are destroyed by @a wima_exit(). The hotspot is
+ * specified in pixels, relative to the upper-left corner
+ * of the cursor image. Like all other coordinate systems
+ * in Wima, the X-axis points to the right and the Y-axis
+ * points down.
  * @param img	The cursor image.
  * @param xhot	The X coordinate of the hotspot.
  * @param yhot	The Y coordinate of the hotspot.
@@ -1762,6 +1762,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size,
  * @param wwh	The window to close.
  * @return		WIMA_STATUS_SUCCESS on success,
  *				an error code otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaStatus wima_window_close(WimaWindow wwh);
 
@@ -1776,12 +1777,14 @@ void wima_window_setFocused(WimaWindow wwh) yinline;
  * @param wwh	The window to query.
  * @return		true if @a wwh is focused,
  *				false otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 bool wima_window_focused(WimaWindow wwh) yinline;
 
 /**
  * Minimizes the window.
  * @param wwh	The window to minimize.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_minimize(WimaWindow wwh) yinline;
 
@@ -1791,11 +1794,12 @@ void wima_window_minimize(WimaWindow wwh) yinline;
  * @return		true if @a is minimized, false
  *				otherwise.
  */
-bool wima_window_minimized(WimaWindow wwh yinline);
+bool wima_window_minimized(WimaWindow wwh) yinline;
 
 /**
  * Maximizes the window.
  * @param wwh	The window to maximize.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_maximize(WimaWindow wwh) yinline;
 
@@ -1804,6 +1808,7 @@ void wima_window_maximize(WimaWindow wwh) yinline;
  * @param wwh	The window to query.
  * @return		true if @a is maximized, false
  *				otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 bool wima_window_maximized(WimaWindow wwh) yinline;
 
@@ -1811,6 +1816,7 @@ bool wima_window_maximized(WimaWindow wwh) yinline;
  * Makes the window full screen on @a monitor.
  * @param wwh		The window to make fullscreen.
  * @param monitor	The monitor to be fullscreen on.
+ * @pre				@a wwh must be a valid WimaWindow.
  */
 void wima_window_fullscreen(WimaWindow wwh, WimaMonitor* monitor) yinline;
 
@@ -1818,18 +1824,21 @@ void wima_window_fullscreen(WimaWindow wwh, WimaMonitor* monitor) yinline;
  * Restores the window from either fullscreen,
  * minimization, or maximization.
  * @param wwh	The window to restore.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_restore(WimaWindow wwh) yinline;
 
 /**
  * Hides the window.
  * @param wwh	The window to hide.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_hide(WimaWindow wwh) yinline;
 
 /**
  * Shows the window.
  * @param wwh	The window to show.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_show(WimaWindow wwh) yinline;
 
@@ -1837,6 +1846,7 @@ void wima_window_show(WimaWindow wwh) yinline;
  * Returns whether or not the window is visible.
  * @param wwh	The window to query.
  * @return		true if visible, false otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 bool wima_window_visible(WimaWindow wwh) yinline;
 
@@ -1844,6 +1854,7 @@ bool wima_window_visible(WimaWindow wwh) yinline;
  * Returns whether or not the window is decorated.
  * @param wwh	The window to query.
  * @return		true if decorated, false otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 bool wima_window_decorated(WimaWindow wwh) yinline;
 
@@ -1851,6 +1862,7 @@ bool wima_window_decorated(WimaWindow wwh) yinline;
  * Returns whether or not the window is resizable.
  * @param wwh	The window to query.
  * @return		true if resizable, false otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 bool wima_window_resizable(WimaWindow wwh) yinline;
 
@@ -1858,384 +1870,524 @@ bool wima_window_resizable(WimaWindow wwh) yinline;
  * Sets the window's title. The data is copied.
  * @param wwh	The window whose title will be set.
  * @param title	The new title for the window.
- * @return
+ * @return		WIMA_STATUS_SUCCESS, or an error code.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) yinline;
 
 /**
- * @brief wima_window_title
- * @param wwh
- * @return
+ * Returns the window's title.
+ * @param wwh	The window to query.
+ * @return		The window's title.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 DynaString wima_window_title(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_setPosition
- * @param wwh
- * @param pos
+ * Sets the window's position in screen coordinates.
+ * @param wwh	The window to update.
+ * @param pos	The new position, in screen coordinates.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_setPosition(WimaWindow wwh, WimaVec pos) yinline;
 
 /**
- * @brief wima_window_position
- * @param wwh
- * @return
+ * Returns the window's position in screen coordinates.
+ * @param wwh	The window to query.
+ * @return		The window's position, in screen coordinates.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaVec wima_window_position(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_setSize
- * @param wwh
- * @param size
+ * Sets the window's size (when not maximized,
+ * minimized, or fullscreen).
+ * @param wwh	The window to update.
+ * @param size	The new size for the window.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_setSize(WimaWindow wwh, WimaSize size) yinline;
 
 /**
- * @brief wima_window_size
- * @param wwh
- * @return
+ * Returns the window's size (when not maximized,
+ * minimized, or fullscreen).
+ * @param wwh	The window to query.
+ * @return		The window's size.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaSize wima_window_size(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_setSizeLimits
- * @param wwh
- * @param min
- * @param max
+ * Sets new size limits on the window beyond which
+ * it cannot be resized by users.
+ * @param wwh	The window to update.
+ * @param min	The min size for the window.
+ * @param max	The max size for the window.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_setSizeLimits(WimaWindow wwh, WimaSize min, WimaSize max) yinline;
 
 /**
- * @brief wima_window_setAspectRatio
- * @param wwh
- * @param numerator
- * @param denominator
+ * Sets the new aspect ratio for the window.
+ * @param wwh			The window to update.
+ * @param numerator		The numerator in the ratio.
+ * @param denominator	The denominator in the ratio.
+ * @pre					@a wwh must be a valid WimaWindow.
  */
 void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator) yinline;
 
 /**
- * @brief wima_window_framebufferSize
- * @param wwh
- * @return
+ * Returns the window's current framebuffer size.
+ * @param wwh	The window to query.
+ * @return		The current framebuffer size of the window.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaSize wima_window_framebufferSize(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_setUserPointer
- * @param win
- * @param user
- * @return
+ * Sets the window's user pointer.
+ * @param wwh	The window to update.
+ * @param user	The new user pointer for the window.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaStatus wima_window_setUserPointer(WimaWindow win, void* user) yinline;
 
 /**
- * @brief wima_window_userPointer
- * @param win
- * @return
+ * Returns the current user pointer for the window,
+ * or NULL if none has been set.
+ * @param wwh	The window to query.
+ * @return		The user pointer for the window,
+ *				or NULL if none.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void* wima_window_userPointer(WimaWindow win) yinline;
 
 /**
- * @brief wima_window_setMods
- * @param wwh
- * @param mods
- */
-void wima_window_setMods(WimaWindow wwh, WimaMods mods) yinline;
-
-/**
- * @brief wima_window_mods
- * @param wwh
- * @return
+ * Returns the current key modifiers for the window.
+ * @param wwh	The window to query.
+ * @return		The current key modifiers for the window.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaMods wima_window_mods(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_scroll
- * @param wwh
- * @return
+ * Returns the current accumulated scroll offsets for
+ * the window.
+ * @param wwh	The window to query.
+ * @return		The current accumulated scroll offsets.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaVec wima_window_scroll(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_clicks
- * @param wwh
- * @return
+ * Returns the current accumulated clicks for the window.
+ * @param wwh	The window to query.
+ * @return		The current accumulated clicks.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 uint32_t wima_window_clicks(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_setHoverWidget
- * @param wwh
- * @param wih
+ * Sets the widget that the window should consider as hovered.
+ * This changes with mouse position, so it is only valid until
+ * the next mouse move event.
+ * @param wwh	The window to update.
+ * @param wih	The widget to consider as hovered.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_setHoverWidget(WimaWindow wwh, WimaWidget wih) yinline;
 
 /**
- * @brief wima_window_hoverWidget
- * @param wwh
- * @return
+ * Returns the widget that is currently being hovered over.
+ * @param wwh	The window to query.
+ * @return		The widget that is currently being
+ *				hovered over.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaWidget wima_window_hoverWidget(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_setActiveWidget
- * @param wwh
- * @param wih
+ * Sets the active widget, which is the widget that the
+ * user is interacting with. Because the user could
+ * start interacting with other widgets, this is only
+ * valid until the next event.
+ * @param wwh	The window to update.
+ * @param wih	The widget to set as active.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_setActiveWidget(WimaWindow wwh, WimaWidget wih) yinline;
 
 /**
- * @brief wima_window_actveWidget
- * @param wwh
- * @return
+ * Returns the currently active widget, which is the
+ * widget that the user is interacting with.
+ * @param wwh	The window to query.
+ * @return		The currently active widget.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaWidget wima_window_actveWidget(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_setFocusWidget
- * @param wwh
- * @param wih
+ * Sets the currently focused widget, which is the
+ * widget that receives char (text input) events.
+ * Because this can change with any other type of
+ * event, this is only valid for as long as there
+ * are only char events.
+ * @param wwh	The window to update.
+ * @param wih	The widget to set as focused.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_setFocusWidget(WimaWindow wwh, WimaWidget wih) yinline;
 
 /**
- * @brief wima_window_focusWidget
- * @param wwh
- * @return
+ * Returns the currently focused widget, which is the
+ * widget that receives char (text input) events.
+ * @param wwh	The window to query.
+ * @return		The currently focused widget.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaWidget wima_window_focusWidget(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_clearEvents
- * @param wwh
+ * Clears all events from the window's event queue. This
+ * stops processing of all events still in the queue.
+ * @param wwh	The window to update.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_clearEvents(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_refresh
- * @param wwh
+ * Requests a refresh on @a wwh. The refresh will
+ * happen the next time drawing happens, which is
+ * right after events are processed.
+ * @param wwh	The window to request a refresh on.
  */
 void wima_window_refresh(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_cancelRefresh
- * @param wwh
+ * Cancels a refresh request on @a wwh. If a layout is requested
+ * (or required, see @a wima_window_cancelLayout()), this cancel
+ * does nothing because a refresh *will* happen.
+ * @param wwh	The window to cancel refresh on.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_cancelRefresh(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_needsRefresh
- * @param wwh
- * @return
+ * Returns whether or not this window needs a refresh.
+ * @param wwh	The window to query.
+ * @return		true if the window needs a refresh,
+ *				false otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 bool wima_window_needsRefresh(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_layout
- * @param wwh
+ * Requests layout on @a wwh. This will also force
+ * a refresh.
+ * @param wwh	The window to request layout on.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_layout(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_cancelLayout
- * @param wwh
+ * Cancels a layout request on @a wwh. If a layout
+ * is required, this does nothing because a refresh
+ * *will* happen.
+ *
+ * A layout is required for: window resizing, area
+ * resizing, area type update, changing workspaces,
+ * menu item click, restoring a window, minimizing
+ * a window, maximizing a window, and making it
+ * fullscreen.
+ * @param wwh	The window to cancel layout on.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_cancelLayout(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_needsLayout
- * @param wwh
- * @return
+ * Returns whether or not the window needs layout.
+ * @param wwh	The window to query.
+ * @return		true if the window needs layout,
+ *				false otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 bool wima_window_needsLayout(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_areas
- * @param wwh
- * @return
+ * Returns a copy of the workspace in the window.
+ * This is meant to be used in conjunctions with
+ * @a wima_window_areas_restore(). These can be
+ * used to implement things like non-modal file
+ * dialogs (like how Blender handles file opening
+ * and saving). However, most of the time, users
+ * should use overlays.
+ * @param wwh	The window to query.
+ * @return		The current workspace.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 DynaTree wima_window_areas(WimaWindow wwh);
 
 /**
- * @brief wima_window_areas_replace
- * @param wwh
- * @param wksp
- * @return
+ * Replaces a window's workspace with another.
+ * @param wwh	The window to update.
+ * @param wksp	The new workspace.
+ * @return		WIMA_STATUS_SUCCESS on success, an
+ *				error code otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksp);
 
 /**
- * @brief wima_window_areas_restore
- * @param wwh
- * @param areas
- * @return
+ * Restores a workspace saved with @a wima_window_areas().
+ * @param wwh	The window to update.
+ * @param areas	The saved areas that will be restored.
+ * @return		WIMA_STATUS_SUCCESS on success, or an
+ *				error code otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas);
 
 /**
- * @brief wima_window_setContextMenu
- * @param wwh
- * @param menu
- * @param title
- * @param icon
- * @return
+ * Sets the context menu on the window with @a title and @a icon.
+ * @param wwh	The window to update.
+ * @param menu	The menu to set on the window.
+ * @param title	The title of the menu.
+ * @param icon	The icon to put next to the title.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) yinline;
 
 /**
- * @brief wima_window_setMenu
- * @param wwh
- * @param menu
- * @return
+ * Sets the context menu on the window.
+ * @param wwh	The window to update.
+ * @param menu	The menu to set on the window.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) yinline;
 
 /**
- * @brief wima_window_menu
- * @param wwh
- * @return
+ * Returns the current menu on the window, or NULL if none.
+ * @param wwh	The window to query.
+ * @return		The current menu, or NULL, if none.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaMenu* wima_window_menu(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_menuTitle
- * @param wwh
- * @return
+ * Returns the context menu title.
+ * @param wwh	The window to query.
+ * @return		The title of the current context menu.
+ * @pre			@a wwh must be a valid WimaWindow.
+ * @pre			The current menu must be a context menu.
  */
 const char* wima_window_menuTitle(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_menuIcon
- * @param wwh
- * @return
+ * Returns the context menu icon.
+ * @param wwh	The window to query.
+ * @return		The icon of the current context menu.
+ * @pre			@a wwh must be a valid WimaWindow.
+ * @pre			The current menu must be a context menu.
  */
 int wima_window_menuIcon(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_removeMenu
- * @param wwh
- * @return
+ * Removes the menu from the window.
+ * @param wwh	The window to update.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaStatus wima_window_removeMenu(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_setCursorType
- * @param wwh
- * @param c
+ * Sets the cursor on @a wwh. The cursor must have been
+ * previously created using @a wima_cursor_create().
+ * @param wwh	The window to update.
+ * @param c		The cursor to set.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_setCursorType(WimaWindow wwh, WimaCursor* c) yinline;
 
 /**
- * @brief wima_window_setStandardCursorType
- * @param wwh
- * @param c
+ * Sets the cursor on @a wwh using a standard cursor type.
+ * @param wwh	The window to update.
+ * @param c		The cursor type to set.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_setStandardCursorType(WimaWindow wwh, WimaCursorType c) yinline;
 
 /**
- * @brief wima_window_cursorType
- * @param wwh
- * @return
+ * Returns the current cursor on @a wwh.
+ * @param wwh	The window to query.
+ * @return		The current cursor type.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaCursor* wima_window_cursorType(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_setCursorMode
- * @param wwh
- * @param mode
+ * Sets the cursor mode for @a wwh
+ * @param wwh	The window to update.
+ * @param mode	The mode to set.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_setCursorMode(WimaWindow wwh, WimaCursorMode mode) yinline;
 
 /**
- * @brief wima_window_cursorMode
- * @param wwh
- * @return
+ * Returns the current cursor mode on @a wwh.
+ * @param wwh	The window to query.
+ * @return		The current cursor mode.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaCursorMode wima_window_cursorMode(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_setCursorPos
- * @param wwh
- * @param pos
+ * Sets the current cursor position on @a wwh.
+ * @param wwh	The window to update.
+ * @param pos	The position to set.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_setCursorPos(WimaWindow wwh, WimaVec pos) yinline;
 
 /**
- * @brief wima_window_cursorPos
- * @param wwh
- * @return
+ * Returns the current cursor position on @a wwh.
+ * @param wwh	The window to query.
+ * @return		The current cursor position.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaVec wima_window_cursorPos(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_cursorStart
- * @param wwh
- * @return
+ * Returns the start position of a mouse drag. If the
+ * user is not currently dragging, the return value
+ * is undefined.
+ * @param wwh	The window to query.
+ * @return		The start position of the mouse drag.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaVec wima_window_cursorStart(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_cursorDelta
- * @param wwh
- * @return
+ * Returns the delta from the start position of a mouse
+ * drag. If the user is not currently dragging, the
+ * value is undefined.
+ * @param wwh	The window to query.
+ * @return		The delta from the start position of a
+ *				mouse drag.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaVec wima_window_cursorDelta(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_setStickyKeys
- * @param wwh
+ * Sets whether sticky keys should be enabled on @a wwh.
+ *
+ * If sticky keys are enabled, a key press will ensure
+ * that wima_window_keyState returns WIMA_ACTION_PRESS
+ * the next time it is called even if the key had been
+ * released before the call. This is useful when you are
+ * only interested in whether keys have been pressed but
+ * not when or in which order.
+ * @param wwh		The window to update.
  * @param enabled
+ * @pre				@a wwh must be a valid WimaWindow.
  */
 void wima_window_setStickyKeys(WimaWindow wwh, bool enabled) yinline;
 
 /**
- * @brief wima_window_stickyKeys
- * @param wwh
- * @return
+ * Returns whether sticky keys (see @a wima_window_setStickyKeys())
+ * are enabled on @a wwh.
+ * @param wwh	The window to query.
+ * @return		true if sticky keys are enabled, false otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 bool wima_window_stickyKeys(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_setStickyMouseBtns
- * @param wwh
+ * Sets whether sticky mouse buttons should be enabled
+ * on @a wwh.
+ *
+ * If sticky mouse buttons are enabled, a mouse button
+ * press will ensure that @a wima_window_mouseBtnState()
+ * returns WIMA_ACTION_PRESS the next time it is called
+ * even if the mouse button had been released before the
+ * call. This is useful when you are only interested in
+ * whether mouse buttons have been pressed but not when
+ * or in which order.
+ * @param wwh		The window to update.
  * @param enabled
+ * @pre				@a wwh must be a valid WimaWindow.
  */
 void wima_window_setStickyMouseBtns(WimaWindow wwh, bool enabled) yinline;
 
 /**
- * @brief wima_window_stickyMouseBtns
- * @param wwh
- * @return
+ * Returns whether sticky mouse buttons (see
+ * @a wima_window_setStickyKeys()) are enabled
+ * on @a wwh.
+ * @param wwh	The window to query.
+ * @return		true if sticky mouse buttons are
+ *				enabled, false otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 bool wima_window_stickyMouseBtns(WimaWindow wwh) yinline;
 
 /**
- * @brief wima_window_keyState
- * @param wwh
- * @param key
- * @return
+ * Returns the last state reported for the specified key to
+ * @a wwh. The returned state is one of WIMA_ACTION_PRESS or
+ * WIMA_ACTION_RELEASE. The action WIMA_ACTION_REPEAT, which
+ * is higher-level, is only reported to the key callbacks.
+ * If the sticky keys are enabled, this function returns
+ * WIMA_ACTION_PRESS the first time you call it for a key that
+ * was pressed, even if that key has already been released.
+ *
+ * The modifier key bit masks are not key tokens and cannot
+ * be used with this function.
+ *
+ * Do not use this function to implement text input.
+ * @param wwh	The window to query.
+ * @param key	The desired keyboard key. WIMA_KEY_UNKNOWN
+ *				is not a valid key for this function.
+ * @return		One of WIMA_ACTION_PRESS or WIMA_ACTION_RELEASE.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaAction wima_window_keyState(WimaWindow wwh, WimaKey key) yinline;
 
 /**
- * @brief wima_window_mouseBtnState
- * @param wwh
- * @param btn
- * @return
+ * This function returns the last state reported for the specified
+ * mouse button to the specified window. The returned state is one
+ * of WIMA_ACTION_PRESS or WIMA_ACTION_RELEASE.
+ *
+ * If the sticky mouse buttons are enabled, this function returns
+ * WIMA_ACTION_PRESS the first time you call it for a mouse button
+ * that was pressed, even if that mouse button has already been
+ * released.
+ * @param wwh	The window to query.
+ * @param btn	The desired mouse button.
+ * @return		One of WIMA_ACTION_PRESS or WIMA_ACTION_RELEASE.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) yinline;
 
 /**
- * @brief wima_window_setClipboard
- * @param wwh
- * @param string
+ * This function sets the system clipboard to the specified,
+ * UTF-8 encoded string.
+ * @param wwh			The window that will own the clipboard
+ *						contents.
+ * @param str			A UTF-8 encoded string to set.
+ * @pre					@a wwh must be a valid WimaWindow.
+ * @pointer_lifetime	@a str is copied before this function
+ *						returns.
  */
 void wima_window_setClipboard(WimaWindow wwh, const char* string) yinline;
 
 /**
- * @brief wima_window_clipboard
- * @param wwh
- * @return
+ * This function returns the contents of the system clipboard,
+ * if it contains or is convertible to a UTF-8 encoded string.
+ *
+ * If the clipboard is empty or if its contents cannot be
+ * converted, NULL is returned and a WIMA_STATUS_INVALID_CLIP
+ * error is generated.
+ * @param wwh	The window requesting the clipboard contents.
+ * @return		The contents of the clipboard as a UTF-8
+ *				encoded string, or NULL if an error occurred.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 const char* wima_window_clipboard(WimaWindow wwh) yinline;
 
