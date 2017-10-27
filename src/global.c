@@ -62,6 +62,9 @@ const char* wima_error_descs[] = {
     "Wima was given an invalid parameter",
     "Clipboard contents were invalid",
     "Wima dropped an event",
+    "client tried to create too many windows",
+    "client tried to create too many workspaces",
+    "client tried to create too many regions"
 };
 
 const char* wima_assert_msgs[] = {

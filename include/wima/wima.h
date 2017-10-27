@@ -122,6 +122,15 @@ typedef enum WimaStatus {
 	/// Returned when an event is dropped.
 	WIMA_STATUS_EVENT_DROPPED  = 141,
 
+	/// Returned when the user tries to create too many windows.
+	WIMA_STATUS_WINDOW_MAX        = 142,
+
+	/// Returned when the user tries to create too many workspaces.
+	WIMA_STATUS_WORKSPACE_MAX     = 143,
+
+	/// Returned when the user tries to create too many regions.
+	WIMA_STATUS_REGION_MAX        = 144,
+
 } WimaStatus;
 
 /**
