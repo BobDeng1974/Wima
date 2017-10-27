@@ -230,6 +230,12 @@ typedef uint8_t WimaWorkspace;
 typedef uint16_t WimaAreaNode;
 
 /**
+ * @def WIMA_AREA_INVALID
+ * A handle indicating an invalid area node.
+ */
+#define WIMA_AREA_INVALID ((WimaAreaNode) -1)
+
+/**
  * A handle to a area.
  */
 typedef struct WimaArea {

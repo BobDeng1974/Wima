@@ -50,8 +50,6 @@ extern "C" {
 #include "layout.h"
 #include "window.h"
 
-#define WIMA_AREA_INVALID ((WimaAreaNode) -1)
-
 #define WIMA_AREA_MIN_SIZE (26)
 
 typedef struct WimaArCtx {
