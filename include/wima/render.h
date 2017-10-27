@@ -80,7 +80,7 @@ typedef enum WimaWidgetState WimaWidgetState;
 //! @endcond Doxygen suppress
 
 /**
- * @file render.h
+ * @file wima/render.h
  */
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -102,7 +102,7 @@ double wima_fmax(double a, double b);
 //! @endcond Doxygen_Suppress
 
 /**
- * @file math.h
+ * @file wima/math.h
  */
 
 /**
