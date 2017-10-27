@@ -45,6 +45,7 @@
 #include "region.h"
 
 global_decl;
+error_descs_decl;
 assert_msgs_decl;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,6 +64,7 @@ WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap) {
 
 	// Make sure we have enough space.
 	if (yunlikely(idx >= WIMA_REGION_MAX)) {
+		wima_error(WIMA_STATUS_REGION_MAX);
 		return WIMA_REGION_INVALID;
 	}
 

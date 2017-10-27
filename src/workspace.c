@@ -48,6 +48,7 @@
 #include "global.h"
 
 global_decl;
+error_descs_decl;
 assert_msgs_decl;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,6 +64,7 @@ WimaWorkspace wima_workspace_register() {
 
 	// Make sure we have enough space.
 	if (yunlikely(len >= WIMA_WORKSPACE_MAX)) {
+		wima_error(WIMA_STATUS_WORKSPACE_MAX);
 		return WIMA_WORKSPACE_INVALID;
 	}
 

@@ -57,6 +57,7 @@
 #include "global.h"
 
 global_decl;
+error_descs_decl;
 assert_msgs_decl;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,6 +82,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 	// Make sure we have enough space.
 	if (yunlikely(len >= WIMA_WINDOW_MAX)) {
+		wima_error(WIMA_STATUS_WINDOW_MAX);
 		return WIMA_WINDOW_INVALID;
 	}
 
