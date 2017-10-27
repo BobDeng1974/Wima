@@ -2954,7 +2954,7 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 
 // Estimator Functions
 // -------------------
-// Use these functions to estimate sizes for widgets with your NVGcontext.
+// Use these functions to estimate sizes for widgets
 
 /**
  * Returns the ideal width for a label with @a iconid as icon and
