@@ -44,7 +44,7 @@
 
 #include "../global.h"
 
-assert_msgs_decl;
+wima_assert_msgs_decl;
 
 void wima_path_begin(WimaRenderContext* ctx) {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);

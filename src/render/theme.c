@@ -75,8 +75,8 @@
 #include "../prop.h"
 #include "render.h"
 
-global_decl;
-assert_msgs_decl;
+wima_global_decl;
+wima_assert_msgs_decl;
 
 #ifdef _MSC_VER
 

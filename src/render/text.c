@@ -44,7 +44,7 @@
 
 #include "../global.h"
 
-assert_msgs_decl;
+wima_assert_msgs_decl;
 
 // TODO: Improve the API.
 

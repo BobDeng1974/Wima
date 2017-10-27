@@ -58,8 +58,8 @@
 
 #include "render/render.h"
 
-global_decl;
-assert_msgs_decl;
+wima_global_decl;
+wima_assert_msgs_decl;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
@@ -213,7 +213,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 
 WimaStatus wima_main() {
 
-	assert_init;
+	wima_assert_init;
 
 	// Make sure we have a valid window.
 	GLFWwindow* win = glfwGetCurrentContext();
@@ -273,7 +273,7 @@ WimaStatus wima_main() {
 
 void wima_exit() {
 
-	assert_init;
+	wima_assert_init;
 
 	// Free the icon images, if they exist.
 	if (wg.numIcons) {

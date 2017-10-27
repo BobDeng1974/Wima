@@ -42,12 +42,12 @@
 
 #include "global.h"
 
-global_decl;
-assert_msgs_decl;
+wima_global_decl;
+wima_assert_msgs_decl;
 
 WimaMonitorArray wima_monitor_list() {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaMonitorArray array;
 
@@ -58,14 +58,14 @@ WimaMonitorArray wima_monitor_list() {
 
 WimaMonitor* wima_monitor_primary() {
 
-	assert_init;
+	wima_assert_init;
 
 	return (WimaMonitor*) glfwGetPrimaryMonitor();
 }
 
 WimaVec wima_monitor_pos(WimaMonitor* monitor) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
 
@@ -78,7 +78,7 @@ WimaVec wima_monitor_pos(WimaMonitor* monitor) {
 
 WimaSize wima_monitor_size(WimaMonitor* monitor) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
 
@@ -91,7 +91,7 @@ WimaSize wima_monitor_size(WimaMonitor* monitor) {
 
 const char* wima_monitor_name(WimaMonitor* monitor) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
 
@@ -100,7 +100,7 @@ const char* wima_monitor_name(WimaMonitor* monitor) {
 
 WimaVideoMode wima_monitor_mode(WimaMonitor* monitor) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
 
@@ -115,7 +115,7 @@ WimaVideoMode wima_monitor_mode(WimaMonitor* monitor) {
 
 WimaVideoModeArray wima_monitor_modes(WimaMonitor* monitor) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
 
@@ -128,7 +128,7 @@ WimaVideoModeArray wima_monitor_modes(WimaMonitor* monitor) {
 
 void wima_monitor_setGamma(WimaMonitor* monitor, float gamma) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
 
@@ -137,7 +137,7 @@ void wima_monitor_setGamma(WimaMonitor* monitor, float gamma) {
 
 void wima_monitor_setGammaRamp(WimaMonitor* monitor, WimaGammaRamp* ramp) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
 
@@ -154,7 +154,7 @@ void wima_monitor_setGammaRamp(WimaMonitor* monitor, WimaGammaRamp* ramp) {
 
 WimaGammaRamp wima_monitor_gammaRamp(WimaMonitor* monitor) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
 

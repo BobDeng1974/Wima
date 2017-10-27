@@ -44,9 +44,9 @@
 #include "global.h"
 #include "region.h"
 
-global_decl;
-error_descs_decl;
-assert_msgs_decl;
+wima_global_decl;
+wima_error_descs_decl;
+wima_assert_msgs_decl;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
@@ -54,7 +54,7 @@ assert_msgs_decl;
 
 WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(funcs.layout != NULL, WIMA_ASSERT_REG_LAYOUT);
 	wassert(itemCap > 0, WIMA_ASSERT_REG_ITEM_CAP);
@@ -90,7 +90,7 @@ WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap) {
 
 void wima_region_setUserPointer(WimaRegion reg, void* ptr) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
 
@@ -103,7 +103,7 @@ void wima_region_setUserPointer(WimaRegion reg, void* ptr) {
 
 void* wima_region_userPointer(WimaRegion reg) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
 

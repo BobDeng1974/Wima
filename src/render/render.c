@@ -44,72 +44,72 @@
 
 #include "../global.h"
 
-global_decl;
-assert_msgs_decl;
+wima_global_decl;
+wima_assert_msgs_decl;
 
 void wima_render_save(WimaRenderContext* ctx) {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgSave(ctx->nvg);
 }
 
 void wima_render_restore(WimaRenderContext* ctx) {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgRestore(ctx->nvg);
 }
 
 void wima_render_reset(WimaRenderContext* ctx) {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgReset(ctx->nvg);
 }
 
 void wima_render_resetTransform(WimaRenderContext* ctx) {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgResetTransform(ctx->nvg);
 }
 
 void wima_render_transform(WimaRenderContext* ctx, WimaTransform tx) {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgTransform(ctx->nvg, tx.v[0], tx.v[1], tx.v[2], tx.v[3], tx.v[4], tx.v[5]);
 }
 
 void wima_render_translate(WimaRenderContext* ctx, WimaVecf vec) {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgTranslate(ctx->nvg, vec.x, vec.y);
 }
 
 void wima_render_rotate(WimaRenderContext* ctx, float angle) {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgRotate(ctx->nvg, angle);
 }
 
 void wima_render_skewX(WimaRenderContext* ctx, float angle) {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgSkewX(ctx->nvg, angle);
 }
 
 void wima_render_skewY(WimaRenderContext* ctx, float angle) {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgSkewY(ctx->nvg, angle);
 }
 
 void wima_render_scale(WimaRenderContext* ctx, float x, float y) {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgScale(ctx->nvg, x, y);
 }
 
 WimaTransform wima_render_currentTransform(WimaRenderContext* ctx) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -122,19 +122,19 @@ WimaTransform wima_render_currentTransform(WimaRenderContext* ctx) {
 }
 
 void wima_render_scissor(WimaRenderContext* ctx, WimaRectf rect) {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgScissor(ctx->nvg, rect.x, rect.y, rect.w, rect.h);
 }
 
 void wima_render_intersectScissor(WimaRenderContext* ctx, WimaRectf rect) {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgIntersectScissor(ctx->nvg, rect.x, rect.y, rect.w, rect.h);
 }
 
 void wima_render_resetScissor(WimaRenderContext* ctx) {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgResetScissor(ctx->nvg);
 }

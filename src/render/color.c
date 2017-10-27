@@ -65,7 +65,7 @@
 
 #include "render.h"
 
-assert_msgs_decl;
+wima_assert_msgs_decl;
 
 WimaColor wima_color_rgb(unsigned char r, unsigned char g, unsigned char b) {
 

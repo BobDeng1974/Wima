@@ -48,9 +48,9 @@
 #include "window.h"
 #include "global.h"
 
-global_decl;
-error_descs_decl;
-assert_msgs_decl;
+wima_global_decl;
+wima_error_descs_decl;
+wima_assert_msgs_decl;
 
 WimaStatus joinItemClick(WimaWidget wih) {
 	printf("Join clicked!\n");
@@ -131,7 +131,7 @@ WimaMenu areaOptionMenu = {
 
 void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
@@ -207,7 +207,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
-	assert_init;
+	wima_assert_init;
 
 	double time = glfwGetTime();
 	uint64_t ts = (time * 1000);
@@ -361,7 +361,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
@@ -550,7 +550,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
@@ -610,7 +610,7 @@ void wima_callback_char(GLFWwindow* window, unsigned int code) {
 
 void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
@@ -656,7 +656,7 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 
 void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) {
 
-	assert_init;
+	wima_assert_init;
 
 	const char* errorMsg = "Could not allocate a file name";
 
@@ -720,7 +720,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 
 void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
@@ -786,7 +786,7 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 
 void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
@@ -826,7 +826,7 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 
 void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
-	assert_init;
+	wima_assert_init;
 
 	glViewport(0, 0, width, height);
 	glScissor(0, 0, width, height);
@@ -887,7 +887,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 
 void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
@@ -932,7 +932,7 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 
 void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
@@ -977,7 +977,7 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 
 void wima_callback_windowRefresh(GLFWwindow* window) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
@@ -993,7 +993,7 @@ void wima_callback_windowRefresh(GLFWwindow* window) {
 
 void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
@@ -1046,7 +1046,7 @@ void wima_callback_windowClose(GLFWwindow* window) {
 	// we just do all of the checks and close. Otherwise, we
 	// could get a segfault.
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the window handle from GLFW.
 	WimaWindow wwh = WIMA_WIN(window);
@@ -1093,7 +1093,7 @@ void wima_callback_monitorConnected(GLFWmonitor* monitor, int connected) {
 	// window, and therefore, we cannot put it on a
 	// window's event queue, we send this one right away.
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the monitor callback.
 	WimaMonitorConnectedFunc monitor_func = wg.funcs.monitor;

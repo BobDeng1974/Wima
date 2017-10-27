@@ -69,12 +69,12 @@
 #include "../prop.h"
 #include "../window.h"
 
-global_decl;
-assert_msgs_decl;
+wima_global_decl;
+wima_assert_msgs_decl;
 
 void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, int iconid, const char *label) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -87,7 +87,7 @@ void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, i
 void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
                          WimaWidgetState state, int iconid, const char *label)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -112,7 +112,7 @@ void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
 void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
                           WimaWidgetState state, int iconid, const char *label)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -138,7 +138,7 @@ void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 int wima_ui_textField_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
                             int iconid, const char *text, int px, int py)
 {
-	assert_init;
+	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	return wima_ui_text_pos(ctx, x, y, w, h, iconid, WIMA_LABEL_FONT_SIZE, text, px, py);
 }
@@ -147,7 +147,7 @@ void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float 
                            WimaWidgetCornerFlags flags, WimaWidgetState state, int iconid, const char *text,
                            int cbegin, int cend)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -177,7 +177,7 @@ void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float 
 void wima_ui_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
                          WimaWidgetState state, const char *label)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -221,7 +221,7 @@ void wima_ui_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
                            WimaWidgetState state, int iconid, const char *label)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -249,7 +249,7 @@ void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 
 void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaColor color) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -267,7 +267,7 @@ void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
                           WimaWidgetState state, const char *label, const char *value)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -299,7 +299,7 @@ void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
                         WimaWidgetCornerFlags flags, WimaWidgetState state, float progress,
                         const char *label, const char *value)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -338,7 +338,7 @@ void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
 void wima_ui_scrollbar(WimaRenderContext* ctx,float x, float y, float w, float h,
                            WimaWidgetState state, float offset, float size)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -383,7 +383,7 @@ void wima_ui_scrollbar(WimaRenderContext* ctx,float x, float y, float w, float h
 
 void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -403,7 +403,7 @@ void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, 
 
 void wima_ui_tooltip_background(WimaRenderContext* ctx, float x, float y, float w, float h) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -429,7 +429,7 @@ void wima_ui_tooltip_background(WimaRenderContext* ctx, float x, float y, float 
 
 void wima_ui_menu_label(WimaRenderContext* ctx, float x, float y, float w, float h, int iconid, const char *label) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -458,7 +458,7 @@ void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float 
                            WimaWidgetState state, int iconid, const char *label,
                            bool hasSub)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -487,7 +487,7 @@ void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float 
 
 void wima_ui_node_port(WimaRenderContext* ctx, float x, float y, WimaWidgetState state, WimaColor color) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -511,7 +511,7 @@ void wima_ui_node_port(WimaRenderContext* ctx, float x, float y, WimaWidgetState
 void wima_ui_node_wire_colored(WimaRenderContext* ctx, float x0, float y0, float x1, float y1,
                                    WimaColor color0, WimaColor color1)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -548,7 +548,7 @@ void wima_ui_node_wire_colored(WimaRenderContext* ctx, float x0, float y0, float
 void wima_ui_node_wire(WimaRenderContext* ctx, float x0, float y0, float x1, float y1,
                            WimaWidgetState state0, WimaWidgetState state1)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -564,7 +564,7 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
                                  WimaWidgetState state, int iconid, const char *label,
                                  WimaColor titleCol)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -639,7 +639,7 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 
 float wima_ui_label_estimateWidth(WimaRenderContext* ctx, int iconid, const char *label) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -678,7 +678,7 @@ float wima_ui_label_estimateWidth(WimaRenderContext* ctx, int iconid, const char
 
 float wima_ui_label_estimateHeight(WimaRenderContext* ctx, int iconid, const char *label, float width) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -714,7 +714,7 @@ float wima_ui_label_estimateHeight(WimaRenderContext* ctx, int iconid, const cha
 void wima_ui_box_rounded(WimaRenderContext* ctx, float x, float y, float w, float h,
                              float tl, float tr, float br, float bl)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -736,7 +736,7 @@ void wima_ui_box_rounded(WimaRenderContext* ctx, float x, float y, float w, floa
 
 void wima_ui_bevel(WimaRenderContext* ctx, float x, float y, float w, float h) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -776,7 +776,7 @@ void wima_ui_bevel(WimaRenderContext* ctx, float x, float y, float w, float h) {
 
 void wima_ui_inset(WimaRenderContext* ctx, float x, float y, float w, float h, float br, float bl) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -807,7 +807,7 @@ void wima_ui_inset(WimaRenderContext* ctx, float x, float y, float w, float h, f
 
 void wima_ui_icon(WimaRenderContext* ctx, float x, float y, int iconid) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -833,7 +833,7 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, int iconid) {
 void wima_ui_dropShadow(WimaRenderContext* ctx, float x, float y, float w, float h,
                             float r, float f, float alpha)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -868,7 +868,7 @@ void wima_ui_box_inner(WimaRenderContext* ctx,
                        float tl, float tr, float br, float bl,
                        WimaColor shade_top, WimaColor shade_btm)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -897,7 +897,7 @@ void wima_ui_box_inner(WimaRenderContext* ctx,
 void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, float h,
                            float tl, float tr, float br, float bl, WimaColor color)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -914,7 +914,7 @@ void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, floa
 
 WimaUiCorners wima_ui_corners_rounded(float r, WimaWidgetCornerFlags flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaUiCorners radiuses;
 
@@ -930,7 +930,7 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
                               int iconid, WimaColor color, WimaTextAlign align, float fontsize,
                               const char *label, const char *value)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -1000,7 +1000,7 @@ void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, 
                                int iconid, WimaColor color, WimaColor shadow,
                                WimaTextAlign align, float fontsize, const char *label)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -1036,7 +1036,7 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
                         int iconid, float fontsize, const char *label,
                         int px, int py)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -1105,7 +1105,7 @@ static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float de
                                   NVGtextRow *rows,    int nrows,
                                   int *cr, float *cx,  float *cy)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -1142,7 +1142,7 @@ void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, floa
                              const char *label, WimaColor caretCol,
                              int cbegin, int cend)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -1224,7 +1224,7 @@ void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, floa
 
 void wima_ui_check(WimaRenderContext* ctx, float ox, float oy, WimaColor color) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -1248,7 +1248,7 @@ void wima_ui_check(WimaRenderContext* ctx, float ox, float oy, WimaColor color) 
 
 void wima_ui_arrow(WimaRenderContext* ctx, float x, float y, float s, WimaColor color) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -1268,7 +1268,7 @@ void wima_ui_arrow(WimaRenderContext* ctx, float x, float y, float s, WimaColor 
 
 void wima_ui_arrow_upDown(WimaRenderContext* ctx, float x, float y, float s, WimaColor color) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -1299,7 +1299,7 @@ void wima_ui_arrow_upDown(WimaRenderContext* ctx, float x, float y, float s, Wim
 
 void wima_ui_node_arrow_down(WimaRenderContext* ctx, float x, float y, float s, WimaColor color) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -1324,7 +1324,7 @@ void wima_ui_node_arrow_down(WimaRenderContext* ctx, float x, float y, float s, 
 
 WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float offset, float size) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaRect result;
 

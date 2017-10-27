@@ -50,8 +50,8 @@
 #include "global.h"
 #include "prop.h"
 
-global_decl;
-assert_msgs_decl;
+wima_global_decl;
+wima_assert_msgs_decl;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions needed by the public functions.
@@ -70,7 +70,7 @@ static bool wima_prop_enumNamesValid(const char* names[], uint32_t numNames);
 
 WimaPropType wima_prop_type(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -81,7 +81,7 @@ WimaPropType wima_prop_type(WimaProperty wph) {
 
 const char* wima_prop_name(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -92,7 +92,7 @@ const char* wima_prop_name(WimaProperty wph) {
 
 const char* wima_prop_label(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -103,7 +103,7 @@ const char* wima_prop_label(WimaProperty wph) {
 
 const char* wima_prop_desc(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -114,7 +114,7 @@ const char* wima_prop_desc(WimaProperty wph) {
 
 WimaProperty wima_prop_find(const char* name) {
 
-	assert_init;
+	wima_assert_init;
 
 	size_t slen = strlen(name);
 
@@ -135,7 +135,7 @@ WimaProperty wima_prop_find(const char* name) {
 
 WimaStatus wima_prop_link(WimaProperty parent, WimaProperty child) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(parent), WIMA_ASSERT_PROP);
 	wassert(wima_prop_valid(child), WIMA_ASSERT_PROP);
@@ -175,7 +175,7 @@ WimaStatus wima_prop_link(WimaProperty parent, WimaProperty child) {
 
 WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(parent), WIMA_ASSERT_PROP);
 	wassert(wima_prop_valid(child), WIMA_ASSERT_PROP);
@@ -219,7 +219,7 @@ WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child) {
 
 WimaPropGroup* wima_prop_group(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -236,7 +236,7 @@ WimaPropGroup* wima_prop_group(WimaProperty wph) {
 
 WimaProperty wima_prop_group_getChild(WimaPropGroup* group, uint32_t idx) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(group != NULL, WIMA_ASSERT_PTR_NULL);
 
@@ -252,7 +252,7 @@ WimaProperty wima_prop_group_getChild(WimaPropGroup* group, uint32_t idx) {
 
 uint32_t wima_prop_group_children(WimaPropGroup* group) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(group != NULL, WIMA_ASSERT_PTR_NULL);
 
@@ -263,7 +263,7 @@ uint32_t wima_prop_group_children(WimaPropGroup* group) {
 
 void wima_prop_setBool(WimaProperty wph, bool val) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -280,7 +280,7 @@ void wima_prop_setBool(WimaProperty wph, bool val) {
 
 bool wima_prop_bool(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -297,7 +297,7 @@ bool wima_prop_bool(WimaProperty wph) {
 
 void wima_prop_setInt(WimaProperty wph, int val) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -316,7 +316,7 @@ void wima_prop_setInt(WimaProperty wph, int val) {
 
 int wima_prop_int(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -333,7 +333,7 @@ int wima_prop_int(WimaProperty wph) {
 
 void wima_prop_setFloat(WimaProperty wph, float val) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -352,7 +352,7 @@ void wima_prop_setFloat(WimaProperty wph, float val) {
 
 float wima_prop_float(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -369,7 +369,7 @@ float wima_prop_float(WimaProperty wph) {
 
 DynaString wima_prop_string(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -386,7 +386,7 @@ DynaString wima_prop_string(WimaProperty wph) {
 
 void wima_prop_setEnumIdx(WimaProperty wph, uint32_t idx) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -405,7 +405,7 @@ void wima_prop_setEnumIdx(WimaProperty wph, uint32_t idx) {
 
 uint32_t wima_prop_enumIdx(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -422,7 +422,7 @@ uint32_t wima_prop_enumIdx(WimaProperty wph) {
 
 DynaVector wima_prop_list(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -439,7 +439,7 @@ DynaVector wima_prop_list(WimaProperty wph) {
 
 void wima_prop_setColor(WimaProperty wph, WimaColor color) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -456,7 +456,7 @@ void wima_prop_setColor(WimaProperty wph, WimaColor color) {
 
 WimaColor wima_prop_color(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -473,7 +473,7 @@ WimaColor wima_prop_color(WimaProperty wph) {
 
 void* wima_prop_ptr(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
 
@@ -490,7 +490,7 @@ void* wima_prop_ptr(WimaProperty wph) {
 
 WimaProperty wima_prop_registerGroup(const char* name, const char* label, const char* desc) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaPropData prop;
 
@@ -506,7 +506,7 @@ WimaProperty wima_prop_registerGroup(const char* name, const char* label, const 
 
 WimaProperty wima_prop_registerBool(const char* name, const char* label, const char* desc, bool initial) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaPropData prop;
 
@@ -522,7 +522,7 @@ WimaProperty wima_prop_registerBool(const char* name, const char* label, const c
 WimaProperty wima_prop_registerInt(const char* name, const char* label, const char* desc,
                                    int initial, int min, int max, uint32_t step)
 {
-	assert_init;
+	wima_assert_init;
 
 	WimaPropData prop;
 
@@ -541,7 +541,7 @@ WimaProperty wima_prop_registerInt(const char* name, const char* label, const ch
 WimaProperty wima_prop_registerFloat(const char* name, const char* label, const char* desc,
                                      float initial, float min, float max, uint32_t step)
 {
-	assert_init;
+	wima_assert_init;
 
 	WimaPropData prop;
 
@@ -559,7 +559,7 @@ WimaProperty wima_prop_registerFloat(const char* name, const char* label, const 
 
 WimaProperty wima_prop_registerString(const char* name, const char* label, const char* desc, DynaString str) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(str != NULL, WIMA_ASSERT_PROP_STR_NULL);
 
@@ -577,7 +577,7 @@ WimaProperty wima_prop_registerString(const char* name, const char* label, const
 WimaProperty wima_prop_registerEnum(const char* name, const char* label, const char* desc,
                                     const char* names[], uint32_t num, uint32_t initial)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_prop_enumNamesValid(names, num), WIMA_ASSERT_PROP_ENUM_NAMES);
 
@@ -597,7 +597,7 @@ WimaProperty wima_prop_registerEnum(const char* name, const char* label, const c
 WimaProperty wima_prop_registerList(const char* name, const char* label, const char* desc,
                                     DynaVector list, WimaPropListDrawFunc draw)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(list != NULL, WIMA_ASSERT_PROP_LIST_NULL);
 
@@ -615,7 +615,7 @@ WimaProperty wima_prop_registerList(const char* name, const char* label, const c
 
 WimaProperty wima_prop_registerColor(const char* name, const char* label, const char* desc, WimaColor initial) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaPropData prop;
 
@@ -631,7 +631,7 @@ WimaProperty wima_prop_registerColor(const char* name, const char* label, const 
 WimaProperty wima_prop_registerPtr(const char* name, const char* label, const char* desc,
                                    void* ptr, WimaPropPtrDrawFunc draw)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(ptr != NULL, WIMA_ASSERT_PROP_PTR_NULL);
 	wassert(draw != NULL, WIMA_ASSERT_PROP_PTR_DRAW);
@@ -651,7 +651,7 @@ WimaProperty wima_prop_registerPtr(const char* name, const char* label, const ch
 WimaProperty wima_prop_registerOperator(const char* name, const char* label,
                                         const char* desc, WimaWidgetMouseClickFunc op)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(op != NULL, WIMA_ASSERT_PROP_OP_NULL);
 
@@ -668,7 +668,7 @@ WimaProperty wima_prop_registerOperator(const char* name, const char* label,
 
 void wima_prop_unregister(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wph < dvec_len(wg.props), WIMA_ASSERT_PROP);
 
@@ -690,7 +690,7 @@ void wima_prop_unregister(WimaProperty wph) {
 
 void wima_prop_free(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wph < dvec_len(wg.props), WIMA_ASSERT_PROP);
 
@@ -879,7 +879,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 #ifdef __YASSERT__
 bool wima_prop_valid(WimaProperty wph) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Make sure the handle is within range.
 	bool valid = wph < dvec_len(wg.props);

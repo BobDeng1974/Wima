@@ -43,7 +43,7 @@
 #include "render.h"
 #include "../global.h"
 
-assert_msgs_decl;
+wima_assert_msgs_decl;
 
 WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecf s, WimaVecf e,
                                     WimaColor icol, WimaColor ocol)

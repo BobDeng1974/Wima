@@ -66,8 +66,8 @@
 
 #include "area.h"
 
-global_decl;
-assert_msgs_decl;
+wima_global_decl;
+wima_assert_msgs_decl;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
@@ -75,7 +75,7 @@ assert_msgs_decl;
 
 WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wah.window), WIMA_ASSERT_WIN);
 
@@ -117,7 +117,7 @@ WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
 
 void wima_widget_setEnabled(WimaWidget wdgt, bool enable) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
@@ -131,7 +131,7 @@ void wima_widget_setEnabled(WimaWidget wdgt, bool enable) {
 
 bool wima_widget_enabled(WimaWidget wdgt) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
@@ -140,7 +140,7 @@ bool wima_widget_enabled(WimaWidget wdgt) {
 
 void wima_widget_setSize(WimaWidget wdgt, WimaSize size) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
@@ -163,18 +163,18 @@ void wima_widget_setSize(WimaWidget wdgt, WimaSize size) {
 }
 
 int wima_widget_width(WimaWidget wdgt) {
-	assert_init;
+	wima_assert_init;
 	return wima_widget_ptr(wdgt)->rect.w;
 }
 
 int wima_widget_height(WimaWidget wdgt) {
-	assert_init;
+	wima_assert_init;
 	return wima_widget_ptr(wdgt)->rect.h;
 }
 
 void wima_widget_setLayout(WimaWidget wdgt, uint32_t flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
@@ -185,13 +185,13 @@ void wima_widget_setLayout(WimaWidget wdgt, uint32_t flags) {
 }
 
 uint32_t wima_widget_layout(WimaWidget wdgt) {
-	assert_init;
+	wima_assert_init;
 	return wima_widget_ptr(wdgt)->widget.flags & WIMA_ITEM_LAYOUT_MASK;
 }
 
 void wima_widget_setBox(WimaWidget wdgt, uint32_t flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
@@ -202,13 +202,13 @@ void wima_widget_setBox(WimaWidget wdgt, uint32_t flags) {
 }
 
 uint32_t wima_widget_box(WimaWidget wdgt) {
-	assert_init;
+	wima_assert_init;
 	return wima_widget_ptr(wdgt)->widget.flags & WIMA_ITEM_BOX_MASK;
 }
 
 void wima_widget_setUserPointer(WimaWidget wdgt, void* user) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
@@ -217,7 +217,7 @@ void wima_widget_setUserPointer(WimaWidget wdgt, void* user) {
 
 void* wima_widget_userPointer(WimaWidget wdgt) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
@@ -226,7 +226,7 @@ void* wima_widget_userPointer(WimaWidget wdgt) {
 
 void wima_widget_setFlags(WimaWidget wdgt, uint32_t flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
@@ -235,13 +235,13 @@ void wima_widget_setFlags(WimaWidget wdgt, uint32_t flags) {
 }
 
 uint32_t wima_widget_flags(WimaWidget wdgt) {
-	assert_init;
+	wima_assert_init;
 	return wima_widget_ptr(wdgt)->widget.flags & WIMA_ITEM_USERMASK;
 }
 
 WimaRect wima_widget_rect(WimaWidget wdgt) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
@@ -254,13 +254,13 @@ WimaRect wima_widget_rect(WimaWidget wdgt) {
 }
 
 uint32_t wima_widget_events(WimaWidget wdgt) {
-	assert_init;
+	wima_assert_init;
 	return wima_widget_ptr(wdgt)->widget.flags & WIMA_ITEM_EVENT_MASK;
 }
 
 WimaWidgetState wima_widget_state(WimaWidget wdgt) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
@@ -281,7 +281,7 @@ WimaWidgetState wima_widget_state(WimaWidget wdgt) {
 
 bool wima_widget_contains(WimaWidget wdgt, WimaVec pos) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaRect rect = wima_widget_rect(wdgt);
 
@@ -292,13 +292,13 @@ bool wima_widget_contains(WimaWidget wdgt, WimaVec pos) {
 }
 
 bool wima_widget_compare(WimaWidget item1, WimaWidget item2) {
-	assert_init;
+	wima_assert_init;
 	return (item1.widget == item2.widget && item1.area == item2.area && item1.window == item2.window);
 }
 
 bool wima_widget_isActive(WimaWidget wdgt) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wdgt.window), WIMA_ASSERT_WIN);
 
@@ -309,7 +309,7 @@ bool wima_widget_isActive(WimaWidget wdgt) {
 
 bool wima_widget_isHovered(WimaWidget wdgt) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wdgt.window), WIMA_ASSERT_WIN);
 
@@ -320,7 +320,7 @@ bool wima_widget_isHovered(WimaWidget wdgt) {
 
 bool wima_widget_isFocused(WimaWidget wdgt) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wdgt.window), WIMA_ASSERT_WIN);
 
@@ -335,7 +335,7 @@ bool wima_widget_isFocused(WimaWidget wdgt) {
 
 WimaItem* wima_widget_ptr(WimaWidget wih) {
 
-	assert_init;
+	wima_assert_init;
 
 	WimaAr* area = wima_area_ptr(wih.window, wih.area);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);

@@ -41,12 +41,12 @@
 #include "widget.h"
 #include "area.h"
 
-global_decl;
-assert_msgs_decl;
+wima_global_decl;
+wima_assert_msgs_decl;
 
 uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical) {
 
-	assert_init;
+	wima_assert_init;
 
 	flags |= horizontal ? WIMA_LAYOUT_FILL_HOR : 0;
 	flags |= vertical ? WIMA_LAYOUT_FILL_VER : 0;
@@ -56,7 +56,7 @@ uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertic
 
 uint16_t wima_layout_clearExpandFlags(uint16_t flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	flags &= ~(WIMA_LAYOUT_FILL_HOR | WIMA_LAYOUT_FILL_VER);
 
@@ -65,7 +65,7 @@ uint16_t wima_layout_clearExpandFlags(uint16_t flags) {
 
 uint16_t wima_layout_setScrollFlags(uint16_t flags, bool horizontal, bool vertical) {
 
-	assert_init;
+	wima_assert_init;
 
 	flags |= horizontal ? WIMA_LAYOUT_SCROLL_HOR : 0;
 	flags |= vertical ? WIMA_LAYOUT_SCROLL_VER : 0;
@@ -75,7 +75,7 @@ uint16_t wima_layout_setScrollFlags(uint16_t flags, bool horizontal, bool vertic
 
 uint16_t wima_layout_clearScrollFlags(uint16_t flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	flags &= ~(WIMA_LAYOUT_SCROLL_HOR | WIMA_LAYOUT_SCROLL_VER);
 
@@ -84,7 +84,7 @@ uint16_t wima_layout_clearScrollFlags(uint16_t flags) {
 
 uint16_t wima_layout_setSeparationFlag(uint16_t flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	flags |= WIMA_LAYOUT_SEP;
 
@@ -93,7 +93,7 @@ uint16_t wima_layout_setSeparationFlag(uint16_t flags) {
 
 uint16_t wima_layout_clearSeparationFlag(uint16_t flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	flags &= ~(WIMA_LAYOUT_SEP);
 
@@ -102,7 +102,7 @@ uint16_t wima_layout_clearSeparationFlag(uint16_t flags) {
 
 uint16_t wima_layout_setBoxFlag(uint16_t flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	flags |= WIMA_LAYOUT_BOX;
 
@@ -111,7 +111,7 @@ uint16_t wima_layout_setBoxFlag(uint16_t flags) {
 
 uint16_t wima_layout_clearBoxFlag(uint16_t flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	flags &= ~(WIMA_LAYOUT_BOX);
 
@@ -120,7 +120,7 @@ uint16_t wima_layout_clearBoxFlag(uint16_t flags) {
 
 WimaItem* wima_layout_ptr(WimaLayout wlh) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the area pointer.
 	WimaAr* area = wima_area_ptr(wlh.window, wlh.area);
@@ -134,7 +134,7 @@ WimaItem* wima_layout_ptr(WimaLayout wlh) {
 
 WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol splitcol) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(parent.window), WIMA_ASSERT_WIN);
 
@@ -232,7 +232,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol
 
 void wima_layout_setEnabled(WimaLayout wlh, bool enabled) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
 
@@ -262,7 +262,7 @@ void wima_layout_setEnabled(WimaLayout wlh, bool enabled) {
 
 bool wima_layout_enabled(WimaLayout wlh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
 
@@ -286,7 +286,7 @@ bool wima_layout_enabled(WimaLayout wlh) {
 
 void wima_layout_setBackgroundColor(WimaLayout wlh, WimaColor color) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
 
@@ -311,7 +311,7 @@ void wima_layout_setBackgroundColor(WimaLayout wlh, WimaColor color) {
 
 WimaColor wima_layout_backgroundColor(WimaLayout wlh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
 
@@ -335,7 +335,7 @@ WimaColor wima_layout_backgroundColor(WimaLayout wlh) {
 
 WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_ROW;
@@ -349,7 +349,7 @@ WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags) {
 
 WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_COL;
@@ -363,7 +363,7 @@ WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags) {
 
 WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_SPLIT;
@@ -378,7 +378,7 @@ WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split) {
 
 WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_LIST;
@@ -392,7 +392,7 @@ WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags) {
 
 WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags, uint32_t cols) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_GRID;

@@ -41,12 +41,12 @@
 
 #include "render/render.h"
 
-global_decl;
-assert_msgs_decl;
+wima_global_decl;
+wima_assert_msgs_decl;
 
 WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(img.pixels != NULL, WIMA_ASSERT_IMG_DATA);
 
@@ -62,7 +62,7 @@ WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) {
 }
 
 void wima_cursor_destroy(WimaCursor* cursor) {
-	assert_init;
+	wima_assert_init;
 	wassert(cursor != NULL, WIMA_ASSERT_CURSOR);
 	glfwDestroyCursor((GLFWcursor*) cursor);
 }

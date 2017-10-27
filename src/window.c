@@ -56,9 +56,9 @@
 #include "window.h"
 #include "global.h"
 
-global_decl;
-error_descs_decl;
-assert_msgs_decl;
+wima_global_decl;
+wima_error_descs_decl;
+wima_assert_msgs_decl;
 
 ////////////////////////////////////////////////////////////////////////////////
 // These are all the static functions that the public functions need.
@@ -73,7 +73,7 @@ static void wima_window_clearContext(WimaWinCtx* ctx);
 WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized,
                               bool resizable, bool decorated)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_area_valid(*((DynaTree*) dvec_get(wg.workspaces, wksph))), WIMA_ASSERT_WKSP);
 
@@ -241,7 +241,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 WimaStatus wima_window_close(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -259,7 +259,7 @@ WimaStatus wima_window_close(WimaWindow wwh) {
 
 void wima_window_setFocused(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -270,7 +270,7 @@ void wima_window_setFocused(WimaWindow wwh) {
 
 bool wima_window_focused(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -281,7 +281,7 @@ bool wima_window_focused(WimaWindow wwh) {
 
 void wima_window_minimize(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -292,7 +292,7 @@ void wima_window_minimize(WimaWindow wwh) {
 
 bool wima_window_minimized(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -303,7 +303,7 @@ bool wima_window_minimized(WimaWindow wwh) {
 
 void wima_window_maximize(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -314,7 +314,7 @@ void wima_window_maximize(WimaWindow wwh) {
 
 bool wima_window_maximized(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -325,7 +325,7 @@ bool wima_window_maximized(WimaWindow wwh) {
 
 void wima_window_fullscreen(WimaWindow wwh, WimaMonitor* monitor) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -340,7 +340,7 @@ void wima_window_fullscreen(WimaWindow wwh, WimaMonitor* monitor) {
 
 void wima_window_restore(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -351,7 +351,7 @@ void wima_window_restore(WimaWindow wwh) {
 
 void wima_window_hide(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -362,7 +362,7 @@ void wima_window_hide(WimaWindow wwh) {
 
 void wima_window_show(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -373,7 +373,7 @@ void wima_window_show(WimaWindow wwh) {
 
 bool wima_window_visible(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -384,7 +384,7 @@ bool wima_window_visible(WimaWindow wwh) {
 
 bool wima_window_decorated(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -395,7 +395,7 @@ bool wima_window_decorated(WimaWindow wwh) {
 
 bool wima_window_resizable(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -406,7 +406,7 @@ bool wima_window_resizable(WimaWindow wwh) {
 
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -422,7 +422,7 @@ WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {
 }
 
 DynaString wima_window_title(WimaWindow wwh) {
-	assert_init;
+	wima_assert_init;
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 	WimaWin* win = dvec_get(wg.windows, wwh);
 	return win->name;
@@ -430,7 +430,7 @@ DynaString wima_window_title(WimaWindow wwh) {
 
 void wima_window_setPosition(WimaWindow wwh, WimaVec pos) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -441,7 +441,7 @@ void wima_window_setPosition(WimaWindow wwh, WimaVec pos) {
 
 WimaVec wima_window_position(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -456,7 +456,7 @@ WimaVec wima_window_position(WimaWindow wwh) {
 
 void wima_window_setSize(WimaWindow wwh, WimaSize size) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -467,7 +467,7 @@ void wima_window_setSize(WimaWindow wwh, WimaSize size) {
 
 WimaSize wima_window_size(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -482,7 +482,7 @@ WimaSize wima_window_size(WimaWindow wwh) {
 
 void wima_window_setSizeLimits(WimaWindow wwh, WimaSize min, WimaSize max) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -493,7 +493,7 @@ void wima_window_setSizeLimits(WimaWindow wwh, WimaSize min, WimaSize max) {
 
 void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -504,7 +504,7 @@ void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator) 
 
 WimaSize wima_window_framebufferSize(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -525,7 +525,7 @@ WimaSize wima_window_framebufferSize(WimaWindow wwh) {
 
 WimaStatus wima_window_setUserPointer(WimaWindow wwh, void* user) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -538,7 +538,7 @@ WimaStatus wima_window_setUserPointer(WimaWindow wwh, void* user) {
 
 void* wima_window_userPointer(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -549,7 +549,7 @@ void* wima_window_userPointer(WimaWindow wwh) {
 
 void wima_window_setMods(WimaWindow wwh, WimaMods mods) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -560,7 +560,7 @@ void wima_window_setMods(WimaWindow wwh, WimaMods mods) {
 
 WimaMods wima_window_mods(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -571,7 +571,7 @@ WimaMods wima_window_mods(WimaWindow wwh) {
 
 WimaVec wima_window_scroll(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -582,7 +582,7 @@ WimaVec wima_window_scroll(WimaWindow wwh) {
 
 uint32_t wima_window_clicks(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -593,7 +593,7 @@ uint32_t wima_window_clicks(WimaWindow wwh) {
 
 void wima_window_setHoverWidget(WimaWindow wwh, WimaWidget wih) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wih.window == wwh, WIMA_ASSERT_WIN_ITEM_MISMATCH);
 
@@ -619,7 +619,7 @@ void wima_window_setHoverWidget(WimaWindow wwh, WimaWidget wih) {
 
 WimaWidget wima_window_hoverWidget(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -630,7 +630,7 @@ WimaWidget wima_window_hoverWidget(WimaWindow wwh) {
 
 void wima_window_setActiveWidget(WimaWindow wwh, WimaWidget wih) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wih.window == wwh, WIMA_ASSERT_WIN_ITEM_MISMATCH);
 
@@ -655,7 +655,7 @@ void wima_window_setActiveWidget(WimaWindow wwh, WimaWidget wih) {
 
 WimaWidget wima_window_actveWidget(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -666,7 +666,7 @@ WimaWidget wima_window_actveWidget(WimaWindow wwh) {
 
 void wima_window_setFocusWidget(WimaWindow wwh, WimaWidget wih) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wih.window == wwh, WIMA_ASSERT_WIN_ITEM_MISMATCH);
 
@@ -691,7 +691,7 @@ void wima_window_setFocusWidget(WimaWindow wwh, WimaWidget wih) {
 
 WimaWidget wima_window_focusWidget(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -703,7 +703,7 @@ WimaWidget wima_window_focusWidget(WimaWindow wwh) {
 
 void wima_window_clearEvents(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -718,7 +718,7 @@ void wima_window_clearEvents(WimaWindow wwh) {
 
 void wima_window_refresh(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -731,7 +731,7 @@ void wima_window_refresh(WimaWindow wwh) {
 
 void wima_window_cancelRefresh(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -744,7 +744,7 @@ void wima_window_cancelRefresh(WimaWindow wwh) {
 
 bool wima_window_needsRefresh(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -756,7 +756,7 @@ bool wima_window_needsRefresh(WimaWindow wwh) {
 
 void wima_window_layout(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -771,7 +771,7 @@ void wima_window_layout(WimaWindow wwh) {
 
 void wima_window_cancelLayout(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -784,7 +784,7 @@ void wima_window_cancelLayout(WimaWindow wwh) {
 
 bool wima_window_needsLayout(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -796,7 +796,7 @@ bool wima_window_needsLayout(WimaWindow wwh) {
 
 DynaTree wima_window_areas(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -824,7 +824,7 @@ DynaTree wima_window_areas(WimaWindow wwh) {
 
 WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -875,7 +875,7 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 
 WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -916,7 +916,7 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 
 WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -946,7 +946,7 @@ WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char
 
 WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -964,7 +964,7 @@ WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) {
 
 WimaMenu* wima_window_menu(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -976,7 +976,7 @@ WimaMenu* wima_window_menu(WimaWindow wwh) {
 
 const char* wima_window_menuTitle(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -990,7 +990,7 @@ const char* wima_window_menuTitle(WimaWindow wwh) {
 
 int wima_window_menuIcon(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1004,7 +1004,7 @@ int wima_window_menuIcon(WimaWindow wwh) {
 
 WimaStatus wima_window_removeMenu(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1018,7 +1018,7 @@ WimaStatus wima_window_removeMenu(WimaWindow wwh) {
 
 void wima_window_setCursorType(WimaWindow wwh, WimaCursor* cursor) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1034,7 +1034,7 @@ void wima_window_setCursorType(WimaWindow wwh, WimaCursor* cursor) {
 
 void wima_window_setStandardCursorType(WimaWindow wwh, WimaCursorType c) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1048,7 +1048,7 @@ void wima_window_setStandardCursorType(WimaWindow wwh, WimaCursorType c) {
 
 WimaCursor* wima_window_cursorType(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1060,7 +1060,7 @@ WimaCursor* wima_window_cursorType(WimaWindow wwh) {
 
 void wima_window_setCursorMode(WimaWindow wwh, WimaCursorMode mode) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1072,7 +1072,7 @@ void wima_window_setCursorMode(WimaWindow wwh, WimaCursorMode mode) {
 
 WimaCursorMode wima_window_cursorMode(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1088,7 +1088,7 @@ WimaCursorMode wima_window_cursorMode(WimaWindow wwh) {
 
 void wima_window_setCursorPos(WimaWindow wwh, WimaVec pos) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1102,7 +1102,7 @@ void wima_window_setCursorPos(WimaWindow wwh, WimaVec pos) {
 
 WimaVec wima_window_cursorPos(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1114,7 +1114,7 @@ WimaVec wima_window_cursorPos(WimaWindow wwh) {
 
 WimaVec wima_window_cursorStart(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1126,7 +1126,7 @@ WimaVec wima_window_cursorStart(WimaWindow wwh) {
 
 WimaVec wima_window_cursorDelta(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1143,7 +1143,7 @@ WimaVec wima_window_cursorDelta(WimaWindow wwh) {
 
 void wima_window_setStickyKeys(WimaWindow wwh, bool enabled) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1155,7 +1155,7 @@ void wima_window_setStickyKeys(WimaWindow wwh, bool enabled) {
 
 bool wima_window_stickyKeys(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1167,7 +1167,7 @@ bool wima_window_stickyKeys(WimaWindow wwh) {
 
 void wima_window_setStickyMouseBtns(WimaWindow wwh, bool enabled) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1179,7 +1179,7 @@ void wima_window_setStickyMouseBtns(WimaWindow wwh, bool enabled) {
 
 bool wima_window_stickyMouseBtns(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1191,7 +1191,7 @@ bool wima_window_stickyMouseBtns(WimaWindow wwh) {
 
 WimaAction wima_window_keyState(WimaWindow wwh, WimaKey key) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1203,7 +1203,7 @@ WimaAction wima_window_keyState(WimaWindow wwh, WimaKey key) {
 
 WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1215,7 +1215,7 @@ WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) {
 
 void wima_window_setClipboard(WimaWindow wwh, const char* string) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1227,7 +1227,7 @@ void wima_window_setClipboard(WimaWindow wwh, const char* string) {
 
 const char* wima_window_clipboard(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1252,7 +1252,7 @@ static WimaStatus wima_window_processFileDrop(WimaWindow wwh, DynaVector files);
 
 WimaStatus wima_window_free(WimaWin* win) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 
@@ -1265,7 +1265,7 @@ WimaStatus wima_window_free(WimaWin* win) {
 
 void wima_window_setDirty(WimaWin* win, bool layout) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 
@@ -1280,7 +1280,7 @@ void wima_window_setDirty(WimaWin* win, bool layout) {
 
 void wima_window_setModifier(WimaWin* win, WimaKey key, WimaAction action) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 
@@ -2108,7 +2108,7 @@ static void wima_window_clearContext(WimaWinCtx* ctx) {
 #ifdef __YASSERT__
 bool wima_window_valid(WimaWindow wwh) {
 
-	assert_init;
+	wima_assert_init;
 
 	// Make sure the handle is within range.
 	bool valid = wwh < dvec_len(wg.windows);

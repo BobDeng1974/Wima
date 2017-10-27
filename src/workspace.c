@@ -47,9 +47,9 @@
 #include "workspace.h"
 #include "global.h"
 
-global_decl;
-error_descs_decl;
-assert_msgs_decl;
+wima_global_decl;
+wima_error_descs_decl;
+wima_assert_msgs_decl;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
@@ -57,7 +57,7 @@ assert_msgs_decl;
 
 WimaWorkspace wima_workspace_register() {
 
-	assert_init;
+	wima_assert_init;
 
 	// Get the index of the new workspace.
 	size_t len = dvec_len(wg.workspaces);
@@ -86,7 +86,7 @@ WimaWorkspace wima_workspace_register() {
 WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
                                     float split, bool vertical)
 {
-	assert_init;
+	wima_assert_init;
 
 	wassert(wwksp < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
 
@@ -119,7 +119,7 @@ WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
 
 WimaStatus wima_workspace_addRegion(WimaWorkspace wwksp, DynaNode node, WimaRegion reg) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wwksp < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
 
@@ -155,7 +155,7 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwksp, DynaNode node, WimaRegi
 
 bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n) {
 
-	assert_init;
+	wima_assert_init;
 
 	wassert(wwh < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
 

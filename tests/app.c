@@ -46,7 +46,7 @@
 
 #include "../src/global.h"
 
-assert_msgs_decl;
+wima_assert_msgs_decl;
 
 bool cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e);
 bool cb_scroll(WimaWidget wih, WimaScrollEvent e);
