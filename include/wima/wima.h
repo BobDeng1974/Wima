@@ -1950,7 +1950,7 @@ WimaSize wima_window_framebufferSize(WimaWindow wwh) yinline;
  * @param user	The new user pointer for the window.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-WimaStatus wima_window_setUserPointer(WimaWindow win, void* user) yinline;
+void wima_window_setUserPointer(WimaWindow wwh, void* user) yinline;
 
 /**
  * Returns the current user pointer for the window,
@@ -1960,7 +1960,7 @@ WimaStatus wima_window_setUserPointer(WimaWindow win, void* user) yinline;
  *				or NULL if none.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-void* wima_window_userPointer(WimaWindow win) yinline;
+void* wima_window_userPointer(WimaWindow wwh) yinline;
 
 /**
  * Returns the current key modifiers for the window.
@@ -2155,7 +2155,7 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas);
  * @param icon	The icon to put next to the title.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) yinline;
+void wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) yinline;
 
 /**
  * Sets the context menu on the window.
@@ -2163,7 +2163,7 @@ WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char
  * @param menu	The menu to set on the window.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) yinline;
+void wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) yinline;
 
 /**
  * Returns the current menu on the window, or NULL if none.
@@ -2196,7 +2196,7 @@ int wima_window_menuIcon(WimaWindow wwh) yinline;
  * @param wwh	The window to update.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-WimaStatus wima_window_removeMenu(WimaWindow wwh) yinline;
+void wima_window_removeMenu(WimaWindow wwh) yinline;
 
 /**
  * Sets the cursor on @a wwh. The cursor must have been
@@ -2205,7 +2205,7 @@ WimaStatus wima_window_removeMenu(WimaWindow wwh) yinline;
  * @param c		The cursor to set.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-void wima_window_setCursorType(WimaWindow wwh, WimaCursor* c) yinline;
+void wima_window_setCursor(WimaWindow wwh, WimaCursor* c) yinline;
 
 /**
  * Sets the cursor on @a wwh using a standard cursor type.
@@ -2213,7 +2213,7 @@ void wima_window_setCursorType(WimaWindow wwh, WimaCursor* c) yinline;
  * @param c		The cursor type to set.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-void wima_window_setStandardCursorType(WimaWindow wwh, WimaCursorType c) yinline;
+void wima_window_setStandardCursor(WimaWindow wwh, WimaCursorType c) yinline;
 
 /**
  * Returns the current cursor on @a wwh.
@@ -2221,7 +2221,7 @@ void wima_window_setStandardCursorType(WimaWindow wwh, WimaCursorType c) yinline
  * @return		The current cursor type.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-WimaCursor* wima_window_cursorType(WimaWindow wwh) yinline;
+WimaCursor* wima_window_cursor(WimaWindow wwh) yinline;
 
 /**
  * Sets the cursor mode for @a wwh
@@ -2375,7 +2375,7 @@ WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) yinline;
  * @pointer_lifetime	@a str is copied before this function
  *						returns.
  */
-void wima_window_setClipboard(WimaWindow wwh, const char* string) yinline;
+void wima_window_setClipboard(WimaWindow wwh, const char* str) yinline;
 
 /**
  * This function returns the contents of the system clipboard,

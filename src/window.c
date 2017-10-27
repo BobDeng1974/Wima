@@ -527,7 +527,7 @@ WimaSize wima_window_framebufferSize(WimaWindow wwh) {
 	return win->fbsize;
 }
 
-WimaStatus wima_window_setUserPointer(WimaWindow wwh, void* user) {
+void wima_window_setUserPointer(WimaWindow wwh, void* user) {
 
 	wima_assert_init;
 
@@ -536,8 +536,6 @@ WimaStatus wima_window_setUserPointer(WimaWindow wwh, void* user) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	win->user = user;
-
-	return WIMA_STATUS_SUCCESS;
 }
 
 void* wima_window_userPointer(WimaWindow wwh) {
@@ -549,17 +547,6 @@ void* wima_window_userPointer(WimaWindow wwh) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	return win->user;
-}
-
-void wima_window_setMods(WimaWindow wwh, WimaMods mods) {
-
-	wima_assert_init;
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	win->ctx.mods = mods;
 }
 
 WimaMods wima_window_mods(WimaWindow wwh) {
@@ -755,7 +742,7 @@ bool wima_window_needsRefresh(WimaWindow wwh) {
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	return WIMA_WIN_IS_DIRTY(win);
+	return WIMA_WIN_IS_DIRTY(win) || WIMA_WIN_NEEDS_LAYOUT(win);
 }
 
 void wima_window_layout(WimaWindow wwh) {
@@ -874,6 +861,9 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 	// Initialize the areas.
 	WimaStatus status = wima_area_init(wwh, window->areas, rect);
 
+	// Set the window as dirty with layout.
+	wima_window_setDirty(window, true);
+
 	return status;
 }
 
@@ -915,10 +905,13 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 	// Resize the areas.
 	wima_area_resize(window->areas, rect);
 
+	// Set the window as dirty with layout.
+	wima_window_setDirty(window, true);
+
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) {
+void wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) {
 
 	wima_assert_init;
 
@@ -944,11 +937,9 @@ WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char
 
 	// Set the menu.
 	win->menu = menu;
-
-	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) {
+void wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) {
 
 	wima_assert_init;
 
@@ -962,8 +953,6 @@ WimaStatus wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) {
 
 	// Set the menu.
 	win->menu = menu;
-
-	return WIMA_STATUS_SUCCESS;
 }
 
 WimaMenu* wima_window_menu(WimaWindow wwh) {
@@ -975,7 +964,7 @@ WimaMenu* wima_window_menu(WimaWindow wwh) {
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	return win->menu;
+	return WIMA_WIN_HAS_MENU(win) ? win->menu : NULL;
 }
 
 const char* wima_window_menuTitle(WimaWindow wwh) {
@@ -1006,7 +995,7 @@ int wima_window_menuIcon(WimaWindow wwh) {
 	return win->menuIcon;
 }
 
-WimaStatus wima_window_removeMenu(WimaWindow wwh) {
+void wima_window_removeMenu(WimaWindow wwh) {
 
 	wima_assert_init;
 
@@ -1016,11 +1005,9 @@ WimaStatus wima_window_removeMenu(WimaWindow wwh) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	win->flags &= ~(WIMA_WIN_MENU | WIMA_WIN_MENU_CONTEXT | WIMA_WIN_MENU_RELEASED);
-
-	return WIMA_STATUS_SUCCESS;
 }
 
-void wima_window_setCursorType(WimaWindow wwh, WimaCursor* cursor) {
+void wima_window_setCursor(WimaWindow wwh, WimaCursor* cursor) {
 
 	wima_assert_init;
 
@@ -1036,7 +1023,7 @@ void wima_window_setCursorType(WimaWindow wwh, WimaCursor* cursor) {
 	glfwSetCursor(win->window, c);
 }
 
-void wima_window_setStandardCursorType(WimaWindow wwh, WimaCursorType c) {
+void wima_window_setStandardCursor(WimaWindow wwh, WimaCursorType c) {
 
 	wima_assert_init;
 
@@ -1050,7 +1037,7 @@ void wima_window_setStandardCursorType(WimaWindow wwh, WimaCursorType c) {
 	glfwSetCursor(win->window, wg.cursors[c]);
 }
 
-WimaCursor* wima_window_cursorType(WimaWindow wwh) {
+WimaCursor* wima_window_cursor(WimaWindow wwh) {
 
 	wima_assert_init;
 
@@ -1217,7 +1204,7 @@ WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) {
 	return (WimaAction) glfwGetMouseButton(win->window, btn);
 }
 
-void wima_window_setClipboard(WimaWindow wwh, const char* string) {
+void wima_window_setClipboard(WimaWindow wwh, const char* str) {
 
 	wima_assert_init;
 
@@ -1226,7 +1213,7 @@ void wima_window_setClipboard(WimaWindow wwh, const char* string) {
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	glfwSetClipboardString(win->window, string);
+	glfwSetClipboardString(win->window, str);
 }
 
 const char* wima_window_clipboard(WimaWindow wwh) {
