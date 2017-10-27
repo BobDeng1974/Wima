@@ -1377,8 +1377,8 @@ uint32_t wima_widget_box(WimaWidget wdgt) yinline;
 
 /**
  * Set the user pointer for @a wdgt.
- * @param wdgt		The widget to set.
- * @param handle	The handle to set.
+ * @param wdgt	The widget to set.
+ * @param user	The handle to set.
  */
 void wima_widget_setUserPointer(WimaWidget wdgt, void* user) yinline;
 
@@ -1458,7 +1458,7 @@ bool wima_widget_isActive(WimaWidget wdgt) yinline;
  * @param wdgt	The widget to query.
  * @return		true if hovered, false otherwise.
  */
-bool wima_widget_isHovered(WimaWidget wdgt yinline);
+bool wima_widget_isHovered(WimaWidget wdgt) yinline;
 
 /**
  * Returns true if @a wdgt is focused.
