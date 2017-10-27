@@ -34,6 +34,14 @@ if(BUILD_DOCS)
 		message(WARNING "Doxygen not found, unable to generate documentation")
 	else()
 
+		option(BUILD_DOCS_INTERNAL "Build internal documentation" OFF)
+
+		if(BUILD_DOCS_INTERNAL)
+			set(WIMA_DOCS_INTERNAL_DIR "${CMAKE_SOURCE_DIR}/src")
+		else()
+			set(WIMA_DOCS_INTERNAL_DIR "")
+		endif()
+
 		configure_file(doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/doxyfile @ONLY)
 		add_custom_target(doc COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_BINARY_DIR}/doxyfile"
 			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
