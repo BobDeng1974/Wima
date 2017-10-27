@@ -47,6 +47,23 @@
 
 WimaG wg;
 
+const char* wima_error_descs[] = {
+    "Allocation failed",
+    "Platform returned an unknown error",
+    "Wima is in an invalid state",
+    "OpenGL returned an error",
+    "Wima does not have an OpenGL context",
+    "Wima could not be initialized",
+    "Wima could not create a window",
+    "Wima could not create the requested workspace",
+    "Wima could not create the requested area",
+    "Wima could not create the requested property",
+    "Wima was given an invalid enum value",
+    "Wima was given an invalid parameter",
+    "Clipboard contents were invalid",
+    "Wima dropped an event",
+};
+
 const char* wima_assert_msgs[] = {
 #ifdef __YASSERT__
 
