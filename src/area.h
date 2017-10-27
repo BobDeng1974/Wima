@@ -51,7 +51,8 @@ extern "C" {
 #include "window.h"
 
 /**
- * @defgroup area area
+ * @defgroup area_internal area_internal
+ * Internal functions and data structures for areas.
  * @{
  */
 
