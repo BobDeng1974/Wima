@@ -259,6 +259,28 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 		// Set the scale.
 		area->area.scale = 1.0f;
 
+		// Get the region handle.
+		WimaRegion reg = area->area.type;
+
+		wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
+
+		// Get the region pointer.
+		WimaReg* region = dvec_get(wg.regions, reg);
+
+		// Get the particular user function setter.
+		WimaAreaGenUserPointerFunc get_user_ptr = region->funcs.gen_ptr;
+
+		// If the user specified one, call it.
+		if (get_user_ptr) {
+
+			// Get all of the area handle
+			// (to pass to the user function).
+			WimaArea wah = wima_area(win, node);
+
+			// Call the user function.
+			area->area.user = get_user_ptr(wah);
+		}
+
 		// Calculate the optimal allocation size.
 		size_t size = ynalloc(sizeof(WimaItem) * region->itemCap);
 
@@ -271,29 +293,6 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 		// Set the capacity (to the allocated size) and the count.
 		area->area.ctx.itemCap = size / sizeof(WimaItem);
 		area->area.ctx.itemCount = 0;
-
-		// Get the region handle.
-		WimaRegion reg = area->area.type;
-
-		wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
-
-		// Get the region pointer.
-		WimaReg* region = dvec_get(wg.regions, reg);
-
-		// Get the particular user function setter.
-		WimaAreaGenUserPointerFunc get_user_ptr = region->funcs.gen_ptr;
-
-		// If the user didn't specify one, don't call it.
-		if (!get_user_ptr) {
-			return WIMA_STATUS_SUCCESS;
-		}
-
-		// Get all of the area handle
-		// (to pass to the user function).
-		WimaArea wah = wima_area(win, node);
-
-		// Call the user function.
-		area->area.user = get_user_ptr(wah);
 
 		// We need to make sure this is cleared.
 		status = WIMA_STATUS_SUCCESS;
@@ -397,10 +396,7 @@ static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 		// Get the region handle.
 		WimaRegion reg = area->area.type;
 
-		// Check that the region handle is valid.
-		if (yunlikely(reg >= dvec_len(wg.regions))) {
-			return WIMA_STATUS_WINDOW_ERR;
-		}
+		wassert(reg >= dvec_len(wg.regions), WIMA_ASSERT_REG);
 
 		// Get the list of regions.
 		WimaReg* region = dvec_get(wg.regions, reg);
