@@ -259,13 +259,23 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 		// Set the scale.
 		area->area.scale = 1.0f;
 
+		// Calculate the optimal allocation size.
+		size_t size = ynalloc(sizeof(WimaItem) * region->itemCap);
+
+		// Allocate and check for error.
+		area->area.ctx.items = ymalloc(size);
+		if (yunlikely(!area->area.ctx.items)) {
+			return WIMA_STATUS_MALLOC_ERR;
+		}
+
+		// Set the capacity (to the allocated size) and the count.
+		area->area.ctx.itemCap = size / sizeof(WimaItem);
+		area->area.ctx.itemCount = 0;
+
 		// Get the region handle.
 		WimaRegion reg = area->area.type;
 
-		// Check that the region handle is valid.
-		if (yunlikely(reg >= dvec_len(wg.regions))) {
-			return WIMA_STATUS_WINDOW_ERR;
-		}
+		wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
 
 		// Get the region pointer.
 		WimaReg* region = dvec_get(wg.regions, reg);
@@ -284,19 +294,6 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 
 		// Call the user function.
 		area->area.user = get_user_ptr(wah);
-
-		// Calculate the optimal allocation size.
-		size_t size = ynalloc(sizeof(WimaItem) * region->itemCap);
-
-		// Allocate and check for error.
-		area->area.ctx.items = ymalloc(size);
-		if (yunlikely(!area->area.ctx.items)) {
-			return WIMA_STATUS_MALLOC_ERR;
-		}
-
-		// Set the capacity (to the allocated size) and the count.
-		area->area.ctx.itemCap = size / sizeof(WimaItem);
-		area->area.ctx.itemCount = 0;
 
 		// We need to make sure this is cleared.
 		status = WIMA_STATUS_SUCCESS;
