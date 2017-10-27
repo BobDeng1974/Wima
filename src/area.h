@@ -50,20 +50,46 @@ extern "C" {
 #include "layout.h"
 #include "window.h"
 
+/**
+ * @defgroup area area
+ * @{
+ */
+
+/**
+ * @def WIMA_AREA_MIN_SIZE
+ * The minimum size (in pixels) that an area can be.
+ * This is adjust for scaling.
+ */
 #define WIMA_AREA_MIN_SIZE (26)
 
+/**
+ * Item (layouts and widgets) context for an area.
+ */
 typedef struct WimaArCtx {
 
+	/// The array of items.
 	WimaItem* items;
 
-	// Capacities.
+	/// Total item capacity.
 	uint16_t itemCap;
 
+	/// Current number of items allocated.
 	uint16_t itemCount;
 
 } WimaArCtx;
 
 typedef struct WimaAr {
+
+	// These are first for speed reasons.
+
+	/// The node of the area within the window's tree.
+	WimaAreaNode node;
+
+	/// The parent window.
+	WimaWindow window;
+
+	/// Whether this node is a parent or not.
+	bool isParent;
 
 	union {
 
@@ -92,16 +118,30 @@ typedef struct WimaAr {
 
 	WimaRect rect;
 
-	WimaAreaNode node;
-
-	WimaWindow window;
-	bool isParent;
-
 } WimaAr;
 
+/**
+ * @def WIMA_AREA_IS_LEAF
+ * Checks if @a area is a leaf (region) area.
+ * @param area	The WimaAr to check.
+ */
 #define WIMA_AREA_IS_LEAF(area)    (!((area)->isParent))
+
+/**
+ * @def WIMA_AREA_IS_PARENT
+ * Checks if @a area is a parent area.
+ * @param area	The WimaAr to check.
+ */
 #define WIMA_AREA_IS_PARENT(area)  ((area)->isParent)
 
+/**
+ * Gets a pointer to the area at @a node in @a wwh.
+ * @param wwh	The window to query.
+ * @param node	The node of the window tree to query.
+ * @return		The pointer to the area.
+ * @pre			@a wwh must be a valid window.
+ * @pre			@a node must be a valid node in the window.
+ */
 WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node);
 
 WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect);
@@ -133,6 +173,10 @@ WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEven
 // you may combine box, layout, event and user flags.
 // frozen items will always be ignored.
 WimaWidget wima_area_findWidget(DynaTree areas, WimaVec pos, uint32_t flags);
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }
