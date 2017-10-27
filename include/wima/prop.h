@@ -48,7 +48,7 @@ extern "C" {
 #include <wima/render.h>
 
 /**
- * @file prop.h
+ * @file wima/prop.h
  */
 
 /**

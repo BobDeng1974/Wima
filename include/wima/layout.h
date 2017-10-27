@@ -51,7 +51,7 @@ extern "C" {
 #include <wima/render.h>
 
 /**
- * @file layout.h
+ * @file wima/layout.h
  */
 
 /**
