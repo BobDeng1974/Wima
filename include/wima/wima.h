@@ -101,35 +101,32 @@ typedef enum WimaStatus {
 	/// Returned when Wima fails to create a window.
 	WIMA_STATUS_WINDOW_ERR     = 134,
 
-	/// Returned when Wima fails to create a workspace.
-	WIMA_STATUS_WORKSPACE_ERR  = 135,
-
-	/// Returned when Wima fails to start an area.
-	WIMA_STATUS_AREA_ERR       = 136,
-
-	/// Returned when a property error occurs.
-	WIMA_STATUS_PROP_ERR       = 137,
-
 	/// Returned when Wima gets an invalid enum value.
-	WIMA_STATUS_INVALID_ENUM   = 138,
+	WIMA_STATUS_INVALID_ENUM   = 135,
 
 	/// Returned when Wima gets an invalid parameter.
-	WIMA_STATUS_INVALID_PARAM  = 139,
+	WIMA_STATUS_INVALID_PARAM  = 136,
 
 	/// Returned when the clipboard contents were invalid.
-	WIMA_STATUS_INVALID_CLIP   = 140,
+	WIMA_STATUS_INVALID_CLIP   = 137,
 
 	/// Returned when an event is dropped.
-	WIMA_STATUS_EVENT_DROPPED  = 141,
+	WIMA_STATUS_EVENT_DROPPED  = 138,
 
 	/// Returned when the user tries to create too many windows.
-	WIMA_STATUS_WINDOW_MAX        = 142,
+	WIMA_STATUS_WINDOW_MAX     = 139,
 
 	/// Returned when the user tries to create too many workspaces.
-	WIMA_STATUS_WORKSPACE_MAX     = 143,
+	WIMA_STATUS_WORKSPACE_MAX  = 140,
 
 	/// Returned when the user tries to create too many regions.
-	WIMA_STATUS_REGION_MAX        = 144,
+	WIMA_STATUS_REGION_MAX     = 141,
+
+	/// Returned when no child for the parent prop exists.
+	WIMA_STATUS_PROP_NO_CHILD  = 142,
+
+	/// Returned when an image fails to load.
+	WIMA_STATUS_IMAGE_LOAD_ERR = 143,
 
 } WimaStatus;
 

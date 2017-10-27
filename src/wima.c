@@ -99,28 +99,28 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.fontPath = dstr_create(fontPath);
 	if (yunlikely(!wg.fontPath)) {
 		wima_exit();
-		return WIMA_STATUS_INIT_ERR;
+		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.iconSheetPath = dstr_create(iconSheetPath);
 	if (yunlikely(!wg.iconSheetPath)) {
 		wima_exit();
-		return WIMA_STATUS_INIT_ERR;
+		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.name = dstr_create(name);
 	if (yunlikely(!wg.name)) {
 		wima_exit();
-		return WIMA_STATUS_INIT_ERR;
+		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.windows = dvec_create(0, sizeof(WimaWin), NULL);
 	if (yunlikely(!wg.windows)) {
 		wima_exit();
-		return WIMA_STATUS_INIT_ERR;
+		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// These are to initialize the DynaNVector.
@@ -131,7 +131,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.props = dnvec_create(2, 0, sizes, dtors);
 	if (yunlikely(!wg.props)) {
 		wima_exit();
-		return WIMA_STATUS_INIT_ERR;
+		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Set the initial theme.
@@ -141,14 +141,14 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.regions = dvec_create(0, sizeof(WimaReg), NULL);
 	if (yunlikely(!wg.regions)) {
 		wima_exit();
-		return WIMA_STATUS_INIT_ERR;
+		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.workspaces = dvec_create(0, sizeof(WimaWksp), NULL);
 	if (yunlikely(!wg.workspaces)) {
 		wima_exit();
-		return WIMA_STATUS_INIT_ERR;
+		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Initialize GLFW and exit on error.
@@ -178,7 +178,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 		data = stbi_load(iconPaths[i], &x, &y, &components, 3);
 
 		// If everything looks valid...
-		if (data && components == 3) {
+		if (data && components == 4) {
 
 			GLFWimage image;
 
@@ -201,7 +201,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 			wg.numIcons = i;
 			wima_exit();
 
-			return WIMA_STATUS_INIT_ERR;
+			return WIMA_STATUS_IMAGE_LOAD_ERR;
 		}
 	}
 

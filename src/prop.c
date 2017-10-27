@@ -170,7 +170,7 @@ WimaStatus wima_prop_link(WimaProperty parent, WimaProperty child) {
 	// Push the child onto the vector.
 	DynaStatus status = dvec_push(data->_group, &child);
 
-	return status ? WIMA_STATUS_PROP_ERR : WIMA_STATUS_SUCCESS;
+	return status ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child) {
@@ -192,9 +192,7 @@ WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child) {
 	size_t len = dvec_len(data->_group);
 
 	// If the len is 0, we have a problem.
-	if (len == 0) {
-		return WIMA_STATUS_PROP_ERR;
-	}
+	wassert(len != 0, WIMA_ASSERT_PROP_REGISTERED);
 
 	// Get the handles.
 	WimaProperty* handles = dvec_get(data->_group, 0);
@@ -209,12 +207,12 @@ WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child) {
 			DynaStatus status = dvec_remove(data->_group, i);
 
 			// Return the appropriate result.
-			return status ? WIMA_STATUS_PROP_ERR : WIMA_STATUS_SUCCESS;
+			return status ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
 		}
 	}
 
 	// Return an error because we could not find the child.
-	return WIMA_STATUS_PROP_ERR;
+	return WIMA_STATUS_PROP_NO_CHILD;
 }
 
 WimaPropGroup* wima_prop_group(WimaProperty wph) {

@@ -419,7 +419,7 @@ WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {
 	glfwSetWindowTitle(win->window, title);
 
 	if (yunlikely(dstr_set(win->name, title))) {
-		return WIMA_STATUS_WINDOW_ERR;
+		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	return WIMA_STATUS_SUCCESS;
@@ -851,13 +851,13 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 
 		// Check for error.
 		if (yunlikely(!window->areas)) {
-			return WIMA_STATUS_WINDOW_ERR;
+			return WIMA_STATUS_MALLOC_ERR;
 		}
 	}
 
 	// Copy the workspace into the area tree.
 	if (yunlikely(dtree_copy(window->areas, wksp))) {
-		return WIMA_STATUS_WINDOW_ERR;
+		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Clear the context.
@@ -894,7 +894,7 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 
 		// Check for error.
 		if (yunlikely(!window->areas)) {
-			return WIMA_STATUS_WINDOW_ERR;
+			return WIMA_STATUS_MALLOC_ERR;
 		}
 	}
 

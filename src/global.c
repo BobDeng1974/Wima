@@ -55,16 +55,15 @@ const char* wima_error_descs[] = {
     "Wima does not have an OpenGL context",
     "Wima could not be initialized",
     "Wima could not create a window",
-    "Wima could not create the requested workspace",
-    "Wima could not create the requested area",
-    "Wima could not create the requested property",
     "Wima was given an invalid enum value",
     "Wima was given an invalid parameter",
     "Clipboard contents were invalid",
     "Wima dropped an event",
     "client tried to create too many windows",
     "client tried to create too many workspaces",
-    "client tried to create too many regions"
+    "client tried to create too many regions",
+    "no child exists for the given property",
+    "image failed to load",
 };
 
 const char* wima_assert_msgs[] = {
@@ -128,6 +127,7 @@ const char* wima_assert_msgs[] = {
     "theme items were not consecutive; this is a bug in Wima",
 
     "prop is not valid",
+    "no props are registered",
     "prop is not a group prop",
     "prop is not a bool prop",
     "prop is not an int prop",
