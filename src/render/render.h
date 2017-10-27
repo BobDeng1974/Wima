@@ -49,50 +49,174 @@ extern "C" {
 
 #include <GLFW/glfw3.h>
 
+/**
+ * @file render/render.h
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Render state.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup render_internal render_internal
+ * Internal functions and data structures for render state.
+ * @{
+ */
+
+/**
+ * Render state (context). Because NanoVG does all of the
+ * rendering, this just has the information for NanoVG.
+ */
 typedef struct WimaRenderContext {
 
+	/// The NanoVG context.
 	NVGcontext* nvg;
+
+	/// The font handle for NanoVG.
 	int font;
+
+	/// The icon sheet handle for NanoVG.
 	int icons;
 
 } WimaRenderContext;
 
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Colors.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup color_internal color_internal
+ * Internal functions and data structures for colors.
+ * @{
+ */
+
+/**
+ * Provides a way to cast between NVGcolor and WimaColor.
+ * It's necessary to have both to hide NanoVG from users.
+ */
 typedef union WimaCol {
 
+	/// The NanoVG color.
 	NVGcolor nvg;
+
+	/// The Wima color.
 	WimaColor wima;
 
 } WimaCol;
 
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Paints.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup paint_internal paint_internal
+ * Internal functions and data structures for paints.
+ * @{
+ */
+
+/**
+ * Provides a way to cast between NVGpaint and WimaPaint.
+ * It's necessary to have both to hide NanoVG from users.
+ */
 typedef union WimaPnt {
 
+	/// The NanoVG paint.
 	NVGpaint nvg;
+
+	/// The Wima paint.
 	WimaPaint wima;
 
 } WimaPnt;
 
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Text.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup text_internal text_internal
+ * Internal functions and data structures for text.
+ * @{
+ */
+
+/**
+ * Provides a way to cast between NVGglyphPosition and WimaGlyphPosition.
+ * It's necessary to have both to hide NanoVG from users.
+ */
 typedef union WimaGlyphPos {
 
+	/// The NanoVG glyph position.
 	NVGglyphPosition nvg;
+
+	/// The Wima glyph position.
 	WimaGlyphPosition wima;
 
 } WimaGlyphPos;
 
+/**
+ * Provides a way to cast between NVGtextRow and WimaTextRow.
+ * It's necessary to have both to hide NanoVG from users.
+ */
 typedef union WimaTxtRow {
 
+	/// The NanoVG text row.
 	NVGtextRow nvg;
+
+	/// The Wima text row.
 	WimaTextRow wima;
 
 } WimaTxtRow;
 
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Images.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup image_internal image_internal
+ * Internal functions and data structures for images.
+ * @{
+ */
+
+/**
+ * Provides a way to cast between GLFWimage and WimaImage.
+ * It's necessary to have both to hide GLFW from users.
+ */
 typedef union WimaImg {
 
+	/// The GLFW image.
 	GLFWimage glfw;
+
+	/// The Wima image.
 	WimaImage wima;
 
 } WimaImg;
 
-// TODO: Put these in the theme.
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Text.
+////////////////////////////////////////////////////////////////////////////////
+
+// TODO: Put these in the theme, except for font size.
+
+//! @cond Doxygen suppress.
 
 // Default text size.
 #define WIMA_LABEL_FONT_SIZE 16
@@ -215,11 +339,14 @@ typedef union WimaImg {
 
 // Default text color.
 #define WIMA_THEME_DEF_TEXT                      {{{ 0.000f, 0.000f, 0.000f, 1.000f }}}
+
 // Default highlighted text color.
 #define WIMA_THEME_DEF_TEXT_SELECTED             {{{ 1.000f, 1.000f, 1.000f, 1.000f }}}
+
 // Menu separator color.
 #define WIMA_THEME_DEF_MENU_SEP                  {{{ 0.21568627451f, 0.21568627451f, 0.21568627451f, 1.000f}}}
 
+// Default colors for all theme types.
 #define WIMA_THEME_DEF_BG                        {{{ 0.447f, 0.447f, 0.447f, 1.000f }}}
 #define WIMA_THEME_DEF_REGULAR_OUTLINE           {{{ 0.098f, 0.098f, 0.098f, 1.000f }}}
 #define WIMA_THEME_DEF_REGULAR_ITEM              {{{ 0.098f, 0.098f, 0.098f, 1.000f }}}
@@ -303,25 +430,89 @@ typedef union WimaImg {
 #define WIMA_THEME_DEF_NODE_WIRE_OUTLINE        {{{ 0.000f, 0.000f, 0.000f, 1.000f }}}
 #define WIMA_THEME_DEF_NODE_WIRE_SELECTED       {{{ 1.000f, 1.000f, 1.000f, 1.000f }}}
 
+// The number of theme types
 #define WIMA_THEME_NUM_TYPES        (14)
-#define WIMA_THEME_BG_LENGTH        (1)
-#define WIMA_THEME_NUM_ITEMS        (12)
-#define WIMA_THEME_WIDGET_LENGTH      (WIMA_THEME_BG_LENGTH + WIMA_THEME_NUM_ITEMS)
 
+// The length of the background theme item.
+#define WIMA_THEME_BG_LENGTH        (1)
+
+// The number of widget themes.
+#define WIMA_THEME_WIDGET_NUM  (12)
+
+// The length of background plus widget.
+#define WIMA_THEME_WIDGET_LENGTH     (WIMA_THEME_BG_LENGTH + WIMA_THEME_WIDGET_NUM)
+
+// The number of types in a widget theme.
 #define WIMA_THEME_WIDGET_NUM_TYPES   (9)
+
+// The number of colors in a widget theme.
 #define WIMA_THEME_WIDGET_NUM_COLORS  (6)
 
+// The number of types in a node theme.
 #define WIMA_THEME_NODE_NUM_TYPES   (10)
+
+// The number of colors in a node theme.
 #define WIMA_THEME_NODE_NUM_COLORS  (9)
 
+// A max buffer for generating names.
 #define WIMA_THEME_MAX_BUFFER       (1025)
 
+//! @endcond Doxygen suppress.
+
+/**
+ * @defgroup theme_internal theme_internal
+ * Internal functions and data structures for themes.
+ * @{
+ */
+
+/**
+ * Loads the default theme into Wima and stores the property
+ * handles in the global @a WimaG struct.
+ *
+ * Because themes are accessed again and again, the @a WimaG
+ * struct stores the handles to the first properties for each
+ * widget theme and requires that they be in consecutive order.
+ * This allows Wima to use a pointer to the first as a pointer
+ * to the whole theme. For this function (and all other private
+ * theme functions), the param @a starts is the array of props
+ * for the first property in each theme.
+ * @param props		The array of properties to store property
+ *					handles in.
+ * @param starts	An array of properties to store the start
+ *					of themes in.
+ * @return			The parent property group for all themes.
+ */
 WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) yinline;
+
+/**
+ * Loads the default background. This doesn't need an entry
+ * in the starts array because it's the only one.
+ * @return	The property for the background.
+ */
 WimaProperty wima_theme_loadBackground() yinline;
+
+/**
+ * Loads the widget theme corresponding to @a type.
+ * @param type		The type of widget theme to load.
+ * @param starts	An array of properties to store the start of
+ *					the theme in (see @a wima_theme_load()).
+ * @return			The parent group property for the widget theme.
+ * @pre				@a type must be between
+ *					[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ */
 WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) yinline;
+
+/**
+ * Loads the node theme.
+ * @param starts	An array of properties to store the start of
+ *					the theme in (see @a wima_theme_load()).
+ * @return			The parent group property for the widget theme.
+ */
 WimaProperty wima_theme_loadNode(WimaProperty* starts) yinline;
 
-WimaProperty wima_theme_create() yinline;
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }

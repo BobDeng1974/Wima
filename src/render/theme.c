@@ -91,6 +91,7 @@ wima_assert_msgs_decl;
 
 const char* themePrefix = "wima_theme_";
 const char* themeLabel = "User Interface Theme";
+const char* themeDesc = "User interface theme group";
 const char* bgDesc = "Default background color";
 
 const char* widgetParentNames[] = {
@@ -455,7 +456,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
 	// Create the main theme property.
-	WimaProperty main = wima_theme_create();
+	WimaProperty main = wima_prop_registerGroup("wima_theme", themeLabel, themeDesc);
 
 	// Create the background and link it in, including in the arrays.
 	WimaProperty bg = wima_theme_loadBackground();
@@ -616,10 +617,6 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 	wima_prop_link(main, child);
 
 	return main;
-}
-
-WimaProperty wima_theme_create() {
-	return wima_prop_registerGroup("wima_theme", themeLabel, "User interface theme group");
 }
 
 void wima_theme_setBackground(WimaColor bg) {
