@@ -308,8 +308,7 @@ void wima_prop_setInt(WimaProperty wph, int val) {
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
 	// Make sure val is within range.
-	val = val < data->_int.min ? data->_int.min : val;
-	data->_int.val = val > data->_int.max ? data->_int.max : val;
+	data->_int.val = wima_clamp(val, data->_int.min, data->_int.max);
 }
 
 int wima_prop_int(WimaProperty wph) {
@@ -344,8 +343,7 @@ void wima_prop_setFloat(WimaProperty wph, float val) {
 	WimaPropData* data = dnvec_get(wg.props, wph, WIMA_PROP_DATA_IDX);
 
 	// Make sure val is within range.
-	val = val < data->_float.min ? data->_float.max : val;
-	data->_float.val = val > data->_float.max ? data->_float.max : val;
+	data->_float.val = wima_clampf(val, data->_float.min, data->_float.max);
 }
 
 float wima_prop_float(WimaProperty wph) {

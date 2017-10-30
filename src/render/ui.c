@@ -323,7 +323,7 @@ void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
 		shade_btm = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
 	}
 
-	nvgScissor(ctx->nvg, x, y, 8 + (w - 8) * wima_clamp(progress, 0, 1), h);
+	nvgScissor(ctx->nvg, x, y, 8 + (w - 8) * wima_clampf(progress, 0, 1), h);
 	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2],cr.v[3], shade_top, shade_btm);
 	nvgResetScissor(ctx->nvg);
 
@@ -1078,7 +1078,7 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
 	nvgTextMetrics(ctx->nvg, &asc, &desc, &lh);
 
 	// Calculate vertical position.
-	int row = wima_clamp((int) ((float) (py - bounds[1]) / lh), 0, nrows - 1);
+	int row = wima_clampf((int) ((float) (py - bounds[1]) / lh), 0, nrows - 1);
 
 	// Search horizontal position.
 	static NVGglyphPosition glyphs[WIMA_MAX_GLYPHS];
@@ -1328,8 +1328,8 @@ WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float of
 
 	WimaRect result;
 
-	size = wima_clamp(size, 0, 1);
-	offset = wima_clamp(offset, 0, 1);
+	size = wima_clampf(size, 0, 1);
+	offset = wima_clampf(offset, 0, 1);
 
 	if (h > w) {
 

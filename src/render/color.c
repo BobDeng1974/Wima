@@ -178,9 +178,9 @@ WimaColor wima_color_offset(WimaColor color, int delta) {
 		float offset = (float) delta / 255.0f;
 
 		// Calculate each channel and clamp.
-		float r = wima_clamp(color.r + offset, 0, 1);
-		float g = wima_clamp(color.g + offset, 0, 1);
-		float b = wima_clamp(color.b + offset, 0, 1);
+		float r = wima_clampf(color.r + offset, 0, 1);
+		float g = wima_clampf(color.g + offset, 0, 1);
+		float b = wima_clampf(color.b + offset, 0, 1);
 
 		// Get the color.
 		result = wima_color_rgbaf(r, g, b, color.a);
