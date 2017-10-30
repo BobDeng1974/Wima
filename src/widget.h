@@ -74,8 +74,6 @@ extern "C" {
 
 #include "event.h"
 
-#define WIMA_ITEM_INVALID ((uint16_t) -1)
-
 // These bits, starting at bit 24, can be safely assigned by the
 // application, e.g. as item types, other event types, drop targets, etc.
 // They can be set and queried using wima_ui_item_setFlags() and

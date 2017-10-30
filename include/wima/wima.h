@@ -258,6 +258,12 @@ typedef struct WimaArea {
  */
 
 /**
+ * @def WIMA_WIDGET_INVALID
+ * A handle indicating an invalid widget.
+ */
+#define WIMA_WIDGET_INVALID ((uint16_t) -1)
+
+/**
  * A handle to a widget.
  */
 typedef struct WimaWidget {
@@ -300,6 +306,12 @@ typedef enum WimaWidgetState {
  * @defgroup layout layout
  * @{
  */
+
+/**
+ * @def WIMA_LAYOUT_INVALID
+ * A handle indicating an invalid layout.
+ */
+#define WIMA_LAYOUT_INVALID ((uint16_t) -1)
 
 /**
  * A handle to a layout.

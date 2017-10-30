@@ -48,8 +48,6 @@ extern "C" {
 #include "old_layout.h"
 #include "widget.h"
 
-#define WIMA_LAYOUT_INVALID ((uint16_t) -1)
-
 #define WIMA_LAYOUT_ENABLE      (0x0001)
 #define WIMA_LAYOUT_ROW         (0x0002)
 #define WIMA_LAYOUT_COL         (0x0004)
