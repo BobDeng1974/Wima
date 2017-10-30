@@ -172,7 +172,7 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Declarations for all static functions that private functions need access to.
+// Declarations for all static functions that private functions need access to.
 ////////////////////////////////////////////////////////////////////////////////
 
 static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect);
