@@ -50,6 +50,10 @@ extern "C" {
 #include "layout.h"
 
 /**
+ * @file area.h
+ */
+
+/**
  * @defgroup area_internal area_internal
  * Internal functions and data structures for areas.
  * @{
