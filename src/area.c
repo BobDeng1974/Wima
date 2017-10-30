@@ -424,30 +424,6 @@ WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e) {
 	return status;
 }
 
-WimaStatus wima_area_mousePos(WimaAr* area, WimaVec pos) {
-
-	wima_assert_init;
-
-	wassert(area != NULL, WIMA_ASSERT_AREA);
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-
-	WimaStatus status;
-
-	// Get the region's event handler.
-	WimaReg* region = dvec_get(wg.regions, area->area.type);
-	WimaAreaMousePosFunc mouse_pos = region->funcs.pos;
-
-	// If the handler exists, run it.
-	if (mouse_pos) {
-		status = mouse_pos(wima_area(area->window, area->node), pos);
-	}
-	else {
-		status = WIMA_STATUS_SUCCESS;
-	}
-
-	return status;
-}
-
 WimaStatus wima_area_mouseEnter(WimaAr* area, bool enter) {
 
 	wima_assert_init;

@@ -376,7 +376,6 @@ int main() {
 	funcs.free_ptr = cb_userPtrFree;
 	funcs.layout = cb_layout;
 	funcs.key = cb_key;
-	funcs.pos = cb_mousePos;
 	funcs.enter = cb_mouseEnterArea;
 
 	// Register a region.

@@ -1517,14 +1517,6 @@ typedef WimaStatus (*WimaAreaLayoutFunc)(WimaArea, WimaLayout, WimaSize);
 typedef bool (*WimaAreaKeyFunc)(WimaArea, WimaKeyEvent);
 
 /**
- * A function callback for mouse moves inside an area.
- * @param area	The area where the event happened.
- * @param event	The event.
- * @returns		true if the event was consumed, false otherwise.
- */
-typedef bool (*WimaAreaMousePosFunc)(WimaArea, WimaVec);
-
-/**
  * A function callback for mouse entering or exiting an area.
  * @param area		The area where the event happened.
  * @param entered	Whether or not the mouse entered.
@@ -1548,9 +1540,6 @@ typedef struct WimaRegionFuncs {
 
 	/// The function to handle key presses.
 	WimaAreaKeyFunc key;
-
-	/// The function to handle mouse moves.
-	WimaAreaMousePosFunc pos;
 
 	/// The function to handle mouse enter/exit.
 	WimaAreaMouseEnterFunc enter;

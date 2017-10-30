@@ -195,7 +195,6 @@ bool wima_area_valid(DynaTree regions);
 void wima_area_free(DynaTree areas);
 
 WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e);
-WimaStatus wima_area_mousePos(WimaAr* area, WimaVec pos);
 WimaStatus wima_area_mouseEnter(WimaAr* area, bool enter);
 
 WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas);

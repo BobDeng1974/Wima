@@ -1733,16 +1733,9 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 			}
 			else {
 
-				// Get the area that contains the mouse.
-				WimaAreaNode node = wima_area_containsMouse(win->areas, e.pos);
+				// TODO: Send event to widget.
 
-				// If it's valid, send the event.
-				if (node != WIMA_AREA_INVALID) {
-					status = wima_area_mousePos(dtree_node(win->areas, node), e.pos);
-				}
-				else {
-					status = WIMA_STATUS_SUCCESS;
-				}
+				status = WIMA_STATUS_SUCCESS;
 			}
 
 			break;
