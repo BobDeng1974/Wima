@@ -1674,11 +1674,10 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 			// If the area is not invalid, sent the event.
 			if (e.area_key.area != WIMA_AREA_INVALID) {
 				WimaAr* area = dtree_node(win->areas, e.area_key.area);
-				status = wima_area_key(area, e.area_key.key);
+				wima_area_key(area, e.area_key.key);
 			}
-			else {
-				status = WIMA_STATUS_SUCCESS;
-			}
+
+			status = WIMA_STATUS_SUCCESS;
 
 			break;
 		}
@@ -1769,7 +1768,8 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		case WIMA_EVENT_AREA_ENTER:
 		{
 			WimaAr* area = dtree_node(win->areas, e.area_enter.area);
-			status = wima_area_mouseEnter(area, e.area_enter.enter);
+			wima_area_mouseEnter(area, e.area_enter.enter);
+			status = WIMA_STATUS_SUCCESS;
 			break;
 		}
 

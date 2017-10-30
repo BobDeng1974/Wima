@@ -401,51 +401,44 @@ static void wima_area_node_free(DynaTree areas, DynaNode node) {
 	}
 }
 
-WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e) {
+void wima_area_key(WimaAr* area, WimaKeyEvent e) {
 
 	wima_assert_init;
 
 	wassert(area != NULL, WIMA_ASSERT_AREA);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-
-	WimaStatus status;
 
 	// Get the region's event handler.
 	WimaReg* region = dvec_get(wg.regions, area->area.type);
 	WimaAreaKeyFunc key_event = region->funcs.key;
 
+	// Get the handle.
+	WimaArea wah = wima_area(area->window, area->node);
+
 	// If the handler exists, run it.
-	if (!key_event || !key_event(wima_area(area->window, area->node), e)) {
+	if (!key_event || !key_event(wah, e)) {
 		// TODO: Send the event up the chain.
 	}
-
-	status = WIMA_STATUS_SUCCESS;
-
-	return status;
 }
 
-WimaStatus wima_area_mouseEnter(WimaAr* area, bool enter) {
+void wima_area_mouseEnter(WimaAr* area, bool enter) {
 
 	wima_assert_init;
 
 	wassert(area != NULL, WIMA_ASSERT_AREA);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	WimaStatus status;
-
 	// Get the region's event handler.
 	WimaReg* region = dvec_get(wg.regions, area->area.type);
 	WimaAreaMouseEnterFunc mouse_enter = region->funcs.enter;
 
-	// If the handler exists, run it.
-	if (mouse_enter) {
-		status = mouse_enter(wima_area(area->window, area->node), enter);
-	}
-	else {
-		status = WIMA_STATUS_SUCCESS;
-	}
+	// Get the handle.
+	WimaArea wah = wima_area(area->window, area->node);
 
-	return status;
+	// If the handler exists, run it.
+	if (!mouse_enter || !mouse_enter(wah, enter)) {
+		// TODO: Send the event up the chain.
+	}
 }
 
 WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas) {
