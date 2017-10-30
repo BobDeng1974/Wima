@@ -46,6 +46,10 @@
 wima_global_decl;
 wima_assert_msgs_decl;
 
+////////////////////////////////////////////////////////////////////////////////
+// Public functions.
+////////////////////////////////////////////////////////////////////////////////
+
 uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical) {
 
 	wima_assert_init;
@@ -118,117 +122,6 @@ uint16_t wima_layout_clearBoxFlag(uint16_t flags) {
 	flags &= ~(WIMA_LAYOUT_BOX);
 
 	return flags;
-}
-
-WimaItem* wima_layout_ptr(WimaLayout wlh) {
-
-	wima_assert_init;
-
-	// Get the area pointer.
-	WimaAr* area = wima_area_ptr(wlh.window, wlh.area);
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-
-	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
-
-	// Calculate the layout pointer.
-	return area->area.ctx.items + wlh.layout;
-}
-
-WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol splitcol) {
-
-	wima_assert_init;
-
-	wassert(wima_window_valid(parent.window), WIMA_ASSERT_WIN);
-
-	// Get a pointer to the window.
-	WimaWin* win = dvec_get(wg.windows, parent.window);
-
-	wassert(dtree_exists(win->areas, parent.area), WIMA_ASSERT_AREA);
-
-	// Get a pointer to the area.
-	WimaAr* area = dtree_node(win->areas, parent.area);
-
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-
-	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_OVER_MAX);
-
-	// Must run between uiBeginLayout() and uiEndLayout().
-	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
-
-	// Make sure the layout starts enabled.
-	flags |= WIMA_LAYOUT_ENABLE;
-
-	// Get the first unused index and increment the count.
-	uint32_t idx = (area->area.ctx.itemCount)++;
-
-	// Fill the handle.
-	WimaLayout wlh;
-	wlh.layout = idx;
-	wlh.area = parent.area;
-	wlh.window = parent.window;
-
-	// If the parent is not valid, we don't have to do
-	// this next part because it means that we are doing
-	// the root, which doesn't need this next stuff.
-	if (parent.layout != WIMA_LAYOUT_INVALID) {
-
-		wassert(parent.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
-
-		// Get a pointer to the parent.
-		WimaItem* pparent = area->area.ctx.items + parent.layout;
-
-		wassert(WIMA_ITEM_IS_LAYOUT(pparent), WIMA_ASSERT_ITEM_LAYOUT);
-
-		wassert(!(pparent->layout.flags & WIMA_LAYOUT_SPLIT) || pparent->layout.kidCount < 2,
-		        WIMA_ASSERT_LAYOUT_SPLIT_MAX);
-
-		// Add to the kid count.
-		++(pparent->layout.kidCount);
-
-		// If the parent's last kid is valid...
-		if (pparent->layout.lastKid != WIMA_LAYOUT_INVALID) {
-
-			// Get the last kid.
-			WimaItem* pkid = area->area.ctx.items + pparent->layout.lastKid;
-
-			// Set its sibling and the parent's
-			// last kid to the new one.
-			pkid->nextSibling = idx;
-			pparent->layout.lastKid = idx;
-		}
-
-		// If the last kid doesn't exist yet...
-		else {
-
-			// Set the parent's first and last kid to the new one.
-			pparent->layout.firstKid = idx;
-			pparent->layout.lastKid = idx;
-		}
-	}
-
-	// Get the pointer to the new item.
-	WimaItem* playout = area->area.ctx.items + idx;
-
-	// Fill it with NULL.
-	memset(playout, 0, sizeof(WimaItem));
-
-	// Set it as a layout.
-	playout->isLayout = true;
-
-	// Set the parent, nextSibling, area, and window.
-	playout->parent = parent.layout;
-	playout->nextSibling = WIMA_WIDGET_INVALID;
-	playout->info.layout = wlh;
-
-	// Set the background, split, kids, and flags.
-	playout->layout.bgcolor = wima_prop_color(wg.themes[WIMA_THEME_BG]);
-	playout->layout.splitcol = splitcol;
-	playout->layout.firstKid = WIMA_WIDGET_INVALID;
-	playout->layout.lastKid = WIMA_LAYOUT_INVALID;
-	playout->layout.kidCount = 0;
-	playout->layout.flags = flags;
-
-	return wlh;
 }
 
 void wima_layout_setEnabled(WimaLayout wlh, bool enabled) {
@@ -404,4 +297,119 @@ WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags, uint32_t cols) {
 	splitcol.cols = cols;
 
 	return wima_layout_new(parent, flags, splitcol);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Private functions.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaItem* wima_layout_ptr(WimaLayout wlh) {
+
+	wima_assert_init;
+
+	// Get the area pointer.
+	WimaAr* area = wima_area_ptr(wlh.window, wlh.area);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
+
+	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
+
+	// Calculate the layout pointer.
+	return area->area.ctx.items + wlh.layout;
+}
+
+WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol splitcol) {
+
+	wima_assert_init;
+
+	wassert(wima_window_valid(parent.window), WIMA_ASSERT_WIN);
+
+	// Get a pointer to the window.
+	WimaWin* win = dvec_get(wg.windows, parent.window);
+
+	wassert(dtree_exists(win->areas, parent.area), WIMA_ASSERT_AREA);
+
+	// Get a pointer to the area.
+	WimaAr* area = dtree_node(win->areas, parent.area);
+
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
+
+	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_OVER_MAX);
+
+	// Must run between uiBeginLayout() and uiEndLayout().
+	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
+
+	// Make sure the layout starts enabled.
+	flags |= WIMA_LAYOUT_ENABLE;
+
+	// Get the first unused index and increment the count.
+	uint32_t idx = (area->area.ctx.itemCount)++;
+
+	// Fill the handle.
+	WimaLayout wlh;
+	wlh.layout = idx;
+	wlh.area = parent.area;
+	wlh.window = parent.window;
+
+	// If the parent is not valid, we don't have to do
+	// this next part because it means that we are doing
+	// the root, which doesn't need this next stuff.
+	if (parent.layout != WIMA_LAYOUT_INVALID) {
+
+		wassert(parent.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
+
+		// Get a pointer to the parent.
+		WimaItem* pparent = area->area.ctx.items + parent.layout;
+
+		wassert(WIMA_ITEM_IS_LAYOUT(pparent), WIMA_ASSERT_ITEM_LAYOUT);
+
+		wassert(!(pparent->layout.flags & WIMA_LAYOUT_SPLIT) || pparent->layout.kidCount < 2,
+		        WIMA_ASSERT_LAYOUT_SPLIT_MAX);
+
+		// Add to the kid count.
+		++(pparent->layout.kidCount);
+
+		// If the parent's last kid is valid...
+		if (pparent->layout.lastKid != WIMA_LAYOUT_INVALID) {
+
+			// Get the last kid.
+			WimaItem* pkid = area->area.ctx.items + pparent->layout.lastKid;
+
+			// Set its sibling and the parent's
+			// last kid to the new one.
+			pkid->nextSibling = idx;
+			pparent->layout.lastKid = idx;
+		}
+
+		// If the last kid doesn't exist yet...
+		else {
+
+			// Set the parent's first and last kid to the new one.
+			pparent->layout.firstKid = idx;
+			pparent->layout.lastKid = idx;
+		}
+	}
+
+	// Get the pointer to the new item.
+	WimaItem* playout = area->area.ctx.items + idx;
+
+	// Fill it with NULL.
+	memset(playout, 0, sizeof(WimaItem));
+
+	// Set it as a layout.
+	playout->isLayout = true;
+
+	// Set the parent, nextSibling, area, and window.
+	playout->parent = parent.layout;
+	playout->nextSibling = WIMA_WIDGET_INVALID;
+	playout->info.layout = wlh;
+
+	// Set the background, split, kids, and flags.
+	playout->layout.bgcolor = wima_prop_color(wg.themes[WIMA_THEME_BG]);
+	playout->layout.splitcol = splitcol;
+	playout->layout.firstKid = WIMA_WIDGET_INVALID;
+	playout->layout.lastKid = WIMA_LAYOUT_INVALID;
+	playout->layout.kidCount = 0;
+	playout->layout.flags = flags;
+
+	return wlh;
 }

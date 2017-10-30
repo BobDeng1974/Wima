@@ -1649,6 +1649,10 @@ void wima_window_processEvents(WimaWindow wwh) {
 	win->ctx.last_cursor = win->ctx.cursorPos;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Static functions.
+////////////////////////////////////////////////////////////////////////////////
+
 static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wih, WimaEvent e) {
 
 	// Switch on the type of event.

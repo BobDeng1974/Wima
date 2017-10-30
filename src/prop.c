@@ -46,6 +46,7 @@
 #include <dyna/string.h>
 
 #include <wima/prop.h>
+#include <wima/math.h>
 
 #include "global.h"
 #include "prop.h"
@@ -752,6 +753,10 @@ void wima_prop_free(WimaProperty wph) {
 	// Set the index as invalid to tell Wima it's available.
 	prop->idx = WIMA_PROP_INVALID;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Static functions.
+////////////////////////////////////////////////////////////////////////////////
 
 static WimaProperty wima_prop_register(const char* name, const char* label, const char* desc,
                                        WimaPropType type, const WimaPropData* data)
