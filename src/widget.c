@@ -98,7 +98,7 @@ WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
 	wih.layout.layout = idx;
 	wih.layout.window = wah.window;
 
-	WimaItem* item = wima_item_ptr(wih.layout);
+	WimaItem* item = wima_layout_ptr(wih.layout);
 
 	memset(item, 0, sizeof(WimaItem));
 
@@ -336,5 +336,5 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt) {
 
 	info.widget = wdgt;
 
-	return wima_item_ptr(info.layout);
+	return wima_layout_ptr(info.layout);
 }

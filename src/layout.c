@@ -120,7 +120,7 @@ uint16_t wima_layout_clearBoxFlag(uint16_t flags) {
 	return flags;
 }
 
-WimaItem* wima_item_ptr(WimaLayout wlh) {
+WimaItem* wima_layout_ptr(WimaLayout wlh) {
 
 	wima_assert_init;
 
