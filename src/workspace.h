@@ -45,11 +45,31 @@ extern "C" {
 #include <wima/wima.h>
 
 /**
+ * @file workspace.h
+ */
+
+/**
+ * @defgroup workspace_internal workspace_internal
+ * Internal functions and data structures for workspaces.
+ * @{
+ */
+
+/**
  * A workspace, which can be broken down into areas.
  */
 typedef DynaTree WimaWksp;
 
+/**
+ * Checks whether @a n is valid within @a wwh.
+ * @param wwh	The workspace to query.
+ * @param n		The node to test.
+ * @return		true if @a n is valid, false otherwise.
+ */
 bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n);
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }
