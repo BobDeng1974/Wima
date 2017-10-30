@@ -59,7 +59,7 @@ extern "C" {
 /**
  * @def WIMA_AREA_MIN_SIZE
  * The minimum size (in pixels) that an area can be.
- * This is adjust for scaling.
+ * This is adjusted for scaling.
  */
 #define WIMA_AREA_MIN_SIZE (26)
 
@@ -79,6 +79,10 @@ typedef struct WimaArCtx {
 
 } WimaArCtx;
 
+/**
+ * A node in the tree of areas. This is where
+ * all of the area's data is actually kept.
+ */
 typedef struct WimaAr {
 
 	// These are first for speed reasons.
@@ -92,32 +96,50 @@ typedef struct WimaAr {
 	/// Whether this node is a parent or not.
 	bool isParent;
 
+	/// The area's rectangle.
+	WimaRect rect;
+
 	union {
 
+		/**
+		 * The data common only to leaves in the tree.
+		 */
 		struct wima_area_leaf {
 
+			/// The user pointer for the area. This is different
+			/// from the region's user pointer which is shared
+			/// by all areas of the same region type. This user
+			/// pointer is only for the area itself.
 			void* user;
 
+			/// The context for the area.
 			WimaArCtx ctx;
 
+			/// The area's current scale.
 			float scale;
 
+			/// The type of area it is.
 			WimaRegion type;
 
 		} area;
 
+		/**
+		 * The data common to parents in the tree.
+		 */
 		struct wima_area_parent {
 
+			/// The percent of the dimension that the parent is split.
 			float split;
+
+			/// The integer location of the split.
 			int spliti;
 
+			/// Whether the split is vertical (split width) or not.
 			bool vertical;
 
 		} parent;
 
 	};
-
-	WimaRect rect;
 
 } WimaAr;
 
@@ -145,7 +167,25 @@ typedef struct WimaAr {
  */
 WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node);
 
+/**
+ * Initializes the tree of @a areas in @a win.
+ * @param win	The window the tree will be attached to.
+ * @param areas	The tree to initialize.
+ * @param rect	The rectangle for the entire window.
+ * @return		WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ */
 WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect);
+
+/**
+ * Checks whether the tree is valid. Valid means that
+ * all parents have exactly two children, no leaf is
+ * labeled as a parent, and that no parent is labeled
+ * as a leaf type.
+ * @param regions	The tree to check.
+ * @return			true if @a regions is valid, false
+ *					otherwise.
+ */
 bool wima_area_valid(DynaTree regions);
 WimaStatus wima_area_free(DynaTree areas);
 
