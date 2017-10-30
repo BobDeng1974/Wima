@@ -187,7 +187,12 @@ WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect);
  *					otherwise.
  */
 bool wima_area_valid(DynaTree regions);
-WimaStatus wima_area_free(DynaTree areas);
+
+/**
+ * Frees a tree of areas.
+ * @param areas	The tree to free.
+ */
+void wima_area_free(DynaTree areas);
 
 WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e);
 WimaStatus wima_area_mousePos(WimaAr* area, WimaVec pos);

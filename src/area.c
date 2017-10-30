@@ -177,7 +177,7 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) {
 
 static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect);
 static bool wima_area_node_valid(DynaTree regions, DynaNode node);
-static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node);
+static void wima_area_node_free(DynaTree areas, DynaNode node);
 
 static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, DynaNode node, WimaPropData* bg);
 static WimaStatus wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, bool adjustSplit);
@@ -344,26 +344,21 @@ static bool wima_area_node_valid(DynaTree regions, DynaNode node) {
 	return result;
 }
 
-WimaStatus wima_area_free(DynaTree areas) {
+void wima_area_free(DynaTree areas) {
 
 	wima_assert_init;
 	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
 
 	// Free the sub areas.
-	WimaStatus status = wima_area_node_free(areas, dtree_root());
+	wima_area_node_free(areas, dtree_root());
 
 	// Free the tree.
 	dtree_free(areas);
-
-	return status;
 }
 
-static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
+static void wima_area_node_free(DynaTree areas, DynaNode node) {
 
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
-
-	// Make sure this is clear.
-	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	// Get the particular area that we care about.
 	WimaAr* area = dtree_node(areas, node);
@@ -371,17 +366,9 @@ static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 	// We do something different depending on what type of node it is.
 	if (WIMA_AREA_IS_PARENT(area)) {
 
-		// Set the left child user pointer and check for error.
-		status = wima_area_node_free(areas, dtree_left(node));
-		if (yunlikely(status)) {
-			return status;
-		}
-
-		// Set the right child user pointer and check for error.
-		status = wima_area_node_free(areas, dtree_right(node));
-		if (yunlikely(status)) {
-			return status;
-		}
+		// Free the children.
+		wima_area_node_free(areas, dtree_left(node));
+		wima_area_node_free(areas, dtree_right(node));
 	}
 	else {
 
@@ -390,7 +377,7 @@ static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 
 		// If the user didn't allocate anything, just return.
 		if (!area->area.user) {
-			return WIMA_STATUS_SUCCESS;
+			return;
 		}
 
 		// Get the region handle.
@@ -406,14 +393,12 @@ static WimaStatus wima_area_node_free(DynaTree areas, DynaNode node) {
 
 		// If the user didn't specify one, don't call it.
 		if (!free_user_ptr) {
-			return WIMA_STATUS_SUCCESS;
+			return;
 		}
 
 		// Call the user function.
 		free_user_ptr(area->area.user);
 	}
-
-	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus wima_area_key(WimaAr* area, WimaKeyEvent e) {
