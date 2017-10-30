@@ -186,26 +186,184 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) {
  * @{
  */
 
+/**
+ * Recursive function for initializing areas.
+ * @param win	The window the areas are in.
+ * @param areas	The area tree.
+ * @param node	The node of the current area to process.
+ * @param rect	The rectangle of the area.
+ * @return		WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ */
 static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect);
+
+/**
+ * A recursive function to check if the area tree is valid.
+ * @param regions	The tree to check.
+ * @param node		The current node to check.
+ * @return			true if valid, false otherwise.
+ */
 static bool wima_area_node_valid(DynaTree regions, DynaNode node);
+
+/**
+ * Recursive function for freeing areas.
+ * @param areas	The tree to free.
+ * @param node	The current node being freed.
+ */
 static void wima_area_node_free(DynaTree areas, DynaNode node);
 
+/**
+ * Recursive function to draw a tree of areas.
+ * @param ctx	The context to render to.
+ * @param areas	The tree of areas to draw.
+ * @param node	The current node being drawn.
+ * @param bg	The data for the background color.
+ * @return		WIMA_STATUS_SUCCESS on success, an
+ *				error code otherwise.
+ */
 static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, DynaNode node, WimaPropData* bg);
+
+/**
+ * Recursive function to resize a tree of areas.
+ * @param areas			The tree to resize.
+ * @param node			The current node being resized.
+ * @param rect			The node's rectangle.
+ * @param adjustSplit	Whether or not the split should be moved.
+ *						See @a wima_area_resize().
+ */
 static void wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, bool adjustSplit);
+
+/**
+ * Recursive function to layout a tree of areas.
+ * @param areas	The tree to layout.
+ * @param node	The current node being laid out.
+ * @return		WIMA_STATUS_SUCCESS on success,
+ *				an error code otherwise.
+ */
 static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
+
+/**
+ * Recursive function to determine which area has the mouse.
+ * @param areas		The tree to query.
+ * @param area		The current area being queried.
+ * @param cursor	The position of the cursor.
+ * @return			The node that has the cursor, or WIMA_AREA_INVALID.
+ */
 static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaVec cursor);
+
+/**
+ * A recursive function to test whether the mouse is on a split.
+ * @param areas		The tree of areas to test.
+ * @param node		The current node being tested.
+ * @param pos		The position of the mouse.
+ * @param result	A pointer to store the split's info in, if the
+ *					mouse *is* on a split.
+ * @return			true if the mouse is on a split, false otherwise.
+ */
 static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVec pos, WimaAreaSplit* result);
+
+/**
+ * A recursive function to move splits.
+ * @param areas		The tree of areas to move splits in.
+ * @param node		The current node.
+ * @param diff		The amount the split should be moved,
+ *					and direction (negative is left).
+ * @param isLeft	true if area whose split is moved is a
+ *					left area, false otherwise.
+ * @param vertical	Whether the split was vertical or not.
+ */
 static void wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bool isLeft, bool vertical);
+
+/**
+ * A recursive function to determine the limit that a split can be moved.
+ * This takes into account how much the children's splits can be moved.
+ * @param areas		The tree of areas to test.
+ * @param node		The current node being tested.
+ * @param isLeft	true if area whose split is moved is a
+ *					left area, false otherwise.
+ * @param vertical	Whether the split was vertical or not.
+ * @return			The limit that @a node's split can be moved.
+ */
 static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool isLeft, bool vertical);
+
+/**
+ * A recursive function to find the widget under the mouse.
+ * @param areas	The tree of areas to test.
+ * @param area	The current area being tested.
+ * @param pos	The pos to test against.
+ * @param flags	The flags of the widget. If the widget at the
+ *				pos does not match, WIMA_WIDGET_INVALID will
+ *				be returned.
+ * @return		The widget at the pos, or WIMA_WIDGET_INVALID.
+ */
 static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVec pos, uint32_t flags);
 
+/**
+ * Fills the two given rectangles with the
+ * rectangles for the children of @a area.
+ * @param area	The area whose children's
+ *				rectangles will be calculated.
+ * @param left	A pointer to the left child rect.
+ * @param right	A pointer to the right child rect.
+ */
 static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* right);
+
+/**
+ * Translates @a pos into relative coordinates
+ * according to @a area's rectangle.
+ * @param area	The area to transform @a pos into.
+ * @param pos	The position of the cursor.
+ * @return		The position of the cursor relative
+ *				to @a area.
+ */
 static WimaVec wima_area_translatePos(WimaAr* area, WimaVec pos);
+
+/**
+ * Pushes an area's viewport onto NanoVG's stack.
+ * @param nvg		The NanoVG context.
+ * @param viewport	The viewport to push.
+ */
 static void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport);
+
+/**
+ * Pops an area's viewport off of NanoVG's stack.
+ * @param nvg	The NanoVG context.
+ */
 static void wima_area_popViewport(NVGcontext* nvg);
+
+/**
+ * Renders an area's background.
+ * @param area	The area's background to render.
+ * @param nvg	The NanoVG context to render to.
+ * @param bg	A pointer to the prop that will have
+ *				the background color to render to.
+ */
 static void wima_area_background(WimaAr* area, NVGcontext* nvg, WimaPropData* bg);
+
+/**
+ * Draw's an area's borders. This makes the area "pop
+ * out" from the screen.
+ * @param area	The area whose borders will be drawn.
+ * @param nvg	The NanoVG context to render to.
+ */
 static void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg);
+
+/**
+ * Draws split widgets (drag handles at the top right and
+ * bottom left of every area).
+ * @param area	The area whose split widgets will be drawn.
+ * @param nvg	The NanoVG context to render to.
+ */
 static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg);
+
+/**
+ * Draws an area's join overlay. This overlay is for when an area is
+ * going to be gobbled by an adjoining area.
+ * @param area		The area whose join overlay will be drawn.
+ * @param nvg		The NanoVG context to render to.
+ * @param vertical	Whether the arrow should be vertical or not.
+ * @param mirror	Whether the arrow should point left (down) or not.
+ */
 static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertical, bool mirror);
 
 /**
