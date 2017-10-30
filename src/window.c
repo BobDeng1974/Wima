@@ -1241,7 +1241,7 @@ static WimaStatus wima_window_processFileDrop(WimaWindow wwh, DynaVector files);
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_window_free(WimaWin* win) {
+void wima_window_free(WimaWin* win) {
 
 	wima_assert_init;
 
@@ -1251,7 +1251,7 @@ WimaStatus wima_window_free(WimaWin* win) {
 	dstr_free(win->name);
 	nvgDeleteGL3(win->render.nvg);
 
-	return wima_area_free(win->areas);
+	wima_area_free(win->areas);
 }
 
 void wima_window_setDirty(WimaWin* win, bool layout) {
