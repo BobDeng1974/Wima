@@ -452,6 +452,8 @@ static WimaColor wima_theme_nodeColor(WimaNodeThemeType type);
 
 WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 
+	wima_assert_init;
+
 	wassert(props != NULL, WIMA_ASSERT_PTR_NULL);
 	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
@@ -480,11 +482,14 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 }
 
 WimaProperty wima_theme_loadBackground() {
+	wima_assert_init;
 	return wima_theme_createProp(WIMA_PROP_COLOR, widgetParentNames[WIMA_THEME_BG],
 	                             NULL, widgetThemeLabels[WIMA_THEME_BG], bgDesc, 0);
 }
 
 WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
+
+	wima_assert_init;
 
 	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
@@ -560,6 +565,8 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 
 WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 
+	wima_assert_init;
+
 	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
 	WimaProperty main = wima_theme_createProp(WIMA_PROP_GROUP, widgetParentNames[WIMA_THEME_NODE],
@@ -621,6 +628,8 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 
 void wima_theme_setBackground(WimaColor bg) {
 
+	wima_assert_init;
+
 	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_BG];
 
@@ -636,6 +645,8 @@ void wima_theme_setBackground(WimaColor bg) {
 
 WimaColor wima_theme_background() {
 
+	wima_assert_init;
+
 	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_BG];
 
@@ -650,6 +661,8 @@ WimaColor wima_theme_background() {
 }
 
 WimaWidgetTheme* wima_theme_widget(WimaThemeType type) {
+
+	wima_assert_init;
 
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
@@ -727,6 +740,8 @@ int wima_theme_widget_shadeBottom(WimaThemeType type) {
 
 void wima_theme_widget_setShaded(WimaThemeType type, bool shaded) {
 
+	wima_assert_init;
+
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
 	// Get the property.
@@ -752,6 +767,8 @@ void wima_theme_widget_setShaded(WimaThemeType type, bool shaded) {
 
 bool wima_theme_widget_shaded(WimaThemeType type) {
 
+	wima_assert_init;
+
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
 	// Get the property.
@@ -776,6 +793,8 @@ bool wima_theme_widget_shaded(WimaThemeType type) {
 }
 
 WimaNodeTheme* wima_theme_node() {
+
+	wima_assert_init;
 
 	// Get the property.
 	WimaProperty wph = wg.themeStarts[WIMA_THEME_NODE];
@@ -860,6 +879,8 @@ WimaColor wima_theme_node_wireSelected() {
 
 void wima_theme_node_setWireCurving(int curving) {
 
+	wima_assert_init;
+
 	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_NODE];
 
@@ -882,6 +903,8 @@ void wima_theme_node_setWireCurving(int curving) {
 }
 
 int wima_theme_node_wireCurving() {
+
+	wima_assert_init;
 
 	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_NODE];
@@ -907,6 +930,8 @@ int wima_theme_node_wireCurving() {
 void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool flip,
                             WimaColor *shade_top, WimaColor *shade_btm)
 {
+	wima_assert_init;
+
 	wassert(shade_top != NULL, WIMA_ASSERT_PTR_NULL);
 	wassert(shade_btm != NULL, WIMA_ASSERT_PTR_NULL);
 
@@ -993,6 +1018,8 @@ void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool 
 
 WimaColor wima_theme_textColor(WimaWidgetTheme* theme, WimaWidgetState state) {
 
+	wima_assert_init;
+
 	wassert(theme != NULL, WIMA_ASSERT_THEME);
 
 	WimaPropData* t = (WimaPropData*) theme;
@@ -1003,6 +1030,8 @@ WimaColor wima_theme_textColor(WimaWidgetTheme* theme, WimaWidgetState state) {
 }
 
 WimaColor wima_theme_wireColor(WimaNodeTheme* theme, WimaWidgetState state) {
+
+	wima_assert_init;
 
 	// TODO: This might need to return two
 	// colors, like wima_theme_shadeColors().
@@ -1032,6 +1061,8 @@ WimaColor wima_theme_wireColor(WimaNodeTheme* theme, WimaWidgetState state) {
 
 static void wima_theme_createName(char* buffer, const char* name1, const char* name2) {
 
+	wima_assert_init;
+
 	wassert(buffer != NULL, WIMA_ASSERT_PTR_NULL);
 	wassert(name1 != NULL, WIMA_ASSERT_PTR_NULL);
 
@@ -1051,6 +1082,8 @@ static void wima_theme_createName(char* buffer, const char* name1, const char* n
 static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, const char* name2,
                                           const char* label, const char* desc, int initial)
 {
+	wima_assert_init;
+
 	wassert(name1 != NULL, WIMA_ASSERT_PTR_NULL);
 
 	char buffer[WIMA_THEME_MAX_BUFFER];
@@ -1080,6 +1113,8 @@ static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, 
 }
 
 static const char** wima_theme_descs(WimaThemeType type) {
+
+	wima_assert_init;
 
 	// Switch on the type to return the correct descriptions.
 	switch (type) {
@@ -1128,6 +1163,8 @@ static const char** wima_theme_descs(WimaThemeType type) {
 
 static void wima_theme_setWidgetColor(WimaThemeType type, WimaWidgetThemeType idx, WimaColor color) {
 
+	wima_assert_init;
+
 	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_WIDGET_COLOR);
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
@@ -1154,6 +1191,8 @@ static void wima_theme_setWidgetColor(WimaThemeType type, WimaWidgetThemeType id
 
 static WimaColor wima_theme_widgetColor(WimaThemeType type, WimaWidgetThemeType idx) {
 
+	wima_assert_init;
+
 	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_WIDGET_COLOR);
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
@@ -1179,6 +1218,8 @@ static WimaColor wima_theme_widgetColor(WimaThemeType type, WimaWidgetThemeType 
 }
 
 static void wima_theme_setWidgetDelta(WimaThemeType type, bool top, int delta) {
+
+	wima_assert_init;
 
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
@@ -1208,6 +1249,8 @@ static void wima_theme_setWidgetDelta(WimaThemeType type, bool top, int delta) {
 
 static int wima_theme_widgetDelta(WimaThemeType type, bool top) {
 
+	wima_assert_init;
+
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
 	// Get the property.
@@ -1236,6 +1279,8 @@ static int wima_theme_widgetDelta(WimaThemeType type, bool top) {
 
 static void wima_theme_setNodeColor(WimaNodeThemeType type, WimaColor color) {
 
+	wima_assert_init;
+
 	wassert(type <= WIMA_THEME_NODE_WIRE_SELECTED, WIMA_ASSERT_THEME_NODE_COLOR);
 
 	// Get the property.
@@ -1260,6 +1305,8 @@ static void wima_theme_setNodeColor(WimaNodeThemeType type, WimaColor color) {
 }
 
 static WimaColor wima_theme_nodeColor(WimaNodeThemeType type) {
+
+	wima_assert_init;
 
 	wassert(type <= WIMA_THEME_NODE_WIRE_SELECTED, WIMA_ASSERT_THEME_NODE_COLOR);
 
