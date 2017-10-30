@@ -74,6 +74,18 @@ extern "C" {
 
 #include "event.h"
 
+/**
+ * @file widget.h
+ */
+
+/**
+ * @defgroup widget_internal widget_internal
+ * Internal functions and data structures for widgets.
+ * @{
+ */
+
+//! @cond Doxygen suppress
+
 // These bits, starting at bit 24, can be safely assigned by the
 // application, e.g. as item types, other event types, drop targets, etc.
 // They can be set and queried using wima_ui_item_setFlags() and
@@ -134,9 +146,21 @@ extern "C" {
 
 // End limits.
 
+// Forward declaration.
 typedef struct WimaItem WimaItem;
+//! @endcond Doxygen suppress
 
+/**
+ * Returns a pointer to a widget's data.
+ * @param wdgt	The widget to query.
+ * @return		A pointer to the widget's data.
+ * @pre			@a wdgt must be valid.
+ */
 WimaItem* wima_widget_ptr(WimaWidget wdgt);
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }
