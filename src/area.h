@@ -48,7 +48,6 @@ extern "C" {
 
 #include "widget.h"
 #include "layout.h"
-#include "window.h"
 
 /**
  * @defgroup area_internal area_internal
@@ -62,6 +61,25 @@ extern "C" {
  * This is adjusted for scaling.
  */
 #define WIMA_AREA_MIN_SIZE (26)
+
+/**
+ * The information for an area split.
+ */
+typedef struct WimaAreaSplit {
+
+	/// The integer location of the split.
+	int split;
+
+	/// The area node with the split.
+	WimaAreaNode area;
+
+	/// The window with the area.
+	WimaWindow window;
+
+	/// Whether or not the split is vertical (splits width).
+	bool vertical;
+
+} WimaAreaSplit;
 
 /**
  * Item (layouts and widgets) context for an area.
@@ -194,29 +212,83 @@ bool wima_area_valid(DynaTree regions);
  */
 void wima_area_free(DynaTree areas);
 
+/**
+ * Handles a key event on an area.
+ * @param area	The area receiving the event.
+ * @param e		The event.
+ */
 void wima_area_key(WimaAr* area, WimaKeyEvent e);
+
+/**
+ * Handles a mouse enter/exit event on an area.
+ * @param area	The area receiving the event.
+ * @param enter	true if entered, false otherwise.
+ */
 void wima_area_mouseEnter(WimaAr* area, bool enter);
 
+/**
+ * Draws all areas.
+ * @param ctx	The render context to draw to.
+ * @param areas	The tree of areas to draw.
+ * @return		WIMA_STATUS_SUCCESS on success, a
+ *				user-supplied error code otherwise.
+ */
 WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas);
+
+/**
+ * Resizes all areas.
+ * @param areas	The tree of areas.
+ * @param rect	The rectangle for the root area.
+ */
 void wima_area_resize(DynaTree areas, WimaRect rect);
 
-// layout all added items starting from the root item 0.
-// after calling uiEndLayout(), no further modifications to the item tree should
-// be done until the next call to uiBeginLayout().
-// It is safe to immediately draw the items after a call to uiEndLayout().
-// this is an O(N) operation for N = number of declared items.
+/**
+ * Lays out all areas.
+ * @param areas	The tree of areas.
+ * @return		WIMA_STATUS_SUCCESS on success, a
+ *				user-supplied error code otherwise.
+ */
 WimaStatus wima_area_layout(DynaTree areas);
-WimaAreaNode wima_area_containsMouse(DynaTree areas, WimaVec cursor);
-bool wima_area_mouseOnSplit(DynaTree areas, WimaVec pos, WimaMouseSplitEvent* result);
-void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaVec cursor);
 
-// returns the topmost item containing absolute location (x,y), starting with
-// item as parent, using a set of flags and masks as filter:
-// if both flags and mask are UI_ANY, the first topmost item is returned.
-// if mask is UI_ANY, the first topmost item matching *any* of flags is returned.
-// otherwise the first item matching (item.flags & flags) == mask is returned.
-// you may combine box, layout, event and user flags.
-// frozen items will always be ignored.
+/**
+ * Finds the area that the mouse is currently inside.
+ * Returns WIMA_AREA_INVALID if the mouse is not in
+ * any area (on a split, for example).
+ * @param areas		The tree of areas to query.
+ * @param cursor	The cursor position to test.
+ * @return			The node with the mouse, or
+ *					WIMA_AREA_INVALID if none.
+ */
+WimaAreaNode wima_area_mouseOver(DynaTree areas, WimaVec cursor);
+
+/**
+ * Returns true if the mouse is on a split, false otherwise.
+ * @param areas		The tree of areas to query.
+ * @param pos		The position of the mouse.
+ * @param result	A pointer to a @a WimaAreaSplit that will be
+ *					filled with the split info.
+ * @return			true if mouse is on a split, false otherwise.
+ */
+bool wima_area_mouseOnSplit(DynaTree areas, WimaVec pos, WimaAreaSplit* result);
+
+/**
+ * Moves an area's split, as well as all of its children's splits.
+ * @param areas		The tree of areas to query for the area.
+ * @param node		The node of the area.
+ * @param split		The split's info.
+ * @param cursor	The position of the cursor.
+ */
+void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, WimaVec cursor);
+
+/**
+ * Finds the widget at @a pos.
+ * @param areas	The tree of areas to query.
+ * @param pos	The pos to test against.
+ * @param flags	The flags of the widget. If the widget at the
+ *				pos does not match, WIMA_WIDGET_INVALID will
+ *				be returned.
+ * @return		The widget at the pos, or WIMA_WIDGET_INVALID.
+ */
 WimaWidget wima_area_findWidget(DynaTree areas, WimaVec pos, uint32_t flags);
 
 /**

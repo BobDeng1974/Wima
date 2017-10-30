@@ -190,7 +190,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	event->area_key.key.scancode = scancode;
 	event->area_key.key.action = wact;
 	event->area_key.key.mods = wmods;
-	event->area_key.area = wima_area_containsMouse(wwin->areas, wwin->ctx.cursorPos);
+	event->area_key.area = wima_area_mouseOver(wwin->areas, wwin->ctx.cursorPos);
 
 	// Set the window as dirty (to be redrawn).
 	wima_window_setDirty(wwin, false);
@@ -375,7 +375,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	// Set the cursor position on the window.
 	wwin->ctx.cursorPos = pos;
 
-	WimaMouseSplitEvent sevent;
+	WimaAreaSplit sevent;
 	uint32_t numEvents;
 
 	// If we are moving the split...
@@ -406,7 +406,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			wwin->ctx.hover = wima_area_findWidget(wwin->areas, pos, WIMA_ITEM_EVENT_MASK);
 
 			// Find out if we switched areas.
-			WimaAreaNode area = wima_area_containsMouse(wwin->areas, pos);
+			WimaAreaNode area = wima_area_mouseOver(wwin->areas, pos);
 			if (area != wwin->ctx.cursorArea) {
 
 				numEvents = wwin->ctx.eventCount;

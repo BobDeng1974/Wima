@@ -183,7 +183,7 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 static void wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, bool adjustSplit);
 static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
 static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaVec cursor);
-static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVec pos, WimaMouseSplitEvent* result);
+static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVec pos, WimaAreaSplit* result);
 static void wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bool isLeft, bool vertical);
 static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool isLeft, bool vertical);
 static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVec pos, uint32_t flags);
@@ -660,7 +660,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 	return status;
 }
 
-WimaAreaNode wima_area_containsMouse(DynaTree areas, WimaVec cursor) {
+WimaAreaNode wima_area_mouseOver(DynaTree areas, WimaVec cursor) {
 
 	wima_assert_init;
 	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
@@ -724,13 +724,13 @@ static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, W
 	return result;
 }
 
-bool wima_area_mouseOnSplit(DynaTree areas, WimaVec pos, WimaMouseSplitEvent* result) {
+bool wima_area_mouseOnSplit(DynaTree areas, WimaVec pos, WimaAreaSplit* result) {
 	wima_assert_init;
 	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
 	return wima_area_node_mouseOnSplit(areas, dtree_root(), pos, result);
 }
 
-static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVec pos, WimaMouseSplitEvent* result) {
+static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVec pos, WimaAreaSplit* result) {
 
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
@@ -810,7 +810,7 @@ static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVec p
 	return on;
 }
 
-void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaVec cursor) {
+void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, WimaVec cursor) {
 
 	wima_assert_init;
 
@@ -824,7 +824,7 @@ void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, W
 
 	// Get the difference between the correct cursor coordinate
 	// and the integer location of the split.
-	int diff = (e.vertical ? pos.x : pos.y) - area->parent.spliti;
+	int diff = (split.vertical ? pos.x : pos.y) - area->parent.spliti;
 
 	// Figure out if the cursor is on the left (or above) or not.
 	bool isLeft = diff < 0;
@@ -833,7 +833,7 @@ void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, W
 	DynaNode child = isLeft ? dtree_left(node) : dtree_right(node);
 
 	// Calculate the limit of the child.
-	int limit = wima_area_node_moveSplit_limit(areas, child, diff < 0, e.vertical);
+	int limit = wima_area_node_moveSplit_limit(areas, child, diff < 0, split.vertical);
 
 	// We need to flip the limit if the cursor is on the left or above.
 	limit = isLeft && limit != 0 ? -limit : limit;
@@ -850,20 +850,18 @@ void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, W
 	area->parent.spliti += diff;
 
 	// Get the appropriate dimension.
-	float dim = (float) ((e.vertical ? area->rect.w : area->rect.h) - 1);
+	float dim = (float) ((split.vertical ? area->rect.w : area->rect.h) - 1);
 
 	// Set the float value.
 	area->parent.split = (float) area->parent.spliti / dim;
-
-	WimaStatus status;
 
 	// Get the children nodes.
 	DynaNode leftNode = dtree_left(node);
 	DynaNode rightNode = dtree_right(node);
 
 	// Move the children's splits.
-	wima_area_node_moveSplit(areas, leftNode, diff, true, e.vertical);
-	wima_area_node_moveSplit(areas, rightNode, -diff, false, e.vertical);
+	wima_area_node_moveSplit(areas, leftNode, diff, true, split.vertical);
+	wima_area_node_moveSplit(areas, rightNode, -diff, false, split.vertical);
 
 	// Resize this node and its children, and return the status.
 	wima_area_node_resize(areas, node, area->rect, false);

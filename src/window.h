@@ -48,8 +48,7 @@
 #include <wima/wima.h>
 
 #include "event.h"
-#include "old_layout.h"
-
+#include "area.h"
 #include "workspace.h"
 
 #include "render/render.h"
@@ -101,7 +100,7 @@ typedef struct WimaWinCtx {
 
 	WimaVec dragStart;
 
-	WimaMouseSplitEvent split;
+	WimaAreaSplit split;
 
 	uint32_t eventCount;
 

@@ -76,17 +76,6 @@ typedef enum WimaEventType {
 
 } WimaEventType;
 
-typedef struct WimaMouseSplitEvent {
-
-	int split;
-
-	WimaAreaNode area;
-	WimaWindow window;
-
-	bool vertical;
-
-} WimaMouseSplitEvent;
-
 typedef struct WimaAreaKeyEvent {
 
 	WimaKeyEvent key;
@@ -122,8 +111,6 @@ typedef struct WimaEvent {
 		WimaCharEvent char_event;
 
 		DynaVector file_drop;
-
-		WimaMouseSplitEvent split;
 
 		WimaAreaEnterEvent area_enter;
 

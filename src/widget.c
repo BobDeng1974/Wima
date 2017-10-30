@@ -65,6 +65,7 @@
 #include "widget.h"
 
 #include "area.h"
+#include "window.h"
 
 wima_global_decl;
 wima_assert_msgs_decl;
