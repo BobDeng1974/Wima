@@ -121,8 +121,6 @@ WimaMenu areaOptionMenu = {
     3,
 };
 
-// TODO: Comments here.
-
 void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
 	wima_assert_init;
