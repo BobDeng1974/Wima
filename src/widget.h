@@ -58,8 +58,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#ifndef WIMA_ITEM_H
-#define WIMA_ITEM_H
+#ifndef WIMA_WIDGET_H
+#define WIMA_WIDGET_H
 
 /* For C++ compatibility. */
 #ifdef __cplusplus
@@ -142,4 +142,4 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt);
 }
 #endif
 
-#endif // WIMA_ITEM_H
+#endif // WIMA_WIDGET_H

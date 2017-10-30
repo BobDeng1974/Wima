@@ -34,6 +34,7 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <wima/wima.h>
 #include <wima/layout.h>
 
 #include "global.h"
@@ -216,13 +217,13 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol
 
 	// Set the parent, nextSibling, area, and window.
 	playout->parent = parent.layout;
-	playout->nextSibling = WIMA_ITEM_INVALID;
+	playout->nextSibling = WIMA_WIDGET_INVALID;
 	playout->info.layout = wlh;
 
 	// Set the background, split, kids, and flags.
 	playout->layout.bgcolor = wima_prop_color(wg.themes[WIMA_THEME_BG]);
 	playout->layout.splitcol = splitcol;
-	playout->layout.firstKid = WIMA_ITEM_INVALID;
+	playout->layout.firstKid = WIMA_WIDGET_INVALID;
 	playout->layout.lastKid = WIMA_LAYOUT_INVALID;
 	playout->layout.kidCount = 0;
 	playout->layout.flags = flags;

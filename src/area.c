@@ -617,7 +617,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 		WimaLayout parent;
 		parent.area = node;
 		parent.window = area->window;
-		parent.layout = WIMA_ITEM_INVALID;
+		parent.layout = WIMA_WIDGET_INVALID;
 
 		// Set the expand flags.
 		uint16_t flags = wima_layout_setExpandFlags(0, true, true);
@@ -1052,7 +1052,7 @@ static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVe
 
 		// Set invalid data in return.
 		wdgt = item;
-		wdgt.widget = WIMA_ITEM_INVALID;
+		wdgt.widget = WIMA_WIDGET_INVALID;
 
 		// TODO: Remove this.
 		return wdgt;
