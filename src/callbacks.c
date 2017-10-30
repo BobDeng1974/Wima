@@ -279,7 +279,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		}
 
 		// If the criteria for a click wasn't met...
-		else if (ts - WIMA_CLICK_THRESHOLD > wwin->ctx.click_timestamp ||
+		else if (ts - WIMA_WIN_CLICK_THRESHOLD > wwin->ctx.click_timestamp ||
 		         wwin->ctx.click_button != wbtn ||
 		         !wima_widget_compare(clickItem, wwin->ctx.click_item))
 		{
