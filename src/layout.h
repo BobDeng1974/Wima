@@ -45,98 +45,120 @@ extern "C" {
 #include <wima/render.h>
 #include <wima/layout.h>
 
+#include "item.h"
 #include "old_layout.h"
 #include "widget.h"
 
+/**
+ * @file src/layout.h
+ */
+
+/**
+ * @defgroup layout_internal layout_internal
+ * Internal functions and data structures for manipulating layouts.
+ * @{
+ */
+
+/**
+ * The types of layout stages Wima can be in.
+ */
+typedef enum WimaLayoutStage {
+
+	/// Layout stage.
+	WIMA_UI_STAGE_LAYOUT       = 0,
+
+	/// Post layout stage (drawing).
+	WIMA_UI_STAGE_POST_LAYOUT  = 1,
+
+	/// Processing stage (event handling).
+	WIMA_UI_STAGE_PROCESS      = 2,
+
+} WimaLayoutStage;
+
+/**
+ * A flag indicating whether a layout is enabled.
+ */
 #define WIMA_LAYOUT_ENABLE      (0x0001)
+
+/**
+ * A flag indicating whether a layout is a row.
+ */
 #define WIMA_LAYOUT_ROW         (0x0002)
+
+/**
+ * A flag indicating whether a layout is a column.
+ */
 #define WIMA_LAYOUT_COL         (0x0004)
+
+/**
+ * A flag indicating whether a layout is a split.
+ */
 #define WIMA_LAYOUT_SPLIT       (0x0008)
+
+/**
+ * A flag indicating whether a layout is a list.
+ */
 #define WIMA_LAYOUT_LIST        (0x0010)
+
+/**
+ * A flag indicating whether a layout is a grid.
+ */
 #define WIMA_LAYOUT_GRID        (0x0020)
+
+/**
+ * A flag indicating whether a layout expands horizontally.
+ */
 #define WIMA_LAYOUT_FILL_HOR    (0x0040)
+
+/**
+ * A flag indicating whether a layout expands vertically.
+ */
 #define WIMA_LAYOUT_FILL_VER    (0x0080)
+
+/**
+ * A flag indicating whether a layout scrolls horizontally.
+ */
 #define WIMA_LAYOUT_SCROLL_HOR  (0x0100)
+
+/**
+ * A flag indicating whether a layout scrolls vertically.
+ */
 #define WIMA_LAYOUT_SCROLL_VER  (0x0200)
+
+/**
+ * A flag indicating whether a layout is a separator.
+ */
 #define WIMA_LAYOUT_SEP         (0x0400)
+
+/**
+ * A flag indicating whether a layout has a box.
+ */
 #define WIMA_LAYOUT_BOX         (0x0800)
 
 // We may use these later, but not for now.
 //#define WIMA_LAYOUT_ROW_FLOW    (0x1000)
 //#define WIMA_LAYOUT_COL_FLOW    (0x2000)
 
-typedef union WimaItemInfo {
-
-	WimaWidget widget;
-	WimaLayout layout;
-
-} WimaItemInfo;
-
-typedef union WimaLayoutSplitCol {
-
-	float split;
-	uint32_t cols;
-
-} WimaLayoutSplitCol;
-
-typedef struct WimaItem {
-
-	WimaItemInfo info;
-
-	bool isLayout;
-
-	uint16_t parent;
-
-	// Index of next sibling with same parent.
-	uint16_t nextSibling;
-
-	WimaRect rect;
-
-	union {
-
-		struct WimaLayoutInfo {
-
-			WimaColor bgcolor;
-
-			WimaLayoutSplitCol splitcol;
-
-			// Index of first kid.
-			// If old item: index of equivalent new item.
-			uint16_t firstKid;
-
-			uint16_t lastKid;
-
-			uint16_t kidCount;
-
-			uint16_t flags;
-
-		} layout;
-
-		struct WimaWdgt {
-
-			/// About 27 bits worth of flags.
-			uint32_t flags;
-
-			/// The property that this refers to.
-			WimaProperty prop;
-
-			/// The user pointer.
-			void* user;
-
-			/// Event functions.
-			WimaWidgetFuncs funcs;
-
-		} widget;
-
-	};
-
-} WimaItem;
-
-#define WIMA_ITEM_IS_LAYOUT(item)  ((item)->isLayout)
-#define WIMA_ITEM_IS_WIDGET(item)  (!((item)->isLayout))
-
+/**
+ * Gets the pointer to a layout's data.
+ * @param wlh	The layout to query.
+ * @return		The pointer to the layout's data.
+ * @pre			@a wlh must be valid.
+ */
 WimaItem* wima_layout_ptr(WimaLayout wlh) yinline;
+
+/**
+ * Creates a new layout with the specified parent, flags, and split/columns.
+ * @param parent	The parent of the new layout.
+ * @param flags		The flags of the new layout.
+ * @param splitcol	The split/columns of the layout.
+ * @return			The new layout.
+ */
 WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol splitcol);
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }

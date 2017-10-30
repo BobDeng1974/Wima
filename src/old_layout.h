@@ -68,14 +68,6 @@ extern "C" {
 
 #include <wima/wima.h>
 
-typedef enum WimaLayoutStage {
-
-	WIMA_UI_STAGE_LAYOUT       = 0,
-	WIMA_UI_STAGE_POST_LAYOUT  = 1,
-	WIMA_UI_STAGE_PROCESS      = 2,
-
-} WimaLayoutStage;
-
 void wima_layout_computeSize(WimaWidget item, int dim);
 
 void wima_layout_arrange(WimaWidget item, int dim);
