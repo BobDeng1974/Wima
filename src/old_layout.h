@@ -61,6 +61,11 @@
 #ifndef WIMA_OLD_LAYOUT_H
 #define WIMA_OLD_LAYOUT_H
 
+/* For C++ compatibility. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <wima/wima.h>
 
 typedef enum WimaLayoutStage {
@@ -74,5 +79,9 @@ typedef enum WimaLayoutStage {
 void wima_layout_computeSize(WimaWidget item, int dim);
 
 void wima_layout_arrange(WimaWidget item, int dim);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // WIMA_OLD_LAYOUT_H

@@ -37,6 +37,11 @@
 #ifndef WIMA_CALLBACKS_H
 #define WIMA_CALLBACKS_H
 
+/* For C++ compatibility. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <GLFW/glfw3.h>
 
 /**
@@ -184,5 +189,9 @@ void wima_callback_error(int error, const char* desc);
 /**
  * @}
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // WIMA_CALLBACKS_H

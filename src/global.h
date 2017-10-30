@@ -37,6 +37,11 @@
 #ifndef WIMA_GLOBAL_H
 #define WIMA_GLOBAL_H
 
+/* For C++ compatibility. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <yc/assert.h>
 
 #include <dyna/vector.h>
@@ -188,5 +193,9 @@ typedef enum WimaAssertType {
 
 #define wima_error(idx) wg.funcs.error((idx), __func__, wima_error_descs[(idx) - 128])
 #define wima_error_desc(idx, desc) wg.funcs.error((idx), __func__, (desc))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // WIMA_GLOBAL_H

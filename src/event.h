@@ -37,6 +37,11 @@
 #ifndef WIMA_EVENT_H
 #define WIMA_EVENT_H
 
+/* For C++ compatibility. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <wima/wima.h>
 
 // Limits.
@@ -125,5 +130,10 @@ typedef struct WimaEvent {
 	};
 
 } WimaEvent;
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif // WIMA_EVENT_H

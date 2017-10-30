@@ -37,6 +37,11 @@
 #ifndef WIMA_WINDOW_H
 #define WIMA_WINDOW_H
 
+/* For C++ compatibility. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 
 #include <yc/assert.h>
@@ -167,5 +172,9 @@ bool wima_window_valid(WimaWindow wwh);
 #endif
 
 #define WIMA_WIN(win) ((WimaWindow) (long) glfwGetWindowUserPointer(win))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // WIMA_WINDOW_H

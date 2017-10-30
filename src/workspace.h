@@ -37,6 +37,11 @@
 #ifndef WIMA_WORKSPACE_H
 #define WIMA_WORKSPACE_H
 
+/* For C++ compatibility. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <wima/wima.h>
 
 /**
@@ -45,5 +50,9 @@
 typedef DynaTree WimaWksp;
 
 bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // WIMA_WORKSPACE_H
