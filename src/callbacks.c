@@ -966,22 +966,6 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 	++(wwin->ctx.eventCount);
 }
 
-void wima_callback_windowRefresh(GLFWwindow* window) {
-
-	wima_assert_init;
-
-	// Get the window handle from GLFW.
-	WimaWindow wwh = WIMA_WIN(window);
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
-
-	// Get the pointer to the window.
-	WimaWin* wwin = dvec_get(wg.windows, wwh);
-
-	// Set the window as dirty without forcing layout.
-	wima_window_setDirty(wwin, false);
-}
-
 void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 
 	wima_assert_init;
@@ -1027,6 +1011,22 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 
 	// Add one to the event count.
 	++(wwin->ctx.eventCount);
+}
+
+void wima_callback_windowRefresh(GLFWwindow* window) {
+
+	wima_assert_init;
+
+	// Get the window handle from GLFW.
+	WimaWindow wwh = WIMA_WIN(window);
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the pointer to the window.
+	WimaWin* wwin = dvec_get(wg.windows, wwh);
+
+	// Set the window as dirty without forcing layout.
+	wima_window_setDirty(wwin, false);
 }
 
 void wima_callback_windowClose(GLFWwindow* window) {
