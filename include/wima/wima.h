@@ -2400,6 +2400,12 @@ const char* wima_window_clipboard(WimaWindow wwh) yinline;
  */
 
 /**
+ * @def WIMA_MAX_ICONS
+ * The max number of app icons that clients can give to Wima.
+ */
+#define WIMA_MAX_ICONS (16)
+
+/**
  * A callback type to draw custom widgets.
  * @param wdgt	The widget to draw.
  * @param ctx	The context to render to.

@@ -55,41 +55,77 @@ extern "C" {
 
 #include "render/render.h"
 
-#define WIMA_MAX_ICONS (16)
+/**
+ * @file global.h
+ */
 
-typedef struct GLFWcursor wima_cursor;
-typedef struct GLFWmonitor wima_monitor;
+/**
+ * @defgroup wima_internal wima_internal
+ * Globally used internal data structures and functions.
+ * @{
+ */
 
+/**
+ * All global data for Wima. There is only one instance
+ * of this struct in every library, and that is @a wg in
+ * the @a global.c file.
+ */
 typedef struct WimaG {
 
+	/// The app name.
 	DynaString name;
 
+	/// The app-wide callbacks.
 	WimaAppFuncs funcs;
 
+	/// Windows.
 	DynaVector windows;
 
+	/// Properties.
 	DynaVector props;
 
+	/// Workspace types.
 	DynaVector workspaces;
+
+	/// Regions (area types).
 	DynaVector regions;
 
+	/// An array of properties that point to the start
+	/// of a widget or node theme. All properties in a
+	/// theme are consecutive, so these can be used to
+	/// get a pointer to a theme.
 	WimaProperty themeStarts[WIMA_THEME_NUM_TYPES];
+
+	/// An array of properties that are the group
+	/// properties for all themes.
 	WimaProperty themes[WIMA_THEME_NUM_TYPES];
+
+	/// The group property for all themes.
 	WimaProperty theme;
 
-	// Icons.
+	/// The number of app icons.
 	int numIcons;
+
+	/// The array of app icons.
 	GLFWimage icons[WIMA_MAX_ICONS];
 
+	/// The path to the font file.
 	DynaString fontPath;
+
+	/// The path to the icon sheet. (Will be removed.)
 	DynaString iconSheetPath;
 
-	// Standard cursors.
+	/// Standard cursors.
 	GLFWcursor* cursors[6];
 
 } WimaG;
 
+/**
+ * All types of assert messages that Wima can give.
+ */
 typedef enum WimaAssertType {
+
+	//! @cond Doxygen suppress.
 
 	WIMA_ASSERT_SWITCH_DEFAULT,
 
@@ -181,18 +217,71 @@ typedef enum WimaAssertType {
 
 	WIMA_ASSERT_PTR_NULL,
 
+	//! @endcond Doxygen suppress.
+
 } WimaAssertType;
 
+/**
+ * @def wima_global_decl
+ * An extern declaration for the global struct.
+ */
 #define wima_global_decl       extern WimaG wg
+
+/**
+ * @def wima_error_descs_decl
+ * An extern declaration for the array of error descriptions.
+ */
 #define wima_error_descs_decl  extern const char* wima_error_descs[]
+
+/**
+ * @def wima_assert_msgs_decl
+ * An extern declaration for the array of assert messages.
+ */
 #define wima_assert_msgs_decl  extern const char* wima_assert_msgs[]
 
+/**
+ * @def wima_assert_msg
+ * Indexes into the array of assert messages.
+ * @param idx	The index of the desired message.
+ *				Should be one of @a WimaAssertType.
+ */
 #define wima_assert_msg(idx)  wima_assert_msgs[(idx)]
+
+/**
+ * @def wassert
+ * An assert call that uses Wima's array of assert messages.
+ * @param	expr	The expression to test for.
+ * @param	idx		The index of the desired assert message.
+ *					Should be one of @a WimaAssertType.
+ */
 #define wassert(expr, idx)    yassert(expr, wima_assert_msg(idx))
+
+/**
+ * @def wima_assert_init
+ * A Wima assert that checks whether Wima has been initialized.
+ */
 #define wima_assert_init      wassert(wg.name != NULL, WIMA_ASSERT_INIT)
 
-#define wima_error(idx) wg.funcs.error((idx), __func__, wima_error_descs[(idx) - 128])
-#define wima_error_desc(idx, desc) wg.funcs.error((idx), __func__, (desc))
+/**
+ * @def wima_error
+ * Calls the client error function using the error description at
+ * @a status, as well as using @a status as the status.
+ * @param status	The status of the error and index of the desired
+ *					error description to send to the client.
+ */
+#define wima_error(status) wg.funcs.error((status), __func__, wima_error_descs[(status) - 128])
+
+/**
+ * @def wima_error_desc
+ * Calls the client error function using @a status and @a desc.
+ * @param	status	The status of the error to send.
+ * @param	desc	The desired description to send.
+ */
+#define wima_error_desc(status, desc) wg.funcs.error((status), __func__, (desc))
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }
