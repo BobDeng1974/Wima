@@ -98,7 +98,6 @@ typedef struct WimaWinCtx {
 	uint32_t click_timestamp;
 	uint32_t clicks;
 
-	WimaEventState state;
 	WimaLayoutStage stage;
 
 	WimaMods mods;
@@ -113,8 +112,8 @@ typedef struct WimaWinCtx {
 
 	bool movingSplit;
 
-	WimaEvent events[WIMA_MAX_EVENTS];
-	WimaWidget eventItems[WIMA_MAX_EVENTS];
+	WimaEvent events[WIMA_EVENT_MAX];
+	WimaWidget eventItems[WIMA_EVENT_MAX];
 
 } WimaWinCtx;
 

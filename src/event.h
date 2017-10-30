@@ -46,17 +46,13 @@ extern "C" {
 
 // Limits.
 
-// Max events we will process on one frame.
-#define WIMA_MAX_EVENTS 64
+/**
+ * @def WIMA_EVENT_MAX
+ * Max events Wima will process on one frame.
+ */
+#define WIMA_EVENT_MAX 64
 
 // End limits.
-
-typedef enum WimaEventState {
-
-	WIMA_UI_STATE_IDLE     = 0,
-	WIMA_UI_STATE_CAPTURE  = 1,
-
-} WimaEventState;
 
 typedef enum WimaEventType {
 
