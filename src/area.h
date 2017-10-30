@@ -198,7 +198,7 @@ void wima_area_key(WimaAr* area, WimaKeyEvent e);
 void wima_area_mouseEnter(WimaAr* area, bool enter);
 
 WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas);
-WimaStatus wima_area_resize(DynaTree areas, WimaRect rect);
+void wima_area_resize(DynaTree areas, WimaRect rect);
 
 // layout all added items starting from the root item 0.
 // after calling uiEndLayout(), no further modifications to the item tree should
@@ -208,7 +208,7 @@ WimaStatus wima_area_resize(DynaTree areas, WimaRect rect);
 WimaStatus wima_area_layout(DynaTree areas);
 WimaAreaNode wima_area_containsMouse(DynaTree areas, WimaVec cursor);
 bool wima_area_mouseOnSplit(DynaTree areas, WimaVec pos, WimaMouseSplitEvent* result);
-WimaStatus wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaVec cursor);
+void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaMouseSplitEvent e, WimaVec cursor);
 
 // returns the topmost item containing absolute location (x,y), starting with
 // item as parent, using a set of flags and masks as filter:

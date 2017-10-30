@@ -186,6 +186,7 @@ typedef enum WimaAssertType {
 #define wassert(expr, idx)    yassert(expr, wima_assert_msg(idx))
 #define wima_assert_init      wassert(wg.name != NULL, WIMA_ASSERT_INIT)
 
-#define wima_error(idx) wg.funcs.error((idx), wima_error_descs[(idx) - 128])
+#define wima_error(idx) wg.funcs.error((idx), __func__, wima_error_descs[(idx) - 128])
+#define wima_error_desc(idx, desc) wg.funcs.error((idx), __func__, (desc))
 
 #endif // WIMA_GLOBAL_H

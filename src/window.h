@@ -161,7 +161,7 @@ WimaStatus wima_window_draw(WimaWindow win);
 
 WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth);
 
-WimaStatus wima_window_processEvents(WimaWindow win);
+void wima_window_processEvents(WimaWindow win);
 
 #ifdef __YASSERT__
 bool wima_window_valid(WimaWindow wwh);

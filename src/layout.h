@@ -67,6 +67,13 @@ extern "C" {
 //#define WIMA_LAYOUT_ROW_FLOW    (0x1000)
 //#define WIMA_LAYOUT_COL_FLOW    (0x2000)
 
+typedef union WimaItemInfo {
+
+	WimaWidget widget;
+	WimaLayout layout;
+
+} WimaItemInfo;
+
 typedef union WimaLayoutSplitCol {
 
 	float split;
@@ -74,51 +81,63 @@ typedef union WimaLayoutSplitCol {
 
 } WimaLayoutSplitCol;
 
-typedef struct WimaLayoutInfo {
-
-	WimaColor bgcolor;
-
-	WimaLayoutSplitCol splitcol;
-
-	// Index of first kid.
-	// If old item: index of equivalent new item.
-	uint16_t firstKid;
-
-	uint16_t lastKid;
-
-	uint16_t kidCount;
-
-	uint16_t flags;
-
-} WimaLayoutInfo;
-
 typedef struct WimaItem {
 
-	union {
+	WimaItemInfo info;
 
-		WimaLayoutInfo layout;
-		WimaWdgt widget;
-
-	};
-
-	WimaRect rect;
+	bool isLayout;
 
 	uint16_t parent;
 
 	// Index of next sibling with same parent.
 	uint16_t nextSibling;
 
-	WimaAreaNode area;
-	WimaWindow window;
+	WimaRect rect;
 
-	bool isLayout;
+	union {
+
+		struct WimaLayoutInfo {
+
+			WimaColor bgcolor;
+
+			WimaLayoutSplitCol splitcol;
+
+			// Index of first kid.
+			// If old item: index of equivalent new item.
+			uint16_t firstKid;
+
+			uint16_t lastKid;
+
+			uint16_t kidCount;
+
+			uint16_t flags;
+
+		} layout;
+
+		struct WimaWdgt {
+
+			/// About 27 bits worth of flags.
+			uint32_t flags;
+
+			/// The property that this refers to.
+			WimaProperty prop;
+
+			/// The user pointer.
+			void* user;
+
+			/// Event functions.
+			WimaWidgetFuncs funcs;
+
+		} widget;
+
+	};
 
 } WimaItem;
 
 #define WIMA_ITEM_IS_LAYOUT(item)  ((item)->isLayout)
 #define WIMA_ITEM_IS_WIDGET(item)  (!((item)->isLayout))
 
-WimaItem* wima_layout_ptr(WimaLayout wlh) yinline;
+WimaItem* wima_item_ptr(WimaLayout wlh) yinline;
 WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol splitcol);
 
 #ifdef __cplusplus

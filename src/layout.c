@@ -118,7 +118,7 @@ uint16_t wima_layout_clearBoxFlag(uint16_t flags) {
 	return flags;
 }
 
-WimaItem* wima_layout_ptr(WimaLayout wlh) {
+WimaItem* wima_item_ptr(WimaLayout wlh) {
 
 	wima_assert_init;
 
@@ -216,8 +216,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol
 	// Set the parent, nextSibling, area, and window.
 	playout->parent = parent.layout;
 	playout->nextSibling = WIMA_ITEM_INVALID;
-	playout->area = parent.area;
-	playout->window = parent.window;
+	playout->info.layout = wlh;
 
 	// Set the background, split, kids, and flags.
 	playout->layout.bgcolor = wima_prop_color(wg.themes[WIMA_THEME_BG]);

@@ -52,34 +52,28 @@ wima_global_decl;
 wima_error_descs_decl;
 wima_assert_msgs_decl;
 
-WimaStatus joinItemClick(WimaWidget wih) {
+void joinItemClick(WimaWidget wih) {
 	printf("Join clicked!\n");
-	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus splitSub1Click(WimaWidget wih) {
+void splitSub1Click(WimaWidget wih) {
 	printf("Split sub 1 clicked!\n");
-	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus splitSub3Click(WimaWidget wih) {
+void splitSub3Click(WimaWidget wih) {
 	printf("Split sub 3 clicked!\n");
-	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus splitSub4Click(WimaWidget wih) {
+void splitSub4Click(WimaWidget wih) {
 	printf("Split sub 4 clicked!\n");
-	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus splitSub5Click(WimaWidget wih) {
+void splitSub5Click(WimaWidget wih) {
 	printf("Split sub 5 clicked!\n");
-	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus splitSubSub1Click(WimaWidget wih) {
+void splitSubSub1Click(WimaWidget wih) {
 	printf("Split sub sub 1 clicked!\n");
-	return WIMA_STATUS_SUCCESS;
 }
 
 WimaMenuItem splitSubSubItems[] = {
@@ -687,7 +681,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 	// Allocate a vector and check for error.
 	DynaVector strs = dvec_createStringVec(filec);
 	if (yunlikely(!strs)) {
-		wg.funcs.error(WIMA_STATUS_MALLOC_ERR, errorMsg);
+		wima_error_desc(WIMA_STATUS_MALLOC_ERR, errorMsg);
 		return;
 	}
 
@@ -703,7 +697,7 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 			dvec_free(strs);
 
 			// Report an error to the user.
-			wg.funcs.error(WIMA_STATUS_MALLOC_ERR, errorMsg);
+			wima_error_desc(WIMA_STATUS_MALLOC_ERR, errorMsg);
 
 			// Return and send no event.
 			return;
@@ -854,11 +848,8 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	rect.w = width;
 	rect.h = height;
 
-	// Resize the areas and check for error to send to client.
-	WimaStatus status = wima_area_resize(wwin->areas, rect);
-	if (yunlikely(status)) {
-		wima_error(status);
-	}
+	// Resize the areas.
+	wima_area_resize(wwin->areas, rect);
 
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
@@ -1168,6 +1159,6 @@ void wima_callback_error(int error, const char* desc) {
 	if (status != WIMA_STATUS_SUCCESS) {
 
 		// Send the event to the client.
-		wg.funcs.error(status, desc);
+		wima_error_desc(status, desc);
 	}
 }

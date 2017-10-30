@@ -136,25 +136,9 @@ extern "C" {
 
 // End limits.
 
-typedef struct WimaWdgt {
-
-	/// About 27 bits worth of flags.
-	uint32_t flags;
-
-	/// The property that this refers to.
-	WimaProperty prop;
-
-	/// The user pointer.
-	void* user;
-
-	/// Event functions.
-	WimaWidgetFuncs funcs;
-
-} WimaWdgt;
-
 typedef struct WimaItem WimaItem;
 
-WimaItem* wima_widget_ptr(WimaWidget wih) yinline;
+WimaItem* wima_widget_ptr(WimaWidget wdgt);
 
 #ifdef __cplusplus
 }

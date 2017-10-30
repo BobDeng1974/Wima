@@ -1233,9 +1233,9 @@ const char* wima_window_clipboard(WimaWindow wwh) {
 ////////////////////////////////////////////////////////////////////////////////
 
 static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos);
-static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wih, WimaEvent e);
-static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaMouseBtnEvent e);
-static WimaStatus wima_window_processFileDrop(WimaWindow wwh, DynaVector files);
+static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wih, WimaEvent e);
+static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaMouseBtnEvent e);
+static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.
@@ -1614,7 +1614,7 @@ static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos) {
 	return result;
 }
 
-WimaStatus wima_window_processEvents(WimaWindow wwh) {
+void wima_window_processEvents(WimaWindow wwh) {
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
@@ -1637,14 +1637,9 @@ WimaStatus wima_window_processEvents(WimaWindow wwh) {
 	// Set the cursor position (used by event processing).
 	win->ctx.cursorPos = win->ctx.last_cursor;
 
-	// Loop through the events.
+	// Loop through the events and process each.
 	for (int i = 0; i < numEvents; ++i) {
-
-		// Process the event and check for error.
-		status = wima_window_processEvent(win, wwh, handles[i], events[i]);
-		if (yunlikely(status)) {
-			break;
-		}
+		wima_window_processEvent(win, wwh, handles[i], events[i]);
 	}
 
 	// Reset the event count.
@@ -1652,20 +1647,15 @@ WimaStatus wima_window_processEvents(WimaWindow wwh) {
 
 	// Set the last cursor.
 	win->ctx.last_cursor = win->ctx.cursorPos;
-
-	return status;
 }
 
-static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wih, WimaEvent e) {
-
-	WimaStatus status;
+static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wih, WimaEvent e) {
 
 	// Switch on the type of event.
 	switch (e.type) {
 
 		case WIMA_EVENT_NONE:
 		{
-			status = WIMA_STATUS_SUCCESS;
 			break;
 		}
 
@@ -1677,14 +1667,12 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 				wima_area_key(area, e.area_key.key);
 			}
 
-			status = WIMA_STATUS_SUCCESS;
-
 			break;
 		}
 
 		case WIMA_EVENT_MOUSE_BTN:
 		{
-			status = wima_window_processMouseBtnEvent(win, wih, e.mouse_btn);
+			wima_window_processMouseBtnEvent(win, wih, e.mouse_btn);
 			break;
 		}
 
@@ -1699,15 +1687,9 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 				wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
 
 				// If the widget handles the event, send it.
-				if (pitem->widget.flags & e.type) {
-					status = pitem->widget.funcs.click(wih, e.click);
+				if (!(pitem->widget.flags & e.type) || !pitem->widget.funcs.click(wih, e.click)) {
+					// TODO: Send the event up the chain.
 				}
-				else {
-					status = WIMA_STATUS_SUCCESS;
-				}
-			}
-			else {
-				status = WIMA_STATUS_SUCCESS;
 			}
 
 			break;
@@ -1718,23 +1700,20 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 			// Set the cursor position.
 			win->ctx.cursorPos = e.pos;
 
-			// Don't do anything if we have a menu up.
-			if (WIMA_WIN_HAS_MENU(win)) {
-				status = WIMA_STATUS_SUCCESS;
-			}
+			// Only do something if we have a menu up.
+			if (!WIMA_WIN_HAS_MENU(win)) {
 
-			// If the user is moving the split...
-			else if (win->ctx.movingSplit) {
+				// If the user is moving the split...
+				if (win->ctx.movingSplit) {
 
-				// Move the split.
-				status = wima_area_moveSplit(win->areas, win->ctx.split.area,
-				                             win->ctx.split, win->ctx.cursorPos);
-			}
-			else {
+					// Move the split.
+					wima_area_moveSplit(win->areas, win->ctx.split.area,
+					                    win->ctx.split, win->ctx.cursorPos);
+				}
+				else {
 
-				// TODO: Send event to widget.
-
-				status = WIMA_STATUS_SUCCESS;
+					// TODO: Send event to widget.
+				}
 			}
 
 			break;
@@ -1751,15 +1730,9 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 				wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
 
 				// If the widget handles the event, send it.
-				if (pitem->widget.flags & e.type) {
-					status = pitem->widget.funcs.drag(wih, e.drag);
+				if (!(pitem->widget.flags & e.type) || !pitem->widget.funcs.drag(wih, e.drag)) {
+					// TODO: Send the event up the chain.
 				}
-				else {
-					status = WIMA_STATUS_SUCCESS;
-				}
-			}
-			else {
-				status = WIMA_STATUS_SUCCESS;
 			}
 
 			break;
@@ -1769,7 +1742,6 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		{
 			WimaAr* area = dtree_node(win->areas, e.area_enter.area);
 			wima_area_mouseEnter(area, e.area_enter.enter);
-			status = WIMA_STATUS_SUCCESS;
 			break;
 		}
 
@@ -1784,15 +1756,9 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 				wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
 
 				// If the widget handles the event, send it.
-				if (pitem->widget.flags & e.type) {
-					status = pitem->widget.funcs.scroll(wih, e.scroll);
+				if (!(pitem->widget.flags & e.type) || !pitem->widget.funcs.scroll(wih, e.scroll)) {
+					// TODO: Send the event up the chain.
 				}
-				else {
-					status = WIMA_STATUS_SUCCESS;
-				}
-			}
-			else {
-				status = WIMA_STATUS_SUCCESS;
 			}
 
 			break;
@@ -1809,15 +1775,9 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 				wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
 
 				// If the widget handles the event, send it.
-				if (pitem->widget.flags & e.type) {
-					status = pitem->widget.funcs.char_event(wih, e.char_event);
+				if (!(pitem->widget.flags & e.type)|| !pitem->widget.funcs.char_event(wih, e.char_event)) {
+
 				}
-				else {
-					status = WIMA_STATUS_SUCCESS;
-				}
-			}
-			else {
-				status = WIMA_STATUS_SUCCESS;
 			}
 
 			break;
@@ -1825,7 +1785,7 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 
 		case WIMA_EVENT_FILE_DROP:
 		{
-			status = wima_window_processFileDrop(wwh, e.file_drop);
+			wima_window_processFileDrop(wwh, e.file_drop);
 			break;
 		}
 
@@ -1835,8 +1795,6 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 			if (wg.funcs.pos) {
 				wg.funcs.pos(wwh, e.pos);
 			}
-
-			status = WIMA_STATUS_SUCCESS;
 
 			break;
 		}
@@ -1848,8 +1806,6 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 				wg.funcs.fbsize(wwh, e.size);
 			}
 
-			status = WIMA_STATUS_SUCCESS;
-
 			break;
 		}
 
@@ -1859,8 +1815,6 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 			if (wg.funcs.winsize) {
 				wg.funcs.winsize(wwh, e.size);
 			}
-
-			status = WIMA_STATUS_SUCCESS;
 
 			break;
 		}
@@ -1872,8 +1826,6 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 				wg.funcs.enter(wwh, e.mouse_enter);
 			}
 
-			status = WIMA_STATUS_SUCCESS;
-
 			break;
 		}
 
@@ -1883,8 +1835,6 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 			if (wg.funcs.minimize) {
 				wg.funcs.minimize(wwh, e.minimized);
 			}
-
-			status = WIMA_STATUS_SUCCESS;
 
 			break;
 		}
@@ -1896,18 +1846,12 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 				wg.funcs.focus(wwh, e.focused);
 			}
 
-			status = WIMA_STATUS_SUCCESS;
-
 			break;
 		}
 	}
-
-	return status;
 }
 
-static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaMouseBtnEvent e) {
-
-	WimaStatus status = WIMA_STATUS_SUCCESS;
+static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaMouseBtnEvent e) {
 
 	// If there is a menu...
 	if (WIMA_WIN_HAS_MENU(win)) {
@@ -1929,7 +1873,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih,
 			// need to do anything else.
 			if (!WIMA_WIN_MENU_IS_RELEASED(win)) {
 				win->flags |= WIMA_WIN_MENU_RELEASED;
-				return WIMA_STATUS_SUCCESS;
+				return;
 			}
 
 			// Send event to menu item.
@@ -1969,7 +1913,7 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih,
 					}
 
 					// Call the item's function.
-					status = item->func(wih);
+					item->func(wih);
 
 					// Clear the window and redraw.
 					wima_window_setDirty(win, true);
@@ -2021,23 +1965,13 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih,
 		wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
 
 		// If the widget handles the event, send it.
-		if (pitem->widget.flags & WIMA_EVENT_MOUSE_BTN) {
-			status = pitem->widget.funcs.mouse(wih, e);
-		}
-		else {
-			status = WIMA_STATUS_SUCCESS;
+		if (!(pitem->widget.flags & WIMA_EVENT_MOUSE_BTN) || !pitem->widget.funcs.mouse(wih, e)) {
+			// TODO: Send the event up the chain.
 		}
 	}
-
-	// Else just send success.
-	else {
-		status = WIMA_STATUS_SUCCESS;
-	}
-
-	return status;
 }
 
-static WimaStatus wima_window_processFileDrop(WimaWindow wwh, DynaVector files) {
+static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files) {
 
 	// If there is a function to handle file drops...
 	if (wg.funcs.file_drop) {
@@ -2049,7 +1983,8 @@ static WimaStatus wima_window_processFileDrop(WimaWindow wwh, DynaVector files) 
 		const char** names = malloc(len * sizeof(char*));
 
 		if (yunlikely(names == NULL)) {
-			return WIMA_STATUS_MALLOC_ERR;
+			wima_error(WIMA_STATUS_MALLOC_ERR);
+			return;
 		}
 
 		// Set the pointers in the list of files.
@@ -2063,8 +1998,6 @@ static WimaStatus wima_window_processFileDrop(WimaWindow wwh, DynaVector files) 
 		// Free the files.
 		dvec_free(files);
 	}
-
-	return WIMA_STATUS_SUCCESS;
 }
 
 static void wima_window_clearContext(WimaWinCtx* ctx) {

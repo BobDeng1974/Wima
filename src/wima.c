@@ -240,7 +240,7 @@ WimaStatus wima_main() {
 		// Render here.
 		WimaStatus status = wima_window_draw(wwh);
 		if (yunlikely(status)) {
-			wg.funcs.error(status, "Wima encountered an error while rendering.");
+			wima_error_desc(status, "Wima encountered an error while rendering.");
 		}
 
 		// Poll for events.
@@ -255,11 +255,8 @@ WimaStatus wima_main() {
 		// Get the window handle.
 		wwh = WIMA_WIN(win);
 
-		// Process events and check for error.
-		status = wima_window_processEvents(wwh);
-		if (yunlikely(status)) {
-			wg.funcs.error(status, "Wima encountered an error processing events.");
-		}
+		// Process events.
+		wima_window_processEvents(wwh);
 
 #ifndef NDEBUG
 		// This is to time the loop in debug mode.

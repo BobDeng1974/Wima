@@ -338,8 +338,9 @@ bool cb_close(WimaWindow wwh) {
 	return true;
 }
 
-void cb_error(WimaStatus status, const char* desc) {
-	fprintf(stderr, "Wima returned the following error:\n    Error[%d]: %s\n", status, desc);
+void cb_error(WimaStatus status, const char* func, const char* desc) {
+	fprintf(stderr, "Wima returned the following error:\n");
+	fprintf(stderr, "    Error[%d]: %s\n    Function: %s\n", status, desc, func);
 	exit(status);
 }
 

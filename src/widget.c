@@ -92,12 +92,12 @@ WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
 
 	uint32_t idx = (area->area.ctx.itemCount)++;
 
-	WimaWidget wih;
-	wih.area = wah.area;
-	wih.widget = idx;
-	wih.window = wah.window;
+	WimaItemInfo wih;
+	wih.layout.area = wah.area;
+	wih.layout.layout = idx;
+	wih.layout.window = wah.window;
 
-	WimaItem* item = wima_widget_ptr(wih);
+	WimaItem* item = wima_item_ptr(wih.layout);
 
 	memset(item, 0, sizeof(WimaItem));
 
@@ -112,7 +112,7 @@ WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
 
 	item->widget.flags |= flags;
 
-	return wih;
+	return wih.widget;
 }
 
 void wima_widget_setEnabled(WimaWidget wdgt, bool enable) {
@@ -329,18 +329,11 @@ bool wima_widget_isFocused(WimaWidget wdgt) {
 	return wima_widget_compare(win->ctx.focus, wdgt);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Private functions.
-////////////////////////////////////////////////////////////////////////////////
+WimaItem* wima_widget_ptr(WimaWidget wdgt) {
 
-WimaItem* wima_widget_ptr(WimaWidget wih) {
+	WimaItemInfo info;
 
-	wima_assert_init;
+	info.widget = wdgt;
 
-	WimaAr* area = wima_area_ptr(wih.window, wih.area);
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-
-	wassert(wih.widget < area->area.ctx.itemCount, WIMA_ASSERT_WIDGET);
-
-	return area->area.ctx.items + wih.widget;
+	return wima_item_ptr(info.layout);
 }

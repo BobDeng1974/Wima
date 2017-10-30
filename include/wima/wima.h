@@ -1070,7 +1070,7 @@ typedef struct WimaMenu WimaMenu;
  * A function for handling a menu item click.
  * @param wdgt	The menu item that was clicked.
  */
-typedef WimaStatus (*WimaMenuItemFunc)(WimaWidget);
+typedef void (*WimaMenuItemFunc)(WimaWidget);
 
 /**
  * A menu item.
@@ -2411,9 +2411,10 @@ typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaRenderContext*);
 /**
  * A callback type to allow Wima to report errors to the user.
  * @param status	The error code.
+ * @param func		The name of the function the error occurred in.
  * @param desc		The error description.
  */
-typedef void (*WimaErrorFunc)(WimaStatus, const char*);
+typedef void (*WimaErrorFunc)(WimaStatus, const char*, const char*);
 
 /**
  * A callback type to handle file drop events.
