@@ -44,15 +44,36 @@ extern "C" {
 
 #include <wima/wima.h>
 
+/**
+ * @file region.h
+ */
+
+/**
+ * @defgroup region_internal region_internal
+ * Internal data structures for regions in Wima.
+ * @{
+ */
+
+/**
+ * Data for a region.
+ */
 typedef struct WimaReg {
 
+	/// The user pointer.
 	void* user;
 
+	/// The functions associated with the region.
 	WimaRegionFuncs funcs;
 
+	/// The item capacity for all
+	/// areas made from this region.
 	uint16_t itemCap;
 
 } WimaReg;
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }
