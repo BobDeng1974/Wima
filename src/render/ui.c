@@ -72,6 +72,19 @@
 wima_global_decl;
 wima_assert_msgs_decl;
 
+////////////////////////////////////////////////////////////////////////////////
+// Static declarations needed for public functions.
+////////////////////////////////////////////////////////////////////////////////
+
+static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float desc,
+                                  float lineHeight,    const char *caret,
+                                  NVGtextRow *rows,    int nrows,
+                                  int *cr, float *cx,  float *cy);
+
+////////////////////////////////////////////////////////////////////////////////
+//  Public functions.
+////////////////////////////////////////////////////////////////////////////////
+
 void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, int iconid, const char *label) {
 
 	wima_assert_init;
@@ -1100,43 +1113,6 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
 	return p;
 }
 
-static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float desc,
-                                  float lineHeight,    const char *caret,
-                                  NVGtextRow *rows,    int nrows,
-                                  int *cr, float *cx,  float *cy)
-{
-	wima_assert_init;
-
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
-
-	static NVGglyphPosition glyphs[WIMA_MAX_GLYPHS];
-	int r, nglyphs;
-
-	for (r = 0; r < nrows && rows[r].end < caret; ++r);
-
-	*cr = r;
-	*cx = x;
-	*cy = y - lineHeight - desc + r * lineHeight;
-
-	if (nrows == 0) {
-		return;
-	}
-
-	*cx = rows[r].minx;
-
-	nglyphs = nvgTextGlyphPositions(ctx->nvg, x, y, rows[r].start, rows[r].end + 1,
-	                                glyphs, WIMA_MAX_GLYPHS);
-
-	for (int i=0; i < nglyphs; ++i) {
-
-		*cx=glyphs[i].x;
-
-		if (glyphs[i].str == caret) {
-			break;
-		}
-	}
-}
-
 void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, float h,
                              int iconid, WimaColor color, float fontsize,
                              const char *label, WimaColor caretCol,
@@ -1353,4 +1329,41 @@ WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float of
 	}
 
 	return result;
+}
+
+static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float desc,
+                                  float lineHeight,    const char *caret,
+                                  NVGtextRow *rows,    int nrows,
+                                  int *cr, float *cx,  float *cy)
+{
+	wima_assert_init;
+
+	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+
+	static NVGglyphPosition glyphs[WIMA_MAX_GLYPHS];
+	int r, nglyphs;
+
+	for (r = 0; r < nrows && rows[r].end < caret; ++r);
+
+	*cr = r;
+	*cx = x;
+	*cy = y - lineHeight - desc + r * lineHeight;
+
+	if (nrows == 0) {
+		return;
+	}
+
+	*cx = rows[r].minx;
+
+	nglyphs = nvgTextGlyphPositions(ctx->nvg, x, y, rows[r].start, rows[r].end + 1,
+	                                glyphs, WIMA_MAX_GLYPHS);
+
+	for (int i=0; i < nglyphs; ++i) {
+
+		*cx=glyphs[i].x;
+
+		if (glyphs[i].str == caret) {
+			break;
+		}
+	}
 }
