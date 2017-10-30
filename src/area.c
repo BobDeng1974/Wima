@@ -59,8 +59,10 @@
 
 #include "render/render.h"
 
+//! @cond Doxygen suppress.
 wima_global_decl;
 wima_assert_msgs_decl;
+//! @endcond Doxygen suppress.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
@@ -175,6 +177,15 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) {
 // Declarations for all static functions that private functions need access to.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @file area.c
+ */
+
+/**
+ * @defgroup area_internal area_internal
+ * @{
+ */
+
 static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect);
 static bool wima_area_node_valid(DynaTree regions, DynaNode node);
 static void wima_area_node_free(DynaTree areas, DynaNode node);
@@ -196,6 +207,10 @@ static void wima_area_background(WimaAr* area, NVGcontext* nvg, WimaPropData* bg
 static void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg);
 static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg);
 static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertical, bool mirror);
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.
@@ -753,21 +768,15 @@ static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVec p
 	// Translate the point into area space.
 	WimaVec tx = wima_area_translatePos(area, pos);
 
-	// Define the limit.
-#define WIMA_SPLIT_LIM 2
-
 	// Check different coordinates depending on if the split is vertical.
 	if (vertical) {
 		int x = tx.x - split;
-		on = x >= -WIMA_SPLIT_LIM && x <= WIMA_SPLIT_LIM;
+		on = x >= -WIMA_AREA_SPLIT_LIMIT && x <= WIMA_AREA_SPLIT_LIMIT;
 	}
 	else {
 		int y = tx.y - split;
-		on = y >= -WIMA_SPLIT_LIM && y <= WIMA_SPLIT_LIM;
+		on = y >= -WIMA_AREA_SPLIT_LIMIT && y <= WIMA_AREA_SPLIT_LIMIT;
 	}
-
-	// Undefine the limit.
-#undef WIMA_SPLIT_LIM
 
 	// If the cursor is not on a split...
 	if (!on) {
