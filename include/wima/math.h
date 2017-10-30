@@ -131,10 +131,19 @@ int wima_min(int a, int b) yinline;
  * Clamps @a v to be within @a min and @a max if it isn't already.
  * @param v		The value to clamp.
  * @param min	The min value to clamp to.
- * @param mix	The max value to clamp to.
+ * @param max	The max value to clamp to.
  * @return		The clamped value.
  */
-float wima_clampf(float v, float min, float mix) yinline;
+int wima_clamp(int v, int min, int max) yinline;
+
+/**
+ * Clamps @a v to be within @a min and @a max if it isn't already.
+ * @param v		The value to clamp.
+ * @param min	The min value to clamp to.
+ * @param max	The max value to clamp to.
+ * @return		The clamped value.
+ */
+float wima_clampf(float v, float min, float max) yinline;
 
 /**
  * Creates a WimaRect from the position (upper left corner)
