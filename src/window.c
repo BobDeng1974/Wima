@@ -1237,6 +1237,15 @@ const char* wima_window_clipboard(WimaWindow wwh) {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @file window.c
+ */
+
+/**
+ * @defgroup window_internal window_internal
+ * @{
+ */
+
+/**
  * Returns the menu that contains @a pos and does not have
  * any posterity menus that contain the cursor. In other
  * words, the menu that is returned is the most sub menu
@@ -1272,6 +1281,10 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
  * @param files	The vector of file names.
  */
 static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files);
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.
@@ -1687,7 +1700,6 @@ static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos) {
 
 	return result;
 }
-
 
 static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wih, WimaEvent e) {
 

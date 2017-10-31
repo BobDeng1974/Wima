@@ -77,6 +77,15 @@ wima_assert_msgs_decl;
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @file ui.c
+ */
+
+/**
+ * @defgroup ui_internal ui_internal
+ * @{
+ */
+
+/**
  * Returns the row, x, and y of the caret.
  * @param ctx			The render context to query.
  * @param x				The upper left X coordinate of the text.
@@ -98,6 +107,9 @@ static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float de
                                   NVGtextRow *rows,    int nrows,
                                   int *cr, float *cx,  float *cy);
 
+/**
+ * @}
+ */
 ////////////////////////////////////////////////////////////////////////////////
 //  Public functions.
 ////////////////////////////////////////////////////////////////////////////////

@@ -435,6 +435,15 @@ const WimaColor colors[] = {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @file theme.c
+ */
+
+/**
+ * @defgroup theme_internal theme_internal
+ * @{
+ */
+
+/**
  * Creates a name by filling @a buffer with @a name1
  * and @a name2, if it exists.
  * @param buffer	The buffer to fill.
@@ -517,6 +526,10 @@ static void wima_theme_setNodeColor(WimaNodeThemeType type, WimaColor color);
  * @return		The node color corresponding to @a type.
  */
 static WimaColor wima_theme_nodeColor(WimaNodeThemeType type);
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
@@ -1092,7 +1105,7 @@ WimaColor wima_theme_wireColor(WimaNodeTheme* theme, WimaWidgetState state) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Functions local only to this file.
+// Static functions.
 ////////////////////////////////////////////////////////////////////////////////
 
 static void wima_theme_createName(char* buffer, const char* name1, const char* name2) {

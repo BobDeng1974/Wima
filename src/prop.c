@@ -59,6 +59,15 @@ wima_assert_msgs_decl;
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @file prop.c
+ */
+
+/**
+ * @defgroup prop_internal prop_internal
+ * @{
+ */
+
+/**
  * Registers a property. This is common code to all cases.
  * @param name	The prop name.
  * @param label	The prop label.
@@ -79,6 +88,10 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
  */
 static bool wima_prop_enumNamesValid(const char* names[], uint32_t numNames);
 #endif
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
