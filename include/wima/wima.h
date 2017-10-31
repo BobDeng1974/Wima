@@ -809,12 +809,12 @@ void wima_cursor_destroy(WimaCursor* cursor) yinline;
  *	- @a WIMA_KEY_KP_SUBTRACT
  *	- @a WIMA_KEY_KP_ADD
  *	- @a WIMA_KEY_KP_EQUAL
- * @param key			The key to query, or WIMA_KEY_UNKNOWN.
- * @param scancode		The scancode of the key to query.
- * @return				The localized name of the key, or NULL.
- * @pointer_lifetime	The string is allocated and freed by Wima,
- *						and is guaranteed to be valid until the
- *						next call to @a wima_key_name().
+ * @param key		The key to query, or WIMA_KEY_UNKNOWN.
+ * @param scancode	The scancode of the key to query.
+ * @return			The localized name of the key, or NULL.
+ * @ptr_lifetime	The string is allocated and freed by Wima,
+ *					and is guaranteed to be valid until the
+ *					next call to @a wima_key_name().
  */
 const char* wima_key_name(WimaKey key, int scancode) yinline;
 
@@ -964,13 +964,13 @@ WimaSize wima_monitor_size(WimaMonitor* monitor) yinline;
  * of the specified monitor. The name typically reflects the make
  * and model of the monitor and is not guaranteed to be unique
  * among the connected monitors.
- * @param monitor		The monitor to query.
- * @return				The UTF-8 encoded name of the monitor, or
- *						NULL if an error occurred.
- * @pointer_lifetime	The returned string is allocated and freed
- *						by Wima. You should not free it yourself.
- *						It is valid until the specified monitor is
- *						disconnected or the library is terminated.
+ * @param monitor	The monitor to query.
+ * @return			The UTF-8 encoded name of the monitor, or
+ *					NULL if an error occurred.
+ * @ptr_lifetime	The returned string is allocated and freed
+ *					by Wima. You should not free it yourself.
+ *					It is valid until the specified monitor is
+ *					disconnected or the library is terminated.
  */
 const char* wima_monitor_name(WimaMonitor* monitor) yinline;
 
@@ -990,15 +990,14 @@ WimaVideoMode wima_monitor_mode(WimaMonitor* monitor) yinline;
  * the specified monitor. The returned array is sorted in ascending
  * order, first by color bit depth (the sum of all channel depths)
  * and then by resolution area (the product of width and height).
- * @param monitor		The monitor to query.
- * @return				An array of video modes, or NULL if an
- *						error occurred.
- * @pointer_lifetime	The returned array is allocated and freed
- *						by Wima. You should not free it yourself.
- *						It is valid until the specified monitor
- *						is disconnected, this function is called
- *						again for that monitor or the library is
- *						terminated.
+ * @param monitor	The monitor to query.
+ * @return			An array of video modes, or NULL if an error
+ *					occurred.
+ * @ptr_lifetime	The returned array is allocated and freed by
+ *					Wima. You should not free it yourself. It is
+ *					valid until @a monitor is disconnected, this
+ *					function is called again for that monitor, or
+ *					the library is terminated.
  */
 WimaVideoModeArray wima_monitor_modes(WimaMonitor* monitor) yinline;
 
@@ -1023,15 +1022,15 @@ void wima_monitor_setGammaRamp(WimaMonitor* monitor, WimaGammaRamp* ramp) yinlin
 /**
  * This function returns the current gamma ramp of the specified
  * monitor.
- * @param monitor		The monitor to query.
- * @return				The current gamma ramp, or NULL if an error
- *						occurred.
- * @pointer_lifetime	The returned structure and its arrays are
- *						allocated and freed by Wima. You should not
- *						free them yourself. They are valid until
- *						the specified monitor is disconnected, this
- *						function is called again for that monitor
- *						or the library is terminated.
+ * @param monitor	The monitor to query.
+ * @return			The current gamma ramp, or NULL if an error
+ *					occurred.
+ * @ptr_lifetime	The returned structure and its arrays are
+ *					allocated and freed by Wima. You should not
+ *					free them yourself. They are valid until
+ *					the specified monitor is disconnected, this
+ *					function is called again for that monitor
+ *					or the library is terminated.
  */
 WimaGammaRamp wima_monitor_gammaRamp(WimaMonitor* monitor) yinline;
 
@@ -2349,12 +2348,12 @@ WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) yinline;
 /**
  * This function sets the system clipboard to the specified,
  * UTF-8 encoded string.
- * @param wwh			The window that will own the clipboard
- *						contents.
- * @param str			A UTF-8 encoded string to set.
- * @pre					@a wwh must be a valid WimaWindow.
- * @pointer_lifetime	@a str is copied before this function
- *						returns.
+ * @param wwh		The window that will own the clipboard
+ *					contents.
+ * @param str		A UTF-8 encoded string to set.
+ * @pre				@a wwh must be a valid WimaWindow.
+ * @ptr_lifetime	@a str is copied before this function
+ *					returns.
  */
 void wima_window_setClipboard(WimaWindow wwh, const char* str) yinline;
 
