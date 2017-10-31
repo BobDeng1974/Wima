@@ -1626,30 +1626,6 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 
 	return WIMA_STATUS_SUCCESS;
 }
-
-static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos) {
-
-	wassert(menu != NULL, WIMA_ASSERT_WIN_MENU);
-
-	// Get the menu that contains the position.
-	WimaMenu* result = wima_rect_contains(menu->rect, pos) ? menu : NULL;
-
-	WimaMenu* child;
-
-	// If the menu has a submenu, check it.
-	if (menu->subMenu) {
-		child = wima_window_menu_contains(menu->subMenu, pos);
-	}
-	else {
-		child = NULL;
-	}
-
-	// Set the result.
-	result = child ? child : result;
-
-	return result;
-}
-
 void wima_window_processEvents(WimaWindow wwh) {
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
@@ -1688,6 +1664,30 @@ void wima_window_processEvents(WimaWindow wwh) {
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions.
 ////////////////////////////////////////////////////////////////////////////////
+
+static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos) {
+
+	wassert(menu != NULL, WIMA_ASSERT_WIN_MENU);
+
+	// Get the menu that contains the position.
+	WimaMenu* result = wima_rect_contains(menu->rect, pos) ? menu : NULL;
+
+	WimaMenu* child;
+
+	// If the menu has a submenu, check it.
+	if (menu->subMenu) {
+		child = wima_window_menu_contains(menu->subMenu, pos);
+	}
+	else {
+		child = NULL;
+	}
+
+	// Set the result.
+	result = child ? child : result;
+
+	return result;
+}
+
 
 static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wih, WimaEvent e) {
 
