@@ -58,10 +58,25 @@ wima_assert_msgs_decl;
 // Static functions needed by the public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Registers a property. This is common code to all cases.
+ * @param name	The prop name.
+ * @param label	The prop label.
+ * @param desc	The prop description.
+ * @param type	The prop type.
+ * @param data	The prop data.
+ * @return		The newly-created WimaProperty.
+ */
 static WimaProperty wima_prop_register(const char* name, const char* label, const char* desc,
                                        WimaPropType type, const WimaPropData* data);
 
 #ifdef __YASSERT__
+/**
+ * Checks an array of enum names to make sure they are valid.
+ * @param names		The array of names to check.
+ * @param numNames	The number of names in the array.
+ * @return			true if all names are valid, false otherwise.
+ */
 static bool wima_prop_enumNamesValid(const char* names[], uint32_t numNames);
 #endif
 
