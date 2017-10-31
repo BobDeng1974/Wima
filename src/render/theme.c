@@ -434,16 +434,88 @@ const WimaColor colors[] = {
 // Static functions needed for public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Creates a name by filling @a buffer with @a name1
+ * and @a name2, if it exists.
+ * @param buffer	The buffer to fill.
+ * @param name1		The first part of the name.
+ * @param name2		The second part of the name, or
+ *					NULL if not necessary.
+ */
 static void wima_theme_createName(char* buffer, const char* name1, const char* name2);
+
+/**
+ * Creates a property with the specified data.
+ * @param type		The type of property to create.
+ * @param name1		The first part of the prop's name.
+ * @param name2		The second part of the prop's name,
+ *					or NULL if none.
+ * @param label		The prop's label.
+ * @param desc		The prop's description.
+ * @param initial	The initial value for the prop. This
+ *					will be interpreted in various ways,
+ *					depending on the prop type.
+ * @return			The created property.
+ */
 static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, const char* name2,
                                           const char* label, const char* desc, int initial);
+
+/**
+ * Returns the correct array of descriptions for the theme type.
+ * @param type	The theme type to return the array of descriptions for.
+ * @return		The array of descriptions for @a type.
+ */
 static const char** wima_theme_descs(WimaThemeType type);
 
+/**
+ * Sets a widget color. The widget is @a type,
+ * and the type of color to set is @a idx.
+ * @param type	The widget type to set the color on.
+ * @param idx	The index of the color to set.
+ * @param color	The color to set.
+ */
 static void wima_theme_setWidgetColor(WimaThemeType type, WimaWidgetThemeType idx, WimaColor color);
+
+/**
+ * Gets a widget color. The widget is @a type,
+ * and the type of color to get is @a idx.
+ * @param type	The widget type to get the color for.
+ * @param idx	The index of the color to get.
+ * @return		The color corresponding to widget
+ *				@a type and color @a idx.
+ */
 static WimaColor wima_theme_widgetColor(WimaThemeType type, WimaWidgetThemeType idx);
+
+/**
+ * Sets a widget shading delta.
+ * @param type	The type of widget.
+ * @param top	true if the top delta should
+ *				be set, false otherwise.
+ * @param delta	The delta to set.
+ */
 static void wima_theme_setWidgetDelta(WimaThemeType type, bool top, int delta);
+
+/**
+ * Gets a widget shading delta.
+ * @param type	The type of widget.
+ * @param top	true if the top delta should
+ *				be returned, false otherwise.
+ * @return		The widget delta.
+ */
 static int wima_theme_widgetDelta(WimaThemeType type, bool top);
+
+/**
+ * Sets a node color. The type of color to set is @a type.
+ * @param type	The color type to set.
+ * @param color	The color to set.
+ */
 static void wima_theme_setNodeColor(WimaNodeThemeType type, WimaColor color);
+
+/**
+ * Sets a node color. The type of color to get is @a type.
+ * @param type	The color type to get.
+ * @return		The node color corresponding to @a type.
+ */
 static WimaColor wima_theme_nodeColor(WimaNodeThemeType type);
 
 ////////////////////////////////////////////////////////////////////////////////

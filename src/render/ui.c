@@ -76,6 +76,23 @@ wima_assert_msgs_decl;
 // Static declarations needed for public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Returns the row, x, and y of the caret.
+ * @param ctx			The render context to query.
+ * @param x				The upper left X coordinate of the text.
+ * @param y				The upper left Y coordinate of the text.
+ * @param desc			The descent of the text, from nvgTextMetrics.
+ * @param lineHeight	The line height of the text, from nvgTextMetrics.
+ * @param caret			The position in the text that the caret is at.
+ * @param rows			The text rows.
+ * @param nrows			The number of rows.
+ * @param cr			A pointer to a value that will be filled with
+ *						the row the caret is at.
+ * @param cx			A pointer to a value that will be filled with
+ *						the caret's X coordinate.
+ * @param cy			A pointer to a value that will be filled with
+ *						the caret's Y coordinate.
+ */
 static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float desc,
                                   float lineHeight,    const char *caret,
                                   NVGtextRow *rows,    int nrows,
