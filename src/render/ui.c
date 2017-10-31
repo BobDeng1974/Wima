@@ -1129,12 +1129,17 @@ void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, floa
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Prepare the color.
 	WimaCol c;
 	c.wima = color;
 
+	// Begin the path.
 	nvgBeginPath(ctx->nvg);
 
+	// Draw the box.
 	wima_ui_box_rounded(ctx, x + 0.5f, y + 0.5f, w - 1, h - 2, tl, tr, br, bl);
+
+	// Set the stroke style and stroke.
 	nvgStrokeColor(ctx->nvg, c.nvg);
 	nvgStrokeWidth(ctx->nvg,1);
 	nvgStroke(ctx->nvg);
@@ -1146,6 +1151,7 @@ WimaUiCorners wima_ui_corners_rounded(float r, WimaWidgetCornerFlags flags) {
 
 	WimaUiCorners radiuses;
 
+	// Set the radii.
 	radiuses.v[0] = (flags & WIMA_CORNER_TOP_LEFT) ? 0 : r;
 	radiuses.v[1] = (flags & WIMA_CORNER_TOP_RIGHT) ? 0 : r;
 	radiuses.v[2] = (flags & WIMA_CORNER_DOWN_RIGHT) ? 0 : r;
