@@ -1131,9 +1131,9 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
 }
 
 void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, float h,
-                             int iconid, WimaColor color, float fontsize,
-                             const char *label, WimaColor caretCol,
-                             int cbegin, int cend)
+                         int iconid, WimaColor color, float fontsize,
+                         const char *label, WimaColor caretCol,
+                         int cbegin, int cend)
 {
 	wima_assert_init;
 
@@ -1195,7 +1195,7 @@ void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, floa
 			}
 			else {
 
-				int blk=c1r-c0r- 1;
+				int blk = c1r-c0r- 1;
 
 				nvgRect(ctx->nvg, c0x - 1, c0y, x + w - c0x + 1, lh + 1);
 				nvgRect(ctx->nvg, x, c1y, c1x - x + 1, lh + 1);
@@ -1205,6 +1205,7 @@ void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, floa
 				}
 			}
 		}
+
 		nvgFill(ctx->nvg);
 	}
 
@@ -1349,9 +1350,9 @@ WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float of
 }
 
 static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float desc,
-                                  float lineHeight,    const char *caret,
-                                  NVGtextRow *rows,    int nrows,
-                                  int *cr, float *cx,  float *cy)
+                              float lineHeight,   const char* caret,
+                              NVGtextRow* rows,   int nrows,
+                              int* cr, float* cx, float* cy)
 {
 	wima_assert_init;
 
@@ -1375,9 +1376,9 @@ static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float de
 	nglyphs = nvgTextGlyphPositions(ctx->nvg, x, y, rows[r].start, rows[r].end + 1,
 	                                glyphs, WIMA_MAX_GLYPHS);
 
-	for (int i=0; i < nglyphs; ++i) {
+	for (int i = 0; i < nglyphs; ++i) {
 
-		*cx=glyphs[i].x;
+		*cx = glyphs[i].x;
 
 		if (glyphs[i].str == caret) {
 			break;
