@@ -1641,6 +1641,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 
 	return WIMA_STATUS_SUCCESS;
 }
+
 void wima_window_processEvents(WimaWindow wwh) {
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
