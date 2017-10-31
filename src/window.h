@@ -130,9 +130,10 @@ extern "C" {
 #define WIMA_WIN_MENU_CONTEXT  (0x04)
 
 /**
- * @def WIMA_WIN_MENU_CLICK
- * A bit indicating whether a click was
- * in a menu or not.
+ * @def WIMA_WIN_MENU_ITEM_PRESS
+ * A bit indicating whether a menu item was pressed or
+ * not. If so, the field @a click_item is the menu item.
+ * Otherwise, it's the widget that was clicked.
  */
 #define WIMA_WIN_MENU_ITEM_PRESS    (0x08)
 
