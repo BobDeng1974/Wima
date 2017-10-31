@@ -98,6 +98,26 @@ typedef uint32_t WimaProperty;
 typedef struct WimaPropGroup WimaPropGroup;
 
 /**
+ * An item for property that is a list.
+ */
+typedef struct WimaPropListItem {
+
+	/// The WIMA_PROP_STRING that has this
+	/// item's name.
+	WimaProperty name;
+
+	/// The item's icon.
+	uint32_t icon;
+
+	/// A pointer to the item's data. This
+	/// is application-dependent, and Wima
+	/// assumes that the client allocates
+	/// and frees this pointer.
+	void* ptr;
+
+} WimaPropListItem;
+
+/**
  * A function to allow a pointer property to draw itself.
  * @param layout	The widget that will contain the property.
  * @param ptr		The pointer of the widget.
@@ -295,17 +315,88 @@ void wima_prop_enum_updateIdx(WimaProperty wph, uint32_t idx) yinline;
 uint32_t wima_prop_enum_idx(WimaProperty wph) yinline;
 
 /**
- * Returns the DynaVector contained in @a wph. The actual
- * DynaVector will be returned, so the user can manipulate
- * it however they like, and the changes will be reflected
- * in Wima.
- * @param wph	The @a WimaProperty whose DynaVector will be
- *				returned.
- * @return		The value contained in @a wph.
+ * Returns the length of the list that @a wph has.
+ * @param wph	The property to query.
+ * @return		The length's of @a wph's list.
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_LIST.
  */
-DynaVector wima_prop_list(WimaProperty wph) yinline;
+uint32_t wima_prop_list_len(WimaProperty wph) yinline;
+
+/**
+ * Pushes @a item onto the back of the list in @a wph.
+ * @param wph	The property whose list will be pushed onto.
+ * @param item	The item to push.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ * @pre			@a wph must be a @a WIMA_PROP_LIST.
+ */
+void wima_prop_list_push(WimaProperty wph, WimaPropListItem item);
+
+/**
+ * Pushes @a item onto the list in @a wph at @a idx.
+ * @param wph	The property whose list will be pushed onto.
+ * @param item	The item to push.
+ * @param idx	The index to push at.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ * @pre			@a wph must be a @a WIMA_PROP_LIST.
+ */
+void wima_prop_list_pushAt(WimaProperty wph, WimaPropListItem item, uint32_t idx);
+
+/**
+ * Pops the item at the back of the list in @a wph off.
+ * @param wph	The property whose list will be popped from.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ * @pre			@a wph must be a @a WIMA_PROP_LIST.
+ */
+void wima_prop_list_pop(WimaProperty wph);
+
+/**
+ * Pops the item at @a idx of the list in @a wph off.
+ * @param wph	The property whose list will be popped from.
+ * @param idx	The index to pop from.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ * @pre			@a wph must be a @a WIMA_PROP_LIST.
+ */
+void wima_prop_list_popAt(WimaProperty wph, uint32_t idx);
+
+/**
+ * Returns a copy of the item at @a idx in @a wph's list.
+ * @param wph	The property whose list will be queried.
+ * @param idx	The index of the item to get.
+ * @return		The item at @a idx in @a wph's list.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ * @pre			@a wph must be a @a WIMA_PROP_LIST.
+ */
+WimaPropListItem wima_prop_list_item(WimaProperty wph, uint32_t idx);
+
+/**
+ * Returns the item at the current index of the list in @a wph.
+ * @param wph	The property to query.
+ * @return		The item at the current index.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ * @pre			@a wph must be a @a WIMA_PROP_LIST.
+ */
+WimaPropListItem wima_prop_list_currentItem(WimaProperty wph);
+
+/**
+ * Updates the current index of the list in @a wph to @a idx.
+ * @param wph	The property whose index will be updated.
+ * @param idx	The new index.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ * @pre			@a wph must be a @a WIMA_PROP_LIST.
+ * @pre			@a idx must be with the bounds of the list.
+ */
+void wima_prop_list_updateIdx(WimaProperty wph, uint32_t idx);
+
+/**
+ * Returns the current index of @a wph.
+ * @param wph	The property to query.
+ * @return		The current index, or WIMA_PROP_LIST_INVALID_IDX
+ *				there are no items in the list.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ * @pre			@a wph must be a @a WIMA_PROP_LIST.
+ */
+uint32_t wima_prop_list_idx(WimaProperty wph);
 
 /**
  * Sets the color in @a wph to @a color.

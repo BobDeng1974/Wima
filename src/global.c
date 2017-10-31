@@ -166,6 +166,7 @@ const char* wima_assert_msgs[] = {
     "str is NULL",
     "enum names is not valid",
     "list is NULL",
+    "index is out of range for the list",
     "prop pointer is NULL",
     "prop draw function is NULL",
     "operator is NULL",

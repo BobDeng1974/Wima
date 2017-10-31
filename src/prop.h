@@ -134,17 +134,6 @@ typedef struct WimaPropEnum {
 } WimaPropEnum;
 
 /**
- * A list item;
- */
-typedef struct WimaPropListItem {
-
-	WimaProperty name;
-	uint32_t icon;
-	void* ptr;
-
-} WimaPropListItem;
-
-/**
  * Data for a list property.
  */
 typedef struct WimaPropList {
