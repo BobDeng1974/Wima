@@ -254,8 +254,8 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		// Set the drag start.
 		wwin->ctx.dragStart = wwin->ctx.cursorPos;
 
-		// If we are on an area split...
-		if (wwin->ctx.split.split >= 0) {
+		// If we are on an area split and don't have a menu...
+		if (wwin->ctx.split.split >= 0 && !WIMA_WIN_HAS_MENU(wwin)) {
 
 			// If the button was not the right mouse button...
 			if (wbtn != WIMA_MOUSE_RIGHT) {
