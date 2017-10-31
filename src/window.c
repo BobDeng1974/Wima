@@ -1605,7 +1605,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 				}
 
 				// Set the item state based on the cursor.
-				item->state = contained ? WIMA_ITEM_HOVER : item->state;
+				item->state = contained ? WIMA_WIDGET_HOVER : item->state;
 			}
 
 			// Actually render the menu item.

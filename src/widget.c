@@ -123,10 +123,10 @@ void wima_widget_setEnabled(WimaWidget wdgt, bool enable) {
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
 	if (enable) {
-		pwdgt->widget.flags |= WIMA_ITEM_DISABLED;
+		pwdgt->widget.flags |= WIMA_WIDGET_DISABLED;
 	}
 	else {
-		pwdgt->widget.flags &= ~WIMA_ITEM_DISABLED;
+		pwdgt->widget.flags &= ~WIMA_WIDGET_DISABLED;
 	}
 }
 
@@ -136,7 +136,7 @@ bool wima_widget_enabled(WimaWidget wdgt) {
 
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
-	return pwdgt->widget.flags & WIMA_ITEM_DISABLED;
+	return pwdgt->widget.flags & WIMA_WIDGET_DISABLED;
 }
 
 void wima_widget_setSize(WimaWidget wdgt, WimaSize size) {
@@ -265,19 +265,19 @@ WimaWidgetState wima_widget_state(WimaWidget wdgt) {
 
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
-	if (pwdgt->widget.flags & WIMA_ITEM_DISABLED) {
-		return WIMA_ITEM_DISABLED;
+	if (pwdgt->widget.flags & WIMA_WIDGET_DISABLED) {
+		return WIMA_WIDGET_DISABLED;
 	}
 
 	if (wima_widget_isFocused(wdgt) && pwdgt->widget.flags & WIMA_EVENT_CHAR) {
-		return WIMA_ITEM_ACTIVE;
+		return WIMA_WIDGET_ACTIVE;
 	}
 
 	if (wima_widget_isActive(wdgt)) {
-		return pwdgt->widget.flags & WIMA_EVENT_MOUSE_BTN ? WIMA_ITEM_ACTIVE : WIMA_ITEM_DEFAULT;
+		return pwdgt->widget.flags & WIMA_EVENT_MOUSE_BTN ? WIMA_WIDGET_ACTIVE : WIMA_WIDGET_DEFAULT;
 	}
 
-	return wima_widget_isHovered(wdgt) ? WIMA_ITEM_HOVER : WIMA_ITEM_DEFAULT;
+	return wima_widget_isHovered(wdgt) ? WIMA_WIDGET_HOVER : WIMA_WIDGET_DEFAULT;
 }
 
 bool wima_widget_contains(WimaWidget wdgt, WimaVec pos) {

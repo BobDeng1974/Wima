@@ -214,12 +214,15 @@ void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float 
 	// Get the two colors for shading.
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, false, &shade_top, &shade_btm);
 
+	// Draw the inner box.
 	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
+	// Draw the box outline.
 	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_ui_box_outline(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], transparent);
 
-	if (state != WIMA_ITEM_ACTIVE) {
+	// Make sure to not have a caret if the textfield is not focused.
+	if (state != WIMA_WIDGET_ACTIVE) {
 		cend = -1;
 	}
 
@@ -265,7 +268,7 @@ void wima_ui_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 	                        WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS,
 	                        transparent);
 
-	if (state == WIMA_ITEM_ACTIVE) {
+	if (state == WIMA_WIDGET_ACTIVE) {
 		WimaColor tp = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_WIDGET]._color, WIMA_TRANSPARENT_ALPHA);
 		wima_ui_check(ctx, ox, oy, tp);
 	}
@@ -392,7 +395,7 @@ void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
 
 	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
-	if (state == WIMA_ITEM_ACTIVE) {
+	if (state == WIMA_WIDGET_ACTIVE) {
 		shade_top = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
 		shade_btm = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
 	}
@@ -442,7 +445,7 @@ void wima_ui_scrollbar(WimaRenderContext* ctx,float x, float y, float w, float h
 	                        WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
 	                        transparent);
 
-	int delta = (state == WIMA_ITEM_ACTIVE) ? WIMA_SCROLLBAR_ACTIVE_SHADE : 0;
+	int delta = (state == WIMA_WIDGET_ACTIVE) ? WIMA_SCROLLBAR_ACTIVE_SHADE : 0;
 	WimaColor itemColor = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, delta);
 
 	WimaRect r = wima_ui_scroll_handle_rect(x, y, w, h, offset, size);
@@ -476,7 +479,7 @@ void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, 
 	WimaUiCorners cr = wima_ui_corners_rounded(WIMA_MENU_RADIUS, flags);
 
 	// Get the two colors for shading.
-	wima_theme_shadeColors((WimaWidgetTheme*) t, WIMA_ITEM_DEFAULT, false, &shade_top, &shade_btm);
+	wima_theme_shadeColors((WimaWidgetTheme*) t, WIMA_WIDGET_DEFAULT, false, &shade_top, &shade_btm);
 	wima_ui_box_inner(ctx, x, y, w, h + 1, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
 	WimaColor color = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
@@ -495,7 +498,7 @@ void wima_ui_tooltip_background(WimaRenderContext* ctx, float x, float y, float 
 	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TOOLTIP);
 
-	wima_theme_shadeColors((WimaWidgetTheme*) t, WIMA_ITEM_DEFAULT, false, &shade_top, &shade_btm);
+	wima_theme_shadeColors((WimaWidgetTheme*) t, WIMA_WIDGET_DEFAULT, false, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, x, y, w, h + 1,
 	                      WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
@@ -550,7 +553,7 @@ void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float 
 	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_MENU_ITEM);
 
-	if (state != WIMA_ITEM_DEFAULT) {
+	if (state != WIMA_WIDGET_DEFAULT) {
 
 		WimaColor shadeTop = wima_color_offset(t[WIMA_THEME_WIDGET_INNER_SELECTED]._color,
 		                                      t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
@@ -559,7 +562,7 @@ void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float 
 
 		wima_ui_box_inner(ctx, x, y, w, h, 0, 0, 0, 0, shadeTop, shadeBtm);
 
-		state = WIMA_ITEM_ACTIVE;
+		state = WIMA_WIDGET_ACTIVE;
 	}
 
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
@@ -589,7 +592,7 @@ void wima_ui_node_port(WimaRenderContext* ctx, float x, float y, WimaWidgetState
 	nvgStroke(ctx->nvg);
 
 	WimaCol c;
-	c.wima = (state != WIMA_ITEM_DEFAULT) ? wima_color_offset(color, WIMA_HOVER_SHADE) : color;
+	c.wima = (state != WIMA_WIDGET_DEFAULT) ? wima_color_offset(color, WIMA_HOVER_SHADE) : color;
 
 	nvgFillColor(ctx->nvg, c.nvg);
 	nvgFill(ctx->nvg);
@@ -686,7 +689,7 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 
 		default:
 
-		case WIMA_ITEM_DEFAULT:
+		case WIMA_WIDGET_DEFAULT:
 		{
 			borderColor = t[WIMA_THEME_NODE_OUTLINE]._color;
 			arrowColor = wima_color_offset(titleCol, -WIMA_BEVEL_SHADE);
@@ -694,7 +697,7 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 			break;
 		}
 
-		case WIMA_ITEM_HOVER:
+		case WIMA_WIDGET_HOVER:
 		{
 			borderColor = t[WIMA_THEME_NODE_OUTLINE_SELECTED]._color;
 			arrowColor = t[WIMA_THEME_NODE_OUTLINE_SELECTED]._color;
@@ -702,7 +705,7 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 			break;
 		}
 
-		case WIMA_ITEM_ACTIVE:
+		case WIMA_WIDGET_ACTIVE:
 		{
 			borderColor = t[WIMA_THEME_NODE_OUTLINE_ACTIVE]._color;
 			arrowColor = t[WIMA_THEME_NODE_OUTLINE_SELECTED]._color;

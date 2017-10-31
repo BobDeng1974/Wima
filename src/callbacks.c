@@ -77,7 +77,7 @@ void splitSubSub1Click(WimaWidget wih) {
 }
 
 WimaMenuItem splitSubSubItems[] = {
-    { "Split sub sub 1", { .func = splitSubSub1Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
+    { "Split sub sub 1", { .func = splitSubSub1Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false },
 };
 
 WimaMenu splitSubSub = {
@@ -90,12 +90,12 @@ WimaMenu splitSubSub = {
 };
 
 WimaMenuItem splitSubItems[] = {
-    { "Split sub 1", { .func = splitSub1Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
-    { NULL, NULL, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, -1, false },
-    { "Split sub 2", &splitSubSub, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), true },
-    { "Split sub 3", { .func = splitSub3Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
-    { "Split sub 4", { .func = splitSub4Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false },
-    { "Split sub 5", { .func = splitSub5Click }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(1,0), false }
+    { "Split sub 1", { .func = splitSub1Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false },
+    { NULL, NULL, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, -1, false },
+    { "Split sub 2", &splitSubSub, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), true },
+    { "Split sub 3", { .func = splitSub3Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false },
+    { "Split sub 4", { .func = splitSub4Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false },
+    { "Split sub 5", { .func = splitSub5Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false }
 };
 
 WimaMenu splitSub = {
@@ -108,9 +108,9 @@ WimaMenu splitSub = {
 };
 
 WimaMenuItem areaOptionMenuItems[] = {
-    { "Split Area", &splitSub, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, -1, true },
-    { NULL, NULL, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, -1, false },
-    { "Join Area", { .func = joinItemClick }, {{ 0, 0, 0, 0 }}, WIMA_ITEM_DEFAULT, WIMA_ICONID(0,0), false }
+    { "Split Area", &splitSub, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, -1, true },
+    { NULL, NULL, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, -1, false },
+    { "Join Area", { .func = joinItemClick }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(0,0), false }
 };
 
 WimaMenu areaOptionMenu = {

@@ -981,7 +981,7 @@ void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool 
 
 			default:
 
-			case WIMA_ITEM_DEFAULT:
+			case WIMA_WIDGET_DEFAULT:
 			{
 				*shade_top = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color,
 				                               t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
@@ -991,7 +991,7 @@ void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool 
 				break;
 			}
 
-			case WIMA_ITEM_HOVER:
+			case WIMA_WIDGET_HOVER:
 			{
 				WimaColor color = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color, WIMA_HOVER_SHADE);
 
@@ -1001,7 +1001,7 @@ void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool 
 				break;
 			}
 
-			case WIMA_ITEM_ACTIVE:
+			case WIMA_WIDGET_ACTIVE:
 			{
 				int delta = flip ?
 				                t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val :
@@ -1023,7 +1023,7 @@ void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool 
 
 			default:
 
-			case WIMA_ITEM_DEFAULT:
+			case WIMA_WIDGET_DEFAULT:
 			{
 				*shade_top = t[WIMA_THEME_WIDGET_INNER]._color;
 				*shade_btm = t[WIMA_THEME_WIDGET_INNER]._color;
@@ -1031,7 +1031,7 @@ void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool 
 				break;
 			}
 
-			case WIMA_ITEM_HOVER:
+			case WIMA_WIDGET_HOVER:
 			{
 				WimaColor color = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color, WIMA_HOVER_SHADE);
 
@@ -1041,7 +1041,7 @@ void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool 
 				break;
 			}
 
-			case WIMA_ITEM_ACTIVE:
+			case WIMA_WIDGET_ACTIVE:
 			{
 				*shade_top = t[WIMA_THEME_WIDGET_INNER_SELECTED]._color;
 				*shade_btm = t[WIMA_THEME_WIDGET_INNER_SELECTED]._color;
@@ -1060,7 +1060,7 @@ WimaColor wima_theme_textColor(WimaWidgetTheme* theme, WimaWidgetState state) {
 
 	WimaPropData* t = (WimaPropData*) theme;
 
-	return (state == WIMA_ITEM_ACTIVE) ?
+	return (state == WIMA_WIDGET_ACTIVE) ?
 	            t[WIMA_THEME_WIDGET_TEXT_SELECTED]._color :
 	            t[WIMA_THEME_WIDGET_TEXT]._color;
 }
@@ -1080,13 +1080,13 @@ WimaColor wima_theme_wireColor(WimaNodeTheme* theme, WimaWidgetState state) {
 
 		default:
 
-		case WIMA_ITEM_DEFAULT:
+		case WIMA_WIDGET_DEFAULT:
 			return t[WIMA_THEME_NODE_WIRE]._color;
 
-		case WIMA_ITEM_HOVER:
+		case WIMA_WIDGET_HOVER:
 			return t[WIMA_THEME_NODE_WIRE_SELECTED]._color;
 
-		case WIMA_ITEM_ACTIVE:
+		case WIMA_WIDGET_ACTIVE:
 			return t[WIMA_THEME_NODE_OUTLINE_ACTIVE]._color;
 	}
 }

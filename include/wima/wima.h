@@ -285,16 +285,16 @@ typedef struct WimaWidget {
 typedef enum WimaWidgetState {
 
 	/// The item is inactive.
-	WIMA_ITEM_DEFAULT = 0,
+	WIMA_WIDGET_DEFAULT = 0,
 
 	/// The item is inactive, but the cursor is hovering over this item.
-	WIMA_ITEM_HOVER   = 1 << 0,
+	WIMA_WIDGET_HOVER   = 1 << 0,
 
 	/// The item is toggled, activated, focused (depends on item kind).
-	WIMA_ITEM_ACTIVE  = 1 << 1,
+	WIMA_WIDGET_ACTIVE  = 1 << 1,
 
 	/// The item is unresponsive.
-	WIMA_ITEM_DISABLED  = 1 << 2,
+	WIMA_WIDGET_DISABLED  = 1 << 2,
 
 } WimaWidgetState;
 
