@@ -64,6 +64,10 @@ wima_assert_msgs_decl;
 // These are all the static functions that the public functions need.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Clears a window's UI context.
+ * @param ctx	The context to clear.
+ */
 static void wima_window_clearContext(WimaWinCtx* ctx);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1232,9 +1236,41 @@ const char* wima_window_clipboard(WimaWindow wwh) {
 // Static functions needed for private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Returns the menu that contains @a pos and does not have
+ * any posterity menus that contain the cursor. In other
+ * words, the menu that is returned is the most sub menu
+ * that contains the cursor.
+ * @param menu	The first menu to start testing.
+ * @param pos	The cursor position.
+ * @return		The youngest menu with the cursor inside.
+ */
 static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos);
+
+/**
+ * Processes one event.
+ * @param win	The window to process events on.
+ * @param wwh	The window handle. Necessary because
+ *				windows don't store their index.
+ * @param wih	The widget associated with the event.
+ * @param e		The event.
+ */
 static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wih, WimaEvent e);
+
+/**
+ * Processes a mouse button event. This is
+ * complicated, so it's in its own function.
+ * @param win	The window to process the event on.
+ * @param wih	The widget associated with the event.
+ * @param e		The event.
+ */
 static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaMouseBtnEvent e);
+
+/**
+ * Processes a file drop event on a window.
+ * @param wwh	The handle of the window.
+ * @param files	The vector of file names.
+ */
 static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files);
 
 ////////////////////////////////////////////////////////////////////////////////
