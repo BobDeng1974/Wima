@@ -43,6 +43,7 @@
 
 #include <wima/wima.h>
 #include <wima/render.h>
+#include <wima/layout.h>
 
 #include "../src/global.h"
 

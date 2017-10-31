@@ -302,36 +302,10 @@ typedef enum WimaWidgetState {
  * @}
  */
 
-/**
- * @defgroup layout layout
- * @{
- */
-
-/**
- * @def WIMA_LAYOUT_INVALID
- * A handle indicating an invalid layout.
- */
-#define WIMA_LAYOUT_INVALID ((uint16_t) -1)
-
-/**
- * A handle to a layout.
- */
-typedef struct WimaLayout {
-
-	/// The ID of the layout.
-	uint16_t layout;
-
-	/// The area the layout is in.
-	WimaAreaNode area;
-
-	/// The window the layout is in.
-	WimaWindow window;
-
-} WimaLayout;
-
-/**
- * @}
- */
+//! @cond Doxygen suppress.
+/// Forward declaration
+typedef struct WimaLayout WimaLayout;
+//! @endcond Doxygen suppress.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Data structures for input.

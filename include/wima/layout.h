@@ -61,6 +61,28 @@ extern "C" {
  */
 
 /**
+ * @def WIMA_LAYOUT_INVALID
+ * A handle indicating an invalid layout.
+ */
+#define WIMA_LAYOUT_INVALID ((uint16_t) -1)
+
+/**
+ * A handle to a layout.
+ */
+typedef struct WimaLayout {
+
+	/// The ID of the layout.
+	uint16_t layout;
+
+	/// The area the layout is in.
+	WimaAreaNode area;
+
+	/// The window the layout is in.
+	WimaWindow window;
+
+} WimaLayout;
+
+/**
  * Takes an initial flag value and sets the expand bits. If @a horizontal is
  * true, the horizontal expand bit is set. Same goes for vertical.
  * @param flags			The initial flag value to use.
