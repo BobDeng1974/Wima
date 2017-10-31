@@ -1893,8 +1893,16 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 
 static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaMouseBtnEvent e) {
 
+
+	// If the mouse button hasn't been released yet,
+	// set it to released and return because we don't
+	// need to do anything else.
+	if (!WIMA_WIN_MENU_IS_RELEASED(win)) {
+		win->flags |= WIMA_WIN_MENU_RELEASED;
+		return;
+	}
 	// If there is a menu...
-	if (WIMA_WIN_HAS_MENU(win)) {
+	else if (WIMA_WIN_HAS_MENU(win)) {
 
 		// Get the menu.
 		WimaMenu* menu = win->menu;
@@ -1907,14 +1915,6 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 
 		// If the mouse button was released, and the containing menu is valid...
 		if (e.action == WIMA_ACTION_RELEASE && m) {
-
-			// If the mouse button hasn't been released yet,
-			// set it to released and return because we don't
-			// need to do anything else.
-			if (!WIMA_WIN_MENU_IS_RELEASED(win)) {
-				win->flags |= WIMA_WIN_MENU_RELEASED;
-				return;
-			}
 
 			// Send event to menu item.
 
