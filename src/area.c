@@ -622,7 +622,7 @@ WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas) {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	// Get a pointer to the background color prop.
-	WimaPropData* bg = dnvec_get(wg.props, wg.themes[WIMA_THEME_BG], WIMA_PROP_DATA_IDX);
+	WimaPropData* bg = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wg.themes[WIMA_THEME_BG]);
 
 	// Draw the areas, starting with the root.
 	return wima_area_node_draw(ctx, areas, dtree_root(), bg);
