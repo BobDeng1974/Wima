@@ -323,21 +323,21 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	// Add one to the event count.
 	++(wwin->ctx.eventCount);
 
-	// Get the number of events.
-	numEvents = wwin->ctx.eventCount;
-
-	// If we've already reached our max.
-	if (yunlikely(numEvents >= WIMA_EVENT_MAX)) {
-
-		// Send an error to the client.
-		wima_error(WIMA_STATUS_EVENT_DROPPED);
-
-		// Drop the event.
-		return;
-	}
-
 	// If a click was completed...
 	if (wwin->ctx.clicks) {
+
+		// Get the number of events.
+		numEvents = wwin->ctx.eventCount;
+
+		// If we've already reached our max.
+		if (yunlikely(numEvents >= WIMA_EVENT_MAX)) {
+
+			// Send an error to the client.
+			wima_error(WIMA_STATUS_EVENT_DROPPED);
+
+			// Drop the event.
+			return;
+		}
 
 		// Calculate a pointer to the event we'll fill.
 		event = wwin->ctx.events + numEvents;
