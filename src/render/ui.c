@@ -108,8 +108,10 @@ void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, i
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_REGULAR);
 
+	// Draw the label.
 	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, t[WIMA_THEME_WIDGET_TEXT]._color,
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
@@ -123,17 +125,26 @@ void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
 
 	WimaColor shade_top, shade_btm;
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_OPERATOR);
 
+	// Get the corners.
 	WimaUiCorners cr = wima_ui_corners_rounded(WIMA_TOOL_RADIUS, flags);
+
+	// Draw the inset.
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
+
+	// Get the two colors for shading.
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
 
+	// Draw the inner box.
 	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
+	// Draw the box outline.
 	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_ui_box_outline(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], transparent);
 
+	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
 	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, textColor, WIMA_ALIGN_CENTER,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
@@ -148,18 +159,26 @@ void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 
 	WimaColor shade_top, shade_btm;
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_RADIO);
 
+	// Get the corners.
 	WimaUiCorners cr = wima_ui_corners_rounded(WIMA_OPTION_RADIUS, flags);
+
+	// Draw the inset.
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
+	// Get the two colors for shading.
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
 
+	// Draw the inner box.
 	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
+	// Draw the box outline.
 	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_ui_box_outline(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], transparent);
 
+	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
 	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, textColor, WIMA_ALIGN_CENTER,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
@@ -183,11 +202,16 @@ void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	WimaColor shade_top, shade_btm;
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TEXTFIELD);
 
+	// Get the corners.
 	WimaUiCorners cr = wima_ui_corners_rounded(WIMA_TEXT_RADIUS, flags);
+
+	// Draw the inset.
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
+	// Get the two colors for shading.
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, false, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
@@ -214,15 +238,18 @@ void wima_ui_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 	float ox, oy;
 	WimaColor shade_top, shade_btm;
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_OPTION);
 
 	ox = x;
 	oy = y + h - WIMA_OPTION_HEIGHT - 3;
 
+	// Draw the inset.
 	wima_ui_inset(ctx, ox, oy,
 	                  WIMA_OPTION_WIDTH,  WIMA_OPTION_HEIGHT,
 	                  WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS);
 
+	// Get the two colors for shading.
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, ox, oy,
@@ -257,11 +284,16 @@ void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	WimaColor shade_top, shade_btm;
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_CHOICE);
 
+	// Get the corners.
 	WimaUiCorners cr = wima_ui_corners_rounded(WIMA_OPTION_RADIUS, flags);
+
+	// Draw the inset.
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
+	// Get the two colors for shading.
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
@@ -279,13 +311,19 @@ void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 
 void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaColor color) {
 
+	// TODO: Make half the button have the color with alpha, like Blender.
+
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_OPERATOR);
 
+	// Get the corners.
 	WimaUiCorners cr = wima_ui_corners_rounded(WIMA_TOOL_RADIUS, flags);
+
+	// Draw the inset.
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
 	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], color, color);
@@ -303,11 +341,16 @@ void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h
 
 	WimaColor shade_top, shade_btm;
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_NUMFIELD);
 
+	// Get the corners.
 	WimaUiCorners cr = wima_ui_corners_rounded(WIMA_NUMBER_RADIUS, flags);
+
+	// Draw the inset.
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
+	// Get the two colors for shading.
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, false, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
@@ -335,11 +378,16 @@ void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
 
 	WimaColor shade_top, shade_btm;
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_SLIDER);
 
+	// Get the corners.
 	WimaUiCorners cr = wima_ui_corners_rounded(WIMA_NUMBER_RADIUS, flags);
+
+	// Draw the inset.
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
 
+	// Get the two colors for shading.
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, false, &shade_top, &shade_btm);
 
 	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
@@ -372,8 +420,10 @@ void wima_ui_scrollbar(WimaRenderContext* ctx,float x, float y, float w, float h
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_SCROLLBAR);
 
+	// Draw the inset.
 	wima_ui_inset(ctx, x, y, w, h, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS);
 
 	WimaColor top = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color,
@@ -419,10 +469,13 @@ void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, 
 
 	WimaColor shade_top, shade_btm;
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_MENU);
 
+	// Get the corners.
 	WimaUiCorners cr = wima_ui_corners_rounded(WIMA_MENU_RADIUS, flags);
 
+	// Get the two colors for shading.
 	wima_theme_shadeColors((WimaWidgetTheme*) t, WIMA_ITEM_DEFAULT, false, &shade_top, &shade_btm);
 	wima_ui_box_inner(ctx, x, y, w, h + 1, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
@@ -439,6 +492,7 @@ void wima_ui_tooltip_background(WimaRenderContext* ctx, float x, float y, float 
 
 	WimaColor shade_top, shade_btm;
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TOOLTIP);
 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, WIMA_ITEM_DEFAULT, false, &shade_top, &shade_btm);
@@ -463,6 +517,7 @@ void wima_ui_menu_label(WimaRenderContext* ctx, float x, float y, float w, float
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_MENU);
 
 	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, t[WIMA_THEME_WIDGET_TEXT]._color,
@@ -492,6 +547,7 @@ void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_MENU_ITEM);
 
 	if (state != WIMA_ITEM_DEFAULT) {
@@ -521,6 +577,7 @@ void wima_ui_node_port(WimaRenderContext* ctx, float x, float y, WimaWidgetState
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_node();
 
 	nvgBeginPath(ctx->nvg);
@@ -545,6 +602,7 @@ void wima_ui_node_wire_colored(WimaRenderContext* ctx, float x0, float y0, float
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_node();
 
 	float length = wima_fmaxf(fabsf(x1 - x0), fabsf(y1 - y0));
@@ -582,6 +640,7 @@ void wima_ui_node_wire(WimaRenderContext* ctx, float x0, float y0, float x1, flo
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Get the theme pointer.
 	WimaPropData* t = (WimaPropData*) wima_theme_node();
 
 	WimaColor first = wima_theme_wireColor((WimaNodeTheme*) t, state0);
@@ -598,6 +657,7 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Get the theme pointers.
 	WimaPropData* t = (WimaPropData*) wima_theme_node();
 	WimaPropData* reg = (WimaPropData*) wima_theme_widget(WIMA_THEME_REGULAR);
 
