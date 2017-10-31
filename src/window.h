@@ -184,13 +184,13 @@ typedef struct WimaWinCtx {
 	/// This is for generating click events.
 	WimaMouseBtn click_button;
 
-	/// The timestamp of the last click.
-	/// This is for generating click events.
-	uint64_t click_timestamp;
-
 	/// The current number of clicks.
 	/// This is for generating click events.
 	uint32_t clicks;
+
+	/// The timestamp of the last click.
+	/// This is for generating click events.
+	uint64_t click_timestamp;
 
 	/// The current layout stage.
 	WimaLayoutStage stage;
@@ -204,14 +204,14 @@ typedef struct WimaWinCtx {
 	/// The split that the user is manipulating.
 	WimaAreaSplit split;
 
-	/// The number of events in the queue.
-	uint8_t eventCount;
-
 	/// The area that the cursor is in.
 	WimaAreaNode cursorArea;
 
 	/// Whether or not the user is moving a split or not.
 	bool movingSplit;
+
+	/// The number of events in the queue.
+	uint8_t eventCount;
 
 	/// The event queue.
 	WimaEvent events[WIMA_EVENT_MAX];
