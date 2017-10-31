@@ -41,6 +41,8 @@
 #include <wima/wima.h>
 #include <wima/math.h>
 
+#include <GLFW/glfw3.h>
+
 #include "callbacks.h"
 #include "widget.h"
 #include "area.h"
@@ -248,6 +250,9 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 
 	// If the user pressed the button...
 	if (wact == WIMA_ACTION_PRESS) {
+
+		// Set the drag start.
+		wwin->ctx.dragStart = wwin->ctx.cursorPos;
 
 		// If we are on an area split...
 		if (wwin->ctx.split.split >= 0) {
