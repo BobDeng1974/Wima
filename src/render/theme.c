@@ -91,11 +91,39 @@ wima_assert_msgs_decl;
 
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @file theme.c
+ */
+
+/**
+ * @defgroup theme_internal theme_internal
+ * @{
+ */
+
+/**
+ * A common prefix for the names of all theme items.
+ */
 const char* themePrefix = "wima_theme_";
+
+/**
+ * The label for the overarching theme group.
+ */
 const char* themeLabel = "User Interface Theme";
+
+/**
+ * The description for the overarching theme group.
+ */
 const char* themeDesc = "User interface theme group";
+
+/**
+ * The description for the background.
+ */
 const char* bgDesc = "Default background color";
 
+/**
+ * An array of suffixes for parent names. These
+ * are also added to the middle of their children.
+ */
 const char* widgetParentNames[] = {
     "background",
     "regular",
@@ -113,6 +141,9 @@ const char* widgetParentNames[] = {
     "node"
 };
 
+/**
+ * Labels for parent themes.
+ */
 const char* widgetParentLabels[] = {
     "Background",
     "Regular",
@@ -130,6 +161,10 @@ const char* widgetParentLabels[] = {
     "Node"
 };
 
+/**
+ * An array of suffixes for names of items in a widget theme.
+ * These are added to the prefix and the parent name.
+ */
 const char* widgetThemeNames[] = {
     "_outline",
     "_widget",
@@ -142,6 +177,11 @@ const char* widgetThemeNames[] = {
     "_shaded"
 };
 
+/**
+ * An array of labels for items in a widget theme.
+ * These are used as-is; they do not have to be
+ * unique like names do.
+ */
 const char* widgetThemeLabels[] = {
     "Outline",
     "Item",
@@ -154,6 +194,10 @@ const char* widgetThemeLabels[] = {
     "Shaded"
 };
 
+/**
+ * An array of suffixes for names of items in a node theme.
+ * These are added to the prefix and the parent name.
+ */
 const char* nodeThemeNames[] = {
     "_outline",
     "_outline_selected",
@@ -167,6 +211,11 @@ const char* nodeThemeNames[] = {
     "_wire_curving"
 };
 
+/**
+ * An array of labels for items in a node theme.
+ * These are used as-is; they do not have to be
+ * unique like names do.
+ */
 const char* nodeThemeLabels[] = {
     "Outline",
     "Outline (Selected)",
@@ -180,14 +229,23 @@ const char* nodeThemeLabels[] = {
     "Wire Curving"
 };
 
+/**
+ * An array of widget shade top delta defaults.
+ */
 int shadeTops[] = {
     0, 15, 15, 0, 15, 15, -20, -20, 5, 0, 38, 0
 };
 
+/**
+ * An array of widget shade bottom delta defaults.
+ */
 int shadeBottoms[] = {
     0, -15, -15, 25, -15, -15, 0, 0, -5, 0, 0, 0
 };
 
+/**
+ * Descriptions for items in the regular widget theme.
+ */
 const char* regularDescs[] = {
     "Outline color of regular UI items",
     "Color of regular UI items",
@@ -200,6 +258,9 @@ const char* regularDescs[] = {
     "Whether shading is enabled for regular UI items"
 };
 
+/**
+ * Descriptions for items in the operator widget theme.
+ */
 const char* operatorDescs[] = {
     "Outline color of operators (buttons)",
     "Color of operators (buttons)",
@@ -212,6 +273,9 @@ const char* operatorDescs[] = {
     "Whether shading is enabled for operators (buttons)"
 };
 
+/**
+ * Descriptions for items in the radio button widget theme.
+ */
 const char* radioDescs[] = {
     "Outline color of radio UI items",
     "Color of radio UI items",
@@ -224,6 +288,9 @@ const char* radioDescs[] = {
     "Whether shading is enabled for radio UI items"
 };
 
+/**
+ * Descriptions for items in the textfield widget theme.
+ */
 const char* textfieldDescs[] = {
     "Outline color of textfield UI items",
     "Color of textfield UI items",
@@ -236,6 +303,9 @@ const char* textfieldDescs[] = {
     "Whether shading is enabled for textfield UI items"
 };
 
+/**
+ * Descriptions for items in the option (checkbox) widget theme.
+ */
 const char* optionDescs[] = {
     "Outline color of option (checkbox) UI items",
     "Color of option (checkbox) UI items",
@@ -248,6 +318,9 @@ const char* optionDescs[] = {
     "Whether shading is enabled for option (checkbox) UI items"
 };
 
+/**
+ * Descriptions for items in the choice (dropdown menu) widget theme.
+ */
 const char* choiceDescs[] = {
     "Outline color of choice (dropdown menu) UI items",
     "Color of choice (dropdown menu) UI items",
@@ -260,6 +333,9 @@ const char* choiceDescs[] = {
     "Whether shading is enabled for choice (dropdown menu) UI items"
 };
 
+/**
+ * Descriptions for items in the number field widget theme.
+ */
 const char* numfieldDescs[] = {
     "Outline color of numfield UI items",
     "Color of numfield UI items",
@@ -272,6 +348,9 @@ const char* numfieldDescs[] = {
     "Whether shading is enabled for numfield UI items"
 };
 
+/**
+ * Descriptions for items in the slider widget theme.
+ */
 const char* sliderDescs[] = {
     "Outline color of slider UI items",
     "Color of slider UI items",
@@ -284,6 +363,9 @@ const char* sliderDescs[] = {
     "Whether shading is enabled for slider UI items"
 };
 
+/**
+ * Descriptions for items in the scrollbar widget theme.
+ */
 const char* scrollbarDescs[] = {
     "Outline color of scrollbars",
     "Color of scrollbars",
@@ -296,6 +378,9 @@ const char* scrollbarDescs[] = {
     "Whether shading is enabled for scrollbars"
 };
 
+/**
+ * Descriptions for items in the menu widget theme.
+ */
 const char* menuDescs[] = {
     "Outline color of menus",
     "Color of menus",
@@ -308,6 +393,9 @@ const char* menuDescs[] = {
     "Whether shading is enabled for menus"
 };
 
+/**
+ * Descriptions for items in the menu item widget theme.
+ */
 const char* menuItemDescs[] = {
     "Outline color of menu items",
     "Color of menu items",
@@ -320,6 +408,9 @@ const char* menuItemDescs[] = {
     "Whether shading is enabled for menu items"
 };
 
+/**
+ * Descriptions for items in the tooltip widget theme.
+ */
 const char* tooltipDescs[] = {
     "Outline color of tooltips",
     "Color of tooltips",
@@ -332,6 +423,9 @@ const char* tooltipDescs[] = {
     "Whether shading is enabled for tooltips"
 };
 
+/**
+ * Descriptions for items in the node theme.
+ */
 const char* nodeDescs[] = {
     "Outline color of nodes",
     "Outline color of nodes when selected",
@@ -345,6 +439,10 @@ const char* nodeDescs[] = {
     "How much wires curve (0 for none, 10 for a lot)"
 };
 
+/**
+ * An array of default colors. This
+ * is used to load the default theme.
+ */
 const WimaColor colors[] = {
 
     WIMA_THEME_DEF_BG,
@@ -435,15 +533,6 @@ const WimaColor colors[] = {
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions needed for public functions.
 ////////////////////////////////////////////////////////////////////////////////
-
-/**
- * @file theme.c
- */
-
-/**
- * @defgroup theme_internal theme_internal
- * @{
- */
 
 /**
  * Creates a name by filling @a buffer with @a name1
