@@ -330,7 +330,7 @@ uint32_t wima_prop_list_len(WimaProperty wph) yinline;
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_LIST.
  */
-void wima_prop_list_push(WimaProperty wph, WimaPropListItem item);
+void wima_prop_list_push(WimaProperty wph, WimaPropListItem item) yinline;
 
 /**
  * Pushes @a item onto the list in @a wph at @a idx.
@@ -340,7 +340,7 @@ void wima_prop_list_push(WimaProperty wph, WimaPropListItem item);
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_LIST.
  */
-void wima_prop_list_pushAt(WimaProperty wph, WimaPropListItem item, uint32_t idx);
+void wima_prop_list_pushAt(WimaProperty wph, WimaPropListItem item, uint32_t idx) yinline;
 
 /**
  * Pops the item at the back of the list in @a wph off.
@@ -348,7 +348,7 @@ void wima_prop_list_pushAt(WimaProperty wph, WimaPropListItem item, uint32_t idx
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_LIST.
  */
-void wima_prop_list_pop(WimaProperty wph);
+void wima_prop_list_pop(WimaProperty wph) yinline;
 
 /**
  * Pops the item at @a idx of the list in @a wph off.
@@ -357,7 +357,7 @@ void wima_prop_list_pop(WimaProperty wph);
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_LIST.
  */
-void wima_prop_list_popAt(WimaProperty wph, uint32_t idx);
+void wima_prop_list_popAt(WimaProperty wph, uint32_t idx) yinline;
 
 /**
  * Returns a copy of the item at @a idx in @a wph's list.
@@ -367,7 +367,7 @@ void wima_prop_list_popAt(WimaProperty wph, uint32_t idx);
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_LIST.
  */
-WimaPropListItem wima_prop_list_item(WimaProperty wph, uint32_t idx);
+WimaPropListItem wima_prop_list_item(WimaProperty wph, uint32_t idx) yinline;
 
 /**
  * Returns the item at the current index of the list in @a wph.
@@ -376,7 +376,7 @@ WimaPropListItem wima_prop_list_item(WimaProperty wph, uint32_t idx);
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_LIST.
  */
-WimaPropListItem wima_prop_list_currentItem(WimaProperty wph);
+WimaPropListItem wima_prop_list_currentItem(WimaProperty wph) yinline;
 
 /**
  * Updates the current index of the list in @a wph to @a idx.
@@ -386,7 +386,7 @@ WimaPropListItem wima_prop_list_currentItem(WimaProperty wph);
  * @pre			@a wph must be a @a WIMA_PROP_LIST.
  * @pre			@a idx must be with the bounds of the list.
  */
-void wima_prop_list_updateIdx(WimaProperty wph, uint32_t idx);
+void wima_prop_list_updateIdx(WimaProperty wph, uint32_t idx) yinline;
 
 /**
  * Returns the current index of @a wph.
@@ -396,7 +396,7 @@ void wima_prop_list_updateIdx(WimaProperty wph, uint32_t idx);
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_LIST.
  */
-uint32_t wima_prop_list_idx(WimaProperty wph);
+uint32_t wima_prop_list_idx(WimaProperty wph) yinline;
 
 /**
  * Sets the color in @a wph to @a color.
