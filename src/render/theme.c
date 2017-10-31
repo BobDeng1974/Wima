@@ -198,7 +198,7 @@ const char* regularDescs[] = {
     "Whether shading is enabled for regular UI items"
 };
 
-const char* toolDescs[] = {
+const char* operatorDescs[] = {
     "Outline color of operators (buttons)",
     "Color of operators (buttons)",
     "Inner color of operators (buttons)",
@@ -352,12 +352,12 @@ const WimaColor colors[] = {
     WIMA_THEME_DEF_REGULAR_INNER_SELECTED,
     WIMA_THEME_DEF_REGULAR_TEXT,
     WIMA_THEME_DEF_REGULAR_TEXT_SELECTED,
-    WIMA_THEME_DEF_TOOL_OUTLINE,
-    WIMA_THEME_DEF_TOOL_ITEM,
-    WIMA_THEME_DEF_TOOL_INNER,
-    WIMA_THEME_DEF_TOOL_INNER_SELECTED,
-    WIMA_THEME_DEF_TOOL_TEXT,
-    WIMA_THEME_DEF_TOOL_TEXT_SELECTED,
+    WIMA_THEME_DEF_OPERATOR_OUTLINE,
+    WIMA_THEME_DEF_OPERATOR_ITEM,
+    WIMA_THEME_DEF_OPERATOR_INNER,
+    WIMA_THEME_DEF_OPERATOR_INNER_SELECTED,
+    WIMA_THEME_DEF_OPERATOR_TEXT,
+    WIMA_THEME_DEF_OPERATOR_TEXT_SELECTED,
     WIMA_THEME_DEF_RADIO_OUTLINE,
     WIMA_THEME_DEF_RADIO_ITEM,
     WIMA_THEME_DEF_RADIO_INNER,
@@ -1159,7 +1159,7 @@ static const char** wima_theme_descs(WimaThemeType type) {
 			return regularDescs;
 
 		case WIMA_THEME_OPERATOR:
-			return toolDescs;
+			return operatorDescs;
 
 		case WIMA_THEME_RADIO:
 			return radioDescs;

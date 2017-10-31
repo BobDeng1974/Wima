@@ -116,8 +116,9 @@ void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, i
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
-void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
-                         WimaWidgetState state, int iconid, const char *label)
+void wima_ui_operatorBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
+                         WimaWidgetCornerFlags flags, WimaWidgetState state, int iconid,
+                         const char *label)
 {
 	wima_assert_init;
 
@@ -129,7 +130,7 @@ void wima_ui_toolBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_OPERATOR);
 
 	// Get the corners.
-	WimaUiCorners cr = wima_ui_corners_rounded(WIMA_TOOL_RADIUS, flags);
+	WimaUiCorners cr = wima_ui_corners_rounded(WIMA_OPERATOR_RADIUS, flags);
 
 	// Draw the inset.
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);
@@ -334,7 +335,7 @@ void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_OPERATOR);
 
 	// Get the corners.
-	WimaUiCorners cr = wima_ui_corners_rounded(WIMA_TOOL_RADIUS, flags);
+	WimaUiCorners cr = wima_ui_corners_rounded(WIMA_OPERATOR_RADIUS, flags);
 
 	// Draw the inset.
 	wima_ui_inset(ctx, x, y, w, h, cr.v[2], cr.v[3]);

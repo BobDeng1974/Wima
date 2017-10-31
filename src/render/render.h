@@ -260,7 +260,7 @@ typedef union WimaImg {
 #define WIMA_NUMBER_ARROW_SIZE 4
 
 // Radius of tool button.
-#define WIMA_TOOL_RADIUS 4
+#define WIMA_OPERATOR_RADIUS 4
 
 // Radius of option button.
 #define WIMA_OPTION_RADIUS 4
@@ -309,8 +309,8 @@ typedef union WimaImg {
 
 // Default widget height.
 #define WIMA_WIDGET_HEIGHT (27)
-// Default toolbutton width (if icon only).
-#define WIMA_TOOL_WIDTH (20)
+// Default operator button width (if icon only).
+#define WIMA_OPERATOR_WIDTH (20)
 
 // Default radius of node ports.
 #define WIMA_NODE_PORT_RADIUS (5)
@@ -354,12 +354,12 @@ typedef union WimaImg {
 #define WIMA_THEME_DEF_REGULAR_INNER_SELECTED    {{{ 0.392f, 0.392f, 0.392f, 1.000f }}}
 #define WIMA_THEME_DEF_REGULAR_TEXT              WIMA_THEME_DEF_TEXT
 #define WIMA_THEME_DEF_REGULAR_TEXT_SELECTED     WIMA_THEME_DEF_TEXT_SELECTED
-#define WIMA_THEME_DEF_TOOL_OUTLINE              {{{ 0.098f, 0.098f, 0.098f, 1.000f }}}
-#define WIMA_THEME_DEF_TOOL_ITEM                 {{{ 0.098f, 0.098f, 0.098f, 1.000f }}}
-#define WIMA_THEME_DEF_TOOL_INNER                {{{ 0.600f, 0.600f, 0.600f, 1.000f }}}
-#define WIMA_THEME_DEF_TOOL_INNER_SELECTED       {{{ 0.392f, 0.392f, 0.392f, 1.000f }}}
-#define WIMA_THEME_DEF_TOOL_TEXT                 WIMA_THEME_DEF_TEXT
-#define WIMA_THEME_DEF_TOOL_TEXT_SELECTED        WIMA_THEME_DEF_TEXT_SELECTED
+#define WIMA_THEME_DEF_OPERATOR_OUTLINE              {{{ 0.098f, 0.098f, 0.098f, 1.000f }}}
+#define WIMA_THEME_DEF_OPERATOR_ITEM                 {{{ 0.098f, 0.098f, 0.098f, 1.000f }}}
+#define WIMA_THEME_DEF_OPERATOR_INNER                {{{ 0.600f, 0.600f, 0.600f, 1.000f }}}
+#define WIMA_THEME_DEF_OPERATOR_INNER_SELECTED       {{{ 0.392f, 0.392f, 0.392f, 1.000f }}}
+#define WIMA_THEME_DEF_OPERATOR_TEXT                 WIMA_THEME_DEF_TEXT
+#define WIMA_THEME_DEF_OPERATOR_TEXT_SELECTED        WIMA_THEME_DEF_TEXT_SELECTED
 #define WIMA_THEME_DEF_RADIO_OUTLINE             {{{ 0.000f, 0.000f, 0.000f, 1.000f }}}
 #define WIMA_THEME_DEF_RADIO_ITEM                {{{ 1.000f, 1.000f, 1.000f, 1.000f }}}
 #define WIMA_THEME_DEF_RADIO_INNER               {{{ 0.275f, 0.275f, 0.275f, 1.000f }}}

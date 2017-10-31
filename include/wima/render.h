@@ -2588,12 +2588,12 @@ void wima_ui_label(WimaRenderContext* ctx,
     float x, float y, float w, float h, int iconid, const char *label);
 
 /**
- * Draw a tool (operator) button  with its upper left origin at
- * (x,y) and size of (w,h), where @a flags is one or multiple flags
- * from @a WimaWidgetCorner and @a state denotes the widget's current
- * state. If @a iconid >= 0, an icon will be added to the widget.
- * If @a label is not NULL, a label will be added to the widget.
- * Widget looks best when @a h is @a WIMA_WIDGET_HEIGHT.
+ * Draw a operator button  with its upper left origin at (x,y) and
+ * size of (w,h), where @a flags is one or multiple flags from @a
+ * WimaWidgetCorner and @a state denotes the widget's current state.
+ * If @a iconid >= 0, an icon will be added to the widget. If @a
+ * label is not NULL, a label will be added to the widget. Widget
+ * looks best when @a h is @a WIMA_WIDGET_HEIGHT.
  * @param ctx		The @a WimaRenderContext to render to.
  * @param x			X coordinate of the upper left corner.
  * @param y			Y coordinate of the upper left corner.
@@ -2605,7 +2605,7 @@ void wima_ui_label(WimaRenderContext* ctx,
  * @param label		The label to draw, or NULL if none.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_toolBtn(WimaRenderContext* ctx,
+void wima_ui_operatorBtn(WimaRenderContext* ctx,
     float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaWidgetState state,
     int iconid, const char *label);
 
