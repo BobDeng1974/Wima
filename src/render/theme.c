@@ -103,48 +103,48 @@ wima_assert_msgs_decl;
 /**
  * A common prefix for the names of all theme items.
  */
-const char* themePrefix = "wima_theme_";
+static const char* const themePrefix = "wima_theme";
 
 /**
  * The label for the overarching theme group.
  */
-const char* themeLabel = "User Interface Theme";
+static const char* const themeLabel = "User Interface Theme";
 
 /**
  * The description for the overarching theme group.
  */
-const char* themeDesc = "User interface theme group";
+static const char* const themeDesc = "User interface theme group";
 
 /**
  * The description for the background.
  */
-const char* bgDesc = "Default background color";
+static const char* const bgDesc = "Default background color";
 
 /**
  * An array of suffixes for parent names. These
  * are also added to the middle of their children.
  */
-const char* widgetParentNames[] = {
-    "background",
-    "regular",
-    "operator",
-    "radio",
-    "textfield",
-    "option",
-    "choice",
-    "numfield",
-    "slider",
-    "scrollbar",
-    "menu",
-    "menu_item",
-    "tooltip",
-    "node"
+static const char* const widgetParentNames[] = {
+    "_background",
+    "_regular",
+    "_operator",
+    "_radio",
+    "_textfield",
+    "_option",
+    "_choice",
+    "_numfield",
+    "_slider",
+    "_scrollbar",
+    "_menu",
+    "_menu_item",
+    "_tooltip",
+    "_node"
 };
 
 /**
  * Labels for parent themes.
  */
-const char* widgetParentLabels[] = {
+static const char* const widgetParentLabels[] = {
     "Background",
     "Regular",
     "Operator",
@@ -165,7 +165,7 @@ const char* widgetParentLabels[] = {
  * An array of suffixes for names of items in a widget theme.
  * These are added to the prefix and the parent name.
  */
-const char* widgetThemeNames[] = {
+static const char* const widgetThemeNames[] = {
     "_outline",
     "_widget",
     "_inner",
@@ -182,7 +182,7 @@ const char* widgetThemeNames[] = {
  * These are used as-is; they do not have to be
  * unique like names do.
  */
-const char* widgetThemeLabels[] = {
+static const char* const widgetThemeLabels[] = {
     "Outline",
     "Item",
     "Inner",
@@ -198,7 +198,7 @@ const char* widgetThemeLabels[] = {
  * An array of suffixes for names of items in a node theme.
  * These are added to the prefix and the parent name.
  */
-const char* nodeThemeNames[] = {
+static const char* const nodeThemeNames[] = {
     "_outline",
     "_outline_selected",
     "_outline_active",
@@ -216,7 +216,7 @@ const char* nodeThemeNames[] = {
  * These are used as-is; they do not have to be
  * unique like names do.
  */
-const char* nodeThemeLabels[] = {
+static const char* const nodeThemeLabels[] = {
     "Outline",
     "Outline (Selected)",
     "Outline (Active)",
@@ -232,21 +232,21 @@ const char* nodeThemeLabels[] = {
 /**
  * An array of widget shade top delta defaults.
  */
-int shadeTops[] = {
+static const int shadeTops[] = {
     0, 15, 15, 0, 15, 15, -20, -20, 5, 0, 38, 0
 };
 
 /**
  * An array of widget shade bottom delta defaults.
  */
-int shadeBottoms[] = {
+static const int shadeBottoms[] = {
     0, -15, -15, 25, -15, -15, 0, 0, -5, 0, 0, 0
 };
 
 /**
  * Descriptions for items in the regular widget theme.
  */
-const char* regularDescs[] = {
+static const char* const regularDescs[] = {
     "Outline color of regular UI items",
     "Color of regular UI items",
     "Inner color of regular UI items",
@@ -261,7 +261,7 @@ const char* regularDescs[] = {
 /**
  * Descriptions for items in the operator widget theme.
  */
-const char* operatorDescs[] = {
+static const char* const operatorDescs[] = {
     "Outline color of operators (buttons)",
     "Color of operators (buttons)",
     "Inner color of operators (buttons)",
@@ -276,7 +276,7 @@ const char* operatorDescs[] = {
 /**
  * Descriptions for items in the radio button widget theme.
  */
-const char* radioDescs[] = {
+static const char* const radioDescs[] = {
     "Outline color of radio UI items",
     "Color of radio UI items",
     "Inner color of radio UI items",
@@ -291,7 +291,7 @@ const char* radioDescs[] = {
 /**
  * Descriptions for items in the textfield widget theme.
  */
-const char* textfieldDescs[] = {
+static const char* const textfieldDescs[] = {
     "Outline color of textfield UI items",
     "Color of textfield UI items",
     "Inner color of textfield UI items",
@@ -306,7 +306,7 @@ const char* textfieldDescs[] = {
 /**
  * Descriptions for items in the option (checkbox) widget theme.
  */
-const char* optionDescs[] = {
+static const char* const optionDescs[] = {
     "Outline color of option (checkbox) UI items",
     "Color of option (checkbox) UI items",
     "Inner color of option (checkbox) UI items",
@@ -321,7 +321,7 @@ const char* optionDescs[] = {
 /**
  * Descriptions for items in the choice (dropdown menu) widget theme.
  */
-const char* choiceDescs[] = {
+static const char* const choiceDescs[] = {
     "Outline color of choice (dropdown menu) UI items",
     "Color of choice (dropdown menu) UI items",
     "Inner color of choice (dropdown menu) UI items",
@@ -336,7 +336,7 @@ const char* choiceDescs[] = {
 /**
  * Descriptions for items in the number field widget theme.
  */
-const char* numfieldDescs[] = {
+static const char* const numfieldDescs[] = {
     "Outline color of numfield UI items",
     "Color of numfield UI items",
     "Inner color of numfield UI items",
@@ -351,7 +351,7 @@ const char* numfieldDescs[] = {
 /**
  * Descriptions for items in the slider widget theme.
  */
-const char* sliderDescs[] = {
+static const char* const sliderDescs[] = {
     "Outline color of slider UI items",
     "Color of slider UI items",
     "Inner color of slider UI items",
@@ -366,7 +366,7 @@ const char* sliderDescs[] = {
 /**
  * Descriptions for items in the scrollbar widget theme.
  */
-const char* scrollbarDescs[] = {
+static const char* const scrollbarDescs[] = {
     "Outline color of scrollbars",
     "Color of scrollbars",
     "Inner color of scrollbars",
@@ -381,7 +381,7 @@ const char* scrollbarDescs[] = {
 /**
  * Descriptions for items in the menu widget theme.
  */
-const char* menuDescs[] = {
+static const char* const menuDescs[] = {
     "Outline color of menus",
     "Color of menus",
     "Inner color of menus",
@@ -396,7 +396,7 @@ const char* menuDescs[] = {
 /**
  * Descriptions for items in the menu item widget theme.
  */
-const char* menuItemDescs[] = {
+static const char* const menuItemDescs[] = {
     "Outline color of menu items",
     "Color of menu items",
     "Inner color of menu items",
@@ -411,7 +411,7 @@ const char* menuItemDescs[] = {
 /**
  * Descriptions for items in the tooltip widget theme.
  */
-const char* tooltipDescs[] = {
+static const char* const tooltipDescs[] = {
     "Outline color of tooltips",
     "Color of tooltips",
     "Inner color of tooltips",
@@ -426,7 +426,7 @@ const char* tooltipDescs[] = {
 /**
  * Descriptions for items in the node theme.
  */
-const char* nodeDescs[] = {
+static const char* const nodeDescs[] = {
     "Outline color of nodes",
     "Outline color of nodes when selected",
     "Outline color of nodes when active",
@@ -443,7 +443,7 @@ const char* nodeDescs[] = {
  * An array of default colors. This
  * is used to load the default theme.
  */
-const WimaColor colors[] = {
+static const WimaColor colors[] = {
 
     WIMA_THEME_DEF_BG,
     WIMA_THEME_DEF_REGULAR_OUTLINE,
@@ -565,7 +565,7 @@ static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, 
  * @param type	The theme type to return the array of descriptions for.
  * @return		The array of descriptions for @a type.
  */
-static const char** wima_theme_descs(WimaThemeType type);
+static const char* const * wima_theme_descs(WimaThemeType type);
 
 /**
  * Sets a widget color. The widget is @a type,
@@ -634,7 +634,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
 	// Create the main theme property.
-	WimaProperty main = wima_prop_registerGroup("wima_theme", themeLabel, themeDesc);
+	WimaProperty main = wima_prop_registerGroup(themePrefix, themeLabel, themeDesc);
 
 	// Create the background and link it in, including in the arrays.
 	WimaProperty bg = wima_theme_loadBackground();
@@ -670,7 +670,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
 	// Get the right descriptions.
-	const char** descs = wima_theme_descs(type);
+	const char* const * descs = wima_theme_descs(type);
 
 	// Create the main widget property.
 	WimaProperty main = wima_theme_createProp(WIMA_PROP_GROUP, widgetParentNames[type],
@@ -1252,7 +1252,7 @@ static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, 
 	}
 }
 
-static const char** wima_theme_descs(WimaThemeType type) {
+static const char* const * wima_theme_descs(WimaThemeType type) {
 
 	wima_assert_init;
 
