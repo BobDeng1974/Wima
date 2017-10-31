@@ -1937,13 +1937,17 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 			pos.x -= m->rect.x;
 			pos.y -= m->rect.y;
 
+			// Get the menu item.
 			WimaMenuItem* item = win->ctx.click_item.menuItem;
 
+			// If the item was pressed *and* released,
+			// as well as doesn't have a submenu and
+			// does have a function...
 			if (WIMA_WIN_MENU_ITEM_WAS_PRESSED(win) &&
 			    wima_rect_contains(item->rect, pos) &&
 			    !item->hasSubMenu && item->func)
 			{
-				// Dismiss the menu.
+				// Dismiss the menu and clear flags.
 				win->flags = 0;
 
 				// Set the new offsets for the menu. This
