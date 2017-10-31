@@ -57,6 +57,7 @@ WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecf s, WimaVecf
 	ic.wima = icol;
 	oc.wima = ocol;
 
+	// Get the paint from NanoVG.
 	p.nvg = nvgLinearGradient(ctx->nvg, s.x, s.y, e.x, e.y, ic.nvg, oc.nvg);
 
 	return p.wima;
@@ -74,6 +75,7 @@ WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r
 	ic.wima = icol;
 	oc.wima = ocol;
 
+	// Get the paint from NanoVG.
 	p.nvg = nvgBoxGradient(ctx->nvg, rect.x, rect.y, rect.w, rect.h, r, f, ic.nvg, oc.nvg);
 
 	return p.wima;
@@ -91,6 +93,7 @@ WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecf c, float in
 	ic.wima = icol;
 	oc.wima = ocol;
 
+	// Get the paint from NanoVG.
 	p.nvg = nvgRadialGradient(ctx->nvg, c.x, c.y, inr, outr, ic.nvg, oc.nvg);
 
 	return p.wima;
