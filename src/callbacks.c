@@ -54,65 +54,69 @@ wima_global_decl;
 wima_error_descs_decl;
 wima_assert_msgs_decl;
 
-void joinItemClick(WimaWindow wwh) {
-	printf("Join clicked!\n");
+#ifndef NDEBUG
+static void splitSub1Click(WimaWindow wwh) {
+	printf("Split sub 1 clicked on window[%d]\n", wwh);
 }
 
-void splitSub1Click(WimaWindow wwh) {
-	printf("Split sub 1 clicked!\n");
+static void splitSub3Click(WimaWindow wwh) {
+	printf("Split sub 3 clicked on window[%d]\n", wwh);
 }
 
-void splitSub3Click(WimaWindow wwh) {
-	printf("Split sub 3 clicked!\n");
+static void splitSub4Click(WimaWindow wwh) {
+	printf("Split sub 4 clicked on window[%d]\n", wwh);
 }
 
-void splitSub4Click(WimaWindow wwh) {
-	printf("Split sub 4 clicked!\n");
+static void splitSub5Click(WimaWindow wwh) {
+	printf("Split sub 5 clicked on window[%d]\n", wwh);
 }
 
-void splitSub5Click(WimaWindow wwh) {
-	printf("Split sub 5 clicked!\n");
+static void splitSubSub1Click(WimaWindow wwh) {
+	printf("Split sub sub 1 clicked on window[%d]\n", wwh);
 }
 
-void splitSubSub1Click(WimaWindow wwh) {
-	printf("Split sub sub 1 clicked!\n");
-}
-
-WimaMenuItem splitSubSubItems[] = {
-    { "Split sub sub 1", { .func = splitSubSub1Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false },
+WimaMenuItem itemSubSubItems[] = {
+    { "Item sub sub 1", { .func = splitSubSub1Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false },
 };
 
-WimaMenu splitSubSub = {
+WimaMenu itemSubSub = {
 
     {{ 0, 0, 0, 0 }},
     NULL,
-    splitSubSubItems,
+    itemSubSubItems,
     1,
 
 };
 
-WimaMenuItem splitSubItems[] = {
-    { "Split sub 1", { .func = splitSub1Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false },
+WimaMenuItem itemSubItems[] = {
+    { "Item sub 1", { .func = splitSub1Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false },
     { NULL, NULL, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, -1, false },
-    { "Split sub 2", &splitSubSub, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), true },
-    { "Split sub 3", { .func = splitSub3Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false },
-    { "Split sub 4", { .func = splitSub4Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false },
+    { "Item sub 2", &itemSubSub, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), true },
+    { "Item sub 3", { .func = splitSub3Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false },
+    { "Item sub 4", { .func = splitSub4Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false },
     { "Split sub 5", { .func = splitSub5Click }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(1,0), false }
 };
 
-WimaMenu splitSub = {
+WimaMenu itemSub = {
 
     {{ 0, 0, 0, 0 }},
     NULL,
-    splitSubItems,
+    itemSubItems,
     6,
 
 };
+#endif // NDEBUG
 
 WimaMenuItem areaOptionMenuItems[] = {
-    { "Split Area", &splitSub, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, -1, true },
+
+    { "Split Area", { .func = wima_area_splitCallback }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, -1, false },
+    { "Join Area", { .func = wima_area_joinCallback }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, -1, false },
+
+#ifndef NDEBUG
     { NULL, NULL, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, -1, false },
-    { "Join Area", { .func = joinItemClick }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICONID(0,0), false }
+    { "Item 1", &itemSub, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, -1, true }
+#endif // NDEBUG
+
 };
 
 WimaMenu areaOptionMenu = {
@@ -120,7 +124,13 @@ WimaMenu areaOptionMenu = {
     {{ 0, 0, 0, 0 }},
     NULL,
     areaOptionMenuItems,
-    3,
+
+#ifndef NDEBUG
+    4,
+#else
+    2,
+#endif // NDEBUG
+
 };
 
 void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -275,8 +285,10 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 				// Set up the menu.
 				wima_window_setContextMenu(wwh, &areaOptionMenu, "Area Options", -1);
 
+#ifndef NDEBUG
 				// Make sure the sub sub menu won't be drawn.
-				splitSub.subMenu = NULL;
+				itemSub.subMenu = NULL;
+#endif // NDEBUG
 			}
 
 			// Don't return an event to the user.
