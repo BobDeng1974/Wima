@@ -45,8 +45,27 @@
 
 #include "global.h"
 
+/**
+ * @file global.c
+ */
+
+/**
+ * @defgroup wima_internal wima_internal
+ * @{
+ */
+
+/**
+ * The one instance of the WimaG global data. This
+ * must be declared using @a wima_global_decl in
+ * all files that use this.
+ */
 WimaG wg;
 
+/**
+ * A global array of error descriptions whose elements correspond
+ * to WIMA_STATUS_* - 128. WIMA_STATUS_SUCCESS does not need an
+ * error message.
+ */
 const char* wima_error_descs[] = {
     "Allocation failed",
     "Platform returned an unknown error",
@@ -66,6 +85,10 @@ const char* wima_error_descs[] = {
     "image failed to load",
 };
 
+/**
+ * A global array of assert messages whose elements
+ * correspond to @a WimaAssertTypes.
+ */
 const char* wima_assert_msgs[] = {
 #ifdef __YASSERT__
 
@@ -161,3 +184,7 @@ const char* wima_assert_msgs[] = {
 
 #endif
 };
+
+/**
+ * @}
+ */

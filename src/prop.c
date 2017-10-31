@@ -51,8 +51,10 @@
 #include "global.h"
 #include "prop.h"
 
+//! @cond Doxygen suppress.
 wima_global_decl;
 wima_assert_msgs_decl;
+//! @endcond Doxygen suppress.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions needed by the public functions.

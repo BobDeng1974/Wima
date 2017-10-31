@@ -75,8 +75,10 @@
 #include "../prop.h"
 #include "render.h"
 
+//! @cond Doxygen suppress.
 wima_global_decl;
 wima_assert_msgs_decl;
+//! @endcond Doxygen suppress.
 
 #ifdef _MSC_VER
 
