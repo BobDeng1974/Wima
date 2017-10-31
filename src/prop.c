@@ -53,6 +53,7 @@
 
 //! @cond Doxygen suppress.
 wima_global_decl;
+wima_error_descs_decl;
 wima_assert_msgs_decl;
 //! @endcond Doxygen suppress.
 
@@ -629,18 +630,22 @@ WimaProperty wima_prop_enum_register(const char* name, const char* label, const 
 	return idx;
 }
 
-WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc,
-                                    DynaVector list, WimaPropListDrawFunc draw)
+WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc)
 {
 	wima_assert_init;
 
-	wassert(list != NULL, WIMA_ASSERT_PROP_LIST_NULL);
-
 	WimaPropData prop;
+
+	// Create the list and send error if any.
+	DynaVector list = dvec_create(0, sizeof(WimaPropListItem), NULL);
+	if (yunlikely(list == NULL)) {
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_PROP_INVALID;
+	}
 
 	// Set the data.
 	prop._list.list = list;
-	prop._list.draw = draw;
+	prop._list.idx = WIMA_PROP_LIST_INVALID_IDX;
 
 	// Register the property.
 	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_LIST, &prop);

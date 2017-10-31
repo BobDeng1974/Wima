@@ -58,11 +58,6 @@ extern "C" {
  */
 
 /**
- * A handle to an invalid property.
- */
-#define WIMA_PROP_INVALID ((WimaProperty) -1)
-
-/**
  * An enum for what types of properties are allowed.
  */
 typedef enum WimaPropType {
@@ -84,6 +79,18 @@ typedef enum WimaPropType {
  * The public definition of Wima properties.
  */
 typedef uint32_t WimaProperty;
+
+/**
+ * @def WIMA_PROP_INVALID
+ * A handle to an invalid property.
+ */
+#define WIMA_PROP_INVALID ((WimaProperty) -1)
+
+/**
+ * @def WIMA_PROP_LIST_INVALID_IDX
+ * A handle to an invalid list index.
+ */
+#define WIMA_PROP_LIST_INVALID_IDX ((uint32_t) -1)
 
 /**
  * An opaque struct type to return WimaPropGroup.
@@ -452,8 +459,7 @@ WimaProperty wima_prop_enum_register(const char* name, const char* label, const 
                                     const char* names[], uint32_t num, uint32_t initial);
 
 /**
- * Registers and returns a @a WIMA_PROP_LIST. It is set
- * to @a list.
+ * Registers and returns a @a WIMA_PROP_LIST.
  *
  * Wima will draw this is the UI as a dropdown.
  * @param name	The name of the property. This needs
@@ -462,14 +468,10 @@ WimaProperty wima_prop_enum_register(const char* name, const char* label, const 
  *				used as a label in the UI.
  * @param desc	The description of the property.
  *				This is used as a tooltip.
- * @param list	The initial list.
- * @param draw	The function to draw the list.
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
- * @pre			@a list must not be NULL.
  */
-WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc,
-                                    DynaVector list, WimaPropListDrawFunc draw);
+WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc);
 
 /**
  * Registers and returns a @a WIMA_PROP_COLOR. It is set
