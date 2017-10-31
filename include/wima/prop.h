@@ -99,14 +99,6 @@ typedef struct WimaPropGroup WimaPropGroup;
 typedef WimaStatus (*WimaPropPtrDrawFunc)(WimaLayout, void*);
 
 /**
- * A function to allow a list property to draw itself.
- * @param layout	The widget that will contain the property.
- * @param vec		The vector (list) in the property.
- * @return			WIMA_STATUS_SUCCESS if the drawing was successful.
- */
-typedef WimaStatus (*WimaPropListDrawFunc)(WimaLayout, DynaVector);
-
-/**
  * Returns the type of @a wph.
  * @param wph	The @a WimaProperty to return the type of.
  * @return		The type of @a wph.
@@ -163,7 +155,7 @@ WimaProperty wima_prop_find(const char* name);
  * @pre				@a parent must be a @a WIMA_PROP_GROUP.
  * @pre				@a child must be a valid @a WimaProperty.
  */
-WimaStatus wima_prop_link(WimaProperty parent, WimaProperty child);
+WimaStatus wima_prop_group_link(WimaProperty parent, WimaProperty child);
 
 /**
  * Unlinks @a child from @a parent (which is a @a WIMA_PROP_GROUP).
@@ -174,7 +166,7 @@ WimaStatus wima_prop_link(WimaProperty parent, WimaProperty child);
  * @pre				@a parent must be a @a WIMA_PROP_GROUP.
  * @pre				@a child must be a valid @a WimaProperty.
  */
-WimaStatus wima_prop_unlink(WimaProperty parent, WimaProperty child);
+WimaStatus wima_prop_group_unlink(WimaProperty parent, WimaProperty child);
 
 /**
  * Returns a pointer to the WimaPropGroup associated
@@ -195,7 +187,7 @@ WimaPropGroup* wima_prop_group(WimaProperty wph) yinline;
  *				@a WIMA_PROP_INVALID.
  * @pre			@a group must point to a valid @a WimaPropGroup.
  */
-WimaProperty wima_prop_group_getChild(WimaPropGroup* group, uint32_t idx) yinline;
+WimaProperty wima_prop_group_child(WimaPropGroup* group, uint32_t idx) yinline;
 
 /**
  * Returns the number of children in @a group.
@@ -214,7 +206,7 @@ uint32_t wima_prop_group_children(WimaPropGroup* group) yinline;
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_BOOL.
  */
-void wima_prop_setBool(WimaProperty wph, bool val) yinline;
+void wima_prop_bool_update(WimaProperty wph, bool val) yinline;
 
 /**
  * Returns the bool contained in @a wph.
@@ -233,7 +225,7 @@ bool wima_prop_bool(WimaProperty wph) yinline;
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_INT.
  */
-void wima_prop_setInt(WimaProperty wph, int val) yinline;
+void wima_prop_int_update(WimaProperty wph, int val) yinline;
 
 /**
  * Returns the int contained in @a wph.
@@ -252,7 +244,7 @@ int wima_prop_int(WimaProperty wph) yinline;
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_FLOAT.
  */
-void wima_prop_setFloat(WimaProperty wph, float val) yinline;
+void wima_prop_float_update(WimaProperty wph, float val) yinline;
 
 /**
  * Returns the float contained in @a wph.
@@ -283,7 +275,7 @@ DynaString wima_prop_string(WimaProperty wph) yinline;
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_ENUM.
  */
-void wima_prop_setEnumIdx(WimaProperty wph, uint32_t idx) yinline;
+void wima_prop_enum_updateIdx(WimaProperty wph, uint32_t idx) yinline;
 
 /**
  * Returns the enum index contained in @a wph.
@@ -293,7 +285,7 @@ void wima_prop_setEnumIdx(WimaProperty wph, uint32_t idx) yinline;
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_ENUM.
  */
-uint32_t wima_prop_enumIdx(WimaProperty wph) yinline;
+uint32_t wima_prop_enum_idx(WimaProperty wph) yinline;
 
 /**
  * Returns the DynaVector contained in @a wph. The actual
@@ -315,7 +307,7 @@ DynaVector wima_prop_list(WimaProperty wph) yinline;
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_COLOR.
  */
-void wima_prop_setColor(WimaProperty wph, WimaColor color) yinline;
+void wima_prop_color_update(WimaProperty wph, WimaColor color) yinline;
 
 /**
  * Returns the color contained in @a wph.
@@ -351,7 +343,7 @@ void* wima_prop_ptr(WimaProperty wph) yinline;
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
  */
-WimaProperty wima_prop_registerGroup(const char* name, const char* label, const char* desc);
+WimaProperty wima_prop_group_register(const char* name, const char* label, const char* desc);
 
 /**
  * Registers and returns a @a WIMA_PROP_BOOL. Its
@@ -368,7 +360,7 @@ WimaProperty wima_prop_registerGroup(const char* name, const char* label, const 
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  */
-WimaProperty wima_prop_registerBool(const char* name, const char* label, const char* desc, bool initial);
+WimaProperty wima_prop_bool_register(const char* name, const char* label, const char* desc, bool initial);
 
 /**
  * Registers and returns a @a WIMA_PROP_INT. Its
@@ -392,7 +384,7 @@ WimaProperty wima_prop_registerBool(const char* name, const char* label, const c
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  */
-WimaProperty wima_prop_registerInt(const char* name, const char* label, const char* desc,
+WimaProperty wima_prop_int_register(const char* name, const char* label, const char* desc,
                                    int initial, int min, int max, uint32_t step);
 
 /**
@@ -417,7 +409,7 @@ WimaProperty wima_prop_registerInt(const char* name, const char* label, const ch
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  */
-WimaProperty wima_prop_registerFloat(const char* name, const char* label, const char* desc,
+WimaProperty wima_prop_float_register(const char* name, const char* label, const char* desc,
                                      float initial, float min, float max, uint32_t step);
 
 /**
@@ -436,7 +428,7 @@ WimaProperty wima_prop_registerFloat(const char* name, const char* label, const 
  * @pre			@a name must not be NULL.
  * @pre			@a str must not be NULL.
  */
-WimaProperty wima_prop_registerString(const char* name, const char* label, const char* desc, DynaString str);
+WimaProperty wima_prop_string_register(const char* name, const char* label, const char* desc, DynaString str);
 
 /**
  * Registers and returns a @a WIMA_PROP_ENUM. Its initial
@@ -456,7 +448,7 @@ WimaProperty wima_prop_registerString(const char* name, const char* label, const
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  */
-WimaProperty wima_prop_registerEnum(const char* name, const char* label, const char* desc,
+WimaProperty wima_prop_enum_register(const char* name, const char* label, const char* desc,
                                     const char* names[], uint32_t num, uint32_t initial);
 
 /**
@@ -476,7 +468,7 @@ WimaProperty wima_prop_registerEnum(const char* name, const char* label, const c
  * @pre			@a name must not be NULL.
  * @pre			@a list must not be NULL.
  */
-WimaProperty wima_prop_registerList(const char* name, const char* label, const char* desc,
+WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc,
                                     DynaVector list, WimaPropListDrawFunc draw);
 
 /**
@@ -495,7 +487,7 @@ WimaProperty wima_prop_registerList(const char* name, const char* label, const c
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  */
-WimaProperty wima_prop_registerColor(const char* name, const char* label, const char* desc, WimaColor initial);
+WimaProperty wima_prop_color_register(const char* name, const char* label, const char* desc, WimaColor initial);
 
 /**
  * Registers and returns a @a WIMA_PROP_PTR. It is set
@@ -513,7 +505,7 @@ WimaProperty wima_prop_registerColor(const char* name, const char* label, const 
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
  */
-WimaProperty wima_prop_registerPtr(const char* name, const char* label, const char* desc,
+WimaProperty wima_prop_ptr_register(const char* name, const char* label, const char* desc,
                                    void* ptr, WimaPropPtrDrawFunc draw);
 
 /**
@@ -532,7 +524,7 @@ WimaProperty wima_prop_registerPtr(const char* name, const char* label, const ch
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
  */
-WimaProperty wima_prop_registerOperator(const char* name, const char* label,
+WimaProperty wima_prop_operator_register(const char* name, const char* label,
                                         const char* desc, WimaWidgetMouseClickFunc op);
 
 /**

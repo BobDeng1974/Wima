@@ -634,24 +634,24 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
 	// Create the main theme property.
-	WimaProperty main = wima_prop_registerGroup(themePrefix, themeLabel, themeDesc);
+	WimaProperty main = wima_prop_group_register(themePrefix, themeLabel, themeDesc);
 
 	// Create the background and link it in, including in the arrays.
 	WimaProperty bg = wima_theme_loadBackground();
-	wima_prop_link(main, bg);
+	wima_prop_group_link(main, bg);
 	props[WIMA_THEME_BG] = bg;
 	starts[WIMA_THEME_BG] = bg;
 
 	// Loop through the widget types and load their themes.
 	for (WimaThemeType i = WIMA_THEME_REGULAR; i < WIMA_THEME_NODE; ++i) {
 		WimaProperty item = wima_theme_loadWidget(i, starts);
-		wima_prop_link(main, item);
+		wima_prop_group_link(main, item);
 		props[i] = item;
 	}
 
 	// Create the node theme.
 	WimaProperty node = wima_theme_loadNode(starts);
-	wima_prop_link(main, node);
+	wima_prop_group_link(main, node);
 	props[WIMA_THEME_NODE] = node;
 
 	return main;
@@ -699,7 +699,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 		                              widgetThemeLabels[i], descs[i], initial++);
 
 		// Link the property to the main one.
-		wima_prop_link(main, child);
+		wima_prop_group_link(main, child);
 
 		// If it's the first, put it into the start array.
 		if (i == 0) {
@@ -720,21 +720,21 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADE_TOP],
 	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADE_TOP],
 	                              descs[WIMA_THEME_WIDGET_SHADE_TOP], shadeTops[idx]);
-	wima_prop_link(main, child);
+	wima_prop_group_link(main, child);
 
 	// Create the shade bottom prop and link it.
 	child = wima_theme_createProp(WIMA_PROP_INT, parentName,
 	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADE_BTM],
 	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADE_BTM],
 	                              descs[WIMA_THEME_WIDGET_SHADE_BTM], shadeBottoms[idx]);
-	wima_prop_link(main, child);
+	wima_prop_group_link(main, child);
 
 	// Create the shaded prop and link it.
 	child = wima_theme_createProp(WIMA_PROP_BOOL, parentName,
 	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADED],
 	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADED],
 	                              descs[WIMA_THEME_WIDGET_SHADED], true);
-	wima_prop_link(main, child);
+	wima_prop_group_link(main, child);
 
 	return main;
 }
@@ -768,7 +768,7 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 		                              nodeThemeLabels[i], nodeDescs[i], initial++);
 
 		// Link the property to the main one.
-		wima_prop_link(main, child);
+		wima_prop_group_link(main, child);
 
 		// If it's the first, put it into the start array.
 		if (i == 0) {
@@ -795,9 +795,9 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 	strcat(buffer, nodeThemeNames[WIMA_THEME_NODE_WIRE_CURVING]);
 
 	// Create the curving prop and link it.
-	child = wima_prop_registerInt(buffer, nodeThemeLabels[WIMA_THEME_NODE_WIRE_CURVING],
+	child = wima_prop_int_register(buffer, nodeThemeLabels[WIMA_THEME_NODE_WIRE_CURVING],
 	                              nodeDescs[WIMA_THEME_NODE_WIRE_CURVING], 5, 0, 10, 1);
-	wima_prop_link(main, child);
+	wima_prop_group_link(main, child);
 
 	return main;
 }
@@ -816,7 +816,7 @@ void wima_theme_setBackground(WimaColor bg) {
 	wassert(prop->type == WIMA_PROP_COLOR, WIMA_ASSERT_PROP_COLOR);
 #endif
 
-	wima_prop_setColor(wph, bg);
+	wima_prop_color_update(wph, bg);
 }
 
 WimaColor wima_theme_background() {
@@ -1235,16 +1235,16 @@ static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, 
 	switch (type) {
 
 		case WIMA_PROP_GROUP:
-			return wima_prop_registerGroup(buffer, label, desc);
+			return wima_prop_group_register(buffer, label, desc);
 
 		case WIMA_PROP_BOOL:
-			return wima_prop_registerBool(buffer, label, desc, initial != 0);
+			return wima_prop_bool_register(buffer, label, desc, initial != 0);
 
 		case WIMA_PROP_INT:
-			return wima_prop_registerInt(buffer, label, desc, initial, -100, 100, 1);
+			return wima_prop_int_register(buffer, label, desc, initial, -100, 100, 1);
 
 		case WIMA_PROP_COLOR:
-			return wima_prop_registerColor(buffer, label, desc, colors[initial]);
+			return wima_prop_color_register(buffer, label, desc, colors[initial]);
 
 		default:
 			wassert(false, WIMA_ASSERT_SWITCH_DEFAULT);

@@ -134,6 +134,17 @@ typedef struct WimaPropEnum {
 } WimaPropEnum;
 
 /**
+ * A list item;
+ */
+typedef struct WimaPropListItem {
+
+	WimaProperty name;
+	uint32_t icon;
+	void* ptr;
+
+} WimaPropListItem;
+
+/**
  * Data for a list property.
  */
 typedef struct WimaPropList {
@@ -141,8 +152,8 @@ typedef struct WimaPropList {
 	/// The list.
 	DynaVector list;
 
-	/// A function to draw the list.
-	WimaPropListDrawFunc draw;
+	/// The current selected index.
+	uint32_t idx;
 
 } WimaPropList;
 
