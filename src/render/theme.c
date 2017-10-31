@@ -594,6 +594,9 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, widgetThemeNames[i],
 		                              widgetThemeLabels[i], descs[i], initial++);
 
+		// Link the property to the main one.
+		wima_prop_link(main, child);
+
 		// If it's the first, put it into the start array.
 		if (i == 0) {
 			starts[type] = child;
@@ -606,9 +609,6 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 
 		prev = child;
 #endif
-
-		// Link the property to the main one.
-		wima_prop_link(main, child);
 	}
 
 	// Create the shade top prop and link it.
@@ -663,6 +663,9 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, nodeThemeNames[i],
 		                              nodeThemeLabels[i], nodeDescs[i], initial++);
 
+		// Link the property to the main one.
+		wima_prop_link(main, child);
+
 		// If it's the first, put it into the start array.
 		if (i == 0) {
 			starts[WIMA_THEME_NODE] = child;
@@ -675,9 +678,6 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 
 		prev = child;
 #endif
-
-		// Link the property to the main one.
-		wima_prop_link(main, child);
 	}
 
 	char buffer[WIMA_THEME_MAX_BUFFER];
