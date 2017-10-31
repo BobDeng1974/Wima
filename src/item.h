@@ -151,7 +151,7 @@ typedef struct WimaItem {
  * @def WIMA_ITEM_IS_LAYOUT
  * Tests whether an item is a layout.
  * @param	item	The item to test.
- * @returns			true if @a item is a layout,
+ * @return			true if @a item is a layout,
  *					false otherwise.
  */
 #define WIMA_ITEM_IS_LAYOUT(item)  ((item)->isLayout)
@@ -160,7 +160,7 @@ typedef struct WimaItem {
  * @def WIMA_ITEM_IS_WIDGET
  * Tests whether an item is a widget.
  * @param	item	The item to test.
- * @returns			true if @a item is a widget,
+ * @return			true if @a item is a widget,
  *					false otherwise.
  */
 #define WIMA_ITEM_IS_WIDGET(item)  (!((item)->isLayout))

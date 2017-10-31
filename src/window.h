@@ -84,7 +84,7 @@ extern "C" {
  * @def WIMA_WIN_IS_DIRTY
  * Returns true if the window is dirty, false otherwise.
  * @param win	The window to test.
- * @returns		true if @a win is dirty, false otherwise.
+ * @return		true if @a win is dirty, false otherwise.
  */
 #define WIMA_WIN_IS_DIRTY(win)  (((win)->flags) & WIMA_WIN_DIRTY)
 
@@ -104,7 +104,7 @@ extern "C" {
  * @def WIMA_WIN_NEEDS_LAYOUT
  * Returns true if the window needs layout, false otherwise.
  * @param win	The window to test.
- * @returns		true if @a win needs layout, false otherwise.
+ * @return		true if @a win needs layout, false otherwise.
  */
 #define WIMA_WIN_NEEDS_LAYOUT(win)  (((win)->flags) & (WIMA_WIN_LAYOUT | WIMA_WIN_LAYOUT_FORCE))
 
@@ -133,7 +133,7 @@ extern "C" {
  * @def WIMA_WIN_HAS_MENU
  * Returns true if the window has a menu, false otherwise.
  * @param win	The window to test.
- * @returns		true if @a win has a menu, false otherwise.
+ * @return		true if @a win has a menu, false otherwise.
  */
 #define WIMA_WIN_HAS_MENU(win)         (((win)->flags) & WIMA_WIN_MENU)
 
@@ -141,7 +141,7 @@ extern "C" {
  * @def WIMA_WIN_MENU_IS_RELEASED
  * Returns true if the window's menu is released, false otherwise.
  * @param win	The window to test.
- * @returns		true if @a win's menu is released, false otherwise.
+ * @return		true if @a win's menu is released, false otherwise.
  */
 #define WIMA_WIN_MENU_IS_RELEASED(win) (((win)->flags) & WIMA_WIN_MENU_RELEASED)
 
@@ -149,7 +149,7 @@ extern "C" {
  * @def WIMA_WIN_MENU_IS_CONTEXT
  * Returns true if the window's menu is a context menu, false otherwise.
  * @param win	The window to test.
- * @returns		true if @a win's menu is a context menu, false otherwise.
+ * @return		true if @a win's menu is a context menu, false otherwise.
  */
 #define WIMA_WIN_MENU_IS_CONTEXT(win)  (((win)->flags) & WIMA_WIN_MENU_CONTEXT)
 
@@ -348,7 +348,7 @@ bool wima_window_valid(WimaWindow wwh);
  * @def WIMA_WIN
  * Returns the window handle from the GLFW user pointer.
  * @param	win	The GLFW window to query.
- * @returns		The Wima window handle.
+ * @return		The Wima window handle.
  */
 #define WIMA_WIN(win) ((WimaWindow) (long) glfwGetWindowUserPointer(win))
 

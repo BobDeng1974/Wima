@@ -1228,7 +1228,7 @@ typedef enum WimaWidgetLayoutFlags {
  * A function to run when a widget has a mouse button event.
  * @param wdgt	The widget that received the event.
  * @param event	The event.
- * @returns		true if the event was consumed, false otherwise.
+ * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
 typedef bool (*WimaWidgetMouseBtnFunc)(WimaWidget, WimaMouseBtnEvent);
@@ -1237,7 +1237,7 @@ typedef bool (*WimaWidgetMouseBtnFunc)(WimaWidget, WimaMouseBtnEvent);
  * A function to run when a widget has a mouse click event.
  * @param wdgt	The widget that received the event.
  * @param event	The event.
- * @returns		true if the event was consumed, false otherwise.
+ * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
 typedef bool (*WimaWidgetMouseClickFunc)(WimaWidget, WimaMouseClickEvent);
@@ -1246,7 +1246,7 @@ typedef bool (*WimaWidgetMouseClickFunc)(WimaWidget, WimaMouseClickEvent);
  * A function to run when a widget has a mouse drag event.
  * @param wdgt	The widget that received the event.
  * @param event	The event.
- * @returns		true if the event was consumed, false otherwise.
+ * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
 typedef bool (*WimaWidgetMouseDragFunc)(WimaWidget, WimaMouseDragEvent);
@@ -1255,7 +1255,7 @@ typedef bool (*WimaWidgetMouseDragFunc)(WimaWidget, WimaMouseDragEvent);
  * A function to run when a widget has a scroll event.
  * @param wdgt	The widget that received the event.
  * @param event	The event.
- * @returns		true if the event was consumed, false otherwise.
+ * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
 typedef bool (*WimaWidgetScrollFunc)(WimaWidget, WimaScrollEvent);
@@ -1264,7 +1264,7 @@ typedef bool (*WimaWidgetScrollFunc)(WimaWidget, WimaScrollEvent);
  * A function to run when a widget has a char event.
  * @param wdgt	The widget that received the event.
  * @param event	The event.
- * @returns		true if the event was consumed, false otherwise.
+ * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
 typedef bool (*WimaWidgetCharEvent)(WimaWidget, WimaCharEvent);
@@ -1476,7 +1476,7 @@ bool wima_widget_isFocused(WimaWidget wdgt) yinline;
 /**
  * A function to generate an area's user pointer.
  * @param area	The area to generate the user pointer for.
- * @returns		The user pointer.
+ * @return		The user pointer.
  */
 typedef void* (*WimaAreaGenUserPointerFunc)(WimaArea);
 
@@ -1498,7 +1498,7 @@ typedef WimaStatus (*WimaAreaLayoutFunc)(WimaArea, WimaLayout, WimaSize);
  * A function callback for key presses inside an area.
  * @param area	The area where the event happened.
  * @param event	The event.
- * @returns		true if the event was consumed, false otherwise.
+ * @return		true if the event was consumed, false otherwise.
  */
 typedef bool (*WimaAreaKeyFunc)(WimaArea, WimaKeyEvent);
 
@@ -1506,7 +1506,7 @@ typedef bool (*WimaAreaKeyFunc)(WimaArea, WimaKeyEvent);
  * A function callback for mouse entering or exiting an area.
  * @param area		The area where the event happened.
  * @param entered	Whether or not the mouse entered.
- * @returns			true if the event was consumed, false otherwise.
+ * @return			true if the event was consumed, false otherwise.
  */
 typedef bool (*WimaAreaMouseEnterFunc)(WimaArea, bool);
 
@@ -2395,7 +2395,7 @@ const char* wima_window_clipboard(WimaWindow wwh) yinline;
  * A callback type to draw custom widgets.
  * @param wdgt	The widget to draw.
  * @param ctx	The context to render to.
- * @returns		WIMA_STATUS_SUCCESS on success,
+ * @return		WIMA_STATUS_SUCCESS on success,
  *				an error code otherwise.
  */
 typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaRenderContext*);
@@ -2466,7 +2466,7 @@ typedef void (*WimaWindowFocusFunc)(WimaWindow, bool);
 /**
  * A callback type to handle window close events.
  * @param window	The window that received the close event.
- * @returns			true if the window should be closed,
+ * @return			true if the window should be closed,
  *					false otherwise.
  */
 typedef bool (*WimaWindowCloseFunc)(WimaWindow);
