@@ -97,7 +97,7 @@ static bool wima_prop_enum_namesValid(const char* names[], uint32_t numNames);
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-// Public functions.
+// Public functions common to all prop types.
 ////////////////////////////////////////////////////////////////////////////////
 
 WimaPropType wima_prop_type(WimaProperty wph) {
@@ -163,6 +163,44 @@ WimaProperty wima_prop_find(const char* name) {
 	}
 
 	return WIMA_PROP_INVALID;
+}
+
+void wima_prop_unregister(WimaProperty wph) {
+
+	wima_assert_init;
+
+	wassert(wph < dvec_len(wg.props), WIMA_ASSERT_PROP);
+
+	// Get the data.
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+
+	// We might have an early out.
+	if (yunlikely(prop->idx == WIMA_PROP_INVALID)) {
+		return;
+	}
+
+	// Free the property.
+	wima_prop_free(wph);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for group props.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaProperty wima_prop_group_register(const char* name, const char* label, const char* desc) {
+
+	wima_assert_init;
+
+	WimaPropData prop;
+
+	// Create the group.
+	prop._group = dvec_create(0, sizeof(WimaProperty), NULL);
+	wassert(prop._group != NULL, WIMA_ASSERT_PROP_LIST_NULL);
+
+	// Register the property.
+	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_GROUP, &prop);
+
+	return idx;
 }
 
 WimaStatus wima_prop_group_link(WimaProperty parent, WimaProperty child) {
@@ -291,6 +329,25 @@ uint32_t wima_prop_group_children(WimaPropGroup* group) {
 	return (uint32_t) dvec_len(v);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for bool props.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaProperty wima_prop_bool_register(const char* name, const char* label, const char* desc, bool initial) {
+
+	wima_assert_init;
+
+	WimaPropData prop;
+
+	// Set the data.
+	prop._bool = initial;
+
+	// Register the property.
+	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_BOOL, &prop);
+
+	return idx;
+}
+
 void wima_prop_bool_update(WimaProperty wph, bool val) {
 
 	wima_assert_init;
@@ -323,6 +380,29 @@ bool wima_prop_bool(WimaProperty wph) {
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
 	return data->_bool;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for int props.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaProperty wima_prop_int_register(const char* name, const char* label, const char* desc,
+                                   int initial, int min, int max, uint32_t step)
+{
+	wima_assert_init;
+
+	WimaPropData prop;
+
+	// Set the data.
+	prop._int.val = initial;
+	prop._int.min = min;
+	prop._int.max = max;
+	prop._int.step = step;
+
+	// Register the property.
+	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_INT, &prop);
+
+	return idx;
 }
 
 void wima_prop_int_update(WimaProperty wph, int val) {
@@ -360,6 +440,29 @@ int wima_prop_int(WimaProperty wph) {
 	return data->_int.val;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for float props.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaProperty wima_prop_float_register(const char* name, const char* label, const char* desc,
+                                     float initial, float min, float max, uint32_t step)
+{
+	wima_assert_init;
+
+	WimaPropData prop;
+
+	// Set the data.
+	prop._float.val = initial;
+	prop._float.min = min;
+	prop._float.max = max;
+	prop._float.step = step;
+
+	// Register the property.
+	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_FLOAT, &prop);
+
+	return idx;
+}
+
 void wima_prop_float_update(WimaProperty wph, float val) {
 
 	wima_assert_init;
@@ -395,6 +498,27 @@ float wima_prop_float(WimaProperty wph) {
 	return data->_float.val;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for string props.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaProperty wima_prop_string_register(const char* name, const char* label, const char* desc, DynaString str) {
+
+	wima_assert_init;
+
+	wassert(str != NULL, WIMA_ASSERT_PROP_STR_NULL);
+
+	WimaPropData prop;
+
+	// Set the data.
+	prop._str = str;
+
+	// Register the property.
+	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_STRING, &prop);
+
+	return idx;
+}
+
 DynaString wima_prop_string(WimaProperty wph) {
 
 	wima_assert_init;
@@ -410,6 +534,30 @@ DynaString wima_prop_string(WimaProperty wph) {
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
 	return data->_str;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for enum props.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaProperty wima_prop_enum_register(const char* name, const char* label, const char* desc,
+                                    const char* names[], uint32_t num, uint32_t initial)
+{
+	wima_assert_init;
+
+	wassert(wima_prop_enum_namesValid(names, num), WIMA_ASSERT_PROP_ENUM_NAMES);
+
+	WimaPropData prop;
+
+	// Set the data.
+	prop._enum.names = names;
+	prop._enum.num = num;
+	prop._enum.idx = initial;
+
+	// Register the property.
+	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_ENUM, &prop);
+
+	return idx;
 }
 
 void wima_prop_enum_updateIdx(WimaProperty wph, uint32_t idx) {
@@ -446,6 +594,33 @@ uint32_t wima_prop_enum_idx(WimaProperty wph) {
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
 	return data->_enum.idx;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for list props.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc)
+{
+	wima_assert_init;
+
+	WimaPropData prop;
+
+	// Create the list and send error if any.
+	DynaVector list = dvec_create(0, sizeof(WimaPropListItem), NULL);
+	if (yunlikely(list == NULL)) {
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_PROP_INVALID;
+	}
+
+	// Set the data.
+	prop._list.list = list;
+	prop._list.idx = WIMA_PROP_LIST_INVALID_IDX;
+
+	// Register the property.
+	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_LIST, &prop);
+
+	return idx;
 }
 
 uint32_t wima_prop_list_len(WimaProperty wph) {
@@ -661,6 +836,25 @@ uint32_t wima_prop_list_idx(WimaProperty wph) {
 	return data->_list.idx;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for color props.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaProperty wima_prop_color_register(const char* name, const char* label, const char* desc, WimaColor initial) {
+
+	wima_assert_init;
+
+	WimaPropData prop;
+
+	// Set the data.
+	prop._color = initial;
+
+	// Register the property.
+	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_COLOR, &prop);
+
+	return idx;
+}
+
 void wima_prop_color_update(WimaProperty wph, WimaColor color) {
 
 	wima_assert_init;
@@ -695,166 +889,9 @@ WimaColor wima_prop_color(WimaProperty wph) {
 	return data->_color;
 }
 
-void* wima_prop_ptr(WimaProperty wph) {
-
-	wima_assert_init;
-
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-	wassert(prop->type == WIMA_PROP_PTR, WIMA_ASSERT_PROP_PTR);
-#endif
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
-
-	return data->_ptr.ptr;
-}
-
-WimaProperty wima_prop_group_register(const char* name, const char* label, const char* desc) {
-
-	wima_assert_init;
-
-	WimaPropData prop;
-
-	// Create the group.
-	prop._group = dvec_create(0, sizeof(WimaProperty), NULL);
-	wassert(prop._group != NULL, WIMA_ASSERT_PROP_LIST_NULL);
-
-	// Register the property.
-	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_GROUP, &prop);
-
-	return idx;
-}
-
-WimaProperty wima_prop_bool_register(const char* name, const char* label, const char* desc, bool initial) {
-
-	wima_assert_init;
-
-	WimaPropData prop;
-
-	// Set the data.
-	prop._bool = initial;
-
-	// Register the property.
-	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_BOOL, &prop);
-
-	return idx;
-}
-
-WimaProperty wima_prop_int_register(const char* name, const char* label, const char* desc,
-                                   int initial, int min, int max, uint32_t step)
-{
-	wima_assert_init;
-
-	WimaPropData prop;
-
-	// Set the data.
-	prop._int.val = initial;
-	prop._int.min = min;
-	prop._int.max = max;
-	prop._int.step = step;
-
-	// Register the property.
-	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_INT, &prop);
-
-	return idx;
-}
-
-WimaProperty wima_prop_float_register(const char* name, const char* label, const char* desc,
-                                     float initial, float min, float max, uint32_t step)
-{
-	wima_assert_init;
-
-	WimaPropData prop;
-
-	// Set the data.
-	prop._float.val = initial;
-	prop._float.min = min;
-	prop._float.max = max;
-	prop._float.step = step;
-
-	// Register the property.
-	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_FLOAT, &prop);
-
-	return idx;
-}
-
-WimaProperty wima_prop_string_register(const char* name, const char* label, const char* desc, DynaString str) {
-
-	wima_assert_init;
-
-	wassert(str != NULL, WIMA_ASSERT_PROP_STR_NULL);
-
-	WimaPropData prop;
-
-	// Set the data.
-	prop._str = str;
-
-	// Register the property.
-	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_STRING, &prop);
-
-	return idx;
-}
-
-WimaProperty wima_prop_enum_register(const char* name, const char* label, const char* desc,
-                                    const char* names[], uint32_t num, uint32_t initial)
-{
-	wima_assert_init;
-
-	wassert(wima_prop_enum_namesValid(names, num), WIMA_ASSERT_PROP_ENUM_NAMES);
-
-	WimaPropData prop;
-
-	// Set the data.
-	prop._enum.names = names;
-	prop._enum.num = num;
-	prop._enum.idx = initial;
-
-	// Register the property.
-	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_ENUM, &prop);
-
-	return idx;
-}
-
-WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc)
-{
-	wima_assert_init;
-
-	WimaPropData prop;
-
-	// Create the list and send error if any.
-	DynaVector list = dvec_create(0, sizeof(WimaPropListItem), NULL);
-	if (yunlikely(list == NULL)) {
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_PROP_INVALID;
-	}
-
-	// Set the data.
-	prop._list.list = list;
-	prop._list.idx = WIMA_PROP_LIST_INVALID_IDX;
-
-	// Register the property.
-	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_LIST, &prop);
-
-	return idx;
-}
-
-WimaProperty wima_prop_color_register(const char* name, const char* label, const char* desc, WimaColor initial) {
-
-	wima_assert_init;
-
-	WimaPropData prop;
-
-	// Set the data.
-	prop._color = initial;
-
-	// Register the property.
-	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_COLOR, &prop);
-
-	return idx;
-}
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for pointer props.
+////////////////////////////////////////////////////////////////////////////////
 
 WimaProperty wima_prop_ptr_register(const char* name, const char* label, const char* desc,
                                    void* ptr, WimaPropPtrDrawFunc draw)
@@ -876,6 +913,27 @@ WimaProperty wima_prop_ptr_register(const char* name, const char* label, const c
 	return idx;
 }
 
+void* wima_prop_ptr(WimaProperty wph) {
+
+	wima_assert_init;
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+	wassert(prop->type == WIMA_PROP_PTR, WIMA_ASSERT_PROP_PTR);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	return data->_ptr.ptr;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Public function for operator props.
+////////////////////////////////////////////////////////////////////////////////
+
 WimaProperty wima_prop_operator_register(const char* name, const char* label,
                                         const char* desc, WimaWidgetMouseClickFunc op)
 {
@@ -892,24 +950,6 @@ WimaProperty wima_prop_operator_register(const char* name, const char* label,
 	WimaProperty idx = wima_prop_register(name, label, desc, WIMA_PROP_OPERATOR, &prop);
 
 	return idx;
-}
-
-void wima_prop_unregister(WimaProperty wph) {
-
-	wima_assert_init;
-
-	wassert(wph < dvec_len(wg.props), WIMA_ASSERT_PROP);
-
-	// Get the data.
-	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-
-	// We might have an early out.
-	if (yunlikely(prop->idx == WIMA_PROP_INVALID)) {
-		return;
-	}
-
-	// Free the property.
-	wima_prop_free(wph);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
