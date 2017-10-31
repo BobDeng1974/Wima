@@ -492,20 +492,21 @@ WimaProperty wima_prop_list_register(const char* name, const char* label, const 
 WimaProperty wima_prop_color_register(const char* name, const char* label, const char* desc, WimaColor initial);
 
 /**
- * Registers and returns a @a WIMA_PROP_PTR. It is set
- * to @a ptr.
+ * Registers and returns a @a WIMA_PROP_PTR. It is set to @a ptr.
  *
  * Wima will use @a draw to draw this in the UI.
- * @param name	The name of the property. This needs
- *				to be a unique string identifier.
- * @param label	The label of the property. This is
- *				used as a label in the UI.
- * @param desc	The description of the property.
- *				This is used as a tooltip.
- * @param ptr	The initial pointer.
- * @param draw	The function to draw this property.
- * @return		The newly-created @a WimaProperty.
- * @pre			@a name must not be NULL.
+ * @param name		The name of the property. This needs to be a
+ *					unique string identifier.
+ * @param label		The label of the property. This is used as a
+ *					label in the UI.
+ * @param desc		The description of the property. This is used
+ *					as a tooltip.
+ * @param ptr		The initial pointer.
+ * @param draw		The function to draw this property.
+ * @return			The newly-created @a WimaProperty.
+ * @pre				@a name must not be NULL.
+ * @ptr_lifetime	Wima assumes that @a ptr is allocated and freed
+ *					by the client.
  */
 WimaProperty wima_prop_ptr_register(const char* name, const char* label, const char* desc,
                                    void* ptr, WimaPropPtrDrawFunc draw);
