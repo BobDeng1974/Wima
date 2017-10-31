@@ -1168,65 +1168,81 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Get the padding.
 	float pleft = WIMA_PAD_LEFT;
 
-	if (label) {
-
-		if (iconid >= 0) {
-			wima_ui_icon(ctx, x + 4, y + 5, iconid);
-			pleft += WIMA_ICON_SHEET_RES;
-		}
-
-		if (ctx->font < 0) {
-			return;
-		}
-
-		WimaCol c;
-		c.wima = color;
-
-		nvgFontFaceId(ctx->nvg, ctx->font);
-		nvgFontSize(ctx->nvg, fontsize);
-		nvgBeginPath(ctx->nvg);
-		nvgFillColor(ctx->nvg, c.nvg);
-
-		if (value) {
-
-			float label_width = nvgTextBounds(ctx->nvg, 1, 1, label, NULL, NULL);
-			float sep_width = nvgTextBounds(ctx->nvg, 1, 1, WIMA_LABEL_SEPARATOR, NULL, NULL);
-
-			nvgTextAlign(ctx->nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
-			x += pleft;
-
-			if (align == WIMA_ALIGN_CENTER) {
-
-				float textBounds = nvgTextBounds(ctx->nvg, 1, 1, value, NULL, NULL);
-
-				float width = label_width + sep_width + textBounds;
-
-				x += ((w - WIMA_PAD_RIGHT - pleft) - width) * 0.5f;
-			}
-
-			y += WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN;
-			nvgText(ctx->nvg, x, y, label, NULL);
-
-			x += label_width;
-			nvgText(ctx->nvg, x, y, WIMA_LABEL_SEPARATOR, NULL);
-
-			x += sep_width;
-			nvgText(ctx->nvg, x, y, value, NULL);
-		}
-		else {
-			int textAlign = (align == WIMA_ALIGN_LEFT) ?
-			                    (NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE) :
-			                    (NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
-			nvgTextAlign(ctx->nvg, textAlign);
-
-			nvgTextBox(ctx->nvg, x + pleft, y + WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN,
-			           w - WIMA_PAD_RIGHT - pleft, label, NULL);
-		}
-	}
-	else if (iconid >= 0) {
+	// If there is an icon, draw it and add it to the padding.
+	if (iconid >= 0) {
 		wima_ui_icon(ctx, x + 4, y + 5, iconid);
+		pleft += WIMA_ICON_SHEET_RES;
+	}
+
+	// If there is no font or label, just return.
+	if (ctx->font < 0 || !label) {
+		return;
+	}
+
+	// Set up the color.
+	WimaCol c;
+	c.wima = color;
+
+	// Set up the font.
+	nvgFontFaceId(ctx->nvg, ctx->font);
+	nvgFontSize(ctx->nvg, fontsize);
+
+	// Begin the path with the color as fill.
+	nvgBeginPath(ctx->nvg);
+	nvgFillColor(ctx->nvg, c.nvg);
+
+	// If there is a value...
+	if (value) {
+
+		// Get the widths.
+		float label_width = nvgTextBounds(ctx->nvg, 1, 1, label, NULL, NULL);
+		float sep_width = nvgTextBounds(ctx->nvg, 1, 1, WIMA_LABEL_SEPARATOR, NULL, NULL);
+
+		// Align the text.
+		nvgTextAlign(ctx->nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
+
+		// Make sure to take padding into account.
+		x += pleft;
+
+		// If the user wants things aligned to center...
+		if (align == WIMA_ALIGN_CENTER) {
+
+			// Get the text advance of the value.
+			float textBounds = nvgTextBounds(ctx->nvg, 1, 1, value, NULL, NULL);
+
+			// Calculate the full width.
+			float width = label_width + sep_width + textBounds;
+
+			// Calculate the x to put the text in the center.
+			x += ((w - WIMA_PAD_RIGHT - pleft) - width) * 0.5f;
+		}
+
+		// Calculate the y coordinate of the label and draw it.
+		y += WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN;
+		nvgText(ctx->nvg, x, y, label, NULL);
+
+		// Add the label width to the x and draw the separator.
+		x += label_width;
+		nvgText(ctx->nvg, x, y, WIMA_LABEL_SEPARATOR, NULL);
+
+		// Add the sep width to the x and draw the value text.
+		x += sep_width;
+		nvgText(ctx->nvg, x, y, value, NULL);
+	}
+	else {
+
+		// Set the text align.
+		int textAlign = (align == WIMA_ALIGN_LEFT) ?
+		                    (NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE) :
+		                    (NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
+		nvgTextAlign(ctx->nvg, textAlign);
+
+		// Just draw the text.
+		nvgTextBox(ctx->nvg, x + pleft, y + WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN,
+		           w - WIMA_PAD_RIGHT - pleft, label, NULL);
 	}
 }
 
@@ -1238,29 +1254,38 @@ void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, 
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Set up the colors.
 	WimaCol c, s;
 	c.wima = color;
 	s.wima = shadow;
 
+	// If there is a label and font...
 	if (label && (ctx->font >= 0)) {
 
+		// Set up the font.
 		nvgFontFaceId(ctx->nvg, ctx->font);
 		nvgFontSize(ctx->nvg, fontsize);
 
+		// Begin drawing.
 		nvgBeginPath(ctx->nvg);
 
+		// Set the style.
 		nvgTextAlign(ctx->nvg, align);
 		nvgFillColor(ctx->nvg, s.nvg);
 		nvgFontBlur(ctx->nvg, WIMA_NODE_TITLE_FEATHER);
 
+		// Draw a text box.
 		nvgTextBox(ctx->nvg, x + 1, y + h + 3 - WIMA_TEXT_PAD_DOWN, w, label, NULL);
 
+		// Set the style again.
 		nvgFillColor(ctx->nvg, c.nvg);
 		nvgFontBlur(ctx->nvg, 0);
 
+		// Draw another text box.
 		nvgTextBox(ctx->nvg, x, y + h + 2 - WIMA_TEXT_PAD_DOWN, w, label, NULL);
 	}
 
+	// Draw the icon, if it exists.
 	if (iconid >= 0) {
 		wima_ui_icon(ctx, x + w - WIMA_ICON_SHEET_RES, y + 3, iconid);
 	}
@@ -1275,39 +1300,45 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	float bounds[4];
+	float asc, desc, lh;
 
-	float pleft = WIMA_TEXT_RADIUS;
+	static NVGtextRow rows[WIMA_MAX_ROWS];
+	static NVGglyphPosition glyphs[WIMA_MAX_GLYPHS];
 
-	if (!label) {
+	// If there's no label or font, return an invalid position.
+	if (!label || ctx->font < 0) {
 		return -1;
 	}
 
+	// Start calculating padding.
+	float pleft = WIMA_TEXT_RADIUS;
+
+	// If the icon exists, add it to the padding.
 	if (iconid >= 0) {
 		pleft += WIMA_ICON_SHEET_RES;
 	}
 
-	if (ctx->font < 0) {
-		return -1;
-	}
-
+	// Calculate the coordinates.
 	x += pleft;
 	y += WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN;
 
+	// Set the font style.
 	nvgFontFaceId(ctx->nvg, ctx->font);
 	nvgFontSize(ctx->nvg, fontsize);
 	nvgTextAlign(ctx->nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
 
+	// Calculate the width.
 	w -= WIMA_TEXT_RADIUS + pleft;
 
-	float asc, desc, lh;
-	static NVGtextRow rows[WIMA_MAX_ROWS];
-
+	// Break the text into rows.
 	int nrows = nvgTextBreakLines(ctx->nvg, label, NULL, w, rows, WIMA_MAX_ROWS);
 
+	// If there are no rows, return 0.
 	if (nrows == 0) {
 		return 0;
 	}
 
+	// Set up NanoVG text.
 	nvgTextBoxBounds(ctx->nvg, x, y, w, label, NULL, bounds);
 	nvgTextMetrics(ctx->nvg, &asc, &desc, &lh);
 
@@ -1315,13 +1346,12 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
 	int row = wima_clampf((int) ((float) (py - bounds[1]) / lh), 0, nrows - 1);
 
 	// Search horizontal position.
-	static NVGglyphPosition glyphs[WIMA_MAX_GLYPHS];
-
 	int nglyphs = nvgTextGlyphPositions(ctx->nvg, x, y, rows[row].start, rows[row].end + 1,
 	                                    glyphs, WIMA_MAX_GLYPHS);
 
 	int col, p = 0;
 
+	// Loop through the glyphs and set the pos.
 	for (col = 0; col < nglyphs && glyphs[col].x < px; ++col) {
 		p = glyphs[col].str - label;
 	}
@@ -1345,76 +1375,101 @@ void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, floa
 
 	WimaCol c;
 
-	float pleft = WIMA_TEXT_RADIUS;
+	int c0r, c1r;
+	float c0x, c0y, c1x, c1y;
+	float desc, lh;
 
-	if (!label) {
+	static NVGtextRow rows[WIMA_MAX_ROWS];
+
+	// If no label or font, just return.
+	if (!label || ctx->font < 0) {
 		return;
 	}
 
+	// Start calculating the padding.
+	float pleft = WIMA_TEXT_RADIUS;
+
+	// If there is an icon, draw it and add it to the padding.
 	if (iconid >= 0) {
 		wima_ui_icon(ctx, x + 4, y + 2, iconid);
 		pleft += WIMA_ICON_SHEET_RES;
 	}
 
-	if (ctx->font < 0) {
-		return;
-	}
-
+	// Calculate the coordinates.
 	x += pleft;
 	y += WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN;
 
+	// Set up the font style.
 	nvgFontFaceId(ctx->nvg, ctx->font);
 	nvgFontSize(ctx->nvg, fontsize);
 	nvgTextAlign(ctx->nvg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
 
+	// Calculate the width.
 	w -= WIMA_TEXT_RADIUS + pleft;
 
+	// If there is a caret...
 	if (cend >= cbegin) {
 
-		int c0r, c1r;
-		float c0x, c0y, c1x, c1y;
-		float desc, lh;
+		// Set up the caret color.
+		c.wima = caretCol;
 
-		static NVGtextRow rows[WIMA_MAX_ROWS];
-
+		// Break the text into rows.
 		int nrows = nvgTextBreakLines(ctx->nvg, label, label + cend + 1, w, rows, WIMA_MAX_ROWS);
+
+		// Get the text metrics.
 		nvgTextMetrics(ctx->nvg, NULL, &desc, &lh);
 
+		// Calculate the beginning and end caret positions.
 		wima_ui_caret_pos(ctx, x, y, desc, lh, label + cbegin, rows, nrows, &c0r, &c0x, &c0y);
 		wima_ui_caret_pos(ctx, x, y, desc, lh, label + cend,   rows, nrows, &c1r, &c1x, &c1y);
 
+		// Start drawing the path.
 		nvgBeginPath(ctx->nvg);
+
+		// If the caret beginning and end are at the same place...
 		if (cbegin == cend) {
-			nvgFillColor(ctx->nvg, nvgRGBf(0.337,0.502,0.761));
+
+			// Just draw a simple caret.
+			nvgFillColor(ctx->nvg, c.nvg);
 			nvgRect(ctx->nvg, c0x - 1, c0y, 2, lh + 1);
 		}
 		else {
 
-			c.wima = caretCol;
-
+			// Set the fill color to the caret color.
 			nvgFillColor(ctx->nvg, c.nvg);
 
+			// If the start and end of the caret is on the same row...
 			if (c0r == c1r) {
+
+				// Just draw a simple rectangle.
 				nvgRect(ctx->nvg, c0x - 1, c0y, c1x - c0x + 1, lh + 1);
 			}
 			else {
 
-				int blk = c1r-c0r- 1;
+				// Figure out many rows are between
+				// the start and end of the caret.
+				int blk = c1r - c0r - 1;
 
+				// Draw the rectangles on the rows with the caret start and end.
 				nvgRect(ctx->nvg, c0x - 1, c0y, x + w - c0x + 1, lh + 1);
 				nvgRect(ctx->nvg, x, c1y, c1x - x + 1, lh + 1);
 
+				// If there are rows between the start
+				// and end, highlight them all.
 				if (blk) {
 					nvgRect(ctx->nvg, x, c0y +lh, w, blk * lh + 1);
 				}
 			}
 		}
 
+		// Fill the rectangle.
 		nvgFill(ctx->nvg);
 	}
 
+	// Set up the color.
 	c.wima = color;
 
+	// Draw the text.
 	nvgBeginPath(ctx->nvg);
 	nvgFillColor(ctx->nvg, c.nvg);
 	nvgTextBox(ctx->nvg, x, y, w, label, NULL);
@@ -1426,21 +1481,27 @@ void wima_ui_check(WimaRenderContext* ctx, float ox, float oy, WimaColor color) 
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Set up the color.
 	WimaCol c;
 	c.wima = color;
 
+	// Begin the path.
 	nvgBeginPath(ctx->nvg);
 
+	// Set up the stroke style.
 	nvgStrokeWidth(ctx->nvg, 2);
 	nvgStrokeColor(ctx->nvg, c.nvg);
 
+	// Set up the line style.
 	nvgLineCap(ctx->nvg, NVG_BUTT);
 	nvgLineJoin(ctx->nvg, NVG_MITER);
 
+	// Draw the check.
 	nvgMoveTo(ctx->nvg,ox + 4, oy + 5);
 	nvgLineTo(ctx->nvg,ox + 7, oy + 8);
 	nvgLineTo(ctx->nvg,ox + 14, oy + 1);
 
+	// Stroke.
 	nvgStroke(ctx->nvg);
 }
 
@@ -1450,16 +1511,20 @@ void wima_ui_arrow(WimaRenderContext* ctx, float x, float y, float s, WimaColor 
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
+	// Set up the color.
 	WimaCol c;
 	c.wima = color;
 
+	// Begin the path.
 	nvgBeginPath(ctx->nvg);
+
+	// Draw the arrow.
 	nvgMoveTo(ctx->nvg, x, y);
 	nvgLineTo(ctx->nvg,x - s, y + s);
 	nvgLineTo(ctx->nvg,x - s, y - s);
-
 	nvgClosePath(ctx->nvg);
 
+	// Fill, but don't stroke.
 	nvgFillColor(ctx->nvg, c.nvg);
 	nvgFill(ctx->nvg);
 }
@@ -1472,25 +1537,29 @@ void wima_ui_arrow_upDown(WimaRenderContext* ctx, float x, float y, float s, Wim
 
 	float w;
 
+	// Set up the color.
 	WimaCol c;
 	c.wima = color;
 
-	nvgBeginPath(ctx->nvg);
-
+	// Calculate the width.
 	w = 1.1f * s;
 
+	// Begin the path.
+	nvgBeginPath(ctx->nvg);
+
+	// Draw the first arrow.
 	nvgMoveTo(ctx->nvg, x, y - 1);
 	nvgLineTo(ctx->nvg, x + 0.5 * w, y - s - 1);
 	nvgLineTo(ctx->nvg, x + w, y - 1);
-
 	nvgClosePath(ctx->nvg);
 
+	// Draw the second arrow.
 	nvgMoveTo(ctx->nvg, x, y + 1);
 	nvgLineTo(ctx->nvg, x + 0.5 * w, y + s + 1);
 	nvgLineTo(ctx->nvg, x + w, y + 1);
-
 	nvgClosePath(ctx->nvg);
 
+	// Fill, but don't stroke.
 	nvgFillColor(ctx->nvg, c.nvg);
 	nvgFill(ctx->nvg);
 }
@@ -1503,19 +1572,23 @@ void wima_ui_node_arrow_down(WimaRenderContext* ctx, float x, float y, float s, 
 
 	float w;
 
+	// Set up the color.
 	WimaCol c;
 	c.wima = color;
 
+	// Begin the path.
 	nvgBeginPath(ctx->nvg);
 
-	w = 1.0f * s;
+	// Calculate the width.
+	w = 0.5f * s;
 
+	// Draw the arrow.
 	nvgMoveTo(ctx->nvg, x, y);
-	nvgLineTo(ctx->nvg, x + 0.5 * w, y - s);
-	nvgLineTo(ctx->nvg, x - 0.5 * w, y - s);
-
+	nvgLineTo(ctx->nvg, x + w, y - s);
+	nvgLineTo(ctx->nvg, x - w, y - s);
 	nvgClosePath(ctx->nvg);
 
+	// Fill, but don't stroke.
 	nvgFillColor(ctx->nvg, c.nvg);
 	nvgFill(ctx->nvg);
 }
@@ -1526,26 +1599,36 @@ WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float of
 
 	WimaRect result;
 
+	// Clamp the size and offset.
 	size = wima_clampf(size, 0, 1);
 	offset = wima_clampf(offset, 0, 1);
 
+	// If this is a vertical scrollbar...
 	if (h > w) {
 
+		// Calculate the height size.
 		float hs = wima_fmaxf(size * h, w + 1);
 
+		// Calculate the y coordinate and height.
 		result.y = (int) (y + (h - hs) * offset);
 		result.h = (int) hs;
 
+		// Set the x and width.
 		result.x = x;
 		result.w = w;
 	}
+
+	// If this is a horizontal scrollbar...
 	else {
 
+		// Calculate the width size.
 		float ws = wima_fmaxf(size * w, h - 1);
 
+		// Calculate the x coordinate and width.
 		result.x = (int) (x + (w - ws) * offset);
 		result.w = (int) ws;
 
+		// Set the y and height.
 		result.y = y;
 		result.h = h;
 	}
@@ -1569,25 +1652,35 @@ static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float de
 	static NVGglyphPosition glyphs[WIMA_MAX_GLYPHS];
 	int r, nglyphs;
 
+	// Find the row for the caret.
 	for (r = 0; r < nrows && rows[r].end < caret; ++r);
 
+	// Fill the return values, including
+	// cx in case of early return.
 	*cr = r;
 	*cx = x;
 	*cy = y - lineHeight - desc + r * lineHeight;
 
+	// If there are no rows, just return because
+	// we already have the correct values.
 	if (nrows == 0) {
 		return;
 	}
 
+	// Set the x coordinate to the min for the row.
 	*cx = rows[r].minx;
 
+	// Get the glyph positions.
 	nglyphs = nvgTextGlyphPositions(ctx->nvg, x, y, rows[r].start, rows[r].end + 1,
 	                                glyphs, WIMA_MAX_GLYPHS);
 
+	// Iterate through the glyphs.
 	for (int i = 0; i < nglyphs; ++i) {
 
+		// Set the x coordinate.
 		*cx = glyphs[i].x;
 
+		// Break if we have found the caret.
 		if (glyphs[i].str == caret) {
 			break;
 		}
