@@ -284,16 +284,25 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		}
 
 		// If the criteria for a click wasn't met...
-		else if (ts - WIMA_WIN_CLICK_THRESHOLD > wwin->ctx.click_timestamp ||
+		else if (WIMA_WIN_HAS_MENU(wwin) ||
+		         WIMA_WIN_MENU_ITEM_WAS_PRESSED(wwin) ||
+		         ts - WIMA_WIN_CLICK_THRESHOLD > wwin->ctx.click_timestamp ||
 		         wwin->ctx.click_button != wbtn ||
-		         !wima_widget_compare(clickItem, wwin->ctx.click_item))
+		         !wima_widget_compare(clickItem, wwin->ctx.click_item.widget))
 		{
 			// Clear the number of clicks.
 			wwin->ctx.clicks = 0;
 		}
 
-		// The criteria for a click was met, so add one.
+		// If the criteria for a click was met...
 		else {
+
+			// Update the click context in the window.
+			wwin->ctx.click_timestamp = ts;
+			wwin->ctx.click_button = wbtn;
+			wwin->ctx.click_item.widget = clickItem;
+
+			// Add one to the number of clicks.
 			++(wwin->ctx.clicks);
 		}
 	}
@@ -305,11 +314,6 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		wwin->ctx.movingSplit = false;
 		return;
 	}
-
-	// Update the click context in the window.
-	wwin->ctx.click_timestamp = ts;
-	wwin->ctx.click_button = wbtn;
-	wwin->ctx.click_item = clickItem;
 
 	// Set the event item.
 	wwin->ctx.eventItems[numEvents] = clickItem;

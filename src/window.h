@@ -130,6 +130,13 @@ extern "C" {
 #define WIMA_WIN_MENU_CONTEXT  (0x04)
 
 /**
+ * @def WIMA_WIN_MENU_CLICK
+ * A bit indicating whether a click was
+ * in a menu or not.
+ */
+#define WIMA_WIN_MENU_ITEM_PRESS    (0x08)
+
+/**
  * @def WIMA_WIN_HAS_MENU
  * Returns true if the window has a menu, false otherwise.
  * @param win	The window to test.
@@ -152,6 +159,29 @@ extern "C" {
  * @return		true if @a win's menu is a context menu, false otherwise.
  */
 #define WIMA_WIN_MENU_IS_CONTEXT(win)  (((win)->flags) & WIMA_WIN_MENU_CONTEXT)
+
+/**
+ * @def WIMA_WIN_MENU_ITEM_WAS_PRESSED
+ * Returns true if an item in the window's menu pressed, false otherwise.
+ * @param win	The window to test.
+ * @return		true if an item in @a win's menu was clicked, false otherwise.
+ */
+#define WIMA_WIN_MENU_ITEM_WAS_PRESSED(win) (((win)->flags) & WIMA_WIN_MENU_ITEM_PRESS)
+
+/**
+ * A union between widgets and a pointer a menu item,
+ * which is used to store the click location in the
+ * same place.
+ */
+typedef union WimaClickItem {
+
+	/// The widget.
+	WimaWidget widget;
+
+	/// The pointer to the menu item.
+	WimaMenuItem* menuItem;
+
+} WimaClickItem;
 
 /**
  * Data for a window's UI context.
@@ -178,7 +208,7 @@ typedef struct WimaWinCtx {
 
 	/// The widget that was last clicked.
 	/// This is for generating click events.
-	WimaWidget click_item;
+	WimaClickItem click_item;
 
 	/// The mouse button that was last clicked.
 	/// This is for generating click events.

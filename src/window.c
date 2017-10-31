@@ -1908,7 +1908,6 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 
 static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaMouseBtnEvent e) {
 
-
 	// If the mouse button hasn't been released yet,
 	// set it to released and return because we don't
 	// need to do anything else.
@@ -1916,6 +1915,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 		win->flags |= WIMA_WIN_MENU_RELEASED;
 		return;
 	}
+
 	// If there is a menu...
 	else if (WIMA_WIN_HAS_MENU(win)) {
 
@@ -1937,71 +1937,94 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 			pos.x -= m->rect.x;
 			pos.y -= m->rect.y;
 
-			// Get the pointer to the first item.
-			WimaMenuItem* item = m->items;
+			WimaMenuItem* item = win->ctx.click_item.menuItem;
 
-			// Go through the menu items.
-			for (int i = 0; i < m->numItems; ++i, item += 1) {
+			if (WIMA_WIN_MENU_ITEM_WAS_PRESSED(win) &&
+			    wima_rect_contains(item->rect, pos) &&
+			    !item->hasSubMenu && item->func)
+			{
+				// Dismiss the menu.
+				win->flags = 0;
 
-				// If the item is the one, and it has an event function...
-				if (!item->hasSubMenu && wima_rect_contains(item->rect, pos) && item->func) {
+				// Set the new offsets for the menu. This
+				// is so the user can just click if they
+				// want the same thing as last time.
+				m->rect.x = pos.x;
+				m->rect.y = pos.y;
 
-					// Dismiss the menu.
-					win->flags = 0;
+				// If the two menus are not equal, set
+				// the menu offsets for the first.
+				if (m != menu) {
 
-					// Set the new offsets for the menu. This
-					// is so the user can just click if they
-					// want the same thing as last time.
-					m->rect.x = pos.x;
-					m->rect.y = pos.y;
+					// Set the menu's offsets.
+					menu->rect.x = win->menuOffset.x;
+					menu->rect.y = win->menuOffset.y;
 
-					// If the two menus are not equal, set
-					// the menu offsets for the first.
-					if (m != menu) {
+					// Also clear the sub menu.
+					menu->subMenu = NULL;
+				}
 
-						// Set the menu's offsets.
-						menu->rect.x = win->menuOffset.x;
-						menu->rect.y = win->menuOffset.y;
+				// Call the item's function.
+				item->func(wih);
 
-						// Also clear the sub menu.
-						menu->subMenu = NULL;
+				// Clear the window and redraw.
+				wima_window_setDirty(win, true);
+
+				// If the menu has submenus...
+				if (m->subMenu) {
+
+					// Dismiss sub menus.
+					WimaMenu* subMenu = m->subMenu;
+					while (subMenu && subMenu->subMenu) {
+						WimaMenu* temp = subMenu->subMenu;
+						subMenu->subMenu = NULL;
+						subMenu = temp;
 					}
 
-					// Call the item's function.
-					item->func(wih);
-
-					// Clear the window and redraw.
-					wima_window_setDirty(win, true);
-
-					break;
+					// Clear the submenu flag.
+					m->subMenu = NULL;
 				}
-			}
-
-			// If the menu has submenus...
-			if (m->subMenu) {
-
-				// Dismiss sub menus.
-				WimaMenu* subMenu = m->subMenu;
-				while (subMenu && subMenu->subMenu) {
-					WimaMenu* temp = subMenu->subMenu;
-					subMenu->subMenu = NULL;
-					subMenu = temp;
-				}
-
-				// Clear the submenu flag.
-				m->subMenu = NULL;
 			}
 		}
 
 		// If the mouse button was pressed and the containing menu isn't valid...
-		else if (e.action == WIMA_ACTION_PRESS && !m) {
+		else if (e.action == WIMA_ACTION_PRESS) {
 
-			// Set the menu's offsets.
-			menu->rect.x = win->menuOffset.x;
-			menu->rect.y = win->menuOffset.y;
+			// If the mouse is in a menu.
+			if (m) {
 
-			// Dismiss the menu.
-			win->flags = 0;
+				// Translate the position into item coordinates.
+				pos.x -= m->rect.x;
+				pos.y -= m->rect.y;
+
+				// Get the pointer to the first item.
+				WimaMenuItem* item = m->items;
+
+				// Go through the menu items.
+				for (int i = 0; i < m->numItems; ++i, item += 1) {
+
+					// If the item is the one.
+					if (wima_rect_contains(item->rect, pos)) {
+
+						// Store the item in the window and set the flag.
+						win->ctx.click_item.menuItem = item;
+						win->flags |= WIMA_WIN_MENU_ITEM_PRESS;
+
+						break;
+					}
+				}
+			}
+
+			// If the mouse is not in a menu.
+			else {
+
+				// Set the menu's offsets.
+				menu->rect.x = win->menuOffset.x;
+				menu->rect.y = win->menuOffset.y;
+
+				// Dismiss the menu.
+				win->flags = 0;
+			}
 		}
 	}
 
