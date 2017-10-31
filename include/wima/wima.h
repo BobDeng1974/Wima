@@ -1053,9 +1053,9 @@ typedef struct WimaMenu WimaMenu;
 
 /**
  * A function for handling a menu item click.
- * @param wdgt	The menu item that was clicked.
+ * @param win	The window that had the menu.
  */
-typedef void (*WimaMenuItemFunc)(WimaWidget);
+typedef void (*WimaMenuItemFunc)(WimaWindow);
 
 /**
  * A menu item.

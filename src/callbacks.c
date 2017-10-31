@@ -54,27 +54,27 @@ wima_global_decl;
 wima_error_descs_decl;
 wima_assert_msgs_decl;
 
-void joinItemClick(WimaWidget wih) {
+void joinItemClick(WimaWindow wwh) {
 	printf("Join clicked!\n");
 }
 
-void splitSub1Click(WimaWidget wih) {
+void splitSub1Click(WimaWindow wwh) {
 	printf("Split sub 1 clicked!\n");
 }
 
-void splitSub3Click(WimaWidget wih) {
+void splitSub3Click(WimaWindow wwh) {
 	printf("Split sub 3 clicked!\n");
 }
 
-void splitSub4Click(WimaWidget wih) {
+void splitSub4Click(WimaWindow wwh) {
 	printf("Split sub 4 clicked!\n");
 }
 
-void splitSub5Click(WimaWidget wih) {
+void splitSub5Click(WimaWindow wwh) {
 	printf("Split sub 5 clicked!\n");
 }
 
-void splitSubSub1Click(WimaWidget wih) {
+void splitSubSub1Click(WimaWindow wwh) {
 	printf("Split sub sub 1 clicked!\n");
 }
 

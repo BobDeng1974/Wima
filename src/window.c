@@ -1969,7 +1969,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 				}
 
 				// Call the item's function.
-				item->func(wih);
+				item->func(wih.window);
 
 				// Clear the window and redraw.
 				wima_window_setDirty(win, true);
