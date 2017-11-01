@@ -152,7 +152,7 @@ typedef uint8_t WimaRegion;
  * @def WIMA_REGION_INVALID
  * A handle indicating an invalid region.
  */
-#define WIMA_REGION_INVALID ((uint8_t) -1)
+#define WIMA_REGION_INVALID ((WimaRegion) -1)
 
 /**
  * @def WIMA_REGION_MAX
@@ -178,7 +178,7 @@ typedef uint8_t WimaWindow;
  * @def WIMA_WINDOW_INVALID
  * A handle indicating an invalid window.
  */
-#define WIMA_WINDOW_INVALID ((uint8_t) -1)
+#define WIMA_WINDOW_INVALID ((WimaWindow) -1)
 
 /**
  * @def WIMA_WINDOW_MAX
@@ -204,7 +204,7 @@ typedef uint8_t WimaWorkspace;
  * @def WIMA_WORKSPACE_INVALID
  * A handle indicating an invalid workspace.
  */
-#define WIMA_WORKSPACE_INVALID ((uint8_t) -1)
+#define WIMA_WORKSPACE_INVALID ((WimaWorkspace) -1)
 
 /**
  * @def WIMA_WORKSPACE_MAX
