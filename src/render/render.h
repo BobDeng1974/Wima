@@ -191,20 +191,6 @@ typedef union WimaTxtRow {
  */
 
 /**
- * Provides a way to cast between GLFWimage and WimaImage.
- * It's necessary to have both to hide GLFW from users.
- */
-typedef union WimaImg {
-
-	/// The GLFW image.
-	GLFWimage glfw;
-
-	/// The Wima image.
-	WimaImage wima;
-
-} WimaImg;
-
-/**
  * @}
  */
 

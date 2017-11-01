@@ -303,6 +303,9 @@ typedef struct WimaWin {
 	/// The pixel ratio of the window.
 	float pixelRatio;
 
+	/// The list of textures.
+	DynaVector textures;
+
 	/// The UI context for the window.
 	WimaWinCtx ctx;
 

@@ -739,6 +739,28 @@ typedef enum WimaCursorMode {
 } WimaCursorMode;
 
 /**
+ * An uncompressed, in-memory image. The pixels are
+ * 32-bit, little-endian, non-premultiplied RGBA,
+ * i.e. eight bits per channel. They are arranged
+ * canonically as packed sequential rows, starting
+ * from the top-left corner.
+ */
+typedef struct WimaCursorImage {
+
+	/// The width of the image.
+	int width;
+
+	/// The height of the image.
+	int height;
+
+	/// An array of RGBA (four channel) pixels.
+	/// Thus, this array should have space for
+	/// 4 * @a width * @a height bytes.
+	unsigned char* pixels;
+
+} WimaCursorImage;
+
+/**
  * Creates a new custom cursor image that can be set for a
  * window with @a wima_window_setCursor(). The cursor can be
  * destroyed with @a wima_cursor_destroy(). Any remaining
@@ -754,7 +776,7 @@ typedef enum WimaCursorMode {
  * @pre			@a xhot must be less than @a img width.
  * @pre			@a yhot must be less than @a img height.
  */
-WimaCursor* wima_cursor_create(WimaImage img, int xhot, int yhot) yinline;
+WimaCursor* wima_cursor_create(WimaCursorImage img, int xhot, int yhot) yinline;
 
 /**
  * This function destroys a cursor previously created

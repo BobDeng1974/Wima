@@ -29,40 +29,53 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	Functions for manipulating cursors.
+ *	<Put description here>
  *
  *	******** END FILE DESCRIPTION ********
  */
 
+#ifndef WIMA_CURSOR_PRIVATE_H
+#define WIMA_CURSOR_PRIVATE_H
+
+/* For C++ compatibility. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <wima/wima.h>
 
-#include "global.h"
-#include "window.h"
+#include <GLFW/glfw3.h>
 
-#include "cursor.h"
+/**
+ * @file cursor.h
+ */
 
-wima_global_decl;
-wima_assert_msgs_decl;
+/**
+ * @defgroup cursor_internal cursor_internal
+ * Internal functions and data structures for manipulating cursors.
+ * @{
+ */
 
-WimaCursor* wima_cursor_create(WimaCursorImage img, int xhot, int yhot) {
+/**
+ * Provides a way to cast between GLFWimage and WimaImage.
+ * It's necessary to have both to hide GLFW from users.
+ */
+typedef union WimaCursorImg {
 
-	wima_assert_init;
+	/// The GLFW image.
+	GLFWimage glfw;
 
-	wassert(img.pixels != NULL, WIMA_ASSERT_IMG_DATA);
+	/// The Wima image.
+	WimaCursorImage wima;
 
-	wassert(img.width > 0 && img.height > 0, WIMA_ASSERT_CURSOR_DIM);
-	wassert(img.width > xhot && img.height > yhot, WIMA_ASSERT_CURSOR_HOT);
+} WimaCursorImg;
 
-	// Create a go-between image.
-	WimaCursorImg i;
-	i.wima = img;
+/**
+ * @}
+ */
 
-	// Cast the WimaImage to GLFWimage and have GLFW create the cursor.
-	return (WimaCursor*) glfwCreateCursor(&i.glfw, xhot, yhot);
+#ifdef __cplusplus
 }
+#endif
 
-void wima_cursor_destroy(WimaCursor* cursor) {
-	wima_assert_init;
-	wassert(cursor != NULL, WIMA_ASSERT_CURSOR);
-	glfwDestroyCursor((GLFWcursor*) cursor);
-}
+#endif // WIMA_CURSOR_PRIVATE_H

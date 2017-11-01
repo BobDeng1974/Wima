@@ -93,6 +93,9 @@ typedef struct WimaG {
 	/// Icons.
 	DynaVector icons;
 
+	/// Textures.
+	DynaVector textures;
+
 	/// The group property for all themes.
 	WimaProperty theme;
 
