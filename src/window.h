@@ -207,9 +207,14 @@ typedef struct WimaWinCtx {
 	/// The hovered widget in the window.
 	WimaWidget hover;
 
-	/// The widget that was last clicked.
-	/// This is for generating click events.
-	WimaClickItem click_item;
+	/// The area that the cursor is in.
+	WimaAreaNode cursorArea;
+
+	/// The current layout stage.
+	WimaLayoutStage stage;
+
+	/// The current mods the user is pressing.
+	WimaMods mods;
 
 	/// The mouse button that was last clicked.
 	/// This is for generating click events.
@@ -219,30 +224,25 @@ typedef struct WimaWinCtx {
 	/// This is for generating click events.
 	uint32_t clicks;
 
+	/// Whether or not the user is moving a split or not.
+	bool movingSplit;
+
+	/// The number of events in the queue.
+	uint8_t eventCount;
+
+	/// The widget that was last clicked.
+	/// This is for generating click events.
+	WimaClickItem click_item;
+
 	/// The timestamp of the last click.
 	/// This is for generating click events.
 	uint64_t click_timestamp;
-
-	/// The current layout stage.
-	WimaLayoutStage stage;
-
-	/// The current mods the user is pressing.
-	WimaMods mods;
 
 	/// The start of the current drag.
 	WimaVec dragStart;
 
 	/// The split that the user is manipulating.
 	WimaAreaSplit split;
-
-	/// The area that the cursor is in.
-	WimaAreaNode cursorArea;
-
-	/// Whether or not the user is moving a split or not.
-	bool movingSplit;
-
-	/// The number of events in the queue.
-	uint8_t eventCount;
 
 	/// The event queue.
 	WimaEvent events[WIMA_EVENT_MAX];
@@ -275,9 +275,6 @@ typedef struct WimaWin {
 	/// The render context for the window.
 	WimaRenderContext render;
 
-	/// The UI context for the window.
-	WimaWinCtx ctx;
-
 	/// The window's framebuffer size.
 	WimaSize fbsize;
 
@@ -300,11 +297,14 @@ typedef struct WimaWin {
 	/// The menu icon.
 	WimaIcon menuIcon;
 
+	/// Bits set when we have a menu.
+	uint8_t flags;
+
 	/// The pixel ratio of the window.
 	float pixelRatio;
 
-	/// Bits set when we have a menu.
-	uint8_t flags;
+	/// The UI context for the window.
+	WimaWinCtx ctx;
 
 } WimaWin;
 
