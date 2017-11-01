@@ -1046,7 +1046,7 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 	}
 
 	// Get the vector image.
-	WimaIcn img = dvec_get(wg.icons, icon);
+	WimaIcn img = *((WimaIcn*) dvec_get(wg.icons, icon));
 
 	// Loop through the shapes in the image.
 	for (NSVGshape* shape = img->shapes; shape != NULL; shape = shape->next) {
