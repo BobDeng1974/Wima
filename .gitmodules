@@ -9,3 +9,7 @@
 	path = lib/glfw
 	url = https://github.com/glfw/glfw.git
 	branch = master
+[submodule "lib/nanosvg"]
+	path = lib/nanosvg
+	url = https://github.com/memononen/nanosvg.git
+	branch = master
