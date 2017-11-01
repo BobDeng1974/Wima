@@ -117,7 +117,6 @@ WimaIcon wima_icon_register(const char* path, WimaIconUnit unit, float dpi) {
 }
 
 WimaIcon wima_icon_debug() {
-
 #ifndef NDEBUG
 
 	// Make sure it's set to invalid.
