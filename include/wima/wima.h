@@ -139,6 +139,26 @@ typedef enum WimaStatus {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @defgroup icon icon
+ * @{
+ */
+
+/**
+ * A handle to an icon.
+ */
+typedef uint16_t WimaIcon;
+
+/**
+ * @def WIMA_ICON_INVALID
+ * A handle indicating an invalid icon.
+ */
+#define WIMA_ICON_INVALID ((WimaIcon) -1)
+
+/**
+ * @}
+ */
+
+/**
  * @defgroup region region
  * @{
  */

@@ -625,7 +625,7 @@ WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecf o, WimaSizef 
 /**
  * All Blender icons (will be removed).
  */
-typedef enum WimaIcon {
+typedef enum WimaIconType {
 
 	//! @cond Doxygen suppress.
 
@@ -1128,7 +1128,7 @@ typedef enum WimaIcon {
 
 	//! @endcond Doxygen suppress.
 
-} WimaIcon;
+} WimaIconType;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Theme functions and data structures.
