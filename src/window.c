@@ -44,6 +44,7 @@
 #include <wima/render.h>
 #include <wima/math.h>
 
+//! @cond Doxygen suppress.
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg.h>
 #include <nanovg_gl.h>
@@ -56,22 +57,56 @@
 #include "window.h"
 #include "global.h"
 
-//! @cond Doxygen suppress.
 wima_global_decl;
 wima_error_descs_decl;
 wima_assert_msgs_decl;
 //! @endcond Doxygen suppress.
+
+/**
+ * @file window.c
+ */
+
+/**
+ * @defgroup window_internal window_internal
+ * @{
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Click functions for menu items.
 ////////////////////////////////////////////////////////////////////////////////
 
 #ifndef NDEBUG
+
+/**
+ * A test click function for a menu item.
+ * @param wwh	The window with the menu.
+ */
 static void wima_window_sub1_click(WimaWindow wwh);
+
+/**
+ * A test click function for a menu item.
+ * @param wwh	The window with the menu.
+ */
 static void wima_window_sub3_click(WimaWindow wwh);
+
+/**
+ * A test click function for a menu item.
+ * @param wwh	The window with the menu.
+ */
 static void wima_window_sub4_click(WimaWindow wwh);
+
+/**
+ * A test click function for a menu item.
+ * @param wwh	The window with the menu.
+ */
 static void wima_window_sub5_click(WimaWindow wwh);
+
+/**
+ * A test click function for a menu item.
+ * @param wwh	The window with the menu.
+ */
 static void wima_window_sub_sub1_click(WimaWindow wwh);
+
 #endif // NDEBUG
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,15 +115,24 @@ static void wima_window_sub_sub1_click(WimaWindow wwh);
 
 #ifndef NDEBUG
 
+/**
+ * A list of items for the debug sub sub menu.
+ */
 static WimaMenuItem wima_window_splitMenu_sub_sub_items[] = {
 
     WIMA_MENU_ITEM_FUNC_DEFAULT("Item sub sub 1", wima_window_sub_sub1_click),
 
 };
 
+/**
+ * The debug sub sub menu.
+ */
 static WimaMenu wima_window_splitMenu_sub_sub =
     WIMA_MENU_DEFAULT(wima_window_splitMenu_sub_sub_items, 1);
 
+/**
+ * A list of items for the debug sub menu.
+ */
 static WimaMenuItem wima_window_splitMenu_sub_items[] = {
 
     WIMA_MENU_ITEM_FUNC_DEFAULT("Item sub 1", wima_window_sub1_click),
@@ -100,9 +144,15 @@ static WimaMenuItem wima_window_splitMenu_sub_items[] = {
 
 };
 
+/**
+ * The debug sub menu.
+ */
 static WimaMenu wima_window_splitMenu_sub = WIMA_MENU_DEFAULT(wima_window_splitMenu_sub_items, 6);
 #endif // NDEBUG
 
+/**
+ * A list of items for the split menu.
+ */
 static WimaMenuItem wima_window_splitMenu_items[] = {
 
     WIMA_MENU_ITEM_FUNC_DEFAULT("Split Area", wima_window_split),
@@ -117,14 +167,26 @@ static WimaMenuItem wima_window_splitMenu_items[] = {
 
 };
 
+/**
+ * @def WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS
+ * The number of items in the split menu.
+ */
+
 #ifndef NDEBUG
 #define WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS 4
 #else
 #define WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS 2
 #endif
 
+/**
+ * The split menu.
+ */
 static WimaMenu wima_window_areaSplitMenu =
     WIMA_MENU_DEFAULT(wima_window_splitMenu_items, WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS);
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // These are all the static functions that the public functions need.

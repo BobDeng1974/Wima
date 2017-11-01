@@ -1143,7 +1143,7 @@ typedef struct WimaMenu {
     { label, { .click = func }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICON_INVALID, false }
 
 /**
- * @def WIMA_MENU_ITEM_FUNC_DEFAULT
+ * @def WIMA_MENU_ITEM_SEPARATOR
  * Expands into a default compile-time constant
  * initializer for a menu item that is a separator.
  */
