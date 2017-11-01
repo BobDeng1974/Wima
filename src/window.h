@@ -366,6 +366,26 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth);
  */
 void wima_window_processEvents(WimaWindow win);
 
+/**
+ * Sets up the area split menu.
+ * @param wwh	The window to put the menu on.
+ */
+void wima_window_splitMenu(WimaWindow wwh);
+
+/**
+ * Callback to put Wima into "join areas" mode.
+ * @param wwh	The window that called the callback.
+ * @pre			@a wwh must be valid.
+ */
+void wima_window_join(WimaWindow wwh);
+
+/**
+ * Callback to put Wima into "split areas" mode.
+ * @param wwh	The window that called the callback.
+ * @pre			@a wwh must be valid.
+ */
+void wima_window_split(WimaWindow wwh);
+
 #ifdef __YASSERT__
 /**
  * Tests to see if @a wwh is valid (not removed).

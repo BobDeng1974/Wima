@@ -302,13 +302,6 @@ void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, Wim
 WimaWidget wima_area_findWidget(DynaTree areas, WimaVec pos, uint32_t flags);
 
 /**
- * Callback to put Wima into "join areas" mode.
- * @param wwh	The window that called the callback.
- * @pre			@a wwh must be valid.
- */
-void wima_area_joinCallback(WimaWindow wwh);
-
-/**
  * Joins two areas into one. It handles finding the common
  * ancestor and checking if the areas can be merged.
  * @param left	The left (or up) area.
@@ -317,13 +310,6 @@ void wima_area_joinCallback(WimaWindow wwh);
  * @pre			@a right must be valid.
  */
 void wima_area_join(WimaAreaNode left, WimaAreaNode right);
-
-/**
- * Callback to put Wima into "split areas" mode.
- * @param wwh	The window that called the callback.
- * @pre			@a wwh must be valid.
- */
-void wima_area_splitCallback(WimaWindow wwh);
 
 /**
  * Split an area into two. The same region is used for both.

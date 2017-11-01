@@ -1075,7 +1075,7 @@ typedef struct WimaMenuItem {
 		WimaMenu* subMenu;
 
 		/// The function to call when clicked.
-		WimaMenuItemFunc func;
+		WimaMenuItemFunc click;
 	};
 
 	/// The item's rectangle.
@@ -1111,6 +1111,44 @@ typedef struct WimaMenu {
 	uint32_t numItems;
 
 } WimaMenu;
+
+/**
+ * @def WIMA_MENU_DEFAULT
+ * Expands into a default compile-time constant
+ * initializer for a menu .
+ * @param items		A list of menu items for the menu.
+ * @param numItems	The number of items in the list.
+ */
+#define WIMA_MENU_DEFAULT(items, numItems) \
+    { {{ 0, 0, 0, 0 }}, NULL, items, numItems }
+
+/**
+ * @def WIMA_MENU_ITEM_SUB_DEFAULT
+ * Expands into a default compile-time constant
+ * initializer for a menu item that has a sub menu.
+ * @param label	The menu item's label.
+ * @param sub	A pointer to the submenu.
+ */
+#define WIMA_MENU_ITEM_SUB_DEFAULT(label, sub) \
+    { label, sub, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICON_INVALID, true }
+
+/**
+ * @def WIMA_MENU_ITEM_FUNC_DEFAULT
+ * Expands into a default compile-time constant
+ * initializer for a menu item that has a sub menu.
+ * @param label	The menu item's label.
+ * @param func	A pointer to the item's click callback.
+ */
+#define WIMA_MENU_ITEM_FUNC_DEFAULT(label, func) \
+    { label, { .click = func }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICON_INVALID, false }
+
+/**
+ * @def WIMA_MENU_ITEM_FUNC_DEFAULT
+ * Expands into a default compile-time constant
+ * initializer for a menu item that is a separator.
+ */
+#define WIMA_MENU_ITEM_SEPARATOR \
+    { NULL, NULL, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICON_INVALID, false }
 
 /**
  * @}

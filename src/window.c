@@ -63,6 +63,70 @@ wima_assert_msgs_decl;
 //! @endcond Doxygen suppress.
 
 ////////////////////////////////////////////////////////////////////////////////
+// Click functions for menu items.
+////////////////////////////////////////////////////////////////////////////////
+
+#ifndef NDEBUG
+static void wima_window_sub1_click(WimaWindow wwh);
+static void wima_window_sub3_click(WimaWindow wwh);
+static void wima_window_sub4_click(WimaWindow wwh);
+static void wima_window_sub5_click(WimaWindow wwh);
+static void wima_window_sub_sub1_click(WimaWindow wwh);
+#endif // NDEBUG
+
+////////////////////////////////////////////////////////////////////////////////
+// Area split menu (and debug menus).
+////////////////////////////////////////////////////////////////////////////////
+
+#ifndef NDEBUG
+
+static WimaMenuItem wima_window_splitMenu_sub_sub_items[] = {
+
+    WIMA_MENU_ITEM_FUNC_DEFAULT("Item sub sub 1", wima_window_sub_sub1_click),
+
+};
+
+static WimaMenu wima_window_splitMenu_sub_sub =
+    WIMA_MENU_DEFAULT(wima_window_splitMenu_sub_sub_items, 1);
+
+static WimaMenuItem wima_window_splitMenu_sub_items[] = {
+
+    WIMA_MENU_ITEM_FUNC_DEFAULT("Item sub 1", wima_window_sub1_click),
+    WIMA_MENU_ITEM_SEPARATOR,
+    WIMA_MENU_ITEM_SUB_DEFAULT("Item sub 2", &wima_window_splitMenu_sub_sub),
+    WIMA_MENU_ITEM_FUNC_DEFAULT("Item sub 3", wima_window_sub3_click),
+    WIMA_MENU_ITEM_FUNC_DEFAULT("Item sub 4", wima_window_sub4_click),
+    WIMA_MENU_ITEM_FUNC_DEFAULT("Split sub 5", wima_window_sub5_click)
+
+};
+
+static WimaMenu wima_window_splitMenu_sub = WIMA_MENU_DEFAULT(wima_window_splitMenu_sub_items, 6);
+#endif // NDEBUG
+
+static WimaMenuItem wima_window_splitMenu_items[] = {
+
+    WIMA_MENU_ITEM_FUNC_DEFAULT("Split Area", wima_window_split),
+    WIMA_MENU_ITEM_FUNC_DEFAULT("Join Area", wima_window_join),
+
+#ifndef NDEBUG
+
+    WIMA_MENU_ITEM_SEPARATOR,
+    WIMA_MENU_ITEM_SUB_DEFAULT("Item 1", &wima_window_splitMenu_sub),
+
+#endif // NDEBUG
+
+};
+
+#ifndef NDEBUG
+#define WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS 4
+#else
+#define WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS 2
+#endif
+
+static WimaMenu wima_window_areaSplitMenu =
+    WIMA_MENU_DEFAULT(wima_window_splitMenu_items, WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS);
+
+////////////////////////////////////////////////////////////////////////////////
 // These are all the static functions that the public functions need.
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1677,6 +1741,47 @@ void wima_window_processEvents(WimaWindow wwh) {
 	win->ctx.last_cursor = win->ctx.cursorPos;
 }
 
+void wima_window_splitMenu(WimaWindow wwh) {
+
+	WimaIcon debug = wima_icon_debug();
+
+#ifndef NDEBUG
+
+	static bool setup = false;
+
+	if (!setup) {
+
+		// Set as true.
+		setup = true;
+
+		// Set the debug icon in the sub sub menu.
+		wima_window_splitMenu_sub_sub_items[0].icon = debug;
+
+		// Set the debug icon in the sub menu.
+		for (uint32_t i = 0; i < wima_window_splitMenu_sub.numItems; ++i) {
+			wima_window_splitMenu_sub_items[i].icon = debug;
+		}
+	}
+
+	// Make sure the sub sub menu won't be drawn.
+	wima_window_splitMenu_sub.subMenu = NULL;
+
+#endif // NDEBUG
+
+	// Set the context menu in the window.
+	wima_window_setContextMenu(wwh, &wima_window_areaSplitMenu, "Area Options", debug);
+}
+
+void wima_window_join(WimaWindow wwh) {
+	// TODO: Write this function.
+	printf("Join clicked on window[%d]\n", wwh);
+}
+
+void wima_window_split(WimaWindow wwh) {
+	// TODO: Write this function.
+	printf("Split clicked on window[%d]\n", wwh);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -2126,3 +2231,25 @@ bool wima_window_valid(WimaWindow wwh) {
 	return valid;
 }
 #endif
+
+#ifndef NDEBUG
+static void wima_window_sub1_click(WimaWindow wwh) {
+	printf("Item sub 1 clicked on window[%d]\n", wwh);
+}
+
+static void wima_window_sub3_click(WimaWindow wwh) {
+	printf("Item sub 3 clicked on window[%d]\n", wwh);
+}
+
+static void wima_window_sub4_click(WimaWindow wwh) {
+	printf("Item sub 4 clicked on window[%d]\n", wwh);
+}
+
+static void wima_window_sub5_click(WimaWindow wwh) {
+	printf("Item sub 5 clicked on window[%d]\n", wwh);
+}
+
+static void wima_window_sub_sub1_click(WimaWindow wwh) {
+	printf("Item sub sub 1 clicked on window[%d]\n", wwh);
+}
+#endif // NDEBUG

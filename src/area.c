@@ -1260,18 +1260,8 @@ static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVe
 	return wdgt;
 }
 
-void wima_area_joinCallback(WimaWindow wwh) {
-	// TODO: Write this function.
-	printf("Join clicked on window[%d]\n", wwh);
-}
-
 void wima_area_join(WimaAreaNode left, WimaAreaNode right) {
 	// TODO: Write this function.
-}
-
-void wima_area_splitCallback(WimaWindow wwh) {
-	// TODO: Write this function.
-	printf("Split clicked on window[%d]\n", wwh);
 }
 
 void wima_area_split(WimaAreaNode node) {
