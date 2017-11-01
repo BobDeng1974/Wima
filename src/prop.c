@@ -600,8 +600,8 @@ uint32_t wima_prop_enum_idx(WimaProperty wph) {
 // Public functions for list props.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc)
-{
+WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc) {
+
 	wima_assert_init;
 
 	WimaPropData prop;
