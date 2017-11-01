@@ -57,6 +57,15 @@ wima_assert_msgs_decl;
 //! @endcond Doxygen suppress.
 
 /**
+ * @file icon.c
+ */
+
+/**
+ * @defgroup icon_internal icon_internal
+ * @{
+ */
+
+/**
  * The unit names that NanoSVG expects.
  * These correspond to @a WimaIconUnit.
  */
@@ -68,6 +77,10 @@ static const char* const unitNames[] = {
     "cm",
     "in"
 };
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.
