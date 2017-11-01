@@ -298,7 +298,7 @@ typedef struct WimaWin {
 	WimaVec menuOffset;
 
 	/// The menu icon.
-	int menuIcon;
+	WimaIcon menuIcon;
 
 	/// The pixel ratio of the window.
 	float pixelRatio;

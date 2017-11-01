@@ -1085,7 +1085,7 @@ typedef struct WimaMenuItem {
 	WimaWidgetState state;
 
 	/// The item's icon, or -1 for none.
-	int icon;
+	WimaIcon icon;
 
 	/// Whether or not the item has a submenu,
 	/// or is a clickable item.

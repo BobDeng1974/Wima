@@ -675,6 +675,13 @@ typedef enum WimaIconUnit {
 WimaIcon wima_icon_register(const char* path, WimaIconUnit unit, float dpi);
 
 /**
+ * Returns the debug icon. This function
+ * is only available in debug mode.
+ * @return	The debug icon.
+ */
+WimaIcon wima_icon_debug();
+
+/**
  * @}
  */
 

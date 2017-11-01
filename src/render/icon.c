@@ -56,6 +56,10 @@ wima_error_descs_decl;
 wima_assert_msgs_decl;
 //! @endcond Doxygen suppress.
 
+/**
+ * The unit names that NanoSVG expects.
+ * These correspond to @a WimaIconUnit.
+ */
 static const char* const unitNames[] = {
     "px",
     "pt",
@@ -64,6 +68,10 @@ static const char* const unitNames[] = {
     "cm",
     "in"
 };
+
+////////////////////////////////////////////////////////////////////////////////
+// Private functions.
+////////////////////////////////////////////////////////////////////////////////
 
 WimaIcon wima_icon_register(const char* path, WimaIconUnit unit, float dpi) {
 
@@ -92,6 +100,36 @@ WimaIcon wima_icon_register(const char* path, WimaIconUnit unit, float dpi) {
 
 	return (WimaIcon) len;
 }
+
+WimaIcon wima_icon_debug() {
+
+#ifndef NDEBUG
+
+	// Make sure it's set to invalid.
+	static WimaIcon debug = WIMA_ICON_INVALID;
+
+	// If the icon is invalid...
+	if (yunlikely(debug == WIMA_ICON_INVALID)) {
+
+		// Load it.
+		debug = wima_icon_register("../res/bug.svg", WIMA_ICON_PX, 96.0f);
+
+		// If the icon couldn't load, abort.
+		if (yunlikely(debug == WIMA_ICON_INVALID)) {
+			wima_error(WIMA_STATUS_IMAGE_LOAD_ERR);
+			exit(WIMA_STATUS_IMAGE_LOAD_ERR);
+		}
+	}
+
+	return debug;
+#else
+	return -1;
+#endif // NDEBUG
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Private functions.
+////////////////////////////////////////////////////////////////////////////////
 
 NVGcolor wima_icon_color(unsigned int color) {
 

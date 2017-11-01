@@ -2050,7 +2050,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 			// does have a function...
 			if (WIMA_WIN_MENU_ITEM_WAS_PRESSED(win) &&
 			    wima_rect_contains(item->rect, pos) &&
-			    !item->hasSubMenu && item->func)
+			    !item->hasSubMenu && item->click)
 			{
 				// Dismiss the menu and clear flags.
 				win->flags = 0;
@@ -2074,7 +2074,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 				}
 
 				// Call the item's function.
-				item->func(wih.window);
+				item->click(wih.window);
 
 				// Clear the window and redraw.
 				wima_window_setDirty(win, true);
