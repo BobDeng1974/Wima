@@ -76,9 +76,6 @@ typedef struct WimaRenderContext {
 	/// The font handle for NanoVG.
 	int font;
 
-	/// The icon sheet handle for NanoVG.
-	int icons;
-
 } WimaRenderContext;
 
 /**
