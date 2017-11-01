@@ -104,6 +104,8 @@ WimaIcon wima_icon_register(const char* path, WimaIconUnit unit, float dpi) {
 	// Parse the file.
 	WimaIcn img = nsvgParseFromFile(path, unitNames[unit], dpi);
 
+	wassert(img != NULL, WIMA_ASSERT_ICON);
+
 	// Push onto the vector and check for error.
 	DynaStatus status = dvec_push(wg.icons, &img);
 	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {

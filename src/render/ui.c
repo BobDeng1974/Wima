@@ -1048,6 +1048,14 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 	// Get the vector image.
 	WimaIcn img = *((WimaIcn*) dvec_get(wg.icons, icon));
 
+	// Calculate the scale.
+	float scale = WIMA_ICON_SHEET_RES / wima_fmaxf(img->width, img->height);
+
+	// Set up NanoVG.
+	nvgSave(ctx->nvg);
+	nvgTranslate(ctx->nvg, x, y);
+	nvgScale(ctx->nvg, scale, scale);
+
 	// Loop through the shapes in the image.
 	for (NSVGshape* shape = img->shapes; shape != NULL; shape = shape->next) {
 
@@ -1092,6 +1100,9 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 			}
 		}
 	}
+
+	// Restore NanoVG.
+	nvgRestore(ctx->nvg);
 }
 
 void wima_ui_dropShadow(WimaRenderContext* ctx, float x, float y, float w, float h,

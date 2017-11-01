@@ -30,6 +30,7 @@ file(COPY
 	# Add files here.
 	"DejaVuSans.ttf"
 	"blender_icons16.png"
+	"bug.svg"
 
 	DESTINATION "${CMAKE_CURRENT_BINARY_DIR}"
 )

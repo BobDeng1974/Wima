@@ -116,7 +116,7 @@ WimaStatus cb_draw(WimaWidget item, WimaRenderContext* ctx) {
 	wima_render_label(ctx, r.x + 2, r.y + 2, width, height, WIMA_ICONID(0,0), stuff);
 #endif
 
-	wima_ui_label(ctx, r.x, r.y, r.w, r.h, WIMA_ICON_INVALID, buffer);
+	wima_ui_label(ctx, r.x, r.y, r.w, r.h, wima_icon_debug(), buffer);
 
 	return WIMA_STATUS_SUCCESS;
 }

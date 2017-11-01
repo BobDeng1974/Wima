@@ -180,6 +180,8 @@ const char* wima_assert_msgs[] = {
     "cursor dimensions are invalid",
     "cursor hot position is invalid",
 
+    "icon is not valid",
+
     "ptr is NULL",
 
     "file path is NULL",
