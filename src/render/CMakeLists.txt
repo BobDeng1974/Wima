@@ -24,8 +24,9 @@
 #
 #	****** END LICENSE BLOCK ******
 
-# We use the nanovg includes, so we need this.
+# We use the nanovg and nanosvg includes, so we need this.
 include_directories("../../lib/nanovg/src")
+include_directories("../../lib/nanosvg/src")
 
 set(WIMA_RENDER "${PROJECT_NAME}_render")
 set(WIMA_RENDER "${WIMA_RENDER}" PARENT_SCOPE)
@@ -35,6 +36,7 @@ set(WIMA_RENDER_SRC
 	# Add source files here.
 	"color.c"
 	"paint.c"
+	"icon.c"
 	"theme.c"
 	"style.c"
 	"path.c"

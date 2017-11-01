@@ -83,6 +83,7 @@ const char* wima_error_descs[] = {
     "client tried to create too many regions",
     "no child exists for the given property",
     "image failed to load",
+    "client tried to create too many icons",
 };
 
 /**
@@ -100,9 +101,7 @@ const char* wima_assert_msgs[] = {
     "app draw function is null",
     "app error function is null",
     "app font path is null",
-    "app icon sheet path is null",
     "wima cannot read the app font file",
-    "wima cannot read the icon sheet file",
     "more than 16 icons provided",
 
     "window is not valid",
@@ -182,6 +181,8 @@ const char* wima_assert_msgs[] = {
     "cursor hot position is invalid",
 
     "ptr is NULL",
+
+    "file path is NULL",
 
 #endif
 };

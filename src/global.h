@@ -90,6 +90,12 @@ typedef struct WimaG {
 	/// Regions (area types).
 	DynaVector regions;
 
+	/// Icons.
+	DynaVector icons;
+
+	/// The group property for all themes.
+	WimaProperty theme;
+
 	/// An array of properties that point to the start
 	/// of a widget or node theme. All properties in a
 	/// theme are consecutive, so these can be used to
@@ -100,20 +106,14 @@ typedef struct WimaG {
 	/// properties for all themes.
 	WimaProperty themes[WIMA_THEME_NUM_TYPES];
 
-	/// The group property for all themes.
-	WimaProperty theme;
-
 	/// The number of app icons.
-	int numIcons;
+	int numAppIcons;
 
 	/// The array of app icons.
-	GLFWimage icons[WIMA_MAX_ICONS];
+	GLFWimage appIcons[WIMA_MAX_ICONS];
 
 	/// The path to the font file.
 	DynaString fontPath;
-
-	/// The path to the icon sheet. (Will be removed.)
-	DynaString iconSheetPath;
 
 	/// Standard cursors.
 	GLFWcursor* cursors[6];
@@ -135,9 +135,7 @@ typedef enum WimaAssertType {
 	WIMA_ASSERT_APP_DRAW_FUNC,
 	WIMA_ASSERT_APP_ERROR_FUNC,
 	WIMA_ASSERT_APP_FONT_PATH,
-	WIMA_ASSERT_APP_ICON_SHEET_PATH,
 	WIMA_ASSERT_APP_FONT_READ,
-	WIMA_ASSERT_APP_ICON_SHEET_READ,
 	WIMA_ASSERT_APP_NUM_ICONS,
 
 	WIMA_ASSERT_WIN,
@@ -217,6 +215,8 @@ typedef enum WimaAssertType {
 	WIMA_ASSERT_CURSOR_HOT,
 
 	WIMA_ASSERT_PTR_NULL,
+
+	WIMA_ASSERT_PATH_NULL,
 
 	//! @endcond Doxygen suppress.
 

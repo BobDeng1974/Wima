@@ -159,8 +159,8 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	glfwSetMonitorCallback(wima_callback_monitorConnected);
 
 	// Set the icons.
-	if (wg.numIcons > 0) {
-		glfwSetWindowIcon(win, wg.numIcons, wg.icons);
+	if (wg.numAppIcons > 0) {
+		glfwSetWindowIcon(win, wg.numAppIcons, wg.appIcons);
 	}
 
 	// Make sure the window knows its GLFW counterpart.
@@ -234,13 +234,12 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Create the NanoVG context.
 	window->render.nvg = nvgCreateGL3(NVG_ANTIALIAS);
 
-	// Load the font and icons.
+	// Load the font.
 	window->render.font = nvgCreateFont(window->render.nvg, "default", dstr_str(wg.fontPath));
-	window->render.icons = nvgCreateImage(window->render.nvg, dstr_str(wg.iconSheetPath), 0);
 
 	// Load the app icon.
-	if (wg.numIcons) {
-		glfwSetWindowIcon(win, wg.numIcons, wg.icons);
+	if (wg.numAppIcons) {
+		glfwSetWindowIcon(win, wg.numAppIcons, wg.appIcons);
 	}
 
 	// Set the clear color for this context.
@@ -1467,8 +1466,9 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	float w, h;
 
 	// Estimate the submenu arrow width.
-	float arrowWidth = wima_ui_label_estimateWidth(&win->render, WIMA_ICONID(28,2), NULL);
+	float arrowWidth = WIMA_MENU_ARROW_SIZE;
 
+	// Get a pointer to the first item.
 	WimaMenuItem* item = menu->items;
 
 	// Estimate width.

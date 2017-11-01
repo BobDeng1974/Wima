@@ -24,8 +24,9 @@
 #
 #	****** END LICENSE BLOCK ******
 
-# We use the nanovg and yc includes, so we need this.
+# We use the nanovg, nanosvg, and yc includes, so we need this.
 include_directories("../lib/nanovg/src")
+include_directories("../lib/nanosvg/src")
 include_directories("../lib/yc/include")
 
 # Make sure we know what the GLFW CMake target is.

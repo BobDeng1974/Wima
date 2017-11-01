@@ -67,7 +67,7 @@ wima_assert_msgs_decl;
 
 WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
                      uint32_t numIcons,    const char* iconPaths[],
-                     const char* fontPath, const char* iconSheetPath)
+                     const char* fontPath)
 {
 	wassert(name != NULL, WIMA_ASSERT_APP_NAME);
 
@@ -76,9 +76,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 
 	// Check that we can access the font and icon sheets.
 	wassert(fontPath != NULL, WIMA_ASSERT_APP_FONT_PATH);
-	wassert(iconSheetPath != NULL, WIMA_ASSERT_APP_ICON_SHEET_PATH);
 	wassert(access(fontPath, F_OK|R_OK) != -1, WIMA_ASSERT_APP_FONT_READ);
-	wassert(access(iconSheetPath, F_OK|R_OK) != -1, WIMA_ASSERT_APP_ICON_SHEET_READ);
 
 	// Check to make sure the icons are good.
 	wassert(numIcons <= WIMA_MAX_ICONS, WIMA_ASSERT_APP_NUM_ICONS);
@@ -87,24 +85,17 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.funcs = funcs;
 
 	// Clear before trying to set.
+	wg.icons = NULL;
 	wg.regions = NULL;
 	wg.workspaces = NULL;
 	wg.name = NULL;
 	wg.props = NULL;
 	wg.windows = NULL;
 	wg.fontPath = NULL;
-	wg.iconSheetPath = NULL;
 
 	// Create and if error, exit.
 	wg.fontPath = dstr_create(fontPath);
 	if (yunlikely(!wg.fontPath)) {
-		wima_exit();
-		return WIMA_STATUS_MALLOC_ERR;
-	}
-
-	// Create and if error, exit.
-	wg.iconSheetPath = dstr_create(iconSheetPath);
-	if (yunlikely(!wg.iconSheetPath)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -151,6 +142,13 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
+	// Create and if error, exit.
+	wg.icons = dvec_create(0, sizeof(WimaIcn), NULL);
+	if (yunlikely(!wg.icons)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
 	// Initialize GLFW and exit on error.
 	if (yunlikely(!glfwInit())) {
 		wima_exit();
@@ -188,7 +186,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 			image.height = y;
 
 			// Add the icon to the list.
-			wg.icons[i] = image;
+			wg.appIcons[i] = image;
 		}
 		else {
 
@@ -198,7 +196,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 			}
 
 			// Exit.
-			wg.numIcons = i;
+			wg.numAppIcons = i;
 			wima_exit();
 
 			return WIMA_STATUS_IMAGE_LOAD_ERR;
@@ -206,7 +204,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Make sure to set the number of icons.
-	wg.numIcons = numIcons;
+	wg.numAppIcons = numIcons;
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -273,9 +271,9 @@ void wima_exit() {
 	wima_assert_init;
 
 	// Free the icon images, if they exist.
-	if (wg.numIcons) {
-		for (int i = 0; i < wg.numIcons; ++i) {
-			stbi_image_free(wg.icons[i].pixels);
+	if (wg.numAppIcons) {
+		for (int i = 0; i < wg.numAppIcons; ++i) {
+			stbi_image_free(wg.appIcons[i].pixels);
 		}
 	}
 
@@ -285,8 +283,8 @@ void wima_exit() {
 	}
 
 	// Free the icon sheet path, if it exists.
-	if (wg.iconSheetPath) {
-		dstr_free(wg.iconSheetPath);
+	if (wg.icons) {
+		dvec_free(wg.icons);
 	}
 
 	// Free the regions, if they exist.

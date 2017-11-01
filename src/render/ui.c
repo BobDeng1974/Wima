@@ -631,9 +631,15 @@ void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float 
 	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, textColor, WIMA_ALIGN_LEFT,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
 
-	// If there is a sub menu, draw an arrow.
+	// If there is a sub menu...
 	if (hasSub) {
-		wima_ui_icon(ctx, w - WIMA_ICON_SHEET_RES, y + 5, WIMA_ICONID(2,28));
+
+		// Calculate the color.
+		WimaColor arrowTrans = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_WIDGET]._color, WIMA_TRANSPARENT_ALPHA);
+
+		// Draw the arrow.
+		wima_ui_arrow(ctx, w - WIMA_NUMBER_ARROW_SIZE - WIMA_MENU_ARROW_PADDING,
+		              y + 5, WIMA_NUMBER_ARROW_SIZE, arrowTrans);
 	}
 }
 
@@ -1026,38 +1032,66 @@ void wima_ui_inset(WimaRenderContext* ctx, float x, float y, float w, float h, f
 	nvgStroke(ctx->nvg);
 }
 
-void wima_ui_icon(WimaRenderContext* ctx, float x, float y, int iconid) {
+void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
-	int ix, iy, u, v;
+	// TODO: Make sure the icon is rendered at the correct size and place.
 
-	// If no icons loaded, return.
-	if (ctx->icons < 0) {
+	// If icon is invalid, return.
+	if (icon >= dvec_len(wg.icons)) {
 		return;
 	}
 
-	// Get the icon coordinates.
-	ix = iconid & 0xff;
-	iy = (iconid >> 8) & 0xff;
-	u = WIMA_ICON_SHEET_OFFSET_X + ix * WIMA_ICON_SHEET_GRID;
-	v = WIMA_ICON_SHEET_OFFSET_Y + iy * WIMA_ICON_SHEET_GRID;
+	// Get the vector image.
+	WimaIcn img = dvec_get(wg.icons, icon);
 
-	// Draw a rectangle.
-	nvgBeginPath(ctx->nvg);
-	nvgRect(ctx->nvg, x, y, WIMA_ICON_SHEET_RES, WIMA_ICON_SHEET_RES);
+	// Loop through the shapes in the image.
+	for (NSVGshape* shape = img->shapes; shape != NULL; shape = shape->next) {
 
-	// Get the image pattern.
-	NVGpaint paint = nvgImagePattern(ctx->nvg, x - u, y - v,
-	                                 WIMA_ICON_SHEET_WIDTH,
-	                                 WIMA_ICON_SHEET_HEIGHT,
-	                                 0, ctx->icons, 1);
+		// If a shape isn't visible, skip it.
+		if (!(shape->flags & NSVG_FLAGS_VISIBLE)) {
+			continue;
+		}
 
-	// Fill the rectangle.
-	nvgFillPaint(ctx->nvg, paint);
-	nvgFill(ctx->nvg);
+		// Set the style.
+		nvgFillColor(ctx->nvg, wima_icon_color(shape->fill.color));
+		nvgStrokeColor(ctx->nvg, wima_icon_color(shape->stroke.color));
+		nvgStrokeWidth(ctx->nvg, shape->strokeWidth);
+
+		// Loop through the paths in the shape.
+		for (NSVGpath* path = shape->paths; path != NULL; path = path->next) {
+
+			// Start drawing the path.
+			nvgBeginPath(ctx->nvg);
+			nvgMoveTo(ctx->nvg, path->pts[0], path->pts[1]);
+
+			// Loop through the points in the path.
+			for (int i = 0; i < path->npts - 1; i += 3) {
+
+				// Bezier to the next point.
+				float* p = &path->pts[i * 2];
+				nvgBezierTo(ctx->nvg, p[2], p[3], p[4], p[5], p[6], p[7]);
+			}
+
+			// If the path is closed, close it.
+			if (path->closed) {
+				nvgClosePath(ctx->nvg);
+			}
+
+			// If the shape is filled, fill it.
+			if (shape->fill.type) {
+				nvgFill(ctx->nvg);
+			}
+
+			// If the shape is stroked, stroke it.
+			if (shape->stroke.type) {
+				nvgStroke(ctx->nvg);
+			}
+		}
+	}
 }
 
 void wima_ui_dropShadow(WimaRenderContext* ctx, float x, float y, float w, float h,

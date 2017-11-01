@@ -45,10 +45,6 @@
 #include <wima/render.h>
 #include <wima/layout.h>
 
-#include "../src/global.h"
-
-wima_assert_msgs_decl;
-
 bool cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e);
 bool cb_scroll(WimaWidget wih, WimaScrollEvent e);
 bool cb_char(WimaWidget wih, WimaCharEvent e);
@@ -120,7 +116,7 @@ WimaStatus cb_draw(WimaWidget item, WimaRenderContext* ctx) {
 	wima_render_label(ctx, r.x + 2, r.y + 2, width, height, WIMA_ICONID(0,0), stuff);
 #endif
 
-	wima_ui_label(ctx, r.x, r.y, r.w, r.h, WIMA_ICONID(0,0), buffer);
+	wima_ui_label(ctx, r.x, r.y, r.w, r.h, WIMA_ICON_INVALID, buffer);
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -366,9 +362,7 @@ int main() {
 	appfuncs.close = cb_close;
 
 	// Initialize Wima and check for success.
-	WimaStatus status = wima_init("Wima Test App", appfuncs, 0, NULL,
-	                              "../res/DejaVuSans.ttf",
-	                              "../res/blender_icons16.png");
+	WimaStatus status = wima_init("Wima Test App", appfuncs, 0, NULL, "../res/DejaVuSans.ttf");
 	if (status) {
 		return status;
 	}

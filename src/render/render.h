@@ -43,6 +43,7 @@ extern "C" {
 #endif
 
 #include <nanovg.h>
+#include <nanosvg.h>
 
 #include <wima/wima.h>
 #include <wima/render.h>
@@ -211,7 +212,51 @@ typedef union WimaImg {
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-// Text.
+// Icons.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup icon_internal icon_internal
+ * Internal functions and data structures for icons.
+ * @{
+ */
+
+/**
+ * Wima's definition of icons.
+ */
+typedef NSVGimage* WimaIcn;
+
+/**
+ * @def WIMA_ICON_RED
+ * A mask for the red channel in an unsigned int.
+ */
+#define WIMA_ICON_RED   (0x000000FF)
+
+/**
+ * @def WIMA_ICON_GREEN
+ * A mask for the green channel in an unsigned int.
+ */
+#define WIMA_ICON_GREEN (0x0000FF00)
+
+/**
+ * @def WIMA_ICON_BLUE
+ * A mask for the blue channel in an unsigned int.
+ */
+#define WIMA_ICON_BLUE  (0x00FF0000)
+
+/**
+ * Creates an NVGcolor from a color as stored by NanoSVG.
+ * @param color	The color to convert.
+ * @return		The color as a NVGcolor.
+ */
+NVGcolor wima_icon_color(unsigned int color) yinline;
+
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Theme.
 ////////////////////////////////////////////////////////////////////////////////
 
 // TODO: Put these in the theme, except for font size.
@@ -286,6 +331,11 @@ typedef union WimaImg {
 #define WIMA_SCROLLBAR_RADIUS 7
 // Shade intensity of active scrollbar.
 #define WIMA_SCROLLBAR_ACTIVE_SHADE 15
+
+// Size of sub menu arrow padding.
+#define WIMA_MENU_ARROW_PADDING 2
+// Size of sub menu arrow (with padding).
+#define WIMA_MENU_ARROW_SIZE WIMA_NUMBER_ARROW_SIZE + WIMA_MENU_ARROW_PADDING + WIMA_MENU_ARROW_PADDING
 
 // Max glyphs for position testing.
 #define WIMA_MAX_GLYPHS 1024

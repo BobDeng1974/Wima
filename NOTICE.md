@@ -56,6 +56,12 @@ licensed under the following license:
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 > THE SOFTWARE.
 
+## Bug Icon
+
+Adapted from [Antu package development debugger](https://commons.wikimedia.org/wiki/File:Antu_package_development_debugger.svg),
+which is licensed under the [Creative Commons](https://creativecommons.org/)
+[Attribution-Share Alike 3.0 Unported license](https://creativecommons.org/licenses/by-sa/3.0/deed.en).
+
 ## Fonts
 
 Fonts are &copy; Bitstream (see below). DejaVu changes are in public domain.

@@ -128,6 +128,9 @@ typedef enum WimaStatus {
 	/// Returned when an image fails to load.
 	WIMA_STATUS_IMAGE_LOAD_ERR = 143,
 
+	/// Returned when the user tries to create too many icons.
+	WIMA_STATUS_ICON_MAX       = 144,
+
 } WimaStatus;
 
 /**
@@ -137,26 +140,6 @@ typedef enum WimaStatus {
 ////////////////////////////////////////////////////////////////////////////////
 // Forward declarations for handles.
 ////////////////////////////////////////////////////////////////////////////////
-
-/**
- * @defgroup icon icon
- * @{
- */
-
-/**
- * A handle to an icon.
- */
-typedef uint16_t WimaIcon;
-
-/**
- * @def WIMA_ICON_INVALID
- * A handle indicating an invalid icon.
- */
-#define WIMA_ICON_INVALID ((WimaIcon) -1)
-
-/**
- * @}
- */
 
 /**
  * @defgroup region region
@@ -2551,13 +2534,12 @@ typedef struct WimaAppFuncs {
  * @param iconPaths		An array of file names, where each is an
  *						app icon of different size.
  * @param fontPath		The path to the font to use.
- * @param iconSheetPath	The path to the icon sheet to use.
  * @return				WIMA_STATUS_SUCCESS on success, or an
  *						error code otherwise.
  */
 WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
                      uint32_t numIcons,    const char* iconPaths[],
-                     const char* fontPath, const char* iconSheetPath);
+                     const char* fontPath);
 
 /**
  * The main rendering and event loop.
