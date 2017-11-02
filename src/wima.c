@@ -262,7 +262,7 @@ WimaStatus wima_main() {
 		win = glfwGetCurrentContext();
 
 		// Break if we should close.
-		if (yunlikely(glfwWindowShouldClose(win))) {
+		if (yunlikely(!win || glfwWindowShouldClose(win))) {
 			break;
 		}
 
