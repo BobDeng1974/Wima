@@ -86,7 +86,7 @@ static const char* const unitNames[] = {
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaIcon wima_icon_register(const char* path, WimaIconUnit unit, float dpi) {
+WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 
 	wima_assert_init;
 
@@ -126,7 +126,7 @@ WimaIcon wima_icon_debug() {
 	if (yunlikely(debug == WIMA_ICON_INVALID)) {
 
 		// Load it.
-		debug = wima_icon_register("../res/bug.svg", WIMA_ICON_PX, 96.0f);
+		debug = wima_icon_load("../res/bug.svg", WIMA_ICON_PX, 96.0f);
 
 		// If the icon couldn't load, abort.
 		if (yunlikely(debug == WIMA_ICON_INVALID)) {

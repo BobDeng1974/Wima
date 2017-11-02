@@ -650,7 +650,7 @@ typedef enum WimaIconUnit {
  * @param dpi	The dots per inch of the icon.
  * @return		The newly-created icon.
  */
-WimaIcon wima_icon_register(const char* path, WimaIconUnit unit, float dpi);
+WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi);
 
 /**
  * Returns the debug icon. This function
