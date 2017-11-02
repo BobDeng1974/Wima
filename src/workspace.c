@@ -142,6 +142,10 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwksp, DynaNode node, WimaRegi
 	// Set the area type.
 	wan.area.type = reg;
 
+	// Make sure this is cleared.
+	wan.area.ctx.items = NULL;
+	wan.area.ctx.itemCount = 0;
+
 	// Add the node to the tree and check for error.
 	DynaStatus status = dtree_add(wksp, node, &wan);
 	if (yunlikely(status)) {

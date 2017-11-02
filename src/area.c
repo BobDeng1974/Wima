@@ -516,8 +516,10 @@ void wima_area_destroy(void* ptr) {
 
 	if (WIMA_AREA_IS_LEAF(area)) {
 
-		// Free the items arrays.
-		yfree(area->area.ctx.items);
+		// Free the item's arrays, if necessary.
+		if (area->area.ctx.items) {
+			yfree(area->area.ctx.items);
+		}
 
 		// If the user didn't allocate anything, just return.
 		if (!area->area.user) {
