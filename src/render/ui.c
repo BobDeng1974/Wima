@@ -634,12 +634,10 @@ void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float 
 	// If there is a sub menu...
 	if (hasSub) {
 
-		// Calculate the color.
-		WimaColor arrowTrans = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_WIDGET]._color, WIMA_TRANSPARENT_ALPHA);
-
 		// Draw the arrow.
 		wima_ui_arrow(ctx, w - WIMA_NUMBER_ARROW_SIZE - WIMA_MENU_ARROW_PADDING,
-		              y + 5, WIMA_NUMBER_ARROW_SIZE, arrowTrans);
+		              y + 2 + h / 2 - WIMA_NUMBER_ARROW_SIZE / 2,
+		              WIMA_NUMBER_ARROW_SIZE, t[WIMA_THEME_WIDGET_WIDGET]._color);
 	}
 }
 
