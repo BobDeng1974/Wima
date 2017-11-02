@@ -157,3 +157,7 @@ NVGcolor wima_icon_color(unsigned int color) {
 
 	return nvgRGB(r, g, b);
 }
+
+void wima_icon_destroy(void* icon) {
+	nsvgDelete(*((WimaIcn*) icon));
+}

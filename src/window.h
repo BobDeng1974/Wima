@@ -337,7 +337,7 @@ void wima_window_popImage(WimaWin* win);
  * @param win	The window to free.
  * @pre			@a win must be valid.
  */
-void wima_window_free(WimaWin* win);
+void wima_window_destroy(void* ptr);
 
 /**
  * Sets @a win as dirty, and if @a layout is true, forces a layout.

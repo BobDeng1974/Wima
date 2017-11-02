@@ -235,6 +235,12 @@ typedef NSVGimage* WimaIcn;
 NVGcolor wima_icon_color(unsigned int color) yinline;
 
 /**
+ * A destructor for icons.
+ * @param icon	A pointer to the icon to destroy.
+ */
+void wima_icon_destroy(void* icon);
+
+/**
  * @}
  */
 

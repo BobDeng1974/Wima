@@ -138,14 +138,14 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Create and if error, exit.
-	wg.workspaces = dvec_create(0, sizeof(WimaWksp), NULL);
+	wg.workspaces = dvec_create(0, sizeof(WimaWksp), wima_workspace_destroy);
 	if (yunlikely(!wg.workspaces)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
-	wg.icons = dvec_create(0, sizeof(WimaIcn), NULL);
+	wg.icons = dvec_create(0, sizeof(WimaIcn), wima_icon_destroy);
 	if (yunlikely(!wg.icons)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
@@ -160,7 +160,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 
 	// Create and if error, exit.
 	wg.imageFlags = dvec_create(0, sizeof(WimaImageFlags), NULL);
-	if (yunlikely(!wg.icons)) {
+	if (yunlikely(!wg.imageFlags)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -189,7 +189,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	for (int i = 0; i < numIcons; ++i) {
 
 		// Load the image data using stb_image.
-		data = stbi_load(iconPaths[i], &x, &y, &components, 3);
+		data = stbi_load(iconPaths[i], &x, &y, &components, 4);
 
 		// If everything looks valid...
 		if (data && components == 4) {
@@ -320,16 +320,6 @@ void wima_exit() {
 
 	// Free the workspaces, if they exist.
 	if (wg.workspaces) {
-
-		// Get the length for the next loop.
-		size_t len = dvec_len(wg.workspaces);
-
-		// Loop over each item and free them all.
-		for(size_t i = 0; i < len; ++i) {
-			dtree_free(dvec_get(wg.workspaces, i));
-		}
-
-		// Free the actual list.
 		dvec_free(wg.workspaces);
 	}
 
@@ -350,29 +340,13 @@ void wima_exit() {
 
 	// Free the windows, if they exist.
 	if (wg.windows) {
-
-		// Get the length for the next loop.
-		size_t len = dvec_len(wg.windows);
-
-		// Loop over each item and free them all.
-		for (int i = 0; i < len; ++i) {
-
-			// Get the pointer.
-			WimaWin* win = dvec_get(wg.windows, i);
-
-			// If the window IS valid, free it.
-			if (win->window) {
-				wima_window_free(win);
-			}
-		}
-
-		// Free the actual list.
 		dvec_free(wg.windows);
 	}
 
-	// Free the name, if it exists.
+	// If the name exists...
 	if (wg.name) {
 
+		// Free the name.
 		dstr_free(wg.name);
 
 		// Clear this so we know Wima is not initialized.

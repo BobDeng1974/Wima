@@ -560,7 +560,7 @@ typedef enum WimaAction {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * @defgroup events events
+ * @defgroup event event
  * Data structures for events.
  * @{
  */
@@ -2167,9 +2167,11 @@ bool wima_window_needsLayout(WimaWindow wwh) yinline;
  * dialogs (like how Blender handles file opening
  * and saving). However, most of the time, users
  * should use overlays.
- * @param wwh	The window to query.
- * @return		The current workspace.
- * @pre			@a wwh must be a valid WimaWindow.
+ * @param wwh		The window to query.
+ * @return			The current workspace.
+ * @pre				@a wwh must be a valid WimaWindow.
+ * @ptr_lifetime	The returned tree should be freed
+ *					by the client using dtree_free().
  */
 DynaTree wima_window_areas(WimaWindow wwh);
 

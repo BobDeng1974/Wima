@@ -67,6 +67,8 @@ typedef DynaTree WimaWksp;
  */
 bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n);
 
+void wima_workspace_destroy(void* ptr);
+
 /**
  * @}
  */

@@ -206,13 +206,6 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 static bool wima_area_node_valid(DynaTree regions, DynaNode node);
 
 /**
- * Recursive function for freeing areas.
- * @param areas	The tree to free.
- * @param node	The current node being freed.
- */
-static void wima_area_node_free(DynaTree areas, DynaNode node);
-
-/**
  * Recursive function to draw a tree of areas.
  * @param ctx	The context to render to.
  * @param areas	The tree of areas to draw.
@@ -517,33 +510,11 @@ static bool wima_area_node_valid(DynaTree regions, DynaNode node) {
 	return result;
 }
 
-void wima_area_free(DynaTree areas) {
+void wima_area_destroy(void* ptr) {
 
-	wima_assert_init;
-	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
+	WimaAr* area = (WimaAr*) ptr;
 
-	// Free the sub areas.
-	wima_area_node_free(areas, dtree_root());
-
-	// Free the tree.
-	dtree_free(areas);
-}
-
-static void wima_area_node_free(DynaTree areas, DynaNode node) {
-
-	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
-
-	// Get the particular area that we care about.
-	WimaAr* area = dtree_node(areas, node);
-
-	// We do something different depending on what type of node it is.
-	if (WIMA_AREA_IS_PARENT(area)) {
-
-		// Free the children.
-		wima_area_node_free(areas, dtree_left(node));
-		wima_area_node_free(areas, dtree_right(node));
-	}
-	else {
+	if (WIMA_AREA_IS_LEAF(area)) {
 
 		// Free the items arrays.
 		yfree(area->area.ctx.items);

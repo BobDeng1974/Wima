@@ -69,7 +69,7 @@ WimaWorkspace wima_workspace_register() {
 	}
 
 	// Create the workspace and check for error.
-	WimaWksp wksp = dtree_create(0, sizeof(WimaAr), NULL);
+	WimaWksp wksp = dtree_create(0, sizeof(WimaAr), wima_area_destroy);
 	if (yunlikely(!wksp)) {
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_WORKSPACE_INVALID;
@@ -170,4 +170,8 @@ bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n) {
 
 	// Return the condition.
 	return root || (dtree_exists(wksp, p) && WIMA_AREA_IS_PARENT((WimaAr*) dtree_node(wksp, p)));
+}
+
+void wima_workspace_destroy(void* ptr) {
+	dtree_free(*((DynaTree*) ptr));
 }

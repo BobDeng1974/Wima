@@ -249,18 +249,11 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Get the pointer to the app name.
 	const char* name = dstr_str(wg.name);
 
-	// Create the window name.
+	// Create the window name. I do this first
+	// because GLFW does not keep a copy of the
+	// name, so Wima must.
 	wwin.name = dstr_create(name);
 	if (yunlikely(!wwin.name)) {
-		wima_window_free(&wwin);
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_WINDOW_INVALID;
-	}
-
-	// Create the image vector and check for error.
-	wwin.images = dvec_create(0, sizeof(int), NULL);
-	if (yunlikely(!wwin.images)) {
-		wima_window_free(&wwin);
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_WINDOW_INVALID;
 	}
@@ -268,8 +261,19 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Create the window, and check for error.
 	GLFWwindow* win = glfwCreateWindow(size.w, size.h, name, NULL, NULL);
 	if (yunlikely(!win)) {
-		wima_window_free(&wwin);
+		dstr_free(wwin.name);
 		wima_error(WIMA_STATUS_WINDOW_ERR);
+		return WIMA_WINDOW_INVALID;
+	}
+
+	// Make sure the window knows its GLFW counterpart.
+	wwin.window = win;
+
+	// Create the image vector and check for error.
+	wwin.images = dvec_create(0, sizeof(int), NULL);
+	if (yunlikely(!wwin.images)) {
+		wima_window_destroy(&wwin);
+		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_WINDOW_INVALID;
 	}
 
@@ -302,9 +306,6 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	if (wg.numAppIcons > 0) {
 		glfwSetWindowIcon(win, wg.numAppIcons, wg.appIcons);
 	}
-
-	// Make sure the window knows its GLFW counterpart.
-	wwin.window = win;
 
 	WimaWindow idx;
 
@@ -366,7 +367,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 	// Load the context.
 	if (yunlikely(!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))) {
-		wima_window_free(window);
+		wima_window_destroy(window);
 		wima_error(WIMA_STATUS_OPENGL_ERR);
 		return WIMA_WINDOW_INVALID;
 	}
@@ -397,7 +398,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 			// Check for error and handle it.
 			if (yunlikely(status !=WIMA_STATUS_SUCCESS)) {
-				wima_window_free(window);
+				wima_window_destroy(window);
 				wima_error(status);
 				return WIMA_WINDOW_INVALID;
 			}
@@ -971,7 +972,7 @@ DynaTree wima_window_areas(WimaWindow wwh) {
 	int nodes = dtree_nodes(winareas);
 
 	// Create a new tree and check for error.
-	DynaTree areas = dtree_create(nodes, sizeof(WimaAr), NULL);
+	DynaTree areas = dtree_create(nodes, sizeof(WimaAr), wima_area_destroy);
 	if (yunlikely(!areas)) {
 		return NULL;
 	}
@@ -1006,7 +1007,7 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 	if (!window->areas) {
 
 		// Create the area tree.
-		window->areas = dtree_create(dtree_nodes(wksp), sizeof(WimaAr), NULL);
+		window->areas = dtree_create(dtree_nodes(wksp), sizeof(WimaAr), wima_area_destroy);
 
 		// Check for error.
 		if (yunlikely(!window->areas)) {
@@ -1052,7 +1053,7 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 	if (!window->areas) {
 
 		// Create the area tree.
-		window->areas = dtree_create(dtree_nodes(areas), sizeof(WimaAr), NULL);
+		window->areas = dtree_create(dtree_nodes(areas), sizeof(WimaAr), wima_area_destroy);
 
 		// Check for error.
 		if (yunlikely(!window->areas)) {
@@ -1480,57 +1481,42 @@ void wima_window_popImage(WimaWin* win) {
 	nvgDeleteImage(win->render.nvg, id);
 }
 
-void wima_window_free(WimaWin* win) {
+void wima_window_destroy(void* ptr) {
 
 	wima_assert_init;
 
+	WimaWin* win = (WimaWin*) ptr;
+
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 
-	// If the name exists, free it.
-	if (win->name) {
-		dstr_free(win->name);
-	}
+	// If the GLFW window exists, the window
+	// is valid and needs destruction.
+	if (win->window) {
 
-	// If the NanoVG context exists...
-	NVGcontext* nvg = win->render.nvg;
-	if (nvg) {
-
-		// Make sure the vector exists.
-		if (win->images) {
-
-			// Cache this.
-			size_t len = dvec_len(win->images);
-
-			if (len > 0) {
-
-				// Cache these.
-				int* images = dvec_get(win->images, 0);
-				NVGcontext* nvg = win->render.nvg;
-
-				// Loop through the images and delete them all.
-				for (size_t i = 0; i < len; ++i) {
-					nvgDeleteImage(nvg, images[i]);
-				}
-			}
+		// If the NanoVG context exists, delete
+		// it. This will also delete the images.
+		NVGcontext* nvg = win->render.nvg;
+		if (nvg) {
+			nvgDeleteGL3(nvg);
 		}
 
-		// Delete the context.
-		nvgDeleteGL3(nvg);
-	}
+		// Delete the vector of images, if it exists.
+		if (win->images) {
+			dvec_free(win->images);
+		}
 
-	// Delete the vector of images, if it exists.
-	if (win->images) {
-		dvec_free(win->images);
-	}
+		// Free the area tree, if it exists.
+		if (win->areas) {
+			dtree_free(win->areas);
+		}
 
-	// Free the area tree, if it exists.
-	if (win->areas) {
-		wima_area_free(win->areas);
-	}
-
-	// If the GLFW window exists, destroy it.
-	if (win->window) {
+		// Destroy the GLFW window.
 		glfwDestroyWindow(win->window);
+
+		// If the name exists, free it.
+		if (win->name) {
+			dstr_free(win->name);
+		}
 	}
 }
 
