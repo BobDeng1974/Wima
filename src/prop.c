@@ -1025,6 +1025,27 @@ void wima_prop_free(WimaProperty wph) {
 	prop->idx = WIMA_PROP_INVALID;
 }
 
+#ifdef __YASSERT__
+bool wima_prop_valid(WimaProperty wph) {
+
+	wima_assert_init;
+
+	// Make sure the handle is within range.
+	bool valid = wph < dvec_len(wg.props);
+
+	// If the handle's within range...
+	if (valid) {
+
+		// Get the info.
+		WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+
+		// Check that it is valid.
+		valid = prop->idx != WIMA_PROP_INVALID;
+	}
+
+	return valid;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -1146,27 +1167,6 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 
 	// Return the appropriate result.
 	return status ? WIMA_PROP_INVALID : idx;
-}
-
-#ifdef __YASSERT__
-bool wima_prop_valid(WimaProperty wph) {
-
-	wima_assert_init;
-
-	// Make sure the handle is within range.
-	bool valid = wph < dvec_len(wg.props);
-
-	// If the handle's within range...
-	if (valid) {
-
-		// Get the info.
-		WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-
-		// Check that it is valid.
-		valid = prop->idx != WIMA_PROP_INVALID;
-	}
-
-	return valid;
 }
 
 static bool wima_prop_enum_namesValid(const char* names[], uint32_t numNames) {
