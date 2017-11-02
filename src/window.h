@@ -333,8 +333,8 @@ WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags f
 void wima_window_popImage(WimaWin* win);
 
 /**
- * Destroys a window.
- * @param ptr	The window to destroy.
+ * Destroys a window. This is a Dyna DestructFunc.
+ * @param ptr	A pointer to the window to destroy.
  */
 void wima_window_destroy(void* ptr);
 

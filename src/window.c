@@ -270,7 +270,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	wwin.window = win;
 
 	// Create the image vector and check for error.
-	wwin.images = dvec_create(0, sizeof(int), NULL);
+	wwin.images = dvec_create(0, NULL, sizeof(int));
 	if (yunlikely(!wwin.images)) {
 		wima_window_destroy(&wwin);
 		wima_error(WIMA_STATUS_MALLOC_ERR);
@@ -972,7 +972,7 @@ DynaTree wima_window_areas(WimaWindow wwh) {
 	int nodes = dtree_nodes(winareas);
 
 	// Create a new tree and check for error.
-	DynaTree areas = dtree_create(nodes, sizeof(WimaAr), wima_area_destroy);
+	DynaTree areas = dtree_create(nodes, wima_area_destroy, sizeof(WimaAr));
 	if (yunlikely(!areas)) {
 		return NULL;
 	}
@@ -1007,7 +1007,7 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 	if (!window->areas) {
 
 		// Create the area tree.
-		window->areas = dtree_create(dtree_nodes(wksp), sizeof(WimaAr), wima_area_destroy);
+		window->areas = dtree_create(dtree_nodes(wksp), wima_area_destroy, sizeof(WimaAr));
 
 		// Check for error.
 		if (yunlikely(!window->areas)) {
@@ -1053,7 +1053,7 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 	if (!window->areas) {
 
 		// Create the area tree.
-		window->areas = dtree_create(dtree_nodes(areas), sizeof(WimaAr), wima_area_destroy);
+		window->areas = dtree_create(dtree_nodes(areas), wima_area_destroy, sizeof(WimaAr));
 
 		// Check for error.
 		if (yunlikely(!window->areas)) {
