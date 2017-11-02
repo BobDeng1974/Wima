@@ -511,12 +511,12 @@ void wima_prop_list_push(WimaProperty wph, WimaPropListItem item) yinline;
 /**
  * Pushes @a item onto the list in @a wph at @a idx.
  * @param wph	The property whose list will be pushed onto.
- * @param item	The item to push.
  * @param idx	The index to push at.
+ * @param item	The item to push.
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_LIST.
  */
-void wima_prop_list_pushAt(WimaProperty wph, WimaPropListItem item, uint32_t idx) yinline;
+void wima_prop_list_pushAt(WimaProperty wph, uint32_t idx, WimaPropListItem item) yinline;
 
 /**
  * Pops the item at the back of the list in @a wph off.

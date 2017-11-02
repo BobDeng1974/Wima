@@ -669,7 +669,7 @@ void wima_prop_list_push(WimaProperty wph, WimaPropListItem item) {
 	}
 }
 
-void wima_prop_list_pushAt(WimaProperty wph, WimaPropListItem item, uint32_t idx) {
+void wima_prop_list_pushAt(WimaProperty wph, uint32_t idx, WimaPropListItem item) {
 
 	wima_assert_init;
 
@@ -1157,8 +1157,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 	prop.type = type;
 
 	// Push on the nvector.
-	const void* ptrs[] = { &prop, data };
-	DynaStatus status = dnvec_push(wg.props, ptrs);
+	DynaStatus status = dnvec_push(wg.props, &prop, data);
 
 	// Return the appropriate result.
 	return status ? WIMA_PROP_INVALID : idx;
