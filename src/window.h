@@ -304,12 +304,33 @@ typedef struct WimaWin {
 	float pixelRatio;
 
 	/// The list of textures.
-	DynaVector textures;
+	DynaVector images;
 
 	/// The UI context for the window.
 	WimaWinCtx ctx;
 
 } WimaWin;
+
+/**
+ * Adds an image to a window. This allows the NanoVG
+ * context on the window to create a texture.
+ * @param win	The window to add the image to.
+ * @param path	The path to the image file.
+ * @param flags	The flags to add the image with.
+ * @return		WIMA_STATUS_SUCCESS on success, an
+ *				error code otherwise.
+ * @pre			@a win must not be NULL.
+ */
+WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags flags);
+
+/**
+ * Pops an image from a window. This should only
+ * be used when there was an error adding an image
+ * to a window. In any other case, the vectors of
+ * images in windows could mismatch.
+ * @param win	The window to pop an image from.
+ */
+void wima_window_popImage(WimaWin* win);
 
 /**
  * Frees a window.

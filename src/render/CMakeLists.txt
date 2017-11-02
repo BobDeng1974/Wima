@@ -37,6 +37,7 @@ set(WIMA_RENDER_SRC
 	"color.c"
 	"paint.c"
 	"icon.c"
+	"image.c"
 	"theme.c"
 	"style.c"
 	"path.c"

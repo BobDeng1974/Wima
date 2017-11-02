@@ -113,6 +113,57 @@ typedef struct WimaRenderContext WimaRenderContext;
  */
 
 /**
+ * A handle to an image.
+ */
+typedef uint16_t WimaImage;
+
+/**
+ * @def WIMA_IMAGE_INVALID
+ * A handle indicating an invalid image.
+ */
+#define WIMA_IMAGE_INVALID ((WimaImage) -1)
+
+/**
+ * @def WIMA_IMAGE_MAX
+ * The max number of images that can be registered.
+ */
+#define WIMA_IMAGE_MAX WIMA_IMAGE_INVALID
+
+/**
+ * The flags that a user can load an image with.
+ */
+typedef enum WimaImageFlags {
+
+	/// Generate mipmaps during creation of the image.
+	WIMA_IMAGE_GENERATE_MIPMAPS = 1<<0,
+
+	/// Repeat image in X direction.
+	WIMA_IMAGE_REPEATX          = 1<<1,
+
+	/// Repeat image in Y direction.
+	WIMA_IMAGE_REPEATY          = 1<<2,
+
+	/// Flips (inverses) image in Y direction when rendered.
+	WIMA_IMAGE_FLIPY            = 1<<3,
+
+	/// Image data has premultiplied alpha.
+	WIMA_IMAGE_PREMULTIPLIED    = 1<<4,
+
+	/// Image interpolation is nearest instead of linear.
+	WIMA_IMAGE_NEAREST          = 1<<5,
+
+} WimaImageFlags;
+
+/**
+ * Loads an image from @a path with @a flags.
+ * @param path	The path to the image file.
+ * @param flags	The flags to load the image with.
+ * @return		The newly-created image.
+ * @pre			@a path must not be NULL.
+ */
+WimaImage wima_image_load(const char* const path, WimaImageFlags flags);
+
+/**
  * @}
  */
 

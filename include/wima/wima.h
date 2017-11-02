@@ -128,8 +128,11 @@ typedef enum WimaStatus {
 	/// Returned when an image fails to load.
 	WIMA_STATUS_IMAGE_LOAD_ERR = 143,
 
+	/// Returned when the user tries to create too many images.
+	WIMA_STATUS_IMAGE_MAX      = 144,
+
 	/// Returned when the user tries to create too many icons.
-	WIMA_STATUS_ICON_MAX       = 144,
+	WIMA_STATUS_ICON_MAX       = 145,
 
 } WimaStatus;
 

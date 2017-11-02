@@ -93,8 +93,11 @@ typedef struct WimaG {
 	/// Icons.
 	DynaVector icons;
 
-	/// Textures.
-	DynaVector textures;
+	/// Image paths.
+	DynaVector imagePaths;
+
+	/// Image flags.
+	DynaVector imageFlags;
 
 	/// The group property for all themes.
 	WimaProperty theme;
@@ -211,7 +214,9 @@ typedef enum WimaAssertType {
 	WIMA_ASSERT_MONITOR,
 	WIMA_ASSERT_MONITOR_RAMP_SIZE,
 
+	WIMA_ASSERT_IMG,
 	WIMA_ASSERT_IMG_DATA,
+	WIMA_ASSERT_IMG_MISMATCH,
 
 	WIMA_ASSERT_CURSOR,
 	WIMA_ASSERT_CURSOR_DIM,

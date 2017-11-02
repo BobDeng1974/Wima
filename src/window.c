@@ -221,8 +221,11 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	WimaWin wwin;
 
 	// Clear these before assigning.
+	wwin.render.nvg = NULL;
+	wwin.images = NULL;
 	wwin.areas = NULL;
 	wwin.user = NULL;
+	wwin.window = NULL;
 	wwin.fbsize.w = 0;
 	wwin.fbsize.h = 0;
 	wwin.winsize.w = 0;
@@ -249,12 +252,23 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Create the window name.
 	wwin.name = dstr_create(name);
 	if (yunlikely(!wwin.name)) {
+		wima_window_free(&wwin);
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_WINDOW_INVALID;
+	}
+
+	// Create the image vector and check for error.
+	wwin.images = dvec_create(0, sizeof(int), NULL);
+	if (yunlikely(!wwin.images)) {
+		wima_window_free(&wwin);
+		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_WINDOW_INVALID;
 	}
 
 	// Create the window, and check for error.
 	GLFWwindow* win = glfwCreateWindow(size.w, size.h, name, NULL, NULL);
 	if (yunlikely(!win)) {
+		wima_window_free(&wwin);
 		wima_error(WIMA_STATUS_WINDOW_ERR);
 		return WIMA_WINDOW_INVALID;
 	}
@@ -347,21 +361,42 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Set the swap interval.
 	glfwSwapInterval(1);
 
+	// Get a pointer to the new window.
+	WimaWin* window = dvec_get(wg.windows, idx);
+
 	// Load the context.
 	if (yunlikely(!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))) {
-		glfwTerminate();
+		wima_window_free(window);
 		wima_error(WIMA_STATUS_OPENGL_ERR);
 		return WIMA_WINDOW_INVALID;
 	}
-
-	// Get a pointer to the new window.
-	WimaWin* window = dvec_get(wg.windows, idx);
 
 	// Create the NanoVG context.
 	window->render.nvg = nvgCreateGL3(NVG_ANTIALIAS);
 
 	// Load the font.
 	window->render.font = nvgCreateFont(window->render.nvg, "default", dstr_str(wg.fontPath));
+
+	// Cache these.
+	size_t imgLen = dvec_len(wg.imagePaths);
+	WimaImageFlags* flags = dvec_get(wg.imageFlags, 0);
+
+	// Create the already added images.
+	for (size_t i = 0; i < imgLen; ++i) {
+
+		// Get the path.
+		DynaString path = dvec_get(wg.imagePaths, i);
+
+		// Add the image.
+		WimaStatus status = wima_window_addImage(window, dstr_str(path), flags[i]);
+
+		// Check for error and handle it.
+		if (yunlikely(status !=WIMA_STATUS_SUCCESS)) {
+			wima_window_free(window);
+			wima_error(status);
+			return WIMA_WINDOW_INVALID;
+		}
+	}
 
 	// Load the app icon.
 	if (wg.numAppIcons) {
@@ -1417,17 +1452,75 @@ static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files);
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags flags) {
+
+	// Create the image in NanoVG.
+	int id = nvgCreateImage(win->render.nvg, path, flags);
+
+	// Push the id onto the window's vector.
+	return dvec_push(win->images, &id) ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
+}
+
+void wima_window_popImage(WimaWin* win) {
+
+	// Get the length.
+	size_t len = dvec_len(win->images);
+
+	// Get the id.
+	int id = *((int*) dvec_get(win->images, len));
+
+	// Pop off the vector and delete from NanoVG.
+	dvec_pop(win->images);
+	nvgDeleteImage(win->render.nvg, id);
+}
+
 void wima_window_free(WimaWin* win) {
 
 	wima_assert_init;
 
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 
-	// Free the name and the NanoVG context.
-	dstr_free(win->name);
-	nvgDeleteGL3(win->render.nvg);
+	// If the name exists, free it.
+	if (win->name) {
+		dstr_free(win->name);
+	}
 
-	wima_area_free(win->areas);
+	// If the NanoVG context exists...
+	NVGcontext* nvg = win->render.nvg;
+	if (nvg) {
+
+		// Make sure the vector exists.
+		if (win->images) {
+
+			// Cache these.
+			size_t len = dvec_len(win->images);
+			int* images = dvec_get(win->images, 0);
+			NVGcontext* nvg = win->render.nvg;
+
+			// Loop through the images and delete them all.
+			for (size_t i = 0; i < len; ++i) {
+				nvgDeleteImage(nvg, images[i]);
+			}
+		}
+
+		// Delete the context.
+		nvgDeleteGL3(nvg);
+	}
+
+	// Delete the vector of images, if it exists.
+	if (win->images) {
+		dvec_free(win->images);
+	}
+
+	// Free the area tree, if it exists.
+	if (win->areas) {
+		wima_area_free(win->areas);
+	}
+
+	// If the GLFW window exists, destroy it.
+	if (win->window) {
+		glfwDestroyWindow(win->window);
+	}
 }
 
 void wima_window_setDirty(WimaWin* win, bool layout) {

@@ -83,7 +83,8 @@ const char* wima_error_descs[] = {
     "client tried to create too many regions",
     "no child exists for the given property",
     "image failed to load",
-    "client tried to create too many icons",
+    "client tried to load too many images",
+    "client tried to load too many icons",
 };
 
 /**
@@ -174,7 +175,9 @@ const char* wima_assert_msgs[] = {
     "monitor is NULL",
     "gamma ramp size is not 256",
 
+    "image is not valid",
     "image data is NULL",
+    "image list has a mismatch; data is corrupted; this is a bug in Wima",
 
     "cursor is NULL",
     "cursor dimensions are invalid",
