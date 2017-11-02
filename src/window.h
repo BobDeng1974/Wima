@@ -333,9 +333,8 @@ WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags f
 void wima_window_popImage(WimaWin* win);
 
 /**
- * Frees a window.
- * @param win	The window to free.
- * @pre			@a win must be valid.
+ * Destroys a window.
+ * @param ptr	The window to destroy.
  */
 void wima_window_destroy(void* ptr);
 

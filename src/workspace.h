@@ -67,6 +67,10 @@ typedef DynaTree WimaWksp;
  */
 bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n);
 
+/**
+ * Destroys a workspace. This is a Dyna DestructFunc.
+ * @param ptr	A pointer to the workspace to destroy.
+ */
 void wima_workspace_destroy(void* ptr);
 
 /**
