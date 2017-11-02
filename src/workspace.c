@@ -69,7 +69,7 @@ WimaWorkspace wima_workspace_register() {
 	}
 
 	// Create the workspace and check for error.
-	WimaWksp wksp = dtree_create(0, sizeof(WimaAr), wima_area_destroy);
+	WimaWksp wksp = dtree_create(0, wima_area_destroy, sizeof(WimaAr));
 	if (yunlikely(!wksp)) {
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_WORKSPACE_INVALID;

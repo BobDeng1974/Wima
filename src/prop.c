@@ -194,7 +194,7 @@ WimaProperty wima_prop_group_register(const char* name, const char* label, const
 	WimaPropData prop;
 
 	// Create the group.
-	prop._group = dvec_create(0, sizeof(WimaProperty), NULL);
+	prop._group = dvec_create(0, NULL, sizeof(WimaProperty));
 	wassert(prop._group != NULL, WIMA_ASSERT_PROP_LIST_NULL);
 
 	// Register the property.
@@ -607,7 +607,7 @@ WimaProperty wima_prop_list_register(const char* name, const char* label, const 
 	WimaPropData prop;
 
 	// Create the list and send error if any.
-	DynaVector list = dvec_create(0, sizeof(WimaPropListItem), NULL);
+	DynaVector list = dvec_create(0, NULL, sizeof(WimaPropListItem));
 	if (yunlikely(list == NULL)) {
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_PROP_INVALID;
@@ -686,7 +686,7 @@ void wima_prop_list_pushAt(WimaProperty wph, WimaPropListItem item, uint32_t idx
 	wassert(dvec_len(data->_list.list) > idx, WIMA_ASSERT_PROP_LIST_IDX);
 
 	// Push the item onto the vector.
-	DynaStatus status = dvec_pushAt(data->_list.list, &item, idx);
+	DynaStatus status = dvec_pushAt(data->_list.list, idx, &item);
 
 	// Check for error and handle.
 	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
@@ -958,12 +958,22 @@ WimaProperty wima_prop_operator_register(const char* name, const char* label,
 
 void wima_prop_free(WimaProperty wph) {
 
+	// Create an array of void pointers.
+	void* ptrs[] = {
+	    dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph),
+	    dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph)
+	};
+
+	// Free the property.
+	wima_prop_destroy(2, ptrs);
+}
+
+void wima_prop_destroy(size_t count, void** ptrs) {
+
 	wima_assert_init;
 
-	wassert(wph < dvec_len(wg.props), WIMA_ASSERT_PROP);
-
 	// Get the info.
-	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+	WimaPropInfo* prop = ptrs[WIMA_PROP_INFO_IDX];
 
 	// We might have an early out.
 	if (yunlikely(prop->idx == WIMA_PROP_INVALID)) {
@@ -971,29 +981,14 @@ void wima_prop_free(WimaProperty wph) {
 	}
 
 	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+	WimaPropData* data = ptrs[WIMA_PROP_DATA_IDX];
 
 	// Switch on the property type.
 	switch (prop->type) {
 
 		case WIMA_PROP_GROUP:
-		{
-			// Get the number of sub props.
-			size_t len = dvec_len(data->_group);
-
-			// Get the handles.
-			WimaProperty* handles = dvec_get(data->_group, 0);
-
-			// Loop over the handles and recursively free them.
-			for (size_t i = 0; i < len; i++) {
-				wima_prop_free(handles[i]);
-			}
-
-			// Free the vector.
 			dvec_free(data->_group);
-
 			break;
-		}
 
 		case WIMA_PROP_BOOL:
 		case WIMA_PROP_INT:

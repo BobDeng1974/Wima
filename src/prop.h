@@ -234,6 +234,13 @@ typedef union WimaPropData {
  */
 void wima_prop_free(WimaProperty wph);
 
+/**
+ * Destroys a property. This is a Dyna NDestructFunc.
+ * @param count	The count of arrays to destroy elements from.
+ * @param ptrs	The array of elements to destroy.
+ */
+void wima_prop_destroy(size_t count, void** ptrs);
+
 #ifdef __YASSERT__
 /**
  * Checks to see if a property is

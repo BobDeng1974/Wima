@@ -110,18 +110,14 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Create and if error, exit.
-	wg.windows = dvec_create(0, sizeof(WimaWin), NULL);
+	wg.windows = dvec_create(0, NULL, sizeof(WimaWin));
 	if (yunlikely(!wg.windows)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
-	// These are to initialize the DynaNVector.
-	const size_t sizes[] = { sizeof(WimaPropInfo), sizeof(WimaPropData) };
-	const DestructFunc dtors[] = { NULL, NULL };
-
 	// Create and if error, exit.
-	wg.props = dnvec_create(2, 0, sizes, dtors);
+	wg.props = dnvec_create(2, 0, wima_prop_destroy, sizeof(WimaPropInfo), sizeof(WimaPropData));
 	if (yunlikely(!wg.props)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
@@ -131,21 +127,21 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.theme = wima_theme_load(wg.themes, wg.themeStarts);
 
 	// Create and if error, exit.
-	wg.regions = dvec_create(0, sizeof(WimaReg), NULL);
+	wg.regions = dvec_create(0, NULL, sizeof(WimaReg));
 	if (yunlikely(!wg.regions)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
-	wg.workspaces = dvec_create(0, sizeof(WimaWksp), wima_workspace_destroy);
+	wg.workspaces = dvec_create(0, wima_workspace_destroy, sizeof(WimaWksp));
 	if (yunlikely(!wg.workspaces)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
-	wg.icons = dvec_create(0, sizeof(WimaIcn), wima_icon_destroy);
+	wg.icons = dvec_create(0, wima_icon_destroy, sizeof(WimaIcn));
 	if (yunlikely(!wg.icons)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
@@ -159,7 +155,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Create and if error, exit.
-	wg.imageFlags = dvec_create(0, sizeof(WimaImageFlags), NULL);
+	wg.imageFlags = dvec_create(0, NULL, sizeof(WimaImageFlags));
 	if (yunlikely(!wg.imageFlags)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
