@@ -377,24 +377,30 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Load the font.
 	window->render.font = nvgCreateFont(window->render.nvg, "default", dstr_str(wg.fontPath));
 
-	// Cache these.
+	// Cache this.
 	size_t imgLen = dvec_len(wg.imagePaths);
-	WimaImageFlags* flags = dvec_get(wg.imageFlags, 0);
 
-	// Create the already added images.
-	for (size_t i = 0; i < imgLen; ++i) {
+	// If there are images to load...
+	if (imgLen > 0) {
 
-		// Get the path.
-		DynaString path = dvec_get(wg.imagePaths, i);
+		// Cache this.
+		WimaImageFlags* flags = dvec_get(wg.imageFlags, 0);
 
-		// Add the image.
-		WimaStatus status = wima_window_addImage(window, dstr_str(path), flags[i]);
+		// Create the already added images.
+		for (size_t i = 0; i < imgLen; ++i) {
 
-		// Check for error and handle it.
-		if (yunlikely(status !=WIMA_STATUS_SUCCESS)) {
-			wima_window_free(window);
-			wima_error(status);
-			return WIMA_WINDOW_INVALID;
+			// Get the path.
+			DynaString path = dvec_get(wg.imagePaths, i);
+
+			// Add the image.
+			WimaStatus status = wima_window_addImage(window, dstr_str(path), flags[i]);
+
+			// Check for error and handle it.
+			if (yunlikely(status !=WIMA_STATUS_SUCCESS)) {
+				wima_window_free(window);
+				wima_error(status);
+				return WIMA_WINDOW_INVALID;
+			}
 		}
 	}
 
@@ -1492,14 +1498,19 @@ void wima_window_free(WimaWin* win) {
 		// Make sure the vector exists.
 		if (win->images) {
 
-			// Cache these.
+			// Cache this.
 			size_t len = dvec_len(win->images);
-			int* images = dvec_get(win->images, 0);
-			NVGcontext* nvg = win->render.nvg;
 
-			// Loop through the images and delete them all.
-			for (size_t i = 0; i < len; ++i) {
-				nvgDeleteImage(nvg, images[i]);
+			if (len > 0) {
+
+				// Cache these.
+				int* images = dvec_get(win->images, 0);
+				NVGcontext* nvg = win->render.nvg;
+
+				// Loop through the images and delete them all.
+				for (size_t i = 0; i < len; ++i) {
+					nvgDeleteImage(nvg, images[i]);
+				}
 			}
 		}
 
