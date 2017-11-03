@@ -1199,7 +1199,7 @@ void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, floa
 
 	// Set the stroke style and stroke.
 	nvgStrokeColor(ctx->nvg, c.nvg);
-	nvgStrokeWidth(ctx->nvg,1);
+	nvgStrokeWidth(ctx->nvg, 1);
 	nvgStroke(ctx->nvg);
 }
 
