@@ -1,7 +1,7 @@
 /*
  *	***** BEGIN LICENSE BLOCK *****
  *
- *	Copyright 2017 Project LFyre
+ *	Copyright 2017 Yzena Tech
  *
  *	Licensed under the Apache License, Version 2.0 (the "Apache License")
  *	with the following modification; you may not use this file except in

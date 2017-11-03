@@ -52,8 +52,8 @@ contributors should familiarize themselves with them.
 
 ## Commit Messages
 
-Projects under Project LFyre, including Wima, use the commit message guidelines
-laid out in [this blog post](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
+Projects under Yzena, including Wima, use the commit message guidelines laid out
+in [this blog post](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
 
 ## Semantic Versioning
 
