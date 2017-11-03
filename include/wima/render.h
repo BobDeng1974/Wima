@@ -2169,7 +2169,7 @@ typedef struct WimaUiCorners {
  * @pre				ctx must not be NULL.
  */
 void wima_ui_label(WimaRenderContext* ctx,
-    float x, float y, float w, float h, int iconid, const char *label);
+    float x, float y, float w, float h, WimaIcon iconid, const char *label);
 
 /**
  * Draw a operator button  with its upper left origin at (x,y) and
@@ -2191,7 +2191,7 @@ void wima_ui_label(WimaRenderContext* ctx,
  */
 void wima_ui_operatorBtn(WimaRenderContext* ctx,
     float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaWidgetState state,
-    int iconid, const char *label);
+    WimaIcon iconid, const char *label);
 
 /**
  * Draw a radio button with its upper left origin at (x,y) and
@@ -2213,7 +2213,7 @@ void wima_ui_operatorBtn(WimaRenderContext* ctx,
  */
 void wima_ui_radioBtn(WimaRenderContext* ctx,
     float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaWidgetState state,
-    int iconid, const char *label);
+    WimaIcon iconid, const char *label);
 
 /**
  * Calculate the corresponding text position for given
@@ -2235,7 +2235,7 @@ void wima_ui_radioBtn(WimaRenderContext* ctx,
  * @pre				ctx must not be NULL.
  */
 int wima_ui_textField_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
-    int iconid, const char *text, int px, int py);
+    WimaIcon iconid, const char *text, int px, int py);
 
 /**
  * Draw a text field with its upper left origin at (x,y) and size of (w,h),
@@ -2262,7 +2262,7 @@ int wima_ui_textField_pos(WimaRenderContext* ctx, float x, float y, float w, flo
  */
 void wima_ui_textField(WimaRenderContext* ctx,
     float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaWidgetState state,
-    int iconid, const char *text, int cbegin, int cend);
+    WimaIcon iconid, const char *text, int cbegin, int cend);
 
 /**
  * Draw an option (checkbox) button with its upper left origin at
@@ -2302,7 +2302,7 @@ void wima_ui_optionBtn(WimaRenderContext* ctx,
  */
 void wima_ui_choiceBtn(WimaRenderContext* ctx,
     float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaWidgetState state,
-    int iconid, const char *label);
+    WimaIcon iconid, const char *label);
 
 /**
  * Draw a color button with its upper left origin at
@@ -2419,7 +2419,7 @@ void wima_ui_menu_background(WimaRenderContext* ctx,
  * @pre				ctx must not be NULL.
  */
 void wima_ui_menu_label(WimaRenderContext* ctx,
-    float x, float y, float w, float h, int iconid, const char *label);
+    float x, float y, float w, float h, WimaIcon iconid, const char *label);
 
 /**
  * Draw a menu separator. Widget looks best when @a h
@@ -2453,7 +2453,7 @@ void wima_ui_menu_separator(WimaRenderContext* ctx, float x, float y, float w, f
  */
 void wima_ui_menu_item(WimaRenderContext* ctx,
     float x, float y, float w, float h, WimaWidgetState state,
-    int iconid, const char *label, bool hasSub);
+    WimaIcon iconid, const char *label, bool hasSub);
 
 /**
  * Draw a tooltip background with its upper left origin
@@ -2532,7 +2532,7 @@ void wima_ui_node_wire_colored(WimaRenderContext* ctx, float x0, float y0, float
  * @pre				ctx must not be NULL.
  */
 void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, float h,
-    WimaWidgetState state, int iconid, const char *label, WimaColor titleCol);
+    WimaWidgetState state, WimaIcon iconid, const char *label, WimaColor titleCol);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -2549,7 +2549,7 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
  * @return			The ideal width of the label.
  * @pre				ctx must not be NULL.
  */
-float wima_ui_label_estimateWidth(WimaRenderContext* ctx, int iconid, const char *label);
+float wima_ui_label_estimateWidth(WimaRenderContext* ctx, WimaIcon iconid, const char *label);
 
 /**
  * Returns the height for a label with @a iconid as icon, @a label as
@@ -2562,7 +2562,7 @@ float wima_ui_label_estimateWidth(WimaRenderContext* ctx, int iconid, const char
  * @return			The ideal height of the label.
  * @pre				ctx must not be NULL.
  */
-float wima_ui_label_estimateHeight(WimaRenderContext* ctx, int iconid, const char *label, float width);
+float wima_ui_label_estimateHeight(WimaRenderContext* ctx, WimaIcon iconid, const char *label, float width);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -2735,7 +2735,7 @@ void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, floa
  * @pre				ctx must not be NULL.
  */
 void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w, float h,
-    int iconid, WimaColor color, WimaTextAlign align, float fontsize, const char *label,
+    WimaIcon iconid, WimaColor color, WimaTextAlign align, float fontsize, const char *label,
     const char *value);
 
 /**
@@ -2758,7 +2758,7 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
  * @pre				ctx must not be NULL.
  */
 void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, float h,
-    int iconid, WimaColor color, WimaColor shadow, WimaTextAlign align,
+    WimaIcon iconid, WimaColor color, WimaColor shadow, WimaTextAlign align,
     float fontsize, const char *label);
 
 /**
@@ -2781,7 +2781,7 @@ void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, 
  * @pre				ctx must not be NULL.
  */
 int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
-    int iconid, float fontsize, const char *label, int px, int py);
+    WimaIcon iconid, float fontsize, const char *label, int px, int py);
 
 /**
  * Draw an optional icon @a iconid, an optional @a label and
@@ -2808,7 +2808,7 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
  * @pre				ctx must not be NULL.
  */
 void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, float h,
-    int iconid, WimaColor color, float fontsize, const char *label,
+    WimaIcon iconid, WimaColor color, float fontsize, const char *label,
     WimaColor caretCol, int cbegin, int cend);
 
 /**

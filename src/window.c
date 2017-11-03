@@ -1084,7 +1084,7 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-void wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) {
+void wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, WimaIcon icon) {
 
 	wima_assert_init;
 
@@ -1154,7 +1154,7 @@ const char* wima_window_menuTitle(WimaWindow wwh) {
 	return win->menuTitle;
 }
 
-int wima_window_menuIcon(WimaWindow wwh) {
+WimaIcon wima_window_menuIcon(WimaWindow wwh) {
 
 	wima_assert_init;
 
@@ -1672,7 +1672,7 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	// Cache these. If parentWidth is 0, that means
 	// that this is the highest level menu.
 	bool isTopAndContext = WIMA_WIN_MENU_IS_CONTEXT(win) && parentWidth == 0;
-	bool hasTitle = isTopAndContext && (win->menuTitle || win->menuIcon >= 0);
+	bool hasTitle = isTopAndContext && (win->menuTitle || win->menuIcon != WIMA_ICON_INVALID);
 
 	// If the menu has a title, factor the title into the width.
 	if (hasTitle) {

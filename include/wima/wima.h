@@ -1109,7 +1109,7 @@ typedef struct WimaMenuItem {
 	/// The state of the item.
 	WimaWidgetState state;
 
-	/// The item's icon, or -1 for none.
+	/// The item's icon, or WIMA_ICON_INVALID for none.
 	WimaIcon icon;
 
 	/// Whether or not the item has a submenu,
@@ -2203,7 +2203,7 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas);
  * @param icon	The icon to put next to the title.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-void wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, int icon) yinline;
+void wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, WimaIcon icon) yinline;
 
 /**
  * Sets the context menu on the window.
@@ -2237,7 +2237,7 @@ const char* wima_window_menuTitle(WimaWindow wwh) yinline;
  * @pre			@a wwh must be a valid WimaWindow.
  * @pre			The current menu must be a context menu.
  */
-int wima_window_menuIcon(WimaWindow wwh) yinline;
+WimaIcon wima_window_menuIcon(WimaWindow wwh) yinline;
 
 /**
  * Removes the menu from the window.

@@ -116,7 +116,7 @@ static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float de
 //  Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, int iconid, const char *label) {
+void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon icon, const char *label) {
 
 	wima_assert_init;
 
@@ -126,12 +126,12 @@ void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, i
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_REGULAR);
 
 	// Draw the label.
-	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, t[WIMA_THEME_WIDGET_TEXT]._color,
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, t[WIMA_THEME_WIDGET_TEXT]._color,
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
 void wima_ui_operatorBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
-                         WimaWidgetCornerFlags flags, WimaWidgetState state, int iconid,
+                         WimaWidgetCornerFlags flags, WimaWidgetState state, WimaIcon icon,
                          const char *label)
 {
 	wima_assert_init;
@@ -161,12 +161,12 @@ void wima_ui_operatorBtn(WimaRenderContext* ctx, float x, float y, float w, floa
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, textColor, WIMA_ALIGN_CENTER,
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_CENTER,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
 void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
-                          WimaWidgetState state, int iconid, const char *label)
+                          WimaWidgetState state, WimaIcon icon, const char *label)
 {
 	wima_assert_init;
 
@@ -195,20 +195,20 @@ void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, textColor, WIMA_ALIGN_CENTER,
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_CENTER,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
 int wima_ui_textField_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
-                            int iconid, const char *text, int px, int py)
+                            WimaIcon icon, const char *text, int px, int py)
 {
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
-	return wima_ui_text_pos(ctx, x, y, w, h, iconid, WIMA_LABEL_FONT_SIZE, text, px, py);
+	return wima_ui_text_pos(ctx, x, y, w, h, icon, WIMA_LABEL_FONT_SIZE, text, px, py);
 }
 
 void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float h,
-                           WimaWidgetCornerFlags flags, WimaWidgetState state, int iconid, const char *text,
+                           WimaWidgetCornerFlags flags, WimaWidgetState state, WimaIcon icon, const char *text,
                            int cbegin, int cend)
 {
 	wima_assert_init;
@@ -243,7 +243,7 @@ void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_caret(ctx, x, y, w, h, iconid, textColor, WIMA_LABEL_FONT_SIZE,
+	wima_ui_label_caret(ctx, x, y, w, h, icon, textColor, WIMA_LABEL_FONT_SIZE,
 	                        text, t[WIMA_THEME_WIDGET_WIDGET]._color, cbegin, cend);
 }
 
@@ -300,7 +300,7 @@ void wima_ui_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 }
 
 void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
-                           WimaWidgetState state, int iconid, const char *label)
+                           WimaWidgetState state, WimaIcon icon, const char *label)
 {
 	wima_assert_init;
 
@@ -329,7 +329,7 @@ void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, textColor,
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor,
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 
 	// Draw the arrow.
@@ -566,7 +566,7 @@ void wima_ui_tooltip_background(WimaRenderContext* ctx, float x, float y, float 
 	wima_ui_dropShadow(ctx, x, y, w, h, WIMA_MENU_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
 }
 
-void wima_ui_menu_label(WimaRenderContext* ctx, float x, float y, float w, float h, int iconid, const char *label) {
+void wima_ui_menu_label(WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon icon, const char *label) {
 
 	wima_assert_init;
 
@@ -576,7 +576,7 @@ void wima_ui_menu_label(WimaRenderContext* ctx, float x, float y, float w, float
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_MENU);
 
 	// Draw the label.
-	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, t[WIMA_THEME_WIDGET_TEXT]._color,
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, t[WIMA_THEME_WIDGET_TEXT]._color,
 	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
 }
 
@@ -600,7 +600,7 @@ void wima_ui_menu_separator(WimaRenderContext* ctx, float x, float y, float w, f
 }
 
 void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float h,
-                           WimaWidgetState state, int iconid, const char *label,
+                           WimaWidgetState state, WimaIcon icon, const char *label,
                            bool hasSub)
 {
 	wima_assert_init;
@@ -628,7 +628,7 @@ void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	// Get the text color.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x, y, w, h, iconid, textColor, WIMA_ALIGN_LEFT,
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_LEFT,
 	                             WIMA_LABEL_FONT_SIZE, label, NULL);
 
 	// If there is a sub menu...
@@ -735,7 +735,7 @@ void wima_ui_node_wire(WimaRenderContext* ctx, float x0, float y0, float x1, flo
 }
 
 void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, float h,
-                                 WimaWidgetState state, int iconid, const char *label,
+                                 WimaWidgetState state, WimaIcon icon, const char *label,
                                  WimaColor titleCol)
 {
 	wima_assert_init;
@@ -767,7 +767,7 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 	WimaColor shadow = wima_color_offset(titleCol, WIMA_BEVEL_SHADE);
 	wima_ui_node_label_icon(ctx, x + WIMA_NODE_ARROW_AREA_WIDTH, y,
 	                            w - WIMA_NODE_ARROW_AREA_WIDTH - WIMA_NODE_MARGIN_SIDE,
-	                            WIMA_NODE_TITLE_HEIGHT, iconid, reg[WIMA_THEME_WIDGET_TEXT]._color,
+	                            WIMA_NODE_TITLE_HEIGHT, icon, reg[WIMA_THEME_WIDGET_TEXT]._color,
 	                            shadow, WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label);
 
 	WimaColor arrowColor;
@@ -822,7 +822,7 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-float wima_ui_label_estimateWidth(WimaRenderContext* ctx, int iconid, const char *label) {
+float wima_ui_label_estimateWidth(WimaRenderContext* ctx, WimaIcon icon, const char *label) {
 
 	wima_assert_init;
 
@@ -832,7 +832,7 @@ float wima_ui_label_estimateWidth(WimaRenderContext* ctx, int iconid, const char
 	int w = WIMA_PAD_LEFT + WIMA_PAD_RIGHT;
 
 	// If there's an icon, add it.
-	if (iconid >= 0) {
+	if (icon != WIMA_ICON_INVALID) {
 		w += WIMA_ICON_SHEET_RES;
 	}
 
@@ -874,7 +874,7 @@ float wima_ui_label_estimateWidth(WimaRenderContext* ctx, int iconid, const char
 	return w;
 }
 
-float wima_ui_label_estimateHeight(WimaRenderContext* ctx, int iconid, const char *label, float width) {
+float wima_ui_label_estimateHeight(WimaRenderContext* ctx, WimaIcon icon, const char *label, float width) {
 
 	wima_assert_init;
 
@@ -887,7 +887,7 @@ float wima_ui_label_estimateHeight(WimaRenderContext* ctx, int iconid, const cha
 	width -= WIMA_TEXT_RADIUS * 2;
 
 	// If there's an icon, add it.
-	if (iconid >= 0) {
+	if (icon != WIMA_ICON_INVALID) {
 		width -= WIMA_ICON_SHEET_RES;
 	}
 
@@ -1219,7 +1219,7 @@ WimaUiCorners wima_ui_corners_rounded(float r, WimaWidgetCornerFlags flags) {
 }
 
 void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w, float h,
-                              int iconid, WimaColor color, WimaTextAlign align, float fontsize,
+                              WimaIcon icon, WimaColor color, WimaTextAlign align, float fontsize,
                               const char *label, const char *value)
 {
 	wima_assert_init;
@@ -1230,8 +1230,8 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
 	float pleft = WIMA_PAD_LEFT;
 
 	// If there is an icon, draw it and add it to the padding.
-	if (iconid >= 0) {
-		wima_ui_icon(ctx, x + 4, y + 5, iconid);
+	if (icon != WIMA_ICON_INVALID) {
+		wima_ui_icon(ctx, x + 4, y + 5, icon);
 		pleft += WIMA_ICON_SHEET_RES;
 	}
 
@@ -1305,7 +1305,7 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
 }
 
 void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, float h,
-                               int iconid, WimaColor color, WimaColor shadow,
+                               WimaIcon icon, WimaColor color, WimaColor shadow,
                                WimaTextAlign align, float fontsize, const char *label)
 {
 	wima_assert_init;
@@ -1344,13 +1344,13 @@ void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, 
 	}
 
 	// Draw the icon, if it exists.
-	if (iconid >= 0) {
-		wima_ui_icon(ctx, x + w - WIMA_ICON_SHEET_RES, y + 3, iconid);
+	if (icon != WIMA_ICON_INVALID) {
+		wima_ui_icon(ctx, x + w - WIMA_ICON_SHEET_RES, y + 3, icon);
 	}
 }
 
 int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
-                        int iconid, float fontsize, const char *label,
+                        WimaIcon icon, float fontsize, const char *label,
                         int px, int py)
 {
 	wima_assert_init;
@@ -1372,7 +1372,7 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
 	float pleft = WIMA_TEXT_RADIUS;
 
 	// If the icon exists, add it to the padding.
-	if (iconid >= 0) {
+	if (icon != WIMA_ICON_INVALID) {
 		pleft += WIMA_ICON_SHEET_RES;
 	}
 
@@ -1423,7 +1423,7 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
 }
 
 void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, float h,
-                         int iconid, WimaColor color, float fontsize,
+                         WimaIcon icon, WimaColor color, float fontsize,
                          const char *label, WimaColor caretCol,
                          int cbegin, int cend)
 {
@@ -1448,8 +1448,8 @@ void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, floa
 	float pleft = WIMA_TEXT_RADIUS;
 
 	// If there is an icon, draw it and add it to the padding.
-	if (iconid >= 0) {
-		wima_ui_icon(ctx, x + 4, y + 2, iconid);
+	if (icon != WIMA_ICON_INVALID) {
+		wima_ui_icon(ctx, x + 4, y + 2, icon);
 		pleft += WIMA_ICON_SHEET_RES;
 	}
 
