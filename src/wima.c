@@ -309,14 +309,15 @@ void wima_exit() {
 		dvec_free(wg.icons);
 	}
 
+	// Free the workspaces, if they exist.
+	// This must be before the regions.
+	if (wg.workspaces) {
+		dvec_free(wg.workspaces);
+	}
+
 	// Free the regions, if they exist.
 	if (wg.regions) {
 		dvec_free(wg.regions);
-	}
-
-	// Free the workspaces, if they exist.
-	if (wg.workspaces) {
-		dvec_free(wg.workspaces);
 	}
 
 	// Free the props, if they exist.

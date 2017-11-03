@@ -529,7 +529,7 @@ void wima_area_destroy(void* ptr) {
 		// Get the region handle.
 		WimaRegion reg = area->area.type;
 
-		wassert(reg >= dvec_len(wg.regions), WIMA_ASSERT_REG);
+		wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
 
 		// Get the list of regions.
 		WimaReg* region = dvec_get(wg.regions, reg);
