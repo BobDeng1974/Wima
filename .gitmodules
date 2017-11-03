@@ -1,6 +1,6 @@
 [submodule "cmake"]
 	path = cmake
-	url = git@github.com:ProjectLFyre/YCMake.git
+	url = git@github.com:YzenaTech/YCMake.git
 	branch = master
 [submodule "lib/nanovg"]
 	path = lib/nanovg

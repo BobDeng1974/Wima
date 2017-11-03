@@ -17,7 +17,7 @@ While Blender is built on top of the C++ OpenGL library
 (written by the Blender developers), Wima uses GLFW, a third-party OpenGL
 library.
 
-Wima is developed by [Project LFyre](http://lfyre.org/).
+Wima is developed by [Yzena](http://yzena.com/).
 
 Wima is Free and Open Source Software (FOSS). It is licensed under a modified
 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.html). The
@@ -29,7 +29,7 @@ used by [Pixar Animation Studios](https://www.pixar.com/) for use on the
 
 Wima is not even in Alpha stage yet; the first prototype has not yet been
 completed. This software is nowhere near ready for use. However, it is being
-developed alongside [Yera](https://github.com/ProjectLFyre/Yera).
+developed alongside [Yera](https://github.com/YzenaTech/Yera).
 
 ## Language
 
