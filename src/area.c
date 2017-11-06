@@ -647,6 +647,12 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 			item.area = node;
 			item.window = area->window;
 
+			// Set the item rectangle.
+			area->area.ctx.items[0].rect.x = 0;
+			area->area.ctx.items[0].rect.y = 0;
+			area->area.ctx.items[0].rect.w = area->rect.w;
+			area->area.ctx.items[0].rect.h = area->rect.h;
+
 			// Draw the area. The draw function is guaranteed to be non-null.
 			status = wg.funcs.draw(item, ctx);
 

@@ -246,12 +246,7 @@ WimaRect wima_widget_rect(WimaWidget wdgt) {
 
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
-	WimaRect rc;/* = {{{
-			pwdgt->margins[0], pwdgt->margins[1],
-			pwdgt->size.v[0], pwdgt->size.v[1]
-	}}};*/
-
-	return rc;
+	return pwdgt->rect;
 }
 
 uint32_t wima_widget_events(WimaWidget wdgt) {
