@@ -89,7 +89,13 @@ typedef uint32_t WimaProperty;
  * @def WIMA_PROP_LIST_INVALID_IDX
  * A handle to an invalid list index.
  */
-#define WIMA_PROP_LIST_INVALID_IDX ((uint32_t) -1)
+#define WIMA_PROP_LIST_INVALID_IDX ((uint16_t) -1)
+
+/**
+ * @def WIMA_PROP_LIST_MAX
+ * The max number of items that can be in a prop list.
+ */
+#define WIMA_PROP_LIST_MAX WIMA_PROP_LIST_INVALID_IDX
 
 /**
  * A function to allow a pointer property to draw itself.
@@ -143,6 +149,22 @@ const char* wima_prop_label(WimaProperty wph) yinline;
 const char* wima_prop_desc(WimaProperty wph) yinline;
 
 /**
+ * Sets @a wph's icon to @a icon.
+ * @param wph	The property to update.
+ * @param icon	The icon to set on @a wph.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ */
+void wima_prop_setIcon(WimaProperty wph, WimaIcon icon) yinline;
+
+/**
+ * Returns the icon associated with @a wph.
+ * @param wph	The property to query.
+ * @return		The icon associated with the property.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ */
+WimaIcon wima_prop_icon(WimaProperty wph) yinline;
+
+/**
  * Returns the @a WimaProperty with @a name. If there is no
  * WimaProperty with @a name, it returns @a WIMA_PROP_INVALID.
  * @param name	The name of the WimaProperty to find.
@@ -172,10 +194,11 @@ void wima_prop_unregister(WimaProperty wph);
  *				used as a label in the UI.
  * @param desc	The description of the property.
  *				This is used as a tooltip.
+ * @param icon	The icon to use with the property.
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
  */
-WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc);
+WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc, WimaIcon icon);
 
 /**
  * Returns the length of the list that @a list has.
@@ -284,11 +307,13 @@ uint32_t wima_prop_list_idx(WimaProperty list) yinline;
  *					used as a label in the UI.
  * @param desc		The description of the property.
  *					This is used as a tooltip.
+ * @param icon	The icon to use with the property.
  * @param initial	The initial value of the property.
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  */
-WimaProperty wima_prop_bool_register(const char* name, const char* label, const char* desc, bool initial);
+WimaProperty wima_prop_bool_register(const char* name, const char* label, const char* desc,
+                                     WimaIcon icon, bool initial);
 
 /**
  * Sets the bool in @a wph to @a val.
@@ -328,6 +353,7 @@ bool wima_prop_bool(WimaProperty wph) yinline;
  *					used as a label in the UI.
  * @param desc		The description of the property.
  *					This is used as a tooltip.
+ * @param icon		The icon to use with the property.
  * @param initial	The initial value of the property.
  * @param min		The min value of the property.
  * @param max		The max value of the property.
@@ -336,7 +362,7 @@ bool wima_prop_bool(WimaProperty wph) yinline;
  * @pre				@a name must not be NULL.
  */
 WimaProperty wima_prop_int_register(const char* name, const char* label, const char* desc,
-                                   int initial, int min, int max, uint32_t step);
+                                    WimaIcon icon, int initial, int min, int max, uint32_t step);
 
 /**
  * Sets the int in @a wph to @a val.
@@ -376,6 +402,7 @@ int wima_prop_int(WimaProperty wph) yinline;
  *					used as a label in the UI.
  * @param desc		The description of the property.
  *					This is used as a tooltip.
+ * @param icon		The icon to use with the property.
  * @param initial	The initial value of the property.
  * @param min		The min value of the property.
  * @param max		The max value of the property.
@@ -384,7 +411,7 @@ int wima_prop_int(WimaProperty wph) yinline;
  * @pre				@a name must not be NULL.
  */
 WimaProperty wima_prop_float_register(const char* name, const char* label, const char* desc,
-                                     float initial, float min, float max, uint32_t step);
+                                      WimaIcon icon, float initial, float min, float max, uint32_t step);
 
 /**
  * Sets the float in @a wph to @a val.
@@ -420,12 +447,14 @@ float wima_prop_float(WimaProperty wph) yinline;
  *				used as a label in the UI.
  * @param desc	The description of the property.
  *				This is used as a tooltip.
+ * @param icon	The icon to use with the property.
  * @param str	The initial string.
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
  * @pre			@a str must not be NULL.
  */
-WimaProperty wima_prop_string_register(const char* name, const char* label, const char* desc, DynaString str);
+WimaProperty wima_prop_string_register(const char* name, const char* label, const char* desc,
+                                       WimaIcon icon, DynaString str);
 
 /**
  * Returns the DynaString contained in @a wph. The actual
@@ -454,6 +483,7 @@ DynaString wima_prop_string(WimaProperty wph) yinline;
  *					used as a label in the UI.
  * @param desc		The description of the property.
  *					This is used as a tooltip.
+ * @param icon		The icon to use with the property.
  * @param names		The names of each index. Wima uses
  *					these as labels.
  * @param num		The number of names.
@@ -462,7 +492,7 @@ DynaString wima_prop_string(WimaProperty wph) yinline;
  * @pre				@a name must not be NULL.
  */
 WimaProperty wima_prop_enum_register(const char* name, const char* label, const char* desc,
-                                    const char* names[], uint32_t num, uint32_t initial);
+                                     WimaIcon icon, const char* names[], uint32_t num, uint32_t initial);
 
 /**
  * Sets the enum index in @a wph to @a idx.
@@ -499,11 +529,13 @@ uint32_t wima_prop_enum_idx(WimaProperty wph) yinline;
  *					used as a label in the UI.
  * @param desc		The description of the property.
  *					This is used as a tooltip.
+ * @param icon		The icon to use with the property.
  * @param initial	The initial color of the property.
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  */
-WimaProperty wima_prop_color_register(const char* name, const char* label, const char* desc, WimaColor initial);
+WimaProperty wima_prop_color_register(const char* name, const char* label, const char* desc,
+                                      WimaIcon icon, WimaColor initial);
 
 /**
  * Sets the color in @a wph to @a color.
@@ -538,6 +570,7 @@ WimaColor wima_prop_color(WimaProperty wph) yinline;
  *					label in the UI.
  * @param desc		The description of the property. This is used
  *					as a tooltip.
+ * @param icon		The icon to use with the property.
  * @param ptr		The initial pointer.
  * @param draw		The function to draw this property.
  * @return			The newly-created @a WimaProperty.
@@ -546,7 +579,7 @@ WimaColor wima_prop_color(WimaProperty wph) yinline;
  *					by the client.
  */
 WimaProperty wima_prop_ptr_register(const char* name, const char* label, const char* desc,
-                                   void* ptr, WimaPropPtrDrawFunc draw);
+                                    WimaIcon icon, void* ptr, WimaPropPtrDrawFunc draw);
 
 /**
  * Returns the pointer contained in @a wph.
@@ -573,13 +606,14 @@ void* wima_prop_ptr(WimaProperty wph) yinline;
  *				used as a label in the UI.
  * @param desc	The description of the property.
  *				This is used as a tooltip.
+ * @param icon	The icon to use with the property.
  * @param op	The function to call when this prop
  *				is clicked.
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
  */
-WimaProperty wima_prop_operator_register(const char* name, const char* label,
-                                        const char* desc, WimaWidgetMouseClickFunc op);
+WimaProperty wima_prop_operator_register(const char* name, const char* label, const char* desc,
+                                         WimaIcon icon, WimaWidgetMouseClickFunc op);
 
 /**
  * @}

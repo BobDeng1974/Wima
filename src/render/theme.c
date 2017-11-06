@@ -635,7 +635,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
 	// Create the main theme property.
-	WimaProperty main = wima_prop_list_register(themePrefix, themeLabel, themeDesc);
+	WimaProperty main = wima_prop_list_register(themePrefix, themeLabel, themeDesc, WIMA_ICON_INVALID);
 
 	// Create the background.
 	WimaProperty bg = wima_theme_loadBackground();
@@ -898,8 +898,10 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 	strcat(buffer, nodeThemeNames[WIMA_THEME_NODE_WIRE_CURVING]);
 
 	// Create the curving prop and link it.
-	child = wima_prop_int_register(buffer, nodeThemeLabels[WIMA_THEME_NODE_WIRE_CURVING],
-	                              nodeDescs[WIMA_THEME_NODE_WIRE_CURVING], 5, 0, 10, 1);
+	child = wima_prop_int_register(buffer,
+	                               nodeThemeLabels[WIMA_THEME_NODE_WIRE_CURVING],
+	                               nodeDescs[WIMA_THEME_NODE_WIRE_CURVING],
+	                               WIMA_ICON_INVALID, 5, 0, 10, 1);
 
 	// Check for error.
 	if (yunlikely(child == WIMA_PROP_INVALID)) {
@@ -1351,16 +1353,16 @@ static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, 
 	switch (type) {
 
 		case WIMA_PROP_LIST:
-			return wima_prop_list_register(buffer, label, desc);
+			return wima_prop_list_register(buffer, label, desc, WIMA_ICON_INVALID);
 
 		case WIMA_PROP_BOOL:
-			return wima_prop_bool_register(buffer, label, desc, initial != 0);
+			return wima_prop_bool_register(buffer, label, desc, WIMA_ICON_INVALID, initial != 0);
 
 		case WIMA_PROP_INT:
-			return wima_prop_int_register(buffer, label, desc, initial, -100, 100, 1);
+			return wima_prop_int_register(buffer, label, desc, WIMA_ICON_INVALID, initial, -100, 100, 1);
 
 		case WIMA_PROP_COLOR:
-			return wima_prop_color_register(buffer, label, desc, colors[initial]);
+			return wima_prop_color_register(buffer, label, desc, WIMA_ICON_INVALID, colors[initial]);
 
 		default:
 			wassert(false, WIMA_ASSERT_SWITCH_DEFAULT);

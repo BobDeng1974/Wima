@@ -83,6 +83,7 @@ const char* wima_error_descs[] = {
     "client tried to create too many regions",
     "no child exists for the given property",
     "child already exists for the given property",
+    "client tried to add too many children to a property",
     "image failed to load",
     "client tried to load too many images",
     "client tried to load too many icons",
@@ -172,6 +173,7 @@ const char* wima_assert_msgs[] = {
     "operator is NULL",
     "prop types do not match",
     "prop is a child; parent reference(s) would be invalid",
+    "list index is invalid",
 
     "monitor is NULL",
     "gamma ramp size is not 256",

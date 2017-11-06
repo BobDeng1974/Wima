@@ -176,7 +176,10 @@ typedef struct WimaPropInfo {
 
 	/// This is how many lists have
 	/// the property in them.
-	uint32_t refs;
+	uint16_t refs;
+
+	/// The prop's icon.
+	WimaIcon icon;
 
 	/// The name of the property. This
 	/// needs to be a unique identifier.
@@ -196,9 +199,6 @@ typedef struct WimaPropInfo {
  * A union for all types of prop data.
  */
 typedef union WimaPropData {
-
-	/// Group property data.
-	DynaVector _group;
 
 	/// Bool property data.
 	bool _bool;

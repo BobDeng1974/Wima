@@ -128,14 +128,17 @@ typedef enum WimaStatus {
 	/// Returned when a prop child already exists.
 	WIMA_STATUS_PROP_CHILD_EXISTS  = 143,
 
+	/// Returns when the user tries to add too many children to a property.
+	WIMA_STATUS_PROP_LIST_MAX      = 144,
+
 	/// Returned when an image fails to load.
-	WIMA_STATUS_IMAGE_LOAD_ERR     = 144,
+	WIMA_STATUS_IMAGE_LOAD_ERR     = 145,
 
 	/// Returned when the user tries to create too many images.
-	WIMA_STATUS_IMAGE_MAX          = 145,
+	WIMA_STATUS_IMAGE_MAX          = 146,
 
 	/// Returned when the user tries to create too many icons.
-	WIMA_STATUS_ICON_MAX           = 146,
+	WIMA_STATUS_ICON_MAX           = 147,
 
 } WimaStatus;
 
