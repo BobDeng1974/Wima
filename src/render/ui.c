@@ -109,9 +109,22 @@ static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float de
                                   NVGtextRow *rows,    int nrows,
                                   int *cr, float *cx,  float *cy);
 
+static const WimaLineCap wima_ui_line_caps[] = {
+    WIMA_CAP_BUTT,
+    WIMA_CAP_ROUND,
+    WIMA_CAP_SQUARE,
+};
+
+static const WimaLineJoin wima_ui_line_joins[] = {
+    WIMA_JOIN_MITER,
+    WIMA_JOIN_ROUND,
+    WIMA_JOIN_ROUND
+};
+
 /**
  * @}
  */
+
 ////////////////////////////////////////////////////////////////////////////////
 //  Public functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -1036,8 +1049,6 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
-	// TODO: Make sure the icon is rendered at the correct size and place.
-
 	// If icon is invalid, return.
 	if (icon >= dvec_len(wg.icons)) {
 		return;
@@ -1063,9 +1074,57 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 		}
 
 		// Set the style.
-		nvgFillColor(ctx->nvg, wima_icon_color(shape->fill.color));
-		nvgStrokeColor(ctx->nvg, wima_icon_color(shape->stroke.color));
 		nvgStrokeWidth(ctx->nvg, shape->strokeWidth);
+		nvgLineCap(ctx->nvg, wima_ui_line_caps[shape->strokeLineCap]);
+		nvgLineJoin(ctx->nvg, wima_ui_line_joins[shape->strokeLineJoin]);
+		nvgMiterLimit(ctx->nvg, shape->miterLimit);
+
+#if 0
+		// Figure out the fill style.
+		switch (shape->fill.type) {
+
+			default:
+
+			case NSVG_PAINT_NONE:
+				break;
+
+			case NSVG_PAINT_COLOR:
+				nvgFillColor(ctx->nvg, wima_color_int(shape->fill.color));
+				break;
+
+			case NSVG_PAINT_LINEAR_GRADIENT:
+				nvgFillPaint(ctx->nvg, wima_paint_svgLinearGradient(ctx, shape->fill.gradient, 1.0f));
+				break;
+
+			case NSVG_PAINT_RADIAL_GRADIENT:
+				nvgFillPaint(ctx->nvg, wima_paint_svgRadialGradient(ctx, shape->fill.gradient, 1.0f));
+				break;
+		}
+
+		// Figure out the stroke style.
+		switch (shape->stroke.type) {
+
+			default:
+
+			case NSVG_PAINT_NONE:
+				break;
+
+			case NSVG_PAINT_COLOR:
+				nvgStrokeColor(ctx->nvg, wima_color_int(shape->stroke.color));
+				break;
+
+			case NSVG_PAINT_LINEAR_GRADIENT:
+				nvgStrokePaint(ctx->nvg, wima_paint_svgLinearGradient(ctx, shape->stroke.gradient, 1.0f));
+				break;
+
+			case NSVG_PAINT_RADIAL_GRADIENT:
+				nvgStrokePaint(ctx->nvg, wima_paint_svgRadialGradient(ctx, shape->stroke.gradient, 1.0f));
+				break;
+		}
+#endif
+
+		nvgFillColor(ctx->nvg, wima_color_int(shape->fill.color));
+		nvgStrokeColor(ctx->nvg, wima_color_int(shape->stroke.color));
 
 		// Loop through the paths in the shape.
 		for (NSVGpath* path = shape->paths; path != NULL; path = path->next) {

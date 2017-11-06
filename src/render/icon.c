@@ -149,15 +149,6 @@ WimaIcon wima_icon_debug() {
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-NVGcolor wima_icon_color(unsigned int color) {
-
-	uint8_t r = (uint8_t) (color & WIMA_ICON_RED);
-	uint8_t g = (uint8_t) ((color & WIMA_ICON_GREEN) >> 8);
-	uint8_t b = (uint8_t) ((color & WIMA_ICON_BLUE) >> 16);
-
-	return nvgRGB(r, g, b);
-}
-
 void wima_icon_destroy(void* icon) {
 	nsvgDelete(*((WimaIcn*) icon));
 }

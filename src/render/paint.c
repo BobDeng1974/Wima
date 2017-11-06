@@ -37,6 +37,7 @@
 #include <yc/assert.h>
 
 #include <nanovg.h>
+#include <nanosvg.h>
 
 #include <wima/render.h>
 
@@ -44,6 +45,10 @@
 #include "../global.h"
 
 wima_assert_msgs_decl;
+
+////////////////////////////////////////////////////////////////////////////////
+// Public functions.
+////////////////////////////////////////////////////////////////////////////////
 
 WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecf s, WimaVecf e,
                                     WimaColor icol, WimaColor ocol)
@@ -109,4 +114,46 @@ WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecf o, WimaSizef 
 	WimaPnt p;
 
 	return p.wima;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Private functions.
+////////////////////////////////////////////////////////////////////////////////
+
+NVGpaint wima_paint_svgLinearGradient(WimaRenderContext* ctx, NSVGgradient* gradient, float alpha) {
+
+	float inverse[6];
+	float sx, sy, ex, ey;
+
+	nvgTransformInverse(inverse, gradient->xform);
+	nvgTransformPoint(&sx, &sy, inverse, 0, 0);
+	nvgTransformPoint(&ex, &ey, inverse, 0, 1);
+
+	return nvgLinearGradient(ctx->nvg, sx, sy, ex, ey,
+	    wima_color_intAlpha(gradient->stops[0].color, alpha),
+	    wima_color_intAlpha(gradient->stops[gradient->nstops - 1].color, alpha));
+}
+
+NVGpaint wima_paint_svgRadialGradient(WimaRenderContext* ctx, NSVGgradient* gradient, float alpha) {
+
+	float inverse[6];
+	float cx, cy, r1, r2, inr, outr;
+
+	nvgTransformInverse(inverse, gradient->xform);
+	nvgTransformPoint(&cx, &cy, inverse, 0, 0);
+	nvgTransformPoint(&r1, &r2, inverse, 0, 1);
+	outr = r2 - cy;
+
+	if (gradient->nstops == 3) {
+		inr = gradient->stops[1].offset * outr;
+	}
+	else {
+		inr = 0;
+	}
+
+	NVGpaint paint = nvgRadialGradient(ctx->nvg, cx, cy, inr, outr,
+	    wima_color_intAlpha(gradient->stops[0].color, alpha),
+	    wima_color_intAlpha(gradient->stops[gradient->nstops - 1].color, alpha));
+
+	return  paint;
 }
