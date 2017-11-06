@@ -62,13 +62,12 @@ extern "C" {
  */
 typedef enum WimaPropType {
 
-	WIMA_PROP_GROUP,
+	WIMA_PROP_LIST,
 	WIMA_PROP_BOOL,
 	WIMA_PROP_INT,
 	WIMA_PROP_FLOAT,
 	WIMA_PROP_STRING,
 	WIMA_PROP_ENUM,
-	WIMA_PROP_LIST,
 	WIMA_PROP_COLOR,
 	WIMA_PROP_PTR,
 	WIMA_PROP_OPERATOR
@@ -91,31 +90,6 @@ typedef uint32_t WimaProperty;
  * A handle to an invalid list index.
  */
 #define WIMA_PROP_LIST_INVALID_IDX ((uint32_t) -1)
-
-/**
- * An opaque struct type to return WimaPropGroup.
- */
-typedef struct WimaPropGroup WimaPropGroup;
-
-/**
- * An item for property that is a list.
- */
-typedef struct WimaPropListItem {
-
-	/// The WIMA_PROP_STRING that has this
-	/// item's name.
-	WimaProperty name;
-
-	/// The item's icon.
-	uint32_t icon;
-
-	/// A pointer to the item's data. This
-	/// is application-dependent, and Wima
-	/// assumes that the client allocates
-	/// and frees this pointer.
-	void* ptr;
-
-} WimaPropListItem;
 
 /**
  * A function to allow a pointer property to draw itself.
@@ -185,14 +159,13 @@ WimaProperty wima_prop_find(const char* name);
 void wima_prop_unregister(WimaProperty wph);
 
 ////////////////////////////////////////////////////////////////////////////////
-// Public functions for group props.
+// Public functions for list props.
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Registers and returns a @a WIMA_PROP_GROUP. It is
- * initially empty.
+ * Registers and returns a @a WIMA_PROP_LIST.
  *
- * Wima will not allow this to be drawn in the UI.
+ * Wima will draw this is the UI as a dropdown.
  * @param name	The name of the property. This needs
  *				to be a unique string identifier.
  * @param label	The label of the property. This is
@@ -202,60 +175,99 @@ void wima_prop_unregister(WimaProperty wph);
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
  */
-WimaProperty wima_prop_group_register(const char* name, const char* label, const char* desc);
+WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc);
 
 /**
- * Links @a child to @a parent (which is a @a WIMA_PROP_GROUP).
- * @param parent	The parent @a WimaProperty to link the @a child to.
- * @param child		The child property to link to the @a parent.
- * @return			@a WIMA_STATUS_SUCCESS on success, an error code otherwise.
- * @pre				@a parent must be a valid WimaProperty.
- * @pre				@a parent must be a @a WIMA_PROP_GROUP.
- * @pre				@a child must be a valid @a WimaProperty.
+ * Returns the length of the list that @a list has.
+ * @param list	The property to query.
+ * @return		The length's of @a list's list.
+ * @pre			@a list must be a valid @a WimaProperty.
+ * @pre			@a list must be a @a WIMA_PROP_LIST.
  */
-WimaStatus wima_prop_group_link(WimaProperty parent, WimaProperty child);
+uint32_t wima_prop_list_len(WimaProperty list) yinline;
 
 /**
- * Unlinks @a child from @a parent (which is a @a WIMA_PROP_GROUP).
- * @param parent	The parent @a WimaProperty to unlink the @a child from.
- * @param child		The child property to unlink from the @a parent.
- * @return			@a WIMA_STATUS_SUCCESS on success, an error code otherwise.
- * @pre				@a parent must be a valid WimaProperty.
- * @pre				@a parent must be a @a WIMA_PROP_GROUP.
- * @pre				@a child must be a valid @a WimaProperty.
+ * Pushes @a child onto the back of the list in @a list.
+ * @param list	The property whose list will be pushed onto.
+ * @param child	The item to push.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a list must be a valid @a WimaProperty.
+ * @pre			@a list must be a @a WIMA_PROP_LIST.
  */
-WimaStatus wima_prop_group_unlink(WimaProperty parent, WimaProperty child);
+WimaStatus wima_prop_list_push(WimaProperty list, WimaProperty child) yinline;
 
 /**
- * Returns a pointer to the WimaPropGroup associated
- * with @a wph, which must be a @a WIMA_PROP_GROUP.
- * @param wph	The @a WimaProperty whose @a WimaPropGroup will be returned.
- * @return		A pointer to the @a WimaPropGroup associated with @a wph.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_GROUP.
+ * Pushes @a child onto the list in @a list at @a idx.
+ * @param list	The property whose list will be pushed onto.
+ * @param idx	The index to push at.
+ * @param child	The item to push.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a list must be a valid @a WimaProperty.
+ * @pre			@a list must be a @a WIMA_PROP_LIST.
  */
-WimaPropGroup* wima_prop_group(WimaProperty wph) yinline;
+WimaStatus wima_prop_list_pushAt(WimaProperty list, uint32_t idx, WimaProperty child) yinline;
 
 /**
- * Returns the @a WimaProperty at @a idx, or @a WIMA_PROP_INVALID
- * if @a idx is out of range.
- * @param group	The @a WimaPropGroup whose child will be returned.
- * @param idx	The index of the child to return.
- * @return		The child @a WimaProperty, if it exists, or
- *				@a WIMA_PROP_INVALID.
- * @pre			@a group must point to a valid @a WimaPropGroup.
+ * Pops the item at the back of the list in @a list off.
+ * @param list	The property whose list will be popped from.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a list must be a valid @a WimaProperty.
+ * @pre			@a list must be a @a WIMA_PROP_LIST.
  */
-WimaProperty wima_prop_group_child(WimaPropGroup* group, uint32_t idx) yinline;
+WimaStatus wima_prop_list_pop(WimaProperty list) yinline;
 
 /**
- * Returns the number of children in @a group.
- * @param group	The @a WimaPropGroup whose number
- *				of children will be returned.
- * @return		The number of children in @a group.
- * @pre			@a group must point to a valid
- *				@a WimaPropGroup.
+ * Pops the item at @a idx of the list in @a list off.
+ * @param list	The property whose list will be popped from.
+ * @param idx	The index to pop from.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a list must be a valid @a WimaProperty.
+ * @pre			@a list must be a @a WIMA_PROP_LIST.
  */
-uint32_t wima_prop_group_children(WimaPropGroup* group) yinline;
+WimaStatus wima_prop_list_popAt(WimaProperty list, uint32_t idx) yinline;
+
+/**
+ * Returns a copy of the item at @a idx in @a list's list.
+ * @param list	The property whose list will be queried.
+ * @param idx	The index of the item to get.
+ * @return		The item at @a idx in @a list's list.
+ * @pre			@a list must be a valid @a WimaProperty.
+ * @pre			@a list must be a @a WIMA_PROP_LIST.
+ */
+WimaProperty wima_prop_list_item(WimaProperty list, uint32_t idx) yinline;
+
+/**
+ * Returns the item at the current index of the list in @a list.
+ * @param list	The property to query.
+ * @return		The item at the current index.
+ * @pre			@a list must be a valid @a WimaProperty.
+ * @pre			@a list must be a @a WIMA_PROP_LIST.
+ */
+WimaProperty wima_prop_list_currentItem(WimaProperty list) yinline;
+
+/**
+ * Updates the current index of the list in @a list to @a idx.
+ * @param list	The property whose index will be updated.
+ * @param idx	The new index.
+ * @pre			@a list must be a valid @a WimaProperty.
+ * @pre			@a list must be a @a WIMA_PROP_LIST.
+ * @pre			@a idx must be with the bounds of the list.
+ */
+void wima_prop_list_updateIdx(WimaProperty list, uint32_t idx) yinline;
+
+/**
+ * Returns the current index of @a list.
+ * @param list	The property to query.
+ * @return		The current index, or WIMA_PROP_LIST_INVALID_IDX
+ *				there are no items in the list.
+ * @pre			@a list must be a valid @a WimaProperty.
+ * @pre			@a list must be a @a WIMA_PROP_LIST.
+ */
+uint32_t wima_prop_list_idx(WimaProperty list) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions for bool props.
@@ -470,109 +482,6 @@ void wima_prop_enum_updateIdx(WimaProperty wph, uint32_t idx) yinline;
  * @pre			@a wph must be a @a WIMA_PROP_ENUM.
  */
 uint32_t wima_prop_enum_idx(WimaProperty wph) yinline;
-
-////////////////////////////////////////////////////////////////////////////////
-// Public functions for list props.
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Registers and returns a @a WIMA_PROP_LIST.
- *
- * Wima will draw this is the UI as a dropdown.
- * @param name	The name of the property. This needs
- *				to be a unique string identifier.
- * @param label	The label of the property. This is
- *				used as a label in the UI.
- * @param desc	The description of the property.
- *				This is used as a tooltip.
- * @return		The newly-created @a WimaProperty.
- * @pre			@a name must not be NULL.
- */
-WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc);
-
-/**
- * Returns the length of the list that @a wph has.
- * @param wph	The property to query.
- * @return		The length's of @a wph's list.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_LIST.
- */
-uint32_t wima_prop_list_len(WimaProperty wph) yinline;
-
-/**
- * Pushes @a item onto the back of the list in @a wph.
- * @param wph	The property whose list will be pushed onto.
- * @param item	The item to push.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_LIST.
- */
-void wima_prop_list_push(WimaProperty wph, WimaPropListItem item) yinline;
-
-/**
- * Pushes @a item onto the list in @a wph at @a idx.
- * @param wph	The property whose list will be pushed onto.
- * @param idx	The index to push at.
- * @param item	The item to push.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_LIST.
- */
-void wima_prop_list_pushAt(WimaProperty wph, uint32_t idx, WimaPropListItem item) yinline;
-
-/**
- * Pops the item at the back of the list in @a wph off.
- * @param wph	The property whose list will be popped from.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_LIST.
- */
-void wima_prop_list_pop(WimaProperty wph) yinline;
-
-/**
- * Pops the item at @a idx of the list in @a wph off.
- * @param wph	The property whose list will be popped from.
- * @param idx	The index to pop from.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_LIST.
- */
-void wima_prop_list_popAt(WimaProperty wph, uint32_t idx) yinline;
-
-/**
- * Returns a copy of the item at @a idx in @a wph's list.
- * @param wph	The property whose list will be queried.
- * @param idx	The index of the item to get.
- * @return		The item at @a idx in @a wph's list.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_LIST.
- */
-WimaPropListItem wima_prop_list_item(WimaProperty wph, uint32_t idx) yinline;
-
-/**
- * Returns the item at the current index of the list in @a wph.
- * @param wph	The property to query.
- * @return		The item at the current index.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_LIST.
- */
-WimaPropListItem wima_prop_list_currentItem(WimaProperty wph) yinline;
-
-/**
- * Updates the current index of the list in @a wph to @a idx.
- * @param wph	The property whose index will be updated.
- * @param idx	The new index.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_LIST.
- * @pre			@a idx must be with the bounds of the list.
- */
-void wima_prop_list_updateIdx(WimaProperty wph, uint32_t idx) yinline;
-
-/**
- * Returns the current index of @a wph.
- * @param wph	The property to query.
- * @return		The current index, or WIMA_PROP_LIST_INVALID_IDX
- *				there are no items in the list.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_LIST.
- */
-uint32_t wima_prop_list_idx(WimaProperty wph) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions for color props.

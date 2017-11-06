@@ -77,6 +77,7 @@
 
 //! @cond Doxygen suppress.
 wima_global_decl;
+wima_error_descs_decl;
 wima_assert_msgs_decl;
 //! @endcond Doxygen suppress.
 
@@ -634,24 +635,63 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
 	// Create the main theme property.
-	WimaProperty main = wima_prop_group_register(themePrefix, themeLabel, themeDesc);
+	WimaProperty main = wima_prop_list_register(themePrefix, themeLabel, themeDesc);
 
-	// Create the background and link it in, including in the arrays.
+	// Create the background.
 	WimaProperty bg = wima_theme_loadBackground();
-	wima_prop_group_link(main, bg);
+
+	if (bg == WIMA_PROP_INVALID) {
+		return WIMA_PROP_INVALID;
+	}
+
+	// Push the prop.
+	WimaStatus status = wima_prop_list_push(main, bg);
+
+	// Check for error.
+	if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+		wima_error(status);
+		return WIMA_PROP_INVALID;
+	}
+
+	// Set the references in the array.
 	props[WIMA_THEME_BG] = bg;
 	starts[WIMA_THEME_BG] = bg;
 
-	// Loop through the widget types and load their themes.
+	// Loop through the widget types.
 	for (WimaThemeType i = WIMA_THEME_REGULAR; i < WIMA_THEME_NODE; ++i) {
+
+		// Load the theme and push it.
 		WimaProperty item = wima_theme_loadWidget(i, starts);
-		wima_prop_group_link(main, item);
+
+		// Check for error.
+		if (yunlikely(item == WIMA_PROP_INVALID)) {
+			return WIMA_PROP_INVALID;
+		}
+
+		// Push the prop.
+		status = wima_prop_list_push(main, item);
+
+		// Check for error.
+		if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+			wima_error(status);
+			return WIMA_PROP_INVALID;
+		}
+
+		// Set the prop reference.
 		props[i] = item;
 	}
 
-	// Create the node theme.
+	// Create the node theme and push it.
 	WimaProperty node = wima_theme_loadNode(starts);
-	wima_prop_group_link(main, node);
+	status = wima_prop_list_push(main, node);
+
+	// Check for error.
+	if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+		wima_error(status);
+		return WIMA_PROP_INVALID;
+	}
+
+	// Set the prop reference.
 	props[WIMA_THEME_NODE] = node;
 
 	return main;
@@ -673,13 +713,14 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 	const char* const * descs = wima_theme_descs(type);
 
 	// Create the main widget property.
-	WimaProperty main = wima_theme_createProp(WIMA_PROP_GROUP, widgetParentNames[type],
+	WimaProperty main = wima_theme_createProp(WIMA_PROP_LIST, widgetParentNames[type],
 	                                          NULL, widgetParentLabels[type], NULL, 0);
 
 	// Get the parent name.
 	const char* parentName = widgetParentNames[type];
 
 	WimaProperty child;
+	WimaStatus status;
 
 	// Get the index.
 	int idx = type - 1;
@@ -698,8 +739,19 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, widgetThemeNames[i],
 		                              widgetThemeLabels[i], descs[i], initial++);
 
+		// Check for error.
+		if (yunlikely(child == WIMA_PROP_INVALID)) {
+			return WIMA_PROP_INVALID;
+		}
+
 		// Link the property to the main one.
-		wima_prop_group_link(main, child);
+		status = wima_prop_list_push(main, child);
+
+		// Check for error.
+		if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+			wima_error(status);
+			return WIMA_PROP_INVALID;
+		}
 
 		// If it's the first, put it into the start array.
 		if (i == 0) {
@@ -715,26 +767,65 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 #endif
 	}
 
-	// Create the shade top prop and link it.
+	// Create the shade top prop.
 	child = wima_theme_createProp(WIMA_PROP_INT, parentName,
 	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADE_TOP],
 	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADE_TOP],
 	                              descs[WIMA_THEME_WIDGET_SHADE_TOP], shadeTops[idx]);
-	wima_prop_group_link(main, child);
 
-	// Create the shade bottom prop and link it.
+	// Check for error.
+	if (yunlikely(child == WIMA_PROP_INVALID)) {
+		return WIMA_PROP_INVALID;
+	}
+
+	// Push the prop.
+	status = wima_prop_list_push(main, child);
+
+	// Check for error.
+	if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+		wima_error(status);
+		return WIMA_PROP_INVALID;
+	}
+
+	// Create the shade bottom prop.
 	child = wima_theme_createProp(WIMA_PROP_INT, parentName,
 	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADE_BTM],
 	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADE_BTM],
 	                              descs[WIMA_THEME_WIDGET_SHADE_BTM], shadeBottoms[idx]);
-	wima_prop_group_link(main, child);
 
-	// Create the shaded prop and link it.
+	// Check for error.
+	if (yunlikely(child == WIMA_PROP_INVALID)) {
+		return WIMA_PROP_INVALID;
+	}
+
+	// Push the prop.
+	status = wima_prop_list_push(main, child);
+
+	// Check for error.
+	if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+		wima_error(status);
+		return WIMA_PROP_INVALID;
+	}
+
+	// Create the shaded prop.
 	child = wima_theme_createProp(WIMA_PROP_BOOL, parentName,
 	                              widgetThemeNames[WIMA_THEME_WIDGET_SHADED],
 	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADED],
 	                              descs[WIMA_THEME_WIDGET_SHADED], true);
-	wima_prop_group_link(main, child);
+
+	// Check for error.
+	if (yunlikely(child == WIMA_PROP_INVALID)) {
+		return WIMA_PROP_INVALID;
+	}
+
+	// Push the prop.
+	status = wima_prop_list_push(main, child);
+
+	// Check for error.
+	if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+		wima_error(status);
+		return WIMA_PROP_INVALID;
+	}
 
 	return main;
 }
@@ -745,7 +836,7 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 
 	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
 
-	WimaProperty main = wima_theme_createProp(WIMA_PROP_GROUP, widgetParentNames[WIMA_THEME_NODE],
+	WimaProperty main = wima_theme_createProp(WIMA_PROP_LIST, widgetParentNames[WIMA_THEME_NODE],
 	                                          NULL, widgetParentLabels[WIMA_THEME_NODE], NULL, 0);
 
 	// Plus 1 for background.
@@ -755,6 +846,7 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 	const char* parentName = widgetParentNames[WIMA_THEME_NODE];
 
 	WimaProperty child;
+	WimaStatus status;
 
 #ifdef __YASSERT__
 	WimaProperty prev;
@@ -767,8 +859,19 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, nodeThemeNames[i],
 		                              nodeThemeLabels[i], nodeDescs[i], initial++);
 
-		// Link the property to the main one.
-		wima_prop_group_link(main, child);
+		// Check for error.
+		if (yunlikely(child == WIMA_PROP_INVALID)) {
+			return WIMA_PROP_INVALID;
+		}
+
+		// Push the prop.
+		status = wima_prop_list_push(main, child);
+
+		// Check for error.
+		if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+			wima_error(status);
+			return WIMA_PROP_INVALID;
+		}
 
 		// If it's the first, put it into the start array.
 		if (i == 0) {
@@ -797,7 +900,20 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 	// Create the curving prop and link it.
 	child = wima_prop_int_register(buffer, nodeThemeLabels[WIMA_THEME_NODE_WIRE_CURVING],
 	                              nodeDescs[WIMA_THEME_NODE_WIRE_CURVING], 5, 0, 10, 1);
-	wima_prop_group_link(main, child);
+
+	// Check for error.
+	if (yunlikely(child == WIMA_PROP_INVALID)) {
+		return WIMA_PROP_INVALID;
+	}
+
+	// Push the prop.
+	status = wima_prop_list_push(main, child);
+
+	// Check for error.
+	if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+		wima_error(status);
+		return WIMA_PROP_INVALID;
+	}
 
 	return main;
 }
@@ -1234,8 +1350,8 @@ static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, 
 	// Switch on the type and create the property.
 	switch (type) {
 
-		case WIMA_PROP_GROUP:
-			return wima_prop_group_register(buffer, label, desc);
+		case WIMA_PROP_LIST:
+			return wima_prop_list_register(buffer, label, desc);
 
 		case WIMA_PROP_BOOL:
 			return wima_prop_bool_register(buffer, label, desc, initial != 0);

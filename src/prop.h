@@ -63,7 +63,7 @@ extern "C" {
  * A seed to feed to the hash function. This
  * needs no cryptographic properties.
  */
-#define WIMA_PROP_SEED (0xadeadbeef0ddba11)
+#define WIMA_PROP_SEED (0xdeadbeef)
 
 /**
  * @def WIMA_PROP_INFO_IDX
@@ -172,7 +172,11 @@ typedef struct WimaPropInfo {
 
 	/// The property hash. This is
 	/// to make lookups faster.
-	uint64_t hash;
+	uint32_t hash;
+
+	/// This is how many lists have
+	/// the property in them.
+	uint32_t refs;
 
 	/// The name of the property. This
 	/// needs to be a unique identifier.
@@ -229,10 +233,12 @@ typedef union WimaPropData {
 } WimaPropData;
 
 /**
- * Frees the property associated with @a wph.
- * @param wph	The property to free
+ * If possible, frees the property associated with @a wph.
+ * Returns false if freeing wasn't possible.
+ * @param wph	The property to free.
+ * @return		true if freed, false otherwise.
  */
-void wima_prop_free(WimaProperty wph);
+bool wima_prop_free(WimaProperty wph);
 
 /**
  * Destroys a property. This is a Dyna NDestructFunc.

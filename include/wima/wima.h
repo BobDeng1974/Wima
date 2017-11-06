@@ -77,62 +77,65 @@ extern "C" {
 typedef enum WimaStatus {
 
 	/// Success.
-	WIMA_STATUS_SUCCESS        = 0,
+	WIMA_STATUS_SUCCESS            = 0,
 
 	/// Returned when Wima fails to allocate memory.
-	WIMA_STATUS_MALLOC_ERR     = 128,
+	WIMA_STATUS_MALLOC_ERR         = 128,
 
 	/// Returned when the platform returns an unknown error.
-	WIMA_STATUS_PLATFORM_ERR   = 129,
+	WIMA_STATUS_PLATFORM_ERR       = 129,
 
 	/// Returned when Wima is in an invalid state for the operation.
-	WIMA_STATUS_INVALID_STATE  = 130,
+	WIMA_STATUS_INVALID_STATE      = 130,
 
 	/// Returned when there was an error with OpenGL
 	/// (though not including context errors).
-	WIMA_STATUS_OPENGL_ERR     = 131,
+	WIMA_STATUS_OPENGL_ERR         = 131,
 
 	/// Returned when OpenGL does not have a context.
-	WIMA_STATUS_CONTEXT_ERR    = 132,
+	WIMA_STATUS_CONTEXT_ERR        = 132,
 
 	/// Returned when Wima fails to initialize.
-	WIMA_STATUS_INIT_ERR       = 133,
+	WIMA_STATUS_INIT_ERR           = 133,
 
 	/// Returned when Wima fails to create a window.
-	WIMA_STATUS_WINDOW_ERR     = 134,
+	WIMA_STATUS_WINDOW_ERR         = 134,
 
 	/// Returned when Wima gets an invalid enum value.
-	WIMA_STATUS_INVALID_ENUM   = 135,
+	WIMA_STATUS_INVALID_ENUM       = 135,
 
 	/// Returned when Wima gets an invalid parameter.
-	WIMA_STATUS_INVALID_PARAM  = 136,
+	WIMA_STATUS_INVALID_PARAM      = 136,
 
 	/// Returned when the clipboard contents were invalid.
-	WIMA_STATUS_INVALID_CLIP   = 137,
+	WIMA_STATUS_INVALID_CLIP       = 137,
 
 	/// Returned when an event is dropped.
-	WIMA_STATUS_EVENT_DROPPED  = 138,
+	WIMA_STATUS_EVENT_DROPPED      = 138,
 
 	/// Returned when the user tries to create too many windows.
-	WIMA_STATUS_WINDOW_MAX     = 139,
+	WIMA_STATUS_WINDOW_MAX         = 139,
 
 	/// Returned when the user tries to create too many workspaces.
-	WIMA_STATUS_WORKSPACE_MAX  = 140,
+	WIMA_STATUS_WORKSPACE_MAX      = 140,
 
 	/// Returned when the user tries to create too many regions.
-	WIMA_STATUS_REGION_MAX     = 141,
+	WIMA_STATUS_REGION_MAX         = 141,
 
 	/// Returned when no child for the parent prop exists.
-	WIMA_STATUS_PROP_NO_CHILD  = 142,
+	WIMA_STATUS_PROP_NO_CHILD      = 142,
+
+	/// Returned when a prop child already exists.
+	WIMA_STATUS_PROP_CHILD_EXISTS  = 143,
 
 	/// Returned when an image fails to load.
-	WIMA_STATUS_IMAGE_LOAD_ERR = 143,
+	WIMA_STATUS_IMAGE_LOAD_ERR     = 144,
 
 	/// Returned when the user tries to create too many images.
-	WIMA_STATUS_IMAGE_MAX      = 144,
+	WIMA_STATUS_IMAGE_MAX          = 145,
 
 	/// Returned when the user tries to create too many icons.
-	WIMA_STATUS_ICON_MAX       = 145,
+	WIMA_STATUS_ICON_MAX           = 146,
 
 } WimaStatus;
 
