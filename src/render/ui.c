@@ -1065,7 +1065,9 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 	nvgTranslate(ctx->nvg, x, y);
 	nvgScale(ctx->nvg, scale, scale);
 
-	bool hole = false;
+	// Set up the index into the windings vector.
+	WimaIconPaths marker = *((WimaIconPaths*) dvec_get(wg.iconPaths, icon));
+	bool* boolptr = dvec_get(wg.iconPathWindings, marker.start);
 
 	// Loop through the shapes in the image.
 	for (NSVGshape* shape = img->shapes; shape != NULL; shape = shape->next) {
@@ -1123,6 +1125,9 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 				break;
 		}
 
+		// Begin the shape. Even though this says "beginPath",
+		// it is actually beginning the shape. Thus, this must
+		// be outside the loop.
 		nvgBeginPath(ctx->nvg);
 
 		// Loop through the paths in the shape.
@@ -1144,55 +1149,26 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 				nvgClosePath(ctx->nvg);
 			}
 
-			// Check if closed. TODO: This needs more work.
-			if (shape->fillRule == NSVG_FILLRULE_NONZERO) {
+			// Set the winding.
+			nvgPathWinding(ctx->nvg, *boolptr);
 
-				if (path->npts >= 2) {
-
-					// Calculate the center.
-					float cx = path->bounds[2] - path->bounds[0];
-					float cy = path->bounds[3] - path->bounds[1];
-
-					// Get the vector to the first point.
-					float v1x = cx - path->pts[0];
-					float v1y = cy - path->pts[1];
-
-					// Get the vector to the second point.
-					float v2x = cx - path->pts[6];
-					float v2y = cy - path->pts[7];
-
-					// Calculate dot product and lengths.
-					float dot = v1x * v2x + v1y + v2y;
-					float v1l = sqrtf(v1x * v1x + v1y * v1y);
-					float v2l = sqrtf(v2x * v2x + v2y * v2y);
-
-					// Calculate the angle.
-					float stuff = dot / (v1l * v2l);
-					float angle = acosf(stuff);
-
-					// Set the winding.
-					nvgPathWinding(ctx->nvg, angle >= WIMA_PI);
-				}
-				else {
-					nvgPathWinding(ctx->nvg, NVG_SOLID);
-				}
-			}
-			else {
-				nvgPathWinding(ctx->nvg, hole ? NVG_HOLE : NVG_SOLID);
-			}
+			// Increment the pointer.
+			boolptr += 1;
 		}
 
 		// If the shape is filled, fill it.
+		// This fills the shape, not the path,
+		// so it must be outside the loop.
 		if (shape->fill.type) {
 			nvgFill(ctx->nvg);
 		}
 
 		// If the shape is stroked, stroke it.
-		if (!hole && shape->stroke.type) {
+		// This strokes the shape, not the path,
+		// so it must be outside the loop.
+		if (shape->stroke.type) {
 			nvgStroke(ctx->nvg);
 		}
-
-		hole = !hole;
 	}
 
 	// Restore NanoVG.
@@ -1327,7 +1303,8 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
 
 	// If there is an icon, draw it and add it to the padding.
 	if (icon != WIMA_ICON_INVALID) {
-		wima_ui_icon(ctx, x + 4, y + 5, icon);
+		wima_ui_icon(ctx, x + (WIMA_WIDGET_HEIGHT - WIMA_ICON_SHEET_RES) / 2,
+		             y + (WIMA_WIDGET_HEIGHT - WIMA_ICON_SHEET_RES) / 2, icon);
 		pleft += WIMA_ICON_SHEET_RES;
 	}
 

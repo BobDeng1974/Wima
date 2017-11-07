@@ -221,6 +221,20 @@ typedef union WimaTxtRow {
 typedef NSVGimage* WimaIcn;
 
 /**
+ * A way for WimaG to store the start and end
+ * of paths in the iconPathWinding vector.
+ */
+typedef struct WimaIconPaths {
+
+	/// The start index of the paths in the iconPathWinding vector.
+	uint32_t start;
+
+	/// The end index of the paths in the iconPathWinding vector.
+	uint32_t end;
+
+} WimaIconPaths;
+
+/**
  * @def WIMA_ICON_RED
  * A mask for the red channel in an unsigned int.
  */
@@ -298,7 +312,7 @@ void wima_icon_destroy(void* icon);
 // Offset of first icon tile relative to top border.
 #define WIMA_ICON_SHEET_OFFSET_Y 10
 // Resolution of single icon.
-#define WIMA_ICON_SHEET_RES 16
+#define WIMA_ICON_SHEET_RES (WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN)
 
 // Size of number field arrow.
 #define WIMA_NUMBER_ARROW_SIZE 4
@@ -343,7 +357,7 @@ void wima_icon_destroy(void* icon);
 #define WIMA_MAX_ROWS 32
 
 // Text distance from bottom.
-#define WIMA_TEXT_PAD_DOWN 9
+#define WIMA_TEXT_PAD_DOWN WIMA_LABEL_FONT_SIZE / 2
 
 // Stroke width of wire outline.
 #define WIMA_NODE_WIRE_OUTLINE_WIDTH 4
@@ -357,7 +371,7 @@ void wima_icon_destroy(void* icon);
 #define WIMA_NODE_ARROW_SIZE 9
 
 // Default widget height.
-#define WIMA_WIDGET_HEIGHT (27)
+#define WIMA_WIDGET_HEIGHT (WIMA_LABEL_FONT_SIZE * 2)
 // Default operator button width (if icon only).
 #define WIMA_OPERATOR_WIDTH (20)
 

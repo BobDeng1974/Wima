@@ -45,6 +45,7 @@
 #undef NANOSVG_ALL_COLOR_KEYWORDS
 
 #include <wima/render.h>
+#include <wima/math.h>
 
 #include "render.h"
 
@@ -90,16 +91,37 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 
 	wima_assert_init;
 
+	WimaIconPaths prev;
+	WimaIconPaths marker;
+	DynaStatus status;
+
 	wassert(path != NULL, WIMA_ASSERT_PATH_NULL);
 
 	// Get the length.
 	size_t len = dvec_len(wg.icons);
+
+	wassert(len == dvec_len(wg.iconPaths), WIMA_ASSERT_ICON_MISMATCH);
 
 	// Make sure the user hasn't created too many icons.
 	if (yunlikely(len == WIMA_ICON_INVALID)) {
 		wima_error(WIMA_STATUS_ICON_MAX);
 		return WIMA_ICON_INVALID;
 	}
+
+	// If there is already something in the array...
+	if (len != 0) {
+
+		// Get the previous marker.
+		prev = *((WimaIconPaths*) dvec_get(wg.iconPaths, len - 1));
+	}
+	else {
+
+		// Set a dummy value.
+		prev.end = 0;
+	}
+
+	// Set the marker start.
+	marker.start = prev.end;
 
 	// Parse the file.
 	WimaIcn img = nsvgParseFromFile(path, unitNames[unit], dpi);
@@ -110,9 +132,114 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 		return WIMA_ICON_INVALID;
 	}
 
-	// Push onto the vector and check for error.
-	DynaStatus status = dvec_push(wg.icons, &img);
+	// We need to count how many paths are in the icon and alternate holes.
+	size_t count = 0;
+	bool solid = false;
+
+	// Loop through the shapes in the image.
+	for (NSVGshape* shape = img->shapes; shape != NULL; shape = shape->next) {
+
+		// Loop through the paths in the shape.
+		for (NSVGpath* path = shape->paths; path != NULL; path = path->next) {
+
+			// This is the flag to push onto the vector.
+			// We need something that can be addressed.
+			bool result;
+
+			// Flip the flag.
+			solid = !solid;
+
+			// Increment the count.
+			++count;
+
+			// Check if closed. TODO: This needs more work.
+			if (shape->fillRule == NSVG_FILLRULE_NONZERO) {
+
+				// Make sure we can calculate the winding.
+				if (path->npts >= 2) {
+
+					// Calculate the center.
+					float cx = path->bounds[2] - path->bounds[0];
+					float cy = path->bounds[3] - path->bounds[1];
+
+					// Get the vector to the first point.
+					float v1x = cx - path->pts[0];
+					float v1y = cy - path->pts[1];
+
+					// Get the vector to the second point.
+					float v2x = cx - path->pts[6];
+					float v2y = cy - path->pts[7];
+
+					// Calculate dot product and lengths.
+					float dot = v1x * v2x + v1y + v2y;
+					float v1l = sqrtf(v1x * v1x + v1y * v1y);
+					float v2l = sqrtf(v2x * v2x + v2y * v2y);
+
+					// Calculate the angle.
+					float angle = acosf(dot / (v1l * v2l));
+
+					// Set the winding.
+					result = angle >= WIMA_PI;
+				}
+				else {
+
+					// Set no hole.
+					result = true;
+				}
+			}
+			else {
+
+				// Set a hole if the flag says so.
+				result = solid;
+			}
+
+			// Push onto the vector and check for error.
+			status = dvec_push(wg.iconPathWindings, &result);
+			if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
+
+				// Loop through the already-added windings and delete them.
+				// It's count - 1 because the current winding failed.
+				for (uint32_t i = 0; i < count - 1; ++i) {
+					dvec_pop(wg.iconPathWindings);
+				}
+
+				// Return an error.
+				wima_error(WIMA_STATUS_MALLOC_ERR);
+				return WIMA_ICON_INVALID;
+			}
+		}
+	}
+
+	// Set the marker end.
+	marker.end = marker.start + count;
+
+	// Push the marker and check for error.
+	status = dvec_push(wg.iconPaths, &marker);
 	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
+
+		// Loop through the already-added windings and delete them.
+		for (uint32_t i = 0; i < count; ++i) {
+			dvec_pop(wg.iconPathWindings);
+		}
+
+		// Return an error.
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_ICON_INVALID;
+	}
+
+	// Push onto the vector and check for error.
+	status = dvec_push(wg.icons, &img);
+	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
+
+		// Loop through the already-added windings and delete them.
+		for (uint32_t i = 0; i < count; ++i) {
+			dvec_pop(wg.iconPathWindings);
+		}
+
+		// Make sure to pop the marker.
+		dvec_pop(wg.iconPaths);
+
+		// Return an error.
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_ICON_INVALID;
 	}
