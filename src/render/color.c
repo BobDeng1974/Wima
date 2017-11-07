@@ -203,15 +203,7 @@ NVGcolor wima_color_int(unsigned int color) {
 	uint8_t r = (uint8_t) (color & WIMA_ICON_RED);
 	uint8_t g = (uint8_t) ((color & WIMA_ICON_GREEN) >> 8);
 	uint8_t b = (uint8_t) ((color & WIMA_ICON_BLUE) >> 16);
+	uint8_t a = (uint8_t) ((color & WIMA_ICON_ALPHA) >> 24);
 
-	return nvgRGB(r, g, b);
-}
-
-NVGcolor wima_color_intAlpha(unsigned int color, float alpha) {
-
-	uint8_t r = (uint8_t) (color & WIMA_ICON_RED);
-	uint8_t g = (uint8_t) ((color & WIMA_ICON_GREEN) >> 8);
-	uint8_t b = (uint8_t) ((color & WIMA_ICON_BLUE) >> 16);
-
-	return nvgRGBAf(r / 255.0f, g / 255.0f, b / 255.0f, alpha);
+	return nvgRGBA(r, g, b, a);
 }

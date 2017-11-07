@@ -1079,7 +1079,6 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 		nvgLineJoin(ctx->nvg, wima_ui_line_joins[shape->strokeLineJoin]);
 		nvgMiterLimit(ctx->nvg, shape->miterLimit);
 
-#if 0
 		// Figure out the fill style.
 		switch (shape->fill.type) {
 
@@ -1093,11 +1092,11 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 				break;
 
 			case NSVG_PAINT_LINEAR_GRADIENT:
-				nvgFillPaint(ctx->nvg, wima_paint_svgLinearGradient(ctx, shape->fill.gradient, 1.0f));
+				nvgFillPaint(ctx->nvg, wima_paint_svgLinearGradient(ctx, shape->fill.gradient));
 				break;
 
 			case NSVG_PAINT_RADIAL_GRADIENT:
-				nvgFillPaint(ctx->nvg, wima_paint_svgRadialGradient(ctx, shape->fill.gradient, 1.0f));
+				nvgFillPaint(ctx->nvg, wima_paint_svgRadialGradient(ctx, shape->fill.gradient));
 				break;
 		}
 
@@ -1114,17 +1113,15 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 				break;
 
 			case NSVG_PAINT_LINEAR_GRADIENT:
-				nvgStrokePaint(ctx->nvg, wima_paint_svgLinearGradient(ctx, shape->stroke.gradient, 1.0f));
+				nvgStrokePaint(ctx->nvg, wima_paint_svgLinearGradient(ctx, shape->stroke.gradient));
 				break;
 
 			case NSVG_PAINT_RADIAL_GRADIENT:
-				nvgStrokePaint(ctx->nvg, wima_paint_svgRadialGradient(ctx, shape->stroke.gradient, 1.0f));
+				nvgStrokePaint(ctx->nvg, wima_paint_svgRadialGradient(ctx, shape->stroke.gradient));
 				break;
 		}
-#endif
 
-		nvgFillColor(ctx->nvg, wima_color_int(shape->fill.color));
-		nvgStrokeColor(ctx->nvg, wima_color_int(shape->stroke.color));
+		bool hole = false;
 
 		// Loop through the paths in the shape.
 		for (NSVGpath* path = shape->paths; path != NULL; path = path->next) {

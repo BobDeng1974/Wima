@@ -114,15 +114,6 @@ typedef union WimaCol {
 NVGcolor wima_color_int(unsigned int color) yinline;
 
 /**
- * Creates an NVGcolor from a color as stored by NanoSVG.
- * Includes an alpha channel.
- * @param color	The color to convert.
- * @param alpha	The alpha to put the color at.
- * @return		The color as a NVGcolor.
- */
-NVGcolor wima_color_intAlpha(unsigned int color, float alpha) yinline;
-
-/**
  * @}
  */
 
@@ -150,9 +141,9 @@ typedef union WimaPnt {
 
 } WimaPnt;
 
-NVGpaint wima_paint_svgLinearGradient(WimaRenderContext* ctx, NSVGgradient* gradient, float alpha);
+NVGpaint wima_paint_svgLinearGradient(WimaRenderContext* ctx, NSVGgradient* gradient);
 
-NVGpaint wima_paint_svgRadialGradient(WimaRenderContext* ctx, NSVGgradient* gradient, float alpha);
+NVGpaint wima_paint_svgRadialGradient(WimaRenderContext* ctx, NSVGgradient* gradient);
 
 /**
  * @}
@@ -246,6 +237,12 @@ typedef NSVGimage* WimaIcn;
  * A mask for the blue channel in an unsigned int.
  */
 #define WIMA_ICON_BLUE  (0x00FF0000)
+
+/**
+ * @def WIMA_ICON_ALPHA
+ * A mask for the alpha channel in an unsigned int.
+ */
+#define WIMA_ICON_ALPHA (0xFF000000)
 
 /**
  * A destructor for icons.

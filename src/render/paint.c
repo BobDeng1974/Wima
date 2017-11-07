@@ -120,7 +120,7 @@ WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecf o, WimaSizef 
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-NVGpaint wima_paint_svgLinearGradient(WimaRenderContext* ctx, NSVGgradient* gradient, float alpha) {
+NVGpaint wima_paint_svgLinearGradient(WimaRenderContext* ctx, NSVGgradient* gradient) {
 
 	float inverse[6];
 	float sx, sy, ex, ey;
@@ -130,11 +130,11 @@ NVGpaint wima_paint_svgLinearGradient(WimaRenderContext* ctx, NSVGgradient* grad
 	nvgTransformPoint(&ex, &ey, inverse, 0, 1);
 
 	return nvgLinearGradient(ctx->nvg, sx, sy, ex, ey,
-	    wima_color_intAlpha(gradient->stops[0].color, alpha),
-	    wima_color_intAlpha(gradient->stops[gradient->nstops - 1].color, alpha));
+	    wima_color_int(gradient->stops[0].color),
+	    wima_color_int(gradient->stops[gradient->nstops - 1].color));
 }
 
-NVGpaint wima_paint_svgRadialGradient(WimaRenderContext* ctx, NSVGgradient* gradient, float alpha) {
+NVGpaint wima_paint_svgRadialGradient(WimaRenderContext* ctx, NSVGgradient* gradient) {
 
 	float inverse[6];
 	float cx, cy, r1, r2, inr, outr;
@@ -152,8 +152,8 @@ NVGpaint wima_paint_svgRadialGradient(WimaRenderContext* ctx, NSVGgradient* grad
 	}
 
 	NVGpaint paint = nvgRadialGradient(ctx->nvg, cx, cy, inr, outr,
-	    wima_color_intAlpha(gradient->stops[0].color, alpha),
-	    wima_color_intAlpha(gradient->stops[gradient->nstops - 1].color, alpha));
+	    wima_color_int(gradient->stops[0].color),
+	    wima_color_int(gradient->stops[gradient->nstops - 1].color));
 
 	return  paint;
 }
