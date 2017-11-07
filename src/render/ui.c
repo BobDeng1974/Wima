@@ -1065,6 +1065,8 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 	nvgTranslate(ctx->nvg, x, y);
 	nvgScale(ctx->nvg, scale, scale);
 
+	bool hole = false;
+
 	// Loop through the shapes in the image.
 	for (NSVGshape* shape = img->shapes; shape != NULL; shape = shape->next) {
 
@@ -1121,21 +1123,25 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 				break;
 		}
 
-		bool hole = false;
+		nvgBeginPath(ctx->nvg);
 
 		// Loop through the paths in the shape.
 		for (NSVGpath* path = shape->paths; path != NULL; path = path->next) {
 
 			// Start drawing the path.
-			nvgBeginPath(ctx->nvg);
 			nvgMoveTo(ctx->nvg, path->pts[0], path->pts[1]);
 
 			// Loop through the points in the path.
 			for (int i = 0; i < path->npts - 1; i += 3) {
 
 				// Bezier to the next point.
-				float* p = &path->pts[i * 2];
+				float* p = path->pts + i * 2;
 				nvgBezierTo(ctx->nvg, p[2], p[3], p[4], p[5], p[6], p[7]);
+			}
+
+			// If the path is closed, close it.
+			if (path->closed) {
+				nvgClosePath(ctx->nvg);
 			}
 
 			// Check if closed. TODO: This needs more work.
@@ -1165,7 +1171,7 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 					float angle = acosf(stuff);
 
 					// Set the winding.
-					nvgPathWinding(ctx->nvg, angle < 0.0f ? NVG_SOLID : NVG_HOLE);
+					nvgPathWinding(ctx->nvg, angle >= WIMA_PI);
 				}
 				else {
 					nvgPathWinding(ctx->nvg, NVG_SOLID);
@@ -1173,24 +1179,20 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 			}
 			else {
 				nvgPathWinding(ctx->nvg, hole ? NVG_HOLE : NVG_SOLID);
-				hole = !hole;
-			}
-
-			// If the path is closed, close it.
-			if (path->closed) {
-				nvgClosePath(ctx->nvg);
-			}
-
-			// If the shape is filled, fill it.
-			if (shape->fill.type) {
-				nvgFill(ctx->nvg);
-			}
-
-			// If the shape is stroked, stroke it.
-			if (shape->stroke.type) {
-				nvgStroke(ctx->nvg);
 			}
 		}
+
+		// If the shape is filled, fill it.
+		if (shape->fill.type) {
+			nvgFill(ctx->nvg);
+		}
+
+		// If the shape is stroked, stroke it.
+		if (!hole && shape->stroke.type) {
+			nvgStroke(ctx->nvg);
+		}
+
+		hole = !hole;
 	}
 
 	// Restore NanoVG.
