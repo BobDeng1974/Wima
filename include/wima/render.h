@@ -711,6 +711,13 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi);
 WimaIcon wima_icon_debug();
 
 /**
+ * Returns the donut icon. This function
+ * is only available in debug mode.
+ * @return	The donut icon.
+ */
+WimaIcon wima_icon_donut();
+
+/**
  * @}
  */
 

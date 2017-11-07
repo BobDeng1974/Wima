@@ -145,6 +145,31 @@ WimaIcon wima_icon_debug() {
 #endif // NDEBUG
 }
 
+WimaIcon wima_icon_donut() {
+#ifndef NDEBUG
+
+	// Make sure it's set to invalid.
+	static WimaIcon donut = WIMA_ICON_INVALID;
+
+	// If the icon is invalid...
+	if (yunlikely(donut == WIMA_ICON_INVALID)) {
+
+		// Load it.
+		donut = wima_icon_load("../res/donut.svg", WIMA_ICON_PX, 96.0f);
+
+		// If the icon couldn't load, abort.
+		if (yunlikely(donut == WIMA_ICON_INVALID)) {
+			wima_error(WIMA_STATUS_IMAGE_LOAD_ERR);
+			exit(WIMA_STATUS_IMAGE_LOAD_ERR);
+		}
+	}
+
+	return donut;
+#else
+	return -1;
+#endif // NDEBUG
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
