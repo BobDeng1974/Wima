@@ -1138,6 +1138,44 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 				nvgBezierTo(ctx->nvg, p[2], p[3], p[4], p[5], p[6], p[7]);
 			}
 
+			// Check if closed. TODO: This needs more work.
+			if (shape->fillRule == NSVG_FILLRULE_NONZERO) {
+
+				if (path->npts >= 2) {
+
+					// Calculate the center.
+					float cx = path->bounds[2] - path->bounds[0];
+					float cy = path->bounds[3] - path->bounds[1];
+
+					// Get the vector to the first point.
+					float v1x = cx - path->pts[0];
+					float v1y = cy - path->pts[1];
+
+					// Get the vector to the second point.
+					float v2x = cx - path->pts[6];
+					float v2y = cy - path->pts[7];
+
+					// Calculate dot product and lengths.
+					float dot = v1x * v2x + v1y + v2y;
+					float v1l = sqrtf(v1x * v1x + v1y * v1y);
+					float v2l = sqrtf(v2x * v2x + v2y * v2y);
+
+					// Calculate the angle.
+					float stuff = dot / (v1l * v2l);
+					float angle = acosf(stuff);
+
+					// Set the winding.
+					nvgPathWinding(ctx->nvg, angle < 0.0f ? NVG_SOLID : NVG_HOLE);
+				}
+				else {
+					nvgPathWinding(ctx->nvg, NVG_SOLID);
+				}
+			}
+			else {
+				nvgPathWinding(ctx->nvg, hole ? NVG_HOLE : NVG_SOLID);
+				hole = !hole;
+			}
+
 			// If the path is closed, close it.
 			if (path->closed) {
 				nvgClosePath(ctx->nvg);
