@@ -141,8 +141,22 @@ typedef union WimaPnt {
 
 } WimaPnt;
 
+/**
+ * Generates a linear gradient paint from an NSVGgradient.
+ * @param ctx		The render context to generate the gradient.
+ * @param gradient	The gradient to generate from.
+ * @return			A linear gradient generated from @a gradient.
+ * @pre				@a ctx must not be NULL.
+ */
 NVGpaint wima_paint_svgLinearGradient(WimaRenderContext* ctx, NSVGgradient* gradient);
 
+/**
+ * Generates a radial gradient paint from an NSVGgradient.
+ * @param ctx		The render context to generate the gradient.
+ * @param gradient	The gradient to generate from.
+ * @return			A radial gradient generated from @a gradient.
+ * @pre				@a ctx must not be NULL.
+ */
 NVGpaint wima_paint_svgRadialGradient(WimaRenderContext* ctx, NSVGgradient* gradient);
 
 /**
