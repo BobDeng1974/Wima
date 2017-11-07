@@ -112,6 +112,12 @@ double wima_fmax(double a, double b);
  */
 
 /**
+ * @def WIMA_PI
+ * A define that defines pi.
+ */
+#define WIMA_PI 3.14159265358979323846264338327f
+
+/**
  * Returns the max of the two arguments.
  * @param a	The first argument.
  * @param b	The second argument.
