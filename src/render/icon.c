@@ -123,6 +123,8 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 WimaIcon wima_icon_debug() {
 #ifndef NDEBUG
 
+	wima_assert_init;
+
 	// Make sure it's set to invalid.
 	static WimaIcon debug = WIMA_ICON_INVALID;
 
@@ -147,6 +149,8 @@ WimaIcon wima_icon_debug() {
 
 WimaIcon wima_icon_donut() {
 #ifndef NDEBUG
+
+	wima_assert_init;
 
 	// Make sure it's set to invalid.
 	static WimaIcon donut = WIMA_ICON_INVALID;
@@ -175,5 +179,6 @@ WimaIcon wima_icon_donut() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void wima_icon_destroy(void* icon) {
+	wima_assert_init;
 	nsvgDelete(*((WimaIcn*) icon));
 }
