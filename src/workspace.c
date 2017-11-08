@@ -42,7 +42,7 @@
 #include <wima/wima.h>
 #include <math.h>
 
-#include "region.h"
+#include "editor.h"
 #include "area.h"
 #include "workspace.h"
 #include "global.h"
@@ -119,7 +119,7 @@ WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus wima_workspace_addRegion(WimaWorkspace wwksp, DynaNode node, WimaRegion reg) {
+WimaStatus wima_workspace_addEditor(WimaWorkspace wwksp, DynaNode node, WimaEditor wed) {
 
 	wima_assert_init;
 
@@ -140,7 +140,7 @@ WimaStatus wima_workspace_addRegion(WimaWorkspace wwksp, DynaNode node, WimaRegi
 	wan.rect.h = -1;
 
 	// Set the area type.
-	wan.area.type = reg;
+	wan.area.type = wed;
 
 	// Make sure this is cleared.
 	wan.area.ctx.items = NULL;

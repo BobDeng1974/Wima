@@ -80,7 +80,7 @@ const char* wima_error_descs[] = {
     "Wima dropped an event",
     "client tried to create too many windows",
     "client tried to create too many workspaces",
-    "client tried to create too many regions",
+    "client tried to create too many editors",
     "no child exists for the given property",
     "child already exists for the given property",
     "client tried to add too many children to a property",
@@ -125,10 +125,10 @@ const char* wima_assert_msgs[] = {
     "area is a leaf, not a parent",
     "number of items in area exceeds capacity",
 
-    "region is not valid",
-    "no regions are registered",
-    "region layout function is null",
-    "region item capacity is not greater than 0",
+    "editor is not valid",
+    "no editors are registered",
+    "editor layout function is null",
+    "editor item capacity is 0",
 
     "item is not a layout",
     "item is not a widget",

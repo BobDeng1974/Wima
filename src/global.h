@@ -87,8 +87,8 @@ typedef struct WimaG {
 	/// Workspace types.
 	DynaVector workspaces;
 
-	/// Regions (area types).
-	DynaVector regions;
+	/// Editors (area types).
+	DynaVector editors;
 
 	/// Icons and their markers in the @a iconPathWindings vector.
 	DynaVector icons;
@@ -165,10 +165,10 @@ typedef enum WimaAssertType {
 	WIMA_ASSERT_AREA_PARENT,
 	WIMA_ASSERT_AREA_ITEMS_OVER_MAX,
 
-	WIMA_ASSERT_REG,
-	WIMA_ASSERT_REG_REGISTERED,
-	WIMA_ASSERT_REG_LAYOUT,
-	WIMA_ASSERT_REG_ITEM_CAP,
+	WIMA_ASSERT_EDITOR,
+	WIMA_ASSERT_EDITOR_REGISTERED,
+	WIMA_ASSERT_EDITOR_LAYOUT,
+	WIMA_ASSERT_EDITOR_ITEM_CAP,
 
 	WIMA_ASSERT_ITEM_LAYOUT,
 	WIMA_ASSERT_ITEM_WIDGET,

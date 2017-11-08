@@ -119,8 +119,8 @@ typedef enum WimaStatus {
 	/// Returned when the user tries to create too many workspaces.
 	WIMA_STATUS_WORKSPACE_MAX      = 140,
 
-	/// Returned when the user tries to create too many regions.
-	WIMA_STATUS_REGION_MAX         = 141,
+	/// Returned when the user tries to create too many editors.
+	WIMA_STATUS_EDITOR_MAX         = 141,
 
 	/// Returned when no child for the parent prop exists.
 	WIMA_STATUS_PROP_NO_CHILD      = 142,
@@ -151,26 +151,26 @@ typedef enum WimaStatus {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * @defgroup region region
+ * @defgroup editor editor
  * @{
  */
 
 /**
- * A handle to a region (area template) type.
+ * A handle to a editor (area template) type.
  */
-typedef uint8_t WimaRegion;
+typedef uint8_t WimaEditor;
 
 /**
- * @def WIMA_REGION_INVALID
- * A handle indicating an invalid region.
+ * @def WIMA_EDITOR_INVALID
+ * A handle indicating an invalid editor.
  */
-#define WIMA_REGION_INVALID ((WimaRegion) -1)
+#define WIMA_EDITOR_INVALID ((WimaEditor) -1)
 
 /**
- * @def WIMA_REGION_MAX
- * The max number of regions that can be registered.
+ * @def WIMA_EDITOR_MAX
+ * The max number of editors that can be registered.
  */
-#define WIMA_REGION_MAX WIMA_REGION_INVALID
+#define WIMA_EDITOR_MAX WIMA_EDITOR_INVALID
 
 /**
  * @}
@@ -1535,12 +1535,12 @@ bool wima_widget_isFocused(WimaWidget wdgt) yinline;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-// Region functions and data structures.
+// Editor functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * @defgroup region region
- * Functions and data structures for manipulating regions
+ * @defgroup editor editor
+ * Functions and data structures for manipulating editors
  * (templates for areas).
  */
 
@@ -1584,7 +1584,7 @@ typedef bool (*WimaAreaMouseEnterFunc)(WimaArea, bool);
 /**
  * A collection of callbacks for areas.
  */
-typedef struct WimaRegionFuncs {
+typedef struct WimaEditorFuncs {
 
 	/// The function to generate the user pointer.
 	WimaAreaGenUserPointerFunc gen_ptr;
@@ -1601,34 +1601,34 @@ typedef struct WimaRegionFuncs {
 	/// The function to handle mouse enter/exit.
 	WimaAreaMouseEnterFunc enter;
 
-} WimaRegionFuncs;
+} WimaEditorFuncs;
 
 /**
- * Registers a region type that can then be used to create a WimaWorkspace.
- * @param funcs		The functions that the region/area will use.
+ * Registers a editor type that can then be used to create a WimaWorkspace.
+ * @param funcs		The functions that the editor/area will use.
  * @param itemCap	The total capacity for items (layouts and widgets)
- *					that the region can handle.
- * @return			The region.
+ *					that the editor can handle.
+ * @return			The editor.
  */
-WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap);
+WimaEditor wima_editor_register(WimaEditorFuncs funcs, uint32_t itemCap);
 
 /**
- * Sets the global user pointer for the region. All areas created from
- * this region will be able to access it. This is the place to put
+ * Sets the global user pointer for the editor. All areas created from
+ * this editor will be able to access it. This is the place to put
  * common data for all of the areas.
- * @param reg	The region to set the user pointer for.
+ * @param wed	The editor to set the user pointer for.
  * @param ptr	The pointer to set.
  */
-void wima_region_setUserPointer(WimaRegion reg, void* ptr) yinline;
+void wima_editor_setUserPointer(WimaEditor wed, void* ptr) yinline;
 
 /**
- * Gets the global user pointer for the region. All areas created from
- * this region will be able to access it. This is the place to put
+ * Gets the global user pointer for the editor. All areas created from
+ * this editor will be able to access it. This is the place to put
  * common data for all of the areas.
- * @param reg	The region to query.
- * @return		The user pointer for the region.
+ * @param wed	The editor to query.
+ * @return		The user pointer for the editor.
  */
-void* wima_region_userPointer(WimaRegion reg) yinline;
+void* wima_editor_userPointer(WimaEditor wed) yinline;
 
 /**
  * @}
@@ -1658,7 +1658,7 @@ WimaArea wima_area(WimaWindow wwh, WimaAreaNode node) yinline;
 /**
  * Returns the user pointer associated with *just* this area.
  * For a user pointer that is common to all areas of the same
- * type, see @a wima_region_userPointer().
+ * type, see @a wima_editor_userPointer().
  * @param wah	The area to query.
  * @return		The user pointer.
  * @pre			@a wah must be valid.
@@ -1698,15 +1698,15 @@ float wima_area_scale(WimaArea wah) yinline;
  * @param type	The type to change to.
  * @pre			@a wah must be valid.
  */
-void wima_area_setType(WimaArea wah, WimaRegion type) yinline;
+void wima_area_setType(WimaArea wah, WimaEditor type) yinline;
 
 /**
- * eturns the region type of @a wah.
+ * Returns the editor type of @a wah.
  * @param wah	The area to query.
- * @return		The area's region type.
+ * @return		The area's editor type.
  * @pre			@a wah must be valid.
  */
-WimaRegion wima_area_type(WimaArea wah) yinline;
+WimaEditor wima_area_type(WimaArea wah) yinline;
 
 /**
  * Returns the total number of items (layouts
@@ -1741,7 +1741,7 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
 /**
  * Registers a new workspace. The workspace is empty and
  * needs to be filled using @a wima_workspace_addParent()
- * and @a wima_workspace_addRegion().
+ * and @a wima_workspace_addEditor().
  *
  * An empty workspace cannot be used to create a window.
  * Also, it is an error to create a window if the workspace
@@ -1768,17 +1768,17 @@ WimaWorkspace wima_workspace_register();
 WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node, float split, bool vertical);
 
 /**
- * Adds a region (leaf) to a workspace.
+ * Adds a editor (leaf) to a workspace.
  * @param wwksp	The workspace to add to.
  * @param node	The node to add, which should be either
  *				the root, or a child of a node that has
  *				already been added.
- * @param reg	The region to set the type as.
+ * @param wed	The editor to set the type as.
  * @return		WIMA_STATUS_SUCCESS on success, or an
  *				error code.
  * @pre			@a wwksp must be valid.
  */
-WimaStatus wima_workspace_addRegion(WimaWorkspace wwksp, DynaNode node, WimaRegion reg);
+WimaStatus wima_workspace_addEditor(WimaWorkspace wwksp, DynaNode node, WimaEditor wed);
 
 /**
  * @}

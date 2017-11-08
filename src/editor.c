@@ -29,7 +29,7 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	Main source file for regions (area templates).
+ *	Main source file for editors (area templates).
  *
  *	******** END FILE DESCRIPTION ********
  */
@@ -42,7 +42,7 @@
 #include <wima/wima.h>
 
 #include "global.h"
-#include "region.h"
+#include "editor.h"
 
 wima_global_decl;
 wima_error_descs_decl;
@@ -52,64 +52,64 @@ wima_assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaRegion wima_region_register(WimaRegionFuncs funcs, uint32_t itemCap) {
+WimaEditor wima_editor_register(WimaEditorFuncs funcs, uint32_t itemCap) {
 
 	wima_assert_init;
 
-	wassert(funcs.layout != NULL, WIMA_ASSERT_REG_LAYOUT);
-	wassert(itemCap > 0, WIMA_ASSERT_REG_ITEM_CAP);
+	wassert(funcs.layout != NULL, WIMA_ASSERT_EDITOR_LAYOUT);
+	wassert(itemCap > 0, WIMA_ASSERT_EDITOR_ITEM_CAP);
 
-	// Get the index of the new region.
-	size_t idx = dvec_len(wg.regions);
+	// Get the index of the new editor.
+	size_t idx = dvec_len(wg.editors);
 
 	// Make sure we have enough space.
-	if (yunlikely(idx >= WIMA_REGION_MAX)) {
-		wima_error(WIMA_STATUS_REGION_MAX);
-		return WIMA_REGION_INVALID;
+	if (yunlikely(idx >= WIMA_EDITOR_MAX)) {
+		wima_error(WIMA_STATUS_EDITOR_MAX);
+		return WIMA_EDITOR_INVALID;
 	}
 
-	WimaReg reg;
+	WimaEdtr edtr;
 
 	// Make sure to null the user pointer.
-	reg.user = NULL;
+	edtr.user = NULL;
 
 	// Set up the functions.
-	reg.funcs = funcs;
+	edtr.funcs = funcs;
 
 	// Set up the item cap.
-	reg.itemCap = itemCap;
+	edtr.itemCap = itemCap;
 
 	// Push onto the vector and check for error.
-	DynaStatus status = dvec_push(wg.regions, &reg);
+	DynaStatus status = dvec_push(wg.editors, &edtr);
 	if (yunlikely(status)) {
 		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_REGION_INVALID;
+		return WIMA_EDITOR_INVALID;
 	}
 
-	return (WimaRegion) idx;
+	return (WimaEditor) idx;
 }
 
-void wima_region_setUserPointer(WimaRegion reg, void* ptr) {
+void wima_editor_setUserPointer(WimaEditor wed, void* ptr) {
 
 	wima_assert_init;
 
-	wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
+	wassert(wed < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
 
-	// Get the region pointer.
-	WimaReg* region = dvec_get(wg.regions, reg);
+	// Get the editor pointer.
+	WimaEdtr* editor = dvec_get(wg.editors, wed);
 
 	// Set the user pointer.
-	region->user = ptr;
+	editor->user = ptr;
 }
 
-void* wima_region_userPointer(WimaRegion reg) {
+void* wima_editor_userPointer(WimaEditor wed) {
 
 	wima_assert_init;
 
-	wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
+	wassert(wed < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
 
-	// Get the region pointer.
-	WimaReg* region = dvec_get(wg.regions, reg);
+	// Get the editor pointer.
+	WimaEdtr* editor = dvec_get(wg.editors, wed);
 
-	return region->user;
+	return editor->user;
 }

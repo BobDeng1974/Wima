@@ -367,7 +367,7 @@ int main() {
 		return status;
 	}
 
-	WimaRegionFuncs funcs;
+	WimaEditorFuncs funcs;
 	funcs.gen_ptr = cb_userPtr;
 	funcs.free_ptr = cb_userPtrFree;
 	funcs.layout = cb_layout;
@@ -375,9 +375,9 @@ int main() {
 	funcs.enter = cb_mouseEnterArea;
 
 	// Register a region.
-	WimaRegion region = wima_region_register(funcs, 4096);
-	if (region == WIMA_REGION_INVALID) {
-		return WIMA_REGION_INVALID;
+	WimaEditor region = wima_editor_register(funcs, 4096);
+	if (region == WIMA_EDITOR_INVALID) {
+		return WIMA_EDITOR_INVALID;
 	}
 
 	// Register a workspace.
@@ -425,12 +425,12 @@ int main() {
 		return status;
 	}
 
-	status = wima_workspace_addRegion(wksp, leftUpUp, region);
+	status = wima_workspace_addEditor(wksp, leftUpUp, region);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addRegion(wksp, leftUpDown, region);
+	status = wima_workspace_addEditor(wksp, leftUpDown, region);
 	if (status) {
 		return status;
 	}
@@ -440,7 +440,7 @@ int main() {
 		return status;
 	}
 
-	status = wima_workspace_addRegion(wksp, leftDownLeft, region);
+	status = wima_workspace_addEditor(wksp, leftDownLeft, region);
 	if (status) {
 		return status;
 	}
@@ -450,22 +450,22 @@ int main() {
 		return status;
 	}
 
-	status = wima_workspace_addRegion(wksp, dtree_left(leftDownRight), region);
+	status = wima_workspace_addEditor(wksp, dtree_left(leftDownRight), region);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addRegion(wksp, dtree_right(leftDownRight), region);
+	status = wima_workspace_addEditor(wksp, dtree_right(leftDownRight), region);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addRegion(wksp, rightUp, region);
+	status = wima_workspace_addEditor(wksp, rightUp, region);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addRegion(wksp, rightDown, region);
+	status = wima_workspace_addEditor(wksp, rightDown, region);
 	if (status) {
 		return status;
 	}

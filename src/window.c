@@ -52,7 +52,7 @@
 #include "render/render.h"
 
 #include "callbacks.h"
-#include "region.h"
+#include "editor.h"
 #include "area.h"
 #include "window.h"
 #include "global.h"
@@ -993,7 +993,7 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
 	wassert(dvec_len(wg.workspaces) != 0, WIMA_ASSERT_WKSP_REGISTERED);
-	wassert(dvec_len(wg.regions) != 0, WIMA_ASSERT_REG_REGISTERED);
+	wassert(dvec_len(wg.editors) != 0, WIMA_ASSERT_EDITOR_REGISTERED);
 
 	// Get the workspace.
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wksph));

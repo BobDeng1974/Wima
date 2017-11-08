@@ -50,7 +50,7 @@
 
 #include "prop.h"
 #include "old_layout.h"
-#include "region.h"
+#include "editor.h"
 #include "area.h"
 #include "window.h"
 #include "global.h"
@@ -127,7 +127,7 @@ float wima_area_scale(WimaArea wah) {
 	return area->area.scale;
 }
 
-void wima_area_setType(WimaArea wah, WimaRegion type) {
+void wima_area_setType(WimaArea wah, WimaEditor type) {
 
 	wima_assert_init;
 
@@ -143,7 +143,7 @@ void wima_area_setType(WimaArea wah, WimaRegion type) {
 	wima_window_setDirty(win, true);
 }
 
-WimaRegion wima_area_type(WimaArea wah) {
+WimaEditor wima_area_type(WimaArea wah) {
 
 	wima_assert_init;
 
@@ -199,11 +199,11 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 
 /**
  * A recursive function to check if the area tree is valid.
- * @param regions	The tree to check.
+ * @param editors	The tree to check.
  * @param node		The current node to check.
  * @return			true if valid, false otherwise.
  */
-static bool wima_area_node_valid(DynaTree regions, DynaNode node);
+static bool wima_area_node_valid(DynaTree editors, DynaNode node);
 
 /**
  * Recursive function to draw a tree of areas.
@@ -425,16 +425,16 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 		// Set the scale.
 		area->area.scale = 1.0f;
 
-		// Get the region handle.
-		WimaRegion reg = area->area.type;
+		// Get the editor handle.
+		WimaEditor edtr = area->area.type;
 
-		wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
+		wassert(edtr < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
 
-		// Get the region pointer.
-		WimaReg* region = dvec_get(wg.regions, reg);
+		// Get the editor pointer.
+		WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
 		// Get the particular user function setter.
-		WimaAreaGenUserPointerFunc get_user_ptr = region->funcs.gen_ptr;
+		WimaAreaGenUserPointerFunc get_user_ptr = editor->funcs.gen_ptr;
 
 		// If the user specified one, call it.
 		if (get_user_ptr) {
@@ -453,7 +453,7 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 		}
 
 		// Calculate the optimal allocation size.
-		size_t size = ynalloc(sizeof(WimaItem) * region->itemCap);
+		size_t size = ynalloc(sizeof(WimaItem) * editor->itemCap);
 
 		// Allocate and check for error.
 		area->area.ctx.items = ymalloc(size);
@@ -472,21 +472,21 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 	return status;
 }
 
-bool wima_area_valid(DynaTree regions) {
+bool wima_area_valid(DynaTree editors) {
 	wima_assert_init;
-	wassert(regions != NULL, WIMA_ASSERT_WIN_AREAS);
-	return wima_area_node_valid(regions, dtree_root());
+	wassert(editors != NULL, WIMA_ASSERT_WIN_AREAS);
+	return wima_area_node_valid(editors, dtree_root());
 }
 
-static bool wima_area_node_valid(DynaTree regions, DynaNode node) {
+static bool wima_area_node_valid(DynaTree editors, DynaNode node) {
 
-	wassert(dtree_exists(regions, node), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(editors, node), WIMA_ASSERT_AREA);
 
 	// Make sure this is clear.
 	bool result = true;
 
 	// Get the particular area we care about.
-	WimaAr* area = dtree_node(regions, node);
+	WimaAr* area = dtree_node(editors, node);
 
 	// We do something different depending on what type of node it is.
 	if (WIMA_AREA_IS_PARENT(area)) {
@@ -494,14 +494,14 @@ static bool wima_area_node_valid(DynaTree regions, DynaNode node) {
 		// Make sure a parent has both left and right children.
 		// A parent ***MUST*** have both children because otherwise
 		// You may as well just set an area.
-		result = dtree_hasLeft(regions, node) && dtree_hasRight(regions, node);
+		result = dtree_hasLeft(editors, node) && dtree_hasRight(editors, node);
 
 		// If we're good so far...
 		if (result) {
 
 			// Make sure the children nodes are valid.
-			result = wima_area_node_valid(regions, dtree_left(node)) &&
-			         wima_area_node_valid(regions, dtree_right(node));
+			result = wima_area_node_valid(editors, dtree_left(node)) &&
+			         wima_area_node_valid(editors, dtree_right(node));
 		}
 	}
 	else {
@@ -509,7 +509,7 @@ static bool wima_area_node_valid(DynaTree regions, DynaNode node) {
 		// Make sure the node does ***NOT*** have children.
 		// Actual areas should never have children because
 		// that kind of defeats the purpose.
-		result = !(dtree_hasLeft(regions, node) || dtree_hasRight(regions, node));
+		result = !(dtree_hasLeft(editors, node) || dtree_hasRight(editors, node));
 	}
 
 	return result;
@@ -531,16 +531,16 @@ void wima_area_destroy(void* ptr) {
 			return;
 		}
 
-		// Get the region handle.
-		WimaRegion reg = area->area.type;
+		// Get the editor handle.
+		WimaEditor edtr = area->area.type;
 
-		wassert(reg < dvec_len(wg.regions), WIMA_ASSERT_REG);
+		wassert(edtr < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
 
-		// Get the list of regions.
-		WimaReg* region = dvec_get(wg.regions, reg);
+		// Get the list of editors.
+		WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
 		// Get the particular user function setter.
-		WimaAreaFreeUserPointerFunc free_user_ptr = region->funcs.free_ptr;
+		WimaAreaFreeUserPointerFunc free_user_ptr = editor->funcs.free_ptr;
 
 		// If the user didn't specify one, don't call it.
 		if (!free_user_ptr) {
@@ -559,9 +559,9 @@ void wima_area_key(WimaAr* area, WimaKeyEvent e) {
 	wassert(area != NULL, WIMA_ASSERT_AREA);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	// Get the region's event handler.
-	WimaReg* region = dvec_get(wg.regions, area->area.type);
-	WimaAreaKeyFunc key_event = region->funcs.key;
+	// Get the editor's event handler.
+	WimaEdtr* editor = dvec_get(wg.editors, area->area.type);
+	WimaAreaKeyFunc key_event = editor->funcs.key;
 
 	// Get the handle.
 	WimaArea wah = wima_area(area->window, area->node);
@@ -579,9 +579,9 @@ void wima_area_mouseEnter(WimaAr* area, bool enter) {
 	wassert(area != NULL, WIMA_ASSERT_AREA);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	// Get the region's event handler.
-	WimaReg* region = dvec_get(wg.regions, area->area.type);
-	WimaAreaMouseEnterFunc mouse_enter = region->funcs.enter;
+	// Get the editor's event handler.
+	WimaEdtr* editor = dvec_get(wg.editors, area->area.type);
+	WimaAreaMouseEnterFunc mouse_enter = editor->funcs.enter;
 
 	// Get the handle.
 	WimaArea wah = wima_area(area->window, area->node);
@@ -783,9 +783,9 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 		WimaLayoutSplitCol splitcol;
 		WimaLayout wlh = wima_layout_new(parent, flags, splitcol);
 
-		// Get the region layout function.
-		WimaReg* region = dvec_get(wg.regions, area->area.type);
-		WimaAreaLayoutFunc layout = region->funcs.layout;
+		// Get the editor layout function.
+		WimaEdtr* editor = dvec_get(wg.editors, area->area.type);
+		WimaAreaLayoutFunc layout = editor->funcs.layout;
 
 		// Do the layout. The layout function is guaranteed to be non-null.
 		status = layout(wah, wlh, size);

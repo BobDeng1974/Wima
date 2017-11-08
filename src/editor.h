@@ -29,13 +29,13 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	Non-public header file contains declarations for regions.
+ *	Non-public header file contains declarations for editors.
  *
  *	******** END FILE DESCRIPTION ********
  */
 
-#ifndef WIMA_REGION_PRIVATE_H
-#define WIMA_REGION_PRIVATE_H
+#ifndef WIMA_EDITOR_PRIVATE_H
+#define WIMA_EDITOR_PRIVATE_H
 
 /* For C++ compatibility */
 #ifdef __cplusplus
@@ -45,31 +45,31 @@ extern "C" {
 #include <wima/wima.h>
 
 /**
- * @file region.h
+ * @file editor.h
  */
 
 /**
- * @defgroup region_internal region_internal
- * Internal data structures for regions in Wima.
+ * @defgroup editor_internal editor_internal
+ * Internal data structures for editors (area templates) in Wima.
  * @{
  */
 
 /**
- * Data for a region.
+ * Data for a editor.
  */
-typedef struct WimaReg {
+typedef struct WimaEdtr {
 
 	/// The user pointer.
 	void* user;
 
-	/// The functions associated with the region.
-	WimaRegionFuncs funcs;
+	/// The functions associated with the editor.
+	WimaEditorFuncs funcs;
 
 	/// The item capacity for all
-	/// areas made from this region.
+	/// areas made from this editor.
 	uint16_t itemCap;
 
-} WimaReg;
+} WimaEdtr;
 
 /**
  * @}
@@ -79,4 +79,4 @@ typedef struct WimaReg {
 }
 #endif
 
-#endif // WIMA_REGION_PRIVATE_H
+#endif // WIMA_EDITOR_PRIVATE_H

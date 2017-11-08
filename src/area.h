@@ -135,8 +135,8 @@ typedef struct WimaAr {
 		struct wima_area_leaf {
 
 			/// The user pointer for the area. This is different
-			/// from the region's user pointer which is shared
-			/// by all areas of the same region type. This user
+			/// from the editor's user pointer which is shared
+			/// by all areas of the same editor type. This user
 			/// pointer is only for the area itself.
 			void* user;
 
@@ -147,7 +147,7 @@ typedef struct WimaAr {
 			float scale;
 
 			/// The type of area it is.
-			WimaRegion type;
+			WimaEditor type;
 
 		} area;
 
@@ -173,7 +173,7 @@ typedef struct WimaAr {
 
 /**
  * @def WIMA_AREA_IS_LEAF
- * Checks if @a area is a leaf (region) area.
+ * Checks if @a area is a leaf (editor) area.
  * @param area	The WimaAr to check.
  */
 #define WIMA_AREA_IS_LEAF(area)    (!((area)->isParent))
@@ -210,11 +210,11 @@ WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect);
  * all parents have exactly two children, no leaf is
  * labeled as a parent, and that no parent is labeled
  * as a leaf type.
- * @param regions	The tree to check.
- * @return			true if @a regions is valid, false
+ * @param editors	The tree to check.
+ * @return			true if @a editors is valid, false
  *					otherwise.
  */
-bool wima_area_valid(DynaTree regions);
+bool wima_area_valid(DynaTree editors);
 
 /**
  * Frees a tree of areas.
@@ -318,7 +318,7 @@ WimaWidget wima_area_findWidget(DynaTree areas, WimaVec pos, uint32_t flags);
 void wima_area_join(WimaAreaNode left, WimaAreaNode right);
 
 /**
- * Split an area into two. The same region is used for both.
+ * Split an area into two. The same editor is used for both.
  * @param node	The area to split.
  * @pre			@a node must be valid.
  */
