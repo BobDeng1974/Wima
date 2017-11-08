@@ -87,6 +87,9 @@ typedef struct WimaG {
 	/// Workspace types.
 	DynaVector workspaces;
 
+	/// Workspace properties. These are the names and icons.
+	DynaVector workspaceProps;
+
 	/// Editors (area types).
 	DynaVector editors;
 
@@ -159,6 +162,7 @@ typedef enum WimaAssertType {
 
 	WIMA_ASSERT_WKSP,
 	WIMA_ASSERT_WKSP_REGISTERED,
+	WIMA_ASSERT_WKSP_MISMATCH,
 
 	WIMA_ASSERT_AREA,
 	WIMA_ASSERT_AREA_LEAF,

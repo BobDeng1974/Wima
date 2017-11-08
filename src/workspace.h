@@ -55,6 +55,12 @@ extern "C" {
  */
 
 /**
+ * @def WIMA_WKSP_BUFFER_SIZE
+ * A buffer size for making workspace names.
+ */
+#define WIMA_WKSP_BUFFER_SIZE 128
+
+/**
  * A workspace, which can be broken down into areas.
  */
 typedef DynaTree WimaWksp;
@@ -66,12 +72,6 @@ typedef DynaTree WimaWksp;
  * @return		true if @a n is valid, false otherwise.
  */
 bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n);
-
-/**
- * Destroys a workspace. This is a Dyna DestructFunc.
- * @param ptr	A pointer to the workspace to destroy.
- */
-void wima_workspace_destroy(void* ptr);
 
 /**
  * @}

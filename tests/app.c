@@ -381,7 +381,7 @@ int main() {
 	}
 
 	// Register a workspace.
-	WimaWorkspace wksp = wima_workspace_register();
+	WimaWorkspace wksp = wima_workspace_register("Test Workspace", wima_icon_donut());
 	if (wksp == WIMA_WORKSPACE_INVALID) {
 		return WIMA_WORKSPACE_INVALID;
 	}

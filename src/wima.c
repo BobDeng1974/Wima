@@ -90,6 +90,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.iconPathWindings = NULL;
 	wg.icons = NULL;
 	wg.editors = NULL;
+	wg.workspaceProps = NULL;
 	wg.workspaces = NULL;
 	wg.name = NULL;
 	wg.props = NULL;
@@ -135,8 +136,15 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Create and if error, exit.
-	wg.workspaces = dvec_create(0, wima_workspace_destroy, sizeof(WimaWksp));
+	wg.workspaces = dvec_createTreeVec(0, wima_area_destroy, sizeof(WimaAr));
 	if (yunlikely(!wg.workspaces)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Create and if error, exit.
+	wg.workspaceProps = dvec_create(0, NULL, sizeof(WimaProperty));
+	if (yunlikely(!wg.workspaceProps)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -320,6 +328,11 @@ void wima_exit() {
 	// Free the icon vector, if it exists.
 	if (wg.icons) {
 		dnvec_free(wg.icons);
+	}
+
+	// Free the icon vector, if it exists.
+	if (wg.workspaceProps) {
+		dvec_free(wg.workspaceProps);
 	}
 
 	// Free the workspaces, if they exist.

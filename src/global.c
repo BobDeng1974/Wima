@@ -119,6 +119,7 @@ const char* wima_assert_msgs[] = {
 
     "workspace is not valid",
     "no workspaces are registered",
+    "the number of workspaces does not match the number of workspace names; this is a bug in Wima",
 
     "area is not valid",
     "area is a parent, not a leaf",

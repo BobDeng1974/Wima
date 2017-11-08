@@ -1751,7 +1751,7 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
  * has any parent nodes with no or only one child.
  * @return	The registered workspace.
  */
-WimaWorkspace wima_workspace_register();
+WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon);
 
 /**
  * Adds a parent node to @a wwksp.

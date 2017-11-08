@@ -47,20 +47,61 @@
 #include "workspace.h"
 #include "global.h"
 
+//! @cond Doxygen suppress.
 wima_global_decl;
 wima_error_descs_decl;
 wima_assert_msgs_decl;
+//! @endcond Doxygen suppress.
+
+////////////////////////////////////////////////////////////////////////////////
+// Global constant format for workspace names.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @file workspace.c
+ */
+
+/**
+ * @defgroup workspace_internal workspace_internal
+ * @{
+ */
+
+/**
+ * A format for making a workspace name.
+ */
+const char* const wima_wksp_fmt = "wima_workspace%03d";
+
+/**
+ * Description (tooltip) for workspace properties.
+ */
+const char* const wima_wksp_desc = "Name of a workspace";
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaWorkspace wima_workspace_register() {
+WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon) {
 
 	wima_assert_init;
 
+	// This is the id of the workspace, for the prop name.
+	static uint8_t index = 0;
+
+	// We also need a buffer.
+	char buffer[WIMA_WKSP_BUFFER_SIZE];
+
+	// Create the name.
+	sprintf(buffer, wima_wksp_fmt, index);
+	++index;
+
 	// Get the index of the new workspace.
 	size_t len = dvec_len(wg.workspaces);
+
+	wassert(len == dvec_len(wg.workspaceProps), WIMA_ASSERT_WKSP_MISMATCH);
 
 	// Make sure we have enough space.
 	if (yunlikely(len >= WIMA_WORKSPACE_MAX)) {
@@ -68,17 +109,63 @@ WimaWorkspace wima_workspace_register() {
 		return WIMA_WORKSPACE_INVALID;
 	}
 
-	// Create the workspace and check for error.
-	WimaWksp wksp = dtree_create(0, wima_area_destroy, sizeof(WimaAr));
-	if (yunlikely(!wksp)) {
+	// Create the string.
+	DynaString s = dstr_create(name);
+
+	// Check for error.
+	if (yunlikely(s == NULL)) {
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_WORKSPACE_INVALID;
 	}
 
-	// Push the workspace onto the list.
-	DynaStatus status = dvec_push(wg.workspaces, &wksp);
-	if (yunlikely(status)) {
+	// Create the property.
+	WimaProperty prop = wima_prop_string_register(buffer, NULL, wima_wksp_desc, icon, s);
+
+	// Check for error.
+	if (yunlikely(prop == WIMA_PROP_INVALID)) {
+
+		// Free the string.
+		dstr_free(s);
+
+		// Report the error.
 		wima_error(WIMA_STATUS_MALLOC_ERR);
+
+		return WIMA_WORKSPACE_INVALID;
+	}
+
+	// Create the workspace.
+	WimaWksp wksp = dvec_pushTree(wg.workspaces);
+
+	// Check for error.
+	if (yunlikely(!wksp)) {
+
+		// Unregister the prop.
+		wima_prop_unregister(prop);
+
+		// Free the string.
+		dstr_free(s);
+
+		// Report the error.
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+
+		return WIMA_WORKSPACE_INVALID;
+	}
+
+	// Push onto the prop vector and check for error.
+	if (yunlikely(dvec_push(wg.workspaceProps, &prop))) {
+
+		// Pop the tree off.
+		dvec_pop(wg.workspaces);
+
+		// Unregister the prop.
+		wima_prop_unregister(prop);
+
+		// Free the string.
+		dstr_free(s);
+
+		// Report the error.
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+
 		return WIMA_WORKSPACE_INVALID;
 	}
 
@@ -174,8 +261,4 @@ bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n) {
 
 	// Return the condition.
 	return root || (dtree_exists(wksp, p) && WIMA_AREA_IS_PARENT((WimaAr*) dtree_node(wksp, p)));
-}
-
-void wima_workspace_destroy(void* ptr) {
-	dtree_free(*((DynaTree*) ptr));
 }
