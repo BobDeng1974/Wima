@@ -60,6 +60,8 @@
 
 #include <string.h>
 
+#include <dyna/nvector.h>
+
 #include <wima/render.h>
 #include <wima/math.h>
 
@@ -1050,12 +1052,12 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	// If icon is invalid, return.
-	if (icon >= dvec_len(wg.icons)) {
+	if (icon >= dnvec_len(wg.icons)) {
 		return;
 	}
 
 	// Get the vector image.
-	WimaIcn img = *((WimaIcn*) dvec_get(wg.icons, icon));
+	WimaIcn img = *((WimaIcn*) dnvec_get(wg.icons, WIMA_ICON_HANDLE_IDX, icon));
 
 	// Calculate the scale.
 	float scale = WIMA_ICON_SHEET_RES / wima_fmaxf(img->width, img->height);
@@ -1066,7 +1068,7 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 	nvgScale(ctx->nvg, scale, scale);
 
 	// Set up the index into the windings vector.
-	WimaIconPaths marker = *((WimaIconPaths*) dvec_get(wg.iconPaths, icon));
+	WimaIconMarker marker = *((WimaIconMarker*) dnvec_get(wg.icons, WIMA_ICON_MARKER_IDX, icon));
 	bool* boolptr = dvec_get(wg.iconPathWindings, marker.start);
 
 	// Loop through the shapes in the image.

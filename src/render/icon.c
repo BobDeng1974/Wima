@@ -38,6 +38,8 @@
 
 #include <jemalloc/jemalloc.h>
 
+#include <dyna/nvector.h>
+
 #define NANOSVG_ALL_COLOR_KEYWORDS
 #define NANOSVG_IMPLEMENTATION
 #include <nanosvg.h>
@@ -91,16 +93,14 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 
 	wima_assert_init;
 
-	WimaIconPaths prev;
-	WimaIconPaths marker;
+	WimaIconMarker prev;
+	WimaIconMarker marker;
 	DynaStatus status;
 
 	wassert(path != NULL, WIMA_ASSERT_PATH_NULL);
 
 	// Get the length.
-	size_t len = dvec_len(wg.icons);
-
-	wassert(len == dvec_len(wg.iconPaths), WIMA_ASSERT_ICON_MISMATCH);
+	size_t len = dnvec_len(wg.icons);
 
 	// Make sure the user hasn't created too many icons.
 	if (yunlikely(len == WIMA_ICON_INVALID)) {
@@ -112,7 +112,7 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 	if (len != 0) {
 
 		// Get the previous marker.
-		prev = *((WimaIconPaths*) dvec_get(wg.iconPaths, len - 1));
+		prev = *((WimaIconMarker*) dnvec_get(wg.icons, WIMA_ICON_MARKER_IDX, len - 1));
 	}
 	else {
 
@@ -213,31 +213,14 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 	// Set the marker end.
 	marker.end = marker.start + count;
 
-	// Push the marker and check for error.
-	status = dvec_push(wg.iconPaths, &marker);
-	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
-
-		// Loop through the already-added windings and delete them.
-		for (uint32_t i = 0; i < count; ++i) {
-			dvec_pop(wg.iconPathWindings);
-		}
-
-		// Return an error.
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_ICON_INVALID;
-	}
-
 	// Push onto the vector and check for error.
-	status = dvec_push(wg.icons, &img);
+	status = dnvec_push(wg.icons, &img, &marker);
 	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
 
 		// Loop through the already-added windings and delete them.
 		for (uint32_t i = 0; i < count; ++i) {
 			dvec_pop(wg.iconPathWindings);
 		}
-
-		// Make sure to pop the marker.
-		dvec_pop(wg.iconPaths);
 
 		// Return an error.
 		wima_error(WIMA_STATUS_MALLOC_ERR);
@@ -305,7 +288,7 @@ WimaIcon wima_icon_donut() {
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-void wima_icon_destroy(void* icon) {
+void wima_icon_destroy(size_t count, void** ptr) {
 	wima_assert_init;
-	nsvgDelete(*((WimaIcn*) icon));
+	nsvgDelete(*((WimaIcn*) ptr[WIMA_ICON_HANDLE_IDX]));
 }

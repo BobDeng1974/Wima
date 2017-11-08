@@ -238,7 +238,7 @@ typedef NSVGimage* WimaIcn;
  * A way for WimaG to store the start and end
  * of paths in the iconPathWinding vector.
  */
-typedef struct WimaIconPaths {
+typedef struct WimaIconMarker {
 
 	/// The start index of the paths in the iconPathWinding vector.
 	uint32_t start;
@@ -246,7 +246,7 @@ typedef struct WimaIconPaths {
 	/// The end index of the paths in the iconPathWinding vector.
 	uint32_t end;
 
-} WimaIconPaths;
+} WimaIconMarker;
 
 /**
  * @def WIMA_ICON_RED
@@ -273,10 +273,24 @@ typedef struct WimaIconPaths {
 #define WIMA_ICON_ALPHA (0xFF000000)
 
 /**
- * A destructor for icons.
- * @param icon	A pointer to the icon to destroy.
+ * @def WIMA_ICON_HANDLE_IDX
+ * The array index for an icon's @a WimaIcon handle.
  */
-void wima_icon_destroy(void* icon);
+#define WIMA_ICON_HANDLE_IDX 0
+
+/**
+ * @def WIMA_ICON_MARKER_IDX
+ * The array index for an icon's winding marker.
+ */
+#define WIMA_ICON_MARKER_IDX 1
+
+/**
+ * A destructor for icons.
+ * @param count	The number items in @a ptr.
+ * @param ptr	A pointer to the icon and
+ *				icon marker to destroy.
+ */
+void wima_icon_destroy(size_t count, void** ptr);
 
 /**
  * @}

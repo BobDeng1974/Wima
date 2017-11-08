@@ -187,7 +187,6 @@ const char* wima_assert_msgs[] = {
     "cursor hot position is invalid",
 
     "icon is not valid",
-    "there is a mismatch in the number of icons; this is a bug in Wima",
 
     "ptr is NULL",
 

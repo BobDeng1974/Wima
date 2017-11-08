@@ -88,7 +88,6 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.imageFlags = NULL;
 	wg.imagePaths = NULL;
 	wg.iconPathWindings = NULL;
-	wg.iconPaths = NULL;
 	wg.icons = NULL;
 	wg.regions = NULL;
 	wg.workspaces = NULL;
@@ -143,15 +142,8 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Create and if error, exit.
-	wg.icons = dvec_create(0, wima_icon_destroy, sizeof(WimaIcn));
+	wg.icons = dnvec_create(2, 0, wima_icon_destroy, sizeof(WimaIcn), sizeof(WimaIconMarker));
 	if (yunlikely(!wg.icons)) {
-		wima_exit();
-		return WIMA_STATUS_MALLOC_ERR;
-	}
-
-	// Create and if error, exit.
-	wg.iconPaths = dvec_create(0, NULL, sizeof(WimaIconPaths));
-	if (yunlikely(!wg.iconPaths)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -325,14 +317,9 @@ void wima_exit() {
 		dvec_free(wg.iconPathWindings);
 	}
 
-	// Free the iconPaths vector, if it exists.
-	if (wg.iconPaths) {
-		dvec_free(wg.iconPaths);
-	}
-
 	// Free the icon vector, if it exists.
 	if (wg.icons) {
-		dvec_free(wg.icons);
+		dnvec_free(wg.icons);
 	}
 
 	// Free the workspaces, if they exist.

@@ -90,13 +90,8 @@ typedef struct WimaG {
 	/// Regions (area types).
 	DynaVector regions;
 
-	/// Icons.
+	/// Icons and their markers in the @a iconPathWindings vector.
 	DynaVector icons;
-
-	/// Path markers for each icon. These indices should
-	/// match exactly with the icons in the @a icons vector.
-	/// They reference indices in @a iconPathWindings.
-	DynaVector iconPaths;
 
 	/// Icon path windings.
 	DynaVector iconPathWindings;
@@ -231,7 +226,6 @@ typedef enum WimaAssertType {
 	WIMA_ASSERT_CURSOR_HOT,
 
 	WIMA_ASSERT_ICON,
-	WIMA_ASSERT_ICON_MISMATCH,
 
 	WIMA_ASSERT_PTR_NULL,
 
