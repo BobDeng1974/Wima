@@ -446,6 +446,11 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 			// Call the user function.
 			area->area.user = get_user_ptr(wah);
 		}
+		else {
+
+			// Set to NULL.
+			area->area.user = NULL;
+		}
 
 		// Calculate the optimal allocation size.
 		size_t size = ynalloc(sizeof(WimaItem) * region->itemCap);
