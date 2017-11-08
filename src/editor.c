@@ -52,7 +52,7 @@ wima_assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaEditor wima_editor_register(WimaEditorFuncs funcs, uint32_t itemCap) {
+WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, uint16_t itemCap) {
 
 	wima_assert_init;
 
@@ -70,19 +70,33 @@ WimaEditor wima_editor_register(WimaEditorFuncs funcs, uint32_t itemCap) {
 
 	WimaEdtr edtr;
 
+	// Create the name.
+	edtr.name = dstr_create(name);
+
+	// Check for error.
+	if (yunlikely(edtr.name == NULL)) {
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_EDITOR_INVALID;
+	}
+
 	// Make sure to null the user pointer.
 	edtr.user = NULL;
 
-	// Set up the functions.
+	// Set up  the fields.
 	edtr.funcs = funcs;
-
-	// Set up the item cap.
+	edtr.icon = icon;
 	edtr.itemCap = itemCap;
 
 	// Push onto the vector and check for error.
 	DynaStatus status = dvec_push(wg.editors, &edtr);
 	if (yunlikely(status)) {
+
+		// Free the name.
+		dstr_free(edtr.name);
+
+		// Send and error.
 		wima_error(WIMA_STATUS_MALLOC_ERR);
+
 		return WIMA_EDITOR_INVALID;
 	}
 

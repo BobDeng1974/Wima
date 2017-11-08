@@ -59,11 +59,17 @@ extern "C" {
  */
 typedef struct WimaEdtr {
 
+	/// The name.
+	DynaString name;
+
 	/// The user pointer.
 	void* user;
 
 	/// The functions associated with the editor.
 	WimaEditorFuncs funcs;
+
+	/// The icon.
+	WimaIcon icon;
 
 	/// The item capacity for all
 	/// areas made from this editor.

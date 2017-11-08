@@ -1605,12 +1605,14 @@ typedef struct WimaEditorFuncs {
 
 /**
  * Registers a editor type that can then be used to create a WimaWorkspace.
+ * @param name		The editor's name. This is used as a label.
  * @param funcs		The functions that the editor/area will use.
+ * @param icon		The icon for the editor.
  * @param itemCap	The total capacity for items (layouts and widgets)
  *					that the editor can handle.
  * @return			The editor.
  */
-WimaEditor wima_editor_register(WimaEditorFuncs funcs, uint32_t itemCap);
+WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, uint16_t itemCap);
 
 /**
  * Sets the global user pointer for the editor. All areas created from
