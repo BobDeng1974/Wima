@@ -100,7 +100,7 @@ WimaStatus cb_draw(WimaWidget item, WimaRenderContext* ctx) {
 
 	sprintf(buffer, "%d", item.area);
 
-	WimaRect r = wima_widget_rect(item);
+	WimaRect r = wima_area_rect(wima_area(item.window, item.area));
 
 #if 0
 	printf("Item[%s] Rect: { x: %d. y: %d, w: %d, h: %d }\n", buffer, r.x, r.y, r.w, r.h);
@@ -116,7 +116,7 @@ WimaStatus cb_draw(WimaWidget item, WimaRenderContext* ctx) {
 	wima_ui_label(ctx, r.x + 2, r.y + 2, width, height, wima_icon_debug(), stuff);
 #endif
 
-	wima_ui_label(ctx, r.x, r.y, r.w, r.h, wima_icon_debug(), buffer);
+	wima_ui_label(ctx, 0, 0, r.w, r.h, wima_icon_debug(), buffer);
 
 	return WIMA_STATUS_SUCCESS;
 }
