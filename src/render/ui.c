@@ -86,6 +86,7 @@ wima_assert_msgs_decl;
 
 /**
  * @defgroup ui_internal ui_internal
+ * Private functions and data structures for the user interface.
  * @{
  */
 

@@ -1191,6 +1191,7 @@ typedef struct WimaMenu {
 
 /**
  * @defgroup widget widget
+ * Functions and data structures for creating widgets.
  * @{
  */
 
