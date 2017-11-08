@@ -374,9 +374,9 @@ int main() {
 	funcs.key = cb_key;
 	funcs.enter = cb_mouseEnterArea;
 
-	// Register a region.
-	WimaEditor region = wima_editor_register(funcs, 4096);
-	if (region == WIMA_EDITOR_INVALID) {
+	// Register a editor.
+	WimaEditor editor = wima_editor_register("Test Editor", funcs, wima_icon_debug(), 4096);
+	if (editor == WIMA_EDITOR_INVALID) {
 		return WIMA_EDITOR_INVALID;
 	}
 
@@ -404,7 +404,7 @@ int main() {
 	DynaNode leftDownLeft = dtree_left(leftDown);
 	DynaNode leftDownRight = dtree_right(leftDown);
 
-	// Add the node and regions to the workspace.
+	// Add the node and editors to the workspace.
 	status = wima_workspace_addParent(wksp, root, 0.5f, true);
 	if (status) {
 		return status;
@@ -425,12 +425,12 @@ int main() {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, leftUpUp, region);
+	status = wima_workspace_addEditor(wksp, leftUpUp, editor);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, leftUpDown, region);
+	status = wima_workspace_addEditor(wksp, leftUpDown, editor);
 	if (status) {
 		return status;
 	}
@@ -440,7 +440,7 @@ int main() {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, leftDownLeft, region);
+	status = wima_workspace_addEditor(wksp, leftDownLeft, editor);
 	if (status) {
 		return status;
 	}
@@ -450,22 +450,22 @@ int main() {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, dtree_left(leftDownRight), region);
+	status = wima_workspace_addEditor(wksp, dtree_left(leftDownRight), editor);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, dtree_right(leftDownRight), region);
+	status = wima_workspace_addEditor(wksp, dtree_right(leftDownRight), editor);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, rightUp, region);
+	status = wima_workspace_addEditor(wksp, rightUp, editor);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, rightDown, region);
+	status = wima_workspace_addEditor(wksp, rightDown, editor);
 	if (status) {
 		return status;
 	}
