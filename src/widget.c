@@ -120,7 +120,10 @@ void wima_widget_setEnabled(WimaWidget wdgt, bool enable) {
 
 	wima_assert_init;
 
+	// Get the pointer.
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
 
 	if (enable) {
 		pwdgt->widget.flags |= WIMA_WIDGET_DISABLED;
@@ -134,7 +137,10 @@ bool wima_widget_enabled(WimaWidget wdgt) {
 
 	wima_assert_init;
 
+	// Get the pointer.
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
 
 	return pwdgt->widget.flags & WIMA_WIDGET_DISABLED;
 }
@@ -143,7 +149,10 @@ void wima_widget_setSize(WimaWidget wdgt, WimaSize size) {
 
 	wima_assert_init;
 
+	// Get the pointer.
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
 
 	pwdgt->rect.w = size.w;
 	pwdgt->rect.h = size.h;
@@ -164,20 +173,37 @@ void wima_widget_setSize(WimaWidget wdgt, WimaSize size) {
 }
 
 int wima_widget_width(WimaWidget wdgt) {
+
 	wima_assert_init;
-	return wima_widget_ptr(wdgt)->rect.w;
+
+	// Get the pointer.
+	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
+
+	return pwdgt->rect.w;
 }
 
 int wima_widget_height(WimaWidget wdgt) {
+
 	wima_assert_init;
-	return wima_widget_ptr(wdgt)->rect.h;
+
+	// Get the pointer.
+	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
+
+	return pwdgt->rect.h;
 }
 
 void wima_widget_setLayout(WimaWidget wdgt, uint32_t flags) {
 
 	wima_assert_init;
 
+	// Get the pointer.
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
 
 	wassert((flags & WIMA_ITEM_LAYOUT_MASK) == flags, WIMA_ASSERT_WIDGET_LAYOUT_FLAGS);
 
@@ -186,15 +212,25 @@ void wima_widget_setLayout(WimaWidget wdgt, uint32_t flags) {
 }
 
 uint32_t wima_widget_layout(WimaWidget wdgt) {
+
 	wima_assert_init;
-	return wima_widget_ptr(wdgt)->widget.flags & WIMA_ITEM_LAYOUT_MASK;
+
+	// Get the pointer.
+	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
+
+	return pwdgt->widget.flags & WIMA_ITEM_LAYOUT_MASK;
 }
 
 void wima_widget_setBox(WimaWidget wdgt, uint32_t flags) {
 
 	wima_assert_init;
 
+	// Get the pointer.
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
 
 	wassert((flags & WIMA_ITEM_BOX_MASK) == flags, WIMA_ASSERT_WIDGET_BOX_FLAGS);
 
@@ -203,15 +239,25 @@ void wima_widget_setBox(WimaWidget wdgt, uint32_t flags) {
 }
 
 uint32_t wima_widget_box(WimaWidget wdgt) {
+
 	wima_assert_init;
-	return wima_widget_ptr(wdgt)->widget.flags & WIMA_ITEM_BOX_MASK;
+
+	// Get the pointer.
+	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
+
+	return pwdgt->widget.flags & WIMA_ITEM_BOX_MASK;
 }
 
 void wima_widget_setUserPointer(WimaWidget wdgt, void* user) {
 
 	wima_assert_init;
 
+	// Get the pointer.
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
 
 	pwdgt->widget.user = user;
 }
@@ -220,7 +266,10 @@ void* wima_widget_userPointer(WimaWidget wdgt) {
 
 	wima_assert_init;
 
+	// Get the pointer.
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
 
 	return pwdgt->widget.user;
 }
@@ -229,45 +278,71 @@ void wima_widget_setFlags(WimaWidget wdgt, uint32_t flags) {
 
 	wima_assert_init;
 
+	// Get the pointer.
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
 
 	pwdgt->widget.flags &= ~WIMA_ITEM_USERMASK;
 	pwdgt->widget.flags |= flags & WIMA_ITEM_USERMASK;
 }
 
 uint32_t wima_widget_flags(WimaWidget wdgt) {
+
 	wima_assert_init;
-	return wima_widget_ptr(wdgt)->widget.flags & WIMA_ITEM_USERMASK;
+
+	// Get the pointer.
+	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
+
+	return pwdgt->widget.flags & WIMA_ITEM_USERMASK;
 }
 
 WimaRect wima_widget_rect(WimaWidget wdgt) {
 
 	wima_assert_init;
 
+	// Get the pointer.
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
 
 	return pwdgt->rect;
 }
 
 uint32_t wima_widget_events(WimaWidget wdgt) {
+
 	wima_assert_init;
-	return wima_widget_ptr(wdgt)->widget.flags & WIMA_ITEM_EVENT_MASK;
+
+	// Get the pointer.
+	WimaItem* pwdgt = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
+
+	return pwdgt->widget.flags & WIMA_ITEM_EVENT_MASK;
 }
 
 WimaWidgetState wima_widget_state(WimaWidget wdgt) {
 
 	wima_assert_init;
 
+	// Get the pointer.
 	WimaItem* pwdgt = wima_widget_ptr(wdgt);
 
+	wassert(WIMA_ITEM_IS_WIDGET(pwdgt), WIMA_ASSERT_ITEM_WIDGET);
+
+	// If the widget is disabled...
 	if (pwdgt->widget.flags & WIMA_WIDGET_DISABLED) {
 		return WIMA_WIDGET_DISABLED;
 	}
 
+	// If the widget is focused *and* receives char events...
 	if (wima_widget_isFocused(wdgt) && pwdgt->widget.flags & WIMA_EVENT_CHAR) {
 		return WIMA_WIDGET_ACTIVE;
 	}
 
+	// If the widget is active...
 	if (wima_widget_isActive(wdgt)) {
 		return pwdgt->widget.flags & WIMA_EVENT_MOUSE_BTN ? WIMA_WIDGET_ACTIVE : WIMA_WIDGET_DEFAULT;
 	}

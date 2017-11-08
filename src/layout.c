@@ -128,22 +128,10 @@ void wima_layout_setEnabled(WimaLayout wlh, bool enabled) {
 
 	wima_assert_init;
 
-	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
-
-	// Get a pointer to the window.
-	WimaWin* win = dvec_get(wg.windows, wlh.window);
-
-	wassert(dtree_exists(win->areas, wlh.area), WIMA_ASSERT_AREA);
-
-	// Get a pointer to the area.
-	WimaAr* area = dtree_node(win->areas, wlh.area);
-
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-
-	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
-
 	// Get a pointer to the layout.
-	WimaItem* layout = area->area.ctx.items + wlh.layout;
+	WimaItem* layout = wima_layout_ptr(wlh);
+
+	wassert(WIMA_ITEM_IS_LAYOUT(layout), WIMA_ASSERT_ITEM_LAYOUT);
 
 	// Sets the enabled bit.
 	if (enabled) {
@@ -158,22 +146,10 @@ bool wima_layout_enabled(WimaLayout wlh) {
 
 	wima_assert_init;
 
-	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
-
-	// Get a pointer to the window.
-	WimaWin* win = dvec_get(wg.windows, wlh.window);
-
-	wassert(dtree_exists(win->areas, wlh.area), WIMA_ASSERT_AREA);
-
-	// Get a pointer to the area.
-	WimaAr* area = dtree_node(win->areas, wlh.area);
-
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-
-	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
-
 	// Get a pointer to the layout.
-	WimaItem* layout = area->area.ctx.items + wlh.layout;
+	WimaItem* layout = wima_layout_ptr(wlh);
+
+	wassert(WIMA_ITEM_IS_LAYOUT(layout), WIMA_ASSERT_ITEM_LAYOUT);
 
 	return layout->layout.flags & WIMA_LAYOUT_ENABLE;
 }
@@ -182,22 +158,10 @@ void wima_layout_setBackgroundColor(WimaLayout wlh, WimaColor color) {
 
 	wima_assert_init;
 
-	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
-
-	// Get a pointer to the window.
-	WimaWin* win = dvec_get(wg.windows, wlh.window);
-
-	wassert(dtree_exists(win->areas, wlh.area), WIMA_ASSERT_AREA);
-
-	// Get a pointer to the area.
-	WimaAr* area = dtree_node(win->areas, wlh.area);
-
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-
-	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
-
 	// Get a pointer to the layout.
-	WimaItem* layout = area->area.ctx.items + wlh.layout;
+	WimaItem* layout = wima_layout_ptr(wlh);
+
+	wassert(WIMA_ITEM_IS_LAYOUT(layout), WIMA_ASSERT_ITEM_LAYOUT);
 
 	// Set the color
 	layout->layout.bgcolor = color;
@@ -207,22 +171,10 @@ WimaColor wima_layout_backgroundColor(WimaLayout wlh) {
 
 	wima_assert_init;
 
-	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
-
-	// Get a pointer to the window.
-	WimaWin* win = dvec_get(wg.windows, wlh.window);
-
-	wassert(dtree_exists(win->areas, wlh.area), WIMA_ASSERT_AREA);
-
-	// Get a pointer to the area.
-	WimaAr* area = dtree_node(win->areas, wlh.area);
-
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-
-	wassert(wlh.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
-
 	// Get a pointer to the layout.
-	WimaItem* layout = area->area.ctx.items + wlh.layout;
+	WimaItem* layout = wima_layout_ptr(wlh);
+
+	wassert(WIMA_ITEM_IS_LAYOUT(layout), WIMA_ASSERT_ITEM_LAYOUT);
 
 	return layout->layout.bgcolor;
 }
@@ -306,6 +258,8 @@ WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags, uint32_t cols) {
 WimaItem* wima_layout_ptr(WimaLayout wlh) {
 
 	wima_assert_init;
+
+	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
 
 	// Get the area pointer.
 	WimaAr* area = wima_area_ptr(wlh.window, wlh.area);
