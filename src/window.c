@@ -207,7 +207,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 {
 	wima_assert_init;
 
-	wassert(wima_area_valid(*((DynaTree*) dvec_get(wg.workspaces, wksph))), WIMA_ASSERT_WKSP);
+	wassert(wima_area_valid(dvec_get(wg.workspaces, wksph)), WIMA_ASSERT_WKSP);
 
 	// Get the index of the new window.
 	size_t len = dvec_len(wg.windows);
@@ -996,7 +996,7 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 	wassert(dvec_len(wg.editors) != 0, WIMA_ASSERT_EDITOR_REGISTERED);
 
 	// Get the workspace.
-	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wksph));
+	WimaWksp wksp = dvec_get(wg.workspaces, wksph);
 
 	wassert(wima_area_valid(wksp), WIMA_ASSERT_WKSP);
 

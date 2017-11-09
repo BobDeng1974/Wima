@@ -175,7 +175,7 @@ WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
 	wassert(wima_workspace_nodeValid(wwksp, node), WIMA_ASSERT_WKSP_TREE_VALID);
 
 	// Get the workspace.
-	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwksp));
+	WimaWksp wksp = dvec_get(wg.workspaces, wwksp);
 
 	// Fill an initial area with common data.
 	WimaAr wan;
@@ -204,7 +204,7 @@ WimaStatus wima_workspace_addEditor(WimaWorkspace wwksp, DynaNode node, WimaEdit
 	wassert(wima_workspace_nodeValid(wwksp, node), WIMA_ASSERT_WKSP_TREE_VALID);
 
 	// Get the workspace.
-	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwksp));
+	WimaWksp wksp = dvec_get(wg.workspaces, wwksp);
 
 	// Fill an initial area with common data.
 	WimaAr wan;
@@ -239,7 +239,7 @@ bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n) {
 	wassert(wwh < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
 
 	// Get the workspace.
-	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwh));
+	WimaWksp wksp = dvec_get(wg.workspaces, wwh);
 
 	// Get the parent and root.
 	DynaNode p = dtree_parent(n);
