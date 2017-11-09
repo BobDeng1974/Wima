@@ -1159,8 +1159,13 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 	// Push on the nvector.
 	DynaStatus status = dnvec_push(wg.props, &prop, data);
 
-	// Return the appropriate result.
-	return status ? WIMA_PROP_INVALID : idx;
+	// Check for error.
+	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
+		ysfree(prop.name, sum);
+		return WIMA_PROP_INVALID;
+	}
+
+	return idx;
 }
 
 static bool wima_prop_enum_namesValid(const char* names[], uint32_t numNames) {

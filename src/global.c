@@ -118,6 +118,7 @@ const char* wima_assert_msgs[] = {
     "window render context is NULL; this is a bug in Wima",
 
     "workspace is not valid",
+    "workspace tree is not valid",
     "no workspaces are registered",
     "the number of workspaces does not match the number of workspace names; this is a bug in Wima",
 

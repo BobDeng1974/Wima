@@ -105,8 +105,7 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon) {
 
 	// Make sure we have enough space.
 	if (yunlikely(len >= WIMA_WORKSPACE_MAX)) {
-		wima_error(WIMA_STATUS_WORKSPACE_MAX);
-		return WIMA_WORKSPACE_INVALID;
+		goto wima_wksp_reg_err;
 	}
 
 	// Create the string.
@@ -114,8 +113,7 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon) {
 
 	// Check for error.
 	if (yunlikely(s == NULL)) {
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_WORKSPACE_INVALID;
+		goto wima_wksp_reg_err;
 	}
 
 	// Create the property.
@@ -123,14 +121,7 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon) {
 
 	// Check for error.
 	if (yunlikely(prop == WIMA_PROP_INVALID)) {
-
-		// Free the string.
-		dstr_free(s);
-
-		// Report the error.
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-
-		return WIMA_WORKSPACE_INVALID;
+		goto wima_wksp_reg_prop_reg_err;
 	}
 
 	// Create the workspace.
@@ -138,38 +129,41 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon) {
 
 	// Check for error.
 	if (yunlikely(!wksp)) {
-
-		// Unregister the prop.
-		wima_prop_unregister(prop);
-
-		// Free the string.
-		dstr_free(s);
-
-		// Report the error.
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-
-		return WIMA_WORKSPACE_INVALID;
+		goto wima_wksp_reg_wksp_err;
 	}
 
 	// Push onto the prop vector and check for error.
 	if (yunlikely(dvec_push(wg.workspaceProps, &prop))) {
-
-		// Pop the tree off.
-		dvec_pop(wg.workspaces);
-
-		// Unregister the prop.
-		wima_prop_unregister(prop);
-
-		// Free the string.
-		dstr_free(s);
-
-		// Report the error.
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-
-		return WIMA_WORKSPACE_INVALID;
+		goto wima_wksp_reg_prop_push_err;
 	}
 
 	return len;
+
+// Error on pushing a prop.
+wima_wksp_reg_prop_push_err:
+
+	// Pop the tree off.
+	dvec_pop(wg.workspaces);
+
+// Error on pushing the workspace.
+wima_wksp_reg_wksp_err:
+
+	// Unregister the prop.
+	wima_prop_unregister(prop);
+
+// Error on registering a prop.
+wima_wksp_reg_prop_reg_err:
+
+	// Free the string.
+	dstr_free(s);
+
+// Other errors.
+wima_wksp_reg_err:
+
+	// Report the error.
+	wima_error(WIMA_STATUS_MALLOC_ERR);
+
+	return WIMA_WORKSPACE_INVALID;
 }
 
 WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
@@ -178,14 +172,10 @@ WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
 	wima_assert_init;
 
 	wassert(wwksp < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
+	wassert(wima_workspace_nodeValid(wwksp, node), WIMA_ASSERT_WKSP_TREE_VALID);
 
 	// Get the workspace.
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwksp));
-
-	// Check that the node is valid so far.
-	if (!wima_workspace_nodeValid(wwksp, node)) {
-		return WIMA_STATUS_INVALID_PARAM;
-	}
 
 	// Fill an initial area with common data.
 	WimaAr wan;
@@ -211,14 +201,10 @@ WimaStatus wima_workspace_addEditor(WimaWorkspace wwksp, DynaNode node, WimaEdit
 	wima_assert_init;
 
 	wassert(wwksp < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
+	wassert(wima_workspace_nodeValid(wwksp, node), WIMA_ASSERT_WKSP_TREE_VALID);
 
 	// Get the workspace.
 	WimaWksp wksp = *((WimaWksp*) dvec_get(wg.workspaces, wwksp));
-
-	// Check that the node is valid so far.
-	if (!wima_workspace_nodeValid(wwksp, node)) {
-		return WIMA_STATUS_INVALID_PARAM;
-	}
 
 	// Fill an initial area with common data.
 	WimaAr wan;
