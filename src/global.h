@@ -140,6 +140,7 @@ typedef enum WimaAssertType {
 	//! @cond Doxygen suppress.
 
 	WIMA_ASSERT_SWITCH_DEFAULT,
+	WIMA_ASSERT_INVALID_OPERATION,
 
 	WIMA_ASSERT_INIT,
 

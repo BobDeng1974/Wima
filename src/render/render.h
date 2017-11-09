@@ -271,6 +271,16 @@ typedef struct WimaIconMarker {
 #define WIMA_ICON_MARKER_IDX 1
 
 /**
+ * Copies a icon. In actuality, this just aborts
+ * since copying icons should not happen.
+ * @param count	The number of arrays to copy.
+ * @param dests	An array of pointers to destinations.
+ * @param srcs	An array of pointers to sources.
+ * @return		An error code (doesn't return).
+ */
+DynaStatus wima_icon_copy(size_t count, void** dests, void** srcs) ynoreturn;
+
+/**
  * A destructor for icons.
  * @param count	The number items in @a ptr.
  * @param ptr	A pointer to the icon and

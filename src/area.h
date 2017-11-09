@@ -217,6 +217,15 @@ WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect);
 bool wima_area_valid(DynaTree editors);
 
 /**
+ * Copies an area from @a src to @a dest.
+ * @param dest	The destination to copy to.
+ * @param src	The source to copy from.
+ * @return		DYNA_STATUS_SUCCESS on success,
+ *				an error code otherwise.
+ */
+DynaStatus wima_area_copy(void* dest, void* src);
+
+/**
  * Frees a tree of areas.
  * @param areas	The tree to free.
  */

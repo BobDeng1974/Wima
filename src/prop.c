@@ -219,7 +219,7 @@ WimaProperty wima_prop_list_register(const char* name, const char* label, const 
 	WimaPropData prop;
 
 	// Create the list and send error if any.
-	DynaVector list = dvec_create(0, NULL, sizeof(WimaProperty));
+	DynaVector list = dvec_create(0, NULL, NULL, sizeof(WimaProperty));
 	if (yunlikely(list == NULL)) {
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_PROP_INVALID;
@@ -931,6 +931,11 @@ WimaProperty wima_prop_operator_register(const char* name, const char* label, co
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
+
+DynaStatus wima_prop_copy(size_t count, void** dests, void** srcs) {
+	wassert(false, WIMA_ASSERT_INVALID_OPERATION);
+	abort();
+}
 
 bool wima_prop_free(WimaProperty wph) {
 

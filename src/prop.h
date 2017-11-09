@@ -233,6 +233,16 @@ typedef union WimaPropData {
 } WimaPropData;
 
 /**
+ * Copies a property. In actuality, this just aborts
+ * since copying props should not happen.
+ * @param count	The number of arrays to copy.
+ * @param dests	An array of pointers to destinations.
+ * @param srcs	An array of pointers to sources.
+ * @return		An error code (doesn't return).
+ */
+DynaStatus wima_prop_copy(size_t count, void** dests, void** srcs) ynoreturn;
+
+/**
  * If possible, frees the property associated with @a wph.
  * Returns false if freeing wasn't possible.
  * @param wph	The property to free.

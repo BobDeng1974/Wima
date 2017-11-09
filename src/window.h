@@ -312,6 +312,21 @@ typedef struct WimaWin {
 } WimaWin;
 
 /**
+ * Copies a window. In actuality, this just aborts
+ * since copying windows should not happen.
+ * @param dest	A pointer to a destination.
+ * @param srcs	A pointer to a source.
+ * @return		An error code (doesn't return).
+ */
+DynaStatus wima_window_copy(void* dest, void* src) ynoreturn;
+
+/**
+ * Destroys a window. This is a Dyna DestructFunc.
+ * @param ptr	A pointer to the window to destroy.
+ */
+void wima_window_destroy(void* ptr);
+
+/**
  * Adds an image to a window. This allows the NanoVG
  * context on the window to create a texture.
  * @param win	The window to add the image to.
@@ -331,12 +346,6 @@ WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags f
  * @param win	The window to pop an image from.
  */
 void wima_window_popImage(WimaWin* win);
-
-/**
- * Destroys a window. This is a Dyna DestructFunc.
- * @param ptr	A pointer to the window to destroy.
- */
-void wima_window_destroy(void* ptr);
 
 /**
  * Sets @a win as dirty, and if @a layout is true, forces a layout.

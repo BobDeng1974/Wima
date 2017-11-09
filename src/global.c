@@ -97,6 +97,7 @@ const char* wima_assert_msgs[] = {
 #ifdef __YASSERT__
 
     "default taken on enum switch",
+    "invalid operation",
 
     "wima is not initialized",
 

@@ -112,14 +112,15 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Create and if error, exit.
-	wg.windows = dvec_create(0, NULL, sizeof(WimaWin));
+	wg.windows = dvec_create(0, NULL, NULL, sizeof(WimaWin));
 	if (yunlikely(!wg.windows)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
-	wg.props = dnvec_create(2, 0, wima_prop_destroy, sizeof(WimaPropInfo), sizeof(WimaPropData));
+	wg.props = dnvec_create(2, 0, wima_prop_copy, wima_prop_destroy,
+	                        sizeof(WimaPropInfo), sizeof(WimaPropData));
 	if (yunlikely(!wg.props)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
@@ -129,35 +130,36 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.theme = wima_theme_load(wg.themes, wg.themeStarts);
 
 	// Create and if error, exit.
-	wg.editors = dvec_create(0, NULL, sizeof(WimaEdtr));
+	wg.editors = dvec_create(0, NULL, NULL, sizeof(WimaEdtr));
 	if (yunlikely(!wg.editors)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
-	wg.workspaces = dvec_createTreeVec(0, wima_area_destroy, sizeof(WimaAr));
+	wg.workspaces = dvec_createTreeVec(0, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
 	if (yunlikely(!wg.workspaces)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
-	wg.workspaceProps = dvec_create(0, NULL, sizeof(WimaProperty));
+	wg.workspaceProps = dvec_create(0, NULL, NULL, sizeof(WimaProperty));
 	if (yunlikely(!wg.workspaceProps)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
-	wg.icons = dnvec_create(2, 0, wima_icon_destroy, sizeof(WimaIcn), sizeof(WimaIconMarker));
+	wg.icons = dnvec_create(2, 0, wima_icon_copy, wima_icon_destroy,
+	                        sizeof(WimaIcn), sizeof(WimaIconMarker));
 	if (yunlikely(!wg.icons)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
-	wg.iconPathWindings = dvec_create(0, NULL, sizeof(bool));
+	wg.iconPathWindings = dvec_create(0, NULL, NULL, sizeof(bool));
 	if (yunlikely(!wg.iconPathWindings)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
@@ -171,7 +173,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Create and if error, exit.
-	wg.imageFlags = dvec_create(0, NULL, sizeof(WimaImageFlags));
+	wg.imageFlags = dvec_create(0, NULL, NULL, sizeof(WimaImageFlags));
 	if (yunlikely(!wg.imageFlags)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;

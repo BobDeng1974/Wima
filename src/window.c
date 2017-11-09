@@ -270,7 +270,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	wwin.window = win;
 
 	// Create the image vector and check for error.
-	wwin.images = dvec_create(0, NULL, sizeof(int));
+	wwin.images = dvec_create(0, NULL, NULL, sizeof(int));
 	if (yunlikely(!wwin.images)) {
 		wima_window_destroy(&wwin);
 		wima_error(WIMA_STATUS_MALLOC_ERR);
@@ -972,7 +972,7 @@ DynaTree wima_window_areas(WimaWindow wwh) {
 	int nodes = dtree_nodes(winareas);
 
 	// Create a new tree and check for error.
-	DynaTree areas = dtree_create(nodes, wima_area_destroy, sizeof(WimaAr));
+	DynaTree areas = dtree_create(nodes, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
 	if (yunlikely(!areas)) {
 		return NULL;
 	}
@@ -1007,7 +1007,8 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 	if (!window->areas) {
 
 		// Create the area tree.
-		window->areas = dtree_create(dtree_nodes(wksp), wima_area_destroy, sizeof(WimaAr));
+		window->areas = dtree_create(dtree_nodes(wksp), wima_area_copy,
+		                             wima_area_destroy, sizeof(WimaAr));
 
 		// Check for error.
 		if (yunlikely(!window->areas)) {
@@ -1053,7 +1054,8 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 	if (!window->areas) {
 
 		// Create the area tree.
-		window->areas = dtree_create(dtree_nodes(areas), wima_area_destroy, sizeof(WimaAr));
+		window->areas = dtree_create(dtree_nodes(areas), wima_area_copy,
+		                             wima_area_destroy, sizeof(WimaAr));
 
 		// Check for error.
 		if (yunlikely(!window->areas)) {
@@ -1459,26 +1461,9 @@ static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files);
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags flags) {
-
-	// Create the image in NanoVG.
-	int id = nvgCreateImage(win->render.nvg, path, flags);
-
-	// Push the id onto the window's vector.
-	return dvec_push(win->images, &id) ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
-}
-
-void wima_window_popImage(WimaWin* win) {
-
-	// Get the length.
-	size_t len = dvec_len(win->images);
-
-	// Get the id.
-	int id = *((int*) dvec_get(win->images, len));
-
-	// Pop off the vector and delete from NanoVG.
-	dvec_pop(win->images);
-	nvgDeleteImage(win->render.nvg, id);
+DynaStatus wima_window_copy(void* dest, void* src) {
+	wassert(false, WIMA_ASSERT_INVALID_OPERATION);
+	abort();
 }
 
 void wima_window_destroy(void* ptr) {
@@ -1518,6 +1503,28 @@ void wima_window_destroy(void* ptr) {
 			dstr_free(win->name);
 		}
 	}
+}
+
+WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags flags) {
+
+	// Create the image in NanoVG.
+	int id = nvgCreateImage(win->render.nvg, path, flags);
+
+	// Push the id onto the window's vector.
+	return dvec_push(win->images, &id) ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
+}
+
+void wima_window_popImage(WimaWin* win) {
+
+	// Get the length.
+	size_t len = dvec_len(win->images);
+
+	// Get the id.
+	int id = *((int*) dvec_get(win->images, len));
+
+	// Pop off the vector and delete from NanoVG.
+	dvec_pop(win->images);
+	nvgDeleteImage(win->render.nvg, id);
 }
 
 void wima_window_setDirty(WimaWin* win, bool layout) {
