@@ -1146,7 +1146,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 
 		// Copy into the label.
 		prop.desc[0] = '\0';
-		strcat(prop.desc, label);
+		strcat(prop.desc, desc);
 	}
 	else {
 
