@@ -103,7 +103,7 @@ typedef uint32_t WimaProperty;
  * @param ptr		The pointer of the widget.
  * @return			WIMA_STATUS_SUCCESS if the drawing was successful.
  */
-typedef WimaStatus (*WimaPropPtrDrawFunc)(WimaLayout, void*);
+typedef WimaStatus (*WimaPropPtrDrawFunc)(WimaLayout layout, void* ptr);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions common to all prop types.

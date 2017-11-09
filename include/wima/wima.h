@@ -1089,7 +1089,7 @@ typedef struct WimaMenu WimaMenu;
  * A function for handling a menu item click.
  * @param win	The window that had the menu.
  */
-typedef void (*WimaMenuItemFunc)(WimaWindow);
+typedef void (*WimaMenuItemFunc)(WimaWindow win);
 
 /**
  * A menu item.
@@ -1303,7 +1303,7 @@ typedef enum WimaWidgetLayoutFlags {
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetMouseBtnFunc)(WimaWidget, WimaMouseBtnEvent);
+typedef bool (*WimaWidgetMouseBtnFunc)(WimaWidget wdgt, WimaMouseBtnEvent event);
 
 /**
  * A function to run when a widget has a mouse click event.
@@ -1312,7 +1312,7 @@ typedef bool (*WimaWidgetMouseBtnFunc)(WimaWidget, WimaMouseBtnEvent);
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetMouseClickFunc)(WimaWidget, WimaMouseClickEvent);
+typedef bool (*WimaWidgetMouseClickFunc)(WimaWidget wdgt, WimaMouseClickEvent event);
 
 /**
  * A function to run when a widget has a mouse drag event.
@@ -1321,7 +1321,7 @@ typedef bool (*WimaWidgetMouseClickFunc)(WimaWidget, WimaMouseClickEvent);
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetMouseDragFunc)(WimaWidget, WimaMouseDragEvent);
+typedef bool (*WimaWidgetMouseDragFunc)(WimaWidget wdgt, WimaMouseDragEvent event);
 
 /**
  * A function to run when a widget has a scroll event.
@@ -1330,7 +1330,7 @@ typedef bool (*WimaWidgetMouseDragFunc)(WimaWidget, WimaMouseDragEvent);
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetScrollFunc)(WimaWidget, WimaScrollEvent);
+typedef bool (*WimaWidgetScrollFunc)(WimaWidget wdgt, WimaScrollEvent event);
 
 /**
  * A function to run when a widget has a char event.
@@ -1339,7 +1339,7 @@ typedef bool (*WimaWidgetScrollFunc)(WimaWidget, WimaScrollEvent);
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetCharEvent)(WimaWidget, WimaCharEvent);
+typedef bool (*WimaWidgetCharEvent)(WimaWidget wdgt, WimaCharEvent event);
 
 /**
  * A collection of widget event functions.
@@ -1550,21 +1550,23 @@ bool wima_widget_isFocused(WimaWidget wdgt) yinline;
  * @param area	The area to generate the user pointer for.
  * @return		The user pointer.
  */
-typedef void* (*WimaAreaGenUserPointerFunc)(WimaArea);
+typedef void* (*WimaAreaGenUserPointerFunc)(WimaArea area);
 
 /**
  * A function to free an area's user pointer.
  * @param ptr	The pointer to free.
  */
-typedef void (*WimaAreaFreeUserPointerFunc)(void*);
+typedef void (*WimaAreaFreeUserPointerFunc)(void* ptr);
 
 /**
  * A function to layout an area.
  * @param area		The area to layout.
  * @param layout	The root layout.
  * @param size		The size of the area.
+ * @return			WIMA_STATUS_SUCCESS on success,
+ *					an error code otherwise.
  */
-typedef WimaStatus (*WimaAreaLayoutFunc)(WimaArea, WimaLayout, WimaSize);
+typedef WimaStatus (*WimaAreaLayoutFunc)(WimaArea area, WimaLayout layout, WimaSize size);
 
 /**
  * A function callback for key presses inside an area.
@@ -1572,7 +1574,7 @@ typedef WimaStatus (*WimaAreaLayoutFunc)(WimaArea, WimaLayout, WimaSize);
  * @param event	The event.
  * @return		true if the event was consumed, false otherwise.
  */
-typedef bool (*WimaAreaKeyFunc)(WimaArea, WimaKeyEvent);
+typedef bool (*WimaAreaKeyFunc)(WimaArea area, WimaKeyEvent event);
 
 /**
  * A function callback for mouse entering or exiting an area.
@@ -1580,7 +1582,7 @@ typedef bool (*WimaAreaKeyFunc)(WimaArea, WimaKeyEvent);
  * @param entered	Whether or not the mouse entered.
  * @return			true if the event was consumed, false otherwise.
  */
-typedef bool (*WimaAreaMouseEnterFunc)(WimaArea, bool);
+typedef bool (*WimaAreaMouseEnterFunc)(WimaArea area, bool entered);
 
 /**
  * A collection of callbacks for areas.
@@ -2474,7 +2476,7 @@ const char* wima_window_clipboard(WimaWindow wwh) yinline;
  * @return		WIMA_STATUS_SUCCESS on success,
  *				an error code otherwise.
  */
-typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaRenderContext*);
+typedef WimaStatus (*WimaDrawFunc)(WimaWidget wdgt, WimaRenderContext* ctx);
 
 /**
  * A callback type to allow Wima to report errors to the user.
@@ -2482,7 +2484,7 @@ typedef WimaStatus (*WimaDrawFunc)(WimaWidget, WimaRenderContext*);
  * @param func		The name of the function the error occurred in.
  * @param desc		The error description.
  */
-typedef void (*WimaErrorFunc)(WimaStatus, const char*, const char*);
+typedef void (*WimaErrorFunc)(WimaStatus status, const char* func, const char* desc);
 
 /**
  * A callback type to handle file drop events.
@@ -2490,28 +2492,28 @@ typedef void (*WimaErrorFunc)(WimaStatus, const char*, const char*);
  * @param filec		The number of files dropped.
  * @param filev		The array of file names.
  */
-typedef void (*WimaWindowFileDropFunc)(WimaWindow, int, const char**);
+typedef void (*WimaWindowFileDropFunc)(WimaWindow window, int filec, const char** filev);
 
 /**
  * A callback type to handle window pos events.
  * @param window	The window that was moved.
  * @param pos		The new position of the window.
  */
-typedef void (*WimaWindowPosFunc)(WimaWindow, WimaVec);
+typedef void (*WimaWindowPosFunc)(WimaWindow window, WimaVec pos);
 
 /**
  * A callback type to handle window framebuffer size events.
  * @param window	The window the was resized.
  * @param size		The new framebuffer size.
  */
-typedef void (*WimaFramebufferSizeFunc)(WimaWindow, WimaSize);
+typedef void (*WimaFramebufferSizeFunc)(WimaWindow window, WimaSize size);
 
 /**
  * A callback type to handle window size events.
  * @param window	The window the was resized.
  * @param size		The new size.
  */
-typedef void (*WimaWindowSizeFunc)(WimaWindow, WimaSize);
+typedef void (*WimaWindowSizeFunc)(WimaWindow window, WimaSize size);
 
 /**
  * A callback type to handle window mouse enter/exit
@@ -2529,15 +2531,15 @@ typedef void (*WimaWindowMouseEnterFunc)(WimaWindow, bool);
  * @param minimized	true if the window was minimized,
  *					false otherwise.
  */
-typedef void (*WimaWindowMinimizeFunc)(WimaWindow, bool);
+typedef void (*WimaWindowMinimizeFunc)(WimaWindow window, bool minimized);
 
 /**
  * A callback type to handle window focus events.
  * @param window	The window that was focused.
- * @param minimized	true if the window was focused,
+ * @param focused	true if the window was focused,
  *					false otherwise.
  */
-typedef void (*WimaWindowFocusFunc)(WimaWindow, bool);
+typedef void (*WimaWindowFocusFunc)(WimaWindow window, bool focused);
 
 /**
  * A callback type to handle window close events.
@@ -2545,7 +2547,7 @@ typedef void (*WimaWindowFocusFunc)(WimaWindow, bool);
  * @return			true if the window should be closed,
  *					false otherwise.
  */
-typedef bool (*WimaWindowCloseFunc)(WimaWindow);
+typedef bool (*WimaWindowCloseFunc)(WimaWindow window);
 
 /**
  * A callback type to handle monitor connection and
@@ -2555,7 +2557,7 @@ typedef bool (*WimaWindowCloseFunc)(WimaWindow);
  * @param connected	true if the monitor was connected,
  *					false otherwise.
  */
-typedef void (*WimaMonitorConnectedFunc)(WimaMonitor*, bool);
+typedef void (*WimaMonitorConnectedFunc)(WimaMonitor* monitor, bool connected);
 
 /**
  * A collection of app-wide event callbacks.
