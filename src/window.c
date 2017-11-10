@@ -49,6 +49,8 @@
 #include <nanovg.h>
 #include <nanovg_gl.h>
 
+#include <GLFW/glfw3.h>
+
 #include "render/render.h"
 
 #include "callbacks.h"
