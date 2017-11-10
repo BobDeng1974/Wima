@@ -454,7 +454,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 			status = wima_window_addImage(window, dstr_str(path), flags[i]);
 
 			// Check for error and handle it.
-			if (yunlikely(status !=WIMA_STATUS_SUCCESS)) {
+			if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
 				wima_window_destroy(window);
 				wima_error(status);
 				return WIMA_WINDOW_INVALID;
