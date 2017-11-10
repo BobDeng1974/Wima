@@ -138,7 +138,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Create and if error, exit.
-	wg.dialogs = dvec_createTreeVec(0, NULL, wima_area_destroy, sizeof(WimaEdtr));
+	wg.dialogs = dvec_createTreeVec(0, NULL, wima_area_destroy, sizeof(WimaAr));
 	if (yunlikely(!wg.dialogs)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
