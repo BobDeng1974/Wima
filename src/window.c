@@ -366,7 +366,9 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 	// Copy the workspace into the area tree.
 	if (yunlikely(dtree_copy(window->curTree, wksp))) {
-		return WIMA_STATUS_MALLOC_ERR;
+		wima_window_destroy(window);
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_WINDOW_INVALID;
 	}
 
 	// Set the tree index.
@@ -419,7 +421,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	window->render.nvg = nvgCreateGL3(NVG_ANTIALIAS);
 
 	// Check for error.
-	if (yunlikely(window->render.nvg)) {
+	if (yunlikely(!window->render.nvg)) {
 		wima_window_destroy(window);
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_WINDOW_INVALID;
