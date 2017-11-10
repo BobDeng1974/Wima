@@ -451,7 +451,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 			DynaString path = dvec_get(wg.imagePaths, i);
 
 			// Add the image.
-			WimaStatus status = wima_window_addImage(window, dstr_str(path), flags[i]);
+			status = wima_window_addImage(window, dstr_str(path), flags[i]);
 
 			// Check for error and handle it.
 			if (yunlikely(status !=WIMA_STATUS_SUCCESS)) {
