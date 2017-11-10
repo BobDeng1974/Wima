@@ -45,6 +45,7 @@
 #include "area.h"
 #include "tree.h"
 #include "workspace.h"
+#include "window.h"
 #include "global.h"
 
 //! @cond Doxygen suppress.
@@ -133,7 +134,64 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon) {
 		goto wima_wksp_reg_prop_push_err;
 	}
 
+	// Get the number of windows.
+	uint8_t winlen = dvec_len(wg.windows);
+
+	WimaWindow i;
+
+	// Loop through the windows.
+	for (i = 0; i < winlen; ) {
+
+		// If the window is valid...
+		if (wima_window_valid(i)) {
+
+			// Get the window.
+			WimaWin* win = dvec_get(wg.windows, i);
+
+			// Mark the window as dirty with layout.
+			wima_window_setDirty(win, true);
+
+			// Push the new workspace onto the window.
+			WimaWksp wksp2 = dvec_pushTree(win->workspaces);
+
+			// Check for error.
+			if (yunlikely(!wksp2)) {
+				goto wima_wksp_reg_win_err;
+			}
+
+			// Copy the workspace.
+			DynaStatus status = dtree_copy(wksp2, wksp);
+
+			// Increment i. This is done here to make
+			// the error handling loop handle this new
+			// workspace at this point.
+			++i;
+
+			// Check for error.
+			if (yunlikely(status)) {
+				goto wima_wksp_reg_win_err;
+			}
+		}
+	}
+
 	return len;
+
+// Error on adding to windows.
+wima_wksp_reg_win_err:
+
+	// Loop through the windows that are already done.
+	for (WimaWindow j = 0; j < i; ++j) {
+
+		// If the window is valid...
+		if (wima_window_valid(i)) {
+
+			// Get the window.
+			WimaWin* win = dvec_get(wg.windows, i);
+
+			// Pop the workspace.
+			dvec_pop(win->workspaces);
+		}
+	}
 
 // Error on pushing a prop.
 wima_wksp_reg_prop_push_err:
