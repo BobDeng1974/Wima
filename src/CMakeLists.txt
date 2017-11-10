@@ -62,6 +62,8 @@ set(WIMA_SRC
 	"callbacks.c"
 	"editor.c"
 	"area.c"
+	"tree.c"
+	"dialog.c"
 	"workspace.c"
 	"window.c"
 	"wima.c"

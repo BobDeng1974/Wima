@@ -125,7 +125,7 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	event->area_key.key.scancode = scancode;
 	event->area_key.key.action = wact;
 	event->area_key.key.mods = wmods;
-	event->area_key.area = wima_area_mouseOver(wwin->areas, wwin->ctx.cursorPos);
+	event->area_key.area = wima_area_mouseOver(WIMA_WIN_AREAS(wwin), wwin->ctx.cursorPos);
 
 	// Set the window as dirty (to be redrawn).
 	wima_window_setDirty(wwin, false);
@@ -174,7 +174,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	// Find the item that was clicked.
-	WimaWidget clickItem = wima_area_findWidget(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN);
+	WimaWidget clickItem = wima_area_findWidget(WIMA_WIN_AREAS(wwin), wwin->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN);
 
 	// Set the active and focus items to the clicked item.
 	wwin->ctx.active = clickItem;
@@ -330,8 +330,10 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 		// Set the window dirty but don't force layout.
 		wima_window_setDirty(wwin, false);
 
+		DynaTree areas = WIMA_WIN_AREAS(wwin);
+
 		// If we have a menu OR we are not on the split anymore...
-		if (WIMA_WIN_HAS_MENU(wwin) || !wima_area_mouseOnSplit(wwin->areas, wwin->ctx.cursorPos, &sevent)) {
+		if (WIMA_WIN_HAS_MENU(wwin) || !wima_area_mouseOnSplit(areas, wwin->ctx.cursorPos, &sevent)) {
 
 			// Erase the split.
 			wwin->ctx.split.split = -1;
@@ -342,10 +344,10 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			WimaEvent* e;
 
 			// Set the hover item.
-			wwin->ctx.hover = wima_area_findWidget(wwin->areas, pos, WIMA_ITEM_EVENT_MASK);
+			wwin->ctx.hover = wima_area_findWidget(areas, pos, WIMA_ITEM_EVENT_MASK);
 
 			// Find out if we switched areas.
-			WimaAreaNode area = wima_area_mouseOver(wwin->areas, pos);
+			WimaAreaNode area = wima_area_mouseOver(areas, pos);
 			if (area != wwin->ctx.cursorArea) {
 
 				numEvents = wwin->ctx.eventCount;
@@ -519,7 +521,7 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 	// Find the widget that the cursor was in.
 	// This is the widget that will receive the
 	// scroll event.
-	WimaWidget wih = wima_area_findWidget(wwin->areas, wwin->ctx.cursorPos, WIMA_EVENT_SCROLL);
+	WimaWidget wih = wima_area_findWidget(WIMA_WIN_AREAS(wwin), wwin->ctx.cursorPos, WIMA_EVENT_SCROLL);
 
 	// Set the event item.
 	wwin->ctx.eventItems[numEvents] = wih;
@@ -788,7 +790,7 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	rect.h = height;
 
 	// Resize the areas.
-	wima_area_resize(wwin->areas, rect);
+	wima_area_resize(WIMA_WIN_AREAS(wwin), rect);
 
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;

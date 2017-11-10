@@ -119,26 +119,29 @@ typedef enum WimaStatus {
 	/// Returned when the user tries to create too many workspaces.
 	WIMA_STATUS_WORKSPACE_MAX      = 140,
 
+	/// Returned when the user tries to create too many dialogs.
+	WIMA_STATUS_DIALOG_MAX         = 141,
+
 	/// Returned when the user tries to create too many editors.
-	WIMA_STATUS_EDITOR_MAX         = 141,
+	WIMA_STATUS_EDITOR_MAX         = 142,
 
 	/// Returned when no child for the parent prop exists.
-	WIMA_STATUS_PROP_NO_CHILD      = 142,
+	WIMA_STATUS_PROP_NO_CHILD      = 143,
 
 	/// Returned when a prop child already exists.
-	WIMA_STATUS_PROP_CHILD_EXISTS  = 143,
+	WIMA_STATUS_PROP_CHILD_EXISTS  = 144,
 
 	/// Returns when the user tries to add too many children to a property.
-	WIMA_STATUS_PROP_LIST_MAX      = 144,
+	WIMA_STATUS_PROP_LIST_MAX      = 145,
 
 	/// Returned when an image fails to load.
-	WIMA_STATUS_IMAGE_LOAD_ERR     = 145,
+	WIMA_STATUS_IMAGE_LOAD_ERR     = 146,
 
 	/// Returned when the user tries to create too many images.
-	WIMA_STATUS_IMAGE_MAX          = 146,
+	WIMA_STATUS_IMAGE_MAX          = 147,
 
 	/// Returned when the user tries to create too many icons.
-	WIMA_STATUS_ICON_MAX           = 147,
+	WIMA_STATUS_ICON_MAX           = 148,
 
 } WimaStatus;
 
@@ -229,6 +232,32 @@ typedef uint8_t WimaWorkspace;
  */
 
 /**
+ * @defgroup workspace workspace
+ * @{
+ */
+
+/**
+ * A handle to a dialog (window template used for pop-ups) type.
+ */
+typedef uint8_t WimaDialog;
+
+/**
+ * @def WIMA_DIALOG_INVALID
+ * A handle indicating an invalid dialog.
+ */
+#define WIMA_DIALOG_INVALID ((WimaDialog) -1)
+
+/**
+ * @def WIMA_DIALOG_MAX
+ * The max number of dialogs that can be registered.
+ */
+#define WIMA_DIALOG_MAX WIMA_DIALOG_INVALID
+
+/**
+ * @}
+ */
+
+/**
  * @defgroup area area
  * @{
  */
@@ -259,6 +288,12 @@ typedef struct WimaArea {
 	WimaWindow window;
 
 } WimaArea;
+
+/**
+ * @def WIMA_AREA_MAX_STACK_CAP
+ * The max capacity of an area stack in a window.
+ */
+#define WIMA_AREA_MAX_STACK_CAP (16)
 
 /**
  * @}
@@ -1751,7 +1786,9 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
  * An empty workspace cannot be used to create a window.
  * Also, it is an error to create a window if the workspace
  * has any parent nodes with no or only one child.
- * @return	The registered workspace.
+ * @param name	The workspace's name (label in the UI).
+ * @param icon	The workspace's icon.
+ * @return		The registered workspace.
  */
 WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon);
 
@@ -1784,6 +1821,72 @@ WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node, float sp
  * @pre			@a wwksp must be valid.
  */
 WimaStatus wima_workspace_addEditor(WimaWorkspace wwksp, DynaNode node, WimaEditor wed);
+
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
+// Dialog functions and data structures.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup dialog dialog
+ * Functions and data structures to manipulate dialogs.
+ *
+ * "Dialogs" are not "dialog boxes" (even though they
+ * are Wima's replacement for dialog boxes). They are
+ * workspaces that do not show in the workspace list.
+ * They are used for things like opening/saving files,
+ * etc. They fill the whole screen.
+ *
+ * Wima uses dialogs instead of dialog boxes because
+ * of its non-modal nature.
+ * @{
+ */
+
+/**
+ * Registers a new dialog. The dialog is empty and
+ * needs to be filled using @a wima_dialog_addParent()
+ * and @a wima_dialog_addEditor().
+ *
+ * An empty dialog cannot be used to fill a window with
+ * @a wima_window_pushDialog(). Also, it is an error to
+ * add a dialog a window if the dialog has any parent
+ * nodes with no or only one child.
+ * @return	The registered dialog.
+ */
+WimaDialog wima_dialog_register();
+
+/**
+ * Adds a parent node to @a wwksp.
+ * @param wwksp		The workspace to add to.
+ * @param node		The node to add, which should be either
+ *					the root, or a child of a node that has
+ *					already been added.
+ * @param split		A value between [0, 1] that indicates
+ *					where the split between this parent's
+ *					children will be.
+ * @param vertical	Whether the split is vertical (splitting
+ *					width) or not.
+ * @return			WIMA_STATUS_SUCCESS on success, or an
+ *					error code.
+ * @pre				@a wwksp must be valid.
+ */
+WimaStatus wima_dialog_addParent(WimaDialog wdlg, DynaNode node, float split, bool vertical);
+
+/**
+ * Adds a editor (leaf) to a workspace.
+ * @param wwksp	The workspace to add to.
+ * @param node	The node to add, which should be either
+ *				the root, or a child of a node that has
+ *				already been added.
+ * @param wed	The editor to set the type as.
+ * @return		WIMA_STATUS_SUCCESS on success, or an
+ *				error code.
+ * @pre			@a wwksp must be valid.
+ */
+WimaStatus wima_dialog_addEditor(WimaDialog wdlg, DynaNode node, WimaEditor wed);
 
 /**
  * @}

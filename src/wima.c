@@ -90,6 +90,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.iconPathWindings = NULL;
 	wg.icons = NULL;
 	wg.editors = NULL;
+	wg.dialogs = NULL;
 	wg.workspaceProps = NULL;
 	wg.workspaces = NULL;
 	wg.name = NULL;
@@ -132,6 +133,13 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	// Create and if error, exit.
 	wg.editors = dvec_create(0, NULL, NULL, sizeof(WimaEdtr));
 	if (yunlikely(!wg.editors)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Create and if error, exit.
+	wg.dialogs = dvec_createTreeVec(0, wima_area_copy, wima_area_destroy, sizeof(WimaEdtr));
+	if (yunlikely(!wg.dialogs)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -341,6 +349,10 @@ void wima_exit() {
 	// This must be before the editors.
 	if (wg.workspaces) {
 		dvec_free(wg.workspaces);
+	}
+
+	if (wg.dialogs) {
+		dvec_free(wg.dialogs);
 	}
 
 	// Free the editors, if they exist.

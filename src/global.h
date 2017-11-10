@@ -90,6 +90,9 @@ typedef struct WimaG {
 	/// Workspace properties. These are the names and icons.
 	DynaVector workspaceProps;
 
+	/// Dialog types.
+	DynaVector dialogs;
+
 	/// Editors (area types).
 	DynaVector editors;
 

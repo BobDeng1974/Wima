@@ -280,10 +280,10 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol
 	// Get a pointer to the window.
 	WimaWin* win = dvec_get(wg.windows, parent.window);
 
-	wassert(dtree_exists(win->areas, parent.area), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
 
 	// Get a pointer to the area.
-	WimaAr* area = dtree_node(win->areas, parent.area);
+	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), parent.area);
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 

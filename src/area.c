@@ -76,7 +76,7 @@ WimaArea wima_area(WimaWindow wwh, WimaAreaNode node) {
 
 #ifdef __YASSERT__
 	WimaWin* win = dvec_get(wg.windows, wwh);
-	wassert(dtree_exists(win->areas, node), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), node), WIMA_ASSERT_AREA);
 #endif
 
 	WimaArea wah;
@@ -374,9 +374,9 @@ WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	wassert(dtree_exists(win->areas, node), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), node), WIMA_ASSERT_AREA);
 
-	return dtree_node(win->areas, node);
+	return dtree_node(WIMA_WIN_AREAS(win), node);
 }
 
 WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect) {

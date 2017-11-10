@@ -223,7 +223,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Clear these before assigning.
 	wwin.render.nvg = NULL;
 	wwin.images = NULL;
-	wwin.areas = NULL;
+	wwin.areaStackIdx = 0;
 	wwin.user = NULL;
 	wwin.window = NULL;
 	wwin.fbsize.w = 0;
@@ -768,10 +768,10 @@ void wima_window_setHoverWidget(WimaWindow wwh, WimaWidget wih) {
 
 #ifdef __YASSERT__
 
-	wassert(dtree_exists(win->areas, wih.area), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), wih.area), WIMA_ASSERT_AREA);
 
 	// Get the area.
-	WimaAr* area = dtree_node(win->areas, wih.area);
+	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), wih.area);
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
@@ -804,10 +804,10 @@ void wima_window_setActiveWidget(WimaWindow wwh, WimaWidget wih) {
 
 #ifdef __YASSERT__
 
-	wassert(dtree_exists(win->areas, wih.area), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), wih.area), WIMA_ASSERT_AREA);
 
 	// Get the area.
-	WimaAr* area = dtree_node(win->areas, wih.area);
+	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), wih.area);
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
@@ -840,10 +840,10 @@ void wima_window_setFocusWidget(WimaWindow wwh, WimaWidget wih) {
 
 #ifdef __YASSERT__
 
-	wassert(dtree_exists(win->areas, wih.area), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), wih.area), WIMA_ASSERT_AREA);
 
 	// Get the area.
-	WimaAr* area = dtree_node(win->areas, wih.area);
+	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), wih.area);
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
@@ -966,7 +966,7 @@ DynaTree wima_window_areas(WimaWindow wwh) {
 
 	// Get the window and areas.
 	WimaWin* win = dvec_get(wg.windows, wwh);
-	DynaTree winareas = win->areas;
+	DynaTree winareas = WIMA_WIN_AREAS(win);
 
 	// Get the number of nodes.
 	int nodes = dtree_nodes(winareas);
@@ -984,6 +984,14 @@ DynaTree wima_window_areas(WimaWindow wwh) {
 	}
 
 	return areas;
+}
+
+WimaStatus wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg) {
+
+}
+
+WimaStatus wima_window_popDialog(WimaWindow wwh) {
+
 }
 
 WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
@@ -1004,20 +1012,20 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 	WimaWin* window = dvec_get(wg.windows, wwh);
 
 	// If the window's areas haven't been created yet...
-	if (!window->areas) {
+	if (!WIMA_WIN_AREAS(window)) {
 
 		// Create the area tree.
-		window->areas = dtree_create(dtree_nodes(wksp), wima_area_copy,
+		WIMA_WIN_AREAS(window) = dtree_create(dtree_nodes(wksp), wima_area_copy,
 		                             wima_area_destroy, sizeof(WimaAr));
 
 		// Check for error.
-		if (yunlikely(!window->areas)) {
+		if (yunlikely(!WIMA_WIN_AREAS(window))) {
 			return WIMA_STATUS_MALLOC_ERR;
 		}
 	}
 
 	// Copy the workspace into the area tree.
-	if (yunlikely(dtree_copy(window->areas, wksp))) {
+	if (yunlikely(dtree_copy(WIMA_WIN_AREAS(window), wksp))) {
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
@@ -1033,7 +1041,7 @@ WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
 	rect.h = window->fbsize.h;
 
 	// Initialize the areas.
-	WimaStatus status = wima_area_init(wwh, window->areas, rect);
+	WimaStatus status = wima_area_init(wwh, WIMA_WIN_AREAS(window), rect);
 
 	// Set the window as dirty with layout.
 	wima_window_setDirty(window, true);
@@ -1051,20 +1059,20 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 	WimaWin* window = dvec_get(wg.windows, wwh);
 
 	// If the window's areas haven't been created yet...
-	if (!window->areas) {
+	if (!WIMA_WIN_AREAS(window)) {
 
 		// Create the area tree.
-		window->areas = dtree_create(dtree_nodes(areas), wima_area_copy,
+		WIMA_WIN_AREAS(window) = dtree_create(dtree_nodes(areas), wima_area_copy,
 		                             wima_area_destroy, sizeof(WimaAr));
 
 		// Check for error.
-		if (yunlikely(!window->areas)) {
+		if (yunlikely(!WIMA_WIN_AREAS(window))) {
 			return WIMA_STATUS_MALLOC_ERR;
 		}
 	}
 
 	// Restore the areas.
-	window->areas = areas;
+	WIMA_WIN_AREAS(window) = areas;
 
 	// Clear the context.
 	wima_window_clearContext(&window->ctx);
@@ -1078,7 +1086,7 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 	rect.h = window->fbsize.h;
 
 	// Resize the areas.
-	wima_area_resize(window->areas, rect);
+	wima_area_resize(WIMA_WIN_AREAS(window), rect);
 
 	// Set the window as dirty with layout.
 	wima_window_setDirty(window, true);
@@ -1491,8 +1499,8 @@ void wima_window_destroy(void* ptr) {
 		}
 
 		// Free the area tree, if it exists.
-		if (win->areas) {
-			dtree_free(win->areas);
+		if (WIMA_WIN_AREAS(win)) {
+			dtree_free(WIMA_WIN_AREAS(win));
 		}
 
 		// Destroy the GLFW window.
@@ -1611,7 +1619,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 	if (WIMA_WIN_NEEDS_LAYOUT(win)) {
 
 		// Layout all areas and check for error.
-		status = wima_area_layout(win->areas);
+		status = wima_area_layout(WIMA_WIN_AREAS(win));
 		if (yunlikely(status)) {
 			return status;
 		}
@@ -1630,7 +1638,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 		nvgBeginFrame(win->render.nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
 
 		// Draw all areas and check for error.
-		status = wima_area_draw(&win->render, win->areas);
+		status = wima_area_draw(&win->render, WIMA_WIN_AREAS(win));
 		if (yunlikely(status)) {
 
 			// Cancel NanoVG frame on error.
@@ -1982,7 +1990,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 		{
 			// If the area is not invalid, sent the event.
 			if (e.area_key.area != WIMA_AREA_INVALID) {
-				WimaAr* area = dtree_node(win->areas, e.area_key.area);
+				WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), e.area_key.area);
 				wima_area_key(area, e.area_key.key);
 			}
 
@@ -2026,7 +2034,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 				if (win->ctx.movingSplit) {
 
 					// Move the split.
-					wima_area_moveSplit(win->areas, win->ctx.split.area,
+					wima_area_moveSplit(WIMA_WIN_AREAS(win), win->ctx.split.area,
 					                    win->ctx.split, win->ctx.cursorPos);
 				}
 				else {
@@ -2059,7 +2067,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 
 		case WIMA_EVENT_AREA_ENTER:
 		{
-			WimaAr* area = dtree_node(win->areas, e.area_enter.area);
+			WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), e.area_enter.area);
 			wima_area_mouseEnter(area, e.area_enter.enter);
 			break;
 		}

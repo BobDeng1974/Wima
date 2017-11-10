@@ -80,6 +80,7 @@ const char* wima_error_descs[] = {
     "Wima dropped an event",
     "client tried to create too many windows",
     "client tried to create too many workspaces",
+    "client tried to create too many dialogs",
     "client tried to create too many editors",
     "no child exists for the given property",
     "child already exists for the given property",

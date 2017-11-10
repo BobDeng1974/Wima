@@ -82,9 +82,9 @@ WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
 
 	WimaWin* win = dvec_get(wg.windows, wah.window);
 
-	wassert(dtree_exists(win->areas, wah.area), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), wah.area), WIMA_ASSERT_AREA);
 
-	WimaAr* area = dtree_node(win->areas, wah.area);
+	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), wah.area);
 
 	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_OVER_MAX);
 

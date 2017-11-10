@@ -266,14 +266,28 @@ typedef struct WimaWin {
 	/// The user pointer for the window.
 	void* user;
 
-	/// The area tree.
-	DynaTree areas;
+	/// The area stack.
+	DynaTree areaStack[WIMA_AREA_MAX_STACK_CAP];
 
-	/// The current cursor.
-	GLFWcursor* cursor;
+	/// The vector of workspaces (area trees).
+	DynaVector workspaces;
 
 	/// The render context for the window.
 	WimaRenderContext render;
+
+	/// Index currently set in the area stack.
+	/// Because it's a stack, it also is the
+	/// length - 1.
+	uint8_t areaStackIdx;
+
+	/// Bits set when we have a menu.
+	uint8_t flags;
+
+	/// The menu icon.
+	WimaIcon menuIcon;
+
+	/// The pixel ratio of the window.
+	float pixelRatio;
 
 	/// The window's framebuffer size.
 	WimaSize fbsize;
@@ -294,14 +308,8 @@ typedef struct WimaWin {
 	/// it easy to click items that are used a lot.
 	WimaVec menuOffset;
 
-	/// The menu icon.
-	WimaIcon menuIcon;
-
-	/// Bits set when we have a menu.
-	uint8_t flags;
-
-	/// The pixel ratio of the window.
-	float pixelRatio;
+	/// The current cursor.
+	GLFWcursor* cursor;
 
 	/// The list of textures.
 	DynaVector images;
@@ -434,6 +442,14 @@ bool wima_window_valid(WimaWindow wwh);
  * @return		The Wima window handle.
  */
 #define WIMA_WIN(win) ((WimaWindow) (long) glfwGetWindowUserPointer(win))
+
+/**
+ * @def WIMA_WIN_AREAS
+ * Returns the current area tree in use on @a win.
+ * @param	win	The window to query.
+ * @return		The current area tree on @a win.
+ */
+#define WIMA_WIN_AREAS(win) ((win)->areaStack[(win)->areaStackIdx])
 
 /**
  * @}
