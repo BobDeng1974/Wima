@@ -428,6 +428,13 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Load the font.
 	window->render.font = nvgCreateFont(window->render.nvg, "default", dstr_str(wg.fontPath));
 
+	// Check for error.
+	if (yunlikely(window->render.font == -1)) {
+		wima_window_destroy(window);
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_WINDOW_INVALID;
+	}
+
 	// Cache this.
 	size_t imgLen = dvec_len(wg.imagePaths);
 
