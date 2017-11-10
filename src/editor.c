@@ -62,11 +62,7 @@ WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, W
 	// Get the index of the new editor.
 	size_t idx = dvec_len(wg.editors);
 
-	// Make sure we have enough space.
-	if (yunlikely(idx >= WIMA_EDITOR_MAX)) {
-		wima_error(WIMA_STATUS_EDITOR_MAX);
-		return WIMA_EDITOR_INVALID;
-	}
+	wassert(idx < WIMA_EDITOR_MAX, WIMA_ASSERT_EDITOR_MAX);
 
 	WimaEdtr edtr;
 

@@ -55,11 +55,7 @@ WimaDialog wima_dialog_register() {
 	// Get the index of the new dialog.
 	size_t len = dvec_len(wg.dialogs);
 
-	// Make sure we have enough space.
-	if (yunlikely(len >= WIMA_DIALOG_MAX)) {
-		wima_error(WIMA_STATUS_DIALOG_MAX);
-		return WIMA_DIALOG_INVALID;
-	}
+	wassert(len < WIMA_DIALOG_MAX, WIMA_ASSERT_DIALOG_MAX);
 
 	// Create the dialog.
 	WimaDlg dlg = dvec_pushTree(wg.dialogs);

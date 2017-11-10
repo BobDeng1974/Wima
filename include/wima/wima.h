@@ -113,35 +113,14 @@ typedef enum WimaStatus {
 	/// Returned when an event is dropped.
 	WIMA_STATUS_EVENT_DROPPED      = 138,
 
-	/// Returned when the user tries to create too many windows.
-	WIMA_STATUS_WINDOW_MAX         = 139,
-
-	/// Returned when the user tries to create too many workspaces.
-	WIMA_STATUS_WORKSPACE_MAX      = 140,
-
-	/// Returned when the user tries to create too many dialogs.
-	WIMA_STATUS_DIALOG_MAX         = 141,
-
-	/// Returned when the user tries to create too many editors.
-	WIMA_STATUS_EDITOR_MAX         = 142,
-
 	/// Returned when no child for the parent prop exists.
-	WIMA_STATUS_PROP_NO_CHILD      = 143,
+	WIMA_STATUS_PROP_NO_CHILD      = 139,
 
 	/// Returned when a prop child already exists.
-	WIMA_STATUS_PROP_CHILD_EXISTS  = 144,
-
-	/// Returns when the user tries to add too many children to a property.
-	WIMA_STATUS_PROP_LIST_MAX      = 145,
+	WIMA_STATUS_PROP_CHILD_EXISTS  = 140,
 
 	/// Returned when an image fails to load.
-	WIMA_STATUS_IMAGE_LOAD_ERR     = 146,
-
-	/// Returned when the user tries to create too many images.
-	WIMA_STATUS_IMAGE_MAX          = 147,
-
-	/// Returned when the user tries to create too many icons.
-	WIMA_STATUS_ICON_MAX           = 148,
+	WIMA_STATUS_IMAGE_LOAD_ERR     = 141,
 
 } WimaStatus;
 

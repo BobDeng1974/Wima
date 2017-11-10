@@ -53,12 +53,7 @@ WimaImage wima_image_load(const char * const path, WimaImageFlags flags) {
 	size_t len = dvec_len(wg.imagePaths);
 
 	wassert(len == dvec_len(wg.imageFlags), WIMA_ASSERT_IMG_MISMATCH);
-
-	// Make sure we have enough space and error if necessary.
-	if (yunlikely(len == WIMA_IMAGE_MAX)) {
-		wima_error(WIMA_STATUS_IMAGE_MAX);
-		return WIMA_IMAGE_INVALID;
-	}
+	wassert(len < WIMA_IMAGE_MAX, WIMA_ASSERT_IMG_MAX);
 
 	// Push onto the path vector.
 	DynaStatus status = dvec_pushString(wg.imagePaths, path);

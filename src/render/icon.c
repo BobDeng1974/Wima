@@ -102,11 +102,7 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 	// Get the length.
 	size_t len = dnvec_len(wg.icons);
 
-	// Make sure the user hasn't created too many icons.
-	if (yunlikely(len == WIMA_ICON_INVALID)) {
-		wima_error(WIMA_STATUS_ICON_MAX);
-		return WIMA_ICON_INVALID;
-	}
+	wassert(len < WIMA_ICON_INVALID, WIMA_ASSERT_ICON_MAX);
 
 	// If there is already something in the array...
 	if (len != 0) {

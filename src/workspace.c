@@ -98,12 +98,7 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon) {
 	size_t len = dvec_len(wg.workspaces);
 
 	wassert(len == dvec_len(wg.workspaceProps), WIMA_ASSERT_WKSP_MISMATCH);
-
-	// Make sure we have enough space.
-	if (yunlikely(len >= WIMA_WORKSPACE_MAX)) {
-		wima_error(WIMA_STATUS_WORKSPACE_MAX);
-		return WIMA_WORKSPACE_INVALID;
-	}
+	wassert(len < WIMA_WORKSPACE_MAX, WIMA_ASSERT_WKSP_MAX);
 
 	// Create the name.
 	sprintf(buffer, wima_wksp_fmt, index);

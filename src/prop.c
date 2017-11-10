@@ -272,10 +272,7 @@ WimaStatus wima_prop_list_push(WimaProperty list, WimaProperty child) {
 	// Cache this.
 	size_t len = dvec_len(data->_list.list);
 
-	// Make sure we aren't going over max.
-	if (yunlikely(len == WIMA_PROP_LIST_MAX)) {
-		return WIMA_STATUS_PROP_LIST_MAX;
-	}
+	wassert(len < WIMA_PROP_LIST_MAX, WIMA_ASSERT_PROP_LIST_MAX);
 
 	// If there are children...
 	if (len != 0) {
@@ -337,11 +334,7 @@ WimaStatus wima_prop_list_pushAt(WimaProperty list, uint32_t idx, WimaProperty c
 	size_t len = dvec_len(data->_list.list);
 
 	wassert(len >= idx, WIMA_ASSERT_PROP_LIST_IDX);
-
-	// Make sure we aren't going over max.
-	if (yunlikely(len == WIMA_PROP_LIST_MAX)) {
-		return WIMA_STATUS_PROP_LIST_MAX;
-	}
+	wassert(len < WIMA_PROP_LIST_MAX, WIMA_ASSERT_PROP_LIST_MAX);
 
 	// If there are children...
 	if (len != 0) {

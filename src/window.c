@@ -213,11 +213,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Get the index of the new window.
 	size_t len = dvec_len(wg.windows);
 
-	// Make sure we have enough space.
-	if (yunlikely(len >= WIMA_WINDOW_MAX)) {
-		wima_error(WIMA_STATUS_WINDOW_MAX);
-		return WIMA_WINDOW_INVALID;
-	}
+	wassert(len < WIMA_WINDOW_MAX, WIMA_ASSERT_WIN_MAX);
 
 	WimaWin wwin;
 

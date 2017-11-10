@@ -78,16 +78,9 @@ const char* wima_error_descs[] = {
     "Wima was given an invalid parameter",
     "Clipboard contents were invalid",
     "Wima dropped an event",
-    "client tried to create too many windows",
-    "client tried to create too many workspaces",
-    "client tried to create too many dialogs",
-    "client tried to create too many editors",
     "no child exists for the given property",
     "child already exists for the given property",
-    "client tried to add too many children to a property",
     "image failed to load",
-    "client tried to load too many images",
-    "client tried to load too many icons",
 };
 
 /**
@@ -110,6 +103,7 @@ const char* wima_assert_msgs[] = {
     "more than 16 icons provided",
 
     "window is not valid",
+    "client tried to create too many windows",
     "window does not match its GLFW handle; this is a bug in Wima",
     "window area tree is null",
     "window does not match item",
@@ -123,11 +117,13 @@ const char* wima_assert_msgs[] = {
     "client tried to push too many dialogs onto the stack",
 
     "workspace is not valid",
+    "client tried to create too many workspaces",
     "workspace tree is not valid",
     "no workspaces are registered",
     "the number of workspaces does not match the number of workspace names; this is a bug in Wima",
 
     "dialog is not valid",
+    "client tried to create too many dialogs",
     "dialog tree is not valid",
     "no dialogs are registered",
 
@@ -137,6 +133,7 @@ const char* wima_assert_msgs[] = {
     "number of items in area exceeds capacity",
 
     "editor is not valid",
+    "client tried to create too many editors",
     "no editors are registered",
     "editor layout function is null",
     "editor item capacity is 0",
@@ -148,6 +145,7 @@ const char* wima_assert_msgs[] = {
     "split layout already has two children",
 
     "widget is not valid",
+    "client tried to create too many widgets/layouts",
     "widget user pointer is not NULL",
     "widget flags not just layout flags",
     "widget flags not just box flags",
@@ -179,6 +177,7 @@ const char* wima_assert_msgs[] = {
     "str is NULL",
     "enum names is not valid",
     "index is out of range for the list",
+    "client tried to add too many children to a property",
     "prop pointer is NULL",
     "prop draw function is NULL",
     "operator is NULL",
@@ -190,6 +189,7 @@ const char* wima_assert_msgs[] = {
     "gamma ramp size is not 256",
 
     "image is not valid",
+    "client tried to load too many images",
     "image data is NULL",
     "image list has a mismatch; data is corrupted; this is a bug in Wima",
 
@@ -198,6 +198,7 @@ const char* wima_assert_msgs[] = {
     "cursor hot position is invalid",
 
     "icon is not valid",
+    "client tried to load too many icons",
 
     "ptr is NULL",
 
