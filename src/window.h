@@ -266,8 +266,11 @@ typedef struct WimaWin {
 	/// The user pointer for the window.
 	void* user;
 
+	/// The current tree.
+	DynaTree curTree;
+
 	/// The area stack.
-	DynaTree areaStack[WIMA_AREA_MAX_STACK_CAP];
+	DynaTree treeStack[WIMA_WINDOW_STACK_MAX];
 
 	/// The vector of workspaces (area trees).
 	DynaVector workspaces;
@@ -278,7 +281,7 @@ typedef struct WimaWin {
 	/// Index currently set in the area stack.
 	/// Because it's a stack, it also is the
 	/// length - 1.
-	uint8_t areaStackIdx;
+	uint8_t treeStackIdx;
 
 	/// Bits set when we have a menu.
 	uint8_t flags;
@@ -449,7 +452,7 @@ bool wima_window_valid(WimaWindow wwh);
  * @param	win	The window to query.
  * @return		The current area tree on @a win.
  */
-#define WIMA_WIN_AREAS(win) ((win)->areaStack[(win)->areaStackIdx])
+#define WIMA_WIN_AREAS(win) ((win)->treeStack[(win)->treeStackIdx])
 
 /**
  * @}

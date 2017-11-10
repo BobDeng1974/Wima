@@ -138,14 +138,14 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Create and if error, exit.
-	wg.dialogs = dvec_createTreeVec(0, wima_area_copy, wima_area_destroy, sizeof(WimaEdtr));
+	wg.dialogs = dvec_createTreeVec(0, NULL, wima_area_destroy, sizeof(WimaEdtr));
 	if (yunlikely(!wg.dialogs)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
-	wg.workspaces = dvec_createTreeVec(0, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
+	wg.workspaces = dvec_createTreeVec(0, NULL, wima_area_destroy, sizeof(WimaAr));
 	if (yunlikely(!wg.workspaces)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;

@@ -53,6 +53,7 @@
 
 #include "callbacks.h"
 #include "editor.h"
+#include "dialog.h"
 #include "area.h"
 #include "window.h"
 #include "global.h"
@@ -223,7 +224,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Clear these before assigning.
 	wwin.render.nvg = NULL;
 	wwin.images = NULL;
-	wwin.areaStackIdx = 0;
+	wwin.treeStackIdx = ((uint8_t) -1);
 	wwin.user = NULL;
 	wwin.window = NULL;
 	wwin.fbsize.w = 0;
@@ -341,17 +342,62 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 		// Push it onto the list and check for error.
 		if (yunlikely(dvec_push(wg.windows, &wwin))) {
+			wima_window_destroy(&wwin);
 			wima_error(WIMA_STATUS_MALLOC_ERR);
 			return WIMA_WINDOW_INVALID;
 		}
 	}
 
-	// Put the workspace into the window and check for error.
-	WimaStatus status = wima_window_areas_replace(idx, wksph);
+	// Get a pointer to the new window.
+	WimaWin* window = dvec_get(wg.windows, idx);
+
+	// Get the workspace.
+	WimaWksp wksp = dvec_get(wg.workspaces, wksph);
+
+	// Create the tree of areas.
+	window->curTree = dtree_create(dtree_nodes(wksp), NULL, wima_area_destroy, sizeof(WimaAr));
+
+	// Check for error.
+	if (yunlikely(!window->curTree)) {
+		wima_window_destroy(window);
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_WINDOW_INVALID;
+	}
+
+	// Copy the workspace into the area tree.
+	if (yunlikely(dtree_copy(window->curTree, wksp))) {
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Set the tree index.
+	window->treeStackIdx = 0;
+
+	// Set the tree in the stack.
+	WIMA_WIN_AREAS(window) = window->curTree;
+
+	WimaRect rect;
+
+	// Set the rectangle.
+	rect.x = 0;
+	rect.y = 0;
+	rect.w = window->fbsize.w;
+	rect.h = window->fbsize.h;
+
+	// Initialize the areas.
+	WimaStatus status = wima_area_init(idx, window->curTree, rect);
+
+	// Check for error.
 	if (yunlikely(status)) {
+		wima_window_destroy(window);
 		wima_error(status);
 		return WIMA_WINDOW_INVALID;
 	}
+
+	// Clear the context.
+	wima_window_clearContext(&window->ctx);
+
+	// Set the window as dirty with layout.
+	wima_window_setDirty(window, true);
 
 	// Set the user pointer to the handle.
 	glfwSetWindowUserPointer(win, (void*) (long) idx);
@@ -361,9 +407,6 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 	// Set the swap interval.
 	glfwSwapInterval(1);
-
-	// Get a pointer to the new window.
-	WimaWin* window = dvec_get(wg.windows, idx);
 
 	// Load the context.
 	if (yunlikely(!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))) {
@@ -972,7 +1015,7 @@ DynaTree wima_window_areas(WimaWindow wwh) {
 	int nodes = dtree_nodes(winareas);
 
 	// Create a new tree and check for error.
-	DynaTree areas = dtree_create(nodes, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
+	DynaTree areas = dtree_create(nodes, NULL, wima_area_destroy, sizeof(WimaAr));
 	if (yunlikely(!areas)) {
 		return NULL;
 	}
@@ -988,94 +1031,36 @@ DynaTree wima_window_areas(WimaWindow wwh) {
 
 WimaStatus wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg) {
 
-}
-
-WimaStatus wima_window_popDialog(WimaWindow wwh) {
-
-}
-
-WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksph) {
-
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
-	wassert(dvec_len(wg.workspaces) != 0, WIMA_ASSERT_WKSP_REGISTERED);
+	wassert(dvec_len(wg.dialogs) != 0, WIMA_ASSERT_DIALOG_REGISTERED);
 	wassert(dvec_len(wg.editors) != 0, WIMA_ASSERT_EDITOR_REGISTERED);
 
-	// Get the workspace.
-	WimaWksp wksp = dvec_get(wg.workspaces, wksph);
+	wassert(wdlg < dvec_len(wg.dialogs), WIMA_ASSERT_DIALOG);
 
-	wassert(wima_area_valid(wksp), WIMA_ASSERT_WKSP);
+	// Get the tree.
+	WimaDlg dlg = dvec_get(wg.dialogs, wdlg);
+
+	wassert(wima_area_valid(dlg), WIMA_ASSERT_DIALOG_TREE_VALID);
 
 	// Get the window.
 	WimaWin* window = dvec_get(wg.windows, wwh);
 
-	// If the window's areas haven't been created yet...
-	if (!WIMA_WIN_AREAS(window)) {
+	wassert(window->treeStackIdx != ((uint8_t) -1), WIMA_ASSERT_WIN_NO_WKSP);
 
-		// Create the area tree.
-		WIMA_WIN_AREAS(window) = dtree_create(dtree_nodes(wksp), wima_area_copy,
-		                             wima_area_destroy, sizeof(WimaAr));
+	wassert(window->treeStackIdx < WIMA_WINDOW_STACK_MAX - 1, WIMA_ASSERT_WIN_STACK_MAX);
 
-		// Check for error.
-		if (yunlikely(!WIMA_WIN_AREAS(window))) {
-			return WIMA_STATUS_MALLOC_ERR;
-		}
-	}
+	// Increment the index.
+	++(window->treeStackIdx);
 
-	// Copy the workspace into the area tree.
-	if (yunlikely(dtree_copy(WIMA_WIN_AREAS(window), wksp))) {
-		return WIMA_STATUS_MALLOC_ERR;
-	}
-
-	// Clear the context.
-	wima_window_clearContext(&window->ctx);
-
-	WimaRect rect;
-
-	// Set the rectangle.
-	rect.x = 0;
-	rect.y = 0;
-	rect.w = window->fbsize.w;
-	rect.h = window->fbsize.h;
-
-	// Initialize the areas.
-	WimaStatus status = wima_area_init(wwh, WIMA_WIN_AREAS(window), rect);
+	// Set the dialog.
+	WIMA_WIN_AREAS(window) = dlg;
+	window->curTree = dlg;
 
 	// Set the window as dirty with layout.
 	wima_window_setDirty(window, true);
-
-	return status;
-}
-
-WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
-
-	wima_assert_init;
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
-
-	// Get the window.
-	WimaWin* window = dvec_get(wg.windows, wwh);
-
-	// If the window's areas haven't been created yet...
-	if (!WIMA_WIN_AREAS(window)) {
-
-		// Create the area tree.
-		WIMA_WIN_AREAS(window) = dtree_create(dtree_nodes(areas), wima_area_copy,
-		                             wima_area_destroy, sizeof(WimaAr));
-
-		// Check for error.
-		if (yunlikely(!WIMA_WIN_AREAS(window))) {
-			return WIMA_STATUS_MALLOC_ERR;
-		}
-	}
-
-	// Restore the areas.
-	WIMA_WIN_AREAS(window) = areas;
-
-	// Clear the context.
-	wima_window_clearContext(&window->ctx);
 
 	WimaRect rect;
 
@@ -1086,10 +1071,48 @@ WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas) {
 	rect.h = window->fbsize.h;
 
 	// Resize the areas.
-	wima_area_resize(WIMA_WIN_AREAS(window), rect);
+	wima_area_resize(window->curTree, rect);
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus wima_window_popDialog(WimaWindow wwh) {
+
+	wima_assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	wassert(dvec_len(wg.dialogs) != 0, WIMA_ASSERT_DIALOG_REGISTERED);
+	wassert(dvec_len(wg.editors) != 0, WIMA_ASSERT_EDITOR_REGISTERED);
+
+	// Get the window.
+	WimaWin* window = dvec_get(wg.windows, wwh);
+
+	wassert(window->treeStackIdx != ((uint8_t) -1), WIMA_ASSERT_WIN_NO_WKSP);
+	wassert(window->treeStackIdx > 0, WIMA_ASSERT_WIN_NO_DIALOG);
+
+	// Free the area.
+	dtree_free(WIMA_WIN_AREAS(window));
+
+	// Decrement the index.
+	--(window->treeStackIdx);
+
+	// Set the new dialog/workspace.
+	window->curTree = WIMA_WIN_AREAS(window);
 
 	// Set the window as dirty with layout.
 	wima_window_setDirty(window, true);
+
+	WimaRect rect;
+
+	// Set the rectangle.
+	rect.x = 0;
+	rect.y = 0;
+	rect.w = window->fbsize.w;
+	rect.h = window->fbsize.h;
+
+	// Resize the areas.
+	wima_area_resize(window->curTree, rect);
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -1488,9 +1511,8 @@ void wima_window_destroy(void* ptr) {
 
 		// If the NanoVG context exists, delete
 		// it. This will also delete the images.
-		NVGcontext* nvg = win->render.nvg;
-		if (nvg) {
-			nvgDeleteGL3(nvg);
+		if (win->render.nvg) {
+			nvgDeleteGL3(win->render.nvg);
 		}
 
 		// Delete the vector of images, if it exists.
@@ -1498,9 +1520,9 @@ void wima_window_destroy(void* ptr) {
 			dvec_free(win->images);
 		}
 
-		// Free the area tree, if it exists.
-		if (WIMA_WIN_AREAS(win)) {
-			dtree_free(WIMA_WIN_AREAS(win));
+		// Free the area trees, if they exist.
+		for (uint8_t i = 0; i <= win->treeStackIdx; ++i) {
+			dtree_free(win->treeStack[i]);
 		}
 
 		// Destroy the GLFW window.

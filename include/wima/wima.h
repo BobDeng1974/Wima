@@ -202,6 +202,12 @@ typedef uint8_t WimaWindow;
 #define WIMA_WINDOW_MAX WIMA_WINDOW_INVALID
 
 /**
+ * @def WIMA_WINDOW_MAX_STACK_CAP
+ * The max capacity of an area stack in a window.
+ */
+#define WIMA_WINDOW_STACK_MAX (8)
+
+/**
  * @}
  */
 
@@ -288,12 +294,6 @@ typedef struct WimaArea {
 	WimaWindow window;
 
 } WimaArea;
-
-/**
- * @def WIMA_AREA_MAX_STACK_CAP
- * The max capacity of an area stack in a window.
- */
-#define WIMA_AREA_MAX_STACK_CAP (16)
 
 /**
  * @}
@@ -2289,25 +2289,9 @@ bool wima_window_needsLayout(WimaWindow wwh) yinline;
  */
 DynaTree wima_window_areas(WimaWindow wwh);
 
-/**
- * Replaces a window's workspace with another.
- * @param wwh	The window to update.
- * @param wksp	The new workspace.
- * @return		WIMA_STATUS_SUCCESS on success, an
- *				error code otherwise.
- * @pre			@a wwh must be a valid WimaWindow.
- */
-WimaStatus wima_window_areas_replace(WimaWindow wwh, WimaWorkspace wksp);
+WimaStatus wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg);
 
-/**
- * Restores a workspace saved with @a wima_window_areas().
- * @param wwh	The window to update.
- * @param areas	The saved areas that will be restored.
- * @return		WIMA_STATUS_SUCCESS on success, or an
- *				error code otherwise.
- * @pre			@a wwh must be a valid WimaWindow.
- */
-WimaStatus wima_window_areas_restore(WimaWindow wwh, DynaTree areas);
+WimaStatus wima_window_popDialog(WimaWindow wwh);
 
 /**
  * Sets the context menu on the window with @a title and @a icon.

@@ -118,11 +118,18 @@ const char* wima_assert_msgs[] = {
     "window context is not valid; this is a bug in Wima",
     "window framebuffer size does not match GLFW framebuffer size; this is a bug in Wima",
     "window render context is NULL; this is a bug in Wima",
+    "no workspace on the window",
+    "no dialog on the window",
+    "client tried to push too many dialogs onto the stack",
 
     "workspace is not valid",
     "workspace tree is not valid",
     "no workspaces are registered",
     "the number of workspaces does not match the number of workspace names; this is a bug in Wima",
+
+    "dialog is not valid",
+    "dialog tree is not valid",
+    "no dialogs are registered",
 
     "area is not valid",
     "area is a parent, not a leaf",

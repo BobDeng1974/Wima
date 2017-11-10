@@ -515,30 +515,6 @@ static bool wima_area_node_valid(DynaTree editors, DynaNode node) {
 	return result;
 }
 
-DynaStatus wima_area_copy(void* dest, void* src) {
-
-	WimaAr* darea = (WimaAr*) dest;
-	WimaAr* sarea = (WimaAr*) src;
-
-	// Just copy.
-	memcpy(darea, sarea, sizeof(WimaAr));
-
-	// If this is a leaf node...
-	if (WIMA_AREA_IS_LEAF(darea)) {
-
-		// Calculate the optimal allocation size.
-		size_t size = ynalloc(sizeof(WimaItem) * darea->area.ctx.itemCap);
-
-		// Allocate and check for error.
-		darea->area.ctx.items = ymalloc(size);
-		if (yunlikely(!darea->area.ctx.items)) {
-			return DYNA_STATUS_MALLOC_FAIL;
-		}
-	}
-
-	return DYNA_STATUS_SUCCESS;
-}
-
 void wima_area_destroy(void* ptr) {
 
 	WimaAr* area = (WimaAr*) ptr;
