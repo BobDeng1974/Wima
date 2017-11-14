@@ -129,6 +129,11 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, Wim
 		goto wima_wksp_reg_wksp_err;
 	}
 
+	// Copy the tree and check for error.
+	if (yunlikely(dtree_copy(wksp, tree))) {
+		goto wima_wksp_reg_prop_push_err;
+	}
+
 	// Push onto the prop vector and check for error.
 	if (yunlikely(dvec_push(wg.workspaceProps, &prop))) {
 		goto wima_wksp_reg_prop_push_err;
