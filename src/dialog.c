@@ -48,7 +48,7 @@ wima_assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaDialog wima_dialog_register() {
+WimaDialog wima_dialog_register(WimaTree tree) {
 
 	wima_assert_init;
 
@@ -62,54 +62,27 @@ WimaDialog wima_dialog_register() {
 
 	// Check for error.
 	if (yunlikely(!dlg)) {
+		goto wima_dlg_reg_push;
+	}
 
-		// Report the error.
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-
-		return WIMA_DIALOG_INVALID;
+	// Copy the tree and check for error.
+	if (yunlikely(dtree_copy(dlg, tree))) {
+		goto wima_dlg_reg_copy;
 	}
 
 	return len;
-}
 
-WimaStatus wima_dialog_addParent(WimaDialog wdlg, DynaNode node, float split, bool vertical) {
+// Error on copy.
+wima_dlg_reg_copy:
 
-	wima_assert_init;
+	// Pop the dialog off.
+	dvec_pop(wg.dialogs);
 
-	wassert(wdlg < dvec_len(wg.dialogs), WIMA_ASSERT_WKSP);
-	wassert(wima_dialog_nodeValid(wdlg, node), WIMA_ASSERT_WKSP_TREE_VALID);
+// Error on push.
+wima_dlg_reg_push:
 
-	// Get the dialog.
-	WimaDlg dlg = dvec_get(wg.dialogs, wdlg);
+	// Report the error.
+	wima_error(WIMA_STATUS_MALLOC_ERR);
 
-	return wima_tree_addParent(dlg, node, split, vertical);
-}
-
-WimaStatus wima_dialog_addEditor(WimaDialog wdlg, DynaNode node, WimaEditor wed) {
-
-	wima_assert_init;
-
-	wassert(wdlg < dvec_len(wg.dialogs), WIMA_ASSERT_WKSP);
-	wassert(wima_dialog_nodeValid(wdlg, node), WIMA_ASSERT_WKSP_TREE_VALID);
-
-	// Get the dialog.
-	WimaDlg dlg = dvec_get(wg.dialogs, wdlg);
-
-	return wima_tree_addEditor(dlg, node, wed);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Private functions.
-////////////////////////////////////////////////////////////////////////////////
-
-bool wima_dialog_nodeValid(WimaDialog wdh, DynaNode n) {
-
-	wima_assert_init;
-
-	wassert(wdh < dvec_len(wg.dialogs), WIMA_ASSERT_WKSP);
-
-	// Get the workspace.
-	WimaDlg dlg = dvec_get(wg.workspaces, wdh);
-
-	return wima_tree_nodeValid(dlg, n);
+	return WIMA_DIALOG_INVALID;
 }

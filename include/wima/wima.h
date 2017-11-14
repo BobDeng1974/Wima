@@ -1824,37 +1824,7 @@ WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed);
  * @param icon	The workspace's icon.
  * @return		The registered workspace.
  */
-WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon);
-
-/**
- * Adds a parent node to @a wwksp.
- * @param wwksp		The workspace to add to.
- * @param node		The node to add, which should be either
- *					the root, or a child of a node that has
- *					already been added.
- * @param split		A value between [0, 1] that indicates
- *					where the split between this parent's
- *					children will be.
- * @param vertical	Whether the split is vertical (splitting
- *					width) or not.
- * @return			WIMA_STATUS_SUCCESS on success, or an
- *					error code.
- * @pre				@a wwksp must be valid.
- */
-WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node, float split, bool vertical);
-
-/**
- * Adds a editor (leaf) to a workspace.
- * @param wwksp	The workspace to add to.
- * @param node	The node to add, which should be either
- *				the root, or a child of a node that has
- *				already been added.
- * @param wed	The editor to set the type as.
- * @return		WIMA_STATUS_SUCCESS on success, or an
- *				error code.
- * @pre			@a wwksp must be valid.
- */
-WimaStatus wima_workspace_addEditor(WimaWorkspace wwksp, DynaNode node, WimaEditor wed);
+WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, WimaTree tree);
 
 /**
  * @}
@@ -1890,37 +1860,7 @@ WimaStatus wima_workspace_addEditor(WimaWorkspace wwksp, DynaNode node, WimaEdit
  * nodes with no or only one child.
  * @return	The registered dialog.
  */
-WimaDialog wima_dialog_register();
-
-/**
- * Adds a parent node to @a wwksp.
- * @param wwksp		The workspace to add to.
- * @param node		The node to add, which should be either
- *					the root, or a child of a node that has
- *					already been added.
- * @param split		A value between [0, 1] that indicates
- *					where the split between this parent's
- *					children will be.
- * @param vertical	Whether the split is vertical (splitting
- *					width) or not.
- * @return			WIMA_STATUS_SUCCESS on success, or an
- *					error code.
- * @pre				@a wwksp must be valid.
- */
-WimaStatus wima_dialog_addParent(WimaDialog wdlg, DynaNode node, float split, bool vertical);
-
-/**
- * Adds a editor (leaf) to a workspace.
- * @param wwksp	The workspace to add to.
- * @param node	The node to add, which should be either
- *				the root, or a child of a node that has
- *				already been added.
- * @param wed	The editor to set the type as.
- * @return		WIMA_STATUS_SUCCESS on success, or an
- *				error code.
- * @pre			@a wwksp must be valid.
- */
-WimaStatus wima_dialog_addEditor(WimaDialog wdlg, DynaNode node, WimaEditor wed);
+WimaDialog wima_dialog_register(WimaTree tree);
 
 /**
  * @}

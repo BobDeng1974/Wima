@@ -85,7 +85,7 @@ const char* const wima_wksp_desc = "Name of a workspace";
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon) {
+WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, WimaTree tree) {
 
 	wima_assert_init;
 
@@ -171,8 +171,6 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon) {
 			if (yunlikely(status)) {
 				goto wima_wksp_reg_win_err;
 			}
-
-			// Set up the new
 		}
 	}
 
@@ -268,47 +266,4 @@ WimaStatus wima_workspace_updateFromWindow(WimaWorkspace wwksp, WimaWindow wwh) 
 	}
 
 	return WIMA_STATUS_SUCCESS;
-}
-
-WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,
-                                    float split, bool vertical)
-{
-	wima_assert_init;
-
-	wassert(wwksp < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
-	wassert(wima_workspace_nodeValid(wwksp, node), WIMA_ASSERT_WKSP_TREE_VALID);
-
-	// Get the workspace.
-	WimaWksp wksp = dvec_get(wg.workspaces, wwksp);
-
-	return wima_tree_addParent(wksp, node, split, vertical);
-}
-
-WimaStatus wima_workspace_addEditor(WimaWorkspace wwksp, DynaNode node, WimaEditor wed) {
-
-	wima_assert_init;
-
-	wassert(wwksp < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
-	wassert(wima_workspace_nodeValid(wwksp, node), WIMA_ASSERT_WKSP_TREE_VALID);
-
-	// Get the workspace.
-	WimaWksp wksp = dvec_get(wg.workspaces, wwksp);
-
-	return wima_tree_addEditor(wksp, node, wed);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Private functions.
-////////////////////////////////////////////////////////////////////////////////
-
-bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n) {
-
-	wima_assert_init;
-
-	wassert(wwh < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
-
-	// Get the workspace.
-	WimaWksp wksp = dvec_get(wg.workspaces, wwh);
-
-	return wima_tree_nodeValid(wksp, n);
 }

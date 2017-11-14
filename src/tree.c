@@ -81,9 +81,10 @@ WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed) {
 	// Set the area type.
 	wan.area.type = wed;
 
-	// Make sure this is cleared.
+	// Make sure these are cleared.
 	wan.area.ctx.items = NULL;
 	wan.area.ctx.itemCount = 0;
+	wan.area.user = WIMA_TREE_USER_INVALID;
 
 	// Add the node to the tree.
 	DynaStatus status = dtree_add(tree, node, &wan);

@@ -380,12 +380,6 @@ int main() {
 		return WIMA_EDITOR_INVALID;
 	}
 
-	// Register a workspace.
-	WimaWorkspace wksp = wima_workspace_register("Test Workspace", wima_icon_donut());
-	if (wksp == WIMA_WORKSPACE_INVALID) {
-		return WIMA_WORKSPACE_INVALID;
-	}
-
 	// Cache these.
 	DynaNode root = dtree_root();
 
@@ -404,70 +398,82 @@ int main() {
 	DynaNode leftDownLeft = dtree_left(leftDown);
 	DynaNode leftDownRight = dtree_right(leftDown);
 
-	// Add the node and editors to the workspace.
-	status = wima_workspace_addParent(wksp, root, 0.5f, true);
+	// Create the tree.
+	WimaTree tree = wima_tree_create();
+	if (!tree) {
+		return 1;
+	}
+
+	// Add the node and editors to the tree.
+	status = wima_tree_addParent(tree, root, 0.5f, true);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addParent(wksp, left, 0.33333f, false);
+	status = wima_tree_addParent(tree, left, 0.33333f, false);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addParent(wksp, right, 0.75f, false);
+	status = wima_tree_addParent(tree, right, 0.75f, false);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addParent(wksp, leftUp, 0.4f, false);
+	status = wima_tree_addParent(tree, leftUp, 0.4f, false);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, leftUpUp, editor);
+	status = wima_tree_addEditor(tree, leftUpUp, editor);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, leftUpDown, editor);
+	status = wima_tree_addEditor(tree, leftUpDown, editor);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addParent(wksp, leftDown, 0.2f, true);
+	status = wima_tree_addParent(tree, leftDown, 0.2f, true);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, leftDownLeft, editor);
+	status = wima_tree_addEditor(tree, leftDownLeft, editor);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addParent(wksp, leftDownRight, 0.5f, true);
+	status = wima_tree_addParent(tree, leftDownRight, 0.5f, true);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, dtree_left(leftDownRight), editor);
+	status = wima_tree_addEditor(tree, dtree_left(leftDownRight), editor);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, dtree_right(leftDownRight), editor);
+	status = wima_tree_addEditor(tree, dtree_right(leftDownRight), editor);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, rightUp, editor);
+	status = wima_tree_addEditor(tree, rightUp, editor);
 	if (status) {
 		return status;
 	}
 
-	status = wima_workspace_addEditor(wksp, rightDown, editor);
+	status = wima_tree_addEditor(tree, rightDown, editor);
 	if (status) {
 		return status;
+	}
+
+	// Register a workspace.
+	WimaWorkspace wksp = wima_workspace_register("Test Workspace", wima_icon_donut(), tree);
+	if (wksp == WIMA_WORKSPACE_INVALID) {
+		return WIMA_WORKSPACE_INVALID;
 	}
 
 	WimaSize size;

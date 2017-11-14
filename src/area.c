@@ -436,7 +436,10 @@ DynaStatus wima_area_copy(void* dest, void* src) {
 		// be allocated. Otherwise, we are copying from a window to a
 		// dialog/workspace, and we need to set the array as NULL, as
 		// well as not set the user pointer.
-		WimaStatus status = wima_area_setup(darea, sarea->area.ctx.items == NULL);
+		// We also check to see if the user pointer is NULL. It it's
+		// not, that means that we should also not copy.
+		bool allocate = sarea->area.user == NULL && sarea->area.ctx.items == NULL;
+		WimaStatus status = wima_area_setup(darea, allocate);
 
 		// Check for error.
 		dstatus = status ? DYNA_STATUS_MALLOC_FAIL : DYNA_STATUS_SUCCESS;
