@@ -1748,6 +1748,61 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
+// Tree functions and data structures.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup tree tree
+ * Functions and data structures to build trees, which
+ * can then be used to create workspaces and dialogs.
+ * @{
+ */
+
+/**
+ * The type for WimaTrees. The actual implementation is hidden.
+ */
+typedef void* WimaTree;
+
+/**
+ * Creates and returns a @a WimaTree, or NULL on error.
+ * @return	A newly-created @a WimaTree, or NULL on error.
+ */
+WimaTree wima_tree_create();
+
+/**
+ * Adds a parent node to @a tree.
+ * @param tree		The tree to add to.
+ * @param node		The node to add, which should be either
+ *					the root, or a child of a node that has
+ *					already been added.
+ * @param split		A value between [0, 1] that indicates
+ *					where the split between this parent's
+ *					children will be.
+ * @param vertical	Whether the split is vertical (splitting
+ *					width) or not.
+ * @return			WIMA_STATUS_SUCCESS on success, or an
+ *					error code.
+ * @pre				@a tree must not be NULL.
+ */
+WimaStatus wima_tree_addParent(WimaTree tree, DynaNode node, float split, bool vertical);
+
+/**
+ * Adds a editor (leaf) to a tree.
+ * @param tree	The tree to add to.
+ * @param node	The node to add, which should be either
+ *				the root, or a child of a node that has
+ *				already been added.
+ * @param wed	The editor to set the type as.
+ * @return		WIMA_STATUS_SUCCESS on success, or an
+ *				error code.
+ * @pre			@a tree must not be NULL.
+ */
+WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed);
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
 // Workspace functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
 

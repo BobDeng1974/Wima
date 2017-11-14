@@ -59,11 +59,15 @@ extern "C" {
  * @{
  */
 
-bool wima_tree_nodeValid(DynaTree tree, DynaNode n);
-
-WimaStatus wima_tree_addParent(DynaTree tree, DynaNode node, float split, bool vertical);
-
-WimaStatus wima_tree_addEditor(DynaTree tree, DynaNode node, WimaEditor wed);
+/**
+ * Figures out whether a node is valid (so far),
+ * which means that it has the proper parents.
+ * @param tree	The tree the node is in.
+ * @param n		The node to check.
+ * @return		true if valid, false otherwise.
+ * @pre			@a tree must not be NULL.
+ */
+bool wima_tree_nodeValid(WimaTree tree, DynaNode n);
 
 /**
  * @}

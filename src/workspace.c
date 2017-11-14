@@ -159,18 +159,20 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon) {
 				goto wima_wksp_reg_win_err;
 			}
 
-			// Copy the workspace.
-			DynaStatus status = dtree_copy(wksp2, wksp);
-
 			// Increment i. This is done here to make
 			// the error handling loop handle this new
 			// workspace at this point.
 			++i;
 
+			// Copy the workspace.
+			DynaStatus status = dtree_copy(wksp2, wksp);
+
 			// Check for error.
 			if (yunlikely(status)) {
 				goto wima_wksp_reg_win_err;
 			}
+
+			// Set up the new
 		}
 	}
 
@@ -218,6 +220,54 @@ wima_wksp_reg_err:
 	wima_error(WIMA_STATUS_MALLOC_ERR);
 
 	return WIMA_WORKSPACE_INVALID;
+}
+
+WimaStatus wima_workspace_updateFromWindow(WimaWorkspace wwksp, WimaWindow wwh) {
+
+	wima_assert_init;
+
+	wassert(wwksp < dvec_len(wg.workspaces), WIMA_ASSERT_WKSP);
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	// Get the areas.
+	DynaTree areas = dvec_get(win->workspaces, wwksp);
+
+	wassert(wima_area_valid(areas), WIMA_ASSERT_AREA);
+
+	// Get the workspace.
+	WimaWksp wksp = dvec_get(wg.workspaces, wwksp);
+
+	// Copy over and check for error.
+	if (yunlikely(dtree_copy(wksp, areas))) {
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Get the number of windows.
+	WimaWindow winlen = dvec_len(wg.windows);
+
+	// Loop through all windows.
+	for (WimaWindow i = 0; i < winlen; ++i) {
+
+		// If no window, or it's the same window, just continue.
+		if (i == wwh || !wima_window_valid(i)) {
+			continue;
+		}
+
+		// Get the window and its workspaces.
+		WimaWin* win = dvec_get(wg.windows, i);
+		WimaWksp winWksp = dvec_get(win->workspaces, wwksp);
+
+		// Copy and check for error.
+		if (yunlikely(dtree_copy(winWksp, wksp))) {
+			return WIMA_STATUS_MALLOC_ERR;
+		}
+	}
+
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus wima_workspace_addParent(WimaWorkspace wwksp, DynaNode node,

@@ -354,7 +354,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	uint8_t wkspLen = dvec_len(wg.workspaces);
 
 	// Create a workspaces vector.
-	window->workspaces = dvec_createTreeVec(wkspLen, NULL, wima_area_destroy, sizeof(WimaAr));
+	window->workspaces = dvec_createTreeVec(wkspLen, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
 
 	// Check for error.
 	if (yunlikely(!window->workspaces)) {
@@ -389,14 +389,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	for (uint8_t i = 0; i < wkspLen; ++i) {
 
 		// Initialize the areas.
-		WimaStatus status = wima_area_init(idx, dvec_get(window->workspaces, i), rect);
-
-		// Check for error.
-		if (yunlikely(status)) {
-			wima_window_destroy(window);
-			wima_error(status);
-			return WIMA_WINDOW_INVALID;
-		}
+		wima_area_init(idx, dvec_get(window->workspaces, i), rect);
 	}
 
 	// Clear the context.

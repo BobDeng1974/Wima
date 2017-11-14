@@ -200,10 +200,24 @@ WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node);
  * @param win	The window the tree will be attached to.
  * @param areas	The tree to initialize.
  * @param rect	The rectangle for the entire window.
- * @return		WIMA_STATUS_SUCCESS on success, an error
- *				code otherwise.
  */
-WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect);
+void wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect);
+
+/**
+ * Copies an area from @a src to @dest. This is a DynaCopyFunc.
+ * @param dest	The destination to copy to.
+ * @param src	The source to copy to.
+ * @return		DYNA_STATUS_SUCCESS on success, an error code otherwise.
+ */
+DynaStatus wima_area_copy(void* dest, void* src);
+
+/**
+ * Sets up an area, and if @a allocate, allocates an tem
+ * array. If not @a allocate, it sets the array to NULL.
+ * @param area		The area to setup.
+ * @param allocate	Whether or not to allocate an array.
+ */
+WimaStatus wima_area_setup(WimaAr* area, bool allocate);
 
 /**
  * Checks whether the tree is valid. Valid means that

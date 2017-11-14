@@ -44,17 +44,15 @@
 #include "tree.h"
 #include "area.h"
 
-bool wima_tree_nodeValid(DynaTree tree, DynaNode n) {
+////////////////////////////////////////////////////////////////////////////////
+// Public functions.
+////////////////////////////////////////////////////////////////////////////////
 
-	// Get the parent and root.
-	DynaNode p = dtree_parent(n);
-	bool root = n == dtree_root();
-
-	// Return the condition.
-	return root || (dtree_exists(tree, p) && WIMA_AREA_IS_PARENT((WimaAr*) dtree_node(tree, p)));
+WimaTree wima_tree_create() {
+	return dtree_create(0, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
 }
 
-WimaStatus wima_tree_addParent(DynaTree tree, DynaNode node, float split, bool vertical) {
+WimaStatus wima_tree_addParent(WimaTree tree, DynaNode node, float split, bool vertical) {
 
 	// Fill an initial area with common data.
 	WimaAr wan;
@@ -72,7 +70,7 @@ WimaStatus wima_tree_addParent(DynaTree tree, DynaNode node, float split, bool v
 	return status ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus wima_tree_addEditor(DynaTree tree, DynaNode node, WimaEditor wed) {
+WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed) {
 
 	// Fill an initial area with common data.
 	WimaAr wan;
@@ -91,4 +89,18 @@ WimaStatus wima_tree_addEditor(DynaTree tree, DynaNode node, WimaEditor wed) {
 	DynaStatus status = dtree_add(tree, node, &wan);
 
 	return status ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Private functions.
+////////////////////////////////////////////////////////////////////////////////
+
+bool wima_tree_nodeValid(WimaTree tree, DynaNode n) {
+
+	// Get the parent and root.
+	DynaNode p = dtree_parent(n);
+	bool root = n == dtree_root();
+
+	// Return the condition.
+	return root || (dtree_exists(tree, p) && WIMA_AREA_IS_PARENT((WimaAr*) dtree_node(tree, p)));
 }

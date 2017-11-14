@@ -192,10 +192,8 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) {
  * @param areas	The area tree.
  * @param node	The node of the current area to process.
  * @param rect	The rectangle of the area.
- * @return		WIMA_STATUS_SUCCESS on success, an error
- *				code otherwise.
  */
-static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect);
+static void wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect);
 
 /**
  * A recursive function to check if the area tree is valid.
@@ -379,17 +377,15 @@ WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node) {
 	return dtree_node(WIMA_WIN_AREAS(win), node);
 }
 
-WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect) {
+void wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect) {
 	wima_assert_init;
 	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
-	return wima_area_node_init(win, areas, dtree_root(), rect);
+	wima_area_node_init(win, areas, dtree_root(), rect);
 }
 
-static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect) {
+static void wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect) {
 
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
-
-	WimaStatus status;
 
 	// Get the particular area that we care about.
 	WimaAr* area = dtree_node(areas, node);
@@ -411,65 +407,103 @@ static WimaStatus wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode n
 		// Calculate and fill the children's rectangles.
 		wima_area_childrenRects(area, &left, &right);
 
-		// Set the left child user pointer and check for error.
-		status = wima_area_node_init(win, areas, dtree_left(node), left);
-		if (yunlikely(status)) {
-			return status;
-		}
-
-		// Set the right child user pointer and check for error.
-		status = wima_area_node_init(win, areas, dtree_right(node), right);
+		// Init the children.
+		wima_area_node_init(win, areas, dtree_left(node), left);
+		wima_area_node_init(win, areas, dtree_right(node), right);
 	}
 	else {
 
 		// Set the scale.
 		area->area.scale = 1.0f;
+	}
+}
 
-		// Get the editor handle.
-		WimaEditor edtr = area->area.type;
+DynaStatus wima_area_copy(void* dest, void* src) {
 
-		wassert(edtr < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
+	WimaAr* darea = (WimaAr*) dest;
+	WimaAr* sarea = (WimaAr*) src;
 
-		// Get the editor pointer.
-		WimaEdtr* editor = dvec_get(wg.editors, edtr);
+	DynaStatus dstatus;
 
-		// Get the particular user function setter.
-		WimaAreaGenUserPointerFunc get_user_ptr = editor->funcs.gen_ptr;
+	// Do the copy.
+	memcpy(darea, sarea, sizeof(WimaAr));
 
-		// If the user specified one, call it.
-		if (get_user_ptr) {
+	// If the area is a leaf...
+	if (WIMA_AREA_IS_LEAF(sarea)) {
 
-			// Get all of the area handle
-			// (to pass to the user function).
-			WimaArea wah = wima_area(win, node);
+		// Set up the area. If the item array is NULL, we are copying
+		// from a workspace or a dialog to a window, and it needs to
+		// be allocated. Otherwise, we are copying from a window to a
+		// dialog/workspace, and we need to set the array as NULL, as
+		// well as not set the user pointer.
+		WimaStatus status = wima_area_setup(darea, sarea->area.ctx.items == NULL);
 
-			// Call the user function.
-			area->area.user = get_user_ptr(wah);
-		}
-		else {
-
-			// Set to NULL.
-			area->area.user = NULL;
-		}
-
-		// Calculate the optimal allocation size.
-		size_t size = ynalloc(sizeof(WimaItem) * editor->itemCap);
-
-		// Allocate and check for error.
-		area->area.ctx.items = ymalloc(size);
-		if (yunlikely(!area->area.ctx.items)) {
-			return WIMA_STATUS_MALLOC_ERR;
-		}
-
-		// Set the capacity (to the allocated size) and the count.
-		area->area.ctx.itemCap = size / sizeof(WimaItem);
-		area->area.ctx.itemCount = 0;
-
-		// We need to make sure this is cleared.
-		status = WIMA_STATUS_SUCCESS;
+		// Check for error.
+		dstatus = status ? DYNA_STATUS_MALLOC_FAIL : DYNA_STATUS_SUCCESS;
+	}
+	else {
+		dstatus = DYNA_STATUS_SUCCESS;
 	}
 
-	return status;
+	return dstatus;
+}
+
+WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
+
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
+
+	// If we don't need to allocate, set NULL and return happy.
+	// We also don't even need to set up the user pointer.
+	if (!allocate) {
+		area->area.user = NULL;
+		area->area.ctx.itemCount = 0;
+		area->area.ctx.items = NULL;
+		return WIMA_STATUS_SUCCESS;
+	}
+
+	// Get the editor handle.
+	WimaEditor edtr = area->area.type;
+
+	wassert(edtr < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
+
+	// Get the editor pointer.
+	WimaEdtr* editor = dvec_get(wg.editors, edtr);
+
+	// Get the particular user function setter.
+	WimaAreaGenUserPointerFunc get_user_ptr = editor->funcs.gen_ptr;
+
+	// If the user specified one, call it.
+	if (get_user_ptr) {
+
+		// Create an area handle. I can't use
+		// wima_area() here because it will assert.
+		WimaArea wah;
+		wah.area = area->node;
+		wah.window = area->window;
+
+		// Call the user function.
+		area->area.user = get_user_ptr(wah);
+	}
+	else {
+
+		// Set to NULL.
+		area->area.user = NULL;
+	}
+
+	// Calculate the optimal allocation size.
+	size_t size = ynalloc(sizeof(WimaItem) * editor->itemCap);
+
+	// Allocate and check for error.
+	area->area.ctx.items = ymalloc(size);
+	if (yunlikely(!area->area.ctx.items)) {
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Set the capacity (to the allocated size) and the count.
+	area->area.ctx.itemCap = size / sizeof(WimaItem);
+	area->area.ctx.itemCount = 0;
+
+	return WIMA_STATUS_SUCCESS;
 }
 
 bool wima_area_valid(DynaTree editors) {
