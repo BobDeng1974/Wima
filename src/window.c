@@ -2048,7 +2048,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 		case WIMA_EVENT_MOUSE_CLICK:
 		{
 			// If the widget is valid...
-			if (wih.widget >= 0) {
+			if (wih.widget != WIMA_WIDGET_INVALID) {
 
 				// Get the widget pointer.
 				WimaItem* pitem = wima_widget_ptr(wih);
@@ -2091,7 +2091,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 		case WIMA_EVENT_MOUSE_DRAG:
 		{
 			// If the widget is valid...
-			if (wih.widget >= 0) {
+			if (wih.widget != WIMA_WIDGET_INVALID) {
 
 				// Get the widget pointer.
 				WimaItem* pitem = wima_widget_ptr(wih);
@@ -2117,7 +2117,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 		case WIMA_EVENT_SCROLL:
 		{
 			// If the widget is valid...
-			if (wih.widget >= 0) {
+			if (wih.widget != WIMA_WIDGET_INVALID) {
 
 				// Get the widget pointer.
 				WimaItem* pitem = wima_widget_ptr(wih);
@@ -2136,7 +2136,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 		case WIMA_EVENT_CHAR:
 		{
 			// If the widget is valid...
-			if (wih.widget >= 0) {
+			if (wih.widget != WIMA_WIDGET_INVALID) {
 
 				// Get the widget pointer.
 				WimaItem* pitem = wima_widget_ptr(wih);
@@ -2353,7 +2353,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 	}
 
 	// If a widget was clicked...
-	else if (wih.widget >= 0) {
+	else if (wih.widget != WIMA_WIDGET_INVALID) {
 
 		// Get its pointer.
 		WimaItem* pitem = wima_widget_ptr(wih);

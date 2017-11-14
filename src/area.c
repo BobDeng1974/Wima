@@ -1246,7 +1246,7 @@ static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVe
 		pos = wima_area_translatePos(area, pos);
 
 		// While we still have a valid widget...
-		while (item.widget >= 0) {
+		while (item.widget != WIMA_WIDGET_INVALID) {
 
 			// Get the widget pointer.
 			pitem = wima_widget_ptr(item);
