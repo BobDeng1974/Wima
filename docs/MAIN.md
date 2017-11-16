@@ -42,9 +42,10 @@ go as follows:
 	[tree](#concepts-types-trees) using `wima_tree_reset()` and repeats steps 4
 	and 5. Otherwise, it frees the [tree](#concepts-types-trees) using
 	`wima_tree_free()` and continues to step 7.
-7.	The client creates a window using `wima_window_create()`.
+7.	The client creates a [window](#concepts-types-windows) using
+	`wima_window_create()`.
 8.	The client runs the event loop in `wima_main()`, which will return when the
-	user has closed all windows.
+	user has closed all [windows](#concepts-types-windows).
 9.	The client exits by calling `wima_exit()`.
 
 <a name="concepts"></a>
