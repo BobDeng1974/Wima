@@ -1776,40 +1776,144 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
 typedef void* WimaTree;
 
 /**
+ * @def WIMA_TREE_NODE_MAX
+ * The max number of nodes in an area tree.
+ */
+#define WIMA_TREE_NODE_MAX ((size_t) WIMA_AREA_MAX)
+
+/**
  * Creates and returns a @a WimaTree, or NULL on error.
  * @return	A newly-created @a WimaTree, or NULL on error.
  */
-WimaTree wima_tree_create();
+WimaTree wima_tree_create() yinline;
 
 /**
- * Adds a parent node to @a tree.
+ * Adds a parent node to @a tree at the root. This function
+ * or @a wima_tree_addRootEditor() must be the first function
+ * called on @a tree after @a wima_tree_create().
+ *
+ * The returned node must have two children before it is used
+ * to initialize a dialog or a workspace.
  * @param tree		The tree to add to.
- * @param node		The node to add, which should be either
- *					the root, or a child of a node that has
- *					already been added.
  * @param split		A value between [0, 1] that indicates
  *					where the split between this parent's
  *					children will be.
  * @param vertical	Whether the split is vertical (splitting
  *					width) or not.
- * @return			WIMA_STATUS_SUCCESS on success, or an
- *					error code.
+ * @return			The added node, or WIMA_AREA_INVALID on
+ *					error.
  * @pre				@a tree must not be NULL.
+ * @pre				The root node of @a tree must not have
+ *					been added already.
  */
-WimaStatus wima_tree_addParent(WimaTree tree, DynaNode node, float split, bool vertical);
+WimaAreaNode wima_tree_addRootParent(WimaTree tree, float split, bool vertical) yinline;
 
 /**
- * Adds a editor (leaf) to a tree.
+ * Adds an editor (leaf) to a tree at the root. This function
+ * or @a wima_tree_addRootParent() must be the first function
+ * called on @a tree after @a wima_tree_create().
+ *
+ * If this function is called, no more adding functions can be
+ * called because the returned node cannot have any children.
  * @param tree	The tree to add to.
- * @param node	The node to add, which should be either
- *				the root, or a child of a node that has
- *				already been added.
  * @param wed	The editor to set the type as.
- * @return		WIMA_STATUS_SUCCESS on success, or an
- *				error code.
+ * @return		The added node, or WIMA_AREA_INVALID on error.
  * @pre			@a tree must not be NULL.
+ * @pre			The root node of @a tree must not have
+ *				been added already.
  */
-WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed);
+WimaAreaNode wima_tree_addRootEditor(WimaTree tree, WimaEditor wed) yinline;
+
+/**
+ * Adds a parent node to @a tree as the left child.
+ *
+ * The returned node must have two children before it
+ * is used to initialize a dialog or a workspace.
+ * @param tree		The tree to add to.
+ * @param parent	The parent node of the node to add.
+ * @param split		A value between [0, 1] that indicates
+ *					where the split between this parent's
+ *					children will be.
+ * @param vertical	Whether the split is vertical (splitting
+ *					width) or not.
+ * @return			The added node, or WIMA_AREA_INVALID on
+ *					error.
+ * @pre				@a tree must not be NULL.
+ * @pre				@a parent must have already been added.
+ * @pre				@a parent must be a parent node.
+ */
+WimaAreaNode wima_tree_addLeftParent(WimaTree tree, WimaAreaNode parent, float split, bool vertical) yinline;
+
+/**
+ * Adds an editor (leaf) node to @a tree as the left child.
+ *
+ * The returned node cannot have any children.
+ * @param tree		The tree to add to.
+ * @param parent	The parent node of the node to add.
+ * @param wed		The editor to set the type as.
+ * @return			The added node, or WIMA_AREA_INVALID on
+ *					error.
+ * @pre				@a tree must not be NULL.
+ * @pre				@a parent must have already been added.
+ * @pre				@a parent must be a parent node.
+ */
+WimaAreaNode wima_tree_addLeftEditor(WimaTree tree, WimaAreaNode parent, WimaEditor wed) yinline;
+
+/**
+ * Adds a parent node to @a tree as the right child.
+ *
+ * The returned node must have two children before it
+ * is used to initialize a dialog or a workspace.
+ * @param tree		The tree to add to.
+ * @param parent	The parent node of the node to add.
+ * @param split		A value between [0, 1] that indicates
+ *					where the split between this parent's
+ *					children will be.
+ * @param vertical	Whether the split is vertical (splitting
+ *					width) or not.
+ * @return			The added node, or WIMA_AREA_INVALID on
+ *					error.
+ * @pre				@a tree must not be NULL.
+ * @pre				@a parent must have already been added.
+ * @pre				@a parent must be a parent node.
+ */
+WimaAreaNode wima_tree_addRightParent(WimaTree tree, WimaAreaNode parent, float split, bool vertical) yinline;
+
+/**
+ * Adds an editor (leaf) node to @a tree as the left child.
+ *
+ * The returned node cannot have any children.
+ * @param tree		The tree to add to.
+ * @param parent	The parent node of the node to add.
+ * @param wed		The editor to set the type as.
+ * @return			The added node, or WIMA_AREA_INVALID on
+ *					error.
+ * @pre				@a tree must not be NULL.
+ * @pre				@a parent must have already been added.
+ * @pre				@a parent must be a parent node.
+ */
+WimaAreaNode wima_tree_addRightEditor(WimaTree tree, WimaAreaNode parent, WimaEditor wed) yinline;
+
+/**
+ * Resets a @a WimaTree. This means that all data in the tree is erased, and
+ * the tree is emptied. It can then be filled using wima_tree_addRootParent(),
+ * wima_tree_addRootEditor(), wima_tree_addParent(), and wima_tree_addEditor().
+ *
+ * This is an optimization function. It is meant to enable clients to reuse a
+ * @a WimaTree to register another workspace/editor. Using this function, the
+ * client is not required to make a new @a WimaTree, which requires two new
+ * allocations.
+ * @param tree	The tree to reset.
+ * @return		WIMA_STATUS_SUCCESS on success, an error code otherwise.
+ */
+WimaStatus wima_tree_reset(WimaTree tree) yinline;
+
+/**
+ * Frees a @a WimaTree.
+ * @param tree	The tree to free.
+ */
+void wima_tree_free(WimaTree tree);
+
 /**
  * @}
  */

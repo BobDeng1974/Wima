@@ -380,24 +380,6 @@ int main() {
 		return WIMA_EDITOR_INVALID;
 	}
 
-	// Cache these.
-	DynaNode root = dtree_root();
-
-	DynaNode left = dtree_left(root);
-	DynaNode right = dtree_right(root);
-
-	DynaNode leftUp = dtree_left(left);
-	DynaNode leftDown = dtree_right(left);
-
-	DynaNode rightUp = dtree_left(right);
-	DynaNode rightDown = dtree_right(right);
-
-	DynaNode leftUpUp = dtree_left(leftUp);
-	DynaNode leftUpDown = dtree_right(leftUp);
-
-	DynaNode leftDownLeft = dtree_left(leftDown);
-	DynaNode leftDownRight = dtree_right(leftDown);
-
 	// Create the tree.
 	WimaTree tree = wima_tree_create();
 	if (!tree) {
@@ -405,69 +387,69 @@ int main() {
 	}
 
 	// Add the node and editors to the tree.
-	status = wima_tree_addParent(tree, root, 0.5f, true);
-	if (status) {
+	WimaAreaNode root = wima_tree_addRootParent(tree, 0.5f, true);
+	if (root == WIMA_AREA_INVALID) {
+		return 1;
+	}
+
+	WimaAreaNode left = wima_tree_addLeftParent(tree, root, 0.33333f, false);
+	if (left == WIMA_AREA_INVALID) {
+		return 1;
+	}
+
+	WimaAreaNode right = wima_tree_addRightParent(tree, root, 0.75f, false);
+	if (right == WIMA_AREA_INVALID) {
+		return 1;
+	}
+
+	WimaAreaNode leftUp = wima_tree_addLeftParent(tree, left, 0.4f, false);
+	if (leftUp == WIMA_AREA_INVALID) {
+		return 1;
+	}
+
+	WimaAreaNode leftUpUp = wima_tree_addLeftEditor(tree, leftUp, editor);
+	if (leftUpUp == WIMA_AREA_INVALID) {
+		return 1;
+	}
+
+	WimaAreaNode leftUpDown = wima_tree_addRightEditor(tree, leftUp, editor);
+	if (leftUpDown == WIMA_AREA_INVALID) {
+		return 1;
+	}
+
+	WimaAreaNode leftDown = wima_tree_addRightParent(tree, left, 0.2f, true);
+	if (leftDown == WIMA_AREA_INVALID) {
 		return status;
 	}
 
-	status = wima_tree_addParent(tree, left, 0.33333f, false);
-	if (status) {
-		return status;
+	WimaAreaNode leftDownLeft = wima_tree_addLeftEditor(tree, leftDown, editor);
+	if (leftDownLeft  == WIMA_AREA_INVALID) {
+		return 1;
 	}
 
-	status = wima_tree_addParent(tree, right, 0.75f, false);
-	if (status) {
-		return status;
+	WimaAreaNode leftDownRight = wima_tree_addRightParent(tree, leftDown, 0.5f, true);
+	if (leftDownRight == WIMA_AREA_INVALID) {
+		return 1;
 	}
 
-	status = wima_tree_addParent(tree, leftUp, 0.4f, false);
-	if (status) {
-		return status;
+	WimaAreaNode leftDownRightLeft = wima_tree_addLeftEditor(tree, leftDownRight, editor);
+	if (leftDownRightLeft == WIMA_AREA_INVALID) {
+		return 1;
 	}
 
-	status = wima_tree_addEditor(tree, leftUpUp, editor);
-	if (status) {
-		return status;
+	WimaAreaNode leftDownRightRight = wima_tree_addRightEditor(tree, leftDownRight, editor);
+	if (leftDownRightRight == WIMA_AREA_INVALID) {
+		return 1;
 	}
 
-	status = wima_tree_addEditor(tree, leftUpDown, editor);
-	if (status) {
-		return status;
+	WimaAreaNode rightUp = wima_tree_addLeftEditor(tree, right, editor);
+	if (rightUp == WIMA_AREA_INVALID) {
+		return 1;
 	}
 
-	status = wima_tree_addParent(tree, leftDown, 0.2f, true);
-	if (status) {
-		return status;
-	}
-
-	status = wima_tree_addEditor(tree, leftDownLeft, editor);
-	if (status) {
-		return status;
-	}
-
-	status = wima_tree_addParent(tree, leftDownRight, 0.5f, true);
-	if (status) {
-		return status;
-	}
-
-	status = wima_tree_addEditor(tree, dtree_left(leftDownRight), editor);
-	if (status) {
-		return status;
-	}
-
-	status = wima_tree_addEditor(tree, dtree_right(leftDownRight), editor);
-	if (status) {
-		return status;
-	}
-
-	status = wima_tree_addEditor(tree, rightUp, editor);
-	if (status) {
-		return status;
-	}
-
-	status = wima_tree_addEditor(tree, rightDown, editor);
-	if (status) {
-		return status;
+	WimaAreaNode rightDown = wima_tree_addRightEditor(tree, right, editor);
+	if (rightDown == WIMA_AREA_INVALID) {
+		return 1;
 	}
 
 	// Register a workspace.

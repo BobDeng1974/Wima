@@ -41,16 +41,236 @@
 
 #include <wima/wima.h>
 
+#include "global.h"
 #include "tree.h"
 #include "area.h"
+
+//! @cond Doxygen suppress.
+wima_global_decl;
+wima_error_descs_decl;
+wima_assert_msgs_decl;
+//! @endcond Doxygen suppress.
+
+////////////////////////////////////////////////////////////////////////////////
+// Static function declarations needed for public functions.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @file tree.c
+ */
+
+/**
+ * @defgroup tree_internal tree_internal
+ * @{
+ */
+
+/**
+ * Figures out whether a node is valid (so far),
+ * which means that it has the proper parents.
+ * @param tree	The tree the node is in.
+ * @param n		The node to check.
+ * @return		true if valid, false otherwise.
+ * @pre			@a tree must not be NULL.
+ */
+static bool wima_tree_nodeValid(WimaTree tree, DynaNode n) yinline;
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
 WimaTree wima_tree_create() {
+	wima_assert_init;
 	return dtree_create(0, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
 }
+
+WimaAreaNode wima_tree_addRootParent(WimaTree tree, float split, bool vertical) {
+
+	wima_assert_init;
+
+	wassert(tree != NULL, WIMA_ASSERT_TREE);
+
+	// Get the root.
+	DynaNode root = dtree_root();
+
+	wassert(!dtree_exists(tree, root), WIMA_ASSERT_TREE_NODE_EXISTS);
+
+	// Add the node to the tree.
+	WimaStatus status = wima_tree_addParent(tree, root, split, vertical);
+
+	// Check for error.
+	if (yunlikely(status)) {
+
+		// Tell the client about the error.
+		wima_error(status);
+
+		return WIMA_AREA_INVALID;
+	}
+
+	return (WimaAreaNode) root;
+}
+
+WimaAreaNode wima_tree_addRootEditor(WimaTree tree, WimaEditor wed) {
+
+	wima_assert_init;
+
+	wassert(tree != NULL, WIMA_ASSERT_TREE);
+
+	// Get the root.
+	DynaNode root = dtree_root();
+
+	wassert(!dtree_exists(tree, root), WIMA_ASSERT_TREE_NODE_EXISTS);
+
+	// Add the node to the tree.
+	WimaStatus status = wima_tree_addEditor(tree, root, wed);
+
+	// Check for error.
+	if (yunlikely(status)) {
+
+		// Tell the client about the error.
+		wima_error(status);
+
+		return WIMA_AREA_INVALID;
+	}
+
+	return (WimaAreaNode) root;
+}
+
+WimaAreaNode wima_tree_addLeftParent(WimaTree tree, WimaAreaNode parent, float split, bool vertical) {
+
+	wima_assert_init;
+
+	wassert(tree != NULL, WIMA_ASSERT_TREE);
+
+	wassert(wima_tree_nodeValid(tree, parent), WIMA_ASSERT_TREE_NODE);
+
+	// Get the node.
+	DynaNode node = dtree_left(parent);
+
+	wassert(!dtree_exists(tree, node), WIMA_ASSERT_TREE_NODE_EXISTS);
+	wassert(node <= WIMA_TREE_NODE_MAX, WIMA_ASSERT_TREE_MAX);
+
+	// Add the node to the tree.
+	WimaStatus status = wima_tree_addParent(tree, node, split, vertical);
+
+	// Check for error.
+	if (yunlikely(status)) {
+
+		// Tell the client about the error.
+		wima_error(status);
+
+		return WIMA_AREA_INVALID;
+	}
+
+	return (WimaAreaNode) node;
+}
+
+WimaAreaNode wima_tree_addLeftEditor(WimaTree tree, WimaAreaNode parent, WimaEditor wed) {
+
+	wima_assert_init;
+
+	wassert(tree != NULL, WIMA_ASSERT_TREE);
+
+	wassert(wima_tree_nodeValid(tree, parent), WIMA_ASSERT_TREE_NODE);
+
+	// Get the node.
+	DynaNode node = dtree_left(parent);
+
+	wassert(!dtree_exists(tree, node), WIMA_ASSERT_TREE_NODE_EXISTS);
+	wassert(node <= WIMA_TREE_NODE_MAX, WIMA_ASSERT_TREE_MAX);
+
+	// Add the node to the tree.
+	WimaStatus status = wima_tree_addEditor(tree, node, wed);
+
+	// Check for error.
+	if (yunlikely(status)) {
+
+		// Tell the client about the error.
+		wima_error(status);
+
+		return WIMA_AREA_INVALID;
+	}
+
+	return (WimaAreaNode) node;
+}
+
+WimaAreaNode wima_tree_addRightParent(WimaTree tree, WimaAreaNode parent, float split, bool vertical) {
+
+	wima_assert_init;
+
+	wassert(tree != NULL, WIMA_ASSERT_TREE);
+
+	wassert(wima_tree_nodeValid(tree, parent), WIMA_ASSERT_TREE_NODE);
+
+	// Get the node.
+	DynaNode node = dtree_right(parent);
+
+	wassert(!dtree_exists(tree, node), WIMA_ASSERT_TREE_NODE_EXISTS);
+	wassert(node <= WIMA_TREE_NODE_MAX, WIMA_ASSERT_TREE_MAX);
+
+	// Add the node to the tree.
+	WimaStatus status = wima_tree_addParent(tree, node, split, vertical);
+
+	// Check for error.
+	if (yunlikely(status)) {
+
+		// Tell the client about the error.
+		wima_error(status);
+
+		return WIMA_AREA_INVALID;
+	}
+
+	return (WimaAreaNode) node;
+}
+
+WimaAreaNode wima_tree_addRightEditor(WimaTree tree, WimaAreaNode parent, WimaEditor wed) {
+
+	wima_assert_init;
+
+	wassert(tree != NULL, WIMA_ASSERT_TREE);
+
+	wassert(wima_tree_nodeValid(tree, parent), WIMA_ASSERT_TREE_NODE);
+
+	// Get the node.
+	DynaNode node = dtree_right(parent);
+
+	wassert(!dtree_exists(tree, node), WIMA_ASSERT_TREE_NODE_EXISTS);
+	wassert(node <= WIMA_TREE_NODE_MAX, WIMA_ASSERT_TREE_MAX);
+
+	// Add the node to the tree.
+	WimaStatus status = wima_tree_addEditor(tree, node, wed);
+
+	// Check for error.
+	if (yunlikely(status)) {
+
+		// Tell the client about the error.
+		wima_error(status);
+
+		return WIMA_AREA_INVALID;
+	}
+
+	return (WimaAreaNode) node;
+}
+
+WimaStatus wima_tree_reset(WimaTree tree) {
+
+	// Set the length to zero. Dyna will call the destructors.
+	DynaStatus status = dtree_empty(tree);
+
+	// Figure out the return value.
+	return status ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
+}
+
+void wima_tree_free(WimaTree tree) {
+	dtree_free(tree);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Private functions.
+////////////////////////////////////////////////////////////////////////////////
 
 WimaStatus wima_tree_addParent(WimaTree tree, DynaNode node, float split, bool vertical) {
 
@@ -93,15 +313,9 @@ WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Private functions.
+// Static functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-bool wima_tree_nodeValid(WimaTree tree, DynaNode n) {
-
-	// Get the parent and root.
-	DynaNode p = dtree_parent(n);
-	bool root = n == dtree_root();
-
-	// Return the condition.
-	return root || (dtree_exists(tree, p) && WIMA_AREA_IS_PARENT((WimaAr*) dtree_node(tree, p)));
+static bool wima_tree_nodeValid(WimaTree tree, DynaNode p) {
+	return dtree_exists(tree, p) && WIMA_AREA_IS_PARENT((WimaAr*) dtree_node(tree, p));
 }

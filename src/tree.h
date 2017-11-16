@@ -72,14 +72,34 @@ extern "C" {
 #define WIMA_TREE_USER_INVALID ((void*) 0x01)
 
 /**
- * Figures out whether a node is valid (so far),
- * which means that it has the proper parents.
- * @param tree	The tree the node is in.
- * @param n		The node to check.
- * @return		true if valid, false otherwise.
+ * Adds a parent node to @a tree.
+ * @param tree		The tree to add to.
+ * @param node		The node to add, which should be either
+ *					the root, or a child of a node that has
+ *					already been added.
+ * @param split		A value between [0, 1] that indicates
+ *					where the split between this parent's
+ *					children will be.
+ * @param vertical	Whether the split is vertical (splitting
+ *					width) or not.
+ * @return			WIMA_STATUS_SUCCESS on success, or an
+ *					error code.
+ * @pre				@a tree must not be NULL.
+ */
+WimaStatus wima_tree_addParent(WimaTree tree, DynaNode node, float split, bool vertical);
+
+/**
+ * Adds an editor (leaf) to @a tree.
+ * @param tree	The tree to add to.
+ * @param node	The node to add, which should be either
+ *				the root, or a child of a node that has
+ *				already been added.
+ * @param wed	The editor to set the type as.
+ * @return		WIMA_STATUS_SUCCESS on success, or an
+ *				error code.
  * @pre			@a tree must not be NULL.
  */
-bool wima_tree_nodeValid(WimaTree tree, DynaNode n);
+WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed);
 
 /**
  * @}
