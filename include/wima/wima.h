@@ -2821,7 +2821,9 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
                      const char* fontPath);
 
 /**
- * The main rendering and event loop.
+ * The main rendering and event loop. This will return
+ * when the user has closed all windows. The client
+ * should call @a wima_exit() right after.
  * @return	WIMA_STATUS_SUCCESS on success, or an
  *			error code otherwise if the app closed
  *			unexpectedly.
