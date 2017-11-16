@@ -116,6 +116,11 @@ const char* wima_assert_msgs[] = {
     "no dialog on the window",
     "client tried to push too many dialogs onto the stack",
 
+    "tree is not valid",
+    "node is beyond max number of nodes for the given tree",
+    "tree node is not valid",
+    "tree node already exists",
+
     "workspace is not valid",
     "client tried to create too many workspaces",
     "workspace tree is not valid",
