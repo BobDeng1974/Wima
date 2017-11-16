@@ -24,11 +24,28 @@ and draw windows, as well as handle any events the user generates.
 See [`tests/app.c`](../tests/app.c) for an example, but a typical example might
 go as follows:
 
-1.	An app must initialize Wima before doing anything else. That is done by
+1.	A client must initialize Wima before doing anything else. That is done by
 	using `wima_init()`.
-
-2.	Then app initializes any number (but more than zero) of
+2.	The client initializes any number (but more than zero) of
 	[editors](#concepts-types-editors) using `wima_editor_register()`.
+3.	The client creates a [tree](#concepts-types-trees) using
+	`wima_tree_create()`.
+4.	The client recursively builds the tree using `wima_tree_addRootParent()`,
+	`wima_tree_addRootEditor()`, `wima_tree_addLeftParent()`,
+	`wima_tree_addLeftEditor()`. `wima_tree_addRightParent()`, and
+	`wima_tree_addRightEditor()`.
+5.	The client registers a [dialog](#concepts-types-dialogs) (using
+	`wima_dialog_register()`) and/or a [workspace](#concepts-types-workspaces)
+	(using `wima_workspace_register()`) from the [tree](#concepts-types-trees).
+6.	If the client has more [dialogs](#concepts-types-dialogs) and/or
+	[workspaces](#concepts-types-workspaces) to create, it resets the
+	[tree](#concepts-types-trees) using `wima_tree_reset()` and repeats steps 4
+	and 5. Otherwise, it frees the [tree](#concepts-types-trees) using
+	`wima_tree_free()` and continues to step 7.
+7.	The client creates a window using `wima_window_create()`.
+8.	The client runs the event loop in `wima_main()`, which will return when the
+	user has closed all windows.
+9.	The client exits by calling `wima_exit()`.
 
 <a name="concepts"></a>
 ## Concepts
