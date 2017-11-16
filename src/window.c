@@ -1014,34 +1014,6 @@ bool wima_window_needsLayout(WimaWindow wwh) {
 	return WIMA_WIN_NEEDS_LAYOUT(win);
 }
 
-DynaTree wima_window_areas(WimaWindow wwh) {
-
-	wima_assert_init;
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
-
-	// Get the window and areas.
-	WimaWin* win = dvec_get(wg.windows, wwh);
-	DynaTree winareas = WIMA_WIN_AREAS(win);
-
-	// Get the number of nodes.
-	int nodes = dtree_nodes(winareas);
-
-	// Create a new tree and check for error.
-	DynaTree areas = dtree_create(nodes, NULL, wima_area_destroy, sizeof(WimaAr));
-	if (yunlikely(!areas)) {
-		return NULL;
-	}
-
-	// Copy the old into the new.
-	if (yunlikely(dtree_copy(areas, winareas))) {
-		dtree_free(areas);
-		return NULL;
-	}
-
-	return areas;
-}
-
 WimaStatus wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg) {
 
 	wima_assert_init;

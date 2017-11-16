@@ -2377,22 +2377,6 @@ void wima_window_cancelLayout(WimaWindow wwh) yinline;
 bool wima_window_needsLayout(WimaWindow wwh) yinline;
 
 /**
- * Returns a copy of the workspace in the window.
- * This is meant to be used in conjunctions with
- * @a wima_window_areas_restore(). These can be
- * used to implement things like non-modal file
- * dialogs (like how Blender handles file opening
- * and saving). However, most of the time, users
- * should use overlays.
- * @param wwh		The window to query.
- * @return			The current workspace.
- * @pre				@a wwh must be a valid WimaWindow.
- * @ptr_lifetime	The returned tree should be freed
- *					by the client using dtree_free().
- */
-DynaTree wima_window_areas(WimaWindow wwh);
-
-/**
  * Pushes a dialog onto a window.
  * @param wwh	The window to push the dialog onto.
  * @param wdlg	The dialog to push.
