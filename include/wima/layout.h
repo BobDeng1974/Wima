@@ -67,6 +67,12 @@ extern "C" {
 #define WIMA_LAYOUT_INVALID ((uint16_t) -1)
 
 /**
+ * @def WIMA_LAYOUT_MAX
+ * The max number of widgets/layouts that can be created.
+ */
+#define WIMA_LAYOUT_MAX WIMA_LAYOUT_INVALID
+
+/**
  * A handle to a layout.
  */
 typedef struct WimaLayout {

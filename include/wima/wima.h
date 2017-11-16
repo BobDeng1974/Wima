@@ -262,6 +262,12 @@ typedef uint16_t WimaAreaNode;
 #define WIMA_AREA_INVALID ((WimaAreaNode) -1)
 
 /**
+ * @def WIMA_AREA_MAX
+ * The max number of areas that can be created.
+ */
+#define WIMA_AREA_MAX WIMA_AREA_INVALID
+
+/**
  * A handle to a area.
  */
 typedef struct WimaArea {
@@ -288,6 +294,12 @@ typedef struct WimaArea {
  * A handle indicating an invalid widget.
  */
 #define WIMA_WIDGET_INVALID ((uint16_t) -1)
+
+/**
+ * @def WIMA_WIDGET_MAX
+ * The max number of widgets/layouts that can be created.
+ */
+#define WIMA_WIDGET_MAX WIMA_WIDGET_INVALID
 
 /**
  * A handle to a widget.
