@@ -204,7 +204,7 @@ WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node);
 void wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect);
 
 /**
- * Copies an area from @a src to @dest. This is a DynaCopyFunc.
+ * Copies an area from @a src to @a dest. This is a DynaCopyFunc.
  * @param dest	The destination to copy to.
  * @param src	The source to copy to.
  * @return		DYNA_STATUS_SUCCESS on success, an error code otherwise.

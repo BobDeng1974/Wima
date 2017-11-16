@@ -181,7 +181,7 @@ typedef uint8_t WimaWindow;
 #define WIMA_WINDOW_MAX WIMA_WINDOW_INVALID
 
 /**
- * @def WIMA_WINDOW_MAX_STACK_CAP
+ * @def WIMA_WINDOW_STACK_MAX
  * The max capacity of an area stack in a window.
  */
 #define WIMA_WINDOW_STACK_MAX (8)
@@ -1813,18 +1813,31 @@ WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed);
  */
 
 /**
- * Registers a new workspace. The workspace is empty and
- * needs to be filled using @a wima_workspace_addParent()
- * and @a wima_workspace_addEditor().
+ * Registers a new workspace based on @a tree.
  *
- * An empty workspace cannot be used to create a window.
- * Also, it is an error to create a window if the workspace
- * has any parent nodes with no or only one child.
+ * The param @a tree must be valid, which means that
+ * every node (except the root) has a parent (and the
+ * parent is a parent node type) and that every parent
+ * has exactly two children.
  * @param name	The workspace's name (label in the UI).
  * @param icon	The workspace's icon.
+ * @param tree	The tree to fill the workspace with.
  * @return		The registered workspace.
+ * @pre			@a tree must be a valid tree.
  */
 WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, WimaTree tree);
+
+/**
+ * Updates a workspace's data from the current state
+ * of the workspace on window @a wwh. This is to allow
+ * the client to update a workspace at runtime.
+ * @param wwksp	The workspace to update.
+ * @param wwh	The window whose version of @a wwksp
+ *				will be used to update it.
+ * @return		WIMA_STATUS_SUCCESS on success, an
+ *				error code otherwise.
+ */
+WimaStatus wima_workspace_updateFromWindow(WimaWorkspace wwksp, WimaWindow wwh);
 
 /**
  * @}
@@ -1850,15 +1863,15 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, Wim
  */
 
 /**
- * Registers a new dialog. The dialog is empty and
- * needs to be filled using @a wima_dialog_addParent()
- * and @a wima_dialog_addEditor().
+ * Registers a new dialog based on @a tree.
  *
- * An empty dialog cannot be used to fill a window with
- * @a wima_window_pushDialog(). Also, it is an error to
- * add a dialog a window if the dialog has any parent
- * nodes with no or only one child.
- * @return	The registered dialog.
+ * The param @a tree must be valid, which means that
+ * every node (except the root) has a parent (and the
+ * parent is a parent node type) and that every parent
+ * has exactly two children.
+ * @param tree	The tree to fill the dialog with.
+ * @return		The registered dialog.
+ * @pre			@a tree must be a valid tree.
  */
 WimaDialog wima_dialog_register(WimaTree tree);
 
@@ -2263,8 +2276,21 @@ bool wima_window_needsLayout(WimaWindow wwh) yinline;
  */
 DynaTree wima_window_areas(WimaWindow wwh);
 
+/**
+ * Pushes a dialog onto a window.
+ * @param wwh	The window to push the dialog onto.
+ * @param wdlg	The dialog to push.
+ * @return		WIMA_STATUS_SUCCESS on success, an
+ *				error code otherwise.
+ */
 WimaStatus wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg);
 
+/**
+ * Pops a dialog from a window.
+ * @param wwh	The window to pop the dialog from.
+ * @return		WIMA_STATUS_SUCCESS on success, an
+ *				error code otherwise.
+ */
 WimaStatus wima_window_popDialog(WimaWindow wwh);
 
 /**

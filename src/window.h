@@ -326,7 +326,7 @@ typedef struct WimaWin {
  * Copies a window. In actuality, this just aborts
  * since copying windows should not happen.
  * @param dest	A pointer to a destination.
- * @param srcs	A pointer to a source.
+ * @param src	A pointer to a source.
  * @return		An error code (doesn't return).
  */
 DynaStatus wima_window_copy(void* dest, void* src) ynoreturn;
