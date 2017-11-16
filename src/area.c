@@ -50,6 +50,7 @@
 
 #include "prop.h"
 #include "old_layout.h"
+#include "tree.h"
 #include "editor.h"
 #include "area.h"
 #include "window.h"
@@ -563,8 +564,10 @@ void wima_area_destroy(void* ptr) {
 			yfree(area->area.ctx.items);
 		}
 
-		// If the user didn't allocate anything, just return.
-		if (!area->area.user) {
+		// If the user didn't allocate anything,
+		// or the use handle is not initialized,
+		// just return.
+		if (!area->area.user || area->area.user == WIMA_TREE_USER_INVALID) {
 			return;
 		}
 
