@@ -143,7 +143,7 @@ void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, W
 
 	// Draw the label.
 	wima_ui_label_icon_value(ctx, x, y, w, h, icon, t[WIMA_THEME_WIDGET_TEXT]._color,
-	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
+	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL, false);
 }
 
 void wima_ui_operatorBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
@@ -178,7 +178,7 @@ void wima_ui_operatorBtn(WimaRenderContext* ctx, float x, float y, float w, floa
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
 	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_CENTER,
-	                             WIMA_LABEL_FONT_SIZE, label, NULL);
+	                             WIMA_LABEL_FONT_SIZE, label, NULL, false);
 }
 
 void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
@@ -212,7 +212,7 @@ void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
 	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_CENTER,
-	                             WIMA_LABEL_FONT_SIZE, label, NULL);
+	                             WIMA_LABEL_FONT_SIZE, label, NULL, false);
 }
 
 int wima_ui_textField_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
@@ -311,8 +311,8 @@ void wima_ui_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x + 12, y, w - 12, h, -1, textColor,
-	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
+	wima_ui_label_icon_value(ctx, x + 12, y, w - 12, h, -1, textColor, WIMA_ALIGN_LEFT,
+	                         WIMA_LABEL_FONT_SIZE, label, NULL, false);
 }
 
 void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
@@ -345,8 +345,8 @@ void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor,
-	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_LEFT,
+	                         WIMA_LABEL_FONT_SIZE, label, NULL, false);
 
 	// Draw the arrow.
 	WimaColor arrowTrans = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_WIDGET]._color, WIMA_TRANSPARENT_ALPHA);
@@ -408,8 +408,8 @@ void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x, y, w, h, -1, textColor,
-	                             WIMA_ALIGN_CENTER, WIMA_LABEL_FONT_SIZE, label, value);
+	wima_ui_label_icon_value(ctx, x, y, w, h, -1, textColor, WIMA_ALIGN_CENTER,
+	                         WIMA_LABEL_FONT_SIZE, label, value, false);
 
 	// Get the arrow color.
 	WimaColor arrowTrans = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_WIDGET]._color, WIMA_TRANSPARENT_ALPHA);
@@ -466,7 +466,7 @@ void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
 	wima_ui_label_icon_value(ctx, x, y, w, h, -1, textColor, WIMA_ALIGN_CENTER,
-	                             WIMA_LABEL_FONT_SIZE, label, value);
+	                             WIMA_LABEL_FONT_SIZE, label, value, false);
 }
 
 void wima_ui_scrollbar(WimaRenderContext* ctx,float x, float y, float w, float h,
@@ -593,7 +593,7 @@ void wima_ui_menu_label(WimaRenderContext* ctx, float x, float y, float w, float
 
 	// Draw the label.
 	wima_ui_label_icon_value(ctx, x, y, w, h, icon, t[WIMA_THEME_WIDGET_TEXT]._color,
-	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL);
+	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL, false);
 }
 
 void wima_ui_menu_separator(WimaRenderContext* ctx, float x, float y, float w, float h) {
@@ -645,7 +645,7 @@ void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float 
 	// Get the text color.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
 	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_LEFT,
-	                             WIMA_LABEL_FONT_SIZE, label, NULL);
+	                             WIMA_LABEL_FONT_SIZE, label, NULL, true);
 
 	// If there is a sub menu...
 	if (hasSub) {
@@ -1295,7 +1295,7 @@ WimaUiCorners wima_ui_corners_rounded(float r, WimaWidgetCornerFlags flags) {
 
 void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w, float h,
                               WimaIcon icon, WimaColor color, WimaTextAlign align, float fontsize,
-                              const char *label, const char *value)
+                              const char *label, const char *value, bool padIcon)
 {
 	wima_assert_init;
 
@@ -1308,6 +1308,9 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
 	if (icon != WIMA_ICON_INVALID) {
 		wima_ui_icon(ctx, x + (WIMA_WIDGET_HEIGHT - WIMA_ICON_SHEET_RES) / 2,
 		             y + (WIMA_WIDGET_HEIGHT - WIMA_ICON_SHEET_RES) / 2, icon);
+		pleft += WIMA_ICON_SHEET_RES;
+	}
+	else if (padIcon) {
 		pleft += WIMA_ICON_SHEET_RES;
 	}
 

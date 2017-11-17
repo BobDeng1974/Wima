@@ -2791,7 +2791,7 @@ void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, floa
  */
 void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w, float h,
     WimaIcon iconid, WimaColor color, WimaTextAlign align, float fontsize, const char *label,
-    const char *value);
+    const char *value, bool padIcon);
 
 /**
  * Draw an optional icon @a iconid and an optional @a label with
