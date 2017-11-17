@@ -381,8 +381,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	window->treeStackIdx = 0;
 
 	// Set the current tree and the stack.
-	//window->curTree = dvec_get(window->workspaces, wksph);
-	WIMA_WIN_AREAS(window) = NULL;//window->curTree;
+	WIMA_WIN_AREAS(window) = dvec_get(window->workspaces, wksph);
 
 	WimaRect rect;
 
@@ -1039,7 +1038,6 @@ void wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp) {
 	WimaWksp wksp = dvec_get(win->workspaces, wwksp);
 
 	// Switch the current tree.
-	//win->curTree = wksp;
 	WIMA_WIN_AREAS(win) = wksp;
 
 	// Set the window as dirty with layout.
@@ -1074,7 +1072,6 @@ WimaStatus wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg) {
 
 	// Set the dialog.
 	WIMA_WIN_AREAS(win) = dlg;
-	//win->curTree = dlg;
 
 	// Set the window as dirty with layout.
 	wima_window_setDirty(win, true);
@@ -1088,7 +1085,7 @@ WimaStatus wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg) {
 	rect.h = win->fbsize.h;
 
 	// Resize the areas.
-	//wima_area_resize(win->curTree, rect);
+	wima_area_resize(WIMA_WIN_AREAS(win), rect);
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -1111,11 +1108,9 @@ WimaStatus wima_window_popDialog(WimaWindow wwh) {
 	// Free the area.
 	dtree_free(WIMA_WIN_AREAS(win));
 
-	// Decrement the index.
+	// Decrement the index. We only need to do this because
+	// now WIMA_WIN_AREAS will refer to the right one.
 	--(win->treeStackIdx);
-
-	// Set the new dialog/workspace.
-	//win->curTree = WIMA_WIN_AREAS(win);
 
 	// Set the window as dirty with layout.
 	wima_window_setDirty(win, true);
@@ -1129,7 +1124,7 @@ WimaStatus wima_window_popDialog(WimaWindow wwh) {
 	rect.h = win->fbsize.h;
 
 	// Resize the areas.
-	//wima_area_resize(win->curTree, rect);
+	wima_area_resize(WIMA_WIN_AREAS(win), rect);
 
 	return WIMA_STATUS_SUCCESS;
 }
