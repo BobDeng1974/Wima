@@ -307,7 +307,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
 	// in floating point numbers, for whatever reason.
-	WimaVecS pos;
+	WimaVec pos;
 	pos.x = floor(x);
 	pos.y = floor(y);
 

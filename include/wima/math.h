@@ -173,7 +173,7 @@ WimaRectf wima_rectf(WimaRect rect) yinline;
  * @param pos	The position to test.
  * @return		true if @a pos is in @a r, false otherwise.
  */
-bool wima_rect_contains(WimaRect r, WimaVecS pos) yinline;
+bool wima_rect_contains(WimaRect r, WimaVec pos) yinline;
 
 /**
  * Converts @a deg to radians.

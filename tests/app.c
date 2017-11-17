@@ -308,7 +308,7 @@ void cb_windowSize(WimaWindow wwh, WimaSize size) {
 #endif
 }
 
-void cb_windowPos(WimaWindow wwh, WimaVecS pos) {
+void cb_windowPos(WimaWindow wwh, WimaVec pos) {
 #if 0
 	printf("Window[%d] moved to { %4d, %4d }\n", wwh, pos.x, pos.y);
 #endif

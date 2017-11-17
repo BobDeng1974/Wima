@@ -84,7 +84,7 @@ WimaSize wima_monitor_size(WimaMonitor* monitor) {
 
 	WimaSize s;
 
-	glfwGetMonitorPhysicalSize((GLFWmonitor*) monitor, &s.w, &s.h);
+	glfwGetMonitorPhysicalSize((GLFWmonitor*) monitor, (int*) &s.w, (int*) &s.h);
 
 	return s;
 }

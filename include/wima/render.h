@@ -281,15 +281,15 @@ typedef struct WimaSize {
 	union {
 
 		/// Access members as an array.
-		int v[2];
+		uint32_t v[2];
 
 		struct {
 
 			/// The width.
-			int w;
+			uint32_t w;
 
 			/// The height.
-			int h;
+			uint32_t h;
 
 		};
 

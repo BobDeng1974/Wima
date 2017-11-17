@@ -52,6 +52,7 @@
 #include <GLFW/glfw3.h>
 
 #include "render/render.h"
+#include "math/math.h"
 
 #include "callbacks.h"
 #include "editor.h"
@@ -277,9 +278,15 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 		return WIMA_WINDOW_INVALID;
 	}
 
+	int w, h;
+
 	// Set the sizes.
-	glfwGetWindowSize(win, &wwin.winsize.w, &wwin.winsize.h);
-	glfwGetFramebufferSize(win, &wwin.fbsize.w, &wwin.fbsize.h);
+	glfwGetWindowSize(win, &w, &h);
+	wwin.winsize.w = w;
+	wwin.winsize.h = h;
+	glfwGetFramebufferSize(win, &w, &h);
+	wwin.fbsize.w = w;
+	wwin.fbsize.h = h;
 
 	// Calculate and set the ratio.
 	wwin.pixelRatio = (float) wwin.fbsize.w / wwin.winsize.w;
@@ -374,8 +381,8 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	window->treeStackIdx = 0;
 
 	// Set the current tree and the stack.
-	window->curTree = dvec_get(window->workspaces, wksph);
-	WIMA_WIN_AREAS(window) = window->curTree;
+	//window->curTree = dvec_get(window->workspaces, wksph);
+	WIMA_WIN_AREAS(window) = NULL;//window->curTree;
 
 	WimaRect rect;
 
@@ -708,7 +715,7 @@ WimaSize wima_window_size(WimaWindow wwh) {
 
 	WimaSize size;
 
-	glfwGetWindowSize(win->window, &size.w, &size.h);
+	glfwGetWindowSize(win->window, (int*) &size.w, (int*) &size.h);
 
 	return size;
 }
@@ -753,7 +760,7 @@ WimaSize wima_window_framebufferSize(WimaWindow wwh) {
 
 #endif
 
-	return win->fbsize;
+	return wima_size_int(win->fbsize);
 }
 
 void wima_window_setUserPointer(WimaWindow wwh, void* user) {
@@ -1014,7 +1021,7 @@ bool wima_window_needsLayout(WimaWindow wwh) {
 	return WIMA_WIN_NEEDS_LAYOUT(win);
 }
 
-WimaStatus wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp) {
+void wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp) {
 
 	wima_assert_init;
 
@@ -1027,8 +1034,13 @@ WimaStatus wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp) {
 	wassert(win->treeStackIdx != ((uint8_t) -1), WIMA_ASSERT_WIN_NO_WKSP);
 	wassert(win->treeStackIdx == 0, WIMA_ASSERT_WIN_HAS_DIALOG);
 
-	// Switch the current tree.
+	wassert(wwksp < dvec_len(win->workspaces), WIMA_ASSERT_WIN_WKSP_INVALID);
 
+	WimaWksp wksp = dvec_get(win->workspaces, wwksp);
+
+	// Switch the current tree.
+	//win->curTree = wksp;
+	WIMA_WIN_AREAS(win) = wksp;
 
 	// Set the window as dirty with layout.
 	wima_window_setDirty(win, true);
@@ -1062,7 +1074,7 @@ WimaStatus wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg) {
 
 	// Set the dialog.
 	WIMA_WIN_AREAS(win) = dlg;
-	win->curTree = dlg;
+	//win->curTree = dlg;
 
 	// Set the window as dirty with layout.
 	wima_window_setDirty(win, true);
@@ -1076,7 +1088,7 @@ WimaStatus wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg) {
 	rect.h = win->fbsize.h;
 
 	// Resize the areas.
-	wima_area_resize(win->curTree, rect);
+	//wima_area_resize(win->curTree, rect);
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -1103,7 +1115,7 @@ WimaStatus wima_window_popDialog(WimaWindow wwh) {
 	--(win->treeStackIdx);
 
 	// Set the new dialog/workspace.
-	win->curTree = WIMA_WIN_AREAS(win);
+	//win->curTree = WIMA_WIN_AREAS(win);
 
 	// Set the window as dirty with layout.
 	wima_window_setDirty(win, true);
@@ -1117,7 +1129,7 @@ WimaStatus wima_window_popDialog(WimaWindow wwh) {
 	rect.h = win->fbsize.h;
 
 	// Resize the areas.
-	wima_area_resize(win->curTree, rect);
+	//wima_area_resize(win->curTree, rect);
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -1288,7 +1300,7 @@ WimaCursorMode wima_window_cursorMode(WimaWindow wwh) {
 	return (WimaCursorMode) (mode - GLFW_CURSOR_NORMAL);
 }
 
-void wima_window_setCursorPos(WimaWindow wwh, WimaVecS pos) {
+void wima_window_setCursorPos(WimaWindow wwh, WimaVec pos) {
 
 	wima_assert_init;
 
@@ -1302,7 +1314,7 @@ void wima_window_setCursorPos(WimaWindow wwh, WimaVecS pos) {
 	glfwSetCursorPos(win->window, (double) pos.x, (double) pos.y);
 }
 
-WimaVecS wima_window_cursorPos(WimaWindow wwh) {
+WimaVec wima_window_cursorPos(WimaWindow wwh) {
 
 	wima_assert_init;
 
@@ -1314,7 +1326,7 @@ WimaVecS wima_window_cursorPos(WimaWindow wwh) {
 	return win->ctx.cursorPos;
 }
 
-WimaVecS wima_window_cursorStart(WimaWindow wwh) {
+WimaVec wima_window_cursorStart(WimaWindow wwh) {
 
 	wima_assert_init;
 
@@ -1461,7 +1473,7 @@ const char* wima_window_clipboard(WimaWindow wwh) {
  * @param pos	The cursor position.
  * @return		The youngest menu with the cursor inside.
  */
-static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVecS pos);
+static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos);
 
 /**
  * Processes one event.
@@ -1817,10 +1829,10 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	}
 
 	// Get the cursor.
-	WimaVecS cursor = win->ctx.cursorPos;
+	WimaVec cursor = win->ctx.cursorPos;
 
 	// Need to keep this for later.
-	WimaVecS pos = cursor;
+	WimaVec pos = cursor;
 
 	// Figure out if the cursor is.
 	bool menuContainsCursor = wima_rect_contains(menu->rect, cursor);
@@ -1987,7 +1999,7 @@ void wima_window_split(WimaWindow wwh) {
 // Static functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVecS pos) {
+static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos) {
 
 	wassert(menu != NULL, WIMA_ASSERT_WIN_MENU);
 
@@ -2229,7 +2241,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 		WimaMenu* menu = win->menu;
 
 		// Get the cursor position.
-		WimaVecS pos = win->ctx.cursorPos;
+		WimaVec pos = win->ctx.cursorPos;
 
 		// Get the bottom-most menu that contains the mouse.
 		WimaMenu* m = wima_window_menu_contains(menu, pos);

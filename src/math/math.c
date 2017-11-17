@@ -66,6 +66,8 @@
 
 #include <wima/wima.h>
 
+#include "math.h"
+
 #ifdef _MSC_VER
 
 #pragma warning (disable: 4996) // Switch off security warnings
@@ -116,6 +118,16 @@ float wima_clampf(float v, float min, float max) {
 	return (v > max) ? max : ((v < min) ? min : v);
 }
 
+WimaSize wima_size_int(WimaSizeS size) {
+
+	WimaSize result;
+
+	result.w = size.w;
+	result.h = size.h;
+
+	return result;
+}
+
 WimaRect wima_rect(WimaVec pos, WimaSize size) {
 
 	WimaRect r;
@@ -142,7 +154,7 @@ WimaRectf wima_rectf(WimaRect rect) {
 	return r;
 }
 
-bool wima_rect_contains(WimaRect r, WimaVecS pos) {
+bool wima_rect_contains(WimaRect r, WimaVec pos) {
 
 	// Translate into the rectangle space.
 	int x = pos.x - r.x;

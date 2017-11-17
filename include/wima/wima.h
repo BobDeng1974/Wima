@@ -1525,7 +1525,7 @@ WimaWidgetState wima_widget_state(WimaWidget wdgt);
  * @return		true if @a pos is in the rectangle, false
  *				otherwise.
  */
-bool wima_widget_contains(WimaWidget wdgt, WimaVecS pos) yinline;
+bool wima_widget_contains(WimaWidget wdgt, WimaVec pos) yinline;
 
 /**
  * Compares two widget handles and returns true if they are
@@ -1753,7 +1753,7 @@ int wima_area_itemCount(WimaArea wah) yinline;
  * @param pos	The position to test against.
  * @return		true if @a pos is inside @a wah, false otherwise.
  */
-bool wima_area_contains(WimaArea wah, WimaVecS pos) yinline;
+bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
 
 /**
  * @}
@@ -2376,7 +2376,8 @@ void wima_window_cancelLayout(WimaWindow wwh) yinline;
  */
 bool wima_window_needsLayout(WimaWindow wwh) yinline;
 
-WimaStatus wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp) yinline;
+
+void wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp) yinline;
 
 /**
  * Pushes a dialog onto a window.
@@ -2493,7 +2494,7 @@ WimaCursorMode wima_window_cursorMode(WimaWindow wwh) yinline;
  * @param pos	The position to set.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-void wima_window_setCursorPos(WimaWindow wwh, WimaVecS pos) yinline;
+void wima_window_setCursorPos(WimaWindow wwh, WimaVec pos) yinline;
 
 /**
  * Returns the current cursor position on @a wwh.
@@ -2501,7 +2502,7 @@ void wima_window_setCursorPos(WimaWindow wwh, WimaVecS pos) yinline;
  * @return		The current cursor position.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-WimaVecS wima_window_cursorPos(WimaWindow wwh) yinline;
+WimaVec wima_window_cursorPos(WimaWindow wwh) yinline;
 
 /**
  * Returns the start position of a mouse drag. If the
@@ -2511,7 +2512,7 @@ WimaVecS wima_window_cursorPos(WimaWindow wwh) yinline;
  * @return		The start position of the mouse drag.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-WimaVecS wima_window_cursorStart(WimaWindow wwh) yinline;
+WimaVec wima_window_cursorStart(WimaWindow wwh) yinline;
 
 /**
  * Returns the delta from the start position of a mouse
@@ -2688,7 +2689,7 @@ typedef void (*WimaWindowFileDropFunc)(WimaWindow window, int filec, const char*
  * @param window	The window that was moved.
  * @param pos		The new position of the window.
  */
-typedef void (*WimaWindowPosFunc)(WimaWindow window, WimaVecS pos);
+typedef void (*WimaWindowPosFunc)(WimaWindow window, WimaVec pos);
 
 /**
  * A callback type to handle window framebuffer size events.

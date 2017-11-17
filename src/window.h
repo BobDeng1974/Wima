@@ -190,10 +190,10 @@ typedef union WimaClickItem {
 typedef struct WimaWinCtx {
 
 	/// Where the cursor was last frame.
-	WimaVecS last_cursor;
+	WimaVec last_cursor;
 
 	/// Where the cursor is currently.
-	WimaVecS cursorPos;
+	WimaVec cursorPos;
 
 	/// Accumulated scroll wheel offsets.
 	WimaVecC scroll;
@@ -216,11 +216,9 @@ typedef struct WimaWinCtx {
 	/// The number of events in the queue.
 	uint8_t eventCount;
 
-	/// The current layout stage.
-	uint16_t stage;
-
-	/// The current mods the user is pressing.
-	uint16_t mods;
+	/// The current number of clicks.
+	/// This is for generating click events.
+	uint16_t clicks;
 
 	/// The mouse button that was last clicked.
 	/// This is for generating click events.
@@ -234,12 +232,14 @@ typedef struct WimaWinCtx {
 	/// This is for generating click events.
 	uint64_t click_timestamp;
 
-	/// The current number of clicks.
-	/// This is for generating click events.
-	uint16_t clicks;
+	/// The current mods the user is pressing.
+	WimaMods mods;
+
+	/// The current layout stage.
+	WimaLayoutStage stage;
 
 	/// The start of the current drag.
-	WimaVecS dragStart;
+	WimaVec dragStart;
 
 	/// The split that the user is manipulating.
 	WimaAreaSplit split;
@@ -266,9 +266,6 @@ typedef struct WimaWin {
 	/// The user pointer for the window.
 	void* user;
 
-	/// The current tree.
-	DynaTree curTree;
-
 	/// The vector of workspaces (area trees).
 	DynaVector workspaces;
 
@@ -293,10 +290,10 @@ typedef struct WimaWin {
 	DynaTree treeStack[WIMA_WINDOW_STACK_MAX];
 
 	/// The window's framebuffer size.
-	WimaSize fbsize;
+	WimaSizeS fbsize;
 
 	/// The window's size.
-	WimaSize winsize;
+	WimaSizeS winsize;
 
 	/// The current menu, or NULL.
 	WimaMenu* menu;
@@ -309,7 +306,7 @@ typedef struct WimaWin {
 	/// allows the menus to appear in the same spot
 	/// relative to the cursor every time, making
 	/// it easy to click items that are used a lot.
-	WimaVecS menuOffset;
+	WimaVec menuOffset;
 
 	/// The current cursor.
 	GLFWcursor* cursor;
