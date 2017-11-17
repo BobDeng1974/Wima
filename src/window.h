@@ -190,13 +190,13 @@ typedef union WimaClickItem {
 typedef struct WimaWinCtx {
 
 	/// Where the cursor was last frame.
-	WimaVec last_cursor;
+	WimaVecs last_cursor;
 
 	/// Where the cursor is currently.
-	WimaVec cursorPos;
+	WimaVecs cursorPos;
 
 	/// Accumulated scroll wheel offsets.
-	WimaVec scroll;
+	WimaVecc scroll;
 
 	/// The active widget in the window.
 	WimaWidget active;
@@ -210,25 +210,21 @@ typedef struct WimaWinCtx {
 	/// The area that the cursor is in.
 	WimaAreaNode cursorArea;
 
-	/// The current layout stage.
-	WimaLayoutStage stage;
-
-	/// The current mods the user is pressing.
-	WimaMods mods;
-
-	/// The mouse button that was last clicked.
-	/// This is for generating click events.
-	WimaMouseBtn click_button;
-
-	/// The current number of clicks.
-	/// This is for generating click events.
-	uint32_t clicks;
-
 	/// Whether or not the user is moving a split or not.
 	bool movingSplit;
 
 	/// The number of events in the queue.
 	uint8_t eventCount;
+
+	/// The current layout stage.
+	uint16_t stage;
+
+	/// The current mods the user is pressing.
+	uint16_t mods;
+
+	/// The mouse button that was last clicked.
+	/// This is for generating click events.
+	WimaMouseBtn click_button;
 
 	/// The widget that was last clicked.
 	/// This is for generating click events.
@@ -238,8 +234,12 @@ typedef struct WimaWinCtx {
 	/// This is for generating click events.
 	uint64_t click_timestamp;
 
+	/// The current number of clicks.
+	/// This is for generating click events.
+	uint16_t clicks;
+
 	/// The start of the current drag.
-	WimaVec dragStart;
+	WimaVecs dragStart;
 
 	/// The split that the user is manipulating.
 	WimaAreaSplit split;
@@ -269,9 +269,6 @@ typedef struct WimaWin {
 	/// The current tree.
 	DynaTree curTree;
 
-	/// The area stack.
-	DynaTree treeStack[WIMA_WINDOW_STACK_MAX];
-
 	/// The vector of workspaces (area trees).
 	DynaVector workspaces;
 
@@ -292,6 +289,9 @@ typedef struct WimaWin {
 	/// The pixel ratio of the window.
 	float pixelRatio;
 
+	/// The area stack.
+	DynaTree treeStack[WIMA_WINDOW_STACK_MAX];
+
 	/// The window's framebuffer size.
 	WimaSize fbsize;
 
@@ -309,7 +309,7 @@ typedef struct WimaWin {
 	/// allows the menus to appear in the same spot
 	/// relative to the cursor every time, making
 	/// it easy to click items that are used a lot.
-	WimaVec menuOffset;
+	WimaVecs menuOffset;
 
 	/// The current cursor.
 	GLFWcursor* cursor;

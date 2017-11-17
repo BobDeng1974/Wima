@@ -307,7 +307,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
 	// in floating point numbers, for whatever reason.
-	WimaVec pos;
+	WimaVecs pos;
 	pos.x = floor(x);
 	pos.y = floor(y);
 
@@ -498,12 +498,12 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 	// Just cast because apparently, glfw does the hard work
 	// in converting them to pixels; it just gives them back
 	// in floating point numbers, for whatever reason.
-	int xint = (int) xoffset;
-	int yint = (int) yoffset;
+	int8_t x = (int8_t) xoffset;
+	int8_t y = (int8_t) yoffset;
 
 	// Add the scroll amounts to the context.
-	wwin->ctx.scroll.x += xint;
-	wwin->ctx.scroll.y += yint;
+	wwin->ctx.scroll.x += x;
+	wwin->ctx.scroll.y += y;
 
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
@@ -531,8 +531,8 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 	// Fill the event.
 	event->type = WIMA_EVENT_SCROLL;
-	event->scroll.xoffset = xint;
-	event->scroll.yoffset = yint;
+	event->scroll.xoffset = x;
+	event->scroll.yoffset = y;
 	event->scroll.mods = wwin->ctx.mods;
 
 	// Add one to the event count.

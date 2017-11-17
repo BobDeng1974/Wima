@@ -113,6 +113,8 @@ const char* wima_assert_msgs[] = {
     "window framebuffer size does not match GLFW framebuffer size; this is a bug in Wima",
     "window render context is NULL; this is a bug in Wima",
     "no workspace on the window",
+    "workspace is not valid for the window; if the workspace has been registered, this is a bug in Wima",
+    "window has a dialog",
     "no dialog on the window",
     "client tried to push too many dialogs onto the stack",
 

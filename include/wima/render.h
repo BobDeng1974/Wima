@@ -178,6 +178,54 @@ WimaImage wima_image_load(const char* const path, WimaImageFlags flags);
  */
 
 /**
+ * A 2-coordinate vector of chars.
+ */
+typedef struct WimaVecc {
+
+	union {
+
+		/// Access members as an array.
+		int8_t v[2];
+
+		struct {
+
+			/// The X coordinate.
+			int8_t x;
+
+			/// The Y coordinate.
+			int8_t y;
+
+		};
+
+	};
+
+} WimaVecc;
+
+/**
+ * A 2-coordinate vector of shorts.
+ */
+typedef struct WimaVecs {
+
+	union {
+
+		/// Access members as an array.
+		int16_t v[2];
+
+		struct {
+
+			/// The X coordinate.
+			int16_t x;
+
+			/// The Y coordinate.
+			int16_t y;
+
+		};
+
+	};
+
+} WimaVecs;
+
+/**
  * A 2-coordinate vector of ints.
  */
 typedef struct WimaVec {

@@ -142,7 +142,7 @@ WimaRectf wima_rectf(WimaRect rect) {
 	return r;
 }
 
-bool wima_rect_contains(WimaRect r, WimaVec pos) {
+bool wima_rect_contains(WimaRect r, WimaVecs pos) {
 
 	// Translate into the rectangle space.
 	int x = pos.x - r.x;
