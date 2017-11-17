@@ -251,6 +251,10 @@ WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags, uint32_t cols) {
 	return wima_layout_new(parent, flags, splitcol);
 }
 
+WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop) {
+	// TODO: Write this function.
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
