@@ -2376,7 +2376,14 @@ void wima_window_cancelLayout(WimaWindow wwh) yinline;
  */
 bool wima_window_needsLayout(WimaWindow wwh) yinline;
 
-
+/**
+ * Sets the workspace on @a wwh to the workspace
+ * associated with @a wwksp.
+ * @param wwh	The window to set the workspace on.
+ * @param wwksp	The workspace handle to set.
+ * @pre			@a wwh must be a valid WimaWindow.
+ * @pre			@a wwksp must be a valid WimaWorkspace.
+ */
 void wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp) yinline;
 
 /**

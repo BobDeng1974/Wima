@@ -92,6 +92,9 @@ typedef struct WimaRenderContext {
  * @{
  */
 
+/**
+ * A size struct that uses unsigned shorts.
+ */
 typedef struct WimaSizeS {
 
 	union {

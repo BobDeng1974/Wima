@@ -2787,6 +2787,8 @@ void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, floa
  * @param fontsize	The font size to use to render the text.
  * @param label		The label to draw, or NULL if none.
  * @param value		The value to add to the label with a separator.
+ * @param padIcon	true if the label should leave a space for the
+ *					icon even if there is none, false otherwise.
  * @pre				ctx must not be NULL.
  */
 void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w, float h,
