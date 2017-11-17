@@ -62,14 +62,31 @@ extern "C" {
  */
 typedef enum WimaPropType {
 
+	/// A list property.
 	WIMA_PROP_LIST,
+
+	/// A bool property.
 	WIMA_PROP_BOOL,
+
+	/// An int property.
 	WIMA_PROP_INT,
+
+	/// A float property.
 	WIMA_PROP_FLOAT,
+
+	/// A string property.
 	WIMA_PROP_STRING,
+
+	/// An enum property.
 	WIMA_PROP_ENUM,
+
+	/// A color property.
 	WIMA_PROP_COLOR,
+
+	/// A pointer (custom) property. See @a WimaCustomProperty.
 	WIMA_PROP_PTR,
+
+	/// An operator property (button).
 	WIMA_PROP_OPERATOR
 
 } WimaPropType;
