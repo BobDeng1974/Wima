@@ -1044,7 +1044,7 @@ void wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp) {
 	wima_window_setDirty(win, true);
 }
 
-WimaStatus wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg) {
+void wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg) {
 
 	wima_assert_init;
 
@@ -1086,11 +1086,9 @@ WimaStatus wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg) {
 
 	// Resize the areas.
 	wima_area_resize(WIMA_WIN_AREAS(win), rect);
-
-	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus wima_window_popDialog(WimaWindow wwh) {
+void wima_window_popDialog(WimaWindow wwh) {
 
 	wima_assert_init;
 
@@ -1125,8 +1123,6 @@ WimaStatus wima_window_popDialog(WimaWindow wwh) {
 
 	// Resize the areas.
 	wima_area_resize(WIMA_WIN_AREAS(win), rect);
-
-	return WIMA_STATUS_SUCCESS;
 }
 
 void wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, WimaIcon icon) {

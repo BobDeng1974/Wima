@@ -2393,7 +2393,7 @@ void wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp) yinline;
  * @return		WIMA_STATUS_SUCCESS on success, an
  *				error code otherwise.
  */
-WimaStatus wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg);
+void wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg);
 
 /**
  * Pops a dialog from a window.
@@ -2401,7 +2401,7 @@ WimaStatus wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg);
  * @return		WIMA_STATUS_SUCCESS on success, an
  *				error code otherwise.
  */
-WimaStatus wima_window_popDialog(WimaWindow wwh);
+void wima_window_popDialog(WimaWindow wwh);
 
 /**
  * Sets the context menu on the window with @a title and @a icon.
