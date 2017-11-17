@@ -77,7 +77,7 @@ void wima_render_transform(WimaRenderContext* ctx, WimaTransform tx) {
 	nvgTransform(ctx->nvg, tx.v[0], tx.v[1], tx.v[2], tx.v[3], tx.v[4], tx.v[5]);
 }
 
-void wima_render_translate(WimaRenderContext* ctx, WimaVecf vec) {
+void wima_render_translate(WimaRenderContext* ctx, WimaVecF vec) {
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgTranslate(ctx->nvg, vec.x, vec.y);

@@ -166,7 +166,7 @@ typedef struct WimaEvent {
 		WimaMouseClickEvent click;
 
 		/// A pos event (window position or mouse position).
-		WimaVecs pos;
+		WimaVecS pos;
 
 		/// A mouse drag event.
 		WimaMouseDragEvent drag;

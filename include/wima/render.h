@@ -180,7 +180,7 @@ WimaImage wima_image_load(const char* const path, WimaImageFlags flags);
 /**
  * A 2-coordinate vector of chars.
  */
-typedef struct WimaVecc {
+typedef struct WimaVecC {
 
 	union {
 
@@ -199,12 +199,12 @@ typedef struct WimaVecc {
 
 	};
 
-} WimaVecc;
+} WimaVecC;
 
 /**
  * A 2-coordinate vector of shorts.
  */
-typedef struct WimaVecs {
+typedef struct WimaVecS {
 
 	union {
 
@@ -223,7 +223,7 @@ typedef struct WimaVecs {
 
 	};
 
-} WimaVecs;
+} WimaVecS;
 
 /**
  * A 2-coordinate vector of ints.
@@ -252,7 +252,7 @@ typedef struct WimaVec {
 /**
  * A 2-coordinate vector of floats.
  */
-typedef struct WimaVecf {
+typedef struct WimaVecF {
 
 	union {
 
@@ -271,7 +271,7 @@ typedef struct WimaVecf {
 
 	};
 
-} WimaVecf;
+} WimaVecF;
 
 /**
  * A 2D size using ints.
@@ -632,7 +632,7 @@ typedef struct WimaPaint {
  * @return		The gradient as a paint.
  * @pre			@a ctx must not be NULL.
  */
-WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecf s, WimaVecf e,
+WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecF s, WimaVecF e,
                                     WimaColor icol, WimaColor ocol) yinline;
 
 /**
@@ -668,7 +668,7 @@ WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r
  * @return		The gradient as a paint.
  * @pre			@a ctx must not be NULL.
  */
-WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecf c, float inr,
+WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecF c, float inr,
                                     float outr, WimaColor icol, WimaColor ocol) yinline;
 
 /**
@@ -685,7 +685,7 @@ WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecf c, float in
  * @return		The image pattern as a paint.
  * @pre			@a ctx must not be NULL.
  */
-WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecf o, WimaSizef e,
+WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecF o, WimaSizef e,
                                   float angle, int image, float alpha) yinline;
 
 /**
@@ -1354,7 +1354,7 @@ void wima_render_transform(WimaRenderContext* ctx, WimaTransform tx) yinline;
  * @param vec	The amount to translate by.
  * @pre			@a ctx must not be NULL.
  */
-void wima_render_translate(WimaRenderContext* ctx, WimaVecf vec) yinline;
+void wima_render_translate(WimaRenderContext* ctx, WimaVecF vec) yinline;
 
 /**
  * Rotates the render state's current coordinate system by @a angle,
@@ -1715,7 +1715,7 @@ void wima_path_begin(WimaRenderContext* ctx) yinline;
  * @param pt	The point to start at.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_moveTo(WimaRenderContext* ctx, WimaVecf pt) yinline;
+void wima_path_moveTo(WimaRenderContext* ctx, WimaVecF pt) yinline;
 
 /**
  * Adds line segment from the last point in the path to
@@ -1724,7 +1724,7 @@ void wima_path_moveTo(WimaRenderContext* ctx, WimaVecf pt) yinline;
  * @param pt	The point to create a line to.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_lineTo(WimaRenderContext* ctx, WimaVecf pt) yinline;
+void wima_path_lineTo(WimaRenderContext* ctx, WimaVecF pt) yinline;
 
 /**
  * Adds cubic bezier segment from last point in the path
@@ -1735,7 +1735,7 @@ void wima_path_lineTo(WimaRenderContext* ctx, WimaVecf pt) yinline;
  * @param c2	The second control point.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_bezierTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c1, WimaVecf c2) yinline;
+void wima_path_bezierTo(WimaRenderContext* ctx, WimaVecF pt, WimaVecF c1, WimaVecF c2) yinline;
 
 /**
  * Adds quadratic bezier segment from last point in the
@@ -1745,7 +1745,7 @@ void wima_path_bezierTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c1, WimaVe
  * @param c		The control point.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_quadTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c) yinline;
+void wima_path_quadTo(WimaRenderContext* ctx, WimaVecF pt, WimaVecF c) yinline;
 
 /**
  * Adds an arc segment at the corner defined by
@@ -1756,7 +1756,7 @@ void wima_path_quadTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c) yinline;
  * @param radius	The radius of the arc.
  * @pre				@a ctx must not be NULL.
  */
-void wima_path_arcTo(WimaRenderContext* ctx, WimaVecf pt1, WimaVecf pt2, float radius) yinline;
+void wima_path_arcTo(WimaRenderContext* ctx, WimaVecF pt1, WimaVecF pt2, float radius) yinline;
 
 /**
  * Closes current sub-path with a line segment.
@@ -1789,7 +1789,7 @@ void wima_path_winding(WimaRenderContext* ctx, WimaWinding dir) yinline;
  * @param dir	The sweep direction.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_arc(WimaRenderContext* ctx, WimaVecf c, float r, float a0, float a1, WimaWinding dir) yinline;
+void wima_path_arc(WimaRenderContext* ctx, WimaVecF c, float r, float a0, float a1, WimaWinding dir) yinline;
 
 /**
  * Creates new rectangle shaped sub-path.
@@ -1833,7 +1833,7 @@ void wima_path_roundedRectVary(WimaRenderContext* ctx, WimaRectf rect,
  * @param ry	The radius on the Y axis.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_ellipse(WimaRenderContext* ctx, WimaVecf c, float rx, float ry) yinline;
+void wima_path_ellipse(WimaRenderContext* ctx, WimaVecF c, float rx, float ry) yinline;
 
 /**
  * Creates new circle shaped sub-path centered at @a c
@@ -1843,7 +1843,7 @@ void wima_path_ellipse(WimaRenderContext* ctx, WimaVecf c, float rx, float ry) y
  * @param r		The radius of the circle.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_circle(WimaRenderContext* ctx, WimaVecf c, float r) yinline;
+void wima_path_circle(WimaRenderContext* ctx, WimaVecF c, float r) yinline;
 
 /**
  * Fills the current path with current fill style.
@@ -2017,7 +2017,7 @@ void wima_text_align(WimaRenderContext* ctx, WimaTextAlign align) yinline;
  * @return			The horizontal text advance.
  * @pre				@a ctx must not be NULL.
  */
-float wima_text(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end) yinline;
+float wima_text(WimaRenderContext* ctx, WimaVecF pt, const char* string, const char* end) yinline;
 
 /**
  * Draws multi-line text string at @a pt (top left corner) wrapped
@@ -2035,7 +2035,7 @@ float wima_text(WimaRenderContext* ctx, WimaVecf pt, const char* string, const c
  *						should be rendered.
  * @pre					@a ctx must not be NULL.
  */
-void wima_text_box(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth,
+void wima_text_box(WimaRenderContext* ctx, WimaVecF pt, float breakRowWidth,
                    const char* string, const char* end) yinline;
 
 /**
@@ -2055,7 +2055,7 @@ void wima_text_box(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth,
  * @return			The horizontal text advance.
  * @pre				@a ctx must not be NULL.
  */
-float wima_text_bounds(WimaRenderContext* ctx, WimaVecf pt, const char* string,
+float wima_text_bounds(WimaRenderContext* ctx, WimaVecF pt, const char* string,
                        const char* end, WimaRectf* bounds) yinline;
 
 /**
@@ -2071,7 +2071,7 @@ float wima_text_bounds(WimaRenderContext* ctx, WimaVecf pt, const char* string,
  * @return				The text bounds.
  * @pre					@a ctx must not be NULL.
  */
-WimaRectf wima_text_box_bounds(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth,
+WimaRectf wima_text_box_bounds(WimaRenderContext* ctx, WimaVecF pt, float breakRowWidth,
                                const char* string, const char* end) yinline;
 
 /**
@@ -2089,7 +2089,7 @@ WimaRectf wima_text_box_bounds(WimaRenderContext* ctx, WimaVecf pt, float breakR
  * @return			The number of positions returned.
  * @pre				@a ctx must not be NULL.
  */
-int wima_text_glyphPositions(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end,
+int wima_text_glyphPositions(WimaRenderContext* ctx, WimaVecF pt, const char* string, const char* end,
                              WimaGlyphPosition* poss, int maxPoss) yinline;
 
 /**

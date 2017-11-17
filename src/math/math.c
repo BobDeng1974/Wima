@@ -142,7 +142,7 @@ WimaRectf wima_rectf(WimaRect rect) {
 	return r;
 }
 
-bool wima_rect_contains(WimaRect r, WimaVecs pos) {
+bool wima_rect_contains(WimaRect r, WimaVecS pos) {
 
 	// Translate into the rectangle space.
 	int x = pos.x - r.x;
@@ -213,9 +213,9 @@ WimaTransform wima_transform_inverse(WimaTransform src) {
 	return dest;
 }
 
-WimaVecf wima_transform_point(WimaTransform transform, WimaVecf pos) {
+WimaVecF wima_transform_point(WimaTransform transform, WimaVecF pos) {
 
-	WimaVecf result;
+	WimaVecF result;
 
 	nvgTransformPoint(&result.x, &result.y, transform.v, pos.x, pos.y);
 

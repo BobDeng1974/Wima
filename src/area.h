@@ -289,7 +289,7 @@ WimaStatus wima_area_layout(DynaTree areas);
  * @return			The node with the mouse, or
  *					WIMA_AREA_INVALID if none.
  */
-WimaAreaNode wima_area_mouseOver(DynaTree areas, WimaVecs cursor);
+WimaAreaNode wima_area_mouseOver(DynaTree areas, WimaVecS cursor);
 
 /**
  * Returns true if the mouse is on a split, false otherwise.
@@ -299,7 +299,7 @@ WimaAreaNode wima_area_mouseOver(DynaTree areas, WimaVecs cursor);
  *					filled with the split info.
  * @return			true if mouse is on a split, false otherwise.
  */
-bool wima_area_mouseOnSplit(DynaTree areas, WimaVecs pos, WimaAreaSplit* result);
+bool wima_area_mouseOnSplit(DynaTree areas, WimaVecS pos, WimaAreaSplit* result);
 
 /**
  * Moves an area's split, as well as all of its children's splits.
@@ -308,7 +308,7 @@ bool wima_area_mouseOnSplit(DynaTree areas, WimaVecs pos, WimaAreaSplit* result)
  * @param split		The split's info.
  * @param cursor	The position of the cursor.
  */
-void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, WimaVecs cursor);
+void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, WimaVecS cursor);
 
 /**
  * Finds the widget at @a pos.
@@ -319,7 +319,7 @@ void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, Wim
  *				be returned.
  * @return		The widget at the pos, or WIMA_WIDGET_INVALID.
  */
-WimaWidget wima_area_findWidget(DynaTree areas, WimaVecs pos, uint32_t flags);
+WimaWidget wima_area_findWidget(DynaTree areas, WimaVecS pos, uint32_t flags);
 
 /**
  * Joins two areas into one. It handles finding the common

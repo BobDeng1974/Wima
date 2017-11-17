@@ -50,7 +50,7 @@ wima_assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecf s, WimaVecf e,
+WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecF s, WimaVecF e,
                                     WimaColor icol, WimaColor ocol)
 {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -86,7 +86,7 @@ WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r
 	return p.wima;
 }
 
-WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecf c, float inr,
+WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecF c, float inr,
                                     float outr, WimaColor icol, WimaColor ocol)
 {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -104,7 +104,7 @@ WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecf c, float in
 	return p.wima;
 }
 
-WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecf o, WimaSizef e,
+WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecF o, WimaSizef e,
                                   float angle, int image, float alpha)
 {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);

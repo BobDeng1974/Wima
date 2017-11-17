@@ -190,13 +190,13 @@ typedef union WimaClickItem {
 typedef struct WimaWinCtx {
 
 	/// Where the cursor was last frame.
-	WimaVecs last_cursor;
+	WimaVecS last_cursor;
 
 	/// Where the cursor is currently.
-	WimaVecs cursorPos;
+	WimaVecS cursorPos;
 
 	/// Accumulated scroll wheel offsets.
-	WimaVecc scroll;
+	WimaVecC scroll;
 
 	/// The active widget in the window.
 	WimaWidget active;
@@ -239,7 +239,7 @@ typedef struct WimaWinCtx {
 	uint16_t clicks;
 
 	/// The start of the current drag.
-	WimaVecs dragStart;
+	WimaVecS dragStart;
 
 	/// The split that the user is manipulating.
 	WimaAreaSplit split;
@@ -309,7 +309,7 @@ typedef struct WimaWin {
 	/// allows the menus to appear in the same spot
 	/// relative to the cursor every time, making
 	/// it easy to click items that are used a lot.
-	WimaVecs menuOffset;
+	WimaVecS menuOffset;
 
 	/// The current cursor.
 	GLFWcursor* cursor;

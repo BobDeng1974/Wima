@@ -164,7 +164,7 @@ int wima_area_itemCount(WimaArea wah) {
 	return area->area.ctx.itemCount;
 }
 
-bool wima_area_contains(WimaArea wah, WimaVecs pos) {
+bool wima_area_contains(WimaArea wah, WimaVecS pos) {
 
 	wima_assert_init;
 
@@ -241,7 +241,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
  * @param cursor	The position of the cursor.
  * @return			The node that has the cursor, or WIMA_AREA_INVALID.
  */
-static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaVecs cursor);
+static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaVecS cursor);
 
 /**
  * A recursive function to test whether the mouse is on a split.
@@ -252,7 +252,7 @@ static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, W
  *					mouse *is* on a split.
  * @return			true if the mouse is on a split, false otherwise.
  */
-static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVecs pos, WimaAreaSplit* result);
+static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVecS pos, WimaAreaSplit* result);
 
 /**
  * A recursive function to move splits.
@@ -288,7 +288,7 @@ static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool is
  *				be returned.
  * @return		The widget at the pos, or WIMA_WIDGET_INVALID.
  */
-static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVecs pos, uint32_t flags);
+static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVecS pos, uint32_t flags);
 
 /**
  * Fills the two given rectangles with the
@@ -308,7 +308,7 @@ static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* righ
  * @return		The position of the cursor relative
  *				to @a area.
  */
-static WimaVecs wima_area_translatePos(WimaAr* area, WimaVecs pos);
+static WimaVecS wima_area_translatePos(WimaAr* area, WimaVecS pos);
 
 /**
  * Pushes an area's viewport onto NanoVG's stack.
@@ -857,7 +857,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 	return status;
 }
 
-WimaAreaNode wima_area_mouseOver(DynaTree areas, WimaVecs cursor) {
+WimaAreaNode wima_area_mouseOver(DynaTree areas, WimaVecS cursor) {
 
 	wima_assert_init;
 	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
@@ -870,7 +870,7 @@ WimaAreaNode wima_area_mouseOver(DynaTree areas, WimaVecs cursor) {
 	return wima_area_node_containsMouse(areas, dtree_node(areas, root), cursor);
 }
 
-static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaVecs cursor) {
+static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, WimaVecS cursor) {
 
 	WimaAreaNode result;
 
@@ -921,13 +921,13 @@ static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, W
 	return result;
 }
 
-bool wima_area_mouseOnSplit(DynaTree areas, WimaVecs pos, WimaAreaSplit* result) {
+bool wima_area_mouseOnSplit(DynaTree areas, WimaVecS pos, WimaAreaSplit* result) {
 	wima_assert_init;
 	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
 	return wima_area_node_mouseOnSplit(areas, dtree_root(), pos, result);
 }
 
-static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVecs pos, WimaAreaSplit* result) {
+static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVecS pos, WimaAreaSplit* result) {
 
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
@@ -948,7 +948,7 @@ static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVecs 
 	int split = area->parent.spliti;
 
 	// Translate the point into area space.
-	WimaVecs tx = wima_area_translatePos(area, pos);
+	WimaVecS tx = wima_area_translatePos(area, pos);
 
 	// Check different coordinates depending on if the split is vertical.
 	if (vertical) {
@@ -1001,7 +1001,7 @@ static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVecs 
 	return on;
 }
 
-void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, WimaVecs cursor) {
+void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, WimaVecS cursor) {
 
 	wima_assert_init;
 
@@ -1011,7 +1011,7 @@ void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, Wim
 	WimaAr* area = dtree_node(areas, node);
 
 	// Translate the cursor into area space.
-	WimaVecs pos = wima_area_translatePos(area, cursor);
+	WimaVecS pos = wima_area_translatePos(area, cursor);
 
 	// Get the difference between the correct cursor coordinate
 	// and the integer location of the split.
@@ -1171,7 +1171,7 @@ static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool is
 	return limit;
 }
 
-WimaWidget wima_area_findWidget(DynaTree areas, WimaVecs pos, uint32_t flags) {
+WimaWidget wima_area_findWidget(DynaTree areas, WimaVecS pos, uint32_t flags) {
 
 	wima_assert_init;
 
@@ -1183,7 +1183,7 @@ WimaWidget wima_area_findWidget(DynaTree areas, WimaVecs pos, uint32_t flags) {
 	return wima_area_node_findWidget(areas, dtree_node(areas, root), pos, flags);
 }
 
-static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVecs pos, uint32_t flags) {
+static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVecS pos, uint32_t flags) {
 
 	wima_assert_init;
 
@@ -1342,13 +1342,13 @@ static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* righ
 	}
 }
 
-static WimaVecs wima_area_translatePos(WimaAr* area, WimaVecs pos) {
+static WimaVecS wima_area_translatePos(WimaAr* area, WimaVecS pos) {
 
 	wima_assert_init;
 
 	wassert(area != NULL, WIMA_ASSERT_AREA);
 
-	WimaVecs result;
+	WimaVecS result;
 
 	// Calculate the new position's coordinates.
 	result.x = pos.x - area->rect.x;

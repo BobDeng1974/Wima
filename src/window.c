@@ -789,7 +789,7 @@ WimaMods wima_window_mods(WimaWindow wwh) {
 	return win->ctx.mods;
 }
 
-WimaVecc wima_window_scroll(WimaWindow wwh) {
+WimaVecC wima_window_scroll(WimaWindow wwh) {
 
 	wima_assert_init;
 
@@ -1288,7 +1288,7 @@ WimaCursorMode wima_window_cursorMode(WimaWindow wwh) {
 	return (WimaCursorMode) (mode - GLFW_CURSOR_NORMAL);
 }
 
-void wima_window_setCursorPos(WimaWindow wwh, WimaVecs pos) {
+void wima_window_setCursorPos(WimaWindow wwh, WimaVecS pos) {
 
 	wima_assert_init;
 
@@ -1302,7 +1302,7 @@ void wima_window_setCursorPos(WimaWindow wwh, WimaVecs pos) {
 	glfwSetCursorPos(win->window, (double) pos.x, (double) pos.y);
 }
 
-WimaVecs wima_window_cursorPos(WimaWindow wwh) {
+WimaVecS wima_window_cursorPos(WimaWindow wwh) {
 
 	wima_assert_init;
 
@@ -1314,7 +1314,7 @@ WimaVecs wima_window_cursorPos(WimaWindow wwh) {
 	return win->ctx.cursorPos;
 }
 
-WimaVecs wima_window_cursorStart(WimaWindow wwh) {
+WimaVecS wima_window_cursorStart(WimaWindow wwh) {
 
 	wima_assert_init;
 
@@ -1461,7 +1461,7 @@ const char* wima_window_clipboard(WimaWindow wwh) {
  * @param pos	The cursor position.
  * @return		The youngest menu with the cursor inside.
  */
-static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVecs pos);
+static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVecS pos);
 
 /**
  * Processes one event.
@@ -1817,10 +1817,10 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 	}
 
 	// Get the cursor.
-	WimaVecs cursor = win->ctx.cursorPos;
+	WimaVecS cursor = win->ctx.cursorPos;
 
 	// Need to keep this for later.
-	WimaVecs pos = cursor;
+	WimaVecS pos = cursor;
 
 	// Figure out if the cursor is.
 	bool menuContainsCursor = wima_rect_contains(menu->rect, cursor);
@@ -1987,7 +1987,7 @@ void wima_window_split(WimaWindow wwh) {
 // Static functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVecs pos) {
+static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVecS pos) {
 
 	wassert(menu != NULL, WIMA_ASSERT_WIN_MENU);
 
@@ -2229,7 +2229,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 		WimaMenu* menu = win->menu;
 
 		// Get the cursor position.
-		WimaVecs pos = win->ctx.cursorPos;
+		WimaVecS pos = win->ctx.cursorPos;
 
 		// Get the bottom-most menu that contains the mouse.
 		WimaMenu* m = wima_window_menu_contains(menu, pos);
