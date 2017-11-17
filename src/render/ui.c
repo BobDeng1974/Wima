@@ -132,8 +132,9 @@ static const WimaLineJoin wima_ui_line_joins[] = {
 //  Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon icon, const char *label) {
-
+void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h,
+                   WimaIcon icon, const char *label)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -178,11 +179,12 @@ void wima_ui_operatorBtn(WimaRenderContext* ctx, float x, float y, float w, floa
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
 	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_CENTER,
-	                             WIMA_LABEL_FONT_SIZE, label, NULL, false);
+	                         WIMA_LABEL_FONT_SIZE, label, NULL, false);
 }
 
-void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
-                          WimaWidgetState state, WimaIcon icon, const char *label)
+void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
+                      WimaWidgetCornerFlags flags, WimaWidgetState state,
+                      WimaIcon icon, const char *label)
 {
 	wima_assert_init;
 
@@ -216,7 +218,7 @@ void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 }
 
 int wima_ui_textField_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
-                            WimaIcon icon, const char *text, int px, int py)
+                          WimaIcon icon, const char *text, int px, int py)
 {
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -224,8 +226,8 @@ int wima_ui_textField_pos(WimaRenderContext* ctx, float x, float y, float w, flo
 }
 
 void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float h,
-                           WimaWidgetCornerFlags flags, WimaWidgetState state, WimaIcon icon, const char *text,
-                           int cbegin, int cend)
+                       WimaWidgetCornerFlags flags, WimaWidgetState state,
+                       WimaIcon icon, const char *text, int cbegin, int cend)
 {
 	wima_assert_init;
 
@@ -264,7 +266,7 @@ void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float 
 }
 
 void wima_ui_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
-                         WimaWidgetState state, const char *label)
+                       WimaWidgetState state, const char *label)
 {
 	wima_assert_init;
 

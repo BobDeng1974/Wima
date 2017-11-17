@@ -2025,10 +2025,17 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 
 		case WIMA_EVENT_KEY:
 		{
+			// Set a false flag.
+			bool consumed = false;
+
 			// If the area is not invalid, sent the event.
 			if (e.area_key.area != WIMA_AREA_INVALID) {
 				WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), e.area_key.area);
-				wima_area_key(area, e.area_key.key);
+				consumed = wima_area_key(area, e.area_key.key);
+			}
+
+			if (!consumed) {
+				// TODO: Send the event to the widget and on up the chain.
 			}
 
 			break;

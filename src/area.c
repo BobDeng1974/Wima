@@ -474,7 +474,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 	WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
 	// Get the particular user function setter.
-	WimaAreaGenUserPointerFunc get_user_ptr = editor->funcs.gen_ptr;
+	WimaAreaInitDataFunc get_user_ptr = editor->funcs.gen_ptr;
 
 	// If the user specified one, call it.
 	if (get_user_ptr) {
@@ -580,7 +580,7 @@ void wima_area_destroy(void* ptr) {
 		WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
 		// Get the particular user function setter.
-		WimaAreaFreeUserPointerFunc free_user_ptr = editor->funcs.free_ptr;
+		WimaAreaFreeDataFunc free_user_ptr = editor->funcs.free_ptr;
 
 		// If the user didn't specify one, don't call it.
 		if (!free_user_ptr) {
@@ -592,7 +592,7 @@ void wima_area_destroy(void* ptr) {
 	}
 }
 
-void wima_area_key(WimaAr* area, WimaKeyEvent e) {
+bool wima_area_key(WimaAr* area, WimaKeyEvent e) {
 
 	wima_assert_init;
 
@@ -607,9 +607,7 @@ void wima_area_key(WimaAr* area, WimaKeyEvent e) {
 	WimaArea wah = wima_area(area->window, area->node);
 
 	// If the handler exists, run it.
-	if (!key_event || !key_event(wah, e)) {
-		// TODO: Send the event up the chain.
-	}
+	return key_event != NULL && key_event(wah, e);
 }
 
 void wima_area_mouseEnter(WimaAr* area, bool enter) {
@@ -698,8 +696,10 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 			area->area.ctx.items[0].rect.w = area->rect.w;
 			area->area.ctx.items[0].rect.h = area->rect.h;
 
+			// TODO: Draw individual widgets.
+
 			// Draw the area. The draw function is guaranteed to be non-null.
-			status = wg.funcs.draw(item, ctx);
+			//status = wg.funcs.draw(item, ctx);
 
 			// Restore the old render state.
 			nvgRestore(ctx->nvg);

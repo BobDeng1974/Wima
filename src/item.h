@@ -138,8 +138,9 @@ typedef struct WimaItem {
 			/// The user pointer.
 			void* user;
 
-			/// Event functions.
-			WimaWidgetFuncs funcs;
+			/// Whether this widget's user pointer was allocated
+			/// with @a wima_widget_allocData() or not.
+			bool alloc;
 
 		} widget;
 

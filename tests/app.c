@@ -135,12 +135,6 @@ WimaStatus cb_layout(WimaArea wah, WimaLayout wlh, WimaSize size) {
 
 	WimaWidgetFuncs funcs;
 
-	funcs.mouse = cb_mouseBtn;
-	funcs.click = NULL;
-	funcs.drag = NULL;
-	funcs.scroll = cb_scroll;
-	funcs.char_event = cb_char;
-
 #if 0
 	WimaItemHandle item = wima_item_new(wah, funcs);
 	wima_item_setSize(item, size);
@@ -350,7 +344,6 @@ int main() {
 #endif
 
 	WimaAppFuncs appfuncs;
-	appfuncs.draw = cb_draw;
 	appfuncs.error = cb_error;
 	appfuncs.file_drop = cb_fileDrop;
 	appfuncs.pos = cb_windowPos;

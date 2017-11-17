@@ -97,14 +97,14 @@ typedef struct WimaLayout {
  * @return				A new set of flags with the old flags value plus
  *						the desired expand bits set.
  */
-uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical) yinline;
+uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical) yconst yinline;
 
 /**
  * Takes an initial flag value and clears the expand bits.
  * @param flags	The initial flags value.
  * @return		The @a flags without the expand bits set.
  */
-uint16_t wima_layout_clearExpandFlags(uint16_t flags) yinline;
+uint16_t wima_layout_clearExpandFlags(uint16_t flags) yconst yinline;
 
 /**
  * Takes an initial flag value and sets the scroll bits. If @a horizontal is
@@ -115,42 +115,42 @@ uint16_t wima_layout_clearExpandFlags(uint16_t flags) yinline;
  * @return				A new set of flags with the old flags value plus
  *						the desired scroll bits set.
  */
-uint16_t wima_layout_setScrollFlags(uint16_t flags, bool horizontal, bool vertical) yinline;
+uint16_t wima_layout_setScrollFlags(uint16_t flags, bool horizontal, bool vertical) yconst yinline;
 
 /**
  * Takes an initial flag value and clears the scroll bits.
  * @param flags	The initial flags value.
  * @return		The @a flags without the scroll bits set.
  */
-uint16_t wima_layout_clearScrollFlags(uint16_t flags) yinline;
+uint16_t wima_layout_clearScrollFlags(uint16_t flags) yconst yinline;
 
 /**
  * Takes an initial flag value and sets the separation bit.
  * @param flags	The initial flags value.
  * @return		The @a flags with the separation bit set.
  */
-uint16_t wima_layout_setSeparationFlag(uint16_t flags) yinline;
+uint16_t wima_layout_setSeparationFlag(uint16_t flags) yconst yinline;
 
 /**
  * Takes an initial flag value and clears the separation bit.
  * @param flags	The initial flags value.
  * @return		The @a flags with the separation bit cleared.
  */
-uint16_t wima_layout_clearSeparationFlag(uint16_t flags) yinline;
+uint16_t wima_layout_clearSeparationFlag(uint16_t flags) yconst yinline;
 
 /**
  * Takes an initial flag value and sets the box bit.
  * @param flags	The initial flags value.
  * @return		The @a flags with the box bit set.
  */
-uint16_t wima_layout_setBoxFlag(uint16_t flags) yinline;
+uint16_t wima_layout_setBoxFlag(uint16_t flags) yconst yinline;
 
 /**
  * Takes an initial flag value and clears the box bit.
  * @param flags	The initial flags value.
  * @return		The @a flags with the box bit cleared.
  */
-uint16_t wima_layout_clearBoxFlag(uint16_t flags) yinline;
+uint16_t wima_layout_clearBoxFlag(uint16_t flags) yconst yinline;
 
 /**
  * Sets whether @a wlh (and its children) are enabled.
@@ -230,6 +230,7 @@ WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split) yin
  * @pre				@a parent must be a valid WimaLayout.
  */
 WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags) yinline;
+
 /**
  * Creates a new sublayout of the provided @a parent
  * that will be laid out as a grid with the specified
@@ -242,6 +243,8 @@ WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags) yinline;
  * @pre				@a parent must be a valid WimaLayout.
  */
 WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags, uint32_t cols) yinline;
+
+WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop);
 
 /**
  * @}

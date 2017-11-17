@@ -96,7 +96,6 @@ const char* wima_assert_msgs[] = {
     "wima is not initialized",
 
     "app name is null",
-    "app draw function is null",
     "app error function is null",
     "app font path is null",
     "wima cannot read the app font file",

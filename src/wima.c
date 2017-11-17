@@ -71,7 +71,6 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 {
 	wassert(name != NULL, WIMA_ASSERT_APP_NAME);
 
-	wassert(funcs.draw != NULL, WIMA_ASSERT_APP_DRAW_FUNC);
 	wassert(funcs.error != NULL, WIMA_ASSERT_APP_ERROR_FUNC);
 
 	// Check that we can access the font and icon sheets.

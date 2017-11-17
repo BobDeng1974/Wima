@@ -109,7 +109,7 @@ WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
 	flags |= (funcs.scroll ? WIMA_EVENT_SCROLL : 0);
 	flags |= (funcs.char_event ? WIMA_EVENT_CHAR : 0);
 
-	item->widget.funcs = funcs;
+	//item->widget.funcs = funcs;
 
 	item->widget.flags |= flags;
 

@@ -862,27 +862,27 @@ WimaColor wima_prop_color(WimaProperty wph) {
 // Public functions for pointer props.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaProperty wima_prop_ptr_register(const char* name, const char* label, const char* desc,
-                                    WimaIcon icon, void* ptr, WimaPropPtrDrawFunc draw)
+WimaProperty wima_prop_custom_register(const char* name, const char* label, const char* desc,
+                                       WimaIcon icon, WimaCustomProperty type, void* ptr)
 {
 	wima_assert_init;
 
 	wassert(ptr != NULL, WIMA_ASSERT_PROP_PTR_NULL);
-	wassert(draw != NULL, WIMA_ASSERT_PROP_PTR_DRAW);
+	wassert(type != NULL, WIMA_ASSERT_PROP_PTR_DRAW);
 
 	WimaPropData prop;
 
 	// Set the data.
-	prop._ptr.draw = draw;
+	prop._ptr.draw = type;
 	prop._ptr.ptr = ptr;
 
 	// Register the property.
-	WimaProperty idx = wima_prop_register(name, label, desc, icon, WIMA_PROP_PTR, &prop);
+	WimaProperty idx = wima_prop_register(name, label, desc, icon, WIMA_PROP_CUSTOM, &prop);
 
 	return idx;
 }
 
-void* wima_prop_ptr(WimaProperty wph) {
+void* wima_prop_custom(WimaProperty wph) {
 
 	wima_assert_init;
 
@@ -890,7 +890,7 @@ void* wima_prop_ptr(WimaProperty wph) {
 
 #ifdef __YASSERT__
 	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-	wassert(prop->type == WIMA_PROP_PTR, WIMA_ASSERT_PROP_PTR);
+	wassert(prop->type == WIMA_PROP_CUSTOM, WIMA_ASSERT_PROP_PTR);
 #endif
 
 	// Get the data.
@@ -1003,7 +1003,7 @@ void wima_prop_destroy(size_t count, void** ptrs) {
 
 		case WIMA_PROP_ENUM:
 		case WIMA_PROP_COLOR:
-		case WIMA_PROP_PTR:
+		case WIMA_PROP_CUSTOM:
 		case WIMA_PROP_OPERATOR:
 			break;
 	}

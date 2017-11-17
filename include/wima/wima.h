@@ -1323,54 +1323,122 @@ typedef enum WimaWidgetLayoutFlags {
 } WimaWidgetLayoutFlags;
 
 /**
- * A function to run when a widget has a mouse button event.
- * @param wdgt	The widget that received the event.
- * @param event	The event.
- * @return		true if the event was consumed, false otherwise.
- *				This is so Wima can pass the event on.
+ * A function to initialize a widget's user pointer.
+ * @param wdgt	The widget whose user pointer will be initialized.
+ * @return		The initialized pointer.
  */
-typedef bool (*WimaWidgetMouseBtnFunc)(WimaWidget wdgt, WimaMouseBtnEvent event);
+typedef void* (*WimaWidgetInitDataFunc)(WimaWidget wdgt);
 
 /**
- * A function to run when a widget has a mouse click event.
- * @param wdgt	The widget that received the event.
- * @param event	The event.
- * @return		true if the event was consumed, false otherwise.
- *				This is so Wima can pass the event on.
+ * Frees a pointer associated with a widget.
+ * @param ptr	The pointer to free.
  */
-typedef bool (*WimaWidgetMouseClickFunc)(WimaWidget wdgt, WimaMouseClickEvent event);
+typedef void (*WimaWidgetFreeDataFunc)(void* ptr);
 
 /**
- * A function to run when a widget has a mouse drag event.
+ * A function to draw a user-defined widget (custom property).
+ * @param wdgt	The widget to draw.
+ * @param ptr	The pointer to the data for the custom property.
+ * @param ctx	The context to render with.
+ * @return		WIMA_STATUS_SUCCESS on success, an error code
+ *				otherwise.
+ */
+typedef WimaStatus (*WimaWidgetDrawFunc)(WimaWidget wdgt, void* ptr, WimaRenderContext* ctx);
+
+/**
+ * A function to return the size that a user-defined widget
+ * (custom property) should be drawn at. A negative value on
+ * either dimension means that that dimension is flexible, and
+ * the absolute value of the dimension is the minimum size.
+ * @param wdgt	The widget whose size will be returned.
+ * @param ptr	The pointer to the data for the custom property.
+ * @return		The required size of the widget.
+ */
+typedef WimaSize (*WimaWidgetSizeFunc)(WimaWidget wdgt, void* ptr);
+
+/**
+ * A function to run when a user-defined widget (custom property)
+ * has a key event.
  * @param wdgt	The widget that received the event.
+ * @param ptr	The pointer to the data for the custom property.
  * @param event	The event.
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetMouseDragFunc)(WimaWidget wdgt, WimaMouseDragEvent event);
+typedef bool (*WimaWidgetKeyFunc)(WimaWidget wdgt, void* ptr, WimaKeyEvent event);
+
+/**
+ * A function to run when a user-defined widget (custom property)
+ * has a mouse button event.
+ * @param wdgt	The widget that received the event.
+ * @param ptr	The pointer to the data for the custom property.
+ * @param event	The event.
+ * @return		true if the event was consumed, false otherwise.
+ *				This is so Wima can pass the event on.
+ */
+typedef bool (*WimaWidgetMouseBtnFunc)(WimaWidget wdgt, void* ptr, WimaMouseBtnEvent event);
+
+/**
+ * A function to run when a user-defined widget (custom property)
+ * has a mouse click event.
+ * @param wdgt	The widget that received the event.
+ * @param ptr	The pointer to the data for the custom property.
+ * @param event	The event.
+ * @return		true if the event was consumed, false otherwise.
+ *				This is so Wima can pass the event on.
+ */
+typedef bool (*WimaWidgetMouseClickFunc)(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event);
+
+/**
+ * A function to run when a user-defined widget (custom property)
+ * has a mouse drag event.
+ * @param wdgt	The widget that received the event.
+ * @param ptr	The pointer to the data for the custom property.
+ * @param event	The event.
+ * @return		true if the event was consumed, false otherwise.
+ *				This is so Wima can pass the event on.
+ */
+typedef bool (*WimaWidgetMouseDragFunc)(WimaWidget wdgt, void* ptr, WimaMouseDragEvent event);
 
 /**
  * A function to run when a widget has a scroll event.
  * @param wdgt	The widget that received the event.
+ * @param ptr	The pointer to the data for the custom property.
  * @param event	The event.
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetScrollFunc)(WimaWidget wdgt, WimaScrollEvent event);
+typedef bool (*WimaWidgetScrollFunc)(WimaWidget wdgt, WimaScrollEvent event, void* ptr);
 
 /**
  * A function to run when a widget has a char event.
  * @param wdgt	The widget that received the event.
+ * @param ptr	The pointer to the data for the custom property.
  * @param event	The event.
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetCharEvent)(WimaWidget wdgt, WimaCharEvent event);
+typedef bool (*WimaWidgetCharEvent)(WimaWidget wdgt, WimaCharEvent event, void* ptr);
 
 /**
  * A collection of widget event functions.
  */
 typedef struct WimaWidgetFuncs {
+
+	/// The function to initialize the pointer.
+	WimaWidgetInitDataFunc init;
+
+	/// The function to free the pointer.
+	WimaWidgetFreeDataFunc free;
+
+	/// The function to draw the widget.
+	WimaWidgetDrawFunc draw;
+
+	/// The function to get the size of the widget.
+	WimaWidgetSizeFunc size;
+
+	/// The key event func.
+	WimaWidgetKeyFunc key;
 
 	/// The mouse button event function.
 	WimaWidgetMouseBtnFunc mouse;
@@ -1562,6 +1630,42 @@ bool wima_widget_isFocused(WimaWidget wdgt) yinline;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
+// Sections functions and data structures.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup region region
+ * Functions and data structures for manipulating regions
+ * (subareas of an area).
+ */
+
+typedef uint16_t WimaRegion;
+
+typedef WimaStatus (*WimaRegionLayout)(WimaRegion region);
+
+#define WIMA_REGION_INVALID ((WimaRegion) -1)
+
+#define WIMA_REGION_MAX WIMA_REGION_INVALID
+
+uint8_t wima_region_setVerticalFlag(uint8_t flags) yconst yinline;
+
+uint8_t wima_region_clearVerticalFlag(uint8_t flags) yconst yinline;
+
+uint8_t wima_region_setResizableFlag(uint8_t flags) yconst yinline;
+
+uint8_t wima_region_clearResizableFlag(uint8_t flags) yconst yinline;
+
+uint8_t wima_region_setScrollFlags(uint8_t flags, bool vertical, bool horizontal) yconst yinline;
+
+uint8_t wima_region_clearScrollFlags(uint8_t flags) yconst yinline;
+
+WimaRegion wima_region_register(WimaRegionLayout layout, uint8_t flags);
+
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
 // Editor functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1572,17 +1676,17 @@ bool wima_widget_isFocused(WimaWidget wdgt) yinline;
  */
 
 /**
- * A function to generate an area's user pointer.
- * @param area	The area to generate the user pointer for.
+ * A function to initialize an area's user pointer.
+ * @param area	The area to initialize the user pointer for.
  * @return		The user pointer.
  */
-typedef void* (*WimaAreaGenUserPointerFunc)(WimaArea area);
+typedef void* (*WimaAreaInitDataFunc)(WimaArea area);
 
 /**
  * A function to free an area's user pointer.
  * @param ptr	The pointer to free.
  */
-typedef void (*WimaAreaFreeUserPointerFunc)(void* ptr);
+typedef void (*WimaAreaFreeDataFunc)(void* ptr);
 
 /**
  * A function to layout an area.
@@ -1616,10 +1720,10 @@ typedef bool (*WimaAreaMouseEnterFunc)(WimaArea area, bool entered);
 typedef struct WimaEditorFuncs {
 
 	/// The function to generate the user pointer.
-	WimaAreaGenUserPointerFunc gen_ptr;
+	WimaAreaInitDataFunc gen_ptr;
 
 	/// The function to free the user pointer.
-	WimaAreaFreeUserPointerFunc free_ptr;
+	WimaAreaFreeDataFunc free_ptr;
 
 	/// The function to layout an area.
 	WimaAreaLayoutFunc layout;
@@ -2667,15 +2771,6 @@ const char* wima_window_clipboard(WimaWindow wwh) yinline;
 #define WIMA_MAX_ICONS (16)
 
 /**
- * A callback type to draw custom widgets.
- * @param wdgt	The widget to draw.
- * @param ctx	The context to render to.
- * @return		WIMA_STATUS_SUCCESS on success,
- *				an error code otherwise.
- */
-typedef WimaStatus (*WimaDrawFunc)(WimaWidget wdgt, WimaRenderContext* ctx);
-
-/**
  * A callback type to allow Wima to report errors to the user.
  * @param status	The error code.
  * @param func		The name of the function the error occurred in.
@@ -2760,9 +2855,6 @@ typedef void (*WimaMonitorConnectedFunc)(WimaMonitor* monitor, bool connected);
  * A collection of app-wide event callbacks.
  */
 typedef struct WimaAppFuncs {
-
-	/// The app draw function.
-	WimaDrawFunc draw;
 
 	/// The app error callback.
 	WimaErrorFunc error;

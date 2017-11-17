@@ -247,7 +247,7 @@ void wima_area_destroy(void* ptr);
  * @param area	The area receiving the event.
  * @param e		The event.
  */
-void wima_area_key(WimaAr* area, WimaKeyEvent e);
+bool wima_area_key(WimaAr* area, WimaKeyEvent e);
 
 /**
  * Handles a mouse enter/exit event on an area.

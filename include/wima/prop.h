@@ -57,6 +57,22 @@ extern "C" {
  * @{
  */
 
+////////////////////////////////////////////////////////////////////////////////
+// Functions and data structures for custom properties.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * The public definition of a custom Wima property.
+ * These allow the client to define their own property
+ * types, which in turn, allows them to define their
+ * own widget types.
+ */
+typedef uint32_t WimaCustomProperty;
+
+////////////////////////////////////////////////////////////////////////////////
+// Functions and data structures for props in general.
+////////////////////////////////////////////////////////////////////////////////
+
 /**
  * An enum for what types of properties are allowed.
  */
@@ -83,11 +99,11 @@ typedef enum WimaPropType {
 	/// A color property.
 	WIMA_PROP_COLOR,
 
-	/// A pointer (custom) property. See @a WimaCustomProperty.
-	WIMA_PROP_PTR,
-
 	/// An operator property (button).
-	WIMA_PROP_OPERATOR
+	WIMA_PROP_OPERATOR,
+
+	/// A custom (user pointer) property. See @a WimaCustomProperty.
+	WIMA_PROP_CUSTOM,
 
 } WimaPropType;
 
@@ -574,41 +590,6 @@ void wima_prop_color_update(WimaProperty wph, WimaColor color) yinline;
 WimaColor wima_prop_color(WimaProperty wph) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Public functions for pointer props.
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Registers and returns a @a WIMA_PROP_PTR. It is set to @a ptr.
- *
- * Wima will use @a draw to draw this in the UI.
- * @param name		The name of the property. This needs to be a
- *					unique string identifier.
- * @param label		The label of the property. This is used as a
- *					label in the UI.
- * @param desc		The description of the property. This is used
- *					as a tooltip.
- * @param icon		The icon to use with the property.
- * @param ptr		The initial pointer.
- * @param draw		The function to draw this property.
- * @return			The newly-created @a WimaProperty.
- * @pre				@a name must not be NULL.
- * @ptr_lifetime	Wima assumes that @a ptr is allocated and freed
- *					by the client.
- */
-WimaProperty wima_prop_ptr_register(const char* name, const char* label, const char* desc,
-                                    WimaIcon icon, void* ptr, WimaPropPtrDrawFunc draw);
-
-/**
- * Returns the pointer contained in @a wph.
- * @param wph	The @a WimaProperty whose pointer will be
- *				returned.
- * @return		The value contained in @a wph.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_PTR.
- */
-void* wima_prop_ptr(WimaProperty wph) yinline;
-
-////////////////////////////////////////////////////////////////////////////////
 // Public function for operator props.
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -631,6 +612,45 @@ void* wima_prop_ptr(WimaProperty wph) yinline;
  */
 WimaProperty wima_prop_operator_register(const char* name, const char* label, const char* desc,
                                          WimaIcon icon, WimaWidgetMouseClickFunc op);
+
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for custom props.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Registers and returns a @a WIMA_PROP_CUSTOM. Its pointer
+ * is set to @a ptr.
+ *
+ * Wima will use the draw function for @a type for draw
+ * this in the UI.
+ * @param name		The name of the property. This needs
+ *					to be a unique string identifier.
+ * @param label		The label of the property. This is
+ *					used as a label in the UI.
+ * @param desc		The description of the property. This
+ *					is used as a tooltip.
+ * @param icon		The icon to use with the property.
+ * @param ptr		The initial pointer.
+ * @param draw		The function to draw this property.
+ * @return			The newly-created @a WimaProperty.
+ * @pre				@a name must not be NULL.
+ * @ptr_lifetime	Wima assumes that @a ptr is allocated
+ *					and freed by the client.
+ */
+WimaProperty wima_prop_custom_register(const char* name, const char* label, const char* desc,
+                                       WimaIcon icon, WimaCustomProperty type, void* ptr);
+
+/**
+ * Returns the pointer contained in @a wph.
+ * @param wph	The @a WimaProperty whose pointer will be
+ *				returned.
+ * @return		The value contained in @a wph.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ * @pre			@a wph must be a @a WIMA_PROP_CUSTOM.
+ */
+void* wima_prop_custom(WimaProperty wph) yinline;
+
+
 
 /**
  * @}
