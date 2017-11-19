@@ -60,12 +60,13 @@
 
 #include <string.h>
 
+#include <dyna/nvector.h>
+
 #include "global.h"
-
 #include "widget.h"
-
 #include "area.h"
 #include "window.h"
+#include "prop.h"
 
 wima_global_decl;
 wima_assert_msgs_decl;
@@ -103,11 +104,12 @@ WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
 	memset(item, 0, sizeof(WimaItem));
 
 	uint32_t flags = 0;
-	flags |= (funcs.mouse ? WIMA_EVENT_MOUSE_BTN : 0);
-	flags |= (funcs.click ? WIMA_EVENT_MOUSE_CLICK : 0);
-	flags |= (funcs.drag ? WIMA_EVENT_MOUSE_DRAG : 0);
-	flags |= (funcs.scroll ? WIMA_EVENT_SCROLL : 0);
-	flags |= (funcs.char_event ? WIMA_EVENT_CHAR : 0);
+	//flags |= (funcs.key ? WIMA_EVENT_KEY : 0);
+	//flags |= (funcs.mouse ? WIMA_EVENT_MOUSE_BTN : 0);
+	//flags |= (funcs.click ? WIMA_EVENT_MOUSE_CLICK : 0);
+	//flags |= (funcs.drag ? WIMA_EVENT_MOUSE_DRAG : 0);
+	//flags |= (funcs.scroll ? WIMA_EVENT_SCROLL : 0);
+	//flags |= (funcs.char_event ? WIMA_EVENT_CHAR : 0);
 
 	//item->widget.funcs = funcs;
 
@@ -400,6 +402,10 @@ bool wima_widget_isFocused(WimaWidget wdgt) {
 	return wima_widget_compare(win->ctx.focus, wdgt);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Private functions.
+////////////////////////////////////////////////////////////////////////////////
+
 WimaItem* wima_widget_ptr(WimaWidget wdgt) {
 
 	WimaItemInfo info;
@@ -407,4 +413,328 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt) {
 	info.widget = wdgt;
 
 	return wima_layout_ptr(info.layout);
+}
+
+void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event) {
+
+	// Get the widget pointer.
+	WimaItem* pitem = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
+
+	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+
+	// Get the prop.
+	WimaProperty wph = pitem->widget.prop;
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	WimaWidgetKeyFunc key;
+
+	// Figure out what to do based on the prop type.
+	switch (prop->type) {
+
+		case WIMA_PROP_LIST:
+			break;
+
+		case WIMA_PROP_BOOL:
+			break;
+
+		case WIMA_PROP_INT:
+			break;
+
+		case WIMA_PROP_FLOAT:
+			break;
+
+		case WIMA_PROP_STRING:
+			break;
+
+		case WIMA_PROP_ENUM:
+			break;
+
+		case WIMA_PROP_COLOR:
+			break;
+
+		case WIMA_PROP_OPERATOR:
+			break;
+
+		case WIMA_PROP_CUSTOM:
+
+			// If the widget handles the event, send it.
+			if (!key(wdgt, data->_ptr.ptr, event)) {
+				// TODO: Send the event up the chain.
+			}
+
+			break;
+	}
+}
+
+void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event) {
+
+	// Get the widget pointer.
+	WimaItem* pitem = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
+
+	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+
+	// Get the prop.
+	WimaProperty wph = pitem->widget.prop;
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	WimaWidgetKeyFunc key;
+
+	// Figure out what to do based on the prop type.
+	switch (prop->type) {
+
+		case WIMA_PROP_LIST:
+			break;
+
+		case WIMA_PROP_BOOL:
+			break;
+
+		case WIMA_PROP_INT:
+			break;
+
+		case WIMA_PROP_FLOAT:
+			break;
+
+		case WIMA_PROP_STRING:
+			break;
+
+		case WIMA_PROP_ENUM:
+			break;
+
+		case WIMA_PROP_COLOR:
+			break;
+
+		case WIMA_PROP_OPERATOR:
+			break;
+
+		case WIMA_PROP_CUSTOM:
+
+			// If the widget handles the event, send it.
+			if (!key(wdgt, data->_ptr.ptr, event)) {
+				// TODO: Send the event up the chain.
+			}
+
+			break;
+	}
+}
+
+void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event) {
+
+	// Get the widget pointer.
+	WimaItem* pitem = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
+
+	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+
+	// Get the prop.
+	WimaProperty wph = pitem->widget.prop;
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	WimaWidgetKeyFunc key;
+
+	// Figure out what to do based on the prop type.
+	switch (prop->type) {
+
+		case WIMA_PROP_LIST:
+			break;
+
+		case WIMA_PROP_BOOL:
+			break;
+
+		case WIMA_PROP_INT:
+			break;
+
+		case WIMA_PROP_FLOAT:
+			break;
+
+		case WIMA_PROP_STRING:
+			break;
+
+		case WIMA_PROP_ENUM:
+			break;
+
+		case WIMA_PROP_COLOR:
+			break;
+
+		case WIMA_PROP_OPERATOR:
+			break;
+
+		case WIMA_PROP_CUSTOM:
+
+			// If the widget handles the event, send it.
+			if (!key(wdgt, data->_ptr.ptr, event)) {
+				// TODO: Send the event up the chain.
+			}
+
+			break;
+	}
+}
+
+void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event) {
+
+	// Get the widget pointer.
+	WimaItem* pitem = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
+
+	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+
+	// Get the prop.
+	WimaProperty wph = pitem->widget.prop;
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	WimaWidgetKeyFunc key;
+
+	// Figure out what to do based on the prop type.
+	switch (prop->type) {
+
+		case WIMA_PROP_LIST:
+			break;
+
+		case WIMA_PROP_BOOL:
+			break;
+
+		case WIMA_PROP_INT:
+			break;
+
+		case WIMA_PROP_FLOAT:
+			break;
+
+		case WIMA_PROP_STRING:
+			break;
+
+		case WIMA_PROP_ENUM:
+			break;
+
+		case WIMA_PROP_COLOR:
+			break;
+
+		case WIMA_PROP_OPERATOR:
+			break;
+
+		case WIMA_PROP_CUSTOM:
+
+			// If the widget handles the event, send it.
+			if (!key(wdgt, data->_ptr.ptr, event)) {
+				// TODO: Send the event up the chain.
+			}
+
+			break;
+	}
+}
+
+void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event) {
+
+	// Get the widget pointer.
+	WimaItem* pitem = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
+
+	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+
+	// Get the prop.
+	WimaProperty wph = pitem->widget.prop;
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	WimaWidgetKeyFunc key;
+
+	// Figure out what to do based on the prop type.
+	switch (prop->type) {
+
+		case WIMA_PROP_LIST:
+			break;
+
+		case WIMA_PROP_BOOL:
+			break;
+
+		case WIMA_PROP_INT:
+			break;
+
+		case WIMA_PROP_FLOAT:
+			break;
+
+		case WIMA_PROP_STRING:
+			break;
+
+		case WIMA_PROP_ENUM:
+			break;
+
+		case WIMA_PROP_COLOR:
+			break;
+
+		case WIMA_PROP_OPERATOR:
+			break;
+
+		case WIMA_PROP_CUSTOM:
+
+			// If the widget handles the event, send it.
+			if (!key(wdgt, data->_ptr.ptr, event)) {
+				// TODO: Send the event up the chain.
+			}
+
+			break;
+	}
+}
+
+void wima_widget_char(WimaWidget wdgt, WimaCharEvent event) {
+
+	// Get the widget pointer.
+	WimaItem* pitem = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
+
+	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+
+	// Get the prop.
+	WimaProperty wph = pitem->widget.prop;
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	WimaWidgetCharFunc char_func;
+
+	// Figure out what to do based on the prop type.
+	switch (prop->type) {
+
+		case WIMA_PROP_LIST:
+			break;
+
+		case WIMA_PROP_BOOL:
+			break;
+
+		case WIMA_PROP_INT:
+			break;
+
+		case WIMA_PROP_FLOAT:
+			break;
+
+		case WIMA_PROP_STRING:
+			break;
+
+		case WIMA_PROP_ENUM:
+			break;
+
+		case WIMA_PROP_COLOR:
+			break;
+
+		case WIMA_PROP_OPERATOR:
+			break;
+
+		case WIMA_PROP_CUSTOM:
+
+			// If the widget handles the event, send it.
+			if (!char_func(wdgt, data->_ptr.ptr, event)) {
+				// TODO: Send the event up the chain.
+			}
+
+			break;
+	}
 }

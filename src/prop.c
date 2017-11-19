@@ -868,13 +868,13 @@ WimaProperty wima_prop_custom_register(const char* name, const char* label, cons
 	wima_assert_init;
 
 	wassert(ptr != NULL, WIMA_ASSERT_PROP_PTR_NULL);
-	wassert(type != NULL, WIMA_ASSERT_PROP_PTR_DRAW);
+	wassert(type < dvec_len(wg.customProps), WIMA_ASSERT_PROP_CUSTOM);
 
 	WimaPropData prop;
 
 	// Set the data.
-	prop._ptr.draw = type;
 	prop._ptr.ptr = ptr;
+	prop._ptr.type = type;
 
 	// Register the property.
 	WimaProperty idx = wima_prop_register(name, label, desc, icon, WIMA_PROP_CUSTOM, &prop);

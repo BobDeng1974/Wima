@@ -108,7 +108,8 @@ extern "C" {
 
 // Bits 9-18.
 #define WIMA_ITEM_EVENT_MASK  \
-	(WIMA_EVENT_MOUSE_BTN   | \
+	(WIMA_EVENT_KEY         | \
+	 WIMA_EVENT_MOUSE_BTN   | \
 	 WIMA_EVENT_MOUSE_CLICK | \
 	 WIMA_EVENT_MOUSE_DRAG  | \
 	 WIMA_EVENT_SCROLL      | \
@@ -157,6 +158,18 @@ typedef struct WimaItem WimaItem;
  * @pre			@a wdgt must be valid.
  */
 WimaItem* wima_widget_ptr(WimaWidget wdgt);
+
+void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event);
+
+void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event);
+
+void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event);
+
+void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event);
+
+void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event);
+
+void wima_widget_char(WimaWidget wdgt, WimaCharEvent event);
 
 /**
  * @}

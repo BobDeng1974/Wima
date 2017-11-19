@@ -93,6 +93,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.workspaceProps = NULL;
 	wg.workspaces = NULL;
 	wg.name = NULL;
+	wg.customProps = NULL;
 	wg.props = NULL;
 	wg.windows = NULL;
 	wg.fontPath = NULL;
@@ -128,6 +129,13 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 
 	// Set the initial theme.
 	wg.theme = wima_theme_load(wg.themes, wg.themeStarts);
+
+	// Create and if error, exit.
+	wg.customProps = dvec_create(0, NULL, NULL, sizeof(WimaCustProp));
+	if (yunlikely(!wg.customProps)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
 
 	// Create and if error, exit.
 	wg.editors = dvec_create(0, NULL, NULL, sizeof(WimaEdtr));
@@ -357,6 +365,11 @@ void wima_exit() {
 	// Free the editors, if they exist.
 	if (wg.editors) {
 		dvec_free(wg.editors);
+	}
+
+	// Free the editors, if they exist.
+	if (wg.customProps) {
+		dvec_free(wg.customProps);
 	}
 
 	// Free the props, if they exist.

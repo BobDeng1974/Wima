@@ -2053,8 +2053,10 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 				consumed = wima_area_key(area, e.area_key.key);
 			}
 
-			if (!consumed) {
-				// TODO: Send the event to the widget and on up the chain.
+			// If the event wasn't consumed, and
+			// the widget is valid, send the event.
+			if (!consumed && wih.widget != WIMA_WIDGET_INVALID) {
+				wima_widget_key(wih, e.area_key.key);
 			}
 
 			break;
@@ -2068,7 +2070,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 
 		case WIMA_EVENT_MOUSE_CLICK:
 		{
-			// If the widget is valid...
+			// If the widget is valid, send the event...
 			if (wih.widget != WIMA_WIDGET_INVALID) {
 
 				// Get the widget pointer.

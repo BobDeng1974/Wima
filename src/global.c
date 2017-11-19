@@ -185,7 +185,7 @@ const char* wima_assert_msgs[] = {
     "index is out of range for the list",
     "client tried to add too many children to a property",
     "prop pointer is NULL",
-    "prop draw function is NULL",
+    "custom prop is not valid",
     "operator is NULL",
     "prop types do not match",
     "prop is a child; parent reference(s) would be invalid",

@@ -84,6 +84,10 @@ typedef struct WimaG {
 	/// Properties.
 	DynaVector props;
 
+	/// Custom properties. These become custom
+	/// widgets in the user interface.
+	DynaVector customProps;
+
 	/// Workspace types.
 	DynaVector workspaces;
 
@@ -237,7 +241,7 @@ typedef enum WimaAssertType {
 	WIMA_ASSERT_PROP_LIST_IDX,
 	WIMA_ASSERT_PROP_LIST_MAX,
 	WIMA_ASSERT_PROP_PTR_NULL,
-	WIMA_ASSERT_PROP_PTR_DRAW,
+	WIMA_ASSERT_PROP_CUSTOM,
 	WIMA_ASSERT_PROP_OP_NULL,
 	WIMA_ASSERT_PROP_TYPE,
 	WIMA_ASSERT_PROP_IS_CHILD,

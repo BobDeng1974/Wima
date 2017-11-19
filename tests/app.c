@@ -133,7 +133,7 @@ WimaStatus cb_layout(WimaArea wah, WimaLayout wlh, WimaSize size) {
 	printf("    Size: { w: %4d, h: %4d }\n", size.w, size.h);
 #endif
 
-	WimaWidgetFuncs funcs;
+	//WimaWidgetFuncs funcs;
 
 #if 0
 	WimaItemHandle item = wima_item_new(wah, funcs);

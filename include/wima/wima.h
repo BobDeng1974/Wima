@@ -1418,53 +1418,7 @@ typedef bool (*WimaWidgetScrollFunc)(WimaWidget wdgt, WimaScrollEvent event, voi
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetCharEvent)(WimaWidget wdgt, WimaCharEvent event, void* ptr);
-
-/**
- * A collection of widget event functions.
- */
-typedef struct WimaWidgetFuncs {
-
-	/// The function to initialize the pointer.
-	WimaWidgetInitDataFunc init;
-
-	/// The function to free the pointer.
-	WimaWidgetFreeDataFunc free;
-
-	/// The function to draw the widget.
-	WimaWidgetDrawFunc draw;
-
-	/// The function to get the size of the widget.
-	WimaWidgetSizeFunc size;
-
-	/// The key event func.
-	WimaWidgetKeyFunc key;
-
-	/// The mouse button event function.
-	WimaWidgetMouseBtnFunc mouse;
-
-	/// The mouse click event function.
-	WimaWidgetMouseClickFunc click;
-
-	/// The mouse drag event function.
-	WimaWidgetMouseDragFunc drag;
-
-	/// The scroll event function.
-	WimaWidgetScrollFunc scroll;
-
-	/// The char event function.
-	WimaWidgetCharEvent char_event;
-
-} WimaWidgetFuncs;
-
-/**
- * Creates a new widget. TODO: Get rid of this and just have functions
- * that take a layout and inserts a particular kind of item.
- * @param wah	The area to insert in.
- * @param funcs	The widget's functions.
- * @return		The created widget.
- */
-WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs);
+typedef bool (*WimaWidgetCharFunc)(WimaWidget wdgt, void* ptr, WimaCharEvent event);
 
 /**
  * Sets whether the widget is enabled or not.
