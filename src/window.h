@@ -213,6 +213,12 @@ typedef struct WimaWinCtx {
 	/// Whether or not the user is moving a split or not.
 	bool movingSplit;
 
+	/// The current mods the user is pressing.
+	uint8_t mods;
+
+	/// The current layout stage.
+	uint8_t stage;
+
 	/// The number of events in the queue.
 	uint8_t eventCount;
 
@@ -232,19 +238,15 @@ typedef struct WimaWinCtx {
 	/// This is for generating click events.
 	uint64_t click_timestamp;
 
-	/// The current mods the user is pressing.
-	WimaMods mods;
-
-	/// The current layout stage.
-	WimaLayoutStage stage;
-
 	/// The start of the current drag.
 	WimaVec dragStart;
 
 	/// The split that the user is manipulating.
 	WimaAreaSplit split;
 
-	/// The event queue.
+	/// The event queue. The data in this struct, and in WimaWin,
+	/// has been carefully packed to ensure that this starts on a
+	/// cache line. Keep it that way.
 	WimaEvent events[WIMA_EVENT_MAX];
 
 	/// The widgets associated with the events.
@@ -268,6 +270,9 @@ typedef struct WimaWin {
 
 	/// The vector of workspaces (area trees).
 	DynaVector workspaces;
+
+	/// The vector of workspace minimum sizes.
+	DynaVector workspaceSizes;
 
 	/// The render context for the window.
 	WimaRenderContext render;

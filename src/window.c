@@ -225,6 +225,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	wwin.images = NULL;
 	wwin.treeStackIdx = ((uint8_t) -1);
 	wwin.workspaces = NULL;
+	wwin.workspaceSizes = NULL;
 	wwin.user = NULL;
 	wwin.window = NULL;
 	wwin.fbsize.w = 0;
@@ -358,10 +359,20 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	WimaWin* window = dvec_get(wg.windows, idx);
 
 	// Cache this.
-	uint8_t wkspLen = dvec_len(wg.workspaces);
+	size_t cap = dvec_cap(wg.workspaces);
+
+	// Create the sizes vector.
+	window->workspaceSizes = dvec_create(cap, NULL, NULL, sizeof(WimaSize));
+
+	// Check for error.
+	if (yunlikely(!window->workspaceSizes)) {
+		wima_window_destroy(window);
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_WINDOW_INVALID;
+	}
 
 	// Create a workspaces vector.
-	window->workspaces = dvec_createTreeVec(wkspLen, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
+	window->workspaces = dvec_createTreeVec(cap, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
 
 	// Check for error.
 	if (yunlikely(!window->workspaces)) {
@@ -390,6 +401,9 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	rect.y = 0;
 	rect.w = window->fbsize.w;
 	rect.h = window->fbsize.h;
+
+	// Cache this.
+	uint8_t wkspLen = dvec_len(wg.workspaces);
 
 	// Loop through all workspaces.
 	for (uint8_t i = 0; i < wkspLen; ++i) {
@@ -1535,6 +1549,11 @@ void wima_window_destroy(void* ptr) {
 			}
 		}
 
+		// Free the workspace sizes.
+		if (win->workspaceSizes) {
+			dvec_free(win->workspaceSizes);
+		}
+
 		// Free the vector of workspaces.
 		if (win->workspaces) {
 			dvec_free(win->workspaces);
@@ -2339,9 +2358,9 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 		wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
 
 		// If the widget handles the event, send it.
-		//if (!(pitem->widget.flags & WIMA_EVENT_MOUSE_BTN) || !pitem->widget.funcs.mouse(wih, e)) {
-		    // TODO: Send the event up the chain.
-		//}
+		if (!(pitem->widget.flags & WIMA_EVENT_MOUSE_BTN) || !pitem->widget.funcs.mouse(wih, e)) {
+			// TODO: Send the event up the chain.
+		}
 	}
 }
 
