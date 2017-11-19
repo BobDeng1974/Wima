@@ -593,6 +593,11 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 
 	wima_assert_init;
 
+	// If the client hasn't asked us to handle the event, don't.
+	if (!wg.funcs.file_drop) {
+		return;
+	}
+
 	const char* errorMsg = "Could not allocate a file name";
 
 	// Get the window handle from GLFW.
@@ -668,55 +673,63 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 	// Set the window as dirty without forcing layout.
 	wima_window_setDirty(wwin, false);
 
+	// Get the number of events.
 	uint32_t numEvents = wwin->ctx.eventCount;
 
-	// If we've already reached our max.
-	if (yunlikely(numEvents >= WIMA_EVENT_MAX)) {
+	// Send the enter event to the window first.
+	if (wg.funcs.enter) {
 
-		// Send an error to the client.
-		wima_error(WIMA_STATUS_EVENT_DROPPED);
+		// If we've already reached our max.
+		if (yunlikely(numEvents >= WIMA_EVENT_MAX)) {
 
-		// Drop the event.
-		return;
+			// Send an error to the client.
+			wima_error(WIMA_STATUS_EVENT_DROPPED);
+
+			// Drop the event.
+			return;
+		}
+
+		// Calculate a pointer to the event we'll fill.
+		WimaEvent* event = wwin->ctx.events + numEvents;
+
+		// Fill the event.
+		event->type = WIMA_EVENT_WIN_ENTER;
+		event->mouse_enter = entered ? true : false;
+
+		// Add one to the event count.
+		++(wwin->ctx.eventCount);
+
+		// Get the number of events.
+		numEvents = wwin->ctx.eventCount;
 	}
 
-	// Send an exit area event.
-	if (wwin->ctx.cursorArea != WIMA_AREA_INVALID) {
+	// Send an exit area event if necessary.
+	if (!entered && wwin->ctx.cursorArea != WIMA_AREA_INVALID) {
 
+		// If we've already reached our max.
+		if (yunlikely(numEvents >= WIMA_EVENT_MAX)) {
+
+			// Send an error to the client.
+			wima_error(WIMA_STATUS_EVENT_DROPPED);
+
+			// Drop the event.
+			return;
+		}
+
+		// Get a pointer to the event.
 		WimaEvent* e = wwin->ctx.events + wwin->ctx.eventCount;
 
+		// Fill the event.
 		e->type = WIMA_EVENT_AREA_ENTER;
 		e->area_enter.area = wwin->ctx.cursorArea;
 		e->area_enter.enter = false;
 
+		// Increment the event count.
 		++(wwin->ctx.eventCount);
 
 		// Clear the area.
 		wwin->ctx.cursorArea = WIMA_AREA_INVALID;
 	}
-
-	// Get the number of events.
-	numEvents = wwin->ctx.eventCount;
-
-	// If we've already reached our max.
-	if (yunlikely(numEvents >= WIMA_EVENT_MAX)) {
-
-		// Send an error to the client.
-		wima_error(WIMA_STATUS_EVENT_DROPPED);
-
-		// Drop the event.
-		return;
-	}
-
-	// Calculate a pointer to the event we'll fill.
-	WimaEvent* event = wwin->ctx.events + numEvents;
-
-	// Fill the event.
-	event->type = WIMA_EVENT_WIN_ENTER;
-	event->mouse_enter = entered ? true : false;
-
-	// Add one to the event count.
-	++(wwin->ctx.eventCount);
 }
 
 void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
@@ -733,6 +746,11 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 
 	// Set the window as dirty without forcing layout.
 	wima_window_setDirty(wwin, false);
+
+	// If the client hasn't asked us to handle the event, don't.
+	if (!wg.funcs.pos) {
+		return;
+	}
 
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
@@ -792,6 +810,11 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	// Resize the areas.
 	wima_area_resize(WIMA_WIN_AREAS(wwin), rect);
 
+	// If the client hasn't asked us to handle the event, don't.
+	if (!wg.funcs.fbsize) {
+		return;
+	}
+
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
@@ -836,6 +859,11 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 	wwin->winsize.w = width;
 	wwin->winsize.h = height;
 	wwin->pixelRatio = (float) wwin->fbsize.w / width;
+
+	// If the client hasn't asked us to handle the event, don't.
+	if (!wg.funcs.winsize) {
+		return;
+	}
 
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
@@ -883,6 +911,11 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 		wima_window_setDirty(wwin, true);
 	}
 
+	// If the client hasn't asked us to handle the event, don't.
+	if (!wg.funcs.minimize) {
+		return;
+	}
+
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
@@ -928,6 +961,11 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 	if (hasFocus) {
 		wima_window_setDirty(wwin, false);
 		wima_window_setFocused(wwh);
+	}
+
+	// If the client hasn't asked us to handle the event, don't.
+	if (!wg.funcs.focus) {
+		return;
 	}
 
 	// Get the number of events.

@@ -2162,61 +2162,37 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 
 		case WIMA_EVENT_WIN_POS:
 		{
-			// If there is a window pos callback, send the event.
-			if (wg.funcs.pos) {
-				wg.funcs.pos(wwh, e.pos);
-			}
-
+			wg.funcs.pos(wwh, e.pos);
 			break;
 		}
 
 		case WIMA_EVENT_FB_SIZE:
 		{
-			// If there is a framebuffer size callback, send the event.
-			if (wg.funcs.fbsize) {
-				wg.funcs.fbsize(wwh, e.size);
-			}
-
+			wg.funcs.fbsize(wwh, e.size);
 			break;
 		}
 
 		case WIMA_EVENT_WIN_SIZE:
 		{
-			// If there is a window size callback, send the event.
-			if (wg.funcs.winsize) {
-				wg.funcs.winsize(wwh, e.size);
-			}
-
+			wg.funcs.winsize(wwh, e.size);
 			break;
 		}
 
 		case WIMA_EVENT_WIN_ENTER:
 		{
-			// If there is a mouse enter window callback, send the event.
-			if (wg.funcs.enter) {
-				wg.funcs.enter(wwh, e.mouse_enter);
-			}
-
+			wg.funcs.enter(wwh, e.mouse_enter);
 			break;
 		}
 
 		case WIMA_EVENT_WIN_MINIMIZE:
 		{
-			// If there is a window minimize callback, send the event.
-			if (wg.funcs.minimize) {
-				wg.funcs.minimize(wwh, e.minimized);
-			}
-
+			wg.funcs.minimize(wwh, e.minimized);
 			break;
 		}
 
 		case WIMA_EVENT_WIN_FOCUS:
 		{
-			// If there is a window focus callback, send the event.
-			if (wg.funcs.focus) {
-				wg.funcs.focus(wwh, e.focused);
-			}
-
+			wg.funcs.focus(wwh, e.focused);
 			break;
 		}
 	}
@@ -2363,39 +2339,35 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 		wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
 
 		// If the widget handles the event, send it.
-		if (!(pitem->widget.flags & WIMA_EVENT_MOUSE_BTN) || !pitem->widget.funcs.mouse(wih, e)) {
-			// TODO: Send the event up the chain.
-		}
+		//if (!(pitem->widget.flags & WIMA_EVENT_MOUSE_BTN) || !pitem->widget.funcs.mouse(wih, e)) {
+		    // TODO: Send the event up the chain.
+		//}
 	}
 }
 
 static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files) {
 
-	// If there is a function to handle file drops...
-	if (wg.funcs.file_drop) {
+	// Get the number of files.
+	size_t len = dvec_len(files);
 
-		// Get the number of files.
-		size_t len = dvec_len(files);
+	// Malloc a list of files.
+	const char** names = malloc(len * sizeof(char*));
 
-		// Malloc a list of files.
-		const char** names = malloc(len * sizeof(char*));
-
-		if (yunlikely(names == NULL)) {
-			wima_error(WIMA_STATUS_MALLOC_ERR);
-			return;
-		}
-
-		// Set the pointers in the list of files.
-		for (int i = 0; i < len; ++i) {
-			names[i] = dstr_str(dvec_get(files, i));
-		}
-
-		// Send the event.
-		wg.funcs.file_drop(wwh, len, names);
-
-		// Free the files.
-		dvec_free(files);
+	if (yunlikely(names == NULL)) {
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return;
 	}
+
+	// Set the pointers in the list of files.
+	for (int i = 0; i < len; ++i) {
+		names[i] = dstr_str(dvec_get(files, i));
+	}
+
+	// Send the event.
+	wg.funcs.file_drop(wwh, len, names);
+
+	// Free the files.
+	dvec_free(files);
 }
 
 static void wima_window_clearContext(WimaWinCtx* ctx) {
