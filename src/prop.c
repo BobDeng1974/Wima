@@ -1036,6 +1036,7 @@ bool wima_prop_valid(WimaProperty wph) {
 
 	return valid;
 }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions.
@@ -1166,6 +1167,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 	return idx;
 }
 
+#ifdef __YASSERT__
 static bool wima_prop_enum_namesValid(const char* names[], uint32_t numNames) {
 
 	// Check that names is not NULL.
