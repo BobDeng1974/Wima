@@ -69,6 +69,12 @@ extern "C" {
  */
 typedef uint32_t WimaCustomProperty;
 
+#define WIMA_PROP_CUSTOM_INVALID ((WimaCustomProperty) -1)
+
+#define WIMA_PROP_CUSTOM_MAX WIMA_PROP_CUSTOM_INVALID
+
+WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs);
+
 ////////////////////////////////////////////////////////////////////////////////
 // Functions and data structures for props in general.
 ////////////////////////////////////////////////////////////////////////////////
@@ -614,7 +620,7 @@ WimaProperty wima_prop_operator_register(const char* name, const char* label, co
                                          WimaIcon icon, WimaWidgetMouseClickFunc op);
 
 ////////////////////////////////////////////////////////////////////////////////
-// Public functions for custom props.
+// Public functions for user pointer props.
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -637,7 +643,7 @@ WimaProperty wima_prop_operator_register(const char* name, const char* label, co
  * @ptr_lifetime	Wima assumes that @a ptr is allocated
  *					and freed by the client.
  */
-WimaProperty wima_prop_custom_register(const char* name, const char* label, const char* desc,
+WimaProperty wima_prop_ptr_register(const char* name, const char* label, const char* desc,
                                        WimaIcon icon, WimaCustomProperty type, void* ptr);
 
 /**
@@ -648,7 +654,7 @@ WimaProperty wima_prop_custom_register(const char* name, const char* label, cons
  * @pre			@a wph must be a valid @a WimaProperty.
  * @pre			@a wph must be a @a WIMA_PROP_CUSTOM.
  */
-void* wima_prop_custom(WimaProperty wph) yinline;
+void* wima_prop_ptr(WimaProperty wph) yinline;
 
 
 

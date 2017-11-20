@@ -62,46 +62,7 @@ extern "C" {
  * A custom property/widget. This is the
  * functions that the widget can have.
  */
-typedef struct WimaCustProp {
-
-	/// The function to initialize the pointer.
-	WimaWidgetInitDataFunc init;
-
-	/// The function to free the pointer.
-	WimaWidgetFreeDataFunc free;
-
-	/// The function to draw the widget.
-	WimaWidgetDrawFunc draw;
-
-	/// The function to get the size of the widget.
-	WimaWidgetSizeFunc size;
-
-	/// The key event func.
-	WimaWidgetKeyFunc key;
-
-	/// The mouse button event function.
-	WimaWidgetMouseBtnFunc mouse;
-
-	/// The mouse click event function.
-	WimaWidgetMouseClickFunc click;
-
-	/// The mouse drag event function.
-	WimaWidgetMouseDragFunc drag;
-
-	/// The scroll event function.
-	WimaWidgetScrollFunc scroll;
-
-	/// The char event function.
-	WimaWidgetCharFunc char_event;
-
-} WimaCustProp;
-
-/**
- * A collection of widget event functions.
- */
-typedef struct WimaWidgetFuncs {
-
-} WimaWidgetFuncs;
+typedef WimaWidgetFuncs WimaCustProp;
 
 /**
  * @def WIMA_PROP_SEED
@@ -196,11 +157,11 @@ typedef struct WimaPropList {
  */
 typedef struct WimaPropPtr {
 
-	/// The pointer.
-	void* ptr;
-
 	/// The type for the widget/property.
 	WimaCustomProperty type;
+
+	/// The pointer.
+	void* ptr;
 
 } WimaPropPtr;
 

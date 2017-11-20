@@ -1421,6 +1421,43 @@ typedef bool (*WimaWidgetScrollFunc)(WimaWidget wdgt, void* ptr, WimaScrollEvent
 typedef bool (*WimaWidgetCharFunc)(WimaWidget wdgt, void* ptr, WimaCharEvent event);
 
 /**
+ * A group of widget funcs.
+ */
+typedef struct WimaWidgetFuncs {
+
+	/// The function to initialize the pointer.
+	WimaWidgetInitDataFunc init;
+
+	/// The function to free the pointer.
+	WimaWidgetFreeDataFunc free;
+
+	/// The function to draw the widget.
+	WimaWidgetDrawFunc draw;
+
+	/// The function to get the size of the widget.
+	WimaWidgetSizeFunc size;
+
+	/// The key event func.
+	WimaWidgetKeyFunc key;
+
+	/// The mouse button event function.
+	WimaWidgetMouseBtnFunc mouse;
+
+	/// The mouse click event function.
+	WimaWidgetMouseClickFunc click;
+
+	/// The mouse drag event function.
+	WimaWidgetMouseDragFunc drag;
+
+	/// The scroll event function.
+	WimaWidgetScrollFunc scroll;
+
+	/// The char event function.
+	WimaWidgetCharFunc char_event;
+
+} WimaWidgetFuncs;
+
+/**
  * Sets whether the widget is enabled or not.
  * @param wdgt		The widget to enable or disable.
  * @param enable	true if enabled, false otherwise.

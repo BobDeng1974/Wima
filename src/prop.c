@@ -884,12 +884,11 @@ WimaProperty wima_prop_operator_register(const char* name, const char* label, co
 // Public functions for custom props.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaProperty wima_prop_custom_register(const char* name, const char* label, const char* desc,
+WimaProperty wima_prop_ptr_register(const char* name, const char* label, const char* desc,
                                        WimaIcon icon, WimaCustomProperty type, void* ptr)
 {
 	wima_assert_init;
 
-	wassert(ptr != NULL, WIMA_ASSERT_PROP_PTR_NULL);
 	wassert(type < dvec_len(wg.customProps), WIMA_ASSERT_PROP_CUSTOM);
 
 	WimaPropData prop;
@@ -904,7 +903,7 @@ WimaProperty wima_prop_custom_register(const char* name, const char* label, cons
 	return idx;
 }
 
-void* wima_prop_custom(WimaProperty wph) {
+void* wima_prop_ptr(WimaProperty wph) {
 
 	wima_assert_init;
 
@@ -919,6 +918,30 @@ void* wima_prop_custom(WimaProperty wph) {
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
 	return data->_ptr.ptr;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for custom properties.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs) {
+
+	wima_assert_init;
+
+	// Cache this.
+	size_t len = dvec_len(wg.customProps);
+
+	wassert(len < WIMA_PROP_CUSTOM_MAX, WIMA_ASSERT_PROP_CUSTOM_MAX);
+	wassert(funcs.draw != NULL, WIMA_ASSERT_PROP_CUSTOM_DRAW);
+	wassert(funcs.size != NULL, WIMA_ASSERT_PROP_CUSTOM_SIZE);
+
+	// Push onto the vector and check for error.
+	if (yunlikely(dvec_push(wg.customProps, &funcs))) {
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_PROP_CUSTOM_INVALID;
+	}
+
+	return (WimaCustomProperty) len;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
