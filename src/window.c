@@ -1485,19 +1485,19 @@ static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos);
  * @param win	The window to process events on.
  * @param wwh	The window handle. Necessary because
  *				windows don't store their index.
- * @param wih	The widget associated with the event.
+ * @param wdgt	The widget associated with the event.
  * @param e		The event.
  */
-static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wih, WimaEvent e);
+static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wdgt, WimaEvent e);
 
 /**
  * Processes a mouse button event. This is
  * complicated, so it's in its own function.
  * @param win	The window to process the event on.
- * @param wih	The widget associated with the event.
+ * @param wdgt	The widget associated with the event.
  * @param e		The event.
  */
-static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaMouseBtnEvent e);
+static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e);
 
 /**
  * Processes a file drop event on a window.
@@ -2032,7 +2032,7 @@ static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos) {
 	return result;
 }
 
-static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wih, WimaEvent e) {
+static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wdgt, WimaEvent e) {
 
 	// Switch on the type of event.
 	switch (e.type) {
@@ -2055,8 +2055,8 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 
 			// If the event wasn't consumed, and
 			// the widget is valid, send the event.
-			if (!consumed && wih.widget != WIMA_WIDGET_INVALID) {
-				wima_widget_key(wih, e.area_key.key);
+			if (!consumed && wdgt.widget != WIMA_WIDGET_INVALID) {
+				wima_widget_key(wdgt, e.area_key.key);
 			}
 
 			break;
@@ -2064,24 +2064,15 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 
 		case WIMA_EVENT_MOUSE_BTN:
 		{
-			wima_window_processMouseBtnEvent(win, wih, e.mouse_btn);
+			wima_window_processMouseBtnEvent(win, wdgt, e.mouse_btn);
 			break;
 		}
 
 		case WIMA_EVENT_MOUSE_CLICK:
 		{
-			// If the widget is valid, send the event...
-			if (wih.widget != WIMA_WIDGET_INVALID) {
-
-				// Get the widget pointer.
-				WimaItem* pitem = wima_widget_ptr(wih);
-
-				wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
-
-				// If the widget handles the event, send it.
-				if (!(pitem->widget.flags & e.type) || !pitem->widget.funcs.click(wih, e.click)) {
-					// TODO: Send the event up the chain.
-				}
+			// If the widget is valid, send the event.
+			if (wdgt.widget != WIMA_WIDGET_INVALID) {
+				wima_widget_mouseClick(wdgt, e.click);
 			}
 
 			break;
@@ -2113,18 +2104,9 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 
 		case WIMA_EVENT_MOUSE_DRAG:
 		{
-			// If the widget is valid...
-			if (wih.widget != WIMA_WIDGET_INVALID) {
-
-				// Get the widget pointer.
-				WimaItem* pitem = wima_widget_ptr(wih);
-
-				wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
-
-				// If the widget handles the event, send it.
-				if (!(pitem->widget.flags & e.type) || !pitem->widget.funcs.drag(wih, e.drag)) {
-					// TODO: Send the event up the chain.
-				}
+			// If the widget is valid, send the event.
+			if (wdgt.widget != WIMA_WIDGET_INVALID) {
+				wima_widget_mouseDrag(wdgt, e.drag);
 			}
 
 			break;
@@ -2139,18 +2121,9 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 
 		case WIMA_EVENT_SCROLL:
 		{
-			// If the widget is valid...
-			if (wih.widget != WIMA_WIDGET_INVALID) {
-
-				// Get the widget pointer.
-				WimaItem* pitem = wima_widget_ptr(wih);
-
-				wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
-
-				// If the widget handles the event, send it.
-				if (!(pitem->widget.flags & e.type) || !pitem->widget.funcs.scroll(wih, e.scroll)) {
-					// TODO: Send the event up the chain.
-				}
+			// If the widget is valid, send the event.
+			if (wdgt.widget != WIMA_WIDGET_INVALID) {
+				wima_widget_scroll(wdgt, e.scroll);
 			}
 
 			break;
@@ -2158,18 +2131,9 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 
 		case WIMA_EVENT_CHAR:
 		{
-			// If the widget is valid...
-			if (wih.widget != WIMA_WIDGET_INVALID) {
-
-				// Get the widget pointer.
-				WimaItem* pitem = wima_widget_ptr(wih);
-
-				wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
-
-				// If the widget handles the event, send it.
-				if (!(pitem->widget.flags & e.type)|| !pitem->widget.funcs.char_event(wih, e.char_event)) {
-
-				}
+			// If the widget is valid, send the event.
+			if (wdgt.widget != WIMA_WIDGET_INVALID) {
+				wima_widget_char(wdgt, e.char_event);
 			}
 
 			break;
@@ -2219,7 +2183,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wi
 	}
 }
 
-static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaMouseBtnEvent e) {
+static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e) {
 
 	// If the mouse button hasn't been released yet,
 	// set it to released and return because we don't
@@ -2282,7 +2246,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 				}
 
 				// Call the item's function.
-				item->click(wih.window);
+				item->click(wdgt.window);
 
 				// Clear the window and redraw.
 				wima_window_setDirty(win, true);
@@ -2351,18 +2315,9 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wih, WimaM
 		win->ctx.dragStart.x = -1;
 	}
 
-	// If a widget was clicked...
-	else if (wih.widget != WIMA_WIDGET_INVALID) {
-
-		// Get its pointer.
-		WimaItem* pitem = wima_widget_ptr(wih);
-
-		wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
-
-		// If the widget handles the event, send it.
-		if (!(pitem->widget.flags & WIMA_EVENT_MOUSE_BTN) || !pitem->widget.funcs.mouse(wih, e)) {
-			// TODO: Send the event up the chain.
-		}
+	// If a widget was clicked, send the event.
+	else if (wdgt.widget != WIMA_WIDGET_INVALID) {
+		wima_widget_mouseBtn(wdgt, e);
 	}
 }
 

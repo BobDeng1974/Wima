@@ -1408,7 +1408,7 @@ typedef bool (*WimaWidgetMouseDragFunc)(WimaWidget wdgt, void* ptr, WimaMouseDra
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetScrollFunc)(WimaWidget wdgt, WimaScrollEvent event, void* ptr);
+typedef bool (*WimaWidgetScrollFunc)(WimaWidget wdgt, void* ptr, WimaScrollEvent event);
 
 /**
  * A function to run when a widget has a char event.

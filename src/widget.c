@@ -417,6 +417,8 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt) {
 
 void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event) {
 
+	// TODO: Finish this function.
+
 	// Get the widget pointer.
 	WimaItem* pitem = wima_widget_ptr(wdgt);
 
@@ -471,6 +473,8 @@ void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event) {
 
 void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event) {
 
+	// TODO: Finish this function.
+
 	// Get the widget pointer.
 	WimaItem* pitem = wima_widget_ptr(wdgt);
 
@@ -483,7 +487,7 @@ void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event) {
 	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	WimaWidgetKeyFunc key;
+	WimaWidgetMouseBtnFunc mouseBtn;
 
 	// Figure out what to do based on the prop type.
 	switch (prop->type) {
@@ -515,7 +519,7 @@ void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event) {
 		case WIMA_PROP_CUSTOM:
 
 			// If the widget handles the event, send it.
-			if (!key(wdgt, data->_ptr.ptr, event)) {
+			if (!mouseBtn(wdgt, data->_ptr.ptr, event)) {
 				// TODO: Send the event up the chain.
 			}
 
@@ -525,6 +529,8 @@ void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event) {
 
 void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event) {
 
+	// TODO: Finish this function.
+
 	// Get the widget pointer.
 	WimaItem* pitem = wima_widget_ptr(wdgt);
 
@@ -537,7 +543,7 @@ void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event) {
 	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	WimaWidgetKeyFunc key;
+	WimaWidgetMouseClickFunc click;
 
 	// Figure out what to do based on the prop type.
 	switch (prop->type) {
@@ -569,7 +575,7 @@ void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event) {
 		case WIMA_PROP_CUSTOM:
 
 			// If the widget handles the event, send it.
-			if (!key(wdgt, data->_ptr.ptr, event)) {
+			if (!click(wdgt, data->_ptr.ptr, event)) {
 				// TODO: Send the event up the chain.
 			}
 
@@ -579,6 +585,8 @@ void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event) {
 
 void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event) {
 
+	// TODO: Finish this function.
+
 	// Get the widget pointer.
 	WimaItem* pitem = wima_widget_ptr(wdgt);
 
@@ -591,7 +599,7 @@ void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event) {
 	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	WimaWidgetKeyFunc key;
+	WimaWidgetMouseDragFunc drag;
 
 	// Figure out what to do based on the prop type.
 	switch (prop->type) {
@@ -623,7 +631,7 @@ void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event) {
 		case WIMA_PROP_CUSTOM:
 
 			// If the widget handles the event, send it.
-			if (!key(wdgt, data->_ptr.ptr, event)) {
+			if (!drag(wdgt, data->_ptr.ptr, event)) {
 				// TODO: Send the event up the chain.
 			}
 
@@ -633,6 +641,8 @@ void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event) {
 
 void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event) {
 
+	// TODO: Finish this function.
+
 	// Get the widget pointer.
 	WimaItem* pitem = wima_widget_ptr(wdgt);
 
@@ -645,7 +655,7 @@ void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event) {
 	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	WimaWidgetKeyFunc key;
+	WimaWidgetScrollFunc scroll;
 
 	// Figure out what to do based on the prop type.
 	switch (prop->type) {
@@ -677,7 +687,7 @@ void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event) {
 		case WIMA_PROP_CUSTOM:
 
 			// If the widget handles the event, send it.
-			if (!key(wdgt, data->_ptr.ptr, event)) {
+			if (!scroll(wdgt, data->_ptr.ptr, event)) {
 				// TODO: Send the event up the chain.
 			}
 
@@ -686,6 +696,8 @@ void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event) {
 }
 
 void wima_widget_char(WimaWidget wdgt, WimaCharEvent event) {
+
+	// TODO: Finish this function.
 
 	// Get the widget pointer.
 	WimaItem* pitem = wima_widget_ptr(wdgt);
