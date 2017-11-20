@@ -859,7 +859,29 @@ WimaColor wima_prop_color(WimaProperty wph) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Public functions for pointer props.
+// Public function for operator props.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaProperty wima_prop_operator_register(const char* name, const char* label, const char* desc,
+                                         WimaIcon icon, WimaWidgetMouseClickFunc op)
+{
+	wima_assert_init;
+
+	wassert(op != NULL, WIMA_ASSERT_PROP_OP_NULL);
+
+	WimaPropData prop;
+
+	// Set the data.
+	prop._op = op;
+
+	// Register the property.
+	WimaProperty idx = wima_prop_register(name, label, desc, icon, WIMA_PROP_OPERATOR, &prop);
+
+	return idx;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for custom props.
 ////////////////////////////////////////////////////////////////////////////////
 
 WimaProperty wima_prop_custom_register(const char* name, const char* label, const char* desc,
@@ -897,28 +919,6 @@ void* wima_prop_custom(WimaProperty wph) {
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
 	return data->_ptr.ptr;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Public function for operator props.
-////////////////////////////////////////////////////////////////////////////////
-
-WimaProperty wima_prop_operator_register(const char* name, const char* label, const char* desc,
-                                         WimaIcon icon, WimaWidgetMouseClickFunc op)
-{
-	wima_assert_init;
-
-	wassert(op != NULL, WIMA_ASSERT_PROP_OP_NULL);
-
-	WimaPropData prop;
-
-	// Set the data.
-	prop._op = op;
-
-	// Register the property.
-	WimaProperty idx = wima_prop_register(name, label, desc, icon, WIMA_PROP_OPERATOR, &prop);
-
-	return idx;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
