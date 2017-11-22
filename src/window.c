@@ -360,7 +360,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	WimaWin* window = dvec_get(wg.windows, idx);
 
 	// Create the widget data.
-	window->widgetData = dmmap_create(0.9f, NULL, NULL, wima_widget_destruct, sizeof(uint64_t));
+	window->widgetData = dpool_create(0.9f, NULL, NULL, wima_widget_destruct, sizeof(uint64_t));
 
 	// Check for error.
 	if (yunlikely(!window->widgetData)) {
@@ -1537,7 +1537,7 @@ void wima_window_destroy(void* ptr) {
 		// Free the widget data. This takes
 		// care of calling widget free functions.
 		if (win->widgetData) {
-			dmmap_free(win->widgetData);
+			dpool_free(win->widgetData);
 		}
 
 		// Destroy the GLFW window.

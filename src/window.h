@@ -47,7 +47,7 @@ extern "C" {
 #include <yc/assert.h>
 
 #include <dyna/vector.h>
-#include <dyna/memmap.h>
+#include <dyna/pool.h>
 
 #include <GLFW/glfw3.h>
 
@@ -301,7 +301,7 @@ typedef struct WimaWin {
 	DynaTree treeStack[WIMA_WINDOW_STACK_MAX];
 
 	/// The memory map for widgets in the window.
-	DynaMemoryMap widgetData;
+	DynaPool widgetData;
 
 	/// The window's framebuffer size.
 	WimaSizeS fbsize;

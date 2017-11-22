@@ -415,7 +415,7 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt) {
 	return wima_layout_ptr(info.layout);
 }
 
-void wima_widget_destruct(DynaMemoryMap map, void* key) {
+void wima_widget_destruct(DynaPool pool, void* key) {
 
 	// TODO: Write this function to get the widget type and destroy it correctly.
 
