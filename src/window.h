@@ -46,6 +46,9 @@ extern "C" {
 
 #include <yc/assert.h>
 
+#include <dyna/vector.h>
+#include <dyna/memmap.h>
+
 #include <GLFW/glfw3.h>
 
 #include <nanovg.h>
@@ -198,14 +201,17 @@ typedef struct WimaWinCtx {
 	/// Accumulated scroll wheel offsets.
 	WimaVecC scroll;
 
-	/// The active widget in the window.
-	WimaWidget active;
-
 	/// The focused widget in the window.
 	WimaWidget focus;
 
 	/// The hovered widget in the window.
 	WimaWidget hover;
+
+	/// Whether the mouse is pressed or not.
+	/// A widget can only be active if a mouse
+	/// button is pressed, and drags are only
+	/// valid when a button is pressed.
+	bool mousePressed;
 
 	/// The area that the cursor is in.
 	WimaAreaNode cursorArea;
@@ -230,13 +236,13 @@ typedef struct WimaWinCtx {
 	/// This is for generating click events.
 	WimaMouseBtn click_button;
 
+	/// The timestamp of the last click.
+	/// This is for generating click events.
+	uint32_t click_timestamp;
+
 	/// The widget that was last clicked.
 	/// This is for generating click events.
 	WimaClickItem click_item;
-
-	/// The timestamp of the last click.
-	/// This is for generating click events.
-	uint64_t click_timestamp;
 
 	/// The start of the current drag.
 	WimaVec dragStart;
@@ -293,6 +299,9 @@ typedef struct WimaWin {
 
 	/// The area stack.
 	DynaTree treeStack[WIMA_WINDOW_STACK_MAX];
+
+	/// The memory map for widgets in the window.
+	DynaMemoryMap widgetData;
 
 	/// The window's framebuffer size.
 	WimaSizeS fbsize;

@@ -224,6 +224,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	wwin.render.nvg = NULL;
 	wwin.images = NULL;
 	wwin.treeStackIdx = ((uint8_t) -1);
+	wwin.widgetData = NULL;
 	wwin.workspaces = NULL;
 	wwin.workspaceSizes = NULL;
 	wwin.user = NULL;
@@ -357,6 +358,16 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 	// Get a pointer to the new window.
 	WimaWin* window = dvec_get(wg.windows, idx);
+
+	// Create the widget data.
+	window->widgetData = dmmap_create(0.9f, NULL, NULL, wima_widget_destruct, sizeof(uint64_t));
+
+	// Check for error.
+	if (yunlikely(!window->widgetData)) {
+		wima_window_destroy(window);
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_WINDOW_INVALID;
+	}
 
 	// Cache this.
 	size_t cap = dvec_cap(wg.workspaces);
@@ -866,42 +877,6 @@ WimaWidget wima_window_hoverWidget(WimaWindow wwh) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	return win->ctx.hover;
-}
-
-void wima_window_setActiveWidget(WimaWindow wwh, WimaWidget wih) {
-
-	wima_assert_init;
-
-	wassert(wih.window == wwh, WIMA_ASSERT_WIN_ITEM_MISMATCH);
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-#ifdef __YASSERT__
-
-	wassert(dtree_exists(WIMA_WIN_AREAS(win), wih.area), WIMA_ASSERT_AREA);
-
-	// Get the area.
-	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), wih.area);
-
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-
-	wassert(wih.widget < area->area.ctx.itemCount, WIMA_ASSERT_WIDGET);
-#endif
-
-	win->ctx.active = wih;
-}
-
-WimaWidget wima_window_actveWidget(WimaWindow wwh) {
-
-	wima_assert_init;
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
-
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	return win->ctx.active;
 }
 
 void wima_window_setFocusWidget(WimaWindow wwh, WimaWidget wih) {
@@ -1557,6 +1532,12 @@ void wima_window_destroy(void* ptr) {
 		// Free the vector of workspaces.
 		if (win->workspaces) {
 			dvec_free(win->workspaces);
+		}
+
+		// Free the widget data. This takes
+		// care of calling widget free functions.
+		if (win->widgetData) {
+			dmmap_free(win->widgetData);
 		}
 
 		// Destroy the GLFW window.
@@ -2363,7 +2344,7 @@ static void wima_window_clearContext(WimaWinCtx* ctx) {
 	ctx->movingSplit = false;
 
 	// Clear items.
-	memset(&ctx->active, -1, sizeof(WimaWidget));
+	// TODO: memset(&ctx->active, -1, sizeof(WimaWidget));
 	memset(&ctx->focus, -1, sizeof(WimaWidget));
 	memset(&ctx->hover, -1, sizeof(WimaWidget));
 }

@@ -2365,26 +2365,6 @@ void wima_window_setHoverWidget(WimaWindow wwh, WimaWidget wih) yinline;
 WimaWidget wima_window_hoverWidget(WimaWindow wwh) yinline;
 
 /**
- * Sets the active widget, which is the widget that the
- * user is interacting with. Because the user could
- * start interacting with other widgets, this is only
- * valid until the next event.
- * @param wwh	The window to update.
- * @param wih	The widget to set as active.
- * @pre			@a wwh must be a valid WimaWindow.
- */
-void wima_window_setActiveWidget(WimaWindow wwh, WimaWidget wih) yinline;
-
-/**
- * Returns the currently active widget, which is the
- * widget that the user is interacting with.
- * @param wwh	The window to query.
- * @return		The currently active widget.
- * @pre			@a wwh must be a valid WimaWindow.
- */
-WimaWidget wima_window_actveWidget(WimaWindow wwh) yinline;
-
-/**
  * Sets the currently focused widget, which is the
  * widget that receives char (text input) events.
  * Because this can change with any other type of

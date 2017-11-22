@@ -69,6 +69,8 @@ extern "C" {
 #include <stdint.h>
 #include <string.h>
 
+#include <dyna/memmap.h>
+
 #include <wima/wima.h>
 #include <wima/prop.h>
 
@@ -158,6 +160,8 @@ typedef struct WimaItem WimaItem;
  * @pre			@a wdgt must be valid.
  */
 WimaItem* wima_widget_ptr(WimaWidget wdgt);
+
+void wima_widget_destruct(DynaMemoryMap map, void* key);
 
 void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event);
 

@@ -377,7 +377,7 @@ bool wima_widget_isActive(WimaWidget wdgt) {
 
 	WimaWin* win = dvec_get(wg.windows, wdgt.window);
 
-	return wima_widget_compare(win->ctx.active, wdgt);
+	return wima_widget_compare(win->ctx.focus, wdgt) && win->ctx.mousePressed;
 }
 
 bool wima_widget_isHovered(WimaWidget wdgt) {
@@ -413,6 +413,16 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt) {
 	info.widget = wdgt;
 
 	return wima_layout_ptr(info.layout);
+}
+
+void wima_widget_destruct(DynaMemoryMap map, void* key) {
+
+	// TODO: Write this function to get the widget type and destroy it correctly.
+
+	wima_assert_init;
+
+	// Get the data.
+	uint64_t data = *((uint64_t*) key);
 }
 
 void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event) {

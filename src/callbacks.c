@@ -177,7 +177,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	WimaWidget clickItem = wima_area_findWidget(WIMA_WIN_AREAS(wwin), wwin->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN);
 
 	// Set the active and focus items to the clicked item.
-	wwin->ctx.active = clickItem;
+	// TODO: wwin->ctx.active = clickItem;
 	wwin->ctx.focus = clickItem;
 
 	// Make sure the dirty bit for the window is set.
@@ -421,7 +421,7 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			glfwSetCursor(wwin->window, wg.cursors[c]);
 
 			// Clear the items.
-			wwin->ctx.active.widget = -1;
+			// TODO: wwin->ctx.active.widget = -1;
 			wwin->ctx.hover.widget = -1;
 
 			// Get the number of events.
