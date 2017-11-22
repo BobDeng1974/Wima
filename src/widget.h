@@ -161,18 +161,55 @@ typedef struct WimaItem WimaItem;
  */
 WimaItem* wima_widget_ptr(WimaWidget wdgt);
 
+/**
+ * A DynaDestructFunc to destroy widget data. This
+ * actually will run the @a WimaWidgetFreeDataFunc
+ * associated with the widget that is being destroyed.
+ * @param pool	The pool that the widget has data in.
+ * @param key	The key to the widget's data.
+ */
 void wima_widget_destruct(DynaPool pool, void* key);
 
+/**
+ * Handles a key event on @a wdgt.
+ * @param wdgt	The widget receiving the event.
+ * @param event	The event.
+ */
 void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event);
 
+/**
+ * Handles a mouse button event on @a wdgt.
+ * @param wdgt	The widget receiving the event.
+ * @param event	The event.
+ */
 void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event);
 
+/**
+ * Handles a mouse click event on @a wdgt.
+ * @param wdgt	The widget receiving the event.
+ * @param event	The event.
+ */
 void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event);
 
+/**
+ * Handles a mouse drag event on @a wdgt.
+ * @param wdgt	The widget receiving the event.
+ * @param event	The event.
+ */
 void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event);
 
+/**
+ * Handles a scroll event on @a wdgt.
+ * @param wdgt	The widget receiving the event.
+ * @param event	The event.
+ */
 void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event);
 
+/**
+ * Handles a char event on @a wdgt.
+ * @param wdgt	The widget receiving the event.
+ * @param event	The event.
+ */
 void wima_widget_char(WimaWidget wdgt, WimaCharEvent event);
 
 /**

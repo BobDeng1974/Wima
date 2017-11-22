@@ -69,10 +69,26 @@ extern "C" {
  */
 typedef uint32_t WimaCustomProperty;
 
+/**
+ * @def WIMA_PROP_CUSTOM_INVALID
+ * A handle to an invalid @a WimaCustomProperty.
+ */
 #define WIMA_PROP_CUSTOM_INVALID ((WimaCustomProperty) -1)
 
+/**
+ * @def WIMA_PROP_CUSTOM_MAX
+ * The max number of WimaCustomProperties
+ * the client can register.
+ */
 #define WIMA_PROP_CUSTOM_MAX WIMA_PROP_CUSTOM_INVALID
 
+/**
+ * Registers a custom property type.
+ * @param funcs	The functions that the custom property
+ *				will use.
+ * @return		The newly-created @a WimaCustomProperty,
+ *				or @a WIMA_PROP_CUSTOM_INVALID on error.
+ */
 WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -637,14 +653,14 @@ WimaProperty wima_prop_operator_register(const char* name, const char* label, co
  *					is used as a tooltip.
  * @param icon		The icon to use with the property.
  * @param ptr		The initial pointer.
- * @param draw		The function to draw this property.
+ * @param type		The widget type.
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  * @ptr_lifetime	Wima assumes that @a ptr is allocated
  *					and freed by the client.
  */
 WimaProperty wima_prop_ptr_register(const char* name, const char* label, const char* desc,
-                                       WimaIcon icon, WimaCustomProperty type, void* ptr);
+                                    WimaIcon icon, WimaCustomProperty type, void* ptr);
 
 /**
  * Returns the pointer contained in @a wph.

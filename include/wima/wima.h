@@ -1630,26 +1630,127 @@ bool wima_widget_isFocused(WimaWidget wdgt) yinline;
  * (subareas of an area).
  */
 
+/**
+ * A WimaRegion is an ordered section of a @a WimaArea.
+ * @a WimaRegions in a @a WimaArea are drawn in the
+ * order that they were given to the area, and they
+ * only take up as much space as they need (unless
+ * resized). That means that the region with the most
+ * space (and the most important) is actually the last
+ * one. All the others should have widget that help the
+ * user work in the last region.
+ */
 typedef uint16_t WimaRegion;
 
-typedef WimaStatus (*WimaRegionLayout)(WimaRegion region);
+/**
+ * A function type to lay out a region.
+ * @param region	The region to lay out.
+ * @param root		The root layout.
+ * @return			WIMA_STATUS_SUCCESS on success,
+ *					an error code otherwise.
+ */
+typedef WimaStatus (*WimaRegionLayout)(WimaRegion region, WimaLayout root);
 
+/**
+ * @def WIMA_REGION_INVALID
+ * A handle to an invalid @a WimaRegion.
+ */
 #define WIMA_REGION_INVALID ((WimaRegion) -1)
 
+/**
+ * @def WIMA_REGION_MAX
+ * The max number of @a WimaRegions that
+ * the client can register.
+ */
 #define WIMA_REGION_MAX WIMA_REGION_INVALID
 
+/**
+ * Takes a set of flags meant for @a WimaRegions
+ * and adds the vertical flag to them.
+ *
+ * The vertical flag is whether the region should
+ * be vertical or not.
+ * @param flags	The flags to add to.
+ * @return		@a flags with the vertical bit set.
+ */
 uint8_t wima_region_setVerticalFlag(uint8_t flags) yconst yinline;
 
+/**
+ * Takes a set of flags meant for @a WimaRegions
+ * and clears the vertical flag from them.
+ *
+ * The vertical flag is whether the region should
+ * be vertical or not.
+ * @param flags	The flags to remove from.
+ * @return		@a flags with the vertical bit
+ *				cleared.
+ */
 uint8_t wima_region_clearVerticalFlag(uint8_t flags) yconst yinline;
 
+/**
+ * Takes a set of flags meant for @a WimaRegions
+ * and adds the resizable flag to them.
+ *
+ * The resizable flag is whether the region should
+ * be resizable or not.
+ * @param flags	The flags to add to.
+ * @return		@a flags with the resizable bit set.
+ */
 uint8_t wima_region_setResizableFlag(uint8_t flags) yconst yinline;
 
+/**
+ * Takes a set of flags meant for @a WimaRegions
+ * and clears the resizable flag from them.
+ *
+ * The resizable flag is whether the region should
+ * be resizable or not.
+ * @param flags	The flags to remove from.
+ * @return		@a flags with the resizable bit
+ *				cleared.
+ */
 uint8_t wima_region_clearResizableFlag(uint8_t flags) yconst yinline;
 
+/**
+ * Takes a set of flags meant for @a WimaRegions
+ * and adds the scroll flags to them, if the
+ * corresponding boolean parameters are set.
+ *
+ * The scroll flags are whether the region should
+ * be scrollable (in the specified direction) or not.
+ * @param flags			The flags to add to.
+ * @param vertical		true if the vertical scroll
+ *						flag should be set, false
+ *						otherwise.
+ * @param horizontal	true if the horizontal
+ *						scroll flag should be set,
+ *						false otherwise.
+ * @return				@a flags with the scroll
+ *						bits set.
+ */
 uint8_t wima_region_setScrollFlags(uint8_t flags, bool vertical, bool horizontal) yconst yinline;
 
+/**
+ * Takes a set of flags meant for @a WimaRegions
+ * and clears the scroll flags from them.
+ *
+ * The scroll flags are whether the region should
+ * be scrollable (in the specified direction) or not.
+ * @param flags	The flags to remove from.
+ * @return		@a flags with the scroll bits
+ *				cleared.
+ */
 uint8_t wima_region_clearScrollFlags(uint8_t flags) yconst yinline;
 
+/**
+ * Registers and returns a @a WimaRegion. The @a flags param can be generated
+ * with @a wima_region_setVerticalFlag(), @a wima_region_clearVerticalFlag(),
+ * @a wima_region_setResizableFlag(), @a wima_region_clearResizableFlag(),
+ * @a wima_region_setScrollFlags(), and @a wima_region_clearScrollFlags().
+ * See those functions for more information on the flags.
+ * @param layout	The function to lay out the region.
+ * @param flags		The flags for the @a WimaRegion.
+ * @return
+ */
 WimaRegion wima_region_register(WimaRegionLayout layout, uint8_t flags);
 
 /**

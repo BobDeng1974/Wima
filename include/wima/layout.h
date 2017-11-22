@@ -244,6 +244,13 @@ WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags) yinline;
  */
 WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags, uint32_t cols) yinline;
 
+/**
+ * Inserts a widget into @a parent. The type of widget depends on @a prop.
+ * @param parent	The parent layout to insert into.
+ * @param prop		The type of widget to insert.
+ * @return			The inserted widget.
+ * @pre				@a parent must be a valid WimaLayout.
+ */
 WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop);
 
 /**
