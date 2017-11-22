@@ -268,20 +268,25 @@ typedef struct WimaWin {
 	/// The GLFW window.
 	GLFWwindow* window;
 
-	/// The window name. This starts as the app name.
-	DynaString name;
-
-	/// The user pointer for the window.
-	void* user;
-
-	/// The vector of workspaces (area trees).
-	DynaVector workspaces;
-
-	/// The vector of workspace minimum sizes.
-	DynaVector workspaceSizes;
+	/// The memory map for widgets in the window.
+	DynaPool widgetData;
 
 	/// The render context for the window.
 	WimaRenderContext render;
+
+	/// The window's framebuffer size. Even though
+	/// we can just query GLFW for this, it is used
+	/// often enough that storing it is a good idea
+	/// for speed.
+	WimaSizeS fbsize;
+
+	/// The window's size. Even though we can just
+	/// query GLFW for this, it is used often enough
+	/// that storing it is a good idea for speed.
+	WimaSizeS winsize;
+
+	/// The pixel ratio of the window.
+	float pixelRatio;
 
 	/// Index currently set in the area stack.
 	/// Because it's a stack, it also is the
@@ -294,20 +299,11 @@ typedef struct WimaWin {
 	/// The menu icon.
 	WimaIcon menuIcon;
 
-	/// The pixel ratio of the window.
-	float pixelRatio;
-
 	/// The area stack.
 	DynaTree treeStack[WIMA_WINDOW_STACK_MAX];
 
-	/// The memory map for widgets in the window.
-	DynaPool widgetData;
-
-	/// The window's framebuffer size.
-	WimaSizeS fbsize;
-
-	/// The window's size.
-	WimaSizeS winsize;
+	/// The window name. This starts as the app name.
+	DynaString name;
 
 	/// The current menu, or NULL.
 	WimaMenu* menu;
@@ -321,6 +317,15 @@ typedef struct WimaWin {
 	/// relative to the cursor every time, making
 	/// it easy to click items that are used a lot.
 	WimaVec menuOffset;
+
+	/// The user pointer for the window.
+	void* user;
+
+	/// The vector of workspaces (area trees).
+	DynaVector workspaces;
+
+	/// The vector of workspace minimum sizes.
+	DynaVector workspaceSizes;
 
 	/// The current cursor.
 	GLFWcursor* cursor;
