@@ -100,6 +100,9 @@ typedef struct WimaG {
 	/// Editors (area types).
 	DynaVector editors;
 
+	/// Regions (areas of an editor).
+	DynaVector regions;
+
 	/// Icons and their markers in the @a iconPathWindings vector.
 	DynaVector icons;
 
@@ -189,6 +192,9 @@ typedef enum WimaAssertType {
 	WIMA_ASSERT_DIALOG_MAX,
 	WIMA_ASSERT_DIALOG_TREE_VALID,
 	WIMA_ASSERT_DIALOG_REGISTERED,
+
+	WIMA_ASSERT_REG,
+	WIMA_ASSERT_REG_LAYOUT_NULL,
 
 	WIMA_ASSERT_AREA,
 	WIMA_ASSERT_AREA_LEAF,

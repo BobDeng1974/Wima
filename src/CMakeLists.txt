@@ -60,6 +60,7 @@ set(WIMA_SRC
 	"widget.c"
 	"layout.c"
 	"callbacks.c"
+	"region.c"
 	"editor.c"
 	"area.c"
 	"tree.c"

@@ -50,6 +50,7 @@
 #include <wima/wima.h>
 
 #include "callbacks.h"
+#include "region.h"
 #include "editor.h"
 #include "area.h"
 #include "window.h"
@@ -88,6 +89,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.imagePaths = NULL;
 	wg.iconPathWindings = NULL;
 	wg.icons = NULL;
+	wg.regions = NULL;
 	wg.editors = NULL;
 	wg.dialogs = NULL;
 	wg.workspaceProps = NULL;
@@ -133,6 +135,13 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	// Create and if error, exit.
 	wg.customProps = dvec_create(0, NULL, NULL, sizeof(WimaCustProp));
 	if (yunlikely(!wg.customProps)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Create and if error, exit.
+	wg.regions = dvec_create(0, NULL, NULL, sizeof(WimaReg));
+	if (yunlikely(!wg.regions)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -358,6 +367,7 @@ void wima_exit() {
 		dvec_free(wg.workspaces);
 	}
 
+	// Free the dialogs, if they exist.
 	if (wg.dialogs) {
 		dvec_free(wg.dialogs);
 	}
@@ -365,6 +375,11 @@ void wima_exit() {
 	// Free the editors, if they exist.
 	if (wg.editors) {
 		dvec_free(wg.editors);
+	}
+
+	// Free the dialogs, if they exist.
+	if (wg.regions) {
+		dvec_free(wg.regions);
 	}
 
 	// Free the editors, if they exist.

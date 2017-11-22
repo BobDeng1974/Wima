@@ -1631,13 +1631,13 @@ bool wima_widget_isFocused(WimaWidget wdgt) yinline;
  */
 
 /**
- * A WimaRegion is an ordered section of a @a WimaArea.
- * @a WimaRegions in a @a WimaArea are drawn in the
- * order that they were given to the area, and they
+ * A WimaRegion is an ordered section of a @a WimaEditor.
+ * @a WimaRegions in a @a WimaEditor are drawn in the
+ * order that they were given to the editor, and they
  * only take up as much space as they need (unless
  * resized). That means that the region with the most
  * space (and the most important) is actually the last
- * one. All the others should have widget that help the
+ * one. All the others should have widgets that help the
  * user work in the last region.
  */
 typedef uint16_t WimaRegion;

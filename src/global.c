@@ -134,6 +134,9 @@ const char* wima_assert_msgs[] = {
     "dialog tree is not valid",
     "no dialogs are registered",
 
+    "region is not valid",
+    "region layout function is NULL",
+
     "area is not valid",
     "area is a parent, not a leaf",
     "area is a leaf, not a parent",

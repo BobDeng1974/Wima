@@ -92,12 +92,12 @@ typedef struct WimaLayout {
  * Takes an initial flag value and sets the expand bits. If @a horizontal is
  * true, the horizontal expand bit is set. Same goes for vertical.
  * @param flags			The initial flag value to use.
- * @param horizontal	Whether the horizontal expand bit should be set.
  * @param vertical		Whether the vertical expand bit should be set.
+ * @param horizontal	Whether the horizontal expand bit should be set.
  * @return				A new set of flags with the old flags value plus
  *						the desired expand bits set.
  */
-uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical) yconst yinline;
+uint16_t wima_layout_setExpandFlags(uint16_t flags, bool vertical, bool horizontal) yconst yinline;
 
 /**
  * Takes an initial flag value and clears the expand bits.
@@ -110,12 +110,12 @@ uint16_t wima_layout_clearExpandFlags(uint16_t flags) yconst yinline;
  * Takes an initial flag value and sets the scroll bits. If @a horizontal is
  * true, the horizontal scroll bit is set. Same goes for vertical.
  * @param flags			The initial flag value to use.
- * @param horizontal	Whether the horizontal scroll bit should be set.
  * @param vertical		Whether the vertical scroll bit should be set.
+ * @param horizontal	Whether the horizontal scroll bit should be set.
  * @return				A new set of flags with the old flags value plus
  *						the desired scroll bits set.
  */
-uint16_t wima_layout_setScrollFlags(uint16_t flags, bool horizontal, bool vertical) yconst yinline;
+uint16_t wima_layout_setScrollFlags(uint16_t flags, bool vertical, bool horizontal) yconst yinline;
 
 /**
  * Takes an initial flag value and clears the scroll bits.

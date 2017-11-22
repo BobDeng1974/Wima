@@ -50,12 +50,12 @@ wima_assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-uint16_t wima_layout_setExpandFlags(uint16_t flags, bool horizontal, bool vertical) {
+uint16_t wima_layout_setExpandFlags(uint16_t flags, bool vertical, bool horizontal) {
 
 	wima_assert_init;
 
-	flags |= horizontal ? WIMA_LAYOUT_FILL_HOR : 0;
 	flags |= vertical ? WIMA_LAYOUT_FILL_VER : 0;
+	flags |= horizontal ? WIMA_LAYOUT_FILL_HOR : 0;
 
 	return flags;
 }
@@ -69,12 +69,12 @@ uint16_t wima_layout_clearExpandFlags(uint16_t flags) {
 	return flags;
 }
 
-uint16_t wima_layout_setScrollFlags(uint16_t flags, bool horizontal, bool vertical) {
+uint16_t wima_layout_setScrollFlags(uint16_t flags, bool vertical, bool horizontal) {
 
 	wima_assert_init;
 
-	flags |= horizontal ? WIMA_LAYOUT_SCROLL_HOR : 0;
 	flags |= vertical ? WIMA_LAYOUT_SCROLL_VER : 0;
+	flags |= horizontal ? WIMA_LAYOUT_SCROLL_HOR : 0;
 
 	return flags;
 }
