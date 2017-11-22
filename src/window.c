@@ -52,7 +52,6 @@
 #include <GLFW/glfw3.h>
 
 #include "render/render.h"
-#include "math/math.h"
 
 #include "callbacks.h"
 #include "editor.h"
@@ -735,11 +734,16 @@ WimaSize wima_window_size(WimaWindow wwh) {
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	WimaSize size;
 
-	glfwGetWindowSize(win->window, (int*) &size.w, (int*) &size.h);
+	// Get the size from GLFW.
+	glfwGetWindowSize(win->window, &size.w, &size.h);
+
+	wassert(win->winsize.w == size.w && win->winsize.h == size.h,
+	        WIMA_ASSERT_WIN_SIZE_MISMATCH);
 
 	return size;
 }
@@ -774,17 +778,15 @@ WimaSize wima_window_framebufferSize(WimaWindow wwh) {
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-#ifdef __YASSERT__
+	WimaSize size;
 
-	int w, h;
+	// Get the size from GLFW.
+	glfwGetFramebufferSize(win->window, &size.w, &size.h);
 
-	glfwGetFramebufferSize(win->window, &w, &h);
+	wassert(win->fbsize.w == size.w && win->fbsize.h == size.h,
+	        WIMA_ASSERT_WIN_FB_SIZE_MISMATCH);
 
-	wassert(win->fbsize.w == w && win->fbsize.h == h, WIMA_ASSERT_WIN_FB_SIZE_MISMATCH);
-
-#endif
-
-	return wima_size_int(win->fbsize);
+	return size;
 }
 
 void wima_window_setUserPointer(WimaWindow wwh, void* user) {

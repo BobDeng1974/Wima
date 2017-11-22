@@ -118,16 +118,6 @@ float wima_clampf(float v, float min, float max) {
 	return (v > max) ? max : ((v < min) ? min : v);
 }
 
-WimaSize wima_size_int(WimaSizeS size) {
-
-	WimaSize result;
-
-	result.w = size.w;
-	result.h = size.h;
-
-	return result;
-}
-
 WimaRect wima_rect(WimaVec pos, WimaSize size) {
 
 	WimaRect r;
