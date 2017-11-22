@@ -948,7 +948,7 @@ WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs) {
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-DynaStatus wima_prop_copy(size_t count, void** dests, void** srcs) {
+DynaStatus wima_prop_copy(void** dests, void** srcs) {
 	wassert(false, WIMA_ASSERT_INVALID_OPERATION);
 	abort();
 }
@@ -972,12 +972,12 @@ bool wima_prop_free(WimaProperty wph) {
 	};
 
 	// Free the property.
-	wima_prop_destroy(2, ptrs);
+	wima_prop_destroy(wg.props, ptrs);
 
 	return true;
 }
 
-void wima_prop_destroy(size_t count, void** ptrs) {
+void wima_prop_destroy(DynaNVector vec, void** ptrs) {
 
 	wima_assert_init;
 

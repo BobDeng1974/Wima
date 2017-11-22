@@ -44,6 +44,8 @@ extern "C" {
 
 #include <yc/assert.h>
 
+#include <dyna/nvector.h>
+
 #include <wima/prop.h>
 #include <wima/render.h>
 
@@ -241,12 +243,11 @@ typedef union WimaPropData {
 /**
  * Copies a property. In actuality, this just aborts
  * since copying props should not happen.
- * @param count	The number of arrays to copy.
  * @param dests	An array of pointers to destinations.
  * @param srcs	An array of pointers to sources.
  * @return		An error code (doesn't return).
  */
-DynaStatus wima_prop_copy(size_t count, void** dests, void** srcs) ynoreturn;
+DynaStatus wima_prop_copy(void** dests, void** srcs) ynoreturn;
 
 /**
  * If possible, frees the property associated with @a wph.
@@ -258,10 +259,10 @@ bool wima_prop_free(WimaProperty wph);
 
 /**
  * Destroys a property. This is a Dyna NDestructFunc.
- * @param count	The count of arrays to destroy elements from.
+ * @param vec	The vector that is destroying elements.
  * @param ptrs	The array of elements to destroy.
  */
-void wima_prop_destroy(size_t count, void** ptrs);
+void wima_prop_destroy(DynaNVector vec, void** ptrs);
 
 #ifdef __YASSERT__
 /**

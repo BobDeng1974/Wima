@@ -553,7 +553,7 @@ static bool wima_area_node_valid(DynaTree editors, DynaNode node) {
 	return result;
 }
 
-void wima_area_destroy(void* ptr) {
+void wima_area_destroy(DynaTree tree, void* ptr) {
 
 	WimaAr* area = (WimaAr*) ptr;
 
