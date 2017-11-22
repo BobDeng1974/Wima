@@ -734,16 +734,25 @@ WimaSize wima_window_size(WimaWindow wwh) {
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+	WimaSize size;
+
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	WimaSize size;
+	// Fill the size.
+	size.w = win->winsize.w;
+	size.h = win->winsize.h;
+
+#ifdef __YASSERT__
+
+	int w, h;
 
 	// Get the size from GLFW.
-	glfwGetWindowSize(win->window, &size.w, &size.h);
+	glfwGetWindowSize(win->window, &w, &h);
 
-	wassert(win->winsize.w == size.w && win->winsize.h == size.h,
-	        WIMA_ASSERT_WIN_SIZE_MISMATCH);
+	wassert(size.w == w && size.h == h, WIMA_ASSERT_WIN_SIZE_MISMATCH);
+
+#endif
 
 	return size;
 }
@@ -776,15 +785,24 @@ WimaSize wima_window_framebufferSize(WimaWindow wwh) {
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
 	WimaSize size;
 
-	// Get the size from GLFW.
-	glfwGetFramebufferSize(win->window, &size.w, &size.h);
+	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	wassert(win->fbsize.w == size.w && win->fbsize.h == size.h,
-	        WIMA_ASSERT_WIN_FB_SIZE_MISMATCH);
+	// Fill the size.
+	size.w = win->fbsize.w;
+	size.h = win->fbsize.h;
+
+#ifdef __YASSERT__
+
+	int w, h;
+
+	// Get the size from GLFW.
+	glfwGetFramebufferSize(win->window, &w, &h);
+
+	wassert(size.w == w && size.h == h, WIMA_ASSERT_WIN_FB_SIZE_MISMATCH);
+
+#endif
 
 	return size;
 }
