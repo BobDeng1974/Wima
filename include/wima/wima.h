@@ -1811,11 +1811,11 @@ typedef bool (*WimaAreaMouseEnterFunc)(WimaArea area, bool entered);
  */
 typedef struct WimaEditorFuncs {
 
-	/// The function to generate the user pointer.
-	WimaAreaInitDataFunc gen_ptr;
+	/// The function to initialize the user pointer.
+	WimaAreaInitDataFunc init;
 
 	/// The function to free the user pointer.
-	WimaAreaFreeDataFunc free_ptr;
+	WimaAreaFreeDataFunc free;
 
 	/// The function to layout an area.
 	WimaAreaLayoutFunc layout;

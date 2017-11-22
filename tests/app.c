@@ -361,8 +361,8 @@ int main() {
 	}
 
 	WimaEditorFuncs funcs;
-	funcs.gen_ptr = cb_userPtr;
-	funcs.free_ptr = cb_userPtrFree;
+	funcs.init = cb_userPtr;
+	funcs.free = cb_userPtrFree;
 	funcs.layout = cb_layout;
 	funcs.key = cb_key;
 	funcs.enter = cb_mouseEnterArea;
