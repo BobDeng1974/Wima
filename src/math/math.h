@@ -47,7 +47,21 @@ extern "C" {
 
 #include "../render/render.h"
 
+/**
+ * @file math/math.h
+ */
+
+/**
+ * @defgroup math_internal math_internal
+ * Internal functions for math.
+ * @{
+ */
+
 WimaSize wima_size_int(WimaSizeS size) yinline;
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }
