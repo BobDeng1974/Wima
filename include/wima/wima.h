@@ -1781,14 +1781,13 @@ typedef void* (*WimaAreaInitDataFunc)(WimaArea area);
 typedef void (*WimaAreaFreeDataFunc)(void* ptr);
 
 /**
- * A function to layout an area.
- * @param area		The area to layout.
- * @param layout	The root layout.
- * @param size		The size of the area.
- * @return			WIMA_STATUS_SUCCESS on success,
- *					an error code otherwise.
+ * A function to layout an area's header.
+ * @param area		The area whose header will be laid out.
+ * @param layout	The root layout. This will be a row layout.
+ * @return			WIMA_STATUS_SUCCESS on success, an error
+ *					code otherwise.
  */
-typedef WimaStatus (*WimaAreaLayoutFunc)(WimaArea area, WimaLayout layout, WimaSize size);
+typedef WimaStatus (*WimaAreaHeaderLayoutFunc)(WimaArea area, WimaLayout layout);
 
 /**
  * A function callback for key presses inside an area.
@@ -1817,8 +1816,8 @@ typedef struct WimaEditorFuncs {
 	/// The function to free the user pointer.
 	WimaAreaFreeDataFunc free;
 
-	/// The function to layout an area.
-	WimaAreaLayoutFunc layout;
+	/// The function to layout an area's header.
+	WimaAreaHeaderLayoutFunc layout;
 
 	/// The function to handle key presses.
 	WimaAreaKeyFunc key;
@@ -1830,14 +1829,50 @@ typedef struct WimaEditorFuncs {
 
 /**
  * Registers a editor type that can then be used to create a WimaWorkspace.
+ *
+ * The list of regions is taken as variadic args, and they must all be of
+ * type @a WimaRegion.
  * @param name		The editor's name. This is used as a label.
  * @param funcs		The functions that the editor/area will use.
  * @param icon		The icon for the editor.
  * @param itemCap	The total capacity for items (layouts and widgets)
+ * @param nRegions	The number of regions.
  *					that the editor can handle.
  * @return			The editor.
  */
-WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, uint16_t itemCap);
+WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
+                                 uint16_t itemCap, int nRegions, ...);
+
+/**
+ * Registers a editor type that can then be used to create a WimaWorkspace.
+ *
+ * The list of regions is taken as a va_list, and they must all be of type
+ * @a WimaRegion.
+ * @param name		The editor's name. This is used as a label.
+ * @param funcs		The functions that the editor/area will use.
+ * @param icon		The icon for the editor.
+ * @param itemCap	The total capacity for items (layouts and widgets)
+ * @param nRegions	The number of regions.
+ * @param regions	A list of regions.
+ *					that the editor can handle.
+ * @return			The editor.
+ */
+WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
+                                 uint16_t itemCap, int nRegions, va_list regions);
+
+/**
+ * Registers a editor type that can then be used to create a WimaWorkspace.
+ * @param name		The editor's name. This is used as a label.
+ * @param funcs		The functions that the editor/area will use.
+ * @param icon		The icon for the editor.
+ * @param itemCap	The total capacity for items (layouts and widgets)
+ * @param nRegions	The number of regions.
+ * @param regions	A list of regions.
+ *					that the editor can handle.
+ * @return			The editor.
+ */
+WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
+                                uint16_t itemCap, int nRegions, WimaRegion regions[]);
 
 /**
  * Sets the global user pointer for the editor. All areas created from

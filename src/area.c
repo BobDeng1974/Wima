@@ -825,10 +825,10 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 		// Get the editor layout function.
 		WimaEdtr* editor = dvec_get(wg.editors, area->area.type);
-		WimaAreaLayoutFunc layout = editor->funcs.layout;
+		WimaAreaHeaderLayoutFunc layout = editor->funcs.layout;
 
 		// Do the layout. The layout function is guaranteed to be non-null.
-		status = layout(wah, wlh, size);
+		// TODO: status = layout(wah, wlh, size);
 
 		// Check for error.
 		if (yunlikely(status)) {

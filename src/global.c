@@ -145,8 +145,8 @@ const char* wima_assert_msgs[] = {
     "editor is not valid",
     "client tried to create too many editors",
     "no editors are registered",
-    "editor layout function is null",
     "editor item capacity is 0",
+    "editor must have at least 1 region",
 
     "item is not a layout",
     "item is not a widget",

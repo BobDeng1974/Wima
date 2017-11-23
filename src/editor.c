@@ -52,11 +52,54 @@ wima_assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, uint16_t itemCap) {
-
+WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
+                                 uint16_t itemCap, int nRegions, ...)
+{
 	wima_assert_init;
 
-	wassert(funcs.layout != NULL, WIMA_ASSERT_EDITOR_LAYOUT);
+	wassert(nRegions > 0, WIMA_ASSERT_EDITOR_NUM_REGIONS);
+
+	// Declare the variadic list.
+	va_list regions;
+	va_start(regions, nRegions);
+
+	// Register the region.
+	WimaEditor wed = wima_editor_vregister(name, funcs, icon, itemCap, nRegions, regions);
+
+	// Clean up.
+	va_end(regions);
+
+	return wed;
+}
+
+WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
+                                 uint16_t itemCap, int nRegions, va_list regions)
+{
+	wima_assert_init;
+
+	wassert(nRegions > 0, WIMA_ASSERT_EDITOR_NUM_REGIONS);
+
+	// Create a list of regions.
+	WimaRegion regs[nRegions];
+
+	// Load the regions into the list.
+	for (int i = 0; i < nRegions; ++i) {
+		regs[i] = (WimaRegion) va_arg(regions, int);
+	}
+
+	// Register the region.
+	return wima_editor_register(name, funcs, icon, itemCap, nRegions, regs);
+}
+
+WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
+                                uint16_t itemCap, int nRegions, WimaRegion regions[])
+{
+	wima_assert_init;
+
+	wassert(nRegions > 0, WIMA_ASSERT_EDITOR_NUM_REGIONS);
+
+	// TODO: Add regions to editors.
+
 	wassert(itemCap > 0, WIMA_ASSERT_EDITOR_ITEM_CAP);
 
 	// Get the index of the new editor.

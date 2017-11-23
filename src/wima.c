@@ -122,7 +122,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Create and if error, exit.
-	wg.props = dnvec_create(2, 0, wima_prop_copy, wima_prop_destroy,
+	wg.props = dnvec_ncreate(2, 0, wima_prop_copy, wima_prop_destroy,
 	                        sizeof(WimaPropInfo), sizeof(WimaPropData));
 	if (yunlikely(!wg.props)) {
 		wima_exit();
@@ -175,7 +175,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Create and if error, exit.
-	wg.icons = dnvec_create(2, 0, wima_icon_copy, wima_icon_destroy,
+	wg.icons = dnvec_ncreate(2, 0, wima_icon_copy, wima_icon_destroy,
 	                        sizeof(WimaIcn), sizeof(WimaIconMarker));
 	if (yunlikely(!wg.icons)) {
 		wima_exit();
