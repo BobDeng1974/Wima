@@ -1689,6 +1689,29 @@ uint8_t wima_region_clearVerticalFlag(uint8_t flags) yconst yinline;
 
 /**
  * Takes a set of flags meant for @a WimaRegions
+ * and adds the left (top) flag to them.
+ *
+ * The left (top) flag is whether the region should
+ * be on the left (or at the top) or not.
+ * @param flags	The flags to add to.
+ * @return		@a flags with the left (top) bit set.
+ */
+uint8_t wima_region_setLeftFlag(uint8_t flags) yconst yinline;
+
+/**
+ * Takes a set of flags meant for @a WimaRegions
+ * and clears the left (top) flag from them.
+ *
+ * The left (top) flag is whether the region should
+ * be on the left (or at the top) or not.
+ * @param flags	The flags to remove from.
+ * @return		@a flags with the left (top) bit
+ *				cleared.
+ */
+uint8_t wima_region_clearLeftFlag(uint8_t flags) yconst yinline;
+
+/**
+ * Takes a set of flags meant for @a WimaRegions
  * and adds the resizable flag to them.
  *
  * The resizable flag is whether the region should

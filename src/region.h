@@ -49,7 +49,7 @@ extern "C" {
  */
 
 /**
- * @defgroup region_internal
+ * @defgroup region_internal region_internal
  * Internal functions and data structures for regions
  * (section templates). I chose region as the user
  * facing word because it sounds better.
@@ -63,22 +63,28 @@ extern "C" {
 #define WIMA_REG_VERTICAL (0x01)
 
 /**
+ * @def WIMA_REG_LEFT
+ * The left (up) bit in the flags.
+ */
+#define WIMA_REG_LEFT (0x02)
+
+/**
  * @def WIMA_REG_RESIZABLE
  * The resizable bit in the flags.
  */
-#define WIMA_REG_RESIZABLE (0x02)
+#define WIMA_REG_RESIZABLE (0x04)
 
 /**
  * @def WIMA_REG_SCROLL_VERTICAL
  * The vertical scroll bit in the flags.
  */
-#define WIMA_REG_SCROLL_VERTICAL (0x04)
+#define WIMA_REG_SCROLL_VERTICAL (0x08)
 
 /**
  * @def WIMA_REG_SCROLL_HORIZONTAL
  * The horizontal scroll bit in the flags.
  */
-#define WIMA_REG_SCROLL_HORIZONTAL (0x08)
+#define WIMA_REG_SCROLL_HORIZONTAL (0x10)
 
 /**
  * The data for a WimaRegion.
