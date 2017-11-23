@@ -89,6 +89,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.imagePaths = NULL;
 	wg.iconPathWindings = NULL;
 	wg.icons = NULL;
+	wg.editorRegions = NULL;
 	wg.regions = NULL;
 	wg.editors = NULL;
 	wg.dialogs = NULL;
@@ -135,6 +136,13 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	// Create and if error, exit.
 	wg.customProps = dvec_create(0, NULL, NULL, sizeof(WimaCustProp));
 	if (yunlikely(!wg.customProps)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Create and if error, exit.
+	wg.editorRegions = dvec_create(0, NULL, NULL, sizeof(WimaRegion));
+	if (yunlikely(!wg.editorRegions)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -379,6 +387,11 @@ void wima_exit() {
 
 	// Free the dialogs, if they exist.
 	if (wg.regions) {
+		dvec_free(wg.regions);
+	}
+
+	// Free the dialogs, if they exist.
+	if (wg.editorRegions) {
 		dvec_free(wg.regions);
 	}
 

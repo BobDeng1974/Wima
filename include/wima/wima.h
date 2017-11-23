@@ -183,6 +183,8 @@ typedef uint8_t WimaWindow;
 /**
  * @def WIMA_WINDOW_STACK_MAX
  * The max capacity of an area stack in a window.
+ * Honestly, there shouldn't be a need for more
+ * than one.
  */
 #define WIMA_WINDOW_STACK_MAX (8)
 

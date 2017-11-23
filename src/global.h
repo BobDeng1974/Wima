@@ -103,6 +103,9 @@ typedef struct WimaG {
 	/// Regions (areas of an editor).
 	DynaVector regions;
 
+	/// A list of regions for each editor.
+	DynaVector editorRegions;
+
 	/// Icons and their markers in the @a iconPathWindings vector.
 	DynaVector icons;
 
