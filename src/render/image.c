@@ -106,7 +106,7 @@ WimaImage wima_image_load(const char * const path, WimaImageFlags flags) {
 				}
 
 				// Pop the image from the window.
-				wima_window_popImage(dvec_get(wg.windows, j));
+				wima_window_removeImage(dvec_get(wg.windows, j));
 			}
 
 			// Tell the client about the error.

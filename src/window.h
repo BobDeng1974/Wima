@@ -369,7 +369,7 @@ WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags f
  * images in windows could mismatch.
  * @param win	The window to pop an image from.
  */
-void wima_window_popImage(WimaWin* win);
+void wima_window_removeImage(WimaWin* win);
 
 /**
  * Sets @a win as dirty, and if @a layout is true, forces a layout.

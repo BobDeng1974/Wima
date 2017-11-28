@@ -1619,7 +1619,7 @@ WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags f
 	return dvec_push(win->images, &id) ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
 }
 
-void wima_window_popImage(WimaWin* win) {
+void wima_window_removeImage(WimaWin* win) {
 
 	// Get the length.
 	size_t len = dvec_len(win->images);
