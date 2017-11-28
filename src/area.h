@@ -100,10 +100,13 @@ typedef struct WimaArCtx {
 	WimaItem* items;
 
 	/// Total item capacity.
-	uint16_t itemCap;
+	uint32_t itemCap;
 
 	/// Current number of items allocated.
-	uint16_t itemCount;
+	uint32_t itemCount;
+
+	/// Data for widgets.
+	DynaPool widgetData;
 
 } WimaArCtx;
 

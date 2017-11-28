@@ -121,16 +121,18 @@ uint8_t wima_region_clearScrollFlags(uint8_t flags) {
 	return flags;
 }
 
-WimaRegion wima_region_register(WimaRegionLayout layout, uint8_t flags) {
+WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8_t flags) {
 
 	wima_assert_init;
 
 	wassert(layout != NULL, WIMA_ASSERT_REG_LAYOUT_NULL);
+	wassert(itemCap > 0, WIMA_ASSERT_REG_ITEM_CAP);
 
 	WimaReg reg;
 
 	// Fill the struct.
 	reg.layout = layout;
+	reg.itemCap = itemCap;
 	reg.flags = flags;
 
 	// Get the length of the vector,

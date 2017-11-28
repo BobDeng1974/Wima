@@ -71,16 +71,15 @@ typedef struct WimaEdtr {
 	/// The icon.
 	WimaIcon icon;
 
+	/// The number of regions this editor has.
+	uint8_t numRegions;
+
 	/// The item capacity for all
 	/// areas made from this editor.
-	uint16_t itemCap;
+	uint32_t itemCap;
 
-	/// The index of the start of this editor's region
-	/// list in the global wg.editorRegions vector.
-	uint32_t regions;
-
-	/// The number of regions this editor has.
-	uint16_t numRegions;
+	/// The list of regions.
+	WimaRegion regions[WIMA_EDITOR_MAX_REGIONS];
 
 } WimaEdtr;
 

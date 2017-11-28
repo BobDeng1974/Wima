@@ -361,7 +361,7 @@ int main() {
 	}
 
 	// Create a region and check for error.
-	WimaRegion region = wima_region_register(NULL, 0);
+	WimaRegion region = wima_region_register(NULL, UINT16_MAX, 0);
 	if (region == WIMA_REGION_INVALID) {
 		return 1;
 	}

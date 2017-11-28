@@ -34,6 +34,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <string.h>
+
 #include <yc/assert.h>
 
 #include <dyna/dyna.h>
@@ -43,6 +45,7 @@
 
 #include "global.h"
 #include "editor.h"
+#include "region.h"
 
 wima_global_decl;
 wima_error_descs_decl;
@@ -52,19 +55,17 @@ wima_assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
-                                 uint16_t itemCap, int nRegions, ...)
-{
+WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, int nRegions, ...) {
 	wima_assert_init;
 
-	wassert(nRegions > 0, WIMA_ASSERT_EDITOR_NUM_REGIONS);
+	wassert(nRegions > 0 && nRegions <= WIMA_EDITOR_MAX_REGIONS, WIMA_ASSERT_EDITOR_NUM_REGIONS);
 
 	// Declare the variadic list.
 	va_list regions;
 	va_start(regions, nRegions);
 
 	// Register the region.
-	WimaEditor wed = wima_editor_vregister(name, funcs, icon, itemCap, nRegions, regions);
+	WimaEditor wed = wima_editor_vregister(name, funcs, icon, nRegions, regions);
 
 	// Clean up.
 	va_end(regions);
@@ -72,12 +73,12 @@ WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, 
 	return wed;
 }
 
-WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
-                                 uint16_t itemCap, int nRegions, va_list regions)
+WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs,
+                                 WimaIcon icon, int nRegions, va_list regions)
 {
 	wima_assert_init;
 
-	wassert(nRegions > 0, WIMA_ASSERT_EDITOR_NUM_REGIONS);
+	wassert(nRegions > 0 && nRegions <= WIMA_EDITOR_MAX_REGIONS, WIMA_ASSERT_EDITOR_NUM_REGIONS);
 
 	// Create a list of regions.
 	WimaRegion regs[nRegions];
@@ -88,19 +89,15 @@ WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, 
 	}
 
 	// Register the region.
-	return wima_editor_register(name, funcs, icon, itemCap, nRegions, regs);
+	return wima_editor_register(name, funcs, icon, nRegions, regs);
 }
 
-WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
-                                uint16_t itemCap, int nRegions, WimaRegion regions[])
+WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs,
+                                WimaIcon icon, int nRegions, WimaRegion regions[])
 {
 	wima_assert_init;
 
-	wassert(nRegions > 0, WIMA_ASSERT_EDITOR_NUM_REGIONS);
-
-	// TODO: Add regions to editors.
-
-	wassert(itemCap > 0, WIMA_ASSERT_EDITOR_ITEM_CAP);
+	wassert(nRegions > 0 && nRegions <= WIMA_EDITOR_MAX_REGIONS, WIMA_ASSERT_EDITOR_NUM_REGIONS);
 
 	// Get the index of the new editor.
 	size_t idx = dvec_len(wg.editors);
@@ -124,7 +121,21 @@ WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, W
 	// Set up  the fields.
 	edtr.funcs = funcs;
 	edtr.icon = icon;
-	edtr.itemCap = itemCap;
+
+	// The sum of the item caps.
+	uint32_t sum = 0;
+
+	// Loop through the regions and add all item caps.
+	for (int i = 0; i < nRegions; ++i) {
+		WimaReg* reg = dvec_get(wg.regions, i);
+		sum += reg->itemCap;
+	}
+
+	// Set up the item cap.
+	edtr.itemCap = sum;
+
+	// Copy the regions.
+	memcpy(edtr.regions, regions, nRegions * sizeof(WimaRegion));
 
 	// Push onto the vector and check for error.
 	DynaStatus status = dvec_push(wg.editors, &edtr);
@@ -133,7 +144,7 @@ WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, W
 		// Free the name.
 		dstr_free(edtr.name);
 
-		// Send and error.
+		// Send an error.
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 
 		return WIMA_EDITOR_INVALID;
