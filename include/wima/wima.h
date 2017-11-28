@@ -186,7 +186,7 @@ typedef uint8_t WimaWindow;
  * Honestly, there shouldn't be a need for more
  * than one.
  */
-#define WIMA_WINDOW_STACK_MAX (8)
+#define WIMA_WINDOW_STACK_MAX (9)
 
 /**
  * @}
