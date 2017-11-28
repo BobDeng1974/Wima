@@ -92,6 +92,27 @@ typedef struct WimaAreaSplit {
 } WimaAreaSplit;
 
 /**
+ * The data for a live region on an area.
+ */
+typedef struct WimaArReg {
+
+	/// The function to lay out the region.
+	WimaRegionLayout layout;
+
+	/// The current size of the region.
+	/// This only applies to the dimension
+	/// opposite the vertical flag.
+	int size;
+
+	/// The min size of the region.
+	int min;
+
+	/// The region flags.
+	uint8_t flags;
+
+} WimaArReg;
+
+/**
  * Item (layouts and widgets) context for an area.
  */
 typedef struct WimaArCtx {
@@ -99,11 +120,11 @@ typedef struct WimaArCtx {
 	/// The array of items.
 	WimaItem* items;
 
-	/// Total item capacity.
-	uint32_t itemCap;
-
 	/// Current number of items allocated.
 	uint32_t itemCount;
+
+	/// Total item capacity.
+	uint32_t itemCap;
 
 	/// Data for widgets.
 	DynaPool widgetData;
@@ -151,6 +172,9 @@ typedef struct WimaAr {
 
 			/// The type of area it is.
 			WimaEditor type;
+
+			/// The list of regions.
+			WimaArReg regions[WIMA_EDITOR_MAX_REGIONS];
 
 		} area;
 
