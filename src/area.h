@@ -70,7 +70,7 @@ extern "C" {
  * @def WIMA_AREA_SPLIT_LIMIT
  * The distance from a split that will still activate the mouse.
  */
-#define WIMA_AREA_SPLIT_LIMIT 2
+#define WIMA_AREA_SPLIT_LIMIT (2)
 
 /**
  * The information for an area split.
