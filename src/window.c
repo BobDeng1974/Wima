@@ -223,7 +223,6 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	wwin.render.nvg = NULL;
 	wwin.images = NULL;
 	wwin.treeStackIdx = ((uint8_t) -1);
-	wwin.widgetData = NULL;
 	wwin.workspaces = NULL;
 	wwin.workspaceSizes = NULL;
 	wwin.user = NULL;
@@ -357,16 +356,6 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 	// Get a pointer to the new window.
 	WimaWin* window = dvec_get(wg.windows, idx);
-
-	// Create the widget data.
-	window->widgetData = dpool_create(0.9f, NULL, NULL, wima_widget_destruct, sizeof(uint64_t));
-
-	// Check for error.
-	if (yunlikely(!window->widgetData)) {
-		wima_window_destroy(window);
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_WINDOW_INVALID;
-	}
 
 	// Cache this.
 	size_t cap = dvec_cap(wg.workspaces);
@@ -1609,12 +1598,6 @@ void wima_window_destroy(void* ptr) {
 		// Free the vector of workspaces.
 		if (win->workspaces) {
 			dvec_free(win->workspaces);
-		}
-
-		// Free the widget data. This takes
-		// care of calling widget free functions.
-		if (win->widgetData) {
-			dpool_free(win->widgetData);
 		}
 
 		// Destroy the GLFW window.

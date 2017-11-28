@@ -268,9 +268,6 @@ typedef struct WimaWin {
 	/// The GLFW window.
 	GLFWwindow* window;
 
-	/// The memory map for widgets in the window.
-	DynaPool widgetData;
-
 	/// The render context for the window.
 	WimaRenderContext render;
 
