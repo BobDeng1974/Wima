@@ -56,6 +56,7 @@ wima_assert_msgs_decl;
 ////////////////////////////////////////////////////////////////////////////////
 
 WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, int nRegions, ...) {
+
 	wima_assert_init;
 
 	wassert(nRegions > 0 && nRegions <= WIMA_EDITOR_MAX_REGIONS, WIMA_ASSERT_EDITOR_NUM_REGIONS);
