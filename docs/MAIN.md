@@ -64,7 +64,7 @@ to each other straight.
 
 Wima's concepts relate to each other in two ways:
 
-*	One concept can be a [template](#concepts-templates) for another
+*	One concept can be a [template](#concepts-templates) for another.
 *	One concept can [use](#concepts-use) another.
 
 <a name="concepts-templates"></a>
