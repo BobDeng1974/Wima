@@ -83,6 +83,9 @@ typedef struct WimaLayout {
 	/// The area the layout is in.
 	WimaAreaNode area;
 
+	/// The region that the layout is in.
+	uint8_t region;
+
 	/// The window the layout is in.
 	WimaWindow window;
 

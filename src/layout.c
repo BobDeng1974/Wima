@@ -306,6 +306,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol
 	WimaLayout wlh;
 	wlh.layout = idx;
 	wlh.area = parent.area;
+	wlh.region = parent.region;
 	wlh.window = parent.window;
 
 	// If the parent is not valid, we don't have to do

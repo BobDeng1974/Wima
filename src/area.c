@@ -822,12 +822,14 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 		// Create a parent layout handle (invalid).
 		WimaLayout parent;
+		parent.layout = WIMA_WIDGET_INVALID;
 		parent.area = node;
 		parent.window = area->window;
-		parent.layout = WIMA_WIDGET_INVALID;
 
 		// Set the expand flags.
 		uint16_t flags = wima_layout_setExpandFlags(0, true, true);
+
+		// TODO: Loop over regions and fill WimaLayout with them.
 
 		// Create a root layout.
 		WimaLayoutSplitCol splitcol;

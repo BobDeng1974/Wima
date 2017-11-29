@@ -320,6 +320,9 @@ typedef struct WimaWidget {
 	/// The area that the widget is in.
 	WimaAreaNode area;
 
+	/// The region that the widget is in.
+	uint8_t region;
+
 	/// The window that the widget is in.
 	WimaWindow window;
 
