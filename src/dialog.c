@@ -52,6 +52,8 @@ WimaDialog wima_dialog_register(WimaTree tree) {
 
 	wima_assert_init;
 
+	wassert(wima_area_valid(tree), WIMA_ASSERT_TREE);
+
 	// Get the index of the new dialog.
 	size_t len = dvec_len(wg.dialogs);
 

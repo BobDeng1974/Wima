@@ -89,6 +89,8 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, Wim
 
 	wima_assert_init;
 
+	wassert(wima_area_valid(tree), WIMA_ASSERT_TREE);
+
 	// This is the id of the workspace, for the prop name.
 	static uint8_t index = 0;
 

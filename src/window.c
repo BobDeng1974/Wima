@@ -210,8 +210,6 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 {
 	wima_assert_init;
 
-	wassert(wima_area_valid(dvec_get(wg.workspaces, wksph)), WIMA_ASSERT_WKSP);
-
 	// Get the index of the new window.
 	size_t len = dvec_len(wg.windows);
 
