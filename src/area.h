@@ -255,7 +255,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate);
  * @return			true if @a editors is valid, false
  *					otherwise.
  */
-bool wima_area_valid(DynaTree editors);
+bool wima_area_valid(DynaTree editors) yinline;
 
 /**
  * Frees a tree of areas.
