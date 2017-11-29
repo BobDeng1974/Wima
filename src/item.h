@@ -42,6 +42,7 @@
 extern "C" {
 #endif
 
+#include <wima/layout.h>
 #include <wima/wima.h>
 
 /**
@@ -155,6 +156,19 @@ typedef struct WimaItem {
  *					false otherwise.
  */
 #define WIMA_ITEM_IS_WIDGET(item)  (!((item)->isLayout))
+
+/**
+ * Returns a pointer to an item on @a win, in @a area, at @a idx.
+ * @param win	The window that the item is in.
+ * @param area	The area that the item is in.
+ * @param idx	The index of the item in the area's array.
+ * @return		The pointer to the item's data.
+ * @pre			@a win must be valid.
+ * @pre			@a area must be valid.
+ * @pre			@a area must be a leaf area.
+ * @pre			@a idx must be within the size of the array.
+ */
+WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint32_t idx);
 
 /**
  * @}

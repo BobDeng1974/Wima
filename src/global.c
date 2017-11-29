@@ -148,6 +148,7 @@ const char* wima_assert_msgs[] = {
     "no editors are registered",
     "editor must have at least 1 region",
 
+    "item is not valid",
     "item is not a layout",
     "item is not a widget",
 

@@ -374,13 +374,21 @@ bool wima_widget_isFocused(WimaWidget wdgt) {
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+uint64_t wima_widget_hash(WimaProperty prop, uint8_t region) {
+
+	wima_assert_init;
+
+	// Start with the prop.
+	uint64_t hash = (uint64_t) prop;
+
+	// Or in the region.
+	hash |= (((uint64_t) region) << 32);
+
+	return hash;
+}
+
 WimaItem* wima_widget_ptr(WimaWidget wdgt) {
-
-	WimaItemInfo info;
-
-	info.widget = wdgt;
-
-	return wima_layout_ptr(info.layout);
+	return wima_item_ptr(wdgt.window, wdgt.area, wdgt.widget);
 }
 
 void wima_widget_destruct(DynaPool pool, void* key) {

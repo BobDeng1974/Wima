@@ -72,6 +72,40 @@ wima_assert_msgs_decl;
  */
 
 /**
+ * An array of flags for the predefined prop types.
+ */
+const uint32_t wima_prop_flags[] = {
+
+    // TODO: Set flags later.
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+
+};
+
+/**
+ * An array of allocation sizes for the predefined prop types.
+ */
+const uint32_t wima_prop_allocSizes[] = {
+
+    // TODO: Set sizes later.
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+
+};
+
+/**
  * Registers a property. This is common code to all cases.
  * @param name	The prop name.
  * @param label	The prop label.

@@ -57,6 +57,7 @@ set(WIMA_SRC
 	"key.c"
 	"monitor.c"
 	"prop.c"
+	"item.c"
 	"widget.c"
 	"layout.c"
 	"callbacks.c"
