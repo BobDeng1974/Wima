@@ -439,7 +439,9 @@ DynaStatus wima_area_copy(void* dest, void* src) {
 		// well as not set the user pointer.
 		// We also check to see if the user pointer is NULL. It it's
 		// not, that means that we should also not copy.
-		bool allocate = sarea->area.user == NULL && sarea->area.ctx.items == NULL;
+		bool allocate = sarea->area.user == NULL &&
+		                sarea->area.ctx.items == NULL &&
+		                sarea->area.ctx.widgetData == NULL;
 		WimaStatus status = wima_area_setup(darea, allocate);
 
 		// Check for error.
@@ -462,6 +464,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 		area->area.user = NULL;
 		area->area.ctx.itemCount = 0;
 		area->area.ctx.items = NULL;
+		area->area.ctx.widgetData = NULL;
 		return WIMA_STATUS_SUCCESS;
 	}
 
@@ -506,6 +509,13 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 	// Set the capacity (to the allocated size) and the count.
 	area->area.ctx.itemCap = size / sizeof(WimaItem);
 	area->area.ctx.itemCount = 0;
+
+	// Create the pool and check for error.
+	area->area.ctx.widgetData = dpool_create(0.9f, NULL, NULL, NULL, sizeof(uint64_t));
+	if (yunlikely(area->area.ctx.widgetData == NULL)) {
+		ysfree(area->area.ctx.items, size);
+		return WIMA_STATUS_MALLOC_ERR;
+	}
 
 	return WIMA_STATUS_SUCCESS;
 }
