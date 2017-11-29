@@ -72,7 +72,11 @@ typedef struct WimaCustProp {
 
 	/// How much data this widget needs to
 	/// have allocated.
-	size_t allocSize;
+	uint32_t allocSize;
+
+	/// The flags for which functions the
+	/// widget will have.
+	uint32_t funcFlags;
 
 } WimaCustProp;
 

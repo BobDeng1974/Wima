@@ -91,7 +91,7 @@ typedef uint32_t WimaCustomProperty;
  * @return			The newly-created @a WimaCustomProperty,
  *					or @a WIMA_PROP_CUSTOM_INVALID on error.
  */
-WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, size_t dataSize);
+WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, uint32_t dataSize);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Functions and data structures for props in general.

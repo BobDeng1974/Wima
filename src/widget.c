@@ -103,14 +103,6 @@ WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
 
 	memset(item, 0, sizeof(WimaItem));
 
-	uint32_t flags = 0;
-	//flags |= (funcs.key ? WIMA_EVENT_KEY : 0);
-	//flags |= (funcs.mouse ? WIMA_EVENT_MOUSE_BTN : 0);
-	//flags |= (funcs.click ? WIMA_EVENT_MOUSE_CLICK : 0);
-	//flags |= (funcs.drag ? WIMA_EVENT_MOUSE_DRAG : 0);
-	//flags |= (funcs.scroll ? WIMA_EVENT_SCROLL : 0);
-	//flags |= (funcs.char_event ? WIMA_EVENT_CHAR : 0);
-
 	//item->widget.funcs = funcs;
 
 	item->widget.flags |= flags;
@@ -402,10 +394,6 @@ bool wima_widget_isFocused(WimaWidget wdgt) {
 	return wima_widget_compare(win->ctx.focus, wdgt);
 }
 
-void* wima_widget_allocate(WimaWidget wdgt, size_t size) {
-
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -427,6 +415,10 @@ void wima_widget_destruct(DynaPool pool, void* key) {
 
 	// Get the data.
 	uint64_t data = *((uint64_t*) key);
+}
+
+void* wima_widget_allocate(WimaWidget wdgt, size_t size) {
+
 }
 
 void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event) {

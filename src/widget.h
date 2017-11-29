@@ -171,6 +171,14 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt);
 void wima_widget_destruct(DynaPool pool, void* key);
 
 /**
+ * Allocates data for the widget.
+ * @param wdgt	The widget to allocate data for.
+ * @param size	The size of the data to allocate.
+ * @return		A pointer to the data.
+ */
+void* wima_widget_allocate(WimaWidget wdgt, size_t size);
+
+/**
  * Handles a key event on @a wdgt.
  * @param wdgt	The widget receiving the event.
  * @param event	The event.

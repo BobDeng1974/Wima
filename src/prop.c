@@ -50,6 +50,7 @@
 
 #include "global.h"
 #include "prop.h"
+#include "event.h"
 
 //! @cond Doxygen suppress.
 wima_global_decl;
@@ -924,7 +925,7 @@ void* wima_prop_ptr(WimaProperty wph) {
 // Public functions for custom properties.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, size_t dataSize) {
+WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, uint32_t dataSize) {
 
 	WimaCustProp wcp;
 
@@ -937,9 +938,19 @@ WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, size_t dataS
 	wassert(funcs.draw != NULL, WIMA_ASSERT_PROP_CUSTOM_DRAW);
 	wassert(funcs.size != NULL, WIMA_ASSERT_PROP_CUSTOM_SIZE);
 
+	// Set the flags.
+	uint32_t flags = 0;
+	flags |= (funcs.key ? WIMA_EVENT_KEY : 0);
+	flags |= (funcs.mouse ? WIMA_EVENT_MOUSE_BTN : 0);
+	flags |= (funcs.click ? WIMA_EVENT_MOUSE_CLICK : 0);
+	flags |= (funcs.drag ? WIMA_EVENT_MOUSE_DRAG : 0);
+	flags |= (funcs.scroll ? WIMA_EVENT_SCROLL : 0);
+	flags |= (funcs.char_event ? WIMA_EVENT_CHAR : 0);
+
 	// Fill the data.
 	wcp.funcs = funcs;
 	wcp.allocSize = dataSize;
+	wcp.funcFlags = flags;
 
 	// Push onto the vector and check for error.
 	if (yunlikely(dvec_push(wg.customProps, &wcp))) {
