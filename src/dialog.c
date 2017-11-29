@@ -34,6 +34,7 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include "area.h"
 #include "tree.h"
 #include "dialog.h"
 #include "global.h"
