@@ -152,6 +152,7 @@ static WimaMenuItem wima_window_splitMenu_sub_items[] = {
  * The debug sub menu.
  */
 static WimaMenu wima_window_splitMenu_sub = WIMA_MENU_DEFAULT(wima_window_splitMenu_sub_items, 6);
+
 #endif // NDEBUG
 
 /**
