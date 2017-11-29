@@ -474,10 +474,10 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 	WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
 	// Get the particular user function setter.
-	WimaAreaInitDataFunc get_user_ptr = editor->funcs.init;
+	WimaAreaInitDataFunc init = editor->funcs.init;
 
 	// If the user specified one, call it.
-	if (get_user_ptr) {
+	if (init) {
 
 		// Create an area handle. I can't use
 		// wima_area() here because it will assert.
@@ -486,7 +486,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 		wah.window = area->window;
 
 		// Call the user function.
-		area->area.user = get_user_ptr(wah);
+		area->area.user = init(wah);
 	}
 	else {
 
