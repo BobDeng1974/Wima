@@ -1544,20 +1544,6 @@ void wima_widget_setBox(WimaWidget wdgt, uint32_t flags) yinline;
 uint32_t wima_widget_box(WimaWidget wdgt) yinline;
 
 /**
- * Set the user pointer for @a wdgt.
- * @param wdgt	The widget to set.
- * @param user	The handle to set.
- */
-void wima_widget_setUserPointer(WimaWidget wdgt, void* user) yinline;
-
-/**
- * Return the user pointer as set by @a wima_widget_setUserPointer().
- * @param wdgt	The widget to query.
- * @return		The user pointer of the widget.
- */
-void* wima_widget_userPointer(WimaWidget wdgt) yinline;
-
-/**
  * Sets the flags on @a wdgt.
  * @param wdgt	The widget to set.
  * @param flags	The flags to set.

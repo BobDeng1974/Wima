@@ -168,22 +168,6 @@ void wima_layout_setEnabled(WimaLayout wlh, bool enabled);
 bool wima_layout_enabled(WimaLayout wlh);
 
 /**
- * Sets the background color of the provided layout.
- * @param wlh	The layout whose background color will be set.
- * @param color	The new background color for the layout.
- * @pre			@a wlh must be a valid WimaLayout.
- */
-void wima_layout_setBackgroundColor(WimaLayout wlh, WimaColor color) yinline;
-
-/**
- * Returns the current background color of the provided layout.
- * @param wlh	The layout whose background color will be returned.
- * @return		The background color of the layout.
- * @pre			@a wlh must be a valid WimaLayout.
- */
-WimaColor wima_layout_backgroundColor(WimaLayout wlh) yinline;
-
-/**
  * Creates a new sublayout of the provided @a parent
  * that will be laid out as a row.
  * @param parent	The parent of the sublayout that

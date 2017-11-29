@@ -362,7 +362,6 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol
 	playout->info.layout = wlh;
 
 	// Set the background, split, kids, and flags.
-	playout->layout.bgcolor = wima_prop_color(wg.themes[WIMA_THEME_BG]);
 	playout->layout.splitcol = splitcol;
 	playout->layout.firstKid = WIMA_WIDGET_INVALID;
 	playout->layout.lastKid = WIMA_LAYOUT_INVALID;

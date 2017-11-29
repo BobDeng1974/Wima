@@ -107,9 +107,6 @@ typedef struct WimaItem {
 
 		struct WimaLayoutInfo {
 
-			/// The background color of the layout.
-			WimaColor bgcolor;
-
 			/// The split location or number of columns.
 			WimaLayoutSplitCol splitcol;
 
@@ -134,13 +131,6 @@ typedef struct WimaItem {
 
 			/// The property that this refers to.
 			WimaProperty prop;
-
-			/// The user pointer.
-			void* user;
-
-			/// Whether this widget's user pointer was allocated
-			/// with @a wima_widget_allocData() or not.
-			bool alloc;
 
 		} widget;
 
