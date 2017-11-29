@@ -60,18 +60,6 @@ extern "C" {
  */
 
 /**
- * @def WIMA_TREE_USER_INVALID
- * This define is used to initialize user pointers on trees.
- * This is done because if the pointer is not NULL, the space
- * for items will not be allocated. That means that when a
- * newly-created tree is copied for the first time, into the
- * dialog or workspaces vectors, space for items won't be
- * allocated, which is what we want. The next time (copying
- * from vectors to a window), it will be done.
- */
-#define WIMA_TREE_USER_INVALID ((void*) 0x01)
-
-/**
  * Adds a parent node to @a tree.
  * @param tree		The tree to add to.
  * @param node		The node to add, which should be either

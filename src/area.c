@@ -567,7 +567,7 @@ void wima_area_destroy(DynaTree tree, void* ptr) {
 		// If the user didn't allocate anything,
 		// or the use handle is not initialized,
 		// just return.
-		if (!area->area.user || area->area.user == WIMA_TREE_USER_INVALID) {
+		if (!area->area.user || area->area.user == WIMA_PTR_INVALID) {
 			return;
 		}
 

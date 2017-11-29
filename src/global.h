@@ -279,6 +279,18 @@ typedef enum WimaAssertType {
 } WimaAssertType;
 
 /**
+ * @def WIMA_PTR_INVALID
+ * This define is used to initialize user pointers on trees.
+ * This is done because if the pointer is not NULL, the space
+ * for items will not be allocated. That means that when a
+ * newly-created tree is copied for the first time, into the
+ * dialog or workspaces vectors, space for items won't be
+ * allocated, which is what we want. The next time (copying
+ * from vectors to a window), it will be done.
+ */
+#define WIMA_PTR_INVALID ((void*) 0x01)
+
+/**
  * @def wima_global_decl
  * An extern declaration for the global struct.
  */
