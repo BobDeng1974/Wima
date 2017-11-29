@@ -105,7 +105,7 @@ WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
 
 	//item->widget.funcs = funcs;
 
-	item->widget.flags |= flags;
+	//item->widget.flags |= flags;
 
 	return wih.widget;
 }
@@ -369,7 +369,7 @@ bool wima_widget_isActive(WimaWidget wdgt) {
 
 	WimaWin* win = dvec_get(wg.windows, wdgt.window);
 
-	return wima_widget_compare(win->ctx.focus, wdgt) && win->ctx.mousePressed;
+	return wima_widget_compare(win->ctx.focus, wdgt) && win->ctx.mouseBtns;
 }
 
 bool wima_widget_isHovered(WimaWidget wdgt) {
@@ -582,6 +582,62 @@ void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event) {
 
 			// If the widget handles the event, send it.
 			if (!click(wdgt, data->_ptr.ptr, event)) {
+				// TODO: Send the event up the chain.
+			}
+
+			break;
+	}
+}
+
+void wima_widget_mousePos(WimaWidget wdgt, WimaVec pos) {
+
+	// TODO: Finish this function.
+
+	// Get the widget pointer.
+	WimaItem* pitem = wima_widget_ptr(wdgt);
+
+	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
+
+	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+
+	// Get the prop.
+	WimaProperty wph = pitem->widget.prop;
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	WimaWidgetMousePosFunc mouse_pos;
+
+	// Figure out what to do based on the prop type.
+	switch (prop->type) {
+
+		case WIMA_PROP_LIST:
+			break;
+
+		case WIMA_PROP_BOOL:
+			break;
+
+		case WIMA_PROP_INT:
+			break;
+
+		case WIMA_PROP_FLOAT:
+			break;
+
+		case WIMA_PROP_STRING:
+			break;
+
+		case WIMA_PROP_ENUM:
+			break;
+
+		case WIMA_PROP_COLOR:
+			break;
+
+		case WIMA_PROP_OPERATOR:
+			break;
+
+		case WIMA_PROP_CUSTOM:
+
+			// If the widget handles the event, send it.
+			if (!mouse_pos(wdgt, data->_ptr.ptr, pos)) {
 				// TODO: Send the event up the chain.
 			}
 

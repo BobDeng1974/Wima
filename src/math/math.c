@@ -102,6 +102,10 @@ double wima_fmax(double a, double b) {
 
 #endif
 
+////////////////////////////////////////////////////////////////////////////////
+// Public functions.
+////////////////////////////////////////////////////////////////////////////////
+
 int wima_max(int a, int b) {
 	return (a > b) ? a : b;
 }
@@ -222,4 +226,35 @@ WimaVecF wima_transform_point(WimaTransform transform, WimaVecF pos) {
 	nvgTransformPoint(&result.x, &result.y, transform.v, pos.x, pos.y);
 
 	return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Private functions.
+////////////////////////////////////////////////////////////////////////////////
+
+uint8_t wima_uint8_log2(register uint8_t x) {
+
+	// Algorithm from: http://aggregate.org/MAGIC/#Log2%20of%20an%20Integer.
+
+	// Bit folding.
+	x |= (x >> 1);
+	x |= (x >> 2);
+	x |= (x >> 4);
+
+	// Calculate the bits.
+	return wima_uint8_bits(x) - 1;
+}
+
+uint8_t wima_uint8_bits(register uint8_t x) {
+
+	// Algorithm from : http://aggregate.org/MAGIC/#Population%20Count%20%28Ones%20Count%29
+
+	// Eight-bit recursive reduction using SWAR...but
+	// first step is mapping 2-bit values into sum of
+	// 2 1-bit values in sneaky way.
+	x -= ((x >> 1) & 0x55);
+	x = (((x >> 2) & 0x33) + (x & 0x33));
+	x = (((x >> 4) + x) & 0x0f);
+
+	return x;
 }

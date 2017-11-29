@@ -200,6 +200,13 @@ void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event);
 void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event);
 
 /**
+ * Handles a mouse position (move) event on @a wdgt.
+ * @param wdgt	The widget receiving the event.
+ * @param pos	The new position of the mouse.
+ */
+void wima_widget_mousePos(WimaWidget wdgt, WimaVec pos);
+
+/**
  * Handles a mouse drag event on @a wdgt.
  * @param wdgt	The widget receiving the event.
  * @param event	The event.

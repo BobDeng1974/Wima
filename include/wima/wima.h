@@ -369,31 +369,28 @@ typedef struct WimaLayout WimaLayout;
 typedef enum WimaMouseBtn {
 
 	/// The first mouse button.
-	WIMA_MOUSE_1       = 0,
+	WIMA_MOUSE_1       = 1 << 0,
 
 	/// The second mouse button.
-	WIMA_MOUSE_2       = 1,
+	WIMA_MOUSE_2       = 1 << 1,
 
 	/// The third mouse button.
-	WIMA_MOUSE_3       = 2,
+	WIMA_MOUSE_3       = 1 << 2,
 
 	/// The fourth mouse button.
-	WIMA_MOUSE_4       = 3,
+	WIMA_MOUSE_4       = 1 << 3,
 
 	/// The fifth mouse button.
-	WIMA_MOUSE_5       = 4,
+	WIMA_MOUSE_5       = 1 << 4,
 
 	/// The sixth mouse button.
-	WIMA_MOUSE_6       = 5,
+	WIMA_MOUSE_6       = 1 << 5,
 
 	/// The seventh mouse button.
-	WIMA_MOUSE_7       = 6,
+	WIMA_MOUSE_7       = 1 << 6,
 
 	/// The eighth mouse button.
-	WIMA_MOUSE_8       = 7,
-
-	/// The last mouse button.
-	WIMA_MOUSE_LAST    = WIMA_MOUSE_8,
+	WIMA_MOUSE_8       = 1 << 7,
 
 	/// The left mouse button.
 	WIMA_MOUSE_LEFT    = WIMA_MOUSE_1,
@@ -1399,6 +1396,17 @@ typedef bool (*WimaWidgetMouseClickFunc)(WimaWidget wdgt, void* ptr, WimaMouseCl
 
 /**
  * A function to run when a user-defined widget (custom property)
+ * has a mouse move event.
+ * @param wdgt	The widget that received the event.
+ * @param ptr	The pointer to the data for the custom property.
+ * @param pos	The new mouse position.
+ * @return		true if the event was consumed, false otherwise.
+ *				This is so Wima can pass the event on.
+ */
+typedef bool (*WimaWidgetMousePosFunc)(WimaWidget wdgt, void* ptr, WimaVec pos);
+
+/**
+ * A function to run when a user-defined widget (custom property)
  * has a mouse drag event.
  * @param wdgt	The widget that received the event.
  * @param ptr	The pointer to the data for the custom property.
@@ -1453,6 +1461,9 @@ typedef struct WimaWidgetFuncs {
 
 	/// The mouse click event function.
 	WimaWidgetMouseClickFunc click;
+
+	/// The mouse positon (move) event function.
+	WimaWidgetMousePosFunc pos;
 
 	/// The mouse drag event function.
 	WimaWidgetMouseDragFunc drag;

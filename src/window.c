@@ -51,6 +51,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include "math/math.h"
 #include "render/render.h"
 
 #include "callbacks.h"
@@ -1468,7 +1469,9 @@ WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) {
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	return (WimaAction) glfwGetMouseButton(win->window, btn);
+	uint8_t gbtn = wima_uint8_log2((uint8_t) btn);
+
+	return (WimaAction) glfwGetMouseButton(win->window, gbtn);
 }
 
 void wima_window_setClipboard(WimaWindow wwh, const char* str) {
@@ -1691,6 +1694,26 @@ void wima_window_setModifier(WimaWin* win, WimaKey key, WimaAction action) {
 		case WIMA_ACTION_PRESS:
 		case WIMA_ACTION_REPEAT:
 			win->ctx.mods |= mod;
+			break;
+	}
+}
+
+void wima_window_setMouseBtn(WimaWin* win, WimaMouseBtn btn, WimaAction action) {
+
+	wima_assert_init;
+
+	wassert(win != NULL, WIMA_ASSERT_WIN);
+
+	// Clear on release, set on press (or repeat).
+	switch (action) {
+
+		case WIMA_ACTION_RELEASE:
+			win->ctx.mouseBtns &= ~(btn);
+			break;
+
+		case WIMA_ACTION_PRESS:
+		case WIMA_ACTION_REPEAT:
+			win->ctx.mouseBtns |= btn;
 			break;
 	}
 }
@@ -2132,9 +2155,10 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
 					wima_area_moveSplit(WIMA_WIN_AREAS(win), win->ctx.split.area,
 					                    win->ctx.split, win->ctx.cursorPos);
 				}
-				else {
 
-					// TODO: Send event to widget.
+				// If the widget is valid, send the event.
+				else if (wdgt.widget != WIMA_WIDGET_INVALID) {
+					wima_widget_mousePos(wdgt, e.pos);
 				}
 			}
 

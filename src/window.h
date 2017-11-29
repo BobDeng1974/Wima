@@ -207,11 +207,11 @@ typedef struct WimaWinCtx {
 	/// The hovered widget in the window.
 	WimaWidget hover;
 
-	/// Whether the mouse is pressed or not.
+	/// WHich mouse buttons are pressed or not.
 	/// A widget can only be active if a mouse
 	/// button is pressed, and drags are only
 	/// valid when a button is pressed.
-	bool mousePressed;
+	uint8_t mouseBtns;
 
 	/// The area that the cursor is in.
 	WimaAreaNode cursorArea;
@@ -388,6 +388,16 @@ void wima_window_setDirty(WimaWin* win, bool layout) yinline;
  * @pre				@a win must be valid.
  */
 void wima_window_setModifier(WimaWin* win, WimaKey key, WimaAction action);
+
+/**
+ * Sets the mouse buttons on @a win according to @a action.
+ * @param win		The window to update.
+ * @param btn		The button to set.
+ * @param action	The action. For WIMA_ACTION_PRESS, it sets the
+ *					mod, and for WIMA_ACTION_RELEASE, it clears it.
+ * @pre				@a win must be valid.
+ */
+void wima_window_setMouseBtn(WimaWin* win, WimaMouseBtn btn, WimaAction action);
 
 /**
  * Draws the window with the current layout.

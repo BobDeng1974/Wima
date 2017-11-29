@@ -150,12 +150,15 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	// Change GLFW data to Wima data.
-	WimaMouseBtn wbtn = (WimaMouseBtn) btn;
+	WimaMouseBtn wbtn = (WimaMouseBtn) (1 << btn);
 	WimaMods wmods = (WimaMods) mods;
 	WimaAction wact = (WimaAction) action;
 
 	// Set the window's mods.
 	wwin->ctx.mods = wmods;
+
+	// Set the mouse button.
+	wima_window_setMouseBtn(wwin, wbtn, wact);
 
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
@@ -176,8 +179,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	// Find the item that was clicked.
 	WimaWidget clickItem = wima_area_findWidget(WIMA_WIN_AREAS(wwin), wwin->ctx.cursorPos, WIMA_EVENT_MOUSE_BTN);
 
-	// Set the active and focus items to the clicked item.
-	// TODO: wwin->ctx.active = clickItem;
+	// Set the focus item to the clicked item.
 	wwin->ctx.focus = clickItem;
 
 	// Make sure the dirty bit for the window is set.
@@ -421,7 +423,6 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			glfwSetCursor(wwin->window, wg.cursors[c]);
 
 			// Clear the items.
-			// TODO: wwin->ctx.active.widget = -1;
 			wwin->ctx.hover.widget = -1;
 
 			// Get the number of events.
@@ -475,9 +476,24 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	// Calculate a pointer to the event we'll fill.
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
-	// Fill the event.
-	event->type = WIMA_EVENT_MOUSE_POS;
-	event->pos = pos;
+	// If there are not mouse buttons being pressed...
+	if (!wwin->ctx.mouseBtns) {
+
+		// Fill the event with a mouse pos.
+		event->type = WIMA_EVENT_MOUSE_POS;
+		event->pos = pos;
+	}
+	else {
+
+		// Fill the event with a drag.
+		event->type = WIMA_EVENT_MOUSE_DRAG;
+		event->drag.button = wwin->ctx.mouseBtns;
+		event->drag.mods = wwin->ctx.mods;
+		event->drag.pos = pos;
+	}
+
+	// Get the event item.
+	wwin->ctx.eventItems[numEvents] = wwin->ctx.focus;
 
 	// Add one to the event count.
 	++(wwin->ctx.eventCount);
