@@ -129,6 +129,9 @@ typedef enum WimaPropType {
 	/// A custom (user pointer) property. See @a WimaCustomProperty.
 	WIMA_PROP_CUSTOM,
 
+	/// A reference to the last predefined property type.
+	WIMA_PROP_LAST_PREDEFINED = WIMA_PROP_OPERATOR,
+
 } WimaPropType;
 
 /**
