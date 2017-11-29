@@ -84,12 +84,14 @@ typedef uint32_t WimaCustomProperty;
 
 /**
  * Registers a custom property type.
- * @param funcs	The functions that the custom property
- *				will use.
- * @return		The newly-created @a WimaCustomProperty,
- *				or @a WIMA_PROP_CUSTOM_INVALID on error.
+ * @param funcs		The functions that the custom property
+ *					will use.
+ * @param dataSize	The size of data that must be allocated
+ *					for widgets using this property.
+ * @return			The newly-created @a WimaCustomProperty,
+ *					or @a WIMA_PROP_CUSTOM_INVALID on error.
  */
-WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs);
+WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, size_t dataSize);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Functions and data structures for props in general.

@@ -1331,11 +1331,11 @@ typedef enum WimaWidgetLayoutFlags {
 } WimaWidgetLayoutFlags;
 
 /**
- * A function to initialize a widget's user pointer.
- * @param wdgt	The widget whose user pointer will be initialized.
- * @return		The initialized pointer.
+ * A function to initialize a widget's data.
+ * @param wdgt	The widget whose data will be initialized.
+ * @param ptr	The ptr to the widget's data.
  */
-typedef void* (*WimaWidgetInitDataFunc)(WimaWidget wdgt);
+typedef void (*WimaWidgetInitDataFunc)(WimaWidget wdgt, void* ptr);
 
 /**
  * Frees a pointer associated with a widget.
@@ -1801,17 +1801,17 @@ WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8
  */
 
 /**
- * A function to initialize an area's user pointer.
- * @param area	The area to initialize the user pointer for.
+ * A function to generate an area's user pointer.
+ * @param area	The area to generate the user pointer for.
  * @return		The user pointer.
  */
-typedef void* (*WimaAreaInitDataFunc)(WimaArea area);
+typedef void* (*WimaAreaGenPtrFunc)(WimaArea area);
 
 /**
  * A function to free an area's user pointer.
  * @param ptr	The pointer to free.
  */
-typedef void (*WimaAreaFreeDataFunc)(void* ptr);
+typedef void (*WimaAreaFreePtrFunc)(void* ptr);
 
 /**
  * A function to layout an area's header.
@@ -1844,10 +1844,10 @@ typedef bool (*WimaAreaMouseEnterFunc)(WimaArea area, bool entered);
 typedef struct WimaEditorFuncs {
 
 	/// The function to initialize the user pointer.
-	WimaAreaInitDataFunc init;
+	WimaAreaGenPtrFunc init;
 
 	/// The function to free the user pointer.
-	WimaAreaFreeDataFunc free;
+	WimaAreaFreePtrFunc free;
 
 	/// The function to layout an area's header.
 	WimaAreaHeaderLayoutFunc layout;

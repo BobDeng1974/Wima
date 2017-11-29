@@ -924,7 +924,9 @@ void* wima_prop_ptr(WimaProperty wph) {
 // Public functions for custom properties.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs) {
+WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, size_t dataSize) {
+
+	WimaCustProp wcp;
 
 	wima_assert_init;
 
@@ -935,8 +937,12 @@ WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs) {
 	wassert(funcs.draw != NULL, WIMA_ASSERT_PROP_CUSTOM_DRAW);
 	wassert(funcs.size != NULL, WIMA_ASSERT_PROP_CUSTOM_SIZE);
 
+	// Fill the data.
+	wcp.funcs = funcs;
+	wcp.allocSize = dataSize;
+
 	// Push onto the vector and check for error.
-	if (yunlikely(dvec_push(wg.customProps, &funcs))) {
+	if (yunlikely(dvec_push(wg.customProps, &wcp))) {
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_PROP_CUSTOM_INVALID;
 	}

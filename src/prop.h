@@ -64,7 +64,17 @@ extern "C" {
  * A custom property/widget. This is the
  * functions that the widget can have.
  */
-typedef WimaWidgetFuncs WimaCustProp;
+typedef struct WimaCustProp {
+
+	/// The functions for widgets created
+	/// from this custom property.
+	WimaWidgetFuncs funcs;
+
+	/// How much data this widget needs to
+	/// have allocated.
+	size_t allocSize;
+
+} WimaCustProp;
 
 /**
  * @def WIMA_PROP_SEED

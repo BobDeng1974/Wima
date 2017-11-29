@@ -477,7 +477,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 	WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
 	// Get the particular user function setter.
-	WimaAreaInitDataFunc init = editor->funcs.init;
+	WimaAreaGenPtrFunc init = editor->funcs.init;
 
 	// If the user specified one, call it.
 	if (init) {
@@ -590,7 +590,7 @@ void wima_area_destroy(DynaTree tree, void* ptr) {
 		WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
 		// Get the particular user function setter.
-		WimaAreaFreeDataFunc free_user_ptr = editor->funcs.free;
+		WimaAreaFreePtrFunc free_user_ptr = editor->funcs.free;
 
 		// If the user didn't specify one, don't call it.
 		if (!free_user_ptr) {
