@@ -1394,6 +1394,8 @@ WimaVec wima_window_cursorStart(WimaWindow wwh) {
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
+	wassert(win->ctx.mouseBtns != 0, WIMA_ASSERT_WIN_DRAG_MOUSE_BTNS);
+
 	return win->ctx.dragStart;
 }
 
@@ -1406,6 +1408,9 @@ WimaVec wima_window_cursorDelta(WimaWindow wwh) {
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
+	wassert(win->ctx.mouseBtns != 0, WIMA_ASSERT_WIN_DRAG_MOUSE_BTNS);
+
+	// Fill the result.
 	WimaVec result = {{{
 	        win->ctx.cursorPos.x - win->ctx.dragStart.x,
 	        win->ctx.cursorPos.y - win->ctx.dragStart.y

@@ -116,7 +116,8 @@ const char* wima_assert_msgs[] = {
     "workspace is not valid for the window; if the workspace has been registered, this is a bug in Wima",
     "window has a dialog",
     "no dialog on the window",
-    "client tried to push too many dialogs onto the stack",
+    "client tried to push too many dialogs onto the window's stack",
+    "client asked for mouse drag data, but no mouse buttons are pressed",
 
     "tree is not valid",
     "node is beyond max number of nodes for the given tree",
