@@ -276,8 +276,8 @@ void cb_fileDrop(WimaWindow wwh, int filec, const char* filev[]) {
 #endif
 }
 
-void* cb_userPtr(WimaArea wah) {
-	return NULL;
+WimaStatus cb_userPtr(WimaArea wah, void* ptr) {
+	return WIMA_STATUS_SUCCESS;
 }
 
 void cb_userPtrFree(void* ptr) {
