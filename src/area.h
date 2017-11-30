@@ -46,6 +46,7 @@ extern "C" {
 
 #include <wima/wima.h>
 
+#include "editor.h"
 #include "widget.h"
 #include "layout.h"
 
@@ -168,7 +169,7 @@ typedef struct WimaAr {
 			WimaEditor type;
 
 			/// The list of regions.
-			WimaArReg regions[WIMA_EDITOR_MAX_REGIONS];
+			WimaArReg regions[WIMA_EDITOR_MAX_MAX_REGIONS];
 
 		} area;
 

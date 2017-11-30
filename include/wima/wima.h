@@ -1654,12 +1654,11 @@ typedef uint16_t WimaRegion;
 
 /**
  * A function type to lay out a region.
- * @param region	The region to lay out.
  * @param root		The root layout.
  * @return			WIMA_STATUS_SUCCESS on success,
  *					an error code otherwise.
  */
-typedef WimaStatus (*WimaRegionLayout)(WimaRegion region, WimaLayout root);
+typedef WimaStatus (*WimaRegionLayout)(WimaLayout root);
 
 /**
  * @def WIMA_REGION_INVALID
@@ -1819,12 +1818,11 @@ typedef void (*WimaAreaFreeDataFunc)(void* ptr);
 
 /**
  * A function to layout an area's header.
- * @param area		The area whose header will be laid out.
- * @param layout	The root layout. This will be a row layout.
- * @return			WIMA_STATUS_SUCCESS on success, an error
- *					code otherwise.
+ * @param root	The root layout. This will be a row layout.
+ * @return		WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
  */
-typedef WimaStatus (*WimaAreaHeaderLayoutFunc)(WimaArea area, WimaLayout layout);
+typedef WimaStatus (*WimaAreaHeaderLayoutFunc)(WimaLayout root);
 
 /**
  * A function callback for key presses inside an area.

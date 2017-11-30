@@ -88,6 +88,13 @@ typedef struct WimaEdtr {
 } WimaEdtr;
 
 /**
+ * @def WIMA_EDITOR_MAX_MAX_REGIONS
+ * The *real* max number of regions.
+ * It has one more for the header.
+ */
+#define WIMA_EDITOR_MAX_MAX_REGIONS (WIMA_EDITOR_MAX_REGIONS + 1)
+
+/**
  * @}
  */
 
