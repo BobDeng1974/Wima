@@ -403,6 +403,8 @@ void wima_widget_destruct(DynaPool pool, void* key) {
 
 void* wima_widget_data(WimaItem* pitem) {
 
+	wima_assert_init;
+
 	// Get the area.
 	WimaAr* area = wima_area_ptr(pitem->info.widget.window, pitem->info.widget.area);
 
@@ -414,6 +416,8 @@ void* wima_widget_data(WimaItem* pitem) {
 }
 
 void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event) {
+
+	wima_assert_init;
 
 	// TODO: Finish this function.
 
@@ -471,6 +475,8 @@ void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event) {
 
 void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event) {
 
+	wima_assert_init;
+
 	// TODO: Finish this function.
 
 	// Get the widget pointer.
@@ -526,6 +532,8 @@ void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event) {
 }
 
 void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event) {
+
+	wima_assert_init;
 
 	// TODO: Finish this function.
 
@@ -583,6 +591,8 @@ void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event) {
 
 void wima_widget_mousePos(WimaWidget wdgt, WimaVec pos) {
 
+	wima_assert_init;
+
 	// TODO: Finish this function.
 
 	// Get the widget pointer.
@@ -638,6 +648,8 @@ void wima_widget_mousePos(WimaWidget wdgt, WimaVec pos) {
 }
 
 void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event) {
+
+	wima_assert_init;
 
 	// TODO: Finish this function.
 
@@ -695,6 +707,8 @@ void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event) {
 
 void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event) {
 
+	wima_assert_init;
+
 	// TODO: Finish this function.
 
 	// Get the widget pointer.
@@ -750,6 +764,8 @@ void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event) {
 }
 
 void wima_widget_char(WimaWidget wdgt, WimaCharEvent event) {
+
+	wima_assert_init;
 
 	// TODO: Finish this function.
 
