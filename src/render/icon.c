@@ -36,7 +36,8 @@
 
 #include <stdio.h>
 
-#include <jemalloc/jemalloc.h>
+#include <yc/opt.h>
+#include <yc/error.h>
 
 #include <dyna/nvector.h>
 
@@ -123,7 +124,7 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 	WimaIcn img = nsvgParseFromFile(path, unitNames[unit], dpi);
 
 	// If there was an error, tell the user.
-	if (yunlikely(!img)) {
+	if (yerror(!img)) {
 		wima_error(WIMA_STATUS_IMAGE_LOAD_ERR);
 		return WIMA_ICON_INVALID;
 	}
@@ -191,7 +192,7 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 
 			// Push onto the vector and check for error.
 			status = dvec_push(wg.iconPathWindings, &result);
-			if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
+			if (yerror(status != DYNA_STATUS_SUCCESS)) {
 
 				// Loop through the already-added windings and delete them.
 				// It's count - 1 because the current winding failed.
@@ -211,7 +212,7 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 
 	// Push onto the vector and check for error.
 	status = dnvec_push(wg.icons, &img, &marker);
-	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
+	if (yerror(status != DYNA_STATUS_SUCCESS)) {
 
 		// Loop through the already-added windings and delete them.
 		for (uint32_t i = 0; i < count; ++i) {
@@ -241,7 +242,7 @@ WimaIcon wima_icon_debug() {
 		debug = wima_icon_load("../res/bug.svg", WIMA_ICON_PX, 96.0f);
 
 		// If the icon couldn't load, abort.
-		if (yunlikely(debug == WIMA_ICON_INVALID)) {
+		if (yerror(debug == WIMA_ICON_INVALID)) {
 			wima_error(WIMA_STATUS_IMAGE_LOAD_ERR);
 			exit(WIMA_STATUS_IMAGE_LOAD_ERR);
 		}
@@ -268,7 +269,7 @@ WimaIcon wima_icon_donut() {
 		donut = wima_icon_load("../res/donut.svg", WIMA_ICON_PX, 96.0f);
 
 		// If the icon couldn't load, abort.
-		if (yunlikely(donut == WIMA_ICON_INVALID)) {
+		if (yerror(donut == WIMA_ICON_INVALID)) {
 			wima_error(WIMA_STATUS_IMAGE_LOAD_ERR);
 			exit(WIMA_STATUS_IMAGE_LOAD_ERR);
 		}

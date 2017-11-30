@@ -39,6 +39,7 @@
 
 #include <yc/assert.h>
 #include <yc/mem.h>
+#include <yc/error.h>
 
 #include <dyna/nvector.h>
 
@@ -484,7 +485,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 
 	// Allocate and check for error.
 	area->area.ctx.items = ymalloc(size);
-	if (yunlikely(!area->area.ctx.items)) {
+	if (yerror(!area->area.ctx.items)) {
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
@@ -494,7 +495,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 
 	// Create the pool and check for error.
 	area->area.ctx.widgetData = dpool_create(0.9f, NULL, NULL, NULL, sizeof(uint64_t));
-	if (yunlikely(area->area.ctx.widgetData == NULL)) {
+	if (yerror(area->area.ctx.widgetData == NULL)) {
 		ysfree(area->area.ctx.items, size);
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -515,7 +516,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 			void* ptr = dpool_malloc(area->area.ctx.widgetData, &key, editor->allocSize);
 
 			// Check for error.
-			if (yunlikely(ptr == NULL)) {
+			if (yerror(ptr == NULL)) {
 				return WIMA_STATUS_MALLOC_ERR;
 			}
 
@@ -534,7 +535,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 			void* ptr = dpool_calloc(area->area.ctx.widgetData, &key, editor->allocSize);
 
 			// Check for error.
-			if (yunlikely(ptr == NULL)) {
+			if (yerror(ptr == NULL)) {
 				status = WIMA_STATUS_MALLOC_ERR;
 			}
 		}
@@ -707,7 +708,7 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 
 		// Draw the left child and check for error.
 		status = wima_area_node_draw(ctx, areas, dtree_left(node), bg);
-		if (yunlikely(status)) {
+		if (yerror(status)) {
 			return status;
 		}
 
@@ -835,7 +836,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 
 		// Layout the left child and check for error.
 		status = wima_area_node_layout(areas, dtree_left(node));
-		if (yunlikely(status)) {
+		if (yerror(status)) {
 			return status;
 		}
 
@@ -880,7 +881,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 		// TODO: status = layout(wah, wlh, size);
 
 		// Check for error.
-		if (yunlikely(status)) {
+		if (yerror(status)) {
 			return status;
 		}
 

@@ -37,6 +37,7 @@
 #include <string.h>
 
 #include <yc/assert.h>
+#include <yc/error.h>
 
 #include <dyna/dyna.h>
 #include <dyna/vector.h>
@@ -112,9 +113,8 @@ WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, W
 	edtr.name = dstr_create(name);
 
 	// Check for error.
-	if (yunlikely(edtr.name == NULL)) {
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_EDITOR_INVALID;
+	if (yerror(edtr.name == NULL)) {
+		goto wima_edtr_reg_name_err;
 	}
 
 	// Make sure to null the user pointer.
@@ -142,18 +142,25 @@ WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, W
 
 	// Push onto the vector and check for error.
 	DynaStatus status = dvec_push(wg.editors, &edtr);
-	if (yunlikely(status)) {
-
-		// Free the name.
-		dstr_free(edtr.name);
-
-		// Send an error.
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-
-		return WIMA_EDITOR_INVALID;
+	if (yerror(status)) {
+		goto wima_edtr_reg_vec_err;
 	}
 
 	return (WimaEditor) idx;
+
+// If there's an error pushing onto the vector.
+wima_edtr_reg_vec_err:
+
+	// Free the name.
+	dstr_free(edtr.name);
+
+// If there's an error creating the name.
+wima_edtr_reg_name_err:
+
+	// Send an error.
+	wima_error(WIMA_STATUS_MALLOC_ERR);
+
+	return WIMA_EDITOR_INVALID;
 }
 
 void wima_editor_setUserPointer(WimaEditor wed, void* ptr) {

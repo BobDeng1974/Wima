@@ -37,6 +37,8 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include <yc/error.h>
+
 #include <dyna/tree.h>
 
 #include <wima/wima.h>
@@ -102,7 +104,7 @@ WimaAreaNode wima_tree_addRootParent(WimaTree tree, float split, bool vertical) 
 	WimaStatus status = wima_tree_addParent(tree, root, split, vertical);
 
 	// Check for error.
-	if (yunlikely(status)) {
+	if (yerror(status)) {
 
 		// Tell the client about the error.
 		wima_error(status);
@@ -128,7 +130,7 @@ WimaAreaNode wima_tree_addRootEditor(WimaTree tree, WimaEditor wed) {
 	WimaStatus status = wima_tree_addEditor(tree, root, wed);
 
 	// Check for error.
-	if (yunlikely(status)) {
+	if (yerror(status)) {
 
 		// Tell the client about the error.
 		wima_error(status);
@@ -157,7 +159,7 @@ WimaAreaNode wima_tree_addLeftParent(WimaTree tree, WimaAreaNode parent, float s
 	WimaStatus status = wima_tree_addParent(tree, node, split, vertical);
 
 	// Check for error.
-	if (yunlikely(status)) {
+	if (yerror(status)) {
 
 		// Tell the client about the error.
 		wima_error(status);
@@ -186,7 +188,7 @@ WimaAreaNode wima_tree_addLeftEditor(WimaTree tree, WimaAreaNode parent, WimaEdi
 	WimaStatus status = wima_tree_addEditor(tree, node, wed);
 
 	// Check for error.
-	if (yunlikely(status)) {
+	if (yerror(status)) {
 
 		// Tell the client about the error.
 		wima_error(status);
@@ -215,7 +217,7 @@ WimaAreaNode wima_tree_addRightParent(WimaTree tree, WimaAreaNode parent, float 
 	WimaStatus status = wima_tree_addParent(tree, node, split, vertical);
 
 	// Check for error.
-	if (yunlikely(status)) {
+	if (yerror(status)) {
 
 		// Tell the client about the error.
 		wima_error(status);
@@ -244,7 +246,7 @@ WimaAreaNode wima_tree_addRightEditor(WimaTree tree, WimaAreaNode parent, WimaEd
 	WimaStatus status = wima_tree_addEditor(tree, node, wed);
 
 	// Check for error.
-	if (yunlikely(status)) {
+	if (yerror(status)) {
 
 		// Tell the client about the error.
 		wima_error(status);

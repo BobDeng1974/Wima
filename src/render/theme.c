@@ -62,6 +62,7 @@
 #include <string.h>
 
 #include <yc/assert.h>
+#include <yc/error.h>
 
 #include <dyna/nvector.h>
 
@@ -648,7 +649,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 	WimaStatus status = wima_prop_list_push(main, bg);
 
 	// Check for error.
-	if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+	if (yerror(status != WIMA_STATUS_SUCCESS)) {
 		wima_error(status);
 		return WIMA_PROP_INVALID;
 	}
@@ -664,7 +665,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 		WimaProperty item = wima_theme_loadWidget(i, starts);
 
 		// Check for error.
-		if (yunlikely(item == WIMA_PROP_INVALID)) {
+		if (yerror(item == WIMA_PROP_INVALID)) {
 			return WIMA_PROP_INVALID;
 		}
 
@@ -672,7 +673,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 		status = wima_prop_list_push(main, item);
 
 		// Check for error.
-		if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+		if (yerror(status != WIMA_STATUS_SUCCESS)) {
 			wima_error(status);
 			return WIMA_PROP_INVALID;
 		}
@@ -686,7 +687,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) {
 	status = wima_prop_list_push(main, node);
 
 	// Check for error.
-	if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+	if (yerror(status != WIMA_STATUS_SUCCESS)) {
 		wima_error(status);
 		return WIMA_PROP_INVALID;
 	}
@@ -740,7 +741,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 		                              widgetThemeLabels[i], descs[i], initial++);
 
 		// Check for error.
-		if (yunlikely(child == WIMA_PROP_INVALID)) {
+		if (yerror(child == WIMA_PROP_INVALID)) {
 			return WIMA_PROP_INVALID;
 		}
 
@@ -748,7 +749,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 		status = wima_prop_list_push(main, child);
 
 		// Check for error.
-		if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+		if (yerror(status != WIMA_STATUS_SUCCESS)) {
 			wima_error(status);
 			return WIMA_PROP_INVALID;
 		}
@@ -774,7 +775,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 	                              descs[WIMA_THEME_WIDGET_SHADE_TOP], shadeTops[idx]);
 
 	// Check for error.
-	if (yunlikely(child == WIMA_PROP_INVALID)) {
+	if (yerror(child == WIMA_PROP_INVALID)) {
 		return WIMA_PROP_INVALID;
 	}
 
@@ -782,7 +783,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 	status = wima_prop_list_push(main, child);
 
 	// Check for error.
-	if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+	if (yerror(status != WIMA_STATUS_SUCCESS)) {
 		wima_error(status);
 		return WIMA_PROP_INVALID;
 	}
@@ -794,7 +795,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 	                              descs[WIMA_THEME_WIDGET_SHADE_BTM], shadeBottoms[idx]);
 
 	// Check for error.
-	if (yunlikely(child == WIMA_PROP_INVALID)) {
+	if (yerror(child == WIMA_PROP_INVALID)) {
 		return WIMA_PROP_INVALID;
 	}
 
@@ -802,7 +803,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 	status = wima_prop_list_push(main, child);
 
 	// Check for error.
-	if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+	if (yerror(status != WIMA_STATUS_SUCCESS)) {
 		wima_error(status);
 		return WIMA_PROP_INVALID;
 	}
@@ -814,7 +815,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 	                              descs[WIMA_THEME_WIDGET_SHADED], true);
 
 	// Check for error.
-	if (yunlikely(child == WIMA_PROP_INVALID)) {
+	if (yerror(child == WIMA_PROP_INVALID)) {
 		return WIMA_PROP_INVALID;
 	}
 
@@ -822,7 +823,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) {
 	status = wima_prop_list_push(main, child);
 
 	// Check for error.
-	if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+	if (yerror(status != WIMA_STATUS_SUCCESS)) {
 		wima_error(status);
 		return WIMA_PROP_INVALID;
 	}
@@ -860,7 +861,7 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 		                              nodeThemeLabels[i], nodeDescs[i], initial++);
 
 		// Check for error.
-		if (yunlikely(child == WIMA_PROP_INVALID)) {
+		if (yerror(child == WIMA_PROP_INVALID)) {
 			return WIMA_PROP_INVALID;
 		}
 
@@ -868,7 +869,7 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 		status = wima_prop_list_push(main, child);
 
 		// Check for error.
-		if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+		if (yerror(status != WIMA_STATUS_SUCCESS)) {
 			wima_error(status);
 			return WIMA_PROP_INVALID;
 		}
@@ -904,7 +905,7 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 	                               WIMA_ICON_INVALID, 5, 0, 10, 1);
 
 	// Check for error.
-	if (yunlikely(child == WIMA_PROP_INVALID)) {
+	if (yerror(child == WIMA_PROP_INVALID)) {
 		return WIMA_PROP_INVALID;
 	}
 
@@ -912,7 +913,7 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts) {
 	status = wima_prop_list_push(main, child);
 
 	// Check for error.
-	if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+	if (yerror(status != WIMA_STATUS_SUCCESS)) {
 		wima_error(status);
 		return WIMA_PROP_INVALID;
 	}

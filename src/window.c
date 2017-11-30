@@ -37,6 +37,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include <yc/error.h>
+
 #include <dyna/dyna.h>
 #include <dyna/tree.h>
 
@@ -218,6 +220,8 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	wassert(len < WIMA_WINDOW_MAX, WIMA_ASSERT_WIN_MAX);
 
 	WimaWin wwin;
+	WimaStatus status;
+	WimaWin* window;
 
 	// Clear these before assigning.
 	wwin.render.nvg = NULL;
@@ -254,17 +258,17 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// because GLFW does not keep a copy of the
 	// name, so Wima must.
 	wwin.name = dstr_create(name);
-	if (yunlikely(!wwin.name)) {
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_WINDOW_INVALID;
+	if (yerror(!wwin.name)) {
+		status = WIMA_STATUS_MALLOC_ERR;
+		goto wima_win_create_name_glfw_err;
 	}
 
 	// Create the window, and check for error.
 	GLFWwindow* win = glfwCreateWindow(size.w, size.h, name, NULL, NULL);
-	if (yunlikely(!win)) {
+	if (yerror(!win)) {
 		dstr_free(wwin.name);
-		wima_error(WIMA_STATUS_WINDOW_ERR);
-		return WIMA_WINDOW_INVALID;
+		status = WIMA_STATUS_WINDOW_ERR;
+		goto wima_win_create_name_glfw_err;
 	}
 
 	// Make sure the window knows its GLFW counterpart.
@@ -272,10 +276,8 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 	// Create the image vector and check for error.
 	wwin.images = dvec_create(0, NULL, NULL, sizeof(int));
-	if (yunlikely(!wwin.images)) {
-		wima_window_destroy(&wwin);
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_WINDOW_INVALID;
+	if (yerror(!wwin.images)) {
+		goto wima_win_create_noptr_err;
 	}
 
 	int w, h;
@@ -347,15 +349,13 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 		idx = len;
 
 		// Push it onto the list and check for error.
-		if (yunlikely(dvec_push(wg.windows, &wwin))) {
-			wima_window_destroy(&wwin);
-			wima_error(WIMA_STATUS_MALLOC_ERR);
-			return WIMA_WINDOW_INVALID;
+		if (yerror(dvec_push(wg.windows, &wwin))) {
+			goto wima_win_create_noptr_err;
 		}
 	}
 
 	// Get a pointer to the new window.
-	WimaWin* window = dvec_get(wg.windows, idx);
+	window = dvec_get(wg.windows, idx);
 
 	// Cache this.
 	size_t cap = dvec_cap(wg.workspaces);
@@ -364,27 +364,21 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	window->workspaceSizes = dvec_create(cap, NULL, NULL, sizeof(WimaSize));
 
 	// Check for error.
-	if (yunlikely(!window->workspaceSizes)) {
-		wima_window_destroy(window);
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_WINDOW_INVALID;
+	if (yerror(!window->workspaceSizes)) {
+		goto wima_win_create_malloc_err;
 	}
 
 	// Create a workspaces vector.
 	window->workspaces = dvec_createTreeVec(cap, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
 
 	// Check for error.
-	if (yunlikely(!window->workspaces)) {
-		wima_window_destroy(window);
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_WINDOW_INVALID;
+	if (yerror(!window->workspaces)) {
+		goto wima_win_create_malloc_err;
 	}
 
 	// Copy the workspaces.
-	if (yunlikely(dvec_copy(window->workspaces, wg.workspaces))) {
-		wima_window_destroy(window);
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_WINDOW_INVALID;
+	if (yerror(dvec_copy(window->workspaces, wg.workspaces))) {
+		goto wima_win_create_malloc_err;
 	}
 
 	// Set the tree index.
@@ -427,30 +421,25 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	glfwSwapInterval(1);
 
 	// Load the context.
-	if (yunlikely(!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))) {
-		wima_window_destroy(window);
-		wima_error(WIMA_STATUS_OPENGL_ERR);
-		return WIMA_WINDOW_INVALID;
+	if (yerror(!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))) {
+		status = WIMA_STATUS_OPENGL_ERR;
+		goto wima_win_create_err;
 	}
 
 	// Create the NanoVG context.
 	window->render.nvg = nvgCreateGL3(NVG_ANTIALIAS);
 
 	// Check for error.
-	if (yunlikely(!window->render.nvg)) {
-		wima_window_destroy(window);
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_WINDOW_INVALID;
+	if (yerror(!window->render.nvg)) {
+		goto wima_win_create_malloc_err;
 	}
 
 	// Load the font.
 	window->render.font = nvgCreateFont(window->render.nvg, "default", dstr_str(wg.fontPath));
 
 	// Check for error.
-	if (yunlikely(window->render.font == -1)) {
-		wima_window_destroy(window);
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_WINDOW_INVALID;
+	if (yerror(window->render.font == -1)) {
+		goto wima_win_create_malloc_err;
 	}
 
 	// Cache this.
@@ -469,13 +458,11 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 			DynaString path = dvec_get(wg.imagePaths, i);
 
 			// Add the image.
-			WimaStatus status = wima_window_addImage(window, dstr_str(path), flags[i]);
+			status = wima_window_addImage(window, dstr_str(path), flags[i]);
 
 			// Check for error and handle it.
-			if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
-				wima_window_destroy(window);
-				wima_error(status);
-				return WIMA_WINDOW_INVALID;
+			if (yerror(status != WIMA_STATUS_SUCCESS)) {
+				goto wima_win_create_err;
 			}
 		}
 	}
@@ -489,6 +476,32 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	return idx;
+
+// When we don't have a pointer to the window yet.
+wima_win_create_noptr_err:
+
+	// Set the pointer.
+	window = &wwin;
+
+// Malloc error
+wima_win_create_malloc_err:
+
+	// Set the status.
+	status = WIMA_STATUS_MALLOC_ERR;
+
+// General errors.
+wima_win_create_err:
+
+	// Destroy the window.
+	wima_window_destroy(window);
+
+// Error creating name or GLFW window.
+wima_win_create_name_glfw_err:
+
+	// Send the error to the client.
+	wima_error(status);
+
+	return WIMA_WINDOW_INVALID;
 }
 
 WimaStatus wima_window_close(WimaWindow wwh) {
@@ -695,8 +708,8 @@ WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {
 	// Set the title in GLFW.
 	glfwSetWindowTitle(win->window, title);
 
-	// Set the title in the name.
-	if (yunlikely(dstr_set(win->name, title))) {
+	// Set the title in the name and check for error.
+	if (yerror(dstr_set(win->name, title))) {
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
@@ -1739,7 +1752,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 
 		// Layout all areas and check for error.
 		status = wima_area_layout(WIMA_WIN_AREAS(win));
-		if (yunlikely(status)) {
+		if (yerror(status)) {
 			return status;
 		}
 
@@ -1758,7 +1771,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 
 		// Draw all areas and check for error.
 		status = wima_area_draw(&win->render, WIMA_WIN_AREAS(win));
-		if (yunlikely(status)) {
+		if (yerror(status)) {
 
 			// Cancel NanoVG frame on error.
 			nvgCancelFrame(win->render.nvg);
@@ -1771,7 +1784,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 
 			// Draw the menu and check for error.
 			status = wima_window_drawMenu(win, win->menu, 0);
-			if (yunlikely(status)) {
+			if (yerror(status)) {
 
 				// Cancel NanoVG frame on error.
 				nvgCancelFrame(win->render.nvg);
@@ -2393,7 +2406,7 @@ static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files) {
 	// Malloc a list of files.
 	const char** names = malloc(len * sizeof(char*));
 
-	if (yunlikely(names == NULL)) {
+	if (yerror(names == NULL)) {
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return;
 	}

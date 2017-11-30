@@ -38,6 +38,7 @@
 #include <stdbool.h>
 
 #include <yc/assert.h>
+#include <yc/error.h>
 
 #include <wima/wima.h>
 
@@ -111,7 +112,7 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, Wim
 	DynaString s = dstr_create(name);
 
 	// Check for error.
-	if (yunlikely(s == NULL)) {
+	if (yerror(s == NULL)) {
 		goto wima_wksp_reg_err;
 	}
 
@@ -119,7 +120,7 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, Wim
 	WimaProperty prop = wima_prop_string_register(buffer, NULL, wima_wksp_desc, icon, s);
 
 	// Check for error.
-	if (yunlikely(prop == WIMA_PROP_INVALID)) {
+	if (yerror(prop == WIMA_PROP_INVALID)) {
 		goto wima_wksp_reg_prop_reg_err;
 	}
 
@@ -127,17 +128,17 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, Wim
 	WimaWksp wksp = dvec_pushTree(wg.workspaces);
 
 	// Check for error.
-	if (yunlikely(!wksp)) {
+	if (yerror(!wksp)) {
 		goto wima_wksp_reg_wksp_err;
 	}
 
 	// Copy the tree and check for error.
-	if (yunlikely(dtree_copy(wksp, tree))) {
+	if (yerror(dtree_copy(wksp, tree))) {
 		goto wima_wksp_reg_prop_push_err;
 	}
 
 	// Push onto the prop vector and check for error.
-	if (yunlikely(dvec_push(wg.workspaceProps, &prop))) {
+	if (yerror(dvec_push(wg.workspaceProps, &prop))) {
 		goto wima_wksp_reg_prop_push_err;
 	}
 
@@ -162,7 +163,7 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, Wim
 			WimaWksp wksp2 = dvec_pushTree(win->workspaces);
 
 			// Check for error.
-			if (yunlikely(!wksp2)) {
+			if (yerror(!wksp2)) {
 				goto wima_wksp_reg_win_err;
 			}
 
@@ -175,7 +176,7 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, Wim
 			DynaStatus status = dtree_copy(wksp2, wksp);
 
 			// Check for error.
-			if (yunlikely(status)) {
+			if (yerror(status)) {
 				goto wima_wksp_reg_win_err;
 			}
 		}
@@ -247,7 +248,7 @@ WimaStatus wima_workspace_updateFromWindow(WimaWorkspace wwksp, WimaWindow wwh) 
 	WimaWksp wksp = dvec_get(wg.workspaces, wwksp);
 
 	// Copy over and check for error.
-	if (yunlikely(dtree_copy(wksp, areas))) {
+	if (yerror(dtree_copy(wksp, areas))) {
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
@@ -267,7 +268,7 @@ WimaStatus wima_workspace_updateFromWindow(WimaWorkspace wwksp, WimaWindow wwh) 
 		WimaWksp winWksp = dvec_get(win->workspaces, wwksp);
 
 		// Copy and check for error.
-		if (yunlikely(dtree_copy(winWksp, wksp))) {
+		if (yerror(dtree_copy(winWksp, wksp))) {
 			return WIMA_STATUS_MALLOC_ERR;
 		}
 	}

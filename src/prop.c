@@ -36,9 +36,12 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <yc/mem.h>
+#include <yc/opt.h>
+#include <yc/error.h>
 
 #include <dyna/hash.h>
 #include <dyna/vector.h>
@@ -255,7 +258,7 @@ WimaProperty wima_prop_list_register(const char* name, const char* label, const 
 
 	// Create the list and send error if any.
 	DynaVector list = dvec_create(0, NULL, NULL, sizeof(WimaProperty));
-	if (yunlikely(list == NULL)) {
+	if (yerror(list == NULL)) {
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_PROP_INVALID;
 	}
@@ -329,7 +332,7 @@ WimaStatus wima_prop_list_push(WimaProperty list, WimaProperty child) {
 	DynaStatus status = dvec_push(data->_list.list, &child);
 
 	// Check for error and handle.
-	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
+	if (yerror(status != DYNA_STATUS_SUCCESS)) {
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
@@ -391,7 +394,7 @@ WimaStatus wima_prop_list_pushAt(WimaProperty list, uint32_t idx, WimaProperty c
 	DynaStatus status = dvec_pushAt(data->_list.list, idx, &child);
 
 	// Check for error and handle.
-	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
+	if (yerror(status != DYNA_STATUS_SUCCESS)) {
 		return  WIMA_STATUS_MALLOC_ERR;
 	}
 
@@ -430,7 +433,7 @@ WimaStatus wima_prop_list_pop(WimaProperty list) {
 	DynaStatus status = dvec_pop(data->_list.list);
 
 	// Check for error and handle.
-	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
+	if (yerror(status != DYNA_STATUS_SUCCESS)) {
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
@@ -472,7 +475,7 @@ WimaStatus wima_prop_list_popAt(WimaProperty list, uint32_t idx) {
 	DynaStatus status = dvec_popAt(data->_list.list, idx);
 
 	// Check for error and handle.
-	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
+	if (yerror(status != DYNA_STATUS_SUCCESS)) {
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
@@ -987,7 +990,7 @@ WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, uint32_t dat
 	wcp.funcFlags = flags;
 
 	// Push onto the vector and check for error.
-	if (yunlikely(dvec_push(wg.customProps, &wcp))) {
+	if (yerror(dvec_push(wg.customProps, &wcp))) {
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_PROP_CUSTOM_INVALID;
 	}
@@ -1036,7 +1039,7 @@ void wima_prop_destroy(DynaNVector vec, void** ptrs) {
 	WimaPropInfo* prop = ptrs[WIMA_PROP_INFO_IDX];
 
 	// We might have an early out.
-	if (yunlikely(prop->idx == WIMA_PROP_INVALID)) {
+	if (yerror(prop->idx == WIMA_PROP_INVALID)) {
 		return;
 	}
 
@@ -1184,7 +1187,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 	prop.name = ymalloc(sum);
 
 	// Check for failure.
-	if (yunlikely(!prop.name)) {
+	if (yerror(!prop.name)) {
 		return WIMA_PROP_INVALID;
 	}
 
@@ -1233,7 +1236,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 	DynaStatus status = dnvec_push(wg.props, &prop, data);
 
 	// Check for error.
-	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
+	if (yerror(status != DYNA_STATUS_SUCCESS)) {
 		ysfree(prop.name, sum);
 		return WIMA_PROP_INVALID;
 	}

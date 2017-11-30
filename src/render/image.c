@@ -34,6 +34,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <yc/error.h>
+
 #include <wima/render.h>
 
 #include "../global.h"
@@ -59,7 +61,7 @@ WimaImage wima_image_load(const char * const path, WimaImageFlags flags) {
 	DynaStatus status = dvec_pushString(wg.imagePaths, path);
 
 	// Check for error.
-	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
+	if (yerror(status != DYNA_STATUS_SUCCESS)) {
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_IMAGE_INVALID;
 	}
@@ -68,7 +70,7 @@ WimaImage wima_image_load(const char * const path, WimaImageFlags flags) {
 	status = dvec_push(wg.imageFlags, &flags);
 
 	// Check for error.
-	if (yunlikely(status != DYNA_STATUS_SUCCESS)) {
+	if (yerror(status != DYNA_STATUS_SUCCESS)) {
 
 		// Make sure to pop the path off.
 		dvec_pop(wg.imagePaths);
@@ -95,7 +97,8 @@ WimaImage wima_image_load(const char * const path, WimaImageFlags flags) {
 		// Add the image to the window.
 		WimaStatus status = wima_window_addImage(win, path, flags);
 
-		if (yunlikely(status != WIMA_STATUS_SUCCESS)) {
+		// Check for error.
+		if (yerror(status != WIMA_STATUS_SUCCESS)) {
 
 			// Loop through all the windows already done.
 			for (size_t j = 0; j < i; ++j) {

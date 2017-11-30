@@ -39,7 +39,8 @@
 #include <unistd.h>
 
 #include <yc/assert.h>
-#include <yc/mem.h>
+#include <yc/opt.h>
+#include <yc/error.h>
 
 #include <dyna/dyna.h>
 #include <dyna/vector.h>
@@ -102,21 +103,21 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 
 	// Create and if error, exit.
 	wg.fontPath = dstr_create(fontPath);
-	if (yunlikely(!wg.fontPath)) {
+	if (yerror(!wg.fontPath)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.name = dstr_create(name);
-	if (yunlikely(!wg.name)) {
+	if (yerror(!wg.name)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.windows = dvec_create(0, NULL, NULL, sizeof(WimaWin));
-	if (yunlikely(!wg.windows)) {
+	if (yerror(!wg.windows)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -124,7 +125,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	// Create and if error, exit.
 	wg.props = dnvec_ncreate(2, 0, wima_prop_copy, wima_prop_destroy,
 	                        sizeof(WimaPropInfo), sizeof(WimaPropData));
-	if (yunlikely(!wg.props)) {
+	if (yerror(!wg.props)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -134,42 +135,42 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 
 	// Create and if error, exit.
 	wg.customProps = dvec_create(0, NULL, NULL, sizeof(WimaCustProp));
-	if (yunlikely(!wg.customProps)) {
+	if (yerror(!wg.customProps)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.regions = dvec_create(0, NULL, NULL, sizeof(WimaReg));
-	if (yunlikely(!wg.regions)) {
+	if (yerror(!wg.regions)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.editors = dvec_create(0, NULL, NULL, sizeof(WimaEdtr));
-	if (yunlikely(!wg.editors)) {
+	if (yerror(!wg.editors)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.dialogs = dvec_createTreeVec(0, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
-	if (yunlikely(!wg.dialogs)) {
+	if (yerror(!wg.dialogs)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.workspaces = dvec_createTreeVec(0, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
-	if (yunlikely(!wg.workspaces)) {
+	if (yerror(!wg.workspaces)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.workspaceProps = dvec_create(0, NULL, NULL, sizeof(WimaProperty));
-	if (yunlikely(!wg.workspaceProps)) {
+	if (yerror(!wg.workspaceProps)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -177,34 +178,34 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	// Create and if error, exit.
 	wg.icons = dnvec_ncreate(2, 0, wima_icon_copy, wima_icon_destroy,
 	                        sizeof(WimaIcn), sizeof(WimaIconMarker));
-	if (yunlikely(!wg.icons)) {
+	if (yerror(!wg.icons)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.iconPathWindings = dvec_create(0, NULL, NULL, sizeof(bool));
-	if (yunlikely(!wg.iconPathWindings)) {
+	if (yerror(!wg.iconPathWindings)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.imagePaths = dvec_createStringVec(0);
-	if (yunlikely(!wg.imagePaths)) {
+	if (yerror(!wg.imagePaths)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Create and if error, exit.
 	wg.imageFlags = dvec_create(0, NULL, NULL, sizeof(WimaImageFlags));
-	if (yunlikely(!wg.imageFlags)) {
+	if (yerror(!wg.imageFlags)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Initialize GLFW and exit on error.
-	if (yunlikely(!glfwInit())) {
+	if (yerror(!glfwInit())) {
 		wima_exit();
 		return WIMA_STATUS_INIT_ERR;
 	}
@@ -269,7 +270,7 @@ WimaStatus wima_main() {
 
 	// Make sure we have a valid window.
 	GLFWwindow* win = glfwGetCurrentContext();
-	if (yunlikely(!win)) {
+	if (yerror(!win)) {
 		return WIMA_STATUS_INVALID_STATE;
 	}
 
@@ -291,7 +292,7 @@ WimaStatus wima_main() {
 
 		// Render here.
 		WimaStatus status = wima_window_draw(wwh);
-		if (yunlikely(status)) {
+		if (yerror(status)) {
 			wima_error_desc(status, "Wima encountered an error while rendering.");
 		}
 

@@ -36,6 +36,8 @@
 
 #include <stdint.h>
 
+#include <yc/error.h>
+
 #include <wima/wima.h>
 
 #include "global.h"
@@ -140,7 +142,7 @@ WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8
 	size_t len = dvec_len(wg.regions);
 
 	// Push onto the vector and check for error.
-	if (yunlikely(dvec_push(wg.regions, &reg))) {
+	if (yerror(dvec_push(wg.regions, &reg))) {
 		return WIMA_REGION_INVALID;
 	}
 

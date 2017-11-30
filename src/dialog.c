@@ -34,6 +34,8 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <yc/error.h>
+
 #include "area.h"
 #include "tree.h"
 #include "dialog.h"
@@ -64,12 +66,12 @@ WimaDialog wima_dialog_register(WimaTree tree) {
 	WimaDlg dlg = dvec_pushTree(wg.dialogs);
 
 	// Check for error.
-	if (yunlikely(!dlg)) {
+	if (yerror(!dlg)) {
 		goto wima_dlg_reg_push;
 	}
 
 	// Copy the tree and check for error.
-	if (yunlikely(dtree_copy(dlg, tree))) {
+	if (yerror(dtree_copy(dlg, tree))) {
 		goto wima_dlg_reg_copy;
 	}
 
