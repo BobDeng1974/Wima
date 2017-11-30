@@ -41,6 +41,7 @@
 #include "global.h"
 #include "item.h"
 #include "window.h"
+#include "prop.h"
 
 wima_global_decl;
 wima_assert_msgs_decl;
@@ -59,4 +60,39 @@ WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint32_t idx) {
 
 	// Calculate the layout pointer.
 	return ar->area.ctx.items + idx;
+}
+
+void wima_item_free(WimaAr* area, WimaItem* item) {
+
+	if (WIMA_ITEM_IS_WIDGET(item)) {
+
+		// Get the property info.
+		WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, item->widget.prop);
+
+		// If the prop type is predefined...
+		if (info->type <= WIMA_PROP_LAST_PREDEFINED) {
+
+			// TODO: Free data from predefined prop types.
+		}
+		else {
+
+			// Get the custom prop.
+			WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, item->widget.prop);
+			WimaCustProp* cprop = dvec_get(wg.customProps, data->_ptr.type);
+
+			// Get the free func and see if it exists.
+			WimaWidgetFreeDataFunc free = cprop->funcs.free;
+			if (free && cprop->allocSize) {
+
+				// Generate the key.
+				uint64_t key = wima_widget_hash(item->widget.prop, item->info.widget.region);
+
+				// Get the pointer.
+				void* ptr = dpool_get(area->area.ctx.widgetData, &key);
+
+				// Free the data.
+				free(ptr);
+			}
+		}
+	}
 }

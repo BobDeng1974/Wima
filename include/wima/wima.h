@@ -1334,8 +1334,10 @@ typedef enum WimaWidgetLayoutFlags {
  * A function to initialize a widget's data.
  * @param wdgt	The widget whose data will be initialized.
  * @param ptr	The ptr to the widget's data.
+ * @return		WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
  */
-typedef void (*WimaWidgetInitDataFunc)(WimaWidget wdgt, void* ptr);
+typedef WimaStatus (*WimaWidgetInitDataFunc)(WimaWidget wdgt, void* ptr);
 
 /**
  * Frees a pointer associated with a widget.
@@ -1801,17 +1803,19 @@ WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8
  */
 
 /**
- * A function to generate an area's user pointer.
+ * A function to initialize an area's data.
  * @param area	The area to generate the user pointer for.
- * @return		The user pointer.
+ * @param ptr	The pointer to the data to initialize.
+ * @return		WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
  */
-typedef void* (*WimaAreaGenPtrFunc)(WimaArea area);
+typedef WimaStatus (*WimaAreaInitDataFunc)(WimaArea area, void* ptr);
 
 /**
- * A function to free an area's user pointer.
- * @param ptr	The pointer to free.
+ * A function to free an area's data.
+ * @param ptr	The pointer to the data to free.
  */
-typedef void (*WimaAreaFreePtrFunc)(void* ptr);
+typedef void (*WimaAreaFreeDataFunc)(void* ptr);
 
 /**
  * A function to layout an area's header.
@@ -1844,10 +1848,10 @@ typedef bool (*WimaAreaMouseEnterFunc)(WimaArea area, bool entered);
 typedef struct WimaEditorFuncs {
 
 	/// The function to initialize the user pointer.
-	WimaAreaGenPtrFunc init;
+	WimaAreaInitDataFunc init;
 
 	/// The function to free the user pointer.
-	WimaAreaFreePtrFunc free;
+	WimaAreaFreeDataFunc free;
 
 	/// The function to layout an area's header.
 	WimaAreaHeaderLayoutFunc layout;
@@ -1868,11 +1872,13 @@ typedef struct WimaEditorFuncs {
  * @param name		The editor's name. This is used as a label.
  * @param funcs		The functions that the editor/area will use.
  * @param icon		The icon for the editor.
+ * @param allocSize	The size that must be allocated for the editor when live.
  * @param nRegions	The number of regions.
  *					that the editor can handle.
  * @return			The editor.
  */
-WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, int nRegions, ...);
+WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs,
+                                 WimaIcon icon, uint32_t allocSize, int nRegions, ...);
 
 /**
  * Registers a editor type that can then be used to create a WimaWorkspace.
@@ -1882,26 +1888,28 @@ WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, 
  * @param name		The editor's name. This is used as a label.
  * @param funcs		The functions that the editor/area will use.
  * @param icon		The icon for the editor.
+ * @param allocSize	The size that must be allocated for the editor when live.
  * @param nRegions	The number of regions.
  * @param regions	A list of regions.
  *					that the editor can handle.
  * @return			The editor.
  */
 WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
-                                 int nRegions, va_list regions);
+                                 uint32_t allocSize, int nRegions, va_list regions);
 
 /**
  * Registers a editor type that can then be used to create a WimaWorkspace.
  * @param name		The editor's name. This is used as a label.
  * @param funcs		The functions that the editor/area will use.
  * @param icon		The icon for the editor.
+ * @param allocSize	The size that must be allocated for the editor when live.
  * @param nRegions	The number of regions.
  * @param regions	A list of regions.
  *					that the editor can handle.
  * @return			The editor.
  */
 WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
-                                int nRegions, WimaRegion regions[]);
+                                uint32_t allocSize, int nRegions, WimaRegion regions[]);
 
 /**
  * Sets the global user pointer for the editor. All areas created from
@@ -1954,7 +1962,7 @@ WimaArea wima_area(WimaWindow wwh, WimaAreaNode node) yinline;
  * @return		The user pointer.
  * @pre			@a wah must be valid.
  */
-void* wima_area_userPointer(WimaArea wah) yinline;
+void* wima_area_data(WimaArea wah) yinline;
 
 /**
  * Returns the rectangle for @a wah.

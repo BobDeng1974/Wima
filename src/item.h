@@ -45,6 +45,11 @@ extern "C" {
 #include <wima/layout.h>
 #include <wima/wima.h>
 
+//! @cond Doxygen suppress.
+// Forward declaration.
+typedef struct WimaAr WimaAr;
+//! @endcond Doxygen suppress.
+
 /**
  * @file item.h
  */
@@ -169,6 +174,13 @@ typedef struct WimaItem {
  * @pre			@a idx must be within the size of the array.
  */
 WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint32_t idx);
+
+/**
+ * Frees the item pointed to by @a item in @a area.
+ * @param area	The area of the item.
+ * @param item	A pointer to the item to free.
+ */
+void wima_item_free(WimaAr* area, WimaItem* item);
 
 /**
  * @}

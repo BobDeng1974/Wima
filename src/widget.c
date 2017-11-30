@@ -401,8 +401,16 @@ void wima_widget_destruct(DynaPool pool, void* key) {
 	uint64_t data = *((uint64_t*) key);
 }
 
-void* wima_widget_allocate(WimaWidget wdgt, size_t size) {
+void* wima_widget_data(WimaItem* pitem) {
 
+	// Get the area.
+	WimaAr* area = wima_area_ptr(pitem->info.widget.window, pitem->info.widget.area);
+
+	// Get the data pointer.
+	uint64_t hash = wima_widget_hash(pitem->widget.prop, pitem->info.widget.region);
+	void* ptr = dpool_get(area->area.ctx.widgetData, &hash);
+
+	return ptr;
 }
 
 void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event) {
@@ -450,10 +458,10 @@ void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event) {
 		case WIMA_PROP_OPERATOR:
 			break;
 
-		case WIMA_PROP_CUSTOM:
+		case WIMA_PROP_PTR:
 
 			// If the widget handles the event, send it.
-			if (!key(wdgt, data->_ptr.ptr, event)) {
+			if (!key(wdgt, wima_widget_data(pitem), event)) {
 				// TODO: Send the event up the chain.
 			}
 
@@ -506,10 +514,10 @@ void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event) {
 		case WIMA_PROP_OPERATOR:
 			break;
 
-		case WIMA_PROP_CUSTOM:
+		case WIMA_PROP_PTR:
 
 			// If the widget handles the event, send it.
-			if (!mouseBtn(wdgt, data->_ptr.ptr, event)) {
+			if (!mouseBtn(wdgt, wima_widget_data(pitem), event)) {
 				// TODO: Send the event up the chain.
 			}
 
@@ -562,10 +570,10 @@ void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event) {
 		case WIMA_PROP_OPERATOR:
 			break;
 
-		case WIMA_PROP_CUSTOM:
+		case WIMA_PROP_PTR:
 
 			// If the widget handles the event, send it.
-			if (!click(wdgt, data->_ptr.ptr, event)) {
+			if (!click(wdgt, wima_widget_data(pitem), event)) {
 				// TODO: Send the event up the chain.
 			}
 
@@ -618,10 +626,10 @@ void wima_widget_mousePos(WimaWidget wdgt, WimaVec pos) {
 		case WIMA_PROP_OPERATOR:
 			break;
 
-		case WIMA_PROP_CUSTOM:
+		case WIMA_PROP_PTR:
 
 			// If the widget handles the event, send it.
-			if (!mouse_pos(wdgt, data->_ptr.ptr, pos)) {
+			if (!mouse_pos(wdgt, wima_widget_data(pitem), pos)) {
 				// TODO: Send the event up the chain.
 			}
 
@@ -674,10 +682,10 @@ void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event) {
 		case WIMA_PROP_OPERATOR:
 			break;
 
-		case WIMA_PROP_CUSTOM:
+		case WIMA_PROP_PTR:
 
 			// If the widget handles the event, send it.
-			if (!drag(wdgt, data->_ptr.ptr, event)) {
+			if (!drag(wdgt, wima_widget_data(pitem), event)) {
 				// TODO: Send the event up the chain.
 			}
 
@@ -730,10 +738,10 @@ void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event) {
 		case WIMA_PROP_OPERATOR:
 			break;
 
-		case WIMA_PROP_CUSTOM:
+		case WIMA_PROP_PTR:
 
 			// If the widget handles the event, send it.
-			if (!scroll(wdgt, data->_ptr.ptr, event)) {
+			if (!scroll(wdgt, wima_widget_data(pitem), event)) {
 				// TODO: Send the event up the chain.
 			}
 
@@ -786,10 +794,10 @@ void wima_widget_char(WimaWidget wdgt, WimaCharEvent event) {
 		case WIMA_PROP_OPERATOR:
 			break;
 
-		case WIMA_PROP_CUSTOM:
+		case WIMA_PROP_PTR:
 
 			// If the widget handles the event, send it.
-			if (!char_func(wdgt, data->_ptr.ptr, event)) {
+			if (!char_func(wdgt, wima_widget_data(pitem), event)) {
 				// TODO: Send the event up the chain.
 			}
 

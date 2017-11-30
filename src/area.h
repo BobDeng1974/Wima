@@ -158,12 +158,6 @@ typedef struct WimaAr {
 		 */
 		struct wima_area_leaf {
 
-			/// The user pointer for the area. This is different
-			/// from the editor's user pointer which is shared
-			/// by all areas of the same editor type. This user
-			/// pointer is only for the area itself.
-			void* user;
-
 			/// The context for the area.
 			WimaArCtx ctx;
 

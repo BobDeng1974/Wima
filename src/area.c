@@ -88,14 +88,17 @@ WimaArea wima_area(WimaWindow wwh, WimaAreaNode node) {
 	return wah;
 }
 
-void* wima_area_userPointer(WimaArea wah) {
+void* wima_area_data(WimaArea wah) {
 
 	wima_assert_init;
 
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	return area->area.user;
+	// Generate the key.
+	uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
+
+	return dpool_get(area->area.ctx.widgetData, &key);
 }
 
 WimaRect wima_area_rect(WimaArea wah) {
@@ -439,8 +442,7 @@ DynaStatus wima_area_copy(void* dest, void* src) {
 		// well as not set the user pointer.
 		// We also check to see if the user pointer is NULL. It it's
 		// not, that means that we should also not copy.
-		bool allocate = sarea->area.user == NULL &&
-		                sarea->area.ctx.items == NULL &&
+		bool allocate = sarea->area.ctx.items == NULL &&
 		                sarea->area.ctx.widgetData == NULL;
 		WimaStatus status = wima_area_setup(darea, allocate);
 
@@ -458,10 +460,11 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
+	WimaStatus status = WIMA_STATUS_SUCCESS;
+
 	// If we don't need to allocate, set NULL and return happy.
 	// We also don't even need to set up the user pointer.
 	if (!allocate) {
-		area->area.user = NULL;
 		area->area.ctx.itemCount = 0;
 		area->area.ctx.items = NULL;
 		area->area.ctx.widgetData = NULL;
@@ -475,27 +478,6 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 
 	// Get the editor pointer.
 	WimaEdtr* editor = dvec_get(wg.editors, edtr);
-
-	// Get the particular user function setter.
-	WimaAreaGenPtrFunc init = editor->funcs.init;
-
-	// If the user specified one, call it.
-	if (init) {
-
-		// Create an area handle. I can't use
-		// wima_area() here because it will assert.
-		WimaArea wah;
-		wah.area = area->node;
-		wah.window = area->window;
-
-		// Call the user function.
-		area->area.user = init(wah);
-	}
-	else {
-
-		// Set to NULL.
-		area->area.user = NULL;
-	}
 
 	// Calculate the optimal allocation size.
 	size_t size = ynalloc(sizeof(WimaItem) * editor->itemCap);
@@ -517,7 +499,48 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
-	return WIMA_STATUS_SUCCESS;
+	// If we need to allocate...
+	if (editor->allocSize > 0) {
+
+		// Generate the key.
+		uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
+
+		// Get the particular user function setter.
+		WimaAreaInitDataFunc init = editor->funcs.init;
+
+		// If the user specified one, call it.
+		if (init) {
+
+			// Allocate the pointer.
+			void* ptr = dpool_malloc(area->area.ctx.widgetData, &key, editor->allocSize);
+
+			// Check for error.
+			if (yunlikely(ptr == NULL)) {
+				return WIMA_STATUS_MALLOC_ERR;
+			}
+
+			// Create an area handle. I can't use
+			// wima_area() here because it will assert.
+			WimaArea wah;
+			wah.area = area->node;
+			wah.window = area->window;
+
+			// Call the user function.
+			status = init(wah, ptr);
+		}
+		else {
+
+			// Allocate and zero the pointer. We can get the pointer later.
+			void* ptr = dpool_calloc(area->area.ctx.widgetData, &key, editor->allocSize);
+
+			// Check for error.
+			if (yunlikely(ptr == NULL)) {
+				status = WIMA_STATUS_MALLOC_ERR;
+			}
+		}
+	}
+
+	return status;
 }
 
 bool wima_area_valid(DynaTree editors) {
@@ -571,13 +594,27 @@ void wima_area_destroy(DynaTree tree, void* ptr) {
 
 		// Free the item's arrays, if necessary.
 		if (area->area.ctx.items) {
+
+			// Cache these.
+			uint32_t itemCount = area->area.ctx.itemCount;
+			WimaItem* item = area->area.ctx.items;
+
+			// Loop through the items and free them all.
+			for (uint32_t i = 0; i < itemCount; ++i, item +=1) {
+				wima_item_free(area, item);
+			}
+
 			yfree(area->area.ctx.items);
 		}
+
+		// Get a pointer to the allocation.
+		uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
+		void* ptr = dpool_get(area->area.ctx.widgetData, &key);
 
 		// If the user didn't allocate anything,
 		// or the use handle is not initialized,
 		// just return.
-		if (!area->area.user || area->area.user == WIMA_PTR_INVALID) {
+		if (ptr == NULL) {
 			return;
 		}
 
@@ -590,15 +627,15 @@ void wima_area_destroy(DynaTree tree, void* ptr) {
 		WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
 		// Get the particular user function setter.
-		WimaAreaFreePtrFunc free_user_ptr = editor->funcs.free;
+		WimaAreaFreeDataFunc free = editor->funcs.free;
 
 		// If the user didn't specify one, don't call it.
-		if (!free_user_ptr) {
+		if (!free) {
 			return;
 		}
 
 		// Call the user function.
-		free_user_ptr(area->area.user);
+		free(ptr);
 	}
 }
 

@@ -55,8 +55,9 @@ wima_assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, int nRegions, ...) {
-
+WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs,
+                                 WimaIcon icon, uint32_t allocSize, int nRegions, ...)
+{
 	wima_assert_init;
 
 	wassert(nRegions > 0 && nRegions <= WIMA_EDITOR_MAX_REGIONS, WIMA_ASSERT_EDITOR_NUM_REGIONS);
@@ -66,7 +67,7 @@ WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, 
 	va_start(regions, nRegions);
 
 	// Register the region.
-	WimaEditor wed = wima_editor_vregister(name, funcs, icon, nRegions, regions);
+	WimaEditor wed = wima_editor_vregister(name, funcs, icon, allocSize, nRegions, regions);
 
 	// Clean up.
 	va_end(regions);
@@ -74,8 +75,8 @@ WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, 
 	return wed;
 }
 
-WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs,
-                                 WimaIcon icon, int nRegions, va_list regions)
+WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
+                                 uint32_t allocSize, int nRegions, va_list regions)
 {
 	wima_assert_init;
 
@@ -90,11 +91,11 @@ WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs,
 	}
 
 	// Register the region.
-	return wima_editor_register(name, funcs, icon, nRegions, regs);
+	return wima_editor_register(name, funcs, icon, allocSize, nRegions, regs);
 }
 
-WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs,
-                                WimaIcon icon, int nRegions, WimaRegion regions[])
+WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
+                                uint32_t allocSize, int nRegions, WimaRegion regions[])
 {
 	wima_assert_init;
 
@@ -122,6 +123,7 @@ WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs,
 	// Set up  the fields.
 	edtr.funcs = funcs;
 	edtr.icon = icon;
+	edtr.allocSize = allocSize;
 
 	// The sum of the item caps.
 	uint32_t sum = 0;

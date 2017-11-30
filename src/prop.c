@@ -920,7 +920,7 @@ WimaProperty wima_prop_operator_register(const char* name, const char* label, co
 ////////////////////////////////////////////////////////////////////////////////
 
 WimaProperty wima_prop_ptr_register(const char* name, const char* label, const char* desc,
-                                       WimaIcon icon, WimaCustomProperty type, void* ptr)
+                                    WimaIcon icon, WimaCustomProperty type, void* ptr)
 {
 	wima_assert_init;
 
@@ -933,7 +933,7 @@ WimaProperty wima_prop_ptr_register(const char* name, const char* label, const c
 	prop._ptr.type = type;
 
 	// Register the property.
-	WimaProperty idx = wima_prop_register(name, label, desc, icon, WIMA_PROP_CUSTOM, &prop);
+	WimaProperty idx = wima_prop_register(name, label, desc, icon, WIMA_PROP_PTR, &prop);
 
 	return idx;
 }
@@ -946,7 +946,7 @@ void* wima_prop_ptr(WimaProperty wph) {
 
 #ifdef __YASSERT__
 	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-	wassert(prop->type == WIMA_PROP_CUSTOM, WIMA_ASSERT_PROP_PTR);
+	wassert(prop->type == WIMA_PROP_PTR, WIMA_ASSERT_PROP_PTR);
 #endif
 
 	// Get the data.
@@ -1077,7 +1077,7 @@ void wima_prop_destroy(DynaNVector vec, void** ptrs) {
 
 		case WIMA_PROP_ENUM:
 		case WIMA_PROP_COLOR:
-		case WIMA_PROP_CUSTOM:
+		case WIMA_PROP_PTR:
 		case WIMA_PROP_OPERATOR:
 			break;
 	}

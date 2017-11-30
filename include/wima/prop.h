@@ -127,7 +127,7 @@ typedef enum WimaPropType {
 	WIMA_PROP_OPERATOR,
 
 	/// A custom (user pointer) property. See @a WimaCustomProperty.
-	WIMA_PROP_CUSTOM,
+	WIMA_PROP_PTR,
 
 	/// A reference to the last predefined property type.
 	WIMA_PROP_LAST_PREDEFINED = WIMA_PROP_OPERATOR,
@@ -657,8 +657,8 @@ WimaProperty wima_prop_operator_register(const char* name, const char* label, co
  * @param desc		The description of the property. This
  *					is used as a tooltip.
  * @param icon		The icon to use with the property.
- * @param ptr		The initial pointer.
  * @param type		The widget type.
+ * @param ptr		The initial pointer.
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  * @ptr_lifetime	Wima assumes that @a ptr is allocated

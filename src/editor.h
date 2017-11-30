@@ -78,6 +78,10 @@ typedef struct WimaEdtr {
 	/// areas made from this editor.
 	uint32_t itemCap;
 
+	/// The size that must be allocated for the editor
+	/// when it is live as an area.
+	uint32_t allocSize;
+
 	/// The list of regions.
 	WimaRegion regions[WIMA_EDITOR_MAX_REGIONS];
 
