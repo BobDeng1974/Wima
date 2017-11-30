@@ -75,37 +75,74 @@ wima_assert_msgs_decl;
  */
 
 /**
- * An array of flags for the predefined prop types.
+ * The WimaCustProp information for predefined prop types.
  */
-const uint32_t wima_prop_flags[] = {
+const WimaCustProp wima_prop_predefinedTypes[] = {
 
-    // TODO: Set flags later.
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    // TODO: Fill this later.
+    {
+        {
+            NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        },
+        0,
+        0
+    },
 
-};
+    {
+        {
+            NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        },
+        0,
+        0
+    },
 
-/**
- * An array of allocation sizes for the predefined prop types.
- */
-const uint32_t wima_prop_allocSizes[] = {
+    {
+        {
+            NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        },
+        0,
+        0
+    },
 
-    // TODO: Set sizes later.
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    {
+        {
+            NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        },
+        0,
+        0
+    },
 
+    {
+        {
+            NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        },
+        0,
+        0
+    },
+
+    {
+        {
+            NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        },
+        0,
+        0
+    },
+
+    {
+        {
+            NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        },
+        0,
+        0
+    },
+
+    {
+        {
+            NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        },
+        0,
+        0
+    },
 };
 
 /**

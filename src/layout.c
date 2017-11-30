@@ -34,6 +34,9 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <yc/opt.h>
+#include <yc/error.h>
+
 #include <wima/wima.h>
 #include <wima/layout.h>
 
@@ -44,11 +47,41 @@
 #include "window.h"
 #include "prop.h"
 
+//! @cond Doxygen suppress.
 wima_global_decl;
+wima_error_descs_decl;
 wima_assert_msgs_decl;
 
-wima_prop_flags_decl;
-wima_prop_sizes_decl;
+wima_prop_info_decl;
+//! @endcond Doxygen suppress.
+
+////////////////////////////////////////////////////////////////////////////////
+// Declarations for static functions.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @file src/layout.c
+ */
+
+/**
+ * @defgroup layout_internal layout_internal
+ * @{
+ */
+
+/**
+ * Sets the data for children in the parent.
+ * @param parent	The parent whose data will be set.
+ * @param area		The area the parent is in.
+ * @param idx		The index of the child's info to set.
+ * @pre				@a parent must be valid.
+ * @pre				@a parent is a layout.
+ * @pre				@a parent must not be full already.
+ */
+static void wima_layout_setChildren(WimaLayout parent, WimaAr* area, uint32_t idx);
+
+/**
+ * @}
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
@@ -288,11 +321,18 @@ WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags, uint32_t cols) {
 
 WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop) {
 
+	WimaStatus status;
 	WimaItemInfo wih;
 	uint32_t flags;
 	uint32_t allocSize;
 
+	WimaPropData* data;
+	WimaCustomProperty custProp;
+	WimaCustProp* cprop;
+
 	wima_assert_init;
+
+	wassert(wima_prop_valid(prop), WIMA_ASSERT_PROP);
 
 	wassert(wima_window_valid(parent.window), WIMA_ASSERT_WIN);
 
@@ -304,14 +344,12 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop) {
 	// Get a pointer to the area.
 	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), parent.area);
 
-	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_OVER_MAX);
-
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
+
+	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_OVER_MAX);
 
 	 // Must run between uiBeginLayout() and uiEndLayout().
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
-
-	wassert(wima_prop_valid(prop), WIMA_ASSERT_PROP);
 
 	// Get the index and increase the count.
 	uint32_t idx = (area->area.ctx.itemCount)++;
@@ -322,46 +360,123 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop) {
 	wih.widget.region = parent.region;
 	wih.widget.window = parent.window;
 
-	// TODO: Finish this function.
-
 	// Get the pointer to the item and prop info.
-	WimaItem* item = wima_layout_ptr(wih.layout);
+	WimaItem* item = area->area.ctx.items + idx;
 	WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, prop);
 
 	// If the prop type is predefined...
-	if (info->type <= WIMA_PROP_LAST_PREDEFINED) {
+	WimaPropType ptype = info->type;
+	bool predefined = ptype <= WIMA_PROP_LAST_PREDEFINED;
+	if (predefined) {
 
 		// Just get the flags and sizes.
-		flags = wima_prop_flags[info->type];
-		allocSize = wima_prop_allocSizes[info->type];
+		flags = wima_prop_predefinedTypes[ptype].funcFlags;
+		allocSize = wima_prop_predefinedTypes[ptype].allocSize;
 	}
 	else {
 
 		// Get the prop data.
-		WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, prop);
+		data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, prop);
 
 		// Get the custom property.
-		WimaCustomProperty custProp = data->_ptr.type;
+		custProp = data->_ptr.type;
 
 		wassert(custProp < dvec_len(wg.customProps), WIMA_ASSERT_PROP_CUSTOM);
 
 		// Get the custom prop data.
-		WimaCustProp* cprop = dvec_get(wg.customProps, custProp);
+		cprop = dvec_get(wg.customProps, custProp);
 
 		// Get the flags and alloc size.
 		flags = cprop->funcFlags;
 		allocSize = cprop->allocSize;
 	}
 
-	// Set the fields.
-	item->widget.prop = prop;
-	item->widget.flags = flags;
-
 	// If the widget wants an allocation...
 	if (allocSize > 0) {
 
+		// Get the key.
+		uint64_t key = wima_widget_hash(prop, parent.region);
 
+		// Check to see if it already exists.
+		// Since it takes a bit to allocate,
+		// I decided to use yunlikely to fast
+		// track every other time.
+		if (yunlikely(!dpool_exists(area->area.ctx.widgetData, &key))) {
+
+			WimaWidgetInitDataFunc init;
+			void* ptr;
+
+			// Get the init function.
+			init = predefined ? wima_prop_predefinedTypes[ptype].funcs.init : cprop->funcs.init;
+
+			// If the init function exists...
+			if (init) {
+
+				// Create a byte array.
+				uint8_t bytes[allocSize];
+
+				// Init the data. We do this before actually
+				// allocating because if the init fails, it
+				// can happen again later.
+				WimaStatus status = init(wih.widget, bytes);
+
+				// Check for error.
+				if (yerror(status != WIMA_STATUS_SUCCESS)) {
+					goto wima_lyt_wdgt_err;
+				}
+
+				// Malloc the data.
+				ptr = dpool_malloc(area->area.ctx.widgetData, &key, allocSize);
+
+				// Check for error.
+				if (yerror(ptr == NULL)) {
+					goto wima_lyt_wdgt_malloc_err;
+				}
+
+				// Copy the memory.
+				memcpy(ptr, bytes, allocSize);
+			}
+			else {
+
+				// Allocate and zero the data.
+				ptr = dpool_calloc(area->area.ctx.widgetData, &key, allocSize);
+
+				// Check for error.
+				if (yerror(ptr == NULL)) {
+					goto wima_lyt_wdgt_malloc_err;
+				}
+			}
+		}
 	}
+
+	// Set the item's data.
+	item->info = wih;
+	item->isLayout = false;
+	item->parent = parent.layout;
+	item->nextSibling = WIMA_WIDGET_INVALID;
+
+	// Set the widget specific stuff.
+	item->widget.prop = prop;
+	item->widget.flags = flags;
+
+	// Set the children info in the parent.
+	wima_layout_setChildren(parent, area, idx);
+
+	return wih.widget;
+
+wima_lyt_wdgt_malloc_err:
+
+	// Set the status.
+	status = WIMA_STATUS_MALLOC_ERR;
+
+// Generic errors.
+wima_lyt_wdgt_err:
+
+	// Send the error.
+	wima_error(status);
+
+	// Set an invalid index.
+	wih.widget.widget = WIMA_WIDGET_INVALID;
 
 	return wih.widget;
 }
@@ -411,55 +526,22 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol
 	// If the parent is not valid, we don't have to do
 	// this next part because it means that we are doing
 	// the root, which doesn't need this next stuff.
-	if (parent.layout != WIMA_LAYOUT_INVALID) {
+	if (yunlikely(parent.layout != WIMA_LAYOUT_INVALID)) {
 
-		wassert(parent.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
-
-		// Get a pointer to the parent.
-		WimaItem* pparent = area->area.ctx.items + parent.layout;
-
-		wassert(WIMA_ITEM_IS_LAYOUT(pparent), WIMA_ASSERT_ITEM_LAYOUT);
-
-		wassert(!(pparent->layout.flags & WIMA_LAYOUT_SPLIT) || pparent->layout.kidCount < 2,
-		        WIMA_ASSERT_LAYOUT_SPLIT_MAX);
-
-		// Add to the kid count.
-		++(pparent->layout.kidCount);
-
-		// If the parent's last kid is valid...
-		if (pparent->layout.lastKid != WIMA_LAYOUT_INVALID) {
-
-			// Get the last kid.
-			WimaItem* pkid = area->area.ctx.items + pparent->layout.lastKid;
-
-			// Set its sibling and the parent's
-			// last kid to the new one.
-			pkid->nextSibling = idx;
-			pparent->layout.lastKid = idx;
-		}
-
-		// If the last kid doesn't exist yet...
-		else {
-
-			// Set the parent's first and last kid to the new one.
-			pparent->layout.firstKid = idx;
-			pparent->layout.lastKid = idx;
-		}
+		// Set all the children.
+		wima_layout_setChildren(parent, area, idx);
 	}
 
 	// Get the pointer to the new item.
 	WimaItem* playout = area->area.ctx.items + idx;
 
-	// Fill it with NULL.
-	memset(playout, 0, sizeof(WimaItem));
-
 	// Set it as a layout.
 	playout->isLayout = true;
 
 	// Set the parent, nextSibling, area, and window.
+	playout->info.layout = wlh;
 	playout->parent = parent.layout;
 	playout->nextSibling = WIMA_WIDGET_INVALID;
-	playout->info.layout = wlh;
 
 	// Set the background, split, kids, and flags.
 	playout->layout.splitcol = splitcol;
@@ -469,4 +551,44 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol
 	playout->layout.flags = flags;
 
 	return wlh;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Static functions.
+////////////////////////////////////////////////////////////////////////////////
+
+static void wima_layout_setChildren(WimaLayout parent, WimaAr* area, uint32_t idx) {
+
+	wassert(parent.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
+
+	// Get a pointer to the parent.
+	WimaItem* pparent = area->area.ctx.items + parent.layout;
+
+	wassert(WIMA_ITEM_IS_LAYOUT(pparent), WIMA_ASSERT_ITEM_LAYOUT);
+
+	wassert(!(pparent->layout.flags & WIMA_LAYOUT_SPLIT) || pparent->layout.kidCount < 2,
+	        WIMA_ASSERT_LAYOUT_SPLIT_MAX);
+
+	// Add to the kid count.
+	++(pparent->layout.kidCount);
+
+	// If the parent's last kid is valid...
+	if (pparent->layout.lastKid != WIMA_LAYOUT_INVALID) {
+
+		// Get the last kid.
+		WimaItem* pkid = area->area.ctx.items + pparent->layout.lastKid;
+
+		// Set its sibling and the parent's
+		// last kid to the new one.
+		pkid->nextSibling = idx;
+		pparent->layout.lastKid = idx;
+	}
+
+	// If the last kid doesn't exist yet...
+	else {
+
+		// Set the parent's first and last kid to the new one.
+		pparent->layout.firstKid = idx;
+		pparent->layout.lastKid = idx;
+	}
 }
