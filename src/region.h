@@ -63,10 +63,26 @@ extern "C" {
 #define WIMA_REG_VERTICAL (0x01)
 
 /**
+ * @def WIMA_REG_IS_VERTICAL(reg)
+ * Returns true if @a reg is vertical, false otherwise.
+ * @param reg	The region to query.
+ * @return		true if @a reg is vertical, false otherwise.
+ */
+#define WIMA_REG_IS_VERTICAL(reg) ((reg)->flags & WIMA_REG_VERTICAL)
+
+/**
  * @def WIMA_REG_LEFT
  * The left (up) bit in the flags.
  */
 #define WIMA_REG_LEFT (0x02)
+
+/**
+ * @def WIMA_REG_IS_LEFT(reg)
+ * Returns true if @a reg is left (top), false otherwise.
+ * @param reg	The region to query.
+ * @return		true if @a reg is left (top), false otherwise.
+ */
+#define WIMA_REG_IS_LEFT(reg) ((reg)->flags & WIMA_REG_LEFT)
 
 /**
  * @def WIMA_REG_RESIZABLE
@@ -75,16 +91,40 @@ extern "C" {
 #define WIMA_REG_RESIZABLE (0x04)
 
 /**
+ * @def WIMA_REG_IS_RESIZABLE(reg)
+ * Returns true if @a reg is resizable, false otherwise.
+ * @param reg	The region to query.
+ * @return		true if @a reg is resizable, false otherwise.
+ */
+#define WIMA_REG_IS_RESIZABLE(reg) ((reg)->flags & WIMA_REG_RESIZABLE)
+
+/**
  * @def WIMA_REG_SCROLL_VERTICAL
  * The vertical scroll bit in the flags.
  */
 #define WIMA_REG_SCROLL_VERTICAL (0x08)
 
 /**
+ * @def WIMA_REG_CAN_SCROLL_VERTICAL(reg)
+ * Returns true if @a reg can scroll vertically, false otherwise.
+ * @param reg	The region to query.
+ * @return		true if @a reg can scroll vertically, false otherwise.
+ */
+#define WIMA_REG_CAN_SCROLL_VERTICAL(reg) ((reg)->flags & WIMA_REG_SCROLL_VERTICAL)
+
+/**
  * @def WIMA_REG_SCROLL_HORIZONTAL
  * The horizontal scroll bit in the flags.
  */
 #define WIMA_REG_SCROLL_HORIZONTAL (0x10)
+
+/**
+ * @def WIMA_REG_CAN_SCROLL_HORIZONTAL(reg)
+ * Returns true if @a reg can scroll horizontally, false otherwise.
+ * @param reg	The region to query.
+ * @return		true if @a reg can scroll horizontally, false otherwise.
+ */
+#define WIMA_REG_CAN_SCROLL_HORIZONTAL(reg) ((reg)->flags & WIMA_REG_SCROLL_HORIZONTAL)
 
 /**
  * The data for a WimaRegion.

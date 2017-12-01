@@ -1749,17 +1749,17 @@ uint8_t wima_region_clearResizableFlag(uint8_t flags) yconst yinline;
  *
  * The scroll flags are whether the region should
  * be scrollable (in the specified direction) or not.
- * @param flags			The flags to add to.
- * @param vertical		true if the vertical scroll
- *						flag should be set, false
- *						otherwise.
- * @param horizontal	true if the horizontal
- *						scroll flag should be set,
- *						false otherwise.
- * @return				@a flags with the scroll
- *						bits set.
+ * The main direction is vertical if the vertical flag
+ * is set, and the opposite is the opposite direction.
+ * @param flags		The flags to add to.
+ * @param main		true if the main scroll flag
+ *					should be set, false otherwise.
+ * @param opposite	true if the opposite scroll flag
+ *					should be set, false otherwise.
+ * @return			@a flags with the scroll
+ *					bits set.
  */
-uint8_t wima_region_setScrollFlags(uint8_t flags, bool vertical, bool horizontal) yconst yinline;
+uint8_t wima_region_setScrollFlags(uint8_t flags, bool main, bool opposite) yconst yinline;
 
 /**
  * Takes a set of flags meant for @a WimaRegions
