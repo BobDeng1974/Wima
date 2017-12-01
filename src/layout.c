@@ -125,24 +125,6 @@ uint16_t wima_layout_clearScrollFlags(uint16_t flags) {
 	return flags;
 }
 
-uint16_t wima_layout_setSeparationFlag(uint16_t flags) {
-
-	wima_assert_init;
-
-	flags |= WIMA_LAYOUT_SEP;
-
-	return flags;
-}
-
-uint16_t wima_layout_clearSeparationFlag(uint16_t flags) {
-
-	wima_assert_init;
-
-	flags &= ~(WIMA_LAYOUT_SEP);
-
-	return flags;
-}
-
 uint16_t wima_layout_setBoxFlag(uint16_t flags) {
 
 	wima_assert_init;
@@ -207,6 +189,28 @@ bool wima_layout_enabled(WimaLayout wlh) {
 	return layout->layout.flags & WIMA_LAYOUT_ENABLE;
 }
 
+void wima_layout_separator(WimaLayout parent) {
+
+	wima_assert_init;
+
+	wassert(wima_window_valid(parent.window), WIMA_ASSERT_WIN);
+
+#ifdef __YASSERT__
+	WimaWin* win = dvec_get(wg.windows, parent.window);
+	wassert(parent.area < dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
+	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
+#endif
+
+	// Set and unset the appropriate flags.
+	uint16_t flags = WIMA_LAYOUT_SEP;
+
+	// Create the splitcol.
+	WimaLayoutSplitCol splitcol;
+
+	// Create the layout, but don't return it.
+	wima_layout_new(parent, flags, splitcol);
+}
+
 WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags) {
 
 	wima_assert_init;
@@ -221,7 +225,7 @@ WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags) {
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_ROW;
-	flags &= ~(WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID);
+	flags &= ~(WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID | WIMA_LAYOUT_SEP);
 
 	// Create the splitcol.
 	WimaLayoutSplitCol splitcol;
@@ -243,7 +247,7 @@ WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags) {
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_COL;
-	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID);
+	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID | WIMA_LAYOUT_SEP);
 
 	// Create the splitcol.
 	WimaLayoutSplitCol splitcol;
@@ -265,7 +269,7 @@ WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split) {
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_SPLIT;
-	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID);
+	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_LIST | WIMA_LAYOUT_GRID | WIMA_LAYOUT_SEP);
 
 	// Create the splitcol.
 	WimaLayoutSplitCol splitcol;
@@ -288,7 +292,7 @@ WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags) {
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_LIST;
-	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_GRID);
+	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_GRID | WIMA_LAYOUT_SEP);
 
 	// Create the splitcol.
 	WimaLayoutSplitCol splitcol;
@@ -310,7 +314,7 @@ WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags, uint32_t cols) {
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_GRID;
-	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST);
+	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_LIST | WIMA_LAYOUT_SEP);
 
 	// Create the splitcol.
 	WimaLayoutSplitCol splitcol;

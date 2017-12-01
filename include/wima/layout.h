@@ -128,20 +128,6 @@ uint16_t wima_layout_setScrollFlags(uint16_t flags, bool vertical, bool horizont
 uint16_t wima_layout_clearScrollFlags(uint16_t flags) yconst yinline;
 
 /**
- * Takes an initial flag value and sets the separation bit.
- * @param flags	The initial flags value.
- * @return		The @a flags with the separation bit set.
- */
-uint16_t wima_layout_setSeparationFlag(uint16_t flags) yconst yinline;
-
-/**
- * Takes an initial flag value and clears the separation bit.
- * @param flags	The initial flags value.
- * @return		The @a flags with the separation bit cleared.
- */
-uint16_t wima_layout_clearSeparationFlag(uint16_t flags) yconst yinline;
-
-/**
  * Takes an initial flag value and sets the box bit.
  * @param flags	The initial flags value.
  * @return		The @a flags with the box bit set.
@@ -169,6 +155,13 @@ void wima_layout_setEnabled(WimaLayout wlh, bool enabled);
  * @return		true if enabled, false otherwise.
  */
 bool wima_layout_enabled(WimaLayout wlh);
+
+/**
+ * Creates a separator layout.
+ * @param parent	The layout to put the separator in.
+ * @pre				@a parent must be a valid WimaLayout.
+ */
+void wima_layout_separator(WimaLayout parent);
 
 /**
  * Creates a new sublayout of the provided @a parent
