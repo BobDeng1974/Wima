@@ -296,6 +296,16 @@ WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas);
 void wima_area_resize(DynaTree areas, WimaRect rect);
 
 /**
+ * Lays out the header for an area. Ths is used
+ * to create the two possible header regions.
+ * @param root	The root layout. Also contains
+ *				the information about the area.
+ * @return		WIMA_STATUS_SUCCESS on success,
+ *				an error code otherwise.
+ */
+WimaStatus wima_area_layoutHeader(WimaLayout root);
+
+/**
  * Lays out all areas.
  * @param areas	The tree of areas.
  * @return		WIMA_STATUS_SUCCESS on success, a

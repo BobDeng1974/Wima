@@ -591,33 +591,33 @@ void wima_area_destroy(DynaTree tree, void* ptr) {
 
 	WimaAr* area = (WimaAr*) ptr;
 
-	if (WIMA_AREA_IS_LEAF(area)) {
+	if (WIMA_AREA_IS_PARENT(area)) {
+		return;
+	}
 
-		// Free the item's arrays, if necessary.
-		if (area->area.ctx.items) {
+	// Free the item's arrays, if necessary.
+	if (area->area.ctx.items) {
 
-			// Cache these.
-			uint32_t itemCount = area->area.ctx.itemCount;
-			WimaItem* item = area->area.ctx.items;
+		// Cache these.
+		uint32_t itemCount = area->area.ctx.itemCount;
+		WimaItem* item = area->area.ctx.items;
 
-			// Loop through the items and free them all.
-			for (uint32_t i = 0; i < itemCount; ++i, item +=1) {
-				wima_item_free(area, item);
-			}
-
-			yfree(area->area.ctx.items);
+		// Loop through the items and free them all.
+		for (uint32_t i = 0; i < itemCount; ++i, item +=1) {
+			wima_item_free(area, item);
 		}
 
-		// Get a pointer to the allocation.
-		uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
-		void* ptr = dpool_get(area->area.ctx.widgetData, &key);
+		yfree(area->area.ctx.items);
+	}
 
-		// If the user didn't allocate anything,
-		// or the use handle is not initialized,
-		// just return.
-		if (ptr == NULL) {
-			return;
-		}
+	// Get a pointer to the allocation.
+	uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
+	void* data = dpool_get(area->area.ctx.widgetData, &key);
+
+	// If the user didn't allocate anything,
+	// or the use handle is not initialized,
+	// just return.
+	if (data != NULL) {
 
 		// Get the editor handle.
 		WimaEditor edtr = area->area.type;
@@ -630,14 +630,14 @@ void wima_area_destroy(DynaTree tree, void* ptr) {
 		// Get the particular user function setter.
 		WimaAreaFreeDataFunc free = editor->funcs.free;
 
-		// If the user didn't specify one, don't call it.
-		if (!free) {
-			return;
+		// If there is a free function, call it.
+		if (free) {
+			free(data);
 		}
-
-		// Call the user function.
-		free(ptr);
 	}
+
+	// Free the pool.
+	dpool_free(area->area.ctx.widgetData);
 }
 
 bool wima_area_key(WimaAr* area, WimaKeyEvent e) {
@@ -814,6 +814,50 @@ static void wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, 
 		wima_area_node_resize(areas, dtree_left(node), left, adjustSplit);
 		wima_area_node_resize(areas, dtree_right(node), right, adjustSplit);
 	}
+}
+
+WimaStatus wima_area_layoutHeader(WimaLayout root) {
+
+	WimaStatus status;
+
+	wima_assert_init;
+
+	// Insert the widget to choose the editor type.
+	// TODO: Make the widget.
+	// wima_layout_widget(root, )
+
+	// Get the area pointer.
+	WimaAr* area = wima_area_ptr(root.window, root.area);
+
+	wassert(area->area.type < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
+
+	// Get the editor.
+	WimaEdtr* edtr = dvec_get(wg.editors, area->area.type);
+
+	// Get the header layout function and see if it exists.
+	WimaAreaHeaderLayoutFunc layout = edtr->funcs.layout;
+	if (layout != NULL) {
+
+		// Add a separator.
+		wima_layout_separator(root);
+
+		// Set the flags.
+		uint16_t flags = 0;
+		flags = wima_layout_setExpandFlags(flags, false, true);
+
+		// Create the layout that will be the user's root.
+		WimaLayout row = wima_layout_row(root, true);
+
+		// Call the header layout function.
+		status = layout(row);
+	}
+	else {
+
+		// Make sure this is clear.
+		status = WIMA_STATUS_SUCCESS;
+	}
+
+	return status;
 }
 
 WimaStatus wima_area_layout(DynaTree areas) {
