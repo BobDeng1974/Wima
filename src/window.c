@@ -224,6 +224,8 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	WimaWin* window;
 
 	// Clear these before assigning.
+	// This is so wima_window_destroy()
+	// knows what has been initialized.
 	wwin.render.nvg = NULL;
 	wwin.images = NULL;
 	wwin.treeStackIdx = ((uint8_t) -1);
