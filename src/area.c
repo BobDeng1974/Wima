@@ -56,6 +56,7 @@
 #include "area.h"
 #include "window.h"
 #include "global.h"
+#include "region.h"
 
 #include "widget.h"
 
@@ -905,42 +906,54 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 		size.w = area->rect.w;
 		size.h = area->rect.h;
 
+		WimaLayoutSplitCol splitcol;
+
+		wassert(area->area.type < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
+
+		// Get the editor and its number of regions.
+		WimaEdtr* edtr = dvec_get(wg.editors, area->area.type);
+		uint8_t numRegions = edtr->numRegions;
+
 		// Create a parent layout handle (invalid).
 		WimaLayout parent;
 		parent.layout = WIMA_WIDGET_INVALID;
 		parent.area = node;
 		parent.window = area->window;
 
-		// Set the expand flags.
-		uint16_t flags = wima_layout_setExpandFlags(0, true, true);
+		// Cache this.
+		uint16_t initialFlags = wima_layout_setExpandFlags(0, true, true);
 
-		// TODO: Loop over regions and fill WimaLayout with them.
+		// Loop over regions.
+		for (uint8_t i = 0; i < numRegions; ++i) {
 
-		// Create a root layout.
-		WimaLayoutSplitCol splitcol;
-		WimaLayout wlh = wima_layout_new(parent, flags, splitcol);
+			// Set the parent's region.
+			parent.region = i;
 
-		// Get the editor layout function.
-		WimaEdtr* editor = dvec_get(wg.editors, area->area.type);
-		WimaAreaHeaderLayoutFunc layout = editor->funcs.layout;
+			// Get the region handle.
+			WimaRegion region = edtr->regions[i];
 
-		// Do the layout. The layout function is guaranteed to be non-null.
-		// TODO: status = layout(wah, wlh, size);
+			wassert(region < dvec_len(wg.regions), WIMA_ASSERT_REG);
 
-		// Check for error.
-		if (yerror(status)) {
-			return status;
-		}
+			// Get the region.
+			WimaReg* reg = dvec_get(wg.regions, region);
 
-		// If there are items in the area,
-		if (area->area.ctx.itemCount) {
+			// Set the flags.
+			bool vScroll = WIMA_REG_CAN_SCROLL_VERTICAL(reg);
+			bool hScroll = WIMA_REG_CAN_SCROLL_HORIZONTAL(reg);
+			uint8_t flags = wima_layout_setScrollFlags(initialFlags, vScroll, hScroll);
 
-			// Get a default widget handle.
-			WimaWidget zero;
-			zero.widget = 0;
-			zero.area = node;
-			zero.window = area->window;
+			// Create a root layout.
+			WimaLayout root = wima_layout_new(parent, flags, splitcol);
 
+			// Do the layout. The layout function is guaranteed to be non-null.
+			status = reg->layout(root);
+
+			// Check for error.
+			if (yerror(status != WIMA_STATUS_SUCCESS)) {
+				return status;
+			}
+
+			// TODO: Compute the layout.
 #if 0
 			// Compute the layout.
 			wima_layout_computeSize(zero, 0);
