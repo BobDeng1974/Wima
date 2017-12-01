@@ -403,11 +403,12 @@ static void wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, W
 	// We do something different depending on what type of node it is.
 	if (WIMA_AREA_IS_PARENT(area)) {
 
-		int dim = (area->parent.vertical ? rect.w : rect.h) - 1;
-		area->parent.spliti = (int) (area->parent.split * dim);
-
 		WimaRect left;
 		WimaRect right;
+
+		// Calculate the integer location of the split.
+		int dim = (area->parent.vertical ? rect.w : rect.h) - 1;
+		area->parent.spliti = (int) (area->parent.split * dim);
 
 		// Calculate and fill the children's rectangles.
 		wima_area_childrenRects(area, &left, &right);
