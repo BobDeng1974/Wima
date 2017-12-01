@@ -176,7 +176,7 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt);
  * @param pool	The pool that the widget has data in.
  * @param key	The key to the widget's data.
  */
-void wima_widget_destruct(DynaPool pool, void* key);
+void wima_widget_destroy(DynaPool pool, void* key);
 
 /**
  * Allocates data for the widget.

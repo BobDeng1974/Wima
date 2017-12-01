@@ -391,7 +391,7 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt) {
 	return wima_item_ptr(wdgt.window, wdgt.area, wdgt.widget);
 }
 
-void wima_widget_destruct(DynaPool pool, void* key) {
+void wima_widget_destroy(DynaPool pool, void* key) {
 
 	wima_assert_init;
 
