@@ -201,14 +201,11 @@ void wima_layout_separator(WimaLayout parent) {
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 #endif
 
-	// Set and unset the appropriate flags.
-	uint16_t flags = WIMA_LAYOUT_SEP;
-
 	// Create the splitcol.
 	WimaLayoutSplitCol splitcol;
 
 	// Create the layout, but don't return it.
-	wima_layout_new(parent, flags, splitcol);
+	wima_layout_new(parent, WIMA_LAYOUT_SEP, splitcol);
 }
 
 WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags) {
