@@ -393,12 +393,42 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt) {
 
 void wima_widget_destruct(DynaPool pool, void* key) {
 
-	// TODO: Write this function to get the widget type and destroy it correctly.
-
 	wima_assert_init;
 
 	// Get the data.
 	uint64_t data = *((uint64_t*) key);
+
+	// Figure out which prop it is.
+	WimaProperty prop = (WimaProperty) data;
+
+	// If the prop is invalid, it's for
+	// an area, and we can ignore it.
+	if (prop == WIMA_PROP_INVALID) {
+		return;
+	}
+
+	wassert(wima_prop_valid(prop), WIMA_ASSERT_PROP);
+
+	// Get the info.
+	WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, prop);
+
+	// If it is user defined...
+	if (info->type == WIMA_PROP_PTR) {
+
+		// Get the data.
+		WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, prop);
+
+		// Get the custom property data.
+		WimaCustProp* cprop = dvec_get(wg.customProps, data->_ptr.type);
+
+		// Get the free function.
+		WimaWidgetFreeDataFunc free = cprop->funcs.free;
+
+		// If the free function exists, call it.
+		if (free != NULL) {
+			free(dpool_get(pool, key));
+		}
+	}
 }
 
 void* wima_widget_data(WimaItem* pitem) {
