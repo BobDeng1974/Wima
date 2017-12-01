@@ -591,6 +591,7 @@ void wima_area_destroy(DynaTree tree, void* ptr) {
 
 	WimaAr* area = (WimaAr*) ptr;
 
+	// Return early if possible.
 	if (WIMA_AREA_IS_PARENT(area)) {
 		return;
 	}
