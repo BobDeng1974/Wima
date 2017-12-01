@@ -121,7 +121,7 @@ WimaStatus cb_draw(WimaWidget item, WimaRenderContext* ctx) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_layout(WimaArea wah, WimaLayout wlh) {
+WimaStatus cb_layout(WimaLayout wlh) {
 
 #if 0
 	printf("Layout: { handle: %4u, width: %4d; height: %4d }\n", wah.area, size.w, size.h);
