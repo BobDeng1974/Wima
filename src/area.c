@@ -607,6 +607,7 @@ void wima_area_destroy(DynaTree tree, void* ptr) {
 			wima_item_free(area, item);
 		}
 
+		// Free the array.
 		yfree(area->area.ctx.items);
 	}
 
