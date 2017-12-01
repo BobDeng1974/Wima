@@ -56,8 +56,8 @@ wima_assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs,
-                                 WimaIcon icon, uint32_t allocSize, int nRegions, ...)
+WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
+                                 uint32_t allocSize, bool headerTop, int nRegions, ...)
 {
 	wima_assert_init;
 
@@ -68,7 +68,7 @@ WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs,
 	va_start(regions, nRegions);
 
 	// Register the region.
-	WimaEditor wed = wima_editor_vregister(name, funcs, icon, allocSize, nRegions, regions);
+	WimaEditor wed = wima_editor_vregister(name, funcs, icon, allocSize, headerTop, nRegions, regions);
 
 	// Clean up.
 	va_end(regions);
@@ -77,7 +77,7 @@ WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs,
 }
 
 WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
-                                 uint32_t allocSize, int nRegions, va_list regions)
+                                 uint32_t allocSize, bool headerTop, int nRegions, va_list regions)
 {
 	wima_assert_init;
 
@@ -92,11 +92,11 @@ WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, 
 	}
 
 	// Register the region.
-	return wima_editor_register(name, funcs, icon, allocSize, nRegions, regs);
+	return wima_editor_register(name, funcs, icon, allocSize, headerTop, nRegions, regs);
 }
 
 WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
-                                uint32_t allocSize, int nRegions, WimaRegion regions[])
+                                uint32_t allocSize, bool headerTop, int nRegions, WimaRegion regions[])
 {
 	wima_assert_init;
 
@@ -123,22 +123,30 @@ WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, W
 	// Set up  the fields.
 	edtr.funcs = funcs;
 	edtr.icon = icon;
+	edtr.headerTop = headerTop;
 	edtr.allocSize = allocSize;
 
-	// The sum of the item caps.
-	uint32_t sum = 0;
+	// Set the header region.
+	edtr.regions[0] = headerTop ? wg.regHeaderTop : wg.regHeaderBtm;
+
+	// Get the pointer to that region.
+	WimaReg* reg = dvec_get(wg.regions, edtr.regions[0]);
+
+	// The sum of the item caps, starting with the header.
+	uint32_t sum = reg->itemCap;
 
 	// Loop through the regions and add all item caps.
 	for (int i = 0; i < nRegions; ++i) {
-		WimaReg* reg = dvec_get(wg.regions, i);
+		reg = dvec_get(wg.regions, regions[i]);
 		sum += reg->itemCap;
 	}
 
 	// Set up the item cap.
 	edtr.itemCap = sum;
 
-	// Copy the regions.
-	memcpy(edtr.regions, regions, nRegions * sizeof(WimaRegion));
+	// Copy the regions. Make sure to start at
+	// index 1 (because of the header region).
+	memcpy(edtr.regions + 1, regions, nRegions * sizeof(WimaRegion));
 
 	// Push onto the vector and check for error.
 	DynaStatus status = dvec_push(wg.editors, &edtr);

@@ -71,6 +71,9 @@ typedef struct WimaEdtr {
 	/// The icon.
 	WimaIcon icon;
 
+	/// Whether the header should be (or start) on top.
+	bool headerTop;
+
 	/// The number of regions this editor has.
 	uint8_t numRegions;
 
