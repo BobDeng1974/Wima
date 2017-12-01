@@ -55,6 +55,7 @@ uint8_t wima_region_setVerticalFlag(uint8_t flags) {
 
 	wima_assert_init;
 
+	// Set the flag.
 	flags |= WIMA_REG_VERTICAL;
 
 	return flags;
@@ -64,6 +65,7 @@ uint8_t wima_region_clearVerticalFlag(uint8_t flags) {
 
 	wima_assert_init;
 
+	// Clear the flag.
 	flags &= ~(WIMA_REG_VERTICAL);
 
 	return flags;
@@ -73,6 +75,7 @@ uint8_t wima_region_setLeftFlag(uint8_t flags) {
 
 	wima_assert_init;
 
+	// Set the flag.
 	flags |= WIMA_REG_LEFT;
 
 	return flags;
@@ -82,6 +85,7 @@ uint8_t wima_region_clearLeftFlag(uint8_t flags) {
 
 	wima_assert_init;
 
+	// Clear the flag.
 	flags &= ~(WIMA_REG_LEFT);
 
 	return flags;
@@ -91,7 +95,8 @@ uint8_t wima_region_setResizableFlag(uint8_t flags) {
 
 	wima_assert_init;
 
-	flags |= WIMA_REG_VERTICAL;
+	// Set the flag.
+	flags |= WIMA_REG_RESIZABLE;
 
 	return flags;
 }
@@ -100,6 +105,7 @@ uint8_t wima_region_clearResizableFlag(uint8_t flags) {
 
 	wima_assert_init;
 
+	// Clear the flag.
 	flags &= ~(WIMA_REG_RESIZABLE);
 
 	return flags;
@@ -119,6 +125,7 @@ uint8_t wima_region_clearScrollFlags(uint8_t flags) {
 
 	wima_assert_init;
 
+	// Clear the flags.
 	flags &= ~(WIMA_REG_SCROLL_VERTICAL | WIMA_REG_SCROLL_HORIZONTAL);
 
 	return flags;
