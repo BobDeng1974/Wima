@@ -212,16 +212,16 @@ static void wima_window_clearContext(WimaWinCtx* ctx);
 WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized,
                               bool resizable, bool decorated)
 {
+	WimaWin wwin;
+	WimaStatus status;
+	WimaWin* window;
+
 	wima_assert_init;
 
 	// Get the index of the new window.
 	size_t len = dvec_len(wg.windows);
 
 	wassert(len < WIMA_WINDOW_MAX, WIMA_ASSERT_WIN_MAX);
-
-	WimaWin wwin;
-	WimaStatus status;
-	WimaWin* window;
 
 	// Clear these before assigning.
 	// This is so wima_window_destroy()
