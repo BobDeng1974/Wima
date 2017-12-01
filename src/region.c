@@ -44,6 +44,7 @@
 #include "region.h"
 
 wima_global_decl;
+wima_error_descs_decl;
 wima_assert_msgs_decl;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -143,6 +144,7 @@ WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8
 
 	// Push onto the vector and check for error.
 	if (yerror(dvec_push(wg.regions, &reg))) {
+		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_REGION_INVALID;
 	}
 
