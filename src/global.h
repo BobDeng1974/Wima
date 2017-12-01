@@ -100,6 +100,14 @@ typedef struct WimaG {
 	/// Editors (area types).
 	DynaVector editors;
 
+	/// The handle to the region that can be used
+	/// for headers that start on top.
+	WimaRegion regHeaderTop;
+
+	/// The handle to the region that can be used
+	/// for headers that start on bottom.
+	WimaRegion regHeaderBtm;
+
 	/// Regions (areas of an editor).
 	DynaVector regions;
 

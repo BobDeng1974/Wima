@@ -147,6 +147,26 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
+	// Create the flags for a header top region.
+	uint8_t flags = wima_region_setLeftFlag(0);
+
+	// Register the header top region and check for error.
+	wg.regHeaderTop = wima_region_register(wima_area_layoutHeader, 256, flags);
+	if (yerror(wg.regHeaderTop == WIMA_REGION_INVALID)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Set the flags for a header bottom region.
+	flags = wima_region_clearLeftFlag(flags);
+
+	// Register the header top region and check for error.
+	wg.regHeaderBtm = wima_region_register(wima_area_layoutHeader, 256, flags);
+	if (yerror(wg.regHeaderBtm == WIMA_REGION_INVALID)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
 	// Create and if error, exit.
 	wg.editors = dvec_create(0, NULL, NULL, sizeof(WimaEdtr));
 	if (yerror(!wg.editors)) {

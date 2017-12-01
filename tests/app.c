@@ -374,7 +374,7 @@ int main() {
 	funcs.enter = cb_mouseEnterArea;
 
 	// Register a editor.
-	WimaEditor editor = wima_editor_nregister("Test Editor", funcs, wima_icon_debug(), 4096, region);
+	WimaEditor editor = wima_editor_nregister("Test Editor", funcs, wima_icon_debug(), false, 1, region);
 	if (editor == WIMA_EDITOR_INVALID) {
 		return WIMA_EDITOR_INVALID;
 	}
