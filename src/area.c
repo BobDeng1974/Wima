@@ -676,8 +676,8 @@ void wima_area_mouseEnter(WimaAr* area, bool enter) {
 	WimaArea wah = wima_area(area->window, area->node);
 
 	// If the handler exists, run it.
-	if (!mouse_enter || !mouse_enter(wah, enter)) {
-		// TODO: Send the event up the chain.
+	if (mouse_enter) {
+		mouse_enter(wah, enter);
 	}
 }
 

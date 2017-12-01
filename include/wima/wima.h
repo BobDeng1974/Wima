@@ -1836,9 +1836,8 @@ typedef bool (*WimaAreaKeyFunc)(WimaArea area, WimaKeyEvent event);
  * A function callback for mouse entering or exiting an area.
  * @param area		The area where the event happened.
  * @param entered	Whether or not the mouse entered.
- * @return			true if the event was consumed, false otherwise.
  */
-typedef bool (*WimaAreaMouseEnterFunc)(WimaArea area, bool entered);
+typedef void (*WimaAreaMouseEnterFunc)(WimaArea area, bool entered);
 
 /**
  * A collection of callbacks for areas.

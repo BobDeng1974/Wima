@@ -212,13 +212,13 @@ bool cb_mousePos(WimaArea wah, WimaVec pos) {
 	return false;
 }
 
-bool cb_mouseEnterArea(WimaArea wah, bool entered) {
+void cb_mouseEnterArea(WimaArea wah, bool entered) {
 
 #if 0
 	printf("Area[%d] %s\n", wah.area, entered ? "Enter" : "Exit");
 #endif
 
-	return false;
+	return;
 }
 
 const float scales[17] = {
