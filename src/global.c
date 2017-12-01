@@ -67,6 +67,7 @@ WimaG wg;
  * error message.
  */
 const char* wima_error_descs[] = {
+
     "Allocation failed",
     "Platform returned an unknown error",
     "Wima is in an invalid state",
@@ -81,6 +82,7 @@ const char* wima_error_descs[] = {
     "no child exists for the given property",
     "child already exists for the given property",
     "image failed to load",
+
 };
 
 /**
