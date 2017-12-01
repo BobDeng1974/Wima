@@ -125,6 +125,7 @@ WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, W
 	edtr.icon = icon;
 	edtr.headerTop = headerTop;
 	edtr.allocSize = allocSize;
+	edtr.numRegions = nRegions + 1;
 
 	// Set the header region.
 	edtr.regions[0] = headerTop ? wg.regHeaderTop : wg.regHeaderBtm;
