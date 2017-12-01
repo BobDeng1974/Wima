@@ -75,9 +75,6 @@ typedef struct WimaG {
 	/// The app name.
 	DynaString name;
 
-	/// The app-wide callbacks.
-	WimaAppFuncs funcs;
-
 	/// Windows.
 	DynaVector windows;
 
@@ -122,6 +119,9 @@ typedef struct WimaG {
 
 	/// Image flags.
 	DynaVector imageFlags;
+
+	/// The app-wide callbacks.
+	WimaAppFuncs funcs;
 
 	/// The group property for all themes.
 	WimaProperty theme;
