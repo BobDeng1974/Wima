@@ -481,7 +481,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 	WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
 	// Calculate the optimal allocation size.
-	size_t size = ynalloc(sizeof(WimaItem) * editor->itemCap);
+	size_t size = ynalloc(sizeof(WimaItem) * area->area.ctx.itemCap);
 
 	// Allocate and check for error.
 	area->area.ctx.items = ymalloc(size);
@@ -500,8 +500,11 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
+	// Cache this.
+	uint32_t allocSize = editor->allocSize;
+
 	// If we need to allocate...
-	if (editor->allocSize > 0) {
+	if (allocSize > 0) {
 
 		// Generate the key.
 		uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
@@ -512,8 +515,10 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 		// If the user specified one, call it.
 		if (init) {
 
+			WimaArea wah;
+
 			// Allocate the pointer.
-			void* ptr = dpool_malloc(area->area.ctx.widgetData, &key, editor->allocSize);
+			void* ptr = dpool_malloc(area->area.ctx.widgetData, &key, allocSize);
 
 			// Check for error.
 			if (yerror(ptr == NULL)) {
@@ -522,7 +527,6 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 
 			// Create an area handle. I can't use
 			// wima_area() here because it will assert.
-			WimaArea wah;
 			wah.area = area->node;
 			wah.window = area->window;
 
@@ -532,7 +536,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate) {
 		else {
 
 			// Allocate and zero the pointer. We can get the pointer later.
-			void* ptr = dpool_calloc(area->area.ctx.widgetData, &key, editor->allocSize);
+			void* ptr = dpool_calloc(area->area.ctx.widgetData, &key, allocSize);
 
 			// Check for error.
 			if (yerror(ptr == NULL)) {
