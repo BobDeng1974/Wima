@@ -103,10 +103,10 @@ typedef struct WimaArReg {
 	/// The current size of the region.
 	/// This only applies to the dimension
 	/// opposite the vertical flag.
-	int size;
+	uint32_t size;
 
 	/// The min size of the region.
-	int min;
+	uint16_t min;
 
 	/// The region flags.
 	uint8_t flags;
