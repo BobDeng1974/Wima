@@ -184,7 +184,7 @@ uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos) {
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	// TODO: Write this function.
+	// TODO: Write this function. This must be done after layout is done.
 }
 
 void wima_area_switchRegionSide(WimaArea wah, uint8_t region) {
