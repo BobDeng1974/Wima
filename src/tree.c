@@ -308,8 +308,9 @@ void wima_tree_free(WimaTree tree) {
 
 static WimaStatus wima_tree_addParent(WimaTree tree, DynaNode node, float split, bool vertical) {
 
-	// Fill an initial area with common data.
 	WimaAr wan;
+
+	// Fill an initial area with common data.
 	wan.isParent = true;
 	wan.rect.w = -1;
 	wan.rect.h = -1;
@@ -326,8 +327,9 @@ static WimaStatus wima_tree_addParent(WimaTree tree, DynaNode node, float split,
 
 static WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed) {
 
-	// Fill an initial area with common data.
 	WimaAr wan;
+
+	// Fill an initial area with common data.
 	wan.isParent = false;
 	wan.rect.w = -1;
 	wan.rect.h = -1;
