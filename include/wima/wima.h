@@ -1955,12 +1955,13 @@ void* wima_editor_userPointer(WimaEditor wed) yinline;
 WimaArea wima_area(WimaWindow wwh, WimaAreaNode node) yinline;
 
 /**
- * Returns the user pointer associated with *just* this area.
- * For a user pointer that is common to all areas of the same
- * type, see @a wima_editor_userPointer().
+ * Returns a pointer to the data associated with *just* this area.
+ * For a user pointer that is common to all areas of the same type,
+ * see @a wima_editor_userPointer().
  * @param wah	The area to query.
  * @return		The user pointer.
  * @pre			@a wah must be valid.
+ * @pre			@a wah must be a leaf area.
  */
 void* wima_area_data(WimaArea wah) yinline;
 
@@ -1969,6 +1970,7 @@ void* wima_area_data(WimaArea wah) yinline;
  * @param wah	The area to query.
  * @return		The area's rectangle.
  * @pre			@a wah must be valid.
+ * @pre			@a wah must be a leaf area.
  */
 WimaRect wima_area_rect(WimaArea wah) yinline;
 
@@ -1978,6 +1980,7 @@ WimaRect wima_area_rect(WimaArea wah) yinline;
  * @param wah	The area to set the scale for.
  * @param scale	The scale to set.
  * @pre			@a wah must be valid.
+ * @pre			@a wah must be a leaf area.
  */
 void wima_area_setScale(WimaArea wah, float scale) yinline;
 
@@ -1986,6 +1989,7 @@ void wima_area_setScale(WimaArea wah, float scale) yinline;
  * @param wah	The area to query.
  * @return		The area's scale.
  * @pre			@a wah must be valid.
+ * @pre			@a wah must be a leaf area.
  */
 float wima_area_scale(WimaArea wah) yinline;
 
@@ -1996,6 +2000,7 @@ float wima_area_scale(WimaArea wah) yinline;
  * @param wah	The area to change.
  * @param type	The type to change to.
  * @pre			@a wah must be valid.
+ * @pre			@a wah must be a leaf area.
  */
 void wima_area_setType(WimaArea wah, WimaEditor type) yinline;
 
@@ -2004,6 +2009,7 @@ void wima_area_setType(WimaArea wah, WimaEditor type) yinline;
  * @param wah	The area to query.
  * @return		The area's editor type.
  * @pre			@a wah must be valid.
+ * @pre			@a wah must be a leaf area.
  */
 WimaEditor wima_area_type(WimaArea wah) yinline;
 
@@ -2012,6 +2018,8 @@ WimaEditor wima_area_type(WimaArea wah) yinline;
  * and widgets) already allocated in @a wah.
  * @param wah	The area to query.
  * @return		The total number of allocated items.
+ * @pre			@a wah must be valid.
+ * @pre			@a wah must be a leaf area.
  */
 int wima_area_itemCount(WimaArea wah) yinline;
 
@@ -2020,6 +2028,8 @@ int wima_area_itemCount(WimaArea wah) yinline;
  * @param wah	The area to query.
  * @param pos	The position to test against.
  * @return		true if @a pos is inside @a wah, false otherwise.
+ * @pre			@a wah must be valid.
+ * @pre			@a wah must be a leaf area.
  */
 bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
 
