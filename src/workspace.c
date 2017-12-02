@@ -44,7 +44,6 @@
 
 #include "editor.h"
 #include "area.h"
-#include "tree.h"
 #include "workspace.h"
 #include "window.h"
 #include "global.h"

@@ -51,7 +51,6 @@
 
 #include "prop.h"
 #include "old_layout.h"
-#include "tree.h"
 #include "editor.h"
 #include "area.h"
 #include "window.h"

@@ -44,7 +44,6 @@
 #include <wima/wima.h>
 
 #include "global.h"
-#include "tree.h"
 #include "area.h"
 
 //! @cond Doxygen suppress.

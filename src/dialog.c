@@ -37,7 +37,6 @@
 #include <yc/error.h>
 
 #include "area.h"
-#include "tree.h"
 #include "dialog.h"
 #include "global.h"
 
