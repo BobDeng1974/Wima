@@ -50,7 +50,6 @@
 #include <math.h>
 
 #include "prop.h"
-#include "old_layout.h"
 #include "editor.h"
 #include "area.h"
 #include "window.h"
