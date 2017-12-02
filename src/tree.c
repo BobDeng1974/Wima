@@ -45,6 +45,7 @@
 
 #include "global.h"
 #include "area.h"
+#include "region.h"
 
 //! @cond Doxygen suppress.
 wima_global_decl;
@@ -328,6 +329,8 @@ static WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor w
 
 	WimaAr wan;
 
+	wassert(wed < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
+
 	// Fill an initial area with common data.
 	wan.isParent = false;
 	wan.rect.w = -1;
@@ -336,9 +339,33 @@ static WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor w
 	// Set the area type.
 	wan.area.type = wed;
 
-	// Make sure these are cleared.
+	// Get the editor and its number of regions.
+	WimaEdtr* edtr = dvec_get(wg.editors, wed);
+	uint8_t numRegions = edtr->numRegions;
+
+	// Make sure these are set or cleared.
 	wan.area.ctx.items = NULL;
 	wan.area.ctx.itemCount = 0;
+	wan.area.ctx.itemCap = edtr->itemCap;
+	wan.area.ctx.widgetData = NULL;
+	wan.area.numRegions = numRegions;
+
+	// Loop over the regions and fill the WimaArReg structs.
+	// We don't need to worry about the size yet.
+	for (uint8_t i = 0; i < numRegions; ++i) {
+
+		// Get the region handle.
+		WimaRegion region = edtr->regions[i];
+
+		wassert(region < dvec_len(wg.regions), WIMA_ASSERT_REG);
+
+		// Get the region.
+		WimaReg* reg = dvec_get(wg.regions, region);
+
+		// Set the region info.
+		wan.area.regions[i].type = region;
+		wan.area.regions[i].flags = reg->flags;
+	}
 
 	// Add the node to the tree.
 	DynaStatus status = dtree_add(tree, node, &wan);
