@@ -26,29 +26,31 @@ go as follows:
 
 1.	A client must initialize Wima before doing anything else. That is done by
 	using `wima_init()`.
-2.	The client registers any number (but more than zero) of
+2.	The client registers up to eight (and more than zero) of
 	[regions](#concepts-types-regions) using `wima_region_register()`.
-3.	The client registers any number (but more than zero) of
-	[editors](#concepts-types-editors) using `wima_editor_register()`.
-4.	The client creates a [tree](#concepts-types-trees) using
+3.	The client uses those [regions](#concepts-types-regions) to register an
+	[editor](#concepts-types-editors) using `wima_editor_register()`.
+4.	The client repeats steps 3 and 4 as much as necessary to register all of its
+	[editors](#concepts-types-editors).
+5.	The client creates a [tree](#concepts-types-trees) using
 	`wima_tree_create()`.
-5.	The client recursively builds the tree using `wima_tree_addRootParent()`,
+6.	The client recursively builds the tree using `wima_tree_addRootParent()`,
 	`wima_tree_addRootEditor()`, `wima_tree_addLeftParent()`,
 	`wima_tree_addLeftEditor()`. `wima_tree_addRightParent()`, and
 	`wima_tree_addRightEditor()`.
-6.	The client registers a [dialog](#concepts-types-dialogs) (using
+7.	The client registers a [dialog](#concepts-types-dialogs) (using
 	`wima_dialog_register()`) and/or a [workspace](#concepts-types-workspaces)
 	(using `wima_workspace_register()`) from the [tree](#concepts-types-trees).
-7.	If the client has more [dialogs](#concepts-types-dialogs) and/or
+8.	If the client has more [dialogs](#concepts-types-dialogs) and/or
 	[workspaces](#concepts-types-workspaces) to create, it resets the
 	[tree](#concepts-types-trees) using `wima_tree_reset()` and repeats steps 4
 	and 5. Otherwise, it frees the [tree](#concepts-types-trees) using
 	`wima_tree_free()` and continues to step 7.
-8.	The client creates a [window](#concepts-types-windows) using
+9.	The client creates a [window](#concepts-types-windows) using
 	`wima_window_create()`.
-9.	The client runs the event loop in `wima_main()`, which will return when the
+10.	The client runs the event loop in `wima_main()`, which will return when the
 	user has closed all [windows](#concepts-types-windows).
-10.	The client exits by calling `wima_exit()`.
+11.	The client exits by calling `wima_exit()`.
 
 <a name="concepts"></a>
 ## Concepts
