@@ -177,6 +177,29 @@ bool wima_area_contains(WimaArea wah, WimaVec pos) {
 	return wima_rect_contains(area->rect, pos);
 }
 
+uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos) {
+
+	wima_assert_init;
+
+	WimaAr* area = wima_area_ptr(wah.window, wah.area);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
+
+	// TODO: Write this function.
+}
+
+void wima_area_switchRegionSide(WimaArea wah, uint8_t region) {
+
+	wima_assert_init;
+
+	WimaAr* area = wima_area_ptr(wah.window, wah.area);
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
+
+	wassert(region < area->area.numRegions, WIMA_ASSERT_AREA_REG_VALID);
+
+	// Toggle the left bit on the region.
+	area->area.regions[region].flags ^= WIMA_REG_LEFT;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Declarations for all static functions that private functions need access to.
 ////////////////////////////////////////////////////////////////////////////////

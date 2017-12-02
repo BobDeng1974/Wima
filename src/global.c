@@ -145,6 +145,7 @@ const char* wima_assert_msgs[] = {
     "area is a parent, not a leaf",
     "area is a leaf, not a parent",
     "number of items in area exceeds capacity",
+    "region is not valid in area",
 
     "editor is not valid",
     "client tried to create too many editors",

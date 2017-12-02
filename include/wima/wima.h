@@ -2034,6 +2034,28 @@ int wima_area_itemCount(WimaArea wah) yinline;
 bool wima_area_contains(WimaArea wah, WimaVec pos) yinline;
 
 /**
+ * Figures out which region @a pos is in. If it is
+ * not in any region, this returns 255 (0xFF).
+ * @param wah	The area to query.
+ * @param pos	The position to query against.
+ * @return		The index of the region in the area
+ *				that @a pos is in, or 0xFF.
+ * @pre			@a wah must be valid.
+ * @pre			@a wah must be a leaf area.
+ */
+uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos);
+
+/**
+ * Switches the side (left/top vs right/bottom) for
+ * the @a region in the area represented by @a wah.
+ * @param wah		The area to update.
+ * @param region	The region within @a wah to update.
+ * @pre				@a wah must be valid.
+ * @pre				@a wah must be a leaf area.
+ */
+void wima_area_switchRegionSide(WimaArea wah, uint8_t region) yinline;
+
+/**
  * @}
  */
 
