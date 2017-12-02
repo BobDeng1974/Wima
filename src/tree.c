@@ -63,8 +63,40 @@ wima_assert_msgs_decl;
 
 /**
  * @defgroup tree_internal tree_internal
+ * Internal functions and data structures
+ * for trees (dialogs and workspaces).
  * @{
  */
+
+/**
+ * Adds a parent node to @a tree.
+ * @param tree		The tree to add to.
+ * @param node		The node to add, which should be either
+ *					the root, or a child of a node that has
+ *					already been added.
+ * @param split		A value between [0, 1] that indicates
+ *					where the split between this parent's
+ *					children will be.
+ * @param vertical	Whether the split is vertical (splitting
+ *					width) or not.
+ * @return			WIMA_STATUS_SUCCESS on success, or an
+ *					error code.
+ * @pre				@a tree must not be NULL.
+ */
+static WimaStatus wima_tree_addParent(WimaTree tree, DynaNode node, float split, bool vertical);
+
+/**
+ * Adds an editor (leaf) to @a tree.
+ * @param tree	The tree to add to.
+ * @param node	The node to add, which should be either
+ *				the root, or a child of a node that has
+ *				already been added.
+ * @param wed	The editor to set the type as.
+ * @return		WIMA_STATUS_SUCCESS on success, or an
+ *				error code.
+ * @pre			@a tree must not be NULL.
+ */
+static WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed);
 
 /**
  * Figures out whether a node is valid (so far),
@@ -271,10 +303,10 @@ void wima_tree_free(WimaTree tree) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Private functions.
+// Private static functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_tree_addParent(WimaTree tree, DynaNode node, float split, bool vertical) {
+static WimaStatus wima_tree_addParent(WimaTree tree, DynaNode node, float split, bool vertical) {
 
 	// Fill an initial area with common data.
 	WimaAr wan;
@@ -292,7 +324,7 @@ WimaStatus wima_tree_addParent(WimaTree tree, DynaNode node, float split, bool v
 	return status ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed) {
+static WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed) {
 
 	// Fill an initial area with common data.
 	WimaAr wan;
@@ -312,10 +344,6 @@ WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed) {
 
 	return status ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-// Static functions.
-////////////////////////////////////////////////////////////////////////////////
 
 static bool wima_tree_nodeValid(WimaTree tree, DynaNode p) {
 	return dtree_exists(tree, p) && WIMA_AREA_IS_PARENT((WimaAr*) dtree_node(tree, p));
