@@ -97,13 +97,13 @@ typedef struct WimaAreaSplit {
  */
 typedef struct WimaArReg {
 
-	/// The function to lay out the region.
-	WimaRegionLayout layout;
+	/// The region type.
+	WimaRegion type;
 
 	/// The current size of the region.
 	/// This only applies to the dimension
 	/// opposite the vertical flag.
-	uint32_t size;
+	uint16_t size;
 
 	/// The min size of the region.
 	uint16_t min;
@@ -167,6 +167,9 @@ typedef struct WimaAr {
 
 			/// The type of area it is.
 			WimaEditor type;
+
+			/// The number of regions.
+			uint8_t numRegions;
 
 			/// The list of regions.
 			WimaArReg regions[WIMA_EDITOR_MAX_MAX_REGIONS];
