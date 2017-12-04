@@ -107,8 +107,6 @@ WimaStatus wima_vinit(const char* name, WimaAppFuncs funcs, const char* fontPath
 WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
                      uint32_t numIcons, const char* iconPaths[])
 {
-	wassert(wg.name != NULL, WIMA_ASSERT_INIT_NOT);
-
 	wassert(name != NULL, WIMA_ASSERT_APP_NAME);
 
 	wassert(funcs.error != NULL, WIMA_ASSERT_APP_ERROR_FUNC);

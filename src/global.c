@@ -93,7 +93,6 @@ const char* wima_assert_msgs[] = {
 #ifdef __YASSERT__
 
     "wima is not initialized",
-    "wima has already been initialized",
 
     "app name is null",
     "app error function is null",
