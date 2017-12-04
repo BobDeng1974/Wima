@@ -130,6 +130,8 @@ void wima_overlay_destroy(DynaVector vec, void* ptr) {
 
 	WimaOvly* ovly = (WimaOvly*) ptr;
 
-	// Free the name.
-	yfree(ovly->name);
+	// Free the name, if necessary.
+	if (ovly->name) {
+		yfree(ovly->name);
+	}
 }
