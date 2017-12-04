@@ -288,7 +288,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 		wg.cursors[i] = glfwCreateStandardCursor(i + GLFW_ARROW_CURSOR);
 
 		// Check for error.
-		if (yerror(wg.cursors[i])) {
+		if (yerror(!wg.cursors[i])) {
 			wima_exit();
 			return WIMA_STATUS_INIT_ERR;
 		}
