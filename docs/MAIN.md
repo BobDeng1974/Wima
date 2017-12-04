@@ -160,6 +160,9 @@ Editors are templates for [areas](#areas).
 <a name="concepts-types-menus"></a>
 #### Menus
 
+<a name="concepts-types-overlays"></a>
+#### Overlays
+
 <a name="concepts-types-windows"></a>
 #### Windows
 

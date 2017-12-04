@@ -56,6 +56,7 @@
 #include "area.h"
 #include "window.h"
 #include "prop.h"
+#include "overlay.h"
 #include "global.h"
 
 #include "render/render.h"
@@ -95,6 +96,7 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.workspaces = NULL;
 	wg.workspaceProps = NULL;
 	wg.regions = NULL;
+	wg.overlays = NULL;
 	wg.icons = NULL;
 	wg.iconPathWindings = NULL;
 	wg.imagePaths = NULL;
@@ -186,6 +188,13 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	// Register the header top region and check for error.
 	wg.regHeaderBtm = wima_region_register(wima_area_layoutHeader, 256, flags);
 	if (yerror(wg.regHeaderBtm == WIMA_REGION_INVALID)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Create and if error, exit.
+	wg.overlays = dvec_create(0, wima_overlay_copy, wima_overlay_destroy, sizeof(WimaOvly));
+	if (yerror(!wg.overlays)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -393,6 +402,11 @@ void wima_exit() {
 	// Free the icon vector, if it exists.
 	if (wg.icons) {
 		dnvec_free(wg.icons);
+	}
+
+	// Free the overlays, if they exist.
+	if (wg.overlays) {
+		dvec_free(wg.overlays);
 	}
 
 	// Free the dialogs, if they exist.

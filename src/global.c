@@ -217,6 +217,11 @@ const char* wima_assert_msgs[] = {
     "icon is not valid",
     "client tried to load too many icons",
 
+    "overlay is not valid",
+    "client tried to register too many overlays",
+    "overlay layout function is not valid",
+    "overlay copy is not allowed",
+
     "ptr is NULL",
 
     "file path is NULL",

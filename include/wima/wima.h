@@ -1229,6 +1229,59 @@ typedef struct WimaMenu {
  */
 
 ////////////////////////////////////////////////////////////////////////////////
+// Overlay functions and data structures.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup overlay overlay
+ * Functions and data structures for creating overlays.
+ * @{
+ */
+
+/**
+ * The public type for overlays in Wima. Overlays are
+ * like menus, but more flexible, and they can't have
+ * sub overlays.
+ */
+typedef uint16_t WimaOverlay;
+
+/**
+ * @def WIMA_OVERLAY_INVALID
+ * A handle to an invalid @a WimaOverlay.
+ */
+#define WIMA_OVERLAY_INVALID ((WimaOverlay) -1)
+
+/**
+ * @def WIMA_OVERLAY_MAX
+ * The max number of overlays that the client can register.
+ */
+#define WIMA_OVERLAY_MAX WIMA_OVERLAY_INVALID
+
+/**
+ * A function type to lay out a @a WimaOverlay.
+ * @param root	The root layout.
+ * @return		WIMA_STATUS_SUCCESS on success,
+ *				an error code otherwise.
+ */
+typedef WimaStatus (*WimaOverlayLayoutFunc)(WimaLayout root);
+
+/**
+ * Registers an overlay type with Wima.
+ * @param name		The name of the overlay, or NULL if none.
+ * @param icon		The icon of the overlay, or WIMA_ICON_INVALID
+ *					if none.
+ * @param layout	The function to lay out the overlay.
+ * @return			The newly-created WimaOverlay on success, or
+ *					WIMA_OVERLAY_INVALID on error.
+ * @pre				@a layout must not be NULL.
+ */
+WimaOverlay wima_overlay_register(const char* name, WimaIcon icon, WimaOverlayLayoutFunc layout);
+
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
 // Widget functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
 
