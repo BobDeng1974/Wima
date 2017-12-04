@@ -758,9 +758,18 @@ typedef enum WimaCursorType {
 	WIMA_CURSOR_HRESIZE,
 
 	/// Vertical resize cursor.
-	WIMA_CURSOR_VRESIZE
+	WIMA_CURSOR_VRESIZE,
+
+	/// A reference to the last cursor.
+	WIMA_CURSOR_LAST = WIMA_CURSOR_VRESIZE,
 
 } WimaCursorType;
+
+/**
+ * @def WIMA_CURSOR_NUM_STD
+ * The number of standard cursors that Wima has.
+ */
+#define WIMA_CURSOR_NUM_STD (WIMA_CURSOR_LAST + 1)
 
 /**
  * The possible cursor modes.

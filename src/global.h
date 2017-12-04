@@ -154,7 +154,7 @@ typedef struct WimaG {
 	GLFWimage appIcons[WIMA_MAX_ICONS];
 
 	/// Standard cursors.
-	GLFWcursor* cursors[6];
+	GLFWcursor* cursors[WIMA_CURSOR_NUM_STD];
 
 } WimaG;
 
