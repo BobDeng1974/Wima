@@ -97,6 +97,9 @@ typedef struct WimaG {
 	/// Editors (area types).
 	DynaVector editors;
 
+	/// Regions (areas of an editor).
+	DynaVector regions;
+
 	/// The handle to the region that can be used
 	/// for headers that start on top.
 	WimaRegion regHeaderTop;
@@ -105,8 +108,8 @@ typedef struct WimaG {
 	/// for headers that start on bottom.
 	WimaRegion regHeaderBtm;
 
-	/// Regions (areas of an editor).
-	DynaVector regions;
+	/// Overlays (like context menus but more general).
+	DynaVector overlays;
 
 	/// Icons and their markers in the @a iconPathWindings vector.
 	DynaVector icons;
@@ -123,6 +126,9 @@ typedef struct WimaG {
 	/// The app-wide callbacks.
 	WimaAppFuncs funcs;
 
+	/// The path to the font file.
+	DynaString fontPath;
+
 	/// The group property for all themes.
 	WimaProperty theme;
 
@@ -136,14 +142,16 @@ typedef struct WimaG {
 	/// properties for all themes.
 	WimaProperty themes[WIMA_THEME_NUM_TYPES];
 
+	/// Whether or not GLFW is initialized.
+	/// This is put here because there is a
+	/// four byte hole.
+	bool glfwInitialized;
+
 	/// The number of app icons.
-	int numAppIcons;
+	uint16_t numAppIcons;
 
 	/// The array of app icons.
 	GLFWimage appIcons[WIMA_MAX_ICONS];
-
-	/// The path to the font file.
-	DynaString fontPath;
 
 	/// Standard cursors.
 	GLFWcursor* cursors[6];
