@@ -1275,7 +1275,7 @@ typedef WimaStatus (*WimaOverlayLayoutFunc)(WimaLayout root);
  *					WIMA_OVERLAY_INVALID on error.
  * @pre				@a layout must not be NULL.
  */
-WimaOverlay wima_overlay_register(const char* name, WimaIcon icon, WimaOverlayLayoutFunc layout);
+WimaOverlay wima_overlay_register(const char* name, WimaIcon icon, ynonnull WimaOverlayLayoutFunc layout);
 
 /**
  * @}
@@ -2147,7 +2147,7 @@ typedef void* WimaTree;
  * Creates and returns a @a WimaTree, or NULL on error.
  * @return	A newly-created @a WimaTree, or NULL on error.
  */
-WimaTree wima_tree_create() yinline;
+WimaTree wima_tree_create() yinline ynoretalias;
 
 /**
  * Adds a parent node to @a tree at the root. This function
@@ -2168,7 +2168,7 @@ WimaTree wima_tree_create() yinline;
  * @pre				The root node of @a tree must not have
  *					been added already.
  */
-WimaAreaNode wima_tree_addRootParent(WimaTree tree, float split, bool vertical) yinline;
+WimaAreaNode wima_tree_addRootParent(ynonnull WimaTree tree, float split, bool vertical) yinline;
 
 /**
  * Adds an editor (leaf) to a tree at the root. This function
@@ -2184,7 +2184,7 @@ WimaAreaNode wima_tree_addRootParent(WimaTree tree, float split, bool vertical) 
  * @pre			The root node of @a tree must not have
  *				been added already.
  */
-WimaAreaNode wima_tree_addRootEditor(WimaTree tree, WimaEditor wed) yinline;
+WimaAreaNode wima_tree_addRootEditor(ynonnull WimaTree tree, WimaEditor wed) yinline;
 
 /**
  * Adds a parent node to @a tree as the left child.
@@ -2204,7 +2204,8 @@ WimaAreaNode wima_tree_addRootEditor(WimaTree tree, WimaEditor wed) yinline;
  * @pre				@a parent must have already been added.
  * @pre				@a parent must be a parent node.
  */
-WimaAreaNode wima_tree_addLeftParent(WimaTree tree, WimaAreaNode parent, float split, bool vertical) yinline;
+WimaAreaNode wima_tree_addLeftParent(ynonnull WimaTree tree, WimaAreaNode parent,
+                                     float split, bool vertical) yinline;
 
 /**
  * Adds an editor (leaf) node to @a tree as the left child.
@@ -2219,7 +2220,7 @@ WimaAreaNode wima_tree_addLeftParent(WimaTree tree, WimaAreaNode parent, float s
  * @pre				@a parent must have already been added.
  * @pre				@a parent must be a parent node.
  */
-WimaAreaNode wima_tree_addLeftEditor(WimaTree tree, WimaAreaNode parent, WimaEditor wed) yinline;
+WimaAreaNode wima_tree_addLeftEditor(ynonnull WimaTree tree, WimaAreaNode parent, WimaEditor wed) yinline;
 
 /**
  * Adds a parent node to @a tree as the right child.
@@ -2239,7 +2240,8 @@ WimaAreaNode wima_tree_addLeftEditor(WimaTree tree, WimaAreaNode parent, WimaEdi
  * @pre				@a parent must have already been added.
  * @pre				@a parent must be a parent node.
  */
-WimaAreaNode wima_tree_addRightParent(WimaTree tree, WimaAreaNode parent, float split, bool vertical) yinline;
+WimaAreaNode wima_tree_addRightParent(ynonnull WimaTree tree, WimaAreaNode parent,
+                                      float split, bool vertical) yinline;
 
 /**
  * Adds an editor (leaf) node to @a tree as the left child.
@@ -2254,7 +2256,7 @@ WimaAreaNode wima_tree_addRightParent(WimaTree tree, WimaAreaNode parent, float 
  * @pre				@a parent must have already been added.
  * @pre				@a parent must be a parent node.
  */
-WimaAreaNode wima_tree_addRightEditor(WimaTree tree, WimaAreaNode parent, WimaEditor wed) yinline;
+WimaAreaNode wima_tree_addRightEditor(ynonnull WimaTree tree, WimaAreaNode parent, WimaEditor wed) yinline;
 
 /**
  * Resets a @a WimaTree. This means that all data in the tree is erased, and
@@ -2267,14 +2269,16 @@ WimaAreaNode wima_tree_addRightEditor(WimaTree tree, WimaAreaNode parent, WimaEd
  * allocations.
  * @param tree	The tree to reset.
  * @return		WIMA_STATUS_SUCCESS on success, an error code otherwise.
+ * @pre			@a tree must not be NULL.
  */
-WimaStatus wima_tree_reset(WimaTree tree) yinline;
+WimaStatus wima_tree_reset(ynonnull WimaTree tree) yinline;
 
 /**
  * Frees a @a WimaTree.
  * @param tree	The tree to free.
+ * @pre			@a tree must not be NULL.
  */
-void wima_tree_free(WimaTree tree);
+void wima_tree_free(ynonnull WimaTree tree);
 
 /**
  * @}
@@ -2301,9 +2305,10 @@ void wima_tree_free(WimaTree tree);
  * @param icon	The workspace's icon.
  * @param tree	The tree to fill the workspace with.
  * @return		The registered workspace.
+ * @pre			@a name must not be NULL.
  * @pre			@a tree must be a valid tree.
  */
-WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, WimaTree tree);
+WimaWorkspace wima_workspace_register(ynonnull const char* const name, WimaIcon icon, ynonnull WimaTree tree);
 
 /**
  * Updates a workspace's data from the current state
@@ -2351,7 +2356,7 @@ WimaStatus wima_workspace_updateFromWindow(WimaWorkspace wwksp, WimaWindow wwh);
  * @return		The registered dialog.
  * @pre			@a tree must be a valid tree.
  */
-WimaDialog wima_dialog_register(WimaTree tree);
+WimaDialog wima_dialog_register(ynonnull WimaTree tree);
 
 /**
  * @}
@@ -2442,8 +2447,9 @@ bool wima_window_maximized(WimaWindow wwh) yinline;
  * @param wwh		The window to make fullscreen.
  * @param monitor	The monitor to be fullscreen on.
  * @pre				@a wwh must be a valid WimaWindow.
+ * @pre				@a monitor must not be NULL.
  */
-void wima_window_fullscreen(WimaWindow wwh, WimaMonitor* monitor) yinline;
+void wima_window_fullscreen(WimaWindow wwh, ynonnull WimaMonitor* monitor) yinline;
 
 /**
  * Restores the window from either fullscreen,
@@ -2497,8 +2503,9 @@ bool wima_window_resizable(WimaWindow wwh) yinline;
  * @param title	The new title for the window.
  * @return		WIMA_STATUS_SUCCESS, or an error code.
  * @pre			@a wwh must be a valid WimaWindow.
+ * @pre			@a title must not be NULL.
  */
-WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) yinline;
+WimaStatus wima_window_setTitle(WimaWindow wwh, ynonnull const char* title) yinline;
 
 /**
  * Returns the window's title.
@@ -2752,16 +2759,19 @@ void wima_window_popDialog(WimaWindow wwh);
  * @param title	The title of the menu.
  * @param icon	The icon to put next to the title.
  * @pre			@a wwh must be a valid WimaWindow.
+ * @pre			@a menu must not be NULL.
  */
-void wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, WimaIcon icon) yinline;
+void wima_window_setContextMenu(WimaWindow wwh, ynonnull WimaMenu* menu,
+                                const char* title, WimaIcon icon) yinline;
 
 /**
  * Sets the context menu on the window.
  * @param wwh	The window to update.
  * @param menu	The menu to set on the window.
  * @pre			@a wwh must be a valid WimaWindow.
+ * @pre			@a menu must not be NULL.
  */
-void wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) yinline;
+void wima_window_setMenu(WimaWindow wwh, ynonnull WimaMenu* menu) yinline;
 
 /**
  * Returns the current menu on the window, or NULL if none.
@@ -2772,7 +2782,7 @@ void wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) yinline;
 WimaMenu* wima_window_menu(WimaWindow wwh) yinline;
 
 /**
- * Returns the context menu title.
+ * Returns the context menu title, or NULL if none.
  * @param wwh	The window to query.
  * @return		The title of the current context menu.
  * @pre			@a wwh must be a valid WimaWindow.
@@ -2802,8 +2812,9 @@ void wima_window_removeMenu(WimaWindow wwh) yinline;
  * @param wwh	The window to update.
  * @param c		The cursor to set.
  * @pre			@a wwh must be a valid WimaWindow.
+ * @pre			@a c must not be NULL.
  */
-void wima_window_setCursor(WimaWindow wwh, WimaCursor* c) yinline;
+void wima_window_setCursor(WimaWindow wwh, ynonnull WimaCursor* c) yinline;
 
 /**
  * Sets the cursor on @a wwh using a standard cursor type.
@@ -2884,7 +2895,8 @@ WimaVec wima_window_cursorDelta(WimaWindow wwh) yinline;
  * only interested in whether keys have been pressed but
  * not when or in which order.
  * @param wwh		The window to update.
- * @param enabled
+ * @param enabled	Whether or not sticky keys should be
+ *					enabled.
  * @pre				@a wwh must be a valid WimaWindow.
  */
 void wima_window_setStickyKeys(WimaWindow wwh, bool enabled) yinline;
@@ -2970,10 +2982,11 @@ WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) yinline;
  *					contents.
  * @param str		A UTF-8 encoded string to set.
  * @pre				@a wwh must be a valid WimaWindow.
+ * @pre				@a str must not be NULL.
  * @ptr_lifetime	@a str is copied before this function
  *					returns.
  */
-void wima_window_setClipboard(WimaWindow wwh, const char* str) yinline;
+void wima_window_setClipboard(WimaWindow wwh, ynonnull const char* str) yinline;
 
 /**
  * This function returns the contents of the system clipboard,
@@ -3139,9 +3152,11 @@ typedef struct WimaAppFuncs {
  * @param numIcons	The number of app icons in @a iconPaths.
  * @return			WIMA_STATUS_SUCCESS on success, or an error
  *					code otherwise.
+ * @pre				@a name must not be NULL.
+ * @pre				@a fontPath must not be NULL.
  */
-WimaStatus wima_ninit(const char* name, WimaAppFuncs funcs,
-                      const char* fontPath, uint32_t numIcons, ...);
+WimaStatus wima_ninit(ynonnull const char* name, WimaAppFuncs funcs,
+                      ynonnull const char* fontPath, uint32_t numIcons, ...);
 
 /**
  * Initializes Wima. The va_list only accepts char pointer args.
@@ -3157,9 +3172,12 @@ WimaStatus wima_ninit(const char* name, WimaAppFuncs funcs,
  *					list must be a char pointer.
  * @return			WIMA_STATUS_SUCCESS on success, or an error
  *					code otherwise.
+ * @pre				@a name must not be NULL.
+ * @pre				@a fontPath must not be NULL.
  */
-WimaStatus wima_vinit(const char* name, WimaAppFuncs funcs, const char* fontPath,
-                      uint32_t numIcons, va_list iconPaths);
+WimaStatus wima_vinit(ynonnull const char* name, WimaAppFuncs funcs,
+                      ynonnull const char* fontPath, uint32_t numIcons,
+                      va_list iconPaths);
 
 /**
  * Initializes Wima.
@@ -3174,6 +3192,8 @@ WimaStatus wima_vinit(const char* name, WimaAppFuncs funcs, const char* fontPath
  *					icon of different size.
  * @return			WIMA_STATUS_SUCCESS on success, or an error
  *					code otherwise.
+ * @pre				@a name must not be NULL.
+ * @pre				@a fontPath must not be NULL.
  */
 WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
                      uint32_t numIcons, const char* iconPaths[]);

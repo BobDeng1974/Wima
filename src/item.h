@@ -173,14 +173,16 @@ typedef struct WimaItem {
  * @pre			@a area must be a leaf area.
  * @pre			@a idx must be within the size of the array.
  */
-WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint32_t idx);
+WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint32_t idx) yretnonnull;
 
 /**
  * Frees the item pointed to by @a item in @a area.
  * @param area	The area of the item.
  * @param item	A pointer to the item to free.
+ * @pre			@a area must not be NULL.
+ * @pre			@a item must not be NULL.
  */
-void wima_item_free(WimaAr* area, WimaItem* item);
+void wima_item_free(ynonnull WimaAr* area, ynonnull WimaItem* item);
 
 /**
  * @}

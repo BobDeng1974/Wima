@@ -144,7 +144,7 @@ typedef enum WimaLayoutStage {
  * @return		The pointer to the layout's data.
  * @pre			@a wlh must be valid.
  */
-WimaItem* wima_layout_ptr(WimaLayout wlh) yinline;
+WimaItem* wima_layout_ptr(WimaLayout wlh) yinline yretnonnull;
 
 /**
  * Creates a new layout with the specified parent, flags, and split/columns.

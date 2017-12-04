@@ -188,7 +188,7 @@ typedef union WimaPnt {
  * @return			A linear gradient generated from @a gradient.
  * @pre				@a ctx must not be NULL.
  */
-NVGpaint wima_paint_svgLinearGradient(WimaRenderContext* ctx, NSVGgradient* gradient);
+NVGpaint wima_paint_svgLinearGradient(ynonnull WimaRenderContext* ctx, NSVGgradient* gradient);
 
 /**
  * Generates a radial gradient paint from an NSVGgradient.
@@ -197,7 +197,7 @@ NVGpaint wima_paint_svgLinearGradient(WimaRenderContext* ctx, NSVGgradient* grad
  * @return			A radial gradient generated from @a gradient.
  * @pre				@a ctx must not be NULL.
  */
-NVGpaint wima_paint_svgRadialGradient(WimaRenderContext* ctx, NSVGgradient* gradient);
+NVGpaint wima_paint_svgRadialGradient(ynonnull WimaRenderContext* ctx, NSVGgradient* gradient);
 
 /**
  * @}
@@ -607,8 +607,10 @@ void wima_icon_destroy(DynaNVector vec, void** ptr);
  * @param starts	An array of properties to store the start
  *					of themes in.
  * @return			The parent property group for all themes.
+ * @pre				@a props must not be NULL.
+ * @pre				@a starts must not be NULL.
  */
-WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) yinline;
+WimaProperty wima_theme_load(ynonnull WimaProperty* props, ynonnull WimaProperty* starts) yinline;
 
 /**
  * Loads the default background. This doesn't need an entry
@@ -625,16 +627,18 @@ WimaProperty wima_theme_loadBackground() yinline;
  * @return			The parent group property for the widget theme.
  * @pre				@a type must be between
  *					[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
+ * @pre				@a starts must not be NULL.
  */
-WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) yinline;
+WimaProperty wima_theme_loadWidget(WimaThemeType type, ynonnull WimaProperty* starts) yinline;
 
 /**
  * Loads the node theme.
  * @param starts	An array of properties to store the start of
  *					the theme in (see @a wima_theme_load()).
  * @return			The parent group property for the widget theme.
+ * @pre				@a starts must not be NULL.
  */
-WimaProperty wima_theme_loadNode(WimaProperty* starts) yinline;
+WimaProperty wima_theme_loadNode(ynonnull WimaProperty* starts) yinline;
 
 /**
  * @}

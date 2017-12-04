@@ -218,15 +218,16 @@ typedef struct WimaAr {
  * @pre			@a wwh must be a valid window.
  * @pre			@a node must be a valid node in the window.
  */
-WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node);
+WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node) yretnonnull;
 
 /**
  * Initializes the tree of @a areas in @a win.
  * @param win	The window the tree will be attached to.
  * @param areas	The tree to initialize.
  * @param rect	The rectangle for the entire window.
+ * @pre			@a areas must not be NULL.
  */
-void wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect);
+void wima_area_init(WimaWindow win, ynonnull DynaTree areas, WimaRect rect);
 
 /**
  * Copies an area from @a src to @a dest. This is a DynaCopyFunc.
@@ -234,7 +235,7 @@ void wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect);
  * @param src	The source to copy to.
  * @return		DYNA_STATUS_SUCCESS on success, an error code otherwise.
  */
-DynaStatus wima_area_copy(void* dest, void* src);
+DynaStatus wima_area_copy(ynonnull void* dest, ynonnull void* src);
 
 /**
  * Sets up an area, and if @a allocate, allocates an tem
@@ -242,7 +243,7 @@ DynaStatus wima_area_copy(void* dest, void* src);
  * @param area		The area to setup.
  * @param allocate	Whether or not to allocate an array.
  */
-WimaStatus wima_area_setup(WimaAr* area, bool allocate);
+WimaStatus wima_area_setup(ynonnull WimaAr* area, bool allocate);
 
 /**
  * Checks whether the tree is valid. Valid means that
@@ -252,35 +253,40 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate);
  * @param editors	The tree to check.
  * @return			true if @a editors is valid, false
  *					otherwise.
+ * @pre				@a editors must not be NULL
  */
-bool wima_area_valid(DynaTree editors) yinline;
+bool wima_area_valid(ynonnull DynaTree editors) yinline;
 
 /**
  * Frees a tree of areas.
  * @param areas	The tree to free.
+ * @pre			@a areas must not be NULL.
  */
-void wima_area_free(DynaTree areas);
+void wima_area_free(ynonnull DynaTree areas);
 
 /**
  * A Dyna DestructFunc that will destroy a node in an area tree.
  * @param tree	The tree that is destroying elements.
  * @param ptr	The pointer to the node to destroy.
+ * @pre			@a tree must not be NULL.
  */
-void wima_area_destroy(DynaTree tree, void* ptr);
+void wima_area_destroy(ynonnull DynaTree tree, ynonnull void* ptr);
 
 /**
  * Handles a key event on an area.
  * @param area	The area receiving the event.
  * @param e		The event.
+ * @pre			@a area must not be NULL.
  */
-bool wima_area_key(WimaAr* area, WimaKeyEvent e);
+bool wima_area_key(ynonnull WimaAr* area, WimaKeyEvent e);
 
 /**
  * Handles a mouse enter/exit event on an area.
  * @param area	The area receiving the event.
  * @param enter	true if entered, false otherwise.
+ * @pre			@a area must not be NULL.
  */
-void wima_area_mouseEnter(WimaAr* area, bool enter);
+void wima_area_mouseEnter(ynonnull WimaAr* area, bool enter);
 
 /**
  * Draws all areas.
@@ -288,15 +294,18 @@ void wima_area_mouseEnter(WimaAr* area, bool enter);
  * @param areas	The tree of areas to draw.
  * @return		WIMA_STATUS_SUCCESS on success, a
  *				user-supplied error code otherwise.
+ * @pre			@a ctx must not be NULL.
+ * @pre			@a areas must not be NULL.
  */
-WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas);
+WimaStatus wima_area_draw(ynonnull WimaRenderContext* ctx, ynonnull DynaTree areas);
 
 /**
  * Resizes all areas.
  * @param areas	The tree of areas.
  * @param rect	The rectangle for the root area.
+ * @pre			@a areas must not be NULL.
  */
-void wima_area_resize(DynaTree areas, WimaRect rect);
+void wima_area_resize(ynonnull DynaTree areas, WimaRect rect);
 
 /**
  * Lays out the header for an area. Ths is used
@@ -313,8 +322,9 @@ WimaStatus wima_area_layoutHeader(WimaLayout root);
  * @param areas	The tree of areas.
  * @return		WIMA_STATUS_SUCCESS on success, a
  *				user-supplied error code otherwise.
+ * @pre			@a areas must not be NULL.
  */
-WimaStatus wima_area_layout(DynaTree areas);
+WimaStatus wima_area_layout(ynonnull DynaTree areas);
 
 /**
  * Finds the area that the mouse is currently inside.
@@ -324,8 +334,9 @@ WimaStatus wima_area_layout(DynaTree areas);
  * @param cursor	The cursor position to test.
  * @return			The node with the mouse, or
  *					WIMA_AREA_INVALID if none.
+ * @pre				@a areas must not be NULL.
  */
-WimaAreaNode wima_area_mouseOver(DynaTree areas, WimaVec cursor);
+WimaAreaNode wima_area_mouseOver(ynonnull DynaTree areas, WimaVec cursor);
 
 /**
  * Returns true if the mouse is on a split, false otherwise.
@@ -334,8 +345,9 @@ WimaAreaNode wima_area_mouseOver(DynaTree areas, WimaVec cursor);
  * @param result	A pointer to a @a WimaAreaSplit that will be
  *					filled with the split info.
  * @return			true if mouse is on a split, false otherwise.
+ * @pre				@a areas must not be NULL.
  */
-bool wima_area_mouseOnSplit(DynaTree areas, WimaVec pos, WimaAreaSplit* result);
+bool wima_area_mouseOnSplit(ynonnull DynaTree areas, WimaVec pos, WimaAreaSplit* result);
 
 /**
  * Moves an area's split, as well as all of its children's splits.
@@ -343,8 +355,9 @@ bool wima_area_mouseOnSplit(DynaTree areas, WimaVec pos, WimaAreaSplit* result);
  * @param node		The node of the area.
  * @param split		The split's info.
  * @param cursor	The position of the cursor.
+ * @pre				@a areas must not be NULL.
  */
-void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, WimaVec cursor);
+void wima_area_moveSplit(ynonnull DynaTree areas, DynaNode node, WimaAreaSplit split, WimaVec cursor);
 
 /**
  * Finds the widget at @a pos.
@@ -354,8 +367,9 @@ void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, Wim
  *				pos does not match, WIMA_WIDGET_INVALID will
  *				be returned.
  * @return		The widget at the pos, or WIMA_WIDGET_INVALID.
+ * @pre			@a areas must not be NULL.
  */
-WimaWidget wima_area_findWidget(DynaTree areas, WimaVec pos, uint32_t flags);
+WimaWidget wima_area_findWidget(ynonnull DynaTree areas, WimaVec pos, uint32_t flags);
 
 /**
  * Joins two areas into one. It handles finding the common

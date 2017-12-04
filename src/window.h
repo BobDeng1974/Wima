@@ -360,7 +360,7 @@ void wima_window_destroy(void* ptr);
  *				error code otherwise.
  * @pre			@a win must not be NULL.
  */
-WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags flags);
+WimaStatus wima_window_addImage(ynonnull WimaWin* win, const char* path, WimaImageFlags flags);
 
 /**
  * Pops an image from a window. This should only
@@ -368,16 +368,17 @@ WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags f
  * to a window. In any other case, the vectors of
  * images in windows could mismatch.
  * @param win	The window to pop an image from.
+ * @pre			@a win must not be NULL.
  */
-void wima_window_removeImage(WimaWin* win);
+void wima_window_removeImage(ynonnull WimaWin* win);
 
 /**
  * Sets @a win as dirty, and if @a layout is true, forces a layout.
  * @param win		The window to update.
  * @param layout	Whether or not layout should be forced.
- * @pre				@a win must be valid.
+ * @pre				@a win must not be NULL.
  */
-void wima_window_setDirty(WimaWin* win, bool layout) yinline;
+void wima_window_setDirty(ynonnull WimaWin* win, bool layout) yinline;
 
 /**
  * Sets the modifiers on @a win according to @a key and @a action.
@@ -385,9 +386,9 @@ void wima_window_setDirty(WimaWin* win, bool layout) yinline;
  * @param key		The key to set for mods.
  * @param action	The action. For WIMA_ACTION_PRESS, it sets the
  *					mod, and for WIMA_ACTION_RELEASE, it clears it.
- * @pre				@a win must be valid.
+ * @pre				@a win must not be NULL.
  */
-void wima_window_setModifier(WimaWin* win, WimaKey key, WimaAction action);
+void wima_window_setModifier(ynonnull WimaWin* win, WimaKey key, WimaAction action);
 
 /**
  * Sets the mouse buttons on @a win according to @a action.
@@ -395,9 +396,9 @@ void wima_window_setModifier(WimaWin* win, WimaKey key, WimaAction action);
  * @param btn		The button to set.
  * @param action	The action. For WIMA_ACTION_PRESS, it sets the
  *					mod, and for WIMA_ACTION_RELEASE, it clears it.
- * @pre				@a win must be valid.
+ * @pre				@a win must not be NULL.
  */
-void wima_window_setMouseBtn(WimaWin* win, WimaMouseBtn btn, WimaAction action);
+void wima_window_setMouseBtn(ynonnull WimaWin* win, WimaMouseBtn btn, WimaAction action);
 
 /**
  * Draws the window with the current layout.
@@ -420,10 +421,10 @@ WimaStatus wima_window_draw(WimaWindow win);
  *						of its parent if there is no room on the right.
  * @return				WIMA_STATUS_SUCCESS on success, an error code
  *						otherwise.
- * @pre					@a win must be valid.
+ * @pre					@a win must not be NULL.
  * @pre					@a menu must not be NULL.
  */
-WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth);
+WimaStatus wima_window_drawMenu(ynonnull WimaWin* win, WimaMenu* menu, int parentWidth);
 
 /**
  * Processes the event queue on @a win.

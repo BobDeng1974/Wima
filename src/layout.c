@@ -76,8 +76,9 @@ wima_prop_info_decl;
  * @pre				@a parent must be valid.
  * @pre				@a parent is a layout.
  * @pre				@a parent must not be full already.
+ * @pre				@a area must not be NULL.
  */
-static void wima_layout_setChildren(WimaLayout parent, WimaAr* area, uint32_t idx);
+static void wima_layout_setChildren(WimaLayout parent, ynonnull WimaAr* area, uint32_t idx);
 
 /**
  * @}

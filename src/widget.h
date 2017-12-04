@@ -167,7 +167,7 @@ uint64_t wima_widget_hash(WimaProperty prop, uint8_t region) yconst yinline;
  * @return		A pointer to the widget's data.
  * @pre			@a wdgt must be valid.
  */
-WimaItem* wima_widget_ptr(WimaWidget wdgt);
+WimaItem* wima_widget_ptr(WimaWidget wdgt) yretnonnull;
 
 /**
  * A DynaDestructFunc to destroy widget data. This
@@ -176,15 +176,7 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt);
  * @param pool	The pool that the widget has data in.
  * @param key	The key to the widget's data.
  */
-void wima_widget_destroy(DynaPool pool, void* key);
-
-/**
- * Allocates data for the widget.
- * @param wdgt	The widget to allocate data for.
- * @param size	The size of the data to allocate.
- * @return		A pointer to the data.
- */
-void* wima_widget_allocate(WimaWidget wdgt, size_t size);
+void wima_widget_destroy(ynonnull DynaPool pool, ynonnull void* key);
 
 /**
  * Handles a key event on @a wdgt.
