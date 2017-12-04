@@ -355,7 +355,7 @@ int main() {
 	appfuncs.close = cb_close;
 
 	// Initialize Wima and check for success.
-	WimaStatus status = wima_init("Wima Test App", appfuncs, 0, NULL, "../res/DejaVuSans.ttf");
+	WimaStatus status = wima_ninit("Wima Test App", appfuncs, "../res/DejaVuSans.ttf", 0);
 	if (status) {
 		return status;
 	}
