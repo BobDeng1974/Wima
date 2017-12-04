@@ -92,10 +92,8 @@ const char* wima_error_descs[] = {
 const char* wima_assert_msgs[] = {
 #ifdef __YASSERT__
 
-    "default taken on enum switch",
-    "invalid operation",
-
     "wima is not initialized",
+    "wima has already been initialized",
 
     "app name is null",
     "app error function is null",
@@ -225,6 +223,9 @@ const char* wima_assert_msgs[] = {
     "ptr is NULL",
 
     "file path is NULL",
+
+    "default taken on enum switch",
+    "invalid operation",
 
 #endif
 };

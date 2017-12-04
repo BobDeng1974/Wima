@@ -3127,22 +3127,56 @@ typedef struct WimaAppFuncs {
 } WimaAppFuncs;
 
 /**
+ *
+ * Initializes Wima. This function only accepts char pointer args
+ * as var args.
+ *
+ * ***THIS FUNCTION (OR wima_vinit() OR wima_init()) MUST BE CALLED
+ * BEFORE ANY OTHERS, EXCEPT FOR THE MATH FUNCTIONS!!!***
+ * @param name		The app name.
+ * @param funcs		The global app callbacks.
+ * @param fontPath	The path to the font to use.
+ * @param numIcons	The number of app icons in @a iconPaths.
+ * @return			WIMA_STATUS_SUCCESS on success, or an error
+ *					code otherwise.
+ */
+WimaStatus wima_ninit(const char* name, WimaAppFuncs funcs,
+                      const char* fontPath, uint32_t numIcons, ...);
+
+/**
+ * Initializes Wima. The va_list only accepts char pointer args.
+ *
+ * ***THIS FUNCTION (OR wima_ninit() OR wima_init()) MUST BE CALLED
+ * BEFORE ANY OTHERS, EXCEPT FOR THE MATH FUNCTIONS!!!***
+ * @param name		The app name.
+ * @param funcs		The global app callbacks.
+ * @param fontPath	The path to the font to use.
+ * @param numIcons	The number of app icons in @a iconPaths.
+ * @param iconPaths	A va_list of the icon paths, where each is an
+ *					app icon of different size. Every arg in the
+ *					list must be a char pointer.
+ * @return			WIMA_STATUS_SUCCESS on success, or an error
+ *					code otherwise.
+ */
+WimaStatus wima_vinit(const char* name, WimaAppFuncs funcs, const char* fontPath,
+                      uint32_t numIcons, va_list iconPaths);
+
+/**
  * Initializes Wima.
  *
- * ***THIS FUNCTION MUST BE CALLED BEFORE ANY OTHERS, EXCEPT
- * FOR THE MATH FUNCTIONS!!!***
- * @param name			The app name.
- * @param funcs			The global app callbacks.
- * @param numIcons		The number of app icons in @a iconPaths.
- * @param iconPaths		An array of file names, where each is an
- *						app icon of different size.
- * @param fontPath		The path to the font to use.
- * @return				WIMA_STATUS_SUCCESS on success, or an
- *						error code otherwise.
+ * ***THIS FUNCTION (OR wima_ninit() OR wima_vinit()) MUST BE CALLED
+ * BEFORE ANY OTHERS, EXCEPT FOR THE MATH FUNCTIONS!!!***
+ * @param name		The app name.
+ * @param funcs		The global app callbacks.
+ * @param fontPath	The path to the font to use.
+ * @param numIcons	The number of app icons in @a iconPaths.
+ * @param iconPaths	An array of file names, where each is an app
+ *					icon of different size.
+ * @return			WIMA_STATUS_SUCCESS on success, or an error
+ *					code otherwise.
  */
-WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
-                     uint32_t numIcons,    const char* iconPaths[],
-                     const char* fontPath);
+WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
+                     uint32_t numIcons, const char* iconPaths[]);
 
 /**
  * The main rendering and event loop. This will return

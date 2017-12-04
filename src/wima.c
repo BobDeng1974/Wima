@@ -68,10 +68,47 @@ wima_assert_msgs_decl;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
-                     uint32_t numIcons,    const char* iconPaths[],
-                     const char* fontPath)
+WimaStatus wima_ninit(const char* name, WimaAppFuncs funcs,
+                      const char* fontPath, uint32_t numIcons, ...)
 {
+	va_list iconPaths;
+
+	wassert(numIcons <= WIMA_MAX_ICONS, WIMA_ASSERT_APP_NUM_ICONS);
+
+	// Set up the list.
+	va_start(iconPaths, numIcons);
+
+	// Init Wima.
+	WimaStatus status = wima_vinit(name, funcs, fontPath, numIcons, iconPaths);
+
+	// Clean up.
+	va_end(iconPaths);
+
+	return status;
+}
+
+WimaStatus wima_vinit(const char* name, WimaAppFuncs funcs, const char* fontPath,
+                      uint32_t numIcons, va_list iconPaths)
+{
+	wassert(numIcons <= WIMA_MAX_ICONS, WIMA_ASSERT_APP_NUM_ICONS);
+
+	// Create a list of paths.
+	const char* paths[numIcons];
+
+	// Load the paths into the list.
+	for (int i = 0; i < numIcons; ++i) {
+		paths[i] = va_arg(iconPaths, char*);
+	}
+
+	// Init Wima.
+	return wima_init(name, funcs, fontPath, numIcons, paths);
+}
+
+WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
+                     uint32_t numIcons, const char* iconPaths[])
+{
+	wassert(wg.name != NULL, WIMA_ASSERT_INIT_NOT);
+
 	wassert(name != NULL, WIMA_ASSERT_APP_NAME);
 
 	wassert(funcs.error != NULL, WIMA_ASSERT_APP_ERROR_FUNC);
