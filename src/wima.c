@@ -86,27 +86,22 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	wg.funcs = funcs;
 
 	// Clear before trying to set.
-	wg.imageFlags = NULL;
-	wg.imagePaths = NULL;
-	wg.iconPathWindings = NULL;
-	wg.icons = NULL;
-	wg.regions = NULL;
+	wg.name = NULL;
+	wg.windows = NULL;
+	wg.props = NULL;
+	wg.customProps = NULL;
 	wg.editors = NULL;
 	wg.dialogs = NULL;
-	wg.workspaceProps = NULL;
 	wg.workspaces = NULL;
-	wg.name = NULL;
-	wg.customProps = NULL;
-	wg.props = NULL;
-	wg.windows = NULL;
+	wg.workspaceProps = NULL;
+	wg.regions = NULL;
+	wg.icons = NULL;
+	wg.iconPathWindings = NULL;
+	wg.imagePaths = NULL;
+	wg.imageFlags = NULL;
 	wg.fontPath = NULL;
-
-	// Create and if error, exit.
-	wg.fontPath = dstr_create(fontPath);
-	if (yerror(!wg.fontPath)) {
-		wima_exit();
-		return WIMA_STATUS_MALLOC_ERR;
-	}
+	wg.numAppIcons = 0;
+	wg.glfwInitialized = false;
 
 	// Create and if error, exit.
 	wg.name = dstr_create(name);
@@ -141,33 +136,6 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	}
 
 	// Create and if error, exit.
-	wg.regions = dvec_create(0, NULL, NULL, sizeof(WimaReg));
-	if (yerror(!wg.regions)) {
-		wima_exit();
-		return WIMA_STATUS_MALLOC_ERR;
-	}
-
-	// Create the flags for a header top region.
-	uint8_t flags = wima_region_setLeftFlag(0);
-
-	// Register the header top region and check for error.
-	wg.regHeaderTop = wima_region_register(wima_area_layoutHeader, 256, flags);
-	if (yerror(wg.regHeaderTop == WIMA_REGION_INVALID)) {
-		wima_exit();
-		return WIMA_STATUS_MALLOC_ERR;
-	}
-
-	// Set the flags for a header bottom region.
-	flags = wima_region_clearLeftFlag(flags);
-
-	// Register the header top region and check for error.
-	wg.regHeaderBtm = wima_region_register(wima_area_layoutHeader, 256, flags);
-	if (yerror(wg.regHeaderBtm == WIMA_REGION_INVALID)) {
-		wima_exit();
-		return WIMA_STATUS_MALLOC_ERR;
-	}
-
-	// Create and if error, exit.
 	wg.editors = dvec_create(0, NULL, NULL, sizeof(WimaEdtr));
 	if (yerror(!wg.editors)) {
 		wima_exit();
@@ -191,6 +159,33 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 	// Create and if error, exit.
 	wg.workspaceProps = dvec_create(0, NULL, NULL, sizeof(WimaProperty));
 	if (yerror(!wg.workspaceProps)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Create and if error, exit.
+	wg.regions = dvec_create(0, NULL, NULL, sizeof(WimaReg));
+	if (yerror(!wg.regions)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Create the flags for a header top region.
+	uint8_t flags = wima_region_setLeftFlag(0);
+
+	// Register the header top region and check for error.
+	wg.regHeaderTop = wima_region_register(wima_area_layoutHeader, 256, flags);
+	if (yerror(wg.regHeaderTop == WIMA_REGION_INVALID)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Set the flags for a header bottom region.
+	flags = wima_region_clearLeftFlag(flags);
+
+	// Register the header top region and check for error.
+	wg.regHeaderBtm = wima_region_register(wima_area_layoutHeader, 256, flags);
+	if (yerror(wg.regHeaderBtm == WIMA_REGION_INVALID)) {
 		wima_exit();
 		return WIMA_STATUS_MALLOC_ERR;
 	}
@@ -224,18 +219,11 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
-	// Initialize GLFW and exit on error.
-	if (yerror(!glfwInit())) {
+	// Create and if error, exit.
+	wg.fontPath = dstr_create(fontPath);
+	if (yerror(!wg.fontPath)) {
 		wima_exit();
-		return WIMA_STATUS_INIT_ERR;
-	}
-
-	// Set the error callback.
-	glfwSetErrorCallback(wima_callback_error);
-
-	// Create the cursors.
-	for (int i = 0; i < 6; ++i) {
-		wg.cursors[i] = glfwCreateStandardCursor(i + GLFW_ARROW_CURSOR);
+		return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Need these for later.
@@ -280,6 +268,31 @@ WimaStatus wima_init(const char* name,     WimaAppFuncs funcs,
 
 	// Make sure to set the number of icons.
 	wg.numAppIcons = numIcons;
+
+	// Initialize GLFW and exit on error.
+	if (yerror(!glfwInit())) {
+		wima_exit();
+		return WIMA_STATUS_INIT_ERR;
+	}
+
+	// Set the flag.
+	wg.glfwInitialized = true;
+
+	// Set the error callback.
+	glfwSetErrorCallback(wima_callback_error);
+
+	// Create the cursors.
+	for (int i = 0; i < 6; ++i) {
+
+		// Create the cursor.
+		wg.cursors[i] = glfwCreateStandardCursor(i + GLFW_ARROW_CURSOR);
+
+		// Check for error.
+		if (yerror(wg.cursors[i])) {
+			wima_exit();
+			return WIMA_STATUS_INIT_ERR;
+		}
+	}
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -345,6 +358,11 @@ void wima_exit() {
 
 	wima_assert_init;
 
+	// Terminate GLFW, if necessary.
+	if (wg.glfwInitialized) {
+		glfwTerminate();
+	}
+
 	// Free the icon images, if they exist.
 	if (wg.numAppIcons) {
 		for (int i = 0; i < wg.numAppIcons; ++i) {
@@ -377,6 +395,11 @@ void wima_exit() {
 		dnvec_free(wg.icons);
 	}
 
+	// Free the dialogs, if they exist.
+	if (wg.regions) {
+		dvec_free(wg.regions);
+	}
+
 	// Free the icon vector, if it exists.
 	if (wg.workspaceProps) {
 		dvec_free(wg.workspaceProps);
@@ -396,11 +419,6 @@ void wima_exit() {
 	// Free the editors, if they exist.
 	if (wg.editors) {
 		dvec_free(wg.editors);
-	}
-
-	// Free the dialogs, if they exist.
-	if (wg.regions) {
-		dvec_free(wg.regions);
 	}
 
 	// Free the editors, if they exist.
@@ -437,7 +455,4 @@ void wima_exit() {
 		// Clear this so we know Wima is not initialized.
 		wg.name = NULL;
 	}
-
-	// Terminate GLFW.
-	glfwTerminate();
 }
