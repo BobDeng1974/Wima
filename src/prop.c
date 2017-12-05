@@ -978,6 +978,23 @@ WimaProperty wima_prop_ptr_register(const char* name, const char* label, const c
 	return idx;
 }
 
+void wima_prop_ptr_update(WimaProperty wph, void* ptr) {
+
+	wima_assert_init;
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+	wassert(prop->type == WIMA_PROP_PTR, WIMA_ASSERT_PROP_PTR);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	data->_ptr.ptr = ptr;
+}
+
 void* wima_prop_ptr(WimaProperty wph) {
 
 	wima_assert_init;

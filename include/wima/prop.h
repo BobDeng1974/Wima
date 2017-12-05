@@ -669,12 +669,21 @@ WimaProperty wima_prop_ptr_register(ynonnull const char* name, const char* label
                                     WimaIcon icon, WimaCustomProperty type, void* ptr);
 
 /**
+ * Updates the pointer in @a wph to @a ptr.
+ * @param wph	The property to update.
+ * @param ptr	The pointer to update the property to.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ * @pre			@a wph must be a @a WIMA_PROP_PTR.
+ */
+void wima_prop_ptr_update(WimaProperty wph, void* ptr);
+
+/**
  * Returns the pointer contained in @a wph.
  * @param wph	The @a WimaProperty whose pointer will be
  *				returned.
  * @return		The value contained in @a wph.
  * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_CUSTOM.
+ * @pre			@a wph must be a @a WIMA_PROP_PTR.
  */
 void* wima_prop_ptr(WimaProperty wph) yinline;
 
