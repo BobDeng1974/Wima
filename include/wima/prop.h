@@ -646,7 +646,7 @@ WimaProperty wima_prop_operator_register(ynonnull const char* name, const char* 
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Registers and returns a @a WIMA_PROP_CUSTOM. Its pointer
+ * Registers and returns a @a WIMA_PROP_PTR. Its pointer
  * is set to @a ptr.
  *
  * Wima will use the draw function for @a type for draw
