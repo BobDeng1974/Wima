@@ -32,12 +32,84 @@ project(wima C)
 set(ignoreMe "${QT_QMAKE_EXECUTABLE}")
 set(ignoreMe "${CMAKE_CXX_COMPILER}")
 
-if(NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE Release)
+if(NOT "${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
+	message(FATAL_ERROR "Clang is the only compiler supported on Linux")
 endif()
 
-if(NOT "${CMAKE_BUILD_TYPE}" MATCHES "Debug")
+# If we are doing a release with debug
+# info, we may want to run sanitizers.
+if("${CMAKE_BUILD_TYPE}" MATCHES "RelWithDebInfo")
+
+	# Create the sanitizer options.
+	option(DYNA_SANITIZER_MEMORY "Build with MemorySanitizer" OFF)
+
+	# If the memory sanitizer is in use, set the flag.
+	if ("${DYNA_SANITIZER_MEMORY}")
+		set(DYNA_SANITIZER_FLAGS "-fsanitize=memory")
+	endif()
+
+endif()
+
+# If we are using sanitizers...
+if(DEFINED DYNA_SANITIZER_FLAGS)
+
+	# We must use Clang as the linker.
+	set(CMAKE_LINKER "${CMAKE_C_COMPILER}")
+
+	# We must use -O1.
+	set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O1 -g -DNDEBUG")
+
+	# These are all options to make the print outs prettier.
+	string(CONCAT DYNA_FLAGS "${CMAKE_C_FLAGS_RELWITHDEBINFO} ${DYNA_SANITIZER_FLAGS} "
+		"-fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-common")
+
+	# We need to set compiler *and* linker flags.
+	set(CMAKE_C_FLAGS "${DYNA_FLAGS}")
+	set(CMAKE_EXE_LINKER_FLAGS "${DYNA_FLAGS}")
+
+endif()
+
+# If we are in debug mode...
+if("${CMAKE_BUILD_TYPE}" MATCHES "Debug" OR "${CMAKE_BUILD_TYPE}" MATCHES "RelWithDegInfo")
+
+	# Option to run the undefined behavior sanitizer.
+	option(DYNA_SANITIZER_UNDEFINED "Build with UndefinedBehaviorSanitizer" ON)
+
+	# If we want to run the undefined behavior sanitizer...
+	if(DYNA_SANITIZER_UNDEFINED)
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=undefined")
+	endif()
+
+endif()
+
+# We need to set yet another compiler flag if we are using sanitizers.
+if(DEFINED DYNA_SANITIZER_FLAGS OR "${DYNA_SANITIZER_UNDEFINED}")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-sanitize-recover=all")
+endif()
+
+# If we are in release mode...
+if("${CMAKE_BUILD_TYPE}" MATCHES "Release")
+
+	# Add link time optimization.
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -flto")
+
+	# Have an option to harden Dyna.
+	option(DYNA_HARDEN "Build with hardened security" OFF)
+
+	# If we are hardened, add Control Flow Integrity.
+	# We would like to add Safe Stack, but it seg faults
+	# with jemalloc right now.
+	if("${DYNA_HARDEN}")
+
+		# Set a bunch of initial flags.
+		#set(DYNA_FLAGS "-fsanitize=cfi -fvisibility=hidden -fsanitize=safe-stack")
+		set(DYNA_FLAGS "-fsanitize=cfi -fvisibility=hidden")
+
+		# We need to set compiler flags.
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DYNA_FLAGS}")
+
+	endif()
+
 endif()
 
 enable_testing()
