@@ -198,7 +198,7 @@ void wima_layout_separator(WimaLayout parent) {
 
 #ifdef __YASSERT__
 	WimaWin* win = dvec_get(wg.windows, parent.window);
-	wassert(parent.area < dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 #endif
 
@@ -217,7 +217,7 @@ WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags) {
 
 #ifdef __YASSERT__
 	WimaWin* win = dvec_get(wg.windows, parent.window);
-	wassert(parent.area < dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 #endif
 
@@ -239,7 +239,7 @@ WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags) {
 
 #ifdef __YASSERT__
 	WimaWin* win = dvec_get(wg.windows, parent.window);
-	wassert(parent.area < dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 #endif
 
@@ -261,7 +261,7 @@ WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split) {
 
 #ifdef __YASSERT__
 	WimaWin* win = dvec_get(wg.windows, parent.window);
-	wassert(parent.area < dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 #endif
 
@@ -284,7 +284,7 @@ WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags) {
 
 #ifdef __YASSERT__
 	WimaWin* win = dvec_get(wg.windows, parent.window);
-	wassert(parent.area < dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 #endif
 
@@ -306,7 +306,7 @@ WimaLayout wima_layout_grid(WimaLayout parent, uint16_t flags, uint32_t cols) {
 
 #ifdef __YASSERT__
 	WimaWin* win = dvec_get(wg.windows, parent.window);
-	wassert(parent.area < dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 #endif
 
@@ -341,7 +341,7 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop) {
 	// Get the window pointer.
 	WimaWin* win = dvec_get(wg.windows, parent.window);
 
-	wassert(parent.area < dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
 
 	// Get a pointer to the area.
 	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), parent.area);

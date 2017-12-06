@@ -344,10 +344,10 @@ static WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor w
 	uint8_t numRegions = edtr->numRegions;
 
 	// Make sure these are set or cleared.
-	wan.area.ctx.items = NULL;
+	wan.area.ctx.items = WIMA_PTR_INVALID;
 	wan.area.ctx.itemCount = 0;
 	wan.area.ctx.itemCap = edtr->itemCap;
-	wan.area.ctx.widgetData = NULL;
+	wan.area.ctx.widgetData = WIMA_PTR_INVALID;
 	wan.area.numRegions = numRegions;
 
 	// Loop over the regions and fill the WimaArReg structs.
