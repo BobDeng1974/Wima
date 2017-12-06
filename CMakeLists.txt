@@ -36,39 +36,6 @@ if(NOT "${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
 	message(FATAL_ERROR "Clang is the only compiler supported on Linux")
 endif()
 
-# If we are doing a release with debug
-# info, we may want to run sanitizers.
-if("${CMAKE_BUILD_TYPE}" MATCHES "RelWithDebInfo")
-
-	# Create the sanitizer options.
-	option(WIMA_SANITIZER_MEMORY "Build with MemorySanitizer" OFF)
-
-	# If the memory sanitizer is in use, set the flag.
-	if ("${WIMA_SANITIZER_MEMORY}")
-		set(WIMA_SANITIZER_FLAGS "-fsanitize=memory")
-	endif()
-
-endif()
-
-# If we are using sanitizers...
-if(DEFINED WIMA_SANITIZER_FLAGS)
-
-	# We must use Clang as the linker.
-	set(CMAKE_LINKER "${CMAKE_C_COMPILER}")
-
-	# We must use -O1.
-	set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O1 -g -DNDEBUG")
-
-	# These are all options to make the print outs prettier.
-	string(CONCAT WIMA_FLAGS "${CMAKE_C_FLAGS_RELWITHDEBINFO} ${WIMA_SANITIZER_FLAGS} "
-		"-fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-common")
-
-	# We need to set compiler *and* linker flags.
-	set(CMAKE_C_FLAGS "${WIMA_FLAGS}")
-	set(CMAKE_EXE_LINKER_FLAGS "${WIMA_FLAGS}")
-
-endif()
-
 # If we are in debug mode...
 if("${CMAKE_BUILD_TYPE}" MATCHES "Debug" OR "${CMAKE_BUILD_TYPE}" MATCHES "RelWithDegInfo")
 
@@ -83,7 +50,7 @@ if("${CMAKE_BUILD_TYPE}" MATCHES "Debug" OR "${CMAKE_BUILD_TYPE}" MATCHES "RelWi
 endif()
 
 # We need to set yet another compiler flag if we are using sanitizers.
-if(DEFINED WIMA_SANITIZER_FLAGS OR "${WIMA_SANITIZER_UNDEFINED}")
+if("${WIMA_SANITIZER_UNDEFINED}")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-sanitize-recover=all")
 endif()
 
