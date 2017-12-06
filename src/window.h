@@ -453,14 +453,12 @@ void wima_window_join(WimaWindow wwh);
  */
 void wima_window_split(WimaWindow wwh);
 
-#ifdef __YASSERT__
 /**
  * Tests to see if @a wwh is valid (not removed).
  * @param wwh	The window to test.
  * @return		true if @a wwh is valid, false otherwise.
  */
 bool wima_window_valid(WimaWindow wwh);
-#endif
 
 /**
  * @def WIMA_WIN

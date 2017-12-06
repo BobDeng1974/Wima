@@ -2452,7 +2452,6 @@ static void wima_window_clearContext(WimaWinCtx* ctx) {
 	memset(&ctx->hover, -1, sizeof(WimaWidget));
 }
 
-#ifdef __YASSERT__
 bool wima_window_valid(WimaWindow wwh) {
 
 	wima_assert_init;
@@ -2473,7 +2472,6 @@ bool wima_window_valid(WimaWindow wwh) {
 
 	return valid;
 }
-#endif
 
 #ifndef NDEBUG
 static void wima_window_sub1_click(WimaWindow wwh) {
