@@ -361,7 +361,7 @@ int main() {
 	}
 
 	// Create a region and check for error.
-	WimaRegion region = wima_region_register(NULL, UINT16_MAX, 0);
+	WimaRegion region = wima_region_register(cb_layout, UINT16_MAX, 0);
 	if (region == WIMA_REGION_INVALID) {
 		return 1;
 	}
@@ -374,7 +374,8 @@ int main() {
 	funcs.enter = cb_mouseEnterArea;
 
 	// Register a editor.
-	WimaEditor editor = wima_editor_nregister("Test Editor", funcs, wima_icon_debug(), false, 1, region);
+	WimaEditor editor = wima_editor_nregister("Test Editor", funcs, wima_icon_debug(),
+	                                          4096, false, 1, region);
 	if (editor == WIMA_EDITOR_INVALID) {
 		return WIMA_EDITOR_INVALID;
 	}
