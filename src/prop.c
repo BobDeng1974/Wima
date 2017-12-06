@@ -248,7 +248,7 @@ WimaProperty wima_prop_find(const char* name) {
 
 	size_t slen = strlen(name);
 
-	uint64_t hash = dyna_hash64(name, slen, WIMA_PROP_SEED);
+	uint32_t hash = dyna_hash32(name, slen, WIMA_PROP_SEED);
 
 	size_t len = dvec_len(wg.props);
 	WimaPropInfo* props = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, 0);
