@@ -115,7 +115,15 @@ extern "C" {
  * @def WIMA_WIN_MENU
  * Window menu bit.
  */
-#define WIMA_WIN_MENU          (0x01)
+#define WIMA_WIN_MENU (0x01)
+
+/**
+ * @def WIMA_WIN_HAS_MENU(win)
+ * Returns true if the window has a menu, false otherwise.
+ * @param win	The window to test.
+ * @return		true if @a win has a menu, false otherwise.
+ */
+#define WIMA_WIN_HAS_MENU(win)         (((win)->flags) & WIMA_WIN_MENU)
 
 /**
  * @def WIMA_WIN_MENU_RELEASED
@@ -126,30 +134,7 @@ extern "C" {
 #define WIMA_WIN_MENU_RELEASED (0x02)
 
 /**
- * @def WIMA_WIN_MENU_CONTEXT
- * Window context menu bit. This is to
- * mark when a menu is a context menu.
- */
-#define WIMA_WIN_MENU_CONTEXT  (0x04)
-
-/**
- * @def WIMA_WIN_MENU_ITEM_PRESS
- * A bit indicating whether a menu item was pressed or
- * not. If so, the field @a click_item is the menu item.
- * Otherwise, it's the widget that was clicked.
- */
-#define WIMA_WIN_MENU_ITEM_PRESS    (0x08)
-
-/**
- * @def WIMA_WIN_HAS_MENU
- * Returns true if the window has a menu, false otherwise.
- * @param win	The window to test.
- * @return		true if @a win has a menu, false otherwise.
- */
-#define WIMA_WIN_HAS_MENU(win)         (((win)->flags) & WIMA_WIN_MENU)
-
-/**
- * @def WIMA_WIN_MENU_IS_RELEASED
+ * @def WIMA_WIN_MENU_IS_RELEASED(win)
  * Returns true if the window's menu is released, false otherwise.
  * @param win	The window to test.
  * @return		true if @a win's menu is released, false otherwise.
@@ -157,7 +142,14 @@ extern "C" {
 #define WIMA_WIN_MENU_IS_RELEASED(win) (((win)->flags) & WIMA_WIN_MENU_RELEASED)
 
 /**
- * @def WIMA_WIN_MENU_IS_CONTEXT
+ * @def WIMA_WIN_MENU_CONTEXT
+ * Window context menu bit. This is to
+ * mark when a menu is a context menu.
+ */
+#define WIMA_WIN_MENU_CONTEXT (0x04)
+
+/**
+ * @def WIMA_WIN_MENU_IS_CONTEXT(win)
  * Returns true if the window's menu is a context menu, false otherwise.
  * @param win	The window to test.
  * @return		true if @a win's menu is a context menu, false otherwise.
@@ -165,12 +157,35 @@ extern "C" {
 #define WIMA_WIN_MENU_IS_CONTEXT(win)  (((win)->flags) & WIMA_WIN_MENU_CONTEXT)
 
 /**
- * @def WIMA_WIN_MENU_ITEM_WAS_PRESSED
+ * @def WIMA_WIN_MENU_ITEM_PRESS
+ * A bit indicating whether a menu item was pressed or
+ * not. If so, the field @a click_item is the menu item.
+ * Otherwise, it's the widget that was clicked.
+ */
+#define WIMA_WIN_MENU_ITEM_PRESS (0x08)
+
+/**
+ * @def WIMA_WIN_MENU_ITEM_WAS_PRESSED(win)
  * Returns true if an item in the window's menu pressed, false otherwise.
  * @param win	The window to test.
  * @return		true if an item in @a win's menu was clicked, false otherwise.
  */
 #define WIMA_WIN_MENU_ITEM_WAS_PRESSED(win) (((win)->flags) & WIMA_WIN_MENU_ITEM_PRESS)
+
+/**
+ * @def WIMA_WIN_OVERLAY
+ * A bit indicating whether the window
+ * has an overlay up or not.
+ */
+#define WIMA_WIN_OVERLAY (0x10)
+
+/**
+ * @def WIMA_WIN_HAS_OVERLAY(win)
+ * Returns true if the window has an overlay, false otherwise.
+ * @param win	The window to test.
+ * @return		true if @a win has an overlay, false otherwise.
+ */
+#define WIMA_WIN_HAS_OVERLAY(win) (((win)->flags) & WIMA_WIN_OVERLAY)
 
 /**
  * A union between widgets and a pointer a menu item,
