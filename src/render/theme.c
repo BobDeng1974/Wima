@@ -624,6 +624,8 @@ static WimaColor wima_theme_nodeColor(WimaNodeThemeType type);
  * @}
  */
 
+//! @cond Doxygen suppress.
+
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -1533,3 +1535,5 @@ static WimaColor wima_theme_nodeColor(WimaNodeThemeType type) {
 
 	return data[type]._color;
 }
+
+//! @endcond Doxygen suppress.

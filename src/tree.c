@@ -112,6 +112,8 @@ static bool wima_tree_nodeValid(ynonnull WimaTree tree, DynaNode n) yinline;
  * @}
  */
 
+//! @cond Doxygen suppress.
+
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -376,3 +378,5 @@ static WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor w
 static bool wima_tree_nodeValid(WimaTree tree, DynaNode p) {
 	return dtree_exists(tree, p) && WIMA_AREA_IS_PARENT((WimaAr*) dtree_node(tree, p));
 }
+
+//! @endcond Doxygen suppress.

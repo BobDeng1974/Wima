@@ -172,6 +172,8 @@ static bool wima_prop_enum_namesValid(const char* names[], uint32_t numNames);
  * @}
  */
 
+//! @cond Doxygen suppress.
+
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions common to all prop types.
 ////////////////////////////////////////////////////////////////////////////////
@@ -1316,3 +1318,5 @@ static bool wima_prop_enum_namesValid(const char* names[], uint32_t numNames) {
 	return valid;
 }
 #endif
+
+//! @endcond Doxygen suppress.

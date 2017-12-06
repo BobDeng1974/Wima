@@ -63,7 +63,6 @@
 //! @cond Doxygen suppress.
 wima_global_decl;
 wima_assert_msgs_decl;
-//! @endcond Doxygen suppress.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
@@ -1739,3 +1738,5 @@ static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertic
 	// End the path.
 	nvgFill(nvg);
 }
+
+//! @endcond Doxygen suppress.

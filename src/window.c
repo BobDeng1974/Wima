@@ -205,6 +205,8 @@ static WimaMenu wima_window_areaSplitMenu =
  */
 static void wima_window_clearContext(WimaWinCtx* ctx);
 
+//! @cond Doxygen suppress.
+
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -2494,3 +2496,5 @@ static void wima_window_sub_sub1_click(WimaWindow wwh) {
 	printf("Item sub sub 1 clicked on window[%d]\n", wwh);
 }
 #endif // NDEBUG
+
+//! @endcond Doxygen suppress.

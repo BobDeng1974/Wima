@@ -86,6 +86,8 @@ static const char* const unitNames[] = {
  * @}
  */
 
+//! @cond Doxygen suppress.
+
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -294,3 +296,5 @@ void wima_icon_destroy(DynaNVector vec, void** ptr) {
 	wima_assert_init;
 	nsvgDelete(*((WimaIcn*) ptr[WIMA_ICON_HANDLE_IDX]));
 }
+
+//! @endcond Doxygen suppress.

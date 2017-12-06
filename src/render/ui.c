@@ -112,12 +112,20 @@ static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float de
                                   NVGtextRow *rows,    int nrows,
                                   int *cr, float *cx,  float *cy);
 
+/**
+ * An array to make it easy to translate
+ * between NanoVG and Wima line caps.
+ */
 static const WimaLineCap wima_ui_line_caps[] = {
     WIMA_CAP_BUTT,
     WIMA_CAP_ROUND,
     WIMA_CAP_SQUARE,
 };
 
+/**
+ * An array to make it easy to translate
+ * between NanoVG and Wima line joins.
+ */
 static const WimaLineJoin wima_ui_line_joins[] = {
     WIMA_JOIN_MITER,
     WIMA_JOIN_ROUND,
@@ -127,6 +135,8 @@ static const WimaLineJoin wima_ui_line_joins[] = {
 /**
  * @}
  */
+
+//! @cond Doxygen suppress.
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Public functions.
@@ -1825,3 +1835,5 @@ static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float de
 		}
 	}
 }
+
+//! @endcond Doxygen suppress.

@@ -81,6 +81,8 @@ const char* const wima_wksp_desc = "Name of a workspace";
  * @}
  */
 
+//! @cond Doxygen suppress.
+
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -274,3 +276,5 @@ WimaStatus wima_workspace_updateFromWindow(WimaWorkspace wwksp, WimaWindow wwh) 
 
 	return WIMA_STATUS_SUCCESS;
 }
+
+//! @endcond Doxygen suppress.
