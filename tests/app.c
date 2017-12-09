@@ -419,7 +419,7 @@ int main() {
 
 	WimaAreaNode leftDown = wima_tree_addRightParent(tree, left, 0.2f, true);
 	if (leftDown == WIMA_AREA_INVALID) {
-		return status;
+		return 1;
 	}
 
 	WimaAreaNode leftDownLeft = wima_tree_addLeftEditor(tree, leftDown, editor);
