@@ -34,6 +34,7 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <stdlib.h>
 #include <string.h>
 
 #include <yc/mem.h>
