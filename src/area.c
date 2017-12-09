@@ -639,34 +639,38 @@ void wima_area_destroy(DynaTree tree, void* ptr) {
 		yfree(area->area.ctx.items);
 	}
 
-	// Get a pointer to the allocation.
-	uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
-	void* data = dpool_get(area->area.ctx.widgetData, &key);
+	// If the widget pool is not NULL...
+	if (area->area.ctx.widgetData) {
 
-	// If the user didn't allocate anything,
-	// or the use handle is not initialized,
-	// just return.
-	if (data != NULL) {
+		// Get a pointer to the allocation.
+		uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
+		void* data = dpool_get(area->area.ctx.widgetData, &key);
 
-		// Get the editor handle.
-		WimaEditor edtr = area->area.type;
+		// If the user didn't allocate anything,
+		// or the use handle is not initialized,
+		// just return.
+		if (data != NULL) {
 
-		wassert(edtr < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
+			// Get the editor handle.
+			WimaEditor edtr = area->area.type;
 
-		// Get the list of editors.
-		WimaEdtr* editor = dvec_get(wg.editors, edtr);
+			wassert(edtr < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
 
-		// Get the particular user function setter.
-		WimaAreaFreeDataFunc free = editor->funcs.free;
+			// Get the list of editors.
+			WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
-		// If there is a free function, call it.
-		if (free) {
-			free(data);
+			// Get the particular user function setter.
+			WimaAreaFreeDataFunc free = editor->funcs.free;
+
+			// If there is a free function, call it.
+			if (free) {
+				free(data);
+			}
 		}
-	}
 
-	// Free the pool.
-	dpool_free(area->area.ctx.widgetData);
+		// Free the pool.
+		dpool_free(area->area.ctx.widgetData);
+	}
 }
 
 bool wima_area_key(WimaAr* area, WimaKeyEvent e) {
