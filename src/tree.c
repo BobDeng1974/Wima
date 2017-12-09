@@ -335,6 +335,7 @@ static WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor w
 
 	// Fill an initial area with common data.
 	wan.isParent = false;
+	wan.node = node;
 	wan.rect.w = -1;
 	wan.rect.h = -1;
 
