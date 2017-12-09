@@ -38,11 +38,46 @@ if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${WIMA_GLFW_DIR}/.git")
 	message(FATAL_ERROR "${WIMA_GLFW_SUBMODULE_ERR}")
 endif()
 
+# We need to set some GLFW cache variables here.
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_DOCS ON CACHE BOOL "" FORCE)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(glfw)
+
+set(GLFW_TARGET "glfw")
+set(GLFW_NAME "${GLFW_TARGET}3")
+set(GLFW_LIB "lib${GLFW_NAME}.a")
+set(GLFW_INC_DIR "glfw/include")
+set(GLFW_LIB_PATH "glfw/src")
+set(GLFW_LIB_ORIG "${GLFW_LIB_PATH}/${GLFW_LIB}")
+set(GLFW_OUT "${CMAKE_CURRENT_BINARY_DIR}/${GLFW_LIB}")
+set(GLFW_PIC "${GLFW_TARGET}_pic")
+set(GLFW_CUSTOM_TARGET "${GLFW_PIC}_custom_target")
+
+# Copy the object file/
+add_custom_command(
+	OUTPUT "${GLFW_OUT}"
+	COMMAND ${CMAKE_COMMAND} -E copy ${GLFW_LIB_ORIG} ${CMAKE_CURRENT_BINARY_DIR}
+	DEPENDS "${GLFW_TARGET}"
+	WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+add_custom_target(${GLFW_CUSTOM_TARGET} DEPENDS ${GLFW_OUT})
+add_library(${GLFW_PIC} STATIC IMPORTED GLOBAL)
+add_dependencies(${GLFW_PIC} ${GLFW_CUSTOM_TARGET} ${GLFW_OUT} ${GLFW_TARGET})
+
+# Make sure to set important properties.
+set_target_properties("${GLFW_PIC}"
+	PROPERTIES
+	OUTPUT_NAME "${GLFW_NAME}"
+	DEPENDS "${GLFW_OUT}"
+	IMPORTED_LOCATION "${GLFW_OUT}"
+	INTERFACE_INCLUDE_DIRECTORIES "${GLFW_INC_DIR}"
+)
+
+# Put on the merge list.
+merge_lib(${GLFW_PIC} ${GLFW_NAME})
 
 set(NANOVG "nanovg")
 set(NANOVG "${NANOVG}" PARENT_SCOPE)

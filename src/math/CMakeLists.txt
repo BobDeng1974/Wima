@@ -34,7 +34,7 @@ set(WIMA_MATH_SRC
 )
 
 create_pic_library(
-	"${WIMA_MATH}" "${WIMA_MATH}" "${WIMA_MATH_SRC}" YES
+	"${WIMA_MATH}" "${WIMA_MATH}" "${WIMA_MATH_SRC}" NO YES
 
 	# Add libraries here.
 	"${MATH_LIB}"

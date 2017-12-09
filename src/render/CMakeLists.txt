@@ -49,7 +49,7 @@ set(WIMA_RENDER_SRC
 set(WIMA_MATH "${PROJECT_NAME}_math")
 
 create_pic_library(
-	"${WIMA_RENDER}" "${WIMA_RENDER}" "${WIMA_RENDER_SRC}" YES
+	"${WIMA_RENDER}" "${WIMA_RENDER}" "${WIMA_RENDER_SRC}" NO YES
 
 	# Add libraries here.
 	"${WIMA_MATH_PIC}"
