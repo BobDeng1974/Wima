@@ -41,6 +41,7 @@
 #include <yc/assert.h>
 #include <yc/opt.h>
 #include <yc/error.h>
+#include <yc/utils.h>
 
 #include <dyna/dyna.h>
 #include <dyna/vector.h>
@@ -107,6 +108,8 @@ WimaStatus wima_vinit(const char* name, WimaAppFuncs funcs, const char* fontPath
 WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
                      uint32_t numIcons, const char* iconPaths[])
 {
+	wassert(wg.name == NULL, WIMA_ASSERT_INIT_DONE);
+
 	wassert(name != NULL, WIMA_ASSERT_APP_NAME);
 
 	wassert(funcs.error != NULL, WIMA_ASSERT_APP_ERROR_FUNC);
@@ -118,27 +121,11 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	// Check to make sure the icons are good.
 	wassert(numIcons <= WIMA_MAX_ICONS, WIMA_ASSERT_APP_NUM_ICONS);
 
+	// Clear wg before trying to set anything.
+	memset(&wg, 0, sizeof(WimaG));
+
 	// Set the functions.
 	wg.funcs = funcs;
-
-	// Clear before trying to set.
-	wg.name = NULL;
-	wg.windows = NULL;
-	wg.props = NULL;
-	wg.customProps = NULL;
-	wg.editors = NULL;
-	wg.dialogs = NULL;
-	wg.workspaces = NULL;
-	wg.workspaceProps = NULL;
-	wg.regions = NULL;
-	wg.overlays = NULL;
-	wg.icons = NULL;
-	wg.iconPathWindings = NULL;
-	wg.imagePaths = NULL;
-	wg.imageFlags = NULL;
-	wg.fontPath = NULL;
-	wg.numAppIcons = 0;
-	wg.glfwInitialized = false;
 
 	// Create and if error, exit.
 	wg.name = dstr_create(name);
@@ -504,4 +491,12 @@ void wima_exit() {
 		// Clear this so we know Wima is not initialized.
 		wg.name = NULL;
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// private functions.
+////////////////////////////////////////////////////////////////////////////////
+
+yctor static void wima_ctor() {
+	wg.name = NULL;
 }

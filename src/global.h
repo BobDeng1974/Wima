@@ -166,6 +166,7 @@ typedef enum WimaAssertType {
 	//! @cond Doxygen suppress.
 
 	WIMA_ASSERT_INIT,
+	WIMA_ASSERT_INIT_DONE,
 
 	WIMA_ASSERT_APP_NAME,
 	WIMA_ASSERT_APP_ERROR_FUNC,
