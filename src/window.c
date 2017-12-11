@@ -162,8 +162,8 @@ static WimaMenu wima_window_splitMenu_sub = WIMA_MENU_DEFAULT(wima_window_splitM
  */
 static WimaMenuItem wima_window_splitMenu_items[] = {
 
-    WIMA_MENU_ITEM_FUNC_DEFAULT("Split Area", wima_window_split),
-    WIMA_MENU_ITEM_FUNC_DEFAULT("Join Area", wima_window_join),
+    WIMA_MENU_ITEM_FUNC_DEFAULT("Split Area", wima_window_splitAreaMode),
+    WIMA_MENU_ITEM_FUNC_DEFAULT("Join Area", wima_window_joinAreasMode),
 
 #ifndef NDEBUG
 
@@ -1534,6 +1534,25 @@ const char* wima_window_clipboard(WimaWindow wwh) {
  * @{
  */
 
+static WimaStatus wima_window_drawOverlay(ynonnull WimaWin* win);
+
+/**
+ * Draws the window's menu. If @a parentWidth is not 0 (which means
+ * that there *is* a parent), and there is no room for the menu, the
+ * menu will be drawn on the left of the parent menu.
+ * @param win			The window whose menu will be drawn.
+ * @param menu			The menu to draw.
+ * @param parentWidth	The width of the menu's parent. If there
+ *						is no parent, this is 0. This allows the
+ *						window to put the menu on the left side
+ *						of its parent if there is no room on the right.
+ * @return				WIMA_STATUS_SUCCESS on success, an error code
+ *						otherwise.
+ * @pre					@a win must not be NULL.
+ * @pre					@a menu must not be NULL.
+ */
+static WimaStatus wima_window_drawMenu(ynonnull WimaWin* win, ynonnull WimaMenu* menu, int parentWidth);
+
 /**
  * Returns the menu that contains @a pos and does not have
  * any posterity menus that contain the cursor. In other
@@ -1543,7 +1562,7 @@ const char* wima_window_clipboard(WimaWindow wwh) {
  * @param pos	The cursor position.
  * @return		The youngest menu with the cursor inside.
  */
-static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos);
+static WimaMenu* wima_window_menu_contains(ynonnull WimaMenu* menu, WimaVec pos);
 
 /**
  * Processes one event.
@@ -1553,7 +1572,7 @@ static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos);
  * @param wdgt	The widget associated with the event.
  * @param e		The event.
  */
-static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wdgt, WimaEvent e);
+static void wima_window_processEvent(ynonnull WimaWin* win, WimaWindow wwh, WimaWidget wdgt, WimaEvent e);
 
 /**
  * Processes a mouse button event. This is
@@ -1562,14 +1581,14 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
  * @param wdgt	The widget associated with the event.
  * @param e		The event.
  */
-static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e);
+static void wima_window_processMouseBtnEvent(ynonnull WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e);
 
 /**
  * Processes a file drop event on a window.
  * @param wwh	The handle of the window.
  * @param files	The vector of file names.
  */
-static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files);
+static void wima_window_processFileDrop(WimaWindow wwh, ynonnull DynaVector files);
 
 /**
  * @}
@@ -1788,8 +1807,22 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 			return status;
 		}
 
+		// If we have an overlay...
+		if (WIMA_WIN_HAS_OVERLAY(win)) {
+
+			// Draw the overlay and check for error.
+			status = wima_window_drawOverlay(win);
+			if (yerror(status)) {
+
+				// Cancel NanoVG frame.
+				nvgCancelFrame(win->render.nvg);
+
+				return status;
+			}
+		}
+
 		// If we have a menu...
-		if (WIMA_WIN_HAS_MENU(win)) {
+		else if (WIMA_WIN_HAS_MENU(win)) {
 
 			// Draw the menu and check for error.
 			status = wima_window_drawMenu(win, win->menu, 0);
@@ -1818,7 +1851,91 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
+void wima_window_processEvents(WimaWindow wwh) {
+
+	WimaStatus status = WIMA_STATUS_SUCCESS;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	// Must run uiBeginLayout(), uiEndLayout() first.
+	wassert(win->ctx.stage != WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_NOT_LAYOUT);
+
+	// Set the stage.
+	win->ctx.stage = WIMA_UI_STAGE_PROCESS;
+
+	// Get the event queue and widget handles.
+	WimaEvent* events = win->ctx.events;
+	WimaWidget* handles = win->ctx.eventItems;
+	int numEvents = win->ctx.eventCount;
+
+	// Set the cursor position (used by event processing).
+	win->ctx.cursorPos = win->ctx.last_cursor;
+
+	// Loop through the events and process each.
+	for (int i = 0; i < numEvents; ++i) {
+		wima_window_processEvent(win, wwh, handles[i], events[i]);
+	}
+
+	// Reset the event count.
+	win->ctx.eventCount = 0;
+
+	// Set the last cursor.
+	win->ctx.last_cursor = win->ctx.cursorPos;
+}
+
+void wima_window_splitMenu(WimaWindow wwh) {
+
+	WimaIcon debug = wima_icon_debug();
+
+#ifndef NDEBUG
+
+	static bool setup = false;
+
+	if (!setup) {
+
+		// Set as true.
+		setup = true;
+
+		// Set the debug icon in the sub sub menu.
+		wima_window_splitMenu_sub_sub_items[0].icon = debug;
+
+		// Set the debug icon in the sub menu.
+		for (uint32_t i = 0; i < wima_window_splitMenu_sub.numItems; ++i) {
+			wima_window_splitMenu_sub_items[i].icon = debug;
+		}
+	}
+
+	// Make sure the sub sub menu won't be drawn.
+	wima_window_splitMenu_sub.subMenu = NULL;
+
+#endif // NDEBUG
+
+	// Set the context menu in the window.
+	wima_window_setContextMenu(wwh, &wima_window_areaSplitMenu, "Area Options", debug);
+}
+
+void wima_window_joinAreasMode(WimaWindow wwh) {
+	// TODO: Write this function.
+	printf("Join clicked on window[%d]\n", wwh);
+}
+
+void wima_window_splitAreaMode(WimaWindow wwh) {
+	// TODO: Write this function.
+	printf("Split clicked on window[%d]\n", wwh);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Static functions.
+////////////////////////////////////////////////////////////////////////////////
+
+static WimaStatus wima_window_drawOverlay(ynonnull WimaWin* win) {
+
+}
+
+static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 
 	float width = 0.0f;
 
@@ -2013,86 +2130,6 @@ WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
 
 	return WIMA_STATUS_SUCCESS;
 }
-
-void wima_window_processEvents(WimaWindow wwh) {
-
-	WimaStatus status = WIMA_STATUS_SUCCESS;
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
-
-	// Get the window.
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	// Must run uiBeginLayout(), uiEndLayout() first.
-	wassert(win->ctx.stage != WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_NOT_LAYOUT);
-
-	// Set the stage.
-	win->ctx.stage = WIMA_UI_STAGE_PROCESS;
-
-	// Get the event queue and widget handles.
-	WimaEvent* events = win->ctx.events;
-	WimaWidget* handles = win->ctx.eventItems;
-	int numEvents = win->ctx.eventCount;
-
-	// Set the cursor position (used by event processing).
-	win->ctx.cursorPos = win->ctx.last_cursor;
-
-	// Loop through the events and process each.
-	for (int i = 0; i < numEvents; ++i) {
-		wima_window_processEvent(win, wwh, handles[i], events[i]);
-	}
-
-	// Reset the event count.
-	win->ctx.eventCount = 0;
-
-	// Set the last cursor.
-	win->ctx.last_cursor = win->ctx.cursorPos;
-}
-
-void wima_window_splitMenu(WimaWindow wwh) {
-
-	WimaIcon debug = wima_icon_debug();
-
-#ifndef NDEBUG
-
-	static bool setup = false;
-
-	if (!setup) {
-
-		// Set as true.
-		setup = true;
-
-		// Set the debug icon in the sub sub menu.
-		wima_window_splitMenu_sub_sub_items[0].icon = debug;
-
-		// Set the debug icon in the sub menu.
-		for (uint32_t i = 0; i < wima_window_splitMenu_sub.numItems; ++i) {
-			wima_window_splitMenu_sub_items[i].icon = debug;
-		}
-	}
-
-	// Make sure the sub sub menu won't be drawn.
-	wima_window_splitMenu_sub.subMenu = NULL;
-
-#endif // NDEBUG
-
-	// Set the context menu in the window.
-	wima_window_setContextMenu(wwh, &wima_window_areaSplitMenu, "Area Options", debug);
-}
-
-void wima_window_join(WimaWindow wwh) {
-	// TODO: Write this function.
-	printf("Join clicked on window[%d]\n", wwh);
-}
-
-void wima_window_split(WimaWindow wwh) {
-	// TODO: Write this function.
-	printf("Split clicked on window[%d]\n", wwh);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Static functions.
-////////////////////////////////////////////////////////////////////////////////
 
 static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos) {
 

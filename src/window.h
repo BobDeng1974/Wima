@@ -425,23 +425,6 @@ void wima_window_setMouseBtn(ynonnull WimaWin* win, WimaMouseBtn btn, WimaAction
 WimaStatus wima_window_draw(WimaWindow win);
 
 /**
- * Draws the window's menu. If @a parentWidth is not 0 (which means
- * that there *is* a parent), and there is no room for the menu, the
- * menu will be drawn on the left of the parent menu.
- * @param win			The window whose menu will be drawn.
- * @param menu			The menu to draw.
- * @param parentWidth	The width of the menu's parent. If there
- *						is no parent, this is 0. This allows the
- *						window to put the menu on the left side
- *						of its parent if there is no room on the right.
- * @return				WIMA_STATUS_SUCCESS on success, an error code
- *						otherwise.
- * @pre					@a win must not be NULL.
- * @pre					@a menu must not be NULL.
- */
-WimaStatus wima_window_drawMenu(ynonnull WimaWin* win, WimaMenu* menu, int parentWidth);
-
-/**
  * Processes the event queue on @a win.
  * @param win	The window whose event queue will be processed.
  * @pre			@a win must be valid.
@@ -459,14 +442,14 @@ void wima_window_splitMenu(WimaWindow wwh);
  * @param wwh	The window that called the callback.
  * @pre			@a wwh must be valid.
  */
-void wima_window_join(WimaWindow wwh);
+void wima_window_joinAreasMode(WimaWindow wwh);
 
 /**
  * Callback to put Wima into "split areas" mode.
  * @param wwh	The window that called the callback.
  * @pre			@a wwh must be valid.
  */
-void wima_window_split(WimaWindow wwh);
+void wima_window_splitAreaMode(WimaWindow wwh);
 
 /**
  * Tests to see if @a wwh is valid (not removed).
