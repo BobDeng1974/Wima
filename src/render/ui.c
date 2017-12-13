@@ -623,8 +623,7 @@ void wima_ui_menu_separator(WimaRenderContext* ctx, float x, float y, float w, f
 }
 
 void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float h,
-                           WimaWidgetState state, WimaIcon icon, const char *label,
-                           bool hasSub)
+                       WimaWidgetState state, WimaIcon icon, const char *label, bool hasSub)
 {
 	wima_assert_init;
 
