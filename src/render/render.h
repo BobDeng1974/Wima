@@ -411,7 +411,7 @@ void wima_icon_destroy(DynaNVector vec, void** ptr);
 // Size of sub menu arrow padding.
 #define WIMA_MENU_ARROW_PADDING 2
 // Size of sub menu arrow (with padding).
-#define WIMA_MENU_ARROW_SIZE WIMA_NUMBER_ARROW_SIZE + WIMA_MENU_ARROW_PADDING + WIMA_MENU_ARROW_PADDING
+#define WIMA_MENU_ARROW_SIZE (WIMA_NUMBER_ARROW_SIZE + WIMA_MENU_ARROW_PADDING + WIMA_MENU_ARROW_PADDING)
 
 // Max glyphs for position testing.
 #define WIMA_MAX_GLYPHS 1024
