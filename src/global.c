@@ -223,6 +223,7 @@ const char* wima_assert_msgs[] = {
     "menu is not valid",
     "client tried to register too many menus",
     "menu cannot be registered with 0 items",
+    "menu items array is NULL",
     "menu name is NULL",
 
     "menu item is not valid",

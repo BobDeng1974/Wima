@@ -57,6 +57,14 @@ extern "C" {
  */
 
 /**
+ * @def WIMA_MENU_NAME(menu)
+ * Returns a pointer to the menu's name.
+ * @param menu	The menu to query.
+ * @return		The pointer to the menu's name.
+ */
+#define WIMA_MENU_NAME(menu) ((char*) ((menu)->items + (menu)->numItems))
+
+/**
  * A menu item.
  */
 typedef struct WimaMnuItm {

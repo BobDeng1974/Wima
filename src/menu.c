@@ -36,6 +36,8 @@
 
 #include <string.h>
 
+#include <yc/error.h>
+
 #include <wima/wima.h>
 
 #include "global.h"
@@ -73,18 +75,88 @@ WimaMenu wima_menu_nregister(const char* const name, WimaIcon icon, uint32_t num
 
 	wima_assert_init;
 
+	wassert(name != NULL, WIMA_ASSERT_MENU_NAME);
+	wassert(numItems > 0, WIMA_ASSERT_MENU_NUM_ITEMS);
+
+	va_list items;
+
+	// Start the list.
+	va_start(items, numItems);
+
+	// Register the menu.
+	WimaMenu menu = wima_menu_vregister(name, icon, numItems, items);
+
+	// Clean up.
+	va_end(items);
+
+	return menu;
 }
 
 WimaMenu wima_menu_vregister(const char* const name, WimaIcon icon, uint32_t numItems, va_list items) {
 
 	wima_assert_init;
 
+	wassert(name != NULL, WIMA_ASSERT_MENU_NAME);
+	wassert(numItems > 0, WIMA_ASSERT_MENU_NUM_ITEMS);
+
+	// Create an array.
+	WimaMenuItem menuItems[numItems];
+
+	// Loop through the arguments and put them in the array.
+	for (uint32_t i = 0; i < numItems; ++i) {
+		WimaMenuItem item = va_arg(items, WimaMenuItem);
+		menuItems[i] = item;
+	}
+
+	// Register the menu.
+	return wima_menu_register(name, icon, numItems, menuItems);
 }
 
 WimaMenu wima_menu_register(const char* const name, WimaIcon icon, uint32_t numItems, WimaMenuItem items[]) {
 
 	wima_assert_init;
 
+	wassert(name != NULL, WIMA_ASSERT_MENU_NAME);
+	wassert(numItems > 0, WIMA_ASSERT_MENU_NUM_ITEMS);
+	wassert(items != NULL, WIMA_ASSERT_MENU_ITEMS);
+
+#ifdef __YASSERT__
+	WimaMenuItem len = dpool_allocations(wg.menuItems);
+	for (uint32_t i = 0; i < numItems; ++i) {
+		wassert(items[i] < len, WIMA_ASSERT_MENU_ITEM);
+	}
+#endif
+
+	// Get the number of allocations. This is also the key/index.
+	uint64_t key = (uint64_t) dpool_allocations(wg.menus);
+
+	wassert(key < WIMA_MENU_MAX, WIMA_ASSERT_MENU_MAX);
+
+	// Get the length of the string.
+	size_t slen = strlen(name);
+
+	// Calculate the size of the allocation.
+	size_t size = sizeof(WimaMnu) + numItems + sizeof(WimaMenuItem) + slen + 1;
+
+	// Allocate and check for failure.
+	WimaMnu* menu = dpool_calloc(wg.menus, &key, size);
+	if (yerror(menu == NULL)) {
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_MENU_INVALID;
+	}
+
+	// Copy fields.
+	menu->numItems = numItems;
+	memcpy(menu->items, items, sizeof(WimaMenuItem) * numItems);
+
+	// Get a pointer to the name.
+	char* label = WIMA_MENU_NAME(menu);
+
+	// Copy the name in.
+	label[0] = '\0';
+	strcat(label, name);
+
+	return (WimaMenu) key;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,18 +168,27 @@ WimaMenuItem wima_menu_item_register(const char* const name, WimaIcon icon,
 {
 	wima_assert_init;
 
-	uint64_t key = dpool_allocations(wg.menuItems);
+	// Get the number of allocations. This is also the key/index.
+	uint64_t key = (uint64_t) dpool_allocations(wg.menuItems);
 
 	wassert(key < WIMA_MENU_ITEM_MAX, WIMA_ASSERT_MENU_ITEM_MAX);
 
+	// Get the length of the string.
 	size_t slen = strlen(name);
 
+	// Allocate and check for failure.
 	WimaMnuItm* item = dpool_calloc(wg.menuItems, &key, sizeof(WimaMnuItm) + slen + 1);
+	if (yerror(item == NULL)) {
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_MENU_ITEM_INVALID;
+	}
 
+	// Set fields.
 	item->click = func;
 	item->icon = icon;
 	item->hasSubMenu = hasSub;
 
+	// Copy the name.
 	item->label[0] = '\0';
 	strcat(item->label, name);
 
