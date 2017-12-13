@@ -208,7 +208,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 				glfwSetCursor(wwin->window, wwin->cursor);
 
 				// Set up the menu.
-				wima_window_splitMenu(wwh);
+				wima_window_setContextMenu(wwh, wg.areaOptionsMenu);
 			}
 
 			// Don't return an event to the user.

@@ -58,6 +58,7 @@ extern "C" {
 #include "event.h"
 #include "area.h"
 #include "workspace.h"
+#include "menu.h"
 
 #include "render/render.h"
 
@@ -198,7 +199,7 @@ typedef union WimaClickItem {
 	WimaWidget widget;
 
 	/// The pointer to the menu item.
-	WimaMenuItem* menuItem;
+	WimaMenuItem menuItem;
 
 } WimaClickItem;
 
@@ -317,8 +318,8 @@ typedef struct WimaWin {
 	/// The window name. This starts as the app name.
 	DynaString name;
 
-	/// The current menu, or NULL.
-	WimaMenu* menu;
+	/// The current menu, or WIMA_MENU_INVALID.
+	WimaMenu menu;
 
 	/// The menu title, or NULL.
 	const char* menuTitle;
@@ -416,6 +417,13 @@ void wima_window_setModifier(ynonnull WimaWin* win, WimaKey key, WimaAction acti
 void wima_window_setMouseBtn(ynonnull WimaWin* win, WimaMouseBtn btn, WimaAction action);
 
 /**
+ * Removes the menu from the window.
+ * @param wwh	The window to update.
+ * @pre			@a wwh must be a valid WimaWindow.
+ */
+void wima_window_removeMenu(WimaWin* win) yinline;
+
+/**
  * Draws the window with the current layout.
  * @param win	The window to draw.
  * @return		WIMA_STATUS_SUCCESS on success,
@@ -430,12 +438,6 @@ WimaStatus wima_window_draw(WimaWindow win);
  * @pre			@a win must be valid.
  */
 void wima_window_processEvents(WimaWindow win);
-
-/**
- * Sets up the area split menu.
- * @param wwh	The window to put the menu on.
- */
-void wima_window_splitMenu(WimaWindow wwh);
 
 /**
  * Callback to put Wima into "join areas" mode.
@@ -473,6 +475,59 @@ bool wima_window_valid(WimaWindow wwh);
  * @return		The current area tree on @a win.
  */
 #define WIMA_WIN_AREAS(win) ((win)->treeStack[(win)->treeStackIdx])
+
+////////////////////////////////////////////////////////////////////////////////
+// Click functions and info for predefined menus and menu items.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @def WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS
+ * The number of items in the area menu.
+ */
+
+/**
+ * @def WIMA_WIN_AREA_SUB_MENU_NUM_ITEMS
+ * The number of items in the area sub menu.
+ */
+
+#ifndef NDEBUG
+
+#	define WIMA_WIN_AREA_SUB_MENU_NUM_ITEMS (6)
+#	define WIMA_WIN_AREA_MENU_NUM_ITEMS (4)
+
+/**
+ * A test click function for a menu item.
+ * @param wwh	The window with the menu.
+ */
+void wima_window_sub1_click(WimaWindow wwh);
+
+/**
+ * A test click function for a menu item.
+ * @param wwh	The window with the menu.
+ */
+void wima_window_sub3_click(WimaWindow wwh);
+
+/**
+ * A test click function for a menu item.
+ * @param wwh	The window with the menu.
+ */
+void wima_window_sub4_click(WimaWindow wwh);
+
+/**
+ * A test click function for a menu item.
+ * @param wwh	The window with the menu.
+ */
+void wima_window_sub5_click(WimaWindow wwh);
+
+/**
+ * A test click function for a menu item.
+ * @param wwh	The window with the menu.
+ */
+void wima_window_sub_sub1_click(WimaWindow wwh);
+
+#else
+#	define WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS (2)
+#endif // NDEBUG
 
 /**
  * @}

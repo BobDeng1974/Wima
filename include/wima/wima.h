@@ -1185,7 +1185,7 @@ typedef uint16_t WimaMenu;
  * @pre			@a name must not be NULL.
  * @pre			@a op must not be NULL.
  */
-WimaMenuItem wima_menu_item_registerOperator(const char* const name, WimaIcon icon,
+WimaMenuItem wima_menu_item_registerOp(const char* const name, WimaIcon icon,
                                              WimaMenuItemFunc op) yinline;
 
 /**
@@ -2791,33 +2791,30 @@ void wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg);
 void wima_window_popDialog(WimaWindow wwh);
 
 /**
- * Sets the context menu on the window with @a title and @a icon.
+ * Sets the context menu on the window
  * @param wwh	The window to update.
  * @param menu	The menu to set on the window.
- * @param title	The title of the menu.
- * @param icon	The icon to put next to the title.
  * @pre			@a wwh must be a valid WimaWindow.
- * @pre			@a menu must not be NULL.
+ * @pre			@a menu must be a valid WimaMenu.
  */
-void wima_window_setContextMenu(WimaWindow wwh, ynonnull WimaMenu* menu,
-                                const char* title, WimaIcon icon) yinline;
+void wima_window_setContextMenu(WimaWindow wwh, WimaMenu menu) yinline;
 
 /**
  * Sets the context menu on the window.
  * @param wwh	The window to update.
  * @param menu	The menu to set on the window.
  * @pre			@a wwh must be a valid WimaWindow.
- * @pre			@a menu must not be NULL.
+ * @pre			@a menu must be a valid WimaMenu.
  */
-void wima_window_setMenu(WimaWindow wwh, ynonnull WimaMenu* menu) yinline;
+void wima_window_setMenu(WimaWindow wwh, WimaMenu menu) yinline;
 
 /**
  * Returns the current menu on the window, or NULL if none.
  * @param wwh	The window to query.
- * @return		The current menu, or NULL, if none.
+ * @return		The current menu, or WIMA_MENU_INVALID if none.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-WimaMenu* wima_window_menu(WimaWindow wwh) yinline;
+WimaMenu wima_window_menu(WimaWindow wwh) yinline;
 
 /**
  * Returns the context menu title, or NULL if none.
@@ -2836,13 +2833,6 @@ const char* wima_window_menuTitle(WimaWindow wwh) yinline;
  * @pre			The current menu must be a context menu.
  */
 WimaIcon wima_window_menuIcon(WimaWindow wwh) yinline;
-
-/**
- * Removes the menu from the window.
- * @param wwh	The window to update.
- * @pre			@a wwh must be a valid WimaWindow.
- */
-void wima_window_removeMenu(WimaWindow wwh) yinline;
 
 /**
  * Sets the cursor on @a wwh. The cursor must have been

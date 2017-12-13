@@ -109,6 +109,9 @@ typedef struct WimaG {
 	/// for headers that start on bottom.
 	WimaRegion regHeaderBtm;
 
+	/// The menu for area options (split, join, etc).
+	WimaMenu areaOptionsMenu;
+
 	/// Overlays (like context menus but more general).
 	DynaVector overlays;
 

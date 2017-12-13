@@ -78,133 +78,15 @@
  * @{
  */
 
-////////////////////////////////////////////////////////////////////////////////
-// Click functions for menu items.
-////////////////////////////////////////////////////////////////////////////////
-
-#ifndef NDEBUG
-
-/**
- * A test click function for a menu item.
- * @param wwh	The window with the menu.
- */
-static void wima_window_sub1_click(WimaWindow wwh);
-
-/**
- * A test click function for a menu item.
- * @param wwh	The window with the menu.
- */
-static void wima_window_sub3_click(WimaWindow wwh);
-
-/**
- * A test click function for a menu item.
- * @param wwh	The window with the menu.
- */
-static void wima_window_sub4_click(WimaWindow wwh);
-
-/**
- * A test click function for a menu item.
- * @param wwh	The window with the menu.
- */
-static void wima_window_sub5_click(WimaWindow wwh);
-
-/**
- * A test click function for a menu item.
- * @param wwh	The window with the menu.
- */
-static void wima_window_sub_sub1_click(WimaWindow wwh);
-
-#endif // NDEBUG
-
-////////////////////////////////////////////////////////////////////////////////
-// Area split menu (and debug menus).
-////////////////////////////////////////////////////////////////////////////////
-
-#ifndef NDEBUG
-
-/**
- * A list of items for the debug sub sub menu.
- */
-static WimaMenuItem wima_window_splitMenu_sub_sub_items[] = {
-
-    WIMA_MENU_ITEM_FUNC_DEFAULT("Item sub sub 1", wima_window_sub_sub1_click),
-
-};
-
-/**
- * The debug sub sub menu.
- */
-static WimaMenu wima_window_splitMenu_sub_sub =
-    WIMA_MENU_DEFAULT(wima_window_splitMenu_sub_sub_items, 1);
-
-/**
- * A list of items for the debug sub menu.
- */
-static WimaMenuItem wima_window_splitMenu_sub_items[] = {
-
-    WIMA_MENU_ITEM_FUNC_DEFAULT("Item sub 1", wima_window_sub1_click),
-    WIMA_MENU_ITEM_SEPARATOR,
-    WIMA_MENU_ITEM_SUB_DEFAULT("Item sub 2", &wima_window_splitMenu_sub_sub),
-    WIMA_MENU_ITEM_FUNC_DEFAULT("Item sub 3", wima_window_sub3_click),
-    WIMA_MENU_ITEM_FUNC_DEFAULT("Item sub 4", wima_window_sub4_click),
-    WIMA_MENU_ITEM_FUNC_DEFAULT("Split sub 5", wima_window_sub5_click)
-
-};
-
-/**
- * The debug sub menu.
- */
-static WimaMenu wima_window_splitMenu_sub = WIMA_MENU_DEFAULT(wima_window_splitMenu_sub_items, 6);
-
-#endif // NDEBUG
-
-/**
- * A list of items for the split menu.
- */
-static WimaMenuItem wima_window_splitMenu_items[] = {
-
-    WIMA_MENU_ITEM_FUNC_DEFAULT("Split Area", wima_window_splitAreaMode),
-    WIMA_MENU_ITEM_FUNC_DEFAULT("Join Area", wima_window_joinAreasMode),
-
-#ifndef NDEBUG
-
-    WIMA_MENU_ITEM_SEPARATOR,
-    WIMA_MENU_ITEM_SUB_DEFAULT("Item 1", &wima_window_splitMenu_sub),
-
-#endif // NDEBUG
-
-};
-
-/**
- * @def WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS
- * The number of items in the split menu.
- */
-
-#ifndef NDEBUG
-#define WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS 4
-#else
-#define WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS 2
-#endif
-
-/**
- * The split menu.
- */
-static WimaMenu wima_window_areaSplitMenu =
-    WIMA_MENU_DEFAULT(wima_window_splitMenu_items, WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS);
-
-/**
- * @}
- */
-
-////////////////////////////////////////////////////////////////////////////////
-// These are all the static functions that the public functions need.
-////////////////////////////////////////////////////////////////////////////////
-
 /**
  * Clears a window's UI context.
  * @param ctx	The context to clear.
  */
 static void wima_window_clearContext(WimaWinCtx* ctx);
+
+/**
+ * @}
+ */
 
 //! @cond Doxygen suppress.
 
@@ -1197,11 +1079,18 @@ void wima_window_popDialog(WimaWindow wwh) {
 	wima_area_resize(WIMA_WIN_AREAS(win), rect);
 }
 
-void wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* title, WimaIcon icon) {
+void wima_window_setContextMenu(WimaWindow wwh, WimaMenu menu) {
 
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	uint64_t key = (uint64_t) menu;
+
+	wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
+
+	// Get the menu.
+	WimaMnu* m = dpool_get(wg.menus, &key);
 
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
@@ -1210,26 +1099,33 @@ void wima_window_setContextMenu(WimaWindow wwh, WimaMenu* menu, const char* titl
 	win->flags = (WIMA_WIN_MENU | WIMA_WIN_MENU_CONTEXT);
 
 	// Set up the offset.
-	win->menuOffset.x = menu->rect.x;
-	win->menuOffset.y = menu->rect.y;
+	win->menuOffset.x = m->rect.x;
+	win->menuOffset.y = m->rect.y;
 
 	// Make sure the menu pops up at the right place.
-	menu->rect.x = win->ctx.cursorPos.x - menu->rect.x;
-	menu->rect.y = win->ctx.cursorPos.y - menu->rect.y;
+	m->rect.x = win->ctx.cursorPos.x - m->rect.x;
+	m->rect.y = win->ctx.cursorPos.y - m->rect.y;
 
 	// Set the title and icon.
-	win->menuTitle = title;
-	win->menuIcon = icon;
+	win->menuTitle = WIMA_MENU_NAME(m);
+	win->menuIcon = m->icon;
 
 	// Set the menu.
 	win->menu = menu;
 }
 
-void wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) {
+void wima_window_setMenu(WimaWindow wwh, WimaMenu menu) {
 
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	uint64_t key = (uint64_t) menu;
+
+	wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
+
+	// Get the menu.
+	WimaMnu* m = dpool_get(wg.menus, &key);
 
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
@@ -1241,7 +1137,7 @@ void wima_window_setMenu(WimaWindow wwh, WimaMenu* menu) {
 	win->menu = menu;
 }
 
-WimaMenu* wima_window_menu(WimaWindow wwh) {
+WimaMenu wima_window_menu(WimaWindow wwh) {
 
 	wima_assert_init;
 
@@ -1250,7 +1146,7 @@ WimaMenu* wima_window_menu(WimaWindow wwh) {
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	return WIMA_WIN_HAS_MENU(win) ? win->menu : NULL;
+	return WIMA_WIN_HAS_MENU(win) ? win->menu : WIMA_MENU_INVALID;
 }
 
 const char* wima_window_menuTitle(WimaWindow wwh) {
@@ -1281,18 +1177,6 @@ WimaIcon wima_window_menuIcon(WimaWindow wwh) {
 	return win->menuIcon;
 }
 
-void wima_window_removeMenu(WimaWindow wwh) {
-
-	wima_assert_init;
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
-
-	// Get the window.
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	win->flags &= ~(WIMA_WIN_MENU | WIMA_WIN_MENU_CONTEXT | WIMA_WIN_MENU_RELEASED);
-}
-
 void wima_window_setCursor(WimaWindow wwh, WimaCursor* cursor) {
 
 	wima_assert_init;
@@ -1302,6 +1186,7 @@ void wima_window_setCursor(WimaWindow wwh, WimaCursor* cursor) {
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
+	// Get the cursor.
 	GLFWcursor* c =(GLFWcursor*) cursor;
 
 	// Set the cursor in the window and in GLFW.
@@ -1552,7 +1437,7 @@ static WimaStatus wima_window_drawOverlay(ynonnull WimaWin* win);
  * @pre					@a win must not be NULL.
  * @pre					@a menu must not be NULL.
  */
-static WimaStatus wima_window_drawMenu(ynonnull WimaWin* win, ynonnull WimaMenu* menu, int parentWidth);
+static WimaStatus wima_window_drawMenu(ynonnull WimaWin* win, ynonnull WimaMnu* menu, int parentWidth);
 
 /**
  * Returns the menu that contains @a pos and does not have
@@ -1563,7 +1448,7 @@ static WimaStatus wima_window_drawMenu(ynonnull WimaWin* win, ynonnull WimaMenu*
  * @param pos	The cursor position.
  * @return		The youngest menu with the cursor inside.
  */
-static WimaMenu* wima_window_menu_contains(ynonnull WimaMenu* menu, WimaVec pos);
+static WimaMnu* wima_window_menu_contains(ynonnull WimaMnu* menu, WimaVec pos);
 
 /**
  * Processes one event.
@@ -1761,6 +1646,20 @@ void wima_window_setMouseBtn(WimaWin* win, WimaMouseBtn btn, WimaAction action) 
 	}
 }
 
+void wima_window_removeMenu(WimaWin* win) {
+
+	wima_assert_init;
+
+	wassert(win != NULL, WIMA_ASSERT_WIN);
+
+	// Clear these.
+	win->menuTitle = NULL;
+	win->menuIcon = WIMA_ICON_INVALID;
+
+	// Clear the flags.
+	win->flags = 0;
+}
+
 WimaStatus wima_window_draw(WimaWindow wwh) {
 
 	WimaStatus status;
@@ -1825,8 +1724,16 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 		// If we have a menu...
 		else if (WIMA_WIN_HAS_MENU(win)) {
 
+			// Get the key.
+			uint64_t key = (uint64_t) win->menu;
+
+			wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
+
+			// Get the menu.
+			WimaMnu* menu = dpool_get(wg.menus, &key);
+
 			// Draw the menu and check for error.
-			status = wima_window_drawMenu(win, win->menu, 0);
+			status = wima_window_drawMenu(win, menu, 0);
 			if (yerror(status)) {
 
 				// Cancel NanoVG frame on error.
@@ -1887,37 +1794,6 @@ void wima_window_processEvents(WimaWindow wwh) {
 	win->ctx.last_cursor = win->ctx.cursorPos;
 }
 
-void wima_window_splitMenu(WimaWindow wwh) {
-
-	WimaIcon debug = wima_icon_debug();
-
-#ifndef NDEBUG
-
-	static bool setup = false;
-
-	if (!setup) {
-
-		// Set as true.
-		setup = true;
-
-		// Set the debug icon in the sub sub menu.
-		wima_window_splitMenu_sub_sub_items[0].icon = debug;
-
-		// Set the debug icon in the sub menu.
-		for (uint32_t i = 0; i < wima_window_splitMenu_sub.numItems; ++i) {
-			wima_window_splitMenu_sub_items[i].icon = debug;
-		}
-	}
-
-	// Make sure the sub sub menu won't be drawn.
-	wima_window_splitMenu_sub.subMenu = NULL;
-
-#endif // NDEBUG
-
-	// Set the context menu in the window.
-	wima_window_setContextMenu(wwh, &wima_window_areaSplitMenu, "Area Options", debug);
-}
-
 void wima_window_joinAreasMode(WimaWindow wwh) {
 	// TODO: Write this function.
 	printf("Join clicked on window[%d]\n", wwh);
@@ -1936,42 +1812,58 @@ static WimaStatus wima_window_drawOverlay(ynonnull WimaWin* win) {
 
 }
 
-static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentWidth) {
+static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, int parentWidth) {
 
-	float width = 0.0f;
+	float w, h;
 
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 	wassert(menu != NULL, WIMA_ASSERT_WIN_MENU);
 
+	// Clear this.
+	float width = 0.0f;
+
 	// Cache these. If parentWidth is 0, that means
 	// that this is the highest level menu.
-	bool isTopAndContext = WIMA_WIN_MENU_IS_CONTEXT(win) && parentWidth == 0;
-	bool hasTitle = isTopAndContext && (win->menuTitle || win->menuIcon != WIMA_ICON_INVALID);
+	bool isTopAndContext = WIMA_WIN_MENU_IS_CONTEXT(win) && parentWidth == 0;\
 
 	// If the menu has a title, factor the title into the width.
-	if (hasTitle) {
+	if (isTopAndContext) {
 		width = wima_ui_label_estimateWidth(&win->render, win->menuIcon, win->menuTitle);
 	}
-
-	float w, h;
 
 	// Estimate the submenu arrow width.
 	float arrowWidth = WIMA_MENU_ARROW_SIZE;
 
-	// Get a pointer to the first item.
-	WimaMenuItem* item = menu->items;
+	// Cache these.
+	uint32_t numItems = menu->numItems;
+	WimaMenuItem* handle = menu->items;
 
-	// Estimate width.
-	for (int i = 0; i < menu->numItems; ++i, item += 1) {
+	// Create an array of item pointers.
+	WimaMnuItm* items[numItems];
 
-		// If there is a label, factor it in, as well as the arrow if necessary.
-		if (item->label) {
-			w = wima_ui_label_estimateWidth(&win->render, item->icon, item->label);
-			w += item->hasSubMenu ? arrowWidth : 0;
+	WimaMnuItm* item;
+
+	// Loop through the items and fill the array and estimate width.
+	// These are combined into one loop to save on branching.
+	for (uint32_t i = 0; i < numItems; ++i, ++handle) {
+
+		// Get the key.
+		uint64_t itemKey = (uint64_t) *handle;
+
+		if (itemKey == WIMA_MENU_SEPARATOR) {
+			items[i] = NULL;
+			continue;
 		}
-		else {
-			w = width;
-		}
+
+		wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
+
+		// Get the pointer and set it in the area.
+		item = dpool_get(wg.menuItems, &itemKey);
+		items[i] = item;
+
+		// Factor the label in, as well as the arrow if necessary.
+		w = wima_ui_label_estimateWidth(&win->render, item->icon, item->label);
+		w += item->hasSubMenu ? arrowWidth : 0;
 
 		// Set the item width and the new max width.
 		item->rect.w = (int) w;
@@ -1983,7 +1875,7 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentW
 	float height = 0.0f;
 
 	// Set the above heights based on estimation.
-	if (hasTitle) {
+	if (isTopAndContext) {
 		titleHeight = wima_ui_label_estimateHeight(&win->render, win->menuIcon, win->menuTitle, width) + 5;
 		height = titleHeight + WIMA_WIDGET_MENU_SEP_HEIGHT;
 	}
@@ -1991,19 +1883,23 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentW
 		height = 5.0f;
 	}
 
-	// Reset the item.
-	item = menu->items;
-
 	// Now estimate height.
-	for (int i = 0; i < menu->numItems; ++i, item += 1) {
+	for (int i = 0; i < numItems; ++i) {
 
-		// If there is a label, estimate. Otherwise, it's a separator.
-		if (item->label) {
-			h = wima_ui_label_estimateHeight(&win->render, item->icon, item->label, width);
+		// Get the pointer.
+		item = items[i];
+
+		// A NULL pointer means a separator.
+		// Just add the height and continue.
+		// We also want to store the height.
+		if (!item) {
+			item = (WimaMnuItm*) (size_t) height;
+			height += WIMA_WIDGET_MENU_SEP_HEIGHT;
+			continue;
 		}
-		else {
-			h = WIMA_WIDGET_MENU_SEP_HEIGHT;
-		}
+
+		// Estimate the height.
+		h = wima_ui_label_estimateHeight(&win->render, item->icon, item->label, width);
 
 		// We want to make sure all items have the same width.
 		item->rect.w = width;
@@ -2069,59 +1965,70 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentW
 	// Draw the background.
 	wima_ui_menu_background(&win->render, 0, 0, menu->rect.w, menu->rect.h, WIMA_CORNER_NONE);
 
-	// If it has a title, draw it.
-	if (hasTitle) {
+	// If it has a title (is the top menu and a context menu), draw it.
+	if (isTopAndContext) {
 		wima_ui_menu_label(&win->render, 0, 5, width, titleHeight, win->menuIcon, win->menuTitle);
 		wima_ui_menu_separator(&win->render, 0, titleHeight, width, WIMA_WIDGET_MENU_SEP_HEIGHT);
 	}
 
 	// Get the menu that contains the mouse.
-	WimaMenu* m = wima_window_menu_contains(menu, pos);
+	WimaMnu* mmouse = wima_window_menu_contains(menu, pos);
 
-	// Reset the item.
-	item = menu->items;
+	// Cache this again.
+	handle = menu->items;
 
-	for (int i = 0; i < menu->numItems; ++i, item += 1) {
+	for (uint32_t i = 0; i < numItems; ++i, ++handle) {
 
-		// If the item has a label...
-		if (item->label) {
+		// Get the pointer.
+		item = items[i];
 
-			// If the menu contains the cursor...
-			if (menuContainsCursor) {
+		// If the item is a separator, just draw it and continue.
+		if ((*handle) == WIMA_MENU_SEPARATOR) {
+			wima_ui_menu_separator(&win->render, 0, (float) (double) (size_t) item,
+			                       width, WIMA_WIDGET_MENU_SEP_HEIGHT);
+			continue;
+		}
 
-				// Calculate whether the item contains the cursor.
-				bool contained = wima_rect_contains(item->rect, cursor);
+		// If the menu contains the cursor...
+		if (menuContainsCursor) {
 
-				// If it does and it is the bottom-most menu...
-				if (contained && m == menu) {
+			// Calculate whether the item contains the cursor.
+			bool contained = wima_rect_contains(item->rect, cursor);
 
-					// Set the menu submenu.
-					menu->subMenu = item->hasSubMenu ? item->subMenu : NULL;
+			// If it does and it is the bottom-most menu...
+			if (contained && mmouse == menu) {
 
-					// If the item has a submenu...
-					if (item->hasSubMenu) {
+				// If the item has a sub menu...
+				if (item->hasSubMenu) {
 
-						// Set the start pos for the submenu.
-						// Make sure to minus the top border
-						// (that's what the minus 5.0f is).
-						menu->subMenu->rect.x = menu->rect.x + width;
-						menu->subMenu->rect.y = menu->rect.y + item->rect.y - 5.0f;
-					}
+					// Get the key.
+					uint64_t subKey = item->subMenu;
+
+					wassert(dpool_exists(wg.menus, &subKey), WIMA_ASSERT_MENU);
+
+					// Get the menu.
+					menu->subMenu = dpool_get(wg.menus, &subKey);
+
+					// Set the start pos for the submenu.
+					// Make sure to minus the top border
+					// (that's what the minus 5.0f is).
+					menu->subMenu->rect.x = menu->rect.x + width;
+					menu->subMenu->rect.y = menu->rect.y + item->rect.y - 5.0f;
 				}
+				else {
 
-				// Set the item state based on the cursor.
-				item->state = contained ? WIMA_WIDGET_HOVER : WIMA_WIDGET_DEFAULT;
+					// Remove any sub menu.
+					menu->subMenu = NULL;
+				}
 			}
 
-			// Actually render the menu item.
-			wima_ui_menu_item(&win->render, item->rect.x, item->rect.y, item->rect.w, item->rect.h,
-			                      item->state, item->icon, item->label, item->hasSubMenu);
+			// Set the item state based on the cursor.
+			item->state = contained ? WIMA_WIDGET_HOVER : WIMA_WIDGET_DEFAULT;
 		}
 
-		// If the item doesn't have a label (it's a separator)...
-		else {
-			wima_ui_menu_separator(&win->render, item->rect.x, item->rect.y, item->rect.w, item->rect.h);
-		}
+		// Actually render the menu item.
+		wima_ui_menu_item(&win->render, item->rect.x, item->rect.y, item->rect.w, item->rect.h,
+		                  item->state, item->icon, item->label, item->hasSubMenu);
 	}
 
 	// If the menu has a submenu, draw it.
@@ -2132,14 +2039,14 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMenu* menu, int parentW
 	return WIMA_STATUS_SUCCESS;
 }
 
-static WimaMenu* wima_window_menu_contains(WimaMenu* menu, WimaVec pos) {
+static WimaMnu* wima_window_menu_contains(WimaMnu* menu, WimaVec pos) {
 
 	wassert(menu != NULL, WIMA_ASSERT_WIN_MENU);
 
 	// Get the menu that contains the position.
-	WimaMenu* result = wima_rect_contains(menu->rect, pos) ? menu : NULL;
+	WimaMnu* result = wima_rect_contains(menu->rect, pos) ? menu : NULL;
 
-	WimaMenu* child;
+	WimaMnu* child;
 
 	// If the menu has a submenu, check it.
 	if (menu->subMenu) {
@@ -2320,26 +2227,40 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 	// If there is a menu...
 	else if (WIMA_WIN_HAS_MENU(win)) {
 
+		uint64_t key = (uint64_t) win->menu;
+
+		wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
+
 		// Get the menu.
-		WimaMenu* menu = win->menu;
+		WimaMnu* menu = dpool_get(wg.menus, &key);
 
 		// Get the cursor position.
 		WimaVec pos = win->ctx.cursorPos;
 
 		// Get the bottom-most menu that contains the mouse.
-		WimaMenu* m = wima_window_menu_contains(menu, pos);
+		WimaMnu* m = wima_window_menu_contains(menu, pos);
+
+		// Get the key.
+		uint64_t itemKey = (uint64_t) win->ctx.click_item.menuItem;
+
+		wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
+
+		// Get the menu item.
+		WimaMnuItm* item = dpool_get(wg.menuItems, &itemKey);
 
 		// If the mouse button was released, and the containing menu is valid...
 		if (e.action == WIMA_ACTION_RELEASE && m) {
+
+			// If the item is a separator, just return.
+			if (itemKey == WIMA_MENU_SEPARATOR) {
+				return;
+			}
 
 			// Send event to menu item.
 
 			// Translate the position into item coordinates.
 			pos.x -= m->rect.x;
 			pos.y -= m->rect.y;
-
-			// Get the menu item.
-			WimaMenuItem* item = win->ctx.click_item.menuItem;
 
 			// If the item was pressed *and* released,
 			// as well as doesn't have a submenu and
@@ -2348,9 +2269,6 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 			    wima_rect_contains(item->rect, pos) &&
 			    !item->hasSubMenu && item->click)
 			{
-				// Dismiss the menu and clear flags.
-				win->flags = 0;
-
 				// Set the new offsets for the menu. This
 				// is so the user can just click if they
 				// want the same thing as last time.
@@ -2369,6 +2287,9 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 					menu->subMenu = NULL;
 				}
 
+				// Dismiss the menu.
+				wima_window_removeMenu(win);
+
 				// Call the item's function.
 				item->click(wdgt.window);
 
@@ -2379,9 +2300,9 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 				if (m->subMenu) {
 
 					// Dismiss sub menus.
-					WimaMenu* subMenu = m->subMenu;
+					WimaMnu* subMenu = m->subMenu;
 					while (subMenu && subMenu->subMenu) {
-						WimaMenu* temp = subMenu->subMenu;
+						WimaMnu* temp = subMenu->subMenu;
 						subMenu->subMenu = NULL;
 						subMenu = temp;
 					}
@@ -2402,9 +2323,6 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 				pos.x -= m->rect.x;
 				pos.y -= m->rect.y;
 
-				// Get the pointer to the first item.
-				WimaMenuItem* item = m->items;
-
 				// Go through the menu items.
 				for (int i = 0; i < m->numItems; ++i, item += 1) {
 
@@ -2412,7 +2330,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 					if (wima_rect_contains(item->rect, pos)) {
 
 						// Store the item in the window and set the flag.
-						win->ctx.click_item.menuItem = item;
+						win->ctx.click_item.menuItem = (WimaMenuItem) item->key;
 						win->flags |= WIMA_WIN_MENU_ITEM_PRESS;
 
 						break;
@@ -2428,7 +2346,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 				menu->rect.y = win->menuOffset.y;
 
 				// Dismiss the menu.
-				win->flags = 0;
+				wima_window_removeMenu(win);
 			}
 		}
 	}
@@ -2513,24 +2431,28 @@ bool wima_window_valid(WimaWindow wwh) {
 	return valid;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Menu item click function for debug mode.
+////////////////////////////////////////////////////////////////////////////////
+
 #ifndef NDEBUG
-static void wima_window_sub1_click(WimaWindow wwh) {
+void wima_window_sub1_click(WimaWindow wwh) {
 	printf("Item sub 1 clicked on window[%d]\n", wwh);
 }
 
-static void wima_window_sub3_click(WimaWindow wwh) {
+void wima_window_sub3_click(WimaWindow wwh) {
 	printf("Item sub 3 clicked on window[%d]\n", wwh);
 }
 
-static void wima_window_sub4_click(WimaWindow wwh) {
+void wima_window_sub4_click(WimaWindow wwh) {
 	printf("Item sub 4 clicked on window[%d]\n", wwh);
 }
 
-static void wima_window_sub5_click(WimaWindow wwh) {
+void wima_window_sub5_click(WimaWindow wwh) {
 	printf("Item sub 5 clicked on window[%d]\n", wwh);
 }
 
-static void wima_window_sub_sub1_click(WimaWindow wwh) {
+void wima_window_sub_sub1_click(WimaWindow wwh) {
 	printf("Item sub sub 1 clicked on window[%d]\n", wwh);
 }
 #endif // NDEBUG

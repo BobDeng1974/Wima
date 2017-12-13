@@ -78,6 +78,9 @@ typedef struct WimaMnuItm {
 		WimaMenuItemFunc click;
 	};
 
+	/// The key for the item.
+	uint64_t key;
+
 	/// The item's rectangle.
 	WimaRect rect;
 
@@ -108,6 +111,9 @@ typedef struct WimaMnu {
 	/// The current visible submenu, or NULL if none.
 	struct WimaMnu* subMenu;
 
+	/// The menu's icon.
+	WimaIcon icon;
+
 	/// Number of items in the menu items array.
 	uint32_t numItems;
 
@@ -130,6 +136,8 @@ typedef struct WimaMnu {
  */
 WimaMenuItem wima_menu_item_register(const char* const name, WimaIcon icon,
                                      WimaMenuItemFunc func, bool hasSub);
+
+WimaMenu wima_menu_registerAreaOptions();
 
 /**
  * @}

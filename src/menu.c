@@ -42,12 +42,33 @@
 
 #include "global.h"
 #include "menu.h"
+#include "window.h"
+
+static const char* const wima_menu_area_menu_name = "Area Options";
+
+static const char* const wima_menu_sub_names[] = {
+    "Debug Sub Item 1",
+    NULL,
+    "Debug Sub Item 2",
+    "Debug Sub Item 3",
+    "Debug Sub Item 4",
+    "Debug Sub Item 5",
+};
+
+static const WimaMenuItemFunc wima_menu_sub_funcs[] = {
+    wima_window_sub1_click,
+    NULL,
+    NULL,
+    wima_window_sub3_click,
+    wima_window_sub4_click,
+    wima_window_sub5_click,
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaMenuItem wima_menu_item_registerOperator(const char* const name, WimaIcon icon, WimaMenuItemFunc op) {
+WimaMenuItem wima_menu_item_registerOp(const char* const name, WimaIcon icon, WimaMenuItemFunc op) {
 
 	wima_assert_init;
 
@@ -119,7 +140,7 @@ WimaMenu wima_menu_register(const char* const name, WimaIcon icon, uint32_t numI
 #ifdef __YASSERT__
 	WimaMenuItem len = dpool_allocations(wg.menuItems);
 	for (uint32_t i = 0; i < numItems; ++i) {
-		wassert(items[i] < len, WIMA_ASSERT_MENU_ITEM);
+		wassert(items[i] < len || items[i] == WIMA_MENU_SEPARATOR, WIMA_ASSERT_MENU_ITEM);
 	}
 #endif
 
@@ -142,6 +163,7 @@ WimaMenu wima_menu_register(const char* const name, WimaIcon icon, uint32_t numI
 	}
 
 	// Copy fields.
+	menu->icon = icon;
 	menu->numItems = numItems;
 	memcpy(menu->items, items, sizeof(WimaMenuItem) * numItems);
 
@@ -181,6 +203,7 @@ WimaMenuItem wima_menu_item_register(const char* const name, WimaIcon icon,
 
 	// Set fields.
 	item->click = func;
+	item->key = key;
 	item->icon = icon;
 	item->hasSubMenu = hasSub;
 
@@ -189,4 +212,113 @@ WimaMenuItem wima_menu_item_register(const char* const name, WimaIcon icon,
 	strcat(item->label, name);
 
 	return (WimaMenuItem) key;
+}
+
+WimaMenu wima_menu_registerAreaOptions() {
+
+	WimaMenu menu;
+
+#ifndef NDEBUG
+
+	// An array of items to fill for the sub menu.
+	WimaMenuItem subItems[WIMA_WIN_AREA_SUB_MENU_NUM_ITEMS];
+
+	// Create the sub sub item and check for error.
+	WimaMenuItem subSubItem = wima_menu_item_registerOp("Debug Item Sub Sub 1", wima_icon_debug(),
+	                                                    wima_window_sub_sub1_click);
+	if (yerror(subSubItem == WIMA_MENU_ITEM_INVALID)) {
+		return WIMA_MENU_INVALID;
+	}
+
+	// Create the sub sub menu and check for error.
+	WimaMenu subSubMenu = wima_menu_nregister("Debug Sub Sub Menu", WIMA_ICON_INVALID, 1, subSubItem);
+	if (yerror(subSubMenu == WIMA_MENU_INVALID)) {
+		return WIMA_MENU_INVALID;
+	}
+
+	// Loop over the sub items array...
+	for (int i = 0; i < WIMA_WIN_AREA_SUB_MENU_NUM_ITEMS; ++i) {
+
+		// If we are not at the separator...
+		if (i != 1) {
+
+			// If we are not at the parent item...
+			if (i != 2) {
+
+				// Register an operator.
+				subItems[i] = wima_menu_item_registerOp(wima_menu_sub_names[i],
+				                                        wima_icon_debug(),
+				                                        wima_menu_sub_funcs[i]);
+			}
+			else {
+
+				// Register the parent.
+				subItems[i] = wima_menu_item_registerParent(wima_menu_sub_names[i],
+				                                            WIMA_ICON_INVALID,
+				                                            subSubMenu);
+			}
+
+			// Check for error.
+			if (yerror(subItems[i] == WIMA_MENU_ITEM_INVALID)) {
+				return WIMA_MENU_INVALID;
+			}
+		}
+		else {
+
+			// Add a separator.
+			subItems[i] = WIMA_MENU_SEPARATOR;
+		}
+	}
+
+	// Register the sub menu and check for error.
+	WimaMenu subMenu = wima_menu_register("Debug Sub Menu", wima_icon_donut(),
+	                                      WIMA_WIN_AREA_SUB_MENU_NUM_ITEMS, subItems);
+	if (yerror(subMenu == WIMA_MENU_INVALID)) {
+		return WIMA_MENU_INVALID;
+	}
+
+#endif
+
+	// Register the split item and check for error.
+	WimaMenuItem split = wima_menu_item_registerOp("Split Area", WIMA_ICON_INVALID,
+	                                               wima_window_splitAreaMode);
+	if (yerror(split == WIMA_MENU_ITEM_INVALID)) {
+		return WIMA_MENU_INVALID;
+	}
+
+	// Register the join item and check for error.
+	WimaMenuItem join = wima_menu_item_registerOp("Join Areas", WIMA_ICON_INVALID,
+	                                              wima_window_joinAreasMode);
+	if (yerror(join == WIMA_MENU_ITEM_INVALID)) {
+		return WIMA_MENU_INVALID;
+	}
+
+#ifndef NDEBUG
+
+	// Register the item with the debug submenu and check for error.
+	WimaMenuItem item = wima_menu_item_registerParent("Debug Item 1", wima_icon_debug(), subMenu);
+	if (yerror(item == WIMA_MENU_ITEM_INVALID)) {
+		return WIMA_MENU_INVALID;
+	}
+
+	// Register the menu with debug options.
+	menu = wima_menu_nregister(wima_menu_area_menu_name, WIMA_ICON_INVALID,
+	                           WIMA_WIN_AREA_MENU_NUM_ITEMS,
+	                           split, join, WIMA_MENU_SEPARATOR, item);
+
+#else
+
+	// Register the menu without debug options.
+	menu = wima_menu_nregister(wima_menu_area_menu_name, WIMA_ICON_INVALID,
+	                           WIMA_WIN_AREA_MENU_NUM_ITEMS, split, join);
+
+#endif
+
+	// Check for error.
+	if (yerror(menu == WIMA_MENU_INVALID)) {
+		wg.areaOptionsMenu = WIMA_MENU_INVALID;
+		return WIMA_MENU_INVALID;
+	}
+
+	return menu;
 }
