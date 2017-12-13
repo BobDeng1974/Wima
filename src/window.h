@@ -419,9 +419,11 @@ void wima_window_setMouseBtn(ynonnull WimaWin* win, WimaMouseBtn btn, WimaAction
 /**
  * Removes the menu from the window.
  * @param wwh	The window to update.
- * @pre			@a wwh must be a valid WimaWindow.
+ * @param menu	The menu to clear submenus from.
+ * @pre			@a win must not be NULL.
+ * @pre			@a menu must not be NULL.
  */
-void wima_window_removeMenu(WimaWin* win) yinline;
+void wima_window_removeMenu(ynonnull WimaWin* win, ynonnull WimaMnu* menu) yinline;
 
 /**
  * Draws the window with the current layout.

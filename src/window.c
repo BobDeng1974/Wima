@@ -1646,7 +1646,7 @@ void wima_window_setMouseBtn(WimaWin* win, WimaMouseBtn btn, WimaAction action) 
 	}
 }
 
-void wima_window_removeMenu(WimaWin* win) {
+void wima_window_removeMenu(WimaWin* win, WimaMnu* menu) {
 
 	wima_assert_init;
 
@@ -1658,6 +1658,21 @@ void wima_window_removeMenu(WimaWin* win) {
 
 	// Clear the flags.
 	win->flags = 0;
+
+	// If the menu has submenus...
+	if (menu->subMenu) {
+
+		// Dismiss sub menus.
+		WimaMnu* subMenu = menu->subMenu;
+		while (subMenu && subMenu->subMenu) {
+			WimaMnu* temp = subMenu->subMenu;
+			subMenu->subMenu = NULL;
+			subMenu = temp;
+		}
+
+		// Clear the submenu flag.
+		menu->subMenu = NULL;
+	}
 }
 
 WimaStatus wima_window_draw(WimaWindow wwh) {
@@ -2288,28 +2303,13 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 				}
 
 				// Dismiss the menu.
-				wima_window_removeMenu(win);
+				wima_window_removeMenu(win, menu);
 
 				// Call the item's function.
 				item->click(wdgt.window);
 
 				// Clear the window and redraw.
 				wima_window_setDirty(win, true);
-
-				// If the menu has submenus...
-				if (m->subMenu) {
-
-					// Dismiss sub menus.
-					WimaMnu* subMenu = m->subMenu;
-					while (subMenu && subMenu->subMenu) {
-						WimaMnu* temp = subMenu->subMenu;
-						subMenu->subMenu = NULL;
-						subMenu = temp;
-					}
-
-					// Clear the submenu flag.
-					m->subMenu = NULL;
-				}
 			}
 		}
 
@@ -2346,7 +2346,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 				menu->rect.y = win->menuOffset.y;
 
 				// Dismiss the menu.
-				wima_window_removeMenu(win);
+				wima_window_removeMenu(win, menu);
 			}
 		}
 	}
