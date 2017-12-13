@@ -1908,7 +1908,8 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, int parentWi
 		// Just add the height and continue.
 		// We also want to store the height.
 		if (!item) {
-			item = (WimaMnuItm*) (size_t) height;
+			double* dptr = (double*) (items + i);
+			*dptr = height;
 			height += WIMA_WIDGET_MENU_SEP_HEIGHT;
 			continue;
 		}
@@ -1999,7 +2000,7 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, int parentWi
 
 		// If the item is a separator, just draw it and continue.
 		if ((*handle) == WIMA_MENU_SEPARATOR) {
-			wima_ui_menu_separator(&win->render, 0, (float) (double) (size_t) item,
+			wima_ui_menu_separator(&win->render, 0, *((double*) &item),
 			                       width, WIMA_WIDGET_MENU_SEP_HEIGHT);
 			continue;
 		}
