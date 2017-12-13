@@ -600,7 +600,7 @@ void wima_ui_menu_label(WimaRenderContext* ctx, float x, float y, float w, float
 
 	// Draw the label.
 	wima_ui_label_icon_value(ctx, x, y, w, h, icon, t[WIMA_THEME_WIDGET_TEXT]._color,
-	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL, false);
+	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL, true);
 }
 
 void wima_ui_menu_separator(WimaRenderContext* ctx, float x, float y, float w, float h) {
