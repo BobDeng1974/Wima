@@ -2249,6 +2249,8 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 		// Get the menu.
 		WimaMnu* menu = dpool_get(wg.menus, &key);
 
+		wassert(menu->subMenu == NULL, WIMA_ASSERT_SUBMENU_NOT_NULL);
+
 		// Get the cursor position.
 		WimaVec pos = win->ctx.cursorPos;
 
