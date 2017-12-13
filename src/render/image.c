@@ -41,12 +41,6 @@
 #include "../global.h"
 #include "../window.h"
 
-//! @cond Doxygen suppress.
-wima_global_decl;
-wima_error_descs_decl;
-wima_assert_msgs_decl;
-//! @endcond Doxygen suppress.
-
 WimaImage wima_image_load(const char * const path, WimaImageFlags flags) {
 
 	wassert(path != NULL, WIMA_ASSERT_PATH_NULL);

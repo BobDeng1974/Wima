@@ -334,23 +334,11 @@ typedef enum WimaAssertType {
  */
 #define WIMA_PTR_INVALID ((void*) 0x01)
 
-/**
- * @def wima_global_decl
- * An extern declaration for the global struct.
- */
-#define wima_global_decl       extern WimaG wg
-
-/**
- * @def wima_error_descs_decl
- * An extern declaration for the array of error descriptions.
- */
-#define wima_error_descs_decl  extern const char* wima_error_descs[]
-
-/**
- * @def wima_assert_msgs_decl
- * An extern declaration for the array of assert messages.
- */
-#define wima_assert_msgs_decl  extern const char* wima_assert_msgs[]
+//! @cond Doxygen suppress.
+extern WimaG wg;
+extern const char* wima_error_descs[];
+extern const char* wima_assert_msgs[];
+//! @endcond Doxygen suppress.
 
 /**
  * @def wima_assert_msg

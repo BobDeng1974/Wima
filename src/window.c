@@ -50,6 +50,7 @@
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg.h>
 #include <nanovg_gl.h>
+//! @endcond Doxygen suppress.
 
 #include <GLFW/glfw3.h>
 
@@ -61,12 +62,12 @@
 #include "dialog.h"
 #include "area.h"
 #include "window.h"
+#include "menu.h"
 #include "global.h"
 
-wima_global_decl;
-wima_error_descs_decl;
-wima_assert_msgs_decl;
-//! @endcond Doxygen suppress.
+////////////////////////////////////////////////////////////////////////////////
+// These are all the static functions that the public functions need.
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * @file window.c

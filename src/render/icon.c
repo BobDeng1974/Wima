@@ -54,12 +54,6 @@
 
 #include "../global.h"
 
-//! @cond Doxygen suppress.
-wima_global_decl;
-wima_error_descs_decl;
-wima_assert_msgs_decl;
-//! @endcond Doxygen suppress.
-
 /**
  * @file icon.c
  */

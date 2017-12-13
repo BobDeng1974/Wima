@@ -76,12 +76,6 @@
 #include "../prop.h"
 #include "render.h"
 
-//! @cond Doxygen suppress.
-wima_global_decl;
-wima_error_descs_decl;
-wima_assert_msgs_decl;
-//! @endcond Doxygen suppress.
-
 #ifdef _MSC_VER
 
 #pragma warning (disable: 4996) // Switch off security warnings

@@ -62,8 +62,6 @@
 #include "render/render.h"
 
 //! @cond Doxygen suppress.
-wima_global_decl;
-wima_assert_msgs_decl;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.

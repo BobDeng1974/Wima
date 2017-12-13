@@ -43,9 +43,6 @@
 #include "window.h"
 #include "prop.h"
 
-wima_global_decl;
-wima_assert_msgs_decl;
-
 WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint32_t idx) {
 
 	wima_assert_init;

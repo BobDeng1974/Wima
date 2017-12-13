@@ -289,11 +289,9 @@ void wima_prop_destroy(DynaNVector vec, void** ptrs);
 bool wima_prop_valid(WimaProperty wph);
 #endif
 
-/**
- * @def wima_prop_info_decl
- * A declaration for the wima_prop_predefinedTypes array.
- */
-#define wima_prop_info_decl extern const WimaCustProp wima_prop_predefinedTypes[]
+//! @cond Doxygen suppress.
+extern const WimaCustProp wima_prop_predefinedTypes[];
+//! @endcond Doxygen suppress.
 
 /**
  * @}

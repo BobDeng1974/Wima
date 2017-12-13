@@ -41,9 +41,6 @@
 
 #include "cursor.h"
 
-wima_global_decl;
-wima_assert_msgs_decl;
-
 WimaCursor* wima_cursor_create(WimaCursorImage img, int xhot, int yhot) {
 
 	wima_assert_init;

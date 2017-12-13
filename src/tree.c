@@ -47,12 +47,6 @@
 #include "area.h"
 #include "region.h"
 
-//! @cond Doxygen suppress.
-wima_global_decl;
-wima_error_descs_decl;
-wima_assert_msgs_decl;
-//! @endcond Doxygen suppress.
-
 ////////////////////////////////////////////////////////////////////////////////
 // Static function declarations needed for public functions.
 ////////////////////////////////////////////////////////////////////////////////

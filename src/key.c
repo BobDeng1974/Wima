@@ -38,9 +38,6 @@
 
 #include "global.h"
 
-wima_global_decl;
-wima_assert_msgs_decl;
-
 const char* wima_key_name(WimaKey key, int scancode) {
 	wima_assert_init;
 	return glfwGetKeyName(key, scancode);

@@ -44,8 +44,6 @@
 
 #include "../global.h"
 
-wima_assert_msgs_decl;
-
 // TODO: Improve the API.
 
 void wima_text_blur(WimaRenderContext* ctx, float blur) {

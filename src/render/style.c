@@ -44,9 +44,6 @@
 
 #include "../global.h"
 
-wima_global_decl;
-wima_assert_msgs_decl;
-
 void wima_style_antialias(WimaRenderContext* ctx, bool enabled) {
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);

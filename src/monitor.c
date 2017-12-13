@@ -42,9 +42,6 @@
 
 #include "global.h"
 
-wima_global_decl;
-wima_assert_msgs_decl;
-
 WimaMonitorArray wima_monitor_list() {
 
 	wima_assert_init;
