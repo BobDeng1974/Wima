@@ -1384,7 +1384,7 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
 		nvgTextAlign(ctx->nvg, textAlign);
 
 		// Just draw the text.
-		nvgTextBox(ctx->nvg, x + pleft, y + WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN,
+		nvgTextBox(ctx->nvg, x + pleft, y + WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN - 4,
 		           w - WIMA_PAD_RIGHT - pleft, label, NULL);
 	}
 }
