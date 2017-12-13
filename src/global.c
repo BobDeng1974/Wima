@@ -220,6 +220,17 @@ const char* wima_assert_msgs[] = {
     "overlay layout function is not valid",
     "overlay copy is not allowed",
 
+    "menu is not valid",
+    "client tried to register too many menus",
+    "menu cannot be registered with 0 items",
+    "menu name is NULL",
+
+    "menu item is not valid",
+    "client tried to register too many menu items",
+    "menu item operator function is NULL",
+    "menu item child menu is not valid",
+    "menu item name is NULL",
+
     "ptr is NULL",
 
     "file path is NULL",

@@ -69,6 +69,7 @@ set(WIMA_SRC
 	"tree.c"
 	"dialog.c"
 	"workspace.c"
+	"menu.c"
 	"window.c"
 	"wima.c"
 )

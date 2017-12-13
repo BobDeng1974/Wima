@@ -222,6 +222,20 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	}
 
 	// Create and if error, exit.
+	wg.menus = dpool_create(0.9f, NULL, NULL, NULL, sizeof(uint64_t));
+	if (yerror(!wg.menus)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Create and if error, exit.
+	wg.menuItems = dpool_create(0.9f, NULL, NULL, NULL, sizeof(uint64_t));
+	if (yerror(!wg.menuItems)) {
+		wima_exit();
+		return WIMA_STATUS_MALLOC_ERR;
+	}
+
+	// Create and if error, exit.
 	wg.icons = dnvec_ncreate(2, 0, wima_icon_copy, wima_icon_destroy,
 	                        sizeof(WimaIcn), sizeof(WimaIconMarker));
 	if (yerror(!wg.icons)) {
@@ -424,6 +438,16 @@ void wima_exit() {
 	// Free the icon vector, if it exists.
 	if (wg.icons) {
 		dnvec_free(wg.icons);
+	}
+
+	// Free the icon vector, if it exists.
+	if (wg.menuItems) {
+		dpool_free(wg.menuItems);
+	}
+
+	// Free the icon vector, if it exists.
+	if (wg.menus) {
+		dpool_free(wg.menus);
 	}
 
 	// Free the overlays, if they exist.

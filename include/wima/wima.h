@@ -1125,9 +1125,6 @@ WimaGammaRamp wima_monitor_gammaRamp(WimaMonitor* monitor) yinline;
  * @{
  */
 
-/// Forward declaration.
-typedef struct WimaMenu WimaMenu;
-
 /**
  * A function for handling a menu item click.
  * @param win	The window that had the menu.
@@ -1135,94 +1132,124 @@ typedef struct WimaMenu WimaMenu;
 typedef void (*WimaMenuItemFunc)(WimaWindow win);
 
 /**
- * A menu item.
+ * The public-facing type for menu items.
  */
-typedef struct WimaMenuItem {
-
-	/// The human-readable label, or
-	/// NULL if this is a separator.
-	const char* label;
-
-	union {
-
-		/// The submenu.
-		WimaMenu* subMenu;
-
-		/// The function to call when clicked.
-		WimaMenuItemFunc click;
-	};
-
-	/// The item's rectangle.
-	WimaRect rect;
-
-	/// The state of the item.
-	WimaWidgetState state;
-
-	/// The item's icon, or WIMA_ICON_INVALID for none.
-	WimaIcon icon;
-
-	/// Whether or not the item has a submenu,
-	/// or is a clickable item.
-	bool hasSubMenu;
-
-} WimaMenuItem;
+typedef uint32_t WimaMenuItem;
 
 /**
- * A menu.
+ * @def WIMA_MENU_ITEM_INVALID
+ * A handle to an invalid menu item.
  */
-typedef struct WimaMenu {
-
-	/// The menu's rectangle.
-	WimaRect rect;
-
-	/// The current visible submenu, or NULL if none.
-	WimaMenu* subMenu;
-
-	/// An array of menu items.
-	WimaMenuItem* items;
-
-	/// Number of items in the menu items array.
-	uint32_t numItems;
-
-} WimaMenu;
+#define WIMA_MENU_ITEM_INVALID ((WimaMenuItem) -1)
 
 /**
- * @def WIMA_MENU_DEFAULT
- * Expands into a default compile-time constant
- * initializer for a menu .
- * @param items		A list of menu items for the menu.
- * @param numItems	The number of items in the list.
+ * @def WIMA_MENU_ITEM_MAX
+ * The max number of menu items that can be registered.
  */
-#define WIMA_MENU_DEFAULT(items, numItems) \
-    { {{ 0, 0, 0, 0 }}, NULL, items, numItems }
+#define WIMA_MENU_ITEM_MAX WIMA_MENU_ITEM_INVALID
 
 /**
- * @def WIMA_MENU_ITEM_SUB_DEFAULT
- * Expands into a default compile-time constant
- * initializer for a menu item that has a sub menu.
- * @param label	The menu item's label.
- * @param sub	A pointer to the submenu.
+ * @def WIMA_MENU_SEPARATOR
+ * A value that can be passed into wima_menu_register()
+ * to indicate a separator.
  */
-#define WIMA_MENU_ITEM_SUB_DEFAULT(label, sub) \
-    { label, sub, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICON_INVALID, true }
+#define WIMA_MENU_SEPARATOR (WIMA_MENU_ITEM_INVALID)
 
 /**
- * @def WIMA_MENU_ITEM_FUNC_DEFAULT
- * Expands into a default compile-time constant
- * initializer for a menu item that has a sub menu.
- * @param label	The menu item's label.
- * @param func	A pointer to the item's click callback.
+ * The public-facing type for menus.
  */
-#define WIMA_MENU_ITEM_FUNC_DEFAULT(label, func) \
-    { label, { .click = func }, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICON_INVALID, false }
+typedef uint16_t WimaMenu;
 
 /**
- * @def WIMA_MENU_ITEM_SEPARATOR
- * Expands into a default compile-time constant
- * initializer for a menu item that is a separator.
+ * @def WIMA_MENU_INVALID
+ * A handle to an invalid menu.
  */
-#define WIMA_MENU_ITEM_SEPARATOR \
-    { NULL, NULL, {{ 0, 0, 0, 0 }}, WIMA_WIDGET_DEFAULT, WIMA_ICON_INVALID, false }
+#define WIMA_MENU_INVALID ((WimaMenu) -1)
+
+/**
+ * @def WIMA_MENU_MAX
+ * The max number of menus that can be registered.
+ */
+#define WIMA_MENU_MAX WIMA_MENU_INVALID
+
+/**
+ * Registers an operator menu item, which is a menu item
+ * that when clicked, performs some action.
+ * @param name	The name of the item. This is used as the
+ *				label and does not have to be unique.
+ * @param icon	The icon of the item, or WIMA_ICON_INVALID
+ *				if none.
+ * @param op	The function to run when the item is clicked.
+ * @return		The newly-created WimaMenuItem.
+ * @pre			@a name must not be NULL.
+ * @pre			@a op must not be NULL.
+ */
+WimaMenuItem wima_menu_item_registerOperator(const char* const name, WimaIcon icon,
+                                             WimaMenuItemFunc op) yinline;
+
+/**
+ * Registers a parent menu item, which is a menu item that
+ * shows a submenu when hovered.
+ * @param name	The name of the item. This is used as the
+ *				label and does not have to be unique.
+ * @param icon	The icon of the item, or WIMA_ICON_INVALID
+ *				if none.
+ * @param child	The child menu.
+ * @return		The newly-created WimaMenuItem.
+ * @pre			@a name must not be NULL.
+ * @pre			@a child must be a valid @a WimaMenu.
+ */
+WimaMenuItem wima_menu_item_registerParent(const char* const name, WimaIcon icon,
+                                           WimaMenu child) yinline;
+
+/**
+ * Registers a menu using varargs. All varargs must be WimaMenuItems,
+ * and there must be as many items as @a numItems.
+ *
+ * If any separators are desired, they should be passed in using
+ * WIMA_MENU_SEPARATOR where they should be in the menu.
+ * @param name		The name of the menu. This is the label and does
+ *					not have to be unique.
+ * @param icon		The menu's icon, or WIMA_ICON_INVALID if none.
+ * @param numItems	The number of items, including any separators.
+ * @return			The newly-created WimaMenu.
+ * @pre				@a name must not be NULL.
+ * @pre				@a numItems must be greater than 0.
+ */
+WimaMenu wima_menu_nregister(const char* const name, WimaIcon icon, uint32_t numItems, ...);
+
+/**
+ * Registers a menu using a va_list, which must only contain
+ * WimaMenuItems.
+ *
+ * If any separators are desired, they should be passed in using
+ * WIMA_MENU_SEPARATOR where they should be in the menu.
+ * @param name		The name of the menu. This is the label and does
+ *					not have to be unique.
+ * @param icon		The menu's icon, or WIMA_ICON_INVALID if none.
+ * @param numItems	The number of items, including any separators.
+ * @param items		The menu items as a va_list.
+ * @return			The newly-created WimaMenu.
+ * @pre				@a name must not be NULL.
+ * @pre				@a numItems must be greater than 0.
+ */
+WimaMenu wima_menu_vregister(const char* const name, WimaIcon icon, uint32_t numItems, va_list items);
+
+/**
+ * Registers a menu using an array of WimaMenuItems.
+ *
+ * If any separators are desired, they should be passed in using
+ * WIMA_MENU_SEPARATOR where they should be in the menu.
+ * @param name		The name of the menu. This is the label and does
+ *					not have to be unique.
+ * @param icon		The menu's icon, or WIMA_ICON_INVALID if none.
+ * @param numItems	The number of items, including any separators.
+ * @param items		The menu items as a va_list.
+ * @return			The newly-created WimaMenu.
+ * @pre				@a name must not be NULL.
+ * @pre				@a numItems must be greater than 0.
+ */
+WimaMenu wima_menu_register(const char* const name, WimaIcon icon, uint32_t numItems, WimaMenuItem items[]);
 
 /**
  * @}

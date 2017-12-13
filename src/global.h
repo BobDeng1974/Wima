@@ -46,6 +46,7 @@ extern "C" {
 
 #include <dyna/vector.h>
 #include <dyna/string.h>
+#include <dyna/pool.h>
 
 #include <wima/wima.h>
 #include <wima/render.h>
@@ -110,6 +111,12 @@ typedef struct WimaG {
 
 	/// Overlays (like context menus but more general).
 	DynaVector overlays;
+
+	/// Menus.
+	DynaPool menus;
+
+	/// Menu items.
+	DynaPool menuItems;
 
 	/// Icons and their markers in the @a iconPathWindings vector.
 	DynaVector icons;
@@ -291,6 +298,17 @@ typedef enum WimaAssertType {
 	WIMA_ASSERT_OVERLAY_MAX,
 	WIMA_ASSERT_OVERLAY_LAYOUT,
 	WIMA_ASSERT_OVERLAY_COPY,
+
+	WIMA_ASSERT_MENU,
+	WIMA_ASSERT_MENU_MAX,
+	WIMA_ASSERT_MENU_NUM_ITEMS,
+	WIMA_ASSERT_MENU_NAME,
+
+	WIMA_ASSERT_MENU_ITEM,
+	WIMA_ASSERT_MENU_ITEM_MAX,
+	WIMA_ASSERT_MENU_ITEM_OP,
+	WIMA_ASSERT_MENU_ITEM_CHILD,
+	WIMA_ASSERT_MENU_ITEM_NAME,
 
 	WIMA_ASSERT_PTR_NULL,
 
