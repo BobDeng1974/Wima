@@ -1180,7 +1180,8 @@ typedef uint16_t WimaMenu;
  * @param icon	The icon of the item, or WIMA_ICON_INVALID
  *				if none.
  * @param op	The function to run when the item is clicked.
- * @return		The newly-created WimaMenuItem.
+ * @return		The newly-created WimaMenuItem, or
+ *				WIMA_MENU_ITEM_INVALID on error.
  * @pre			@a name must not be NULL.
  * @pre			@a op must not be NULL.
  */
@@ -1195,7 +1196,8 @@ WimaMenuItem wima_menu_item_registerOperator(const char* const name, WimaIcon ic
  * @param icon	The icon of the item, or WIMA_ICON_INVALID
  *				if none.
  * @param child	The child menu.
- * @return		The newly-created WimaMenuItem.
+ * @return		The newly-created WimaMenuItem, or
+ *				WIMA_MENU_ITEM_INVALID on error.
  * @pre			@a name must not be NULL.
  * @pre			@a child must be a valid @a WimaMenu.
  */
@@ -1212,9 +1214,12 @@ WimaMenuItem wima_menu_item_registerParent(const char* const name, WimaIcon icon
  *					not have to be unique.
  * @param icon		The menu's icon, or WIMA_ICON_INVALID if none.
  * @param numItems	The number of items, including any separators.
- * @return			The newly-created WimaMenu.
+ * @return			The newly-created WimaMenu, or WIMA_MENU_INVALID
+ *					on error.
  * @pre				@a name must not be NULL.
  * @pre				@a numItems must be greater than 0.
+ * @pre				@a items must not be NULL.
+ * @pre				all items must be valid.
  */
 WimaMenu wima_menu_nregister(const char* const name, WimaIcon icon, uint32_t numItems, ...);
 
@@ -1229,9 +1234,12 @@ WimaMenu wima_menu_nregister(const char* const name, WimaIcon icon, uint32_t num
  * @param icon		The menu's icon, or WIMA_ICON_INVALID if none.
  * @param numItems	The number of items, including any separators.
  * @param items		The menu items as a va_list.
- * @return			The newly-created WimaMenu.
+ * @return			The newly-created WimaMenu, or WIMA_MENU_INVALID
+ *					on error.
  * @pre				@a name must not be NULL.
  * @pre				@a numItems must be greater than 0.
+ * @pre				@a items must not be NULL.
+ * @pre				all items must be valid.
  */
 WimaMenu wima_menu_vregister(const char* const name, WimaIcon icon, uint32_t numItems, va_list items);
 
@@ -1245,9 +1253,12 @@ WimaMenu wima_menu_vregister(const char* const name, WimaIcon icon, uint32_t num
  * @param icon		The menu's icon, or WIMA_ICON_INVALID if none.
  * @param numItems	The number of items, including any separators.
  * @param items		The menu items as a va_list.
- * @return			The newly-created WimaMenu.
+ * @return			The newly-created WimaMenu, or WIMA_MENU_INVALID
+ *					on error.
  * @pre				@a name must not be NULL.
  * @pre				@a numItems must be greater than 0.
+ * @pre				@a items must not be NULL.
+ * @pre				all items must be valid.
  */
 WimaMenu wima_menu_register(const char* const name, WimaIcon icon, uint32_t numItems, WimaMenuItem items[]);
 

@@ -117,7 +117,8 @@ typedef struct WimaMnu {
  * @param func		The function to run when the item is clicked.
  *					Could also be a WimaMenu, if hasSubMenu is true.
  * @param hasSub	true if the item has a sub menu, false otherwise.
- * @return
+ * @return			The newly-created WimaMenuItem, or if there was
+ *					an error, WIMA_MENU_ITEM_INVALID.
  */
 WimaMenuItem wima_menu_item_register(const char* const name, WimaIcon icon,
                                      WimaMenuItemFunc func, bool hasSub);
