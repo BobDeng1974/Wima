@@ -338,9 +338,10 @@ void cb_error(WimaStatus status, const char* func, const char* desc) {
 int main() {
 
 #if 0
-	for (size_t i = WIMA_ASSERT_SWITCH_DEFAULT; i <= WIMA_ASSERT_MONITOR_RAMP_SIZE; ++i) {
+	for (size_t i = 0; i <= WIMA_ASSERT_INVALID_OPERATION; ++i) {
 		printf("Message[%lu]: %s\n", i, wima_assert_msgs[i]);
 	}
+	exit(1);
 #endif
 
 	WimaAppFuncs appfuncs;

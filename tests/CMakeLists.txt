@@ -26,6 +26,7 @@
 
 # We need to include NanoVG's headers.
 include_directories("../lib/nanovg/src")
+include_directories("../lib/nanosvg/src")
 
 set(WIMA_GLOBAL "${PROJECT_NAME}_global")
 
