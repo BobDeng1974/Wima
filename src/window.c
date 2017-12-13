@@ -1877,7 +1877,7 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, int parentWi
 		items[i] = item;
 
 		// Factor the label in, as well as the arrow if necessary.
-		w = wima_ui_label_estimateWidth(&win->render, item->icon, item->label);
+		w = wima_ui_label_estimateWidth(&win->render, 0, item->label);
 		w += item->hasSubMenu ? arrowWidth : 0;
 
 		// Set the item width and the new max width.
@@ -1891,7 +1891,7 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, int parentWi
 
 	// Set the above heights based on estimation.
 	if (isTopAndContext) {
-		titleHeight = wima_ui_label_estimateHeight(&win->render, win->menuIcon, win->menuTitle, width) + 5;
+		titleHeight = wima_ui_label_estimateHeight(&win->render, 0, win->menuTitle, width) + 5;
 		height = titleHeight + WIMA_WIDGET_MENU_SEP_HEIGHT;
 	}
 	else {
@@ -1914,7 +1914,7 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, int parentWi
 		}
 
 		// Estimate the height.
-		h = wima_ui_label_estimateHeight(&win->render, item->icon, item->label, width);
+		h = wima_ui_label_estimateHeight(&win->render, 0, item->label, width);
 
 		// We want to make sure all items have the same width.
 		item->rect.w = width;
