@@ -2300,15 +2300,15 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 					menu->rect.y = win->menuOffset.y;
 				}
 
+				// Dismiss the menu.
+				wima_window_removeMenu(win, menu);
+
+				// Clear the item's state.
+				item->state = WIMA_WIDGET_DEFAULT;
+
 				// Call the item's function.
 				item->click(wdgt.window);
 			}
-
-			// Dismiss the menu.
-			wima_window_removeMenu(win, menu);
-
-			// Clear the item's state.
-			item->state = WIMA_WIDGET_DEFAULT;
 
 			// Clear the window and redraw.
 			wima_window_setDirty(win, true);
