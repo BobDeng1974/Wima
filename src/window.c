@@ -1870,7 +1870,7 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 
 	// If the menu has a title, factor the title into the width.
 	if (isTopAndContext) {
-		width = wima_ui_label_estimateWidth(&win->render, win->menuIcon, win->menuTitle);
+		width = wima_ui_label_estimateWidth(&win->render, 0, win->menuTitle);
 	}
 
 	// Estimate the submenu arrow width.
