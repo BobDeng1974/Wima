@@ -1839,7 +1839,7 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, int parentWi
 
 	// Cache these. If parentWidth is 0, that means
 	// that this is the highest level menu.
-	bool isTopAndContext = WIMA_WIN_MENU_IS_CONTEXT(win) && parentWidth == 0;\
+	bool isTopAndContext = WIMA_WIN_MENU_IS_CONTEXT(win) && parentWidth == 0;
 
 	// If the menu has a title, factor the title into the width.
 	if (isTopAndContext) {
@@ -2250,8 +2250,6 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 		// Get the menu.
 		WimaMnu* menu = dpool_get(wg.menus, &key);
 
-		wassert(menu->subMenu == NULL, WIMA_ASSERT_SUBMENU_NOT_NULL);
-
 		// Get the cursor position.
 		WimaVec pos = win->ctx.cursorPos;
 
@@ -2261,6 +2259,11 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 		// Get the key.
 		uint64_t itemKey = (uint64_t) win->ctx.click_item.menuItem;
 
+		// If the item is a separator, just return.
+		if (itemKey == WIMA_MENU_SEPARATOR) {
+			return;
+		}
+
 		wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
 
 		// Get the menu item.
@@ -2268,11 +2271,6 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 
 		// If the mouse button was released, and the containing menu is valid...
 		if (e.action == WIMA_ACTION_RELEASE && m) {
-
-			// If the item is a separator, just return.
-			if (itemKey == WIMA_MENU_SEPARATOR) {
-				return;
-			}
 
 			// Send event to menu item.
 
@@ -2300,20 +2298,20 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 					// Set the menu's offsets.
 					menu->rect.x = win->menuOffset.x;
 					menu->rect.y = win->menuOffset.y;
-
-					// Also clear the sub menu.
-					menu->subMenu = NULL;
 				}
-
-				// Dismiss the menu.
-				wima_window_removeMenu(win, menu);
 
 				// Call the item's function.
 				item->click(wdgt.window);
-
-				// Clear the window and redraw.
-				wima_window_setDirty(win, true);
 			}
+
+			// Dismiss the menu.
+			wima_window_removeMenu(win, menu);
+
+			// Clear the item's state.
+			item->state = WIMA_WIDGET_DEFAULT;
+
+			// Clear the window and redraw.
+			wima_window_setDirty(win, true);
 		}
 
 		// If the mouse button was pressed and the containing menu isn't valid...
