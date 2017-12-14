@@ -1665,11 +1665,38 @@ void wima_window_removeMenu(WimaWin* win, WimaMnu* menu) {
 	// Loop over the menus.
 	while (subMenu) {
 
+		// Get the handle.
+		WimaMenu handle = subMenu->subMenu;
+
+		// Break out early if we can.
+		if (handle == WIMA_MENU_INVALID) {
+			wassert(subMenu->subMenuParentIdx == UINT16_MAX,
+			        WIMA_ASSERT_MENU_ITEM_PARENT_MISMATCH);
+			break;
+		}
+
+		wassert(subMenu->subMenuParentIdx != UINT16_MAX,
+		        WIMA_ASSERT_MENU_ITEM_PARENT_MISMATCH);
+
+		// Get the menu item key.
+		uint64_t itemKey = (uint64_t) subMenu->items[subMenu->subMenuParentIdx];
+
+		wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
+
+		// Clear the state of the item.
+		WimaMnuItm* item = dpool_get(wg.menuItems, &itemKey);
+		item->state = WIMA_WIDGET_DEFAULT;
+
+		// Get the menu key.
+		uint64_t key = (uint64_t) handle;
+
+		wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
+
 		// Get the submenu.
-		WimaMnu* temp = subMenu->subMenu;
+		WimaMnu* temp = dpool_get(wg.menus, &key);
 
 		// Dismiss it and reassign.
-		subMenu->subMenu = NULL;
+		subMenu->subMenu = WIMA_MENU_INVALID;
 		subMenu = temp;
 	}
 }
@@ -1992,6 +2019,23 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, int parentWi
 	// Cache this again.
 	handle = menu->items;
 
+	WimaMnu* subMenu;
+
+	// If the menu has a submenu...
+	if (menu->subMenu != WIMA_MENU_INVALID) {
+
+		// Get the submenu key.
+		uint64_t subKey = (uint64_t) menu->subMenu;
+
+		wassert(dpool_exists(wg.menus, &subKey), WIMA_ASSERT_MENU);
+
+		// Get the submenu.
+		subMenu = dpool_get(wg.menus, &subKey);
+	}
+	else {
+		subMenu = NULL;
+	}
+
 	for (uint32_t i = 0; i < numItems; ++i, ++handle) {
 
 		// Get the pointer.
@@ -2016,24 +2060,30 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, int parentWi
 				// If the item has a sub menu...
 				if (item->hasSubMenu) {
 
+					// Set the submenu and parent index.
+					menu->subMenu = item->subMenu;
+					menu->subMenuParentIdx = i;
+
 					// Get the key.
 					uint64_t subKey = item->subMenu;
 
 					wassert(dpool_exists(wg.menus, &subKey), WIMA_ASSERT_MENU);
 
 					// Get the menu.
-					menu->subMenu = dpool_get(wg.menus, &subKey);
+					subMenu = dpool_get(wg.menus, &subKey);
 
 					// Set the start pos for the submenu.
 					// Make sure to minus the top border
 					// (that's what the minus 5.0f is).
-					menu->subMenu->rect.x = menu->rect.x + width;
-					menu->subMenu->rect.y = menu->rect.y + item->rect.y - 5.0f;
+					subMenu->rect.x = menu->rect.x + width;
+					subMenu->rect.y = menu->rect.y + item->rect.y - 5.0f;
 				}
 				else {
 
-					// Remove any sub menu.
-					menu->subMenu = NULL;
+					// Remove any sub menu and parent.
+					menu->subMenu = WIMA_MENU_INVALID;
+					menu->subMenuParentIdx = UINT16_MAX;
+					subMenu = NULL;
 				}
 			}
 
@@ -2047,8 +2097,8 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, int parentWi
 	}
 
 	// If the menu has a submenu, draw it.
-	if (menu->subMenu) {
-		wima_window_drawMenu(win, menu->subMenu, width);
+	if (subMenu) {
+		wima_window_drawMenu(win, subMenu, width);
 	}
 
 	return WIMA_STATUS_SUCCESS;
@@ -2063,9 +2113,17 @@ static WimaMnu* wima_window_menu_contains(WimaMnu* menu, WimaVec pos) {
 
 	WimaMnu* child;
 
-	// If the menu has a submenu, check it.
-	if (menu->subMenu) {
-		child = wima_window_menu_contains(menu->subMenu, pos);
+	// If the menu has a submenu...
+	if (menu->subMenu != WIMA_MENU_INVALID) {
+
+		// Get the key.
+		uint64_t key = (uint64_t) menu->subMenu;
+
+		wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
+
+		// Get the child.
+		WimaMnu* m = dpool_get(wg.menus, &key);
+		child = wima_window_menu_contains(m, pos);
 	}
 	else {
 		child = NULL;

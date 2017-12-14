@@ -221,6 +221,7 @@ const char* wima_assert_msgs[] = {
     "menu is not valid",
     "client tried to register too many menus",
     "menu cannot be registered with 0 items",
+    "menu cannot have more than UINT16_MAX items",
     "menu items array is NULL",
     "menu name is NULL",
     "menu's submenu is not NULL; this is a bug in Wima",
@@ -230,6 +231,7 @@ const char* wima_assert_msgs[] = {
     "menu item operator function is NULL",
     "menu item child menu is not valid",
     "menu item name is NULL",
+    "menu item parent does not match child; this is a bug in Wima",
 
     "ptr is NULL",
 

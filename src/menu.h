@@ -109,13 +109,16 @@ typedef struct WimaMnu {
 	WimaRect rect;
 
 	/// The current visible submenu, or NULL if none.
-	struct WimaMnu* subMenu;
+	WimaMenu subMenu;
+
+	/// The index of the item that is the submenu's parent.
+	uint16_t subMenuParentIdx;
 
 	/// The menu's icon.
 	WimaIcon icon;
 
 	/// Number of items in the menu items array.
-	uint32_t numItems;
+	uint16_t numItems;
 
 	/// An array of menu items.
 	WimaMenuItem items[];

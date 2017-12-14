@@ -94,6 +94,7 @@ WimaMenu wima_menu_nregister(const char* const name, WimaIcon icon, uint32_t num
 
 	wassert(name != NULL, WIMA_ASSERT_MENU_NAME);
 	wassert(numItems > 0, WIMA_ASSERT_MENU_NUM_ITEMS);
+	wassert(numItems < UINT16_MAX, WIMA_ASSERT_MENU_MAX_ITEMS);
 
 	va_list items;
 
@@ -115,6 +116,7 @@ WimaMenu wima_menu_vregister(const char* const name, WimaIcon icon, uint32_t num
 
 	wassert(name != NULL, WIMA_ASSERT_MENU_NAME);
 	wassert(numItems > 0, WIMA_ASSERT_MENU_NUM_ITEMS);
+	wassert(numItems < UINT16_MAX, WIMA_ASSERT_MENU_MAX_ITEMS);
 
 	// Create an array.
 	WimaMenuItem menuItems[numItems];
@@ -135,6 +137,7 @@ WimaMenu wima_menu_register(const char* const name, WimaIcon icon, uint32_t numI
 
 	wassert(name != NULL, WIMA_ASSERT_MENU_NAME);
 	wassert(numItems > 0, WIMA_ASSERT_MENU_NUM_ITEMS);
+	wassert(numItems < UINT16_MAX, WIMA_ASSERT_MENU_MAX_ITEMS);
 	wassert(items != NULL, WIMA_ASSERT_MENU_ITEMS);
 
 #ifdef __YASSERT__
@@ -163,6 +166,8 @@ WimaMenu wima_menu_register(const char* const name, WimaIcon icon, uint32_t numI
 	}
 
 	// Copy fields.
+	menu->subMenu = WIMA_MENU_INVALID;
+	menu->subMenuParentIdx = UINT16_MAX;
 	menu->icon = icon;
 	menu->numItems = numItems;
 	memcpy(menu->items, items, sizeof(WimaMenuItem) * numItems);
