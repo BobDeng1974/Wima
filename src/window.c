@@ -2314,21 +2314,21 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 		// Get the bottom-most menu that contains the mouse.
 		WimaMnu* m = wima_window_menu_contains(menu, pos);
 
-		// Get the key.
-		uint64_t itemKey = (uint64_t) win->ctx.click_item.menuItem;
-
-		// If the item is a separator, just return.
-		if (itemKey == WIMA_MENU_SEPARATOR) {
-			return;
-		}
-
-		wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
-
-		// Get the menu item.
-		WimaMnuItm* item = dpool_get(wg.menuItems, &itemKey);
-
 		// If the mouse button was released, and the containing menu is valid...
 		if (e.action == WIMA_ACTION_RELEASE && m) {
+
+			// Get the key.
+			uint64_t itemKey = (uint64_t) win->ctx.click_item.menuItem;
+
+			// If the item is a separator, just return.
+			if (itemKey == WIMA_MENU_SEPARATOR) {
+				return;
+			}
+
+			wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
+
+			// Get the menu item.
+			WimaMnuItm* item = dpool_get(wg.menuItems, &itemKey);
 
 			// Send event to menu item.
 
@@ -2366,24 +2366,40 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 
 				// Call the item's function.
 				item->click(wdgt.window);
-			}
 
-			// Clear the window and redraw.
-			wima_window_setDirty(win, true);
+				// Clear the window and redraw.
+				wima_window_setDirty(win, true);
+			}
 		}
 
 		// If the mouse button was pressed and the containing menu isn't valid...
 		else if (e.action == WIMA_ACTION_PRESS) {
 
-			// If the mouse is in a menu.
+			// If the mouse is in a menu...
 			if (m) {
 
 				// Translate the position into item coordinates.
 				pos.x -= m->rect.x;
 				pos.y -= m->rect.y;
 
+				// Cache this.
+				uint16_t numItems = m->numItems;
+
 				// Go through the menu items.
-				for (int i = 0; i < m->numItems; ++i, item += 1) {
+				for (uint16_t i = 0; i < numItems; ++i) {
+
+					// Get the key.
+					uint64_t itemKey = m->items[i];
+
+					// Break early on a separator.
+					if (itemKey == WIMA_MENU_SEPARATOR) {
+						continue;
+					}
+
+					wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
+
+					// Get the item.
+					WimaMnuItm* item = dpool_get(wg.menuItems, &itemKey);
 
 					// If the item is the one.
 					if (wima_rect_contains(item->rect, pos)) {
