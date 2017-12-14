@@ -1877,7 +1877,7 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 	float arrowWidth = WIMA_MENU_ARROW_SIZE;
 
 	// Cache these.
-	uint32_t numItems = menu->numItems;
+	uint16_t numItems = menu->numItems;
 	WimaMenuItem* handle = menu->items;
 
 	// Create an array of item pointers.
@@ -1887,7 +1887,7 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 
 	// Loop through the items and fill the array and estimate width.
 	// These are combined into one loop to save on branching.
-	for (uint32_t i = 0; i < numItems; ++i, ++handle) {
+	for (uint16_t i = 0; i < numItems; ++i, ++handle) {
 
 		// Get the key.
 		uint64_t itemKey = (uint64_t) *handle;
