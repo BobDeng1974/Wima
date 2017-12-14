@@ -1659,19 +1659,18 @@ void wima_window_removeMenu(WimaWin* win, WimaMnu* menu) {
 	// Clear the flags.
 	win->flags = 0;
 
-	// If the menu has submenus...
-	if (menu->subMenu) {
+	// This is needed for the loop.
+	WimaMnu* subMenu = menu;
 
-		// Dismiss sub menus.
-		WimaMnu* subMenu = menu->subMenu;
-		while (subMenu && subMenu->subMenu) {
-			WimaMnu* temp = subMenu->subMenu;
-			subMenu->subMenu = NULL;
-			subMenu = temp;
-		}
+	// Loop over the menus.
+	while (subMenu) {
 
-		// Clear the submenu flag.
-		menu->subMenu = NULL;
+		// Get the submenu.
+		WimaMnu* temp = subMenu->subMenu;
+
+		// Dismiss it and reassign.
+		subMenu->subMenu = NULL;
+		subMenu = temp;
 	}
 }
 
