@@ -1437,7 +1437,8 @@ static WimaStatus wima_window_drawOverlay(ynonnull WimaWin* win);
  * @pre					@a win must not be NULL.
  * @pre					@a menu must not be NULL.
  */
-static WimaStatus wima_window_drawMenu(ynonnull WimaWin* win, ynonnull WimaMnu* menu, int parentWidth);
+static WimaStatus wima_window_drawMenu(ynonnull WimaWin* win, ynonnull WimaMnu* menu,
+                                       float parentWidth);
 
 /**
  * Returns the menu that contains @a pos and does not have
@@ -1853,7 +1854,7 @@ static WimaStatus wima_window_drawOverlay(ynonnull WimaWin* win) {
 
 }
 
-static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, int parentWidth) {
+static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parentWidth) {
 
 	float w, h;
 
