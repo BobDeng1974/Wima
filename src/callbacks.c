@@ -81,6 +81,31 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	// allow windows to get key presses.
 	switch(wkey) {
 
+		case WIMA_KEY_ESCAPE:
+
+			// TODO: Escape overlays as well.
+
+			// If there is a menu...
+			if (WIMA_WIN_HAS_MENU(wwin)) {
+
+				// Get the menu key.
+				uint64_t key = (uint64_t) wwin->menu;
+
+				wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
+
+				// Get the menu.
+				WimaMnu* menu = dpool_get(wg.menus, &key);
+
+				// Remove the menu.
+				wima_window_removeMenu(wwin, menu);
+
+				// Force a layout.
+				wima_window_setDirty(wwin, true);
+
+				// Just return.
+				return;
+			}
+
 		// These are all the mod keys.
 		case WIMA_KEY_LEFT_SHIFT:
 		case WIMA_KEY_LEFT_CONTROL:
