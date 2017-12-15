@@ -2809,6 +2809,25 @@ void wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg);
 void wima_window_popDialog(WimaWindow wwh);
 
 /**
+ * Sets @a overlay as the overlay on the window that @a wwh
+ * refers to.
+ * @param wwh		The window to update.
+ * @param overlay	The overlay to set on the window.
+ * @pre				@a wwh must be a valid WimaWindow.
+ * @pre				@a wwh must not have an overlay set.
+ * @pre				@a overlay must be a valid WimaOverlay.
+ */
+void wima_window_setOverlay(WimaWindow wwh, WimaOverlay overlay);
+
+/**
+ * Removes the overlay from the window referred to by @a wwh.
+ * @param wwh	The window to update.
+ * @pre				@a wwh must be a valid WimaWindow.
+ * @pre				@a wwh must have an overlay set.
+ */
+void wima_window_removeOverlay(WimaWindow wwh);
+
+/**
  * Sets the context menu on the window
  * @param wwh	The window to update.
  * @param menu	The menu to set on the window.

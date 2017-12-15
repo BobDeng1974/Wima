@@ -118,6 +118,8 @@ const char* const wima_assert_msgs[] = {
     "no dialog on the window",
     "client tried to push too many dialogs onto the window's stack",
     "client asked for mouse drag data, but no mouse buttons are pressed",
+    "window already has an existing overlay",
+    "window does not have an overlay",
 
     "tree is not valid",
     "node is beyond max number of nodes for the given tree",

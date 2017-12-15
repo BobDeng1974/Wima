@@ -309,6 +309,18 @@ typedef struct WimaWin {
 	/// Bits set when we have a menu.
 	uint8_t flags;
 
+	/// The current overlay, or WIMA_OVERLAY_INVALID.
+	WimaOverlay overlay;
+
+	/// A vector of items for overlays.
+	DynaVector overlayItems;
+
+	/// The menu offset. This is the offset that
+	/// the user clicked on a context menu. This
+	/// allows the menus to appear in the same spot
+	/// relative to the cursor every time, making
+	/// it easy to click items that are used a lot.
+	WimaVec overlayOffset;
 
 	/// The area stack.
 	DynaTree treeStack[WIMA_WINDOW_STACK_MAX];

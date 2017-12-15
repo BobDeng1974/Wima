@@ -63,6 +63,7 @@
 #include "area.h"
 #include "window.h"
 #include "menu.h"
+#include "overlay.h"
 #include "global.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -235,16 +236,14 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Get a pointer to the new window.
 	window = dvec_get(wg.windows, idx);
 
-	// Cache this.
-	size_t cap = dvec_cap(wg.workspaces);
-
-	// Create the sizes vector.
-	window->workspaceSizes = dvec_create(cap, NULL, NULL, sizeof(WimaSize));
-
-	// Check for error.
-	if (yerror(!window->workspaceSizes)) {
+	// Create an items vector and check for error.
+	window->overlayItems = dvec_create(0, NULL, NULL, sizeof(WimaItem));
+	if (yerror(window->overlayItems == NULL)) {
 		goto wima_win_create_malloc_err;
 	}
+
+	// Cache this.
+	size_t cap = dvec_cap(wg.workspaces);
 
 	// Create a workspaces vector.
 	window->workspaces = dvec_createTreeVec(cap, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
@@ -256,6 +255,14 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 	// Copy the workspaces.
 	if (yerror(dvec_copy(window->workspaces, wg.workspaces))) {
+		goto wima_win_create_malloc_err;
+	}
+
+	// Create the sizes vector.
+	window->workspaceSizes = dvec_create(cap, NULL, NULL, sizeof(WimaSize));
+
+	// Check for error.
+	if (yerror(!window->workspaceSizes)) {
 		goto wima_win_create_malloc_err;
 	}
 
@@ -1070,6 +1077,67 @@ void wima_window_popDialog(WimaWindow wwh) {
 	wima_area_resize(WIMA_WIN_AREAS(win), rect);
 }
 
+void wima_window_setOverlay(WimaWindow wwh, WimaOverlay overlay) {
+
+	wima_assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	wassert(win->overlay == WIMA_OVERLAY_INVALID, WIMA_ASSERT_WIN_OVERLAY_EXISTS);
+
+	// Get the key.
+	uint64_t key = (uint64_t) win->overlay;
+
+	wassert(dpool_exists(wg.overlays, &key), WIMA_ASSERT_OVERLAY);
+
+	// Get the overlay.
+	WimaOvly* ovly = dpool_get(wg.overlays, &key);
+
+	// Set up the overlay flags.
+	win->flags |= (WIMA_WIN_OVERLAY);
+
+	// Set up the offset.
+	win->overlayOffset.x = ovly->rect.x;
+	win->overlayOffset.y = ovly->rect.y;
+
+	// Make sure the overlay pops up at the right place.
+	ovly->rect.x = win->ctx.cursorPos.x - ovly->rect.x;
+	ovly->rect.y = win->ctx.cursorPos.y - ovly->rect.y;
+
+	// Set the overlay.
+	win->overlay = overlay;
+}
+
+void wima_window_removeOverlay(WimaWindow wwh) {
+
+	wima_assert_init;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	wassert(win->overlay != WIMA_OVERLAY_INVALID, WIMA_ASSERT_WIN_NO_OVERLAY);
+
+	// Get the key.
+	uint64_t key = (uint64_t) win->overlay;
+
+	wassert(dpool_exists(wg.overlays, &key), WIMA_ASSERT_OVERLAY);
+
+	// Get the overlay.
+	WimaOvly* ovly = dpool_get(wg.overlays, &key);
+
+	// Set the offset for next time.
+	ovly->rect.x = win->overlayOffset.x;
+	ovly->rect.y = win->overlayOffset.y;
+
+	// Unset the overlay.
+	win->overlay = WIMA_OVERLAY_INVALID;
+}
+
 void wima_window_setContextMenu(WimaWindow wwh, WimaMenu menu) {
 
 	wima_assert_init;
@@ -1489,6 +1557,11 @@ void wima_window_destroy(void* ptr) {
 			dvec_free(win->workspaces);
 		}
 
+		// Free the vector of items.
+		if (win->overlayItems) {
+			dvec_free(win->overlayItems);
+		}
+
 		// Destroy the GLFW window.
 		glfwDestroyWindow(win->window);
 
@@ -1719,7 +1792,7 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 		}
 
 		// If we have a menu...
-		else if (WIMA_WIN_HAS_MENU(win)) {
+		if (WIMA_WIN_HAS_MENU(win)) {
 
 			// Get the key.
 			uint64_t key = (uint64_t) win->menu;
@@ -1807,6 +1880,8 @@ void wima_window_splitAreaMode(WimaWindow wwh) {
 
 static WimaStatus wima_window_drawOverlay(WimaWin* win) {
 
+	wassert(win != NULL, WIMA_ASSERT_WIN);
+	wassert(win->overlay != WIMA_OVERLAY_INVALID, WIMA_ASSERT_OVERLAY);
 }
 
 static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parentWidth) {
@@ -2256,16 +2331,16 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
 
 static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e) {
 
-	// If the mouse button hasn't been released yet,
-	// set it to released and return because we don't
-	// need to do anything else.
-	if (!WIMA_WIN_MENU_IS_RELEASED(win)) {
-		win->flags |= WIMA_WIN_MENU_RELEASED;
-		return;
-	}
-
 	// If there is a menu...
-	else if (WIMA_WIN_HAS_MENU(win)) {
+	if (WIMA_WIN_HAS_MENU(win)) {
+
+		// If the mouse button hasn't been released yet,
+		// set it to released and return because we don't
+		// need to do anything else.
+		if (!WIMA_WIN_MENU_IS_RELEASED(win)) {
+			win->flags |= WIMA_WIN_MENU_RELEASED;
+			return;
+		}
 
 		uint64_t key = (uint64_t) win->menu;
 
@@ -2390,6 +2465,11 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 				wima_window_removeMenu(win, menu);
 			}
 		}
+	}
+
+	// If we have an overlay...
+	else if (WIMA_WIN_HAS_OVERLAY(win)) {
+		// TODO: Write this.
 	}
 
 	// If we are releasing a split, clear the appropriate data.
