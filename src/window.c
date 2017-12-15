@@ -1097,10 +1097,6 @@ void wima_window_setContextMenu(WimaWindow wwh, WimaMenu menu) {
 	m->rect.x = win->ctx.cursorPos.x - m->rect.x;
 	m->rect.y = win->ctx.cursorPos.y - m->rect.y;
 
-	// Set the title and icon.
-	win->menuTitle = WIMA_MENU_NAME(m);
-	win->menuIcon = m->icon;
-
 	// Set the menu.
 	win->menu = menu;
 }
@@ -1138,34 +1134,6 @@ WimaMenu wima_window_menu(WimaWindow wwh) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	return WIMA_WIN_HAS_MENU(win) ? win->menu : WIMA_MENU_INVALID;
-}
-
-const char* wima_window_menuTitle(WimaWindow wwh) {
-
-	wima_assert_init;
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
-
-	// Get the window.
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	wassert(WIMA_WIN_MENU_IS_CONTEXT(win), WIMA_ASSERT_WIN_CONTEXT_MENU);
-
-	return win->menuTitle;
-}
-
-WimaIcon wima_window_menuIcon(WimaWindow wwh) {
-
-	wima_assert_init;
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
-
-	// Get the window.
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	wassert(WIMA_WIN_MENU_IS_CONTEXT(win), WIMA_ASSERT_WIN_CONTEXT_MENU);
-
-	return win->menuIcon;
 }
 
 void wima_window_setCursor(WimaWindow wwh, WimaCursor* cursor) {
@@ -1644,10 +1612,6 @@ void wima_window_removeMenu(WimaWin* win, WimaMnu* menu) {
 
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 
-	// Clear these.
-	win->menuTitle = NULL;
-	win->menuIcon = WIMA_ICON_INVALID;
-
 	// Clear the flags.
 	win->flags = 0;
 
@@ -1849,6 +1813,9 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 
 	float w, h;
 
+	WimaIcon menuIcon;
+	char* menuTitle;
+
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 	wassert(menu != NULL, WIMA_ASSERT_WIN_MENU);
 
@@ -1860,9 +1827,15 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 	// that this is the highest level menu.
 	bool isTopAndContext = WIMA_WIN_MENU_IS_CONTEXT(win) && parentWidth == 0;
 
-	// If the menu has a title, factor the title into the width.
+	// If the menu has a title...
 	if (isTopAndContext) {
-		width = wima_ui_label_estimateWidth(&win->render, 0, win->menuTitle);
+
+		// Get the title and icon.
+		menuIcon = menu->icon;
+		menuTitle = WIMA_MENU_NAME(menu);
+
+		// Estimate the width with the title.
+		width = wima_ui_label_estimateWidth(&win->render, 0, menuTitle);
 	}
 
 	// Estimate the submenu arrow width.
@@ -1910,7 +1883,7 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 
 	// Set the above heights based on estimation.
 	if (isTopAndContext) {
-		titleHeight = wima_ui_label_estimateHeight(&win->render, 0, win->menuTitle, width) + 5;
+		titleHeight = wima_ui_label_estimateHeight(&win->render, 0, menuTitle, width) + 5;
 		height = titleHeight + WIMA_WIDGET_MENU_SEP_HEIGHT;
 	}
 	else {
@@ -1988,7 +1961,8 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 	// In the case that we are top level ***AND*** a context menu, we
 	// want to set the window menu offsets if we are still in the menu.
 	if (menuContainsCursor && isTopAndContext) {
-		win->menuOffset = cursor;
+		win->menuOffset.x = (int16_t) cursor.x;
+		win->menuOffset.y = (int16_t) cursor.y;
 	}
 
 	// Set up NanoVG.
@@ -2002,7 +1976,7 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 
 	// If it has a title (is the top menu and a context menu), draw it.
 	if (isTopAndContext) {
-		wima_ui_menu_label(&win->render, 0, 5, width, titleHeight, win->menuIcon, win->menuTitle);
+		wima_ui_menu_label(&win->render, 0, 5, width, titleHeight, menuIcon, menuTitle);
 		wima_ui_menu_separator(&win->render, 0, titleHeight, width, WIMA_WIDGET_MENU_SEP_HEIGHT);
 	}
 

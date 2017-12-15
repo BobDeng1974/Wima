@@ -2835,24 +2835,6 @@ void wima_window_setMenu(WimaWindow wwh, WimaMenu menu) yinline;
 WimaMenu wima_window_menu(WimaWindow wwh) yinline;
 
 /**
- * Returns the context menu title, or NULL if none.
- * @param wwh	The window to query.
- * @return		The title of the current context menu.
- * @pre			@a wwh must be a valid WimaWindow.
- * @pre			The current menu must be a context menu.
- */
-const char* wima_window_menuTitle(WimaWindow wwh) yinline;
-
-/**
- * Returns the context menu icon.
- * @param wwh	The window to query.
- * @return		The icon of the current context menu.
- * @pre			@a wwh must be a valid WimaWindow.
- * @pre			The current menu must be a context menu.
- */
-WimaIcon wima_window_menuIcon(WimaWindow wwh) yinline;
-
-/**
  * Sets the cursor on @a wwh. The cursor must have been
  * previously created using @a wima_cursor_create().
  * @param wwh	The window to update.

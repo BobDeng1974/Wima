@@ -309,8 +309,6 @@ typedef struct WimaWin {
 	/// Bits set when we have a menu.
 	uint8_t flags;
 
-	/// The menu icon.
-	WimaIcon menuIcon;
 
 	/// The area stack.
 	DynaTree treeStack[WIMA_WINDOW_STACK_MAX];
@@ -321,15 +319,12 @@ typedef struct WimaWin {
 	/// The current menu, or WIMA_MENU_INVALID.
 	WimaMenu menu;
 
-	/// The menu title, or NULL.
-	const char* menuTitle;
-
 	/// The menu offset. This is the offset that
 	/// the user clicked on a context menu. This
 	/// allows the menus to appear in the same spot
 	/// relative to the cursor every time, making
 	/// it easy to click items that are used a lot.
-	WimaVec menuOffset;
+	WimaVecS menuOffset;
 
 	/// The user pointer for the window.
 	void* user;
