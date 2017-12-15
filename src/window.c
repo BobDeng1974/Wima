@@ -1850,7 +1850,7 @@ void wima_window_splitAreaMode(WimaWindow wwh) {
 // Static functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-static WimaStatus wima_window_drawOverlay(ynonnull WimaWin* win) {
+static WimaStatus wima_window_drawOverlay(WimaWin* win) {
 
 }
 

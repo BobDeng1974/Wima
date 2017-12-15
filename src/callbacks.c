@@ -83,8 +83,6 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 		case WIMA_KEY_ESCAPE:
 
-			// TODO: Escape overlays as well.
-
 			// If there is a menu...
 			if (WIMA_WIN_HAS_MENU(wwin)) {
 
@@ -98,6 +96,17 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 				// Remove the menu.
 				wima_window_removeMenu(wwin, menu);
+
+				// Force a layout.
+				wima_window_setDirty(wwin, true);
+
+				// Just return.
+				return;
+			}
+
+			if (WIMA_WIN_HAS_OVERLAY(wwin)) {
+
+				// TODO: Escape overlays as well.
 
 				// Force a layout.
 				wima_window_setDirty(wwin, true);
