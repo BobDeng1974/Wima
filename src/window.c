@@ -1861,7 +1861,8 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 	wassert(menu != NULL, WIMA_ASSERT_WIN_MENU);
 
-	// Clear this.
+	// Clear these.
+	WimaStatus status = WIMA_STATUS_SUCCESS;
 	float width = 0.0f;
 
 	// Cache these. If parentWidth is 0, that means
@@ -2099,10 +2100,10 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 
 	// If the menu has a submenu, draw it.
 	if (subMenu) {
-		wima_window_drawMenu(win, subMenu, width);
+		status = wima_window_drawMenu(win, subMenu, width);
 	}
 
-	return WIMA_STATUS_SUCCESS;
+	return status;
 }
 
 static WimaMnu* wima_window_menu_contains(WimaMnu* menu, WimaVec pos) {
