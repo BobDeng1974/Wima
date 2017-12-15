@@ -204,7 +204,7 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	}
 
 	// Create and if error, exit.
-	wg.overlays = dvec_create(0, wima_overlay_copy, wima_overlay_destroy, sizeof(WimaOvly));
+	wg.overlays = dpool_create(WIMA_POOL_LOAD, NULL, NULL, NULL, sizeof(uint64_t));
 	if (yerror(!wg.overlays)) {
 		goto wima_init_malloc_err;
 	}
@@ -458,7 +458,7 @@ void wima_exit() {
 
 	// Free the overlays, if they exist.
 	if (wg.overlays) {
-		dvec_free(wg.overlays);
+		dpool_free(wg.overlays);
 	}
 
 	// Free the dialogs, if they exist.

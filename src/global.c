@@ -217,6 +217,7 @@ const char* const wima_assert_msgs[] = {
 
     "overlay is not valid",
     "client tried to register too many overlays",
+    "overlay name is NULL",
     "overlay layout function is not valid",
     "overlay copy is not allowed",
 

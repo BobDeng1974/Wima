@@ -1311,9 +1311,11 @@ typedef WimaStatus (*WimaOverlayLayoutFunc)(WimaLayout root);
  * @param layout	The function to lay out the overlay.
  * @return			The newly-created WimaOverlay on success, or
  *					WIMA_OVERLAY_INVALID on error.
+ * @pre				@a name must not be NULL.
  * @pre				@a layout must not be NULL.
  */
-WimaOverlay wima_overlay_register(const char* name, WimaIcon icon, ynonnull WimaOverlayLayoutFunc layout);
+WimaOverlay wima_overlay_register(ynonnull const char* const name, WimaIcon icon,
+                                  ynonnull WimaOverlayLayoutFunc layout);
 
 /**
  * @}

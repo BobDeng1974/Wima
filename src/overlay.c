@@ -49,67 +49,40 @@
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaOverlay wima_overlay_register(const char* name, WimaIcon icon, WimaOverlayLayoutFunc layout) {
-
-	WimaOvly ovly;
-	size_t slen;
+WimaOverlay wima_overlay_register(const char* const name, WimaIcon icon, WimaOverlayLayoutFunc layout) {
 
 	wima_assert_init;
 
+	wassert(name != NULL, WIMA_ASSERT_OVERLAY_NAME);
 	wassert(layout != NULL, WIMA_ASSERT_OVERLAY_LAYOUT);
 
-	// Get the index (length).
-	size_t idx = dvec_len(wg.overlays);
+	// Get the number of allocations. This is also the key/index.
+	uint64_t key = (uint64_t) dpool_allocations(wg.overlays);
 
-	wassert(idx < WIMA_OVERLAY_MAX, WIMA_ASSERT_OVERLAY_MAX);
+	wassert(key < WIMA_OVERLAY_MAX, WIMA_ASSERT_OVERLAY_MAX);
 
-	// Make sure this is NULL.
-	ovly.name = NULL;
+	// Get the length of the string.
+	size_t slen = strlen(name);
 
-	// If there is a name...
-	if (name != NULL) {
+	// Calculate the size of the allocation.
+	size_t size = sizeof(WimaOvly) + slen + 1;
 
-		// Allocate the name.
-		slen = strlen(name) + 1;
-		ovly.name = ymalloc(slen);
-
-		// Check for error.
-		if (yerror(ovly.name == NULL)) {
-			goto wima_ovly_reg_name_err;
-		}
+	// Allocate and check for failure.
+	WimaOvly* ovly = dpool_calloc(wg.overlays, &key, size);
+	if (yerror(ovly == NULL)) {
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_OVERLAY_INVALID;
 	}
 
-	// Copy the name. We do this by making the
-	// destination zero length and concatenating.
-	ovly.name[0] = '\0';
-	strcat(ovly.name, name);
+	// Copy fields.
+	ovly->layout = layout;
+	ovly->icon = icon;
 
-	// Fill the rest of the data.
-	ovly.layout = layout;
-	ovly.icon = icon;
+	// Copy the name in.
+	ovly->name[0] = '\0';
+	strcat(ovly->name, name);
 
-	// Push onto the vector and check for error.
-	if (yerror(dvec_push(wg.overlays, &ovly))) {
-		goto wima_ovly_reg_vec_err;
-	}
-
-	return (WimaOverlay) idx;
-
-// Error when pushing onto the vector.
-wima_ovly_reg_vec_err:
-
-	// Free the name, if necessary.
-	if (ovly.name) {
-		ysfree(ovly.name, slen);
-	}
-
-// Error on allocating the name.
-wima_ovly_reg_name_err:
-
-	// Send the error to the client.
-	wima_error(WIMA_STATUS_MALLOC_ERR);
-
-	return WIMA_OVERLAY_INVALID;
+	return (WimaOverlay) key;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,16 +92,4 @@ wima_ovly_reg_name_err:
 DynaStatus wima_overlay_copy(void* dest, void* src) {
 	wassert(false, WIMA_ASSERT_OVERLAY_COPY);
 	abort();
-}
-
-void wima_overlay_destroy(DynaVector vec, void* ptr) {
-
-	wima_assert_init;
-
-	WimaOvly* ovly = (WimaOvly*) ptr;
-
-	// Free the name, if necessary.
-	if (ovly->name) {
-		yfree(ovly->name);
-	}
 }

@@ -50,14 +50,17 @@ extern "C" {
  */
 typedef struct WimaOvly {
 
-	/// The name of the overlay.
-	char* name;
-
 	/// The layout function.
 	WimaOverlayLayoutFunc layout;
 
+	/// The rectangle.
+	WimaRect rect;
+
 	/// The icon for the overlay.
 	WimaIcon icon;
+
+	/// The name of the overlay.
+	char name[];
 
 } WimaOvly;
 
@@ -69,13 +72,6 @@ typedef struct WimaOvly {
  * @return		Nothing.
  */
 DynaStatus wima_overlay_copy(void* dest, void* src) ynoreturn;
-
-/**
- * Destroys the @a WimaOvly pointed to by @a ptr.
- * @param vec	The vector that the overlay is in.
- * @param ptr	A pointer to the overlay to destroy.
- */
-void wima_overlay_destroy(DynaVector vec, void* ptr);
 
 #ifdef __cplusplus
 }
