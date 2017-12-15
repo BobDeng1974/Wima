@@ -413,7 +413,7 @@ void wima_window_setMouseBtn(ynonnull WimaWin* win, WimaMouseBtn btn, WimaAction
 
 /**
  * Removes the menu from the window.
- * @param wwh	The window to update.
+ * @param win	The window to update.
  * @param menu	The menu to clear submenus from.
  * @pre			@a win must not be NULL.
  * @pre			@a menu must not be NULL.
@@ -478,7 +478,7 @@ bool wima_window_valid(WimaWindow wwh);
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * @def WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS
+ * @def WIMA_WIN_AREA_MENU_NUM_ITEMS
  * The number of items in the area menu.
  */
 
@@ -489,8 +489,8 @@ bool wima_window_valid(WimaWindow wwh);
 
 #ifndef NDEBUG
 
-#	define WIMA_WIN_AREA_SUB_MENU_NUM_ITEMS (6)
 #	define WIMA_WIN_AREA_MENU_NUM_ITEMS (4)
+#	define WIMA_WIN_AREA_SUB_MENU_NUM_ITEMS (6)
 
 /**
  * A test click function for a menu item.
@@ -523,7 +523,7 @@ void wima_window_sub5_click(WimaWindow wwh);
 void wima_window_sub_sub1_click(WimaWindow wwh);
 
 #else
-#	define WIMA_WIN_AREA_SPLIT_MENU_NUM_ITEMS (2)
+#	define WIMA_WIN_AREA_MENU_NUM_ITEMS (2)
 #endif // NDEBUG
 
 /**
