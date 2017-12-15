@@ -1076,6 +1076,9 @@ void wima_window_setContextMenu(WimaWindow wwh, WimaMenu menu) {
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
 	uint64_t key = (uint64_t) menu;
 
 	wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
@@ -1083,11 +1086,8 @@ void wima_window_setContextMenu(WimaWindow wwh, WimaMenu menu) {
 	// Get the menu.
 	WimaMnu* m = dpool_get(wg.menus, &key);
 
-	// Get the window.
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
 	// Set the menu flags.
-	win->flags = (WIMA_WIN_MENU | WIMA_WIN_MENU_CONTEXT);
+	win->flags |= (WIMA_WIN_MENU | WIMA_WIN_MENU_CONTEXT);
 
 	// Set up the offset.
 	win->menuOffset.x = m->rect.x;
