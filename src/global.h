@@ -386,6 +386,13 @@ extern const char* const wima_assert_msgs[];
 #define wima_error_desc(status, desc) wg.funcs.error((status), __func__, (desc))
 
 /**
+ * @def WIMA_POOL_LOAD
+ * The load for all DynaPools used by Wima.
+ * This is equal to 1/(2^8).
+ */
+#define WIMA_POOL_LOAD (0.99609375f)
+
+/**
  * @}
  */
 

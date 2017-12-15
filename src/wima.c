@@ -210,13 +210,13 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	}
 
 	// Create and if error, exit.
-	wg.menus = dpool_create(0.9f, NULL, NULL, NULL, sizeof(uint64_t));
+	wg.menus = dpool_create(WIMA_POOL_LOAD, NULL, NULL, NULL, sizeof(uint64_t));
 	if (yerror(!wg.menus)) {
 		goto wima_init_malloc_err;
 	}
 
 	// Create and if error, exit.
-	wg.menuItems = dpool_create(0.9f, NULL, NULL, NULL, sizeof(uint64_t));
+	wg.menuItems = dpool_create(WIMA_POOL_LOAD, NULL, NULL, NULL, sizeof(uint64_t));
 	if (yerror(!wg.menuItems)) {
 		goto wima_init_malloc_err;
 	}
