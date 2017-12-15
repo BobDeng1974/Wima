@@ -1775,8 +1775,9 @@ typedef WimaStatus (*WimaRegionLayout)(WimaLayout root);
 #define WIMA_REGION_INVALID ((WimaRegion) -1)
 
 /**
- * @def WIMA_REGION_INVALID
- * An invalid index for a region.
+ * @def WIMA_REGION_INVALID_IDX
+ * An invalid index for a live region
+ * (a region on an area).
  */
 #define WIMA_REGION_INVALID_IDX ((uint8_t) -1)
 
@@ -2793,6 +2794,8 @@ void wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp) yinline;
  * @param wdlg	The dialog to push.
  * @return		WIMA_STATUS_SUCCESS on success, an
  *				error code otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
+ * @pre			@a wdlg must be a valid WimaDialog.
  */
 void wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg);
 
@@ -2801,6 +2804,7 @@ void wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg);
  * @param wwh	The window to pop the dialog from.
  * @return		WIMA_STATUS_SUCCESS on success, an
  *				error code otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
  */
 void wima_window_popDialog(WimaWindow wwh);
 
