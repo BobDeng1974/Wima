@@ -1582,6 +1582,14 @@ typedef struct WimaWidgetFuncs {
 } WimaWidgetFuncs;
 
 /**
+ * Returns true if @a wdgt is in an overlay, false otherwise.
+ * @param wdgt	The widget to test.
+ * @return		true if @a layout is in an overlay, false otherwise.
+ * @pre			@a wdgt must be a valid WimaWidget.
+ */
+bool wima_widget_inOverlay(WimaWidget wdgt) yconst yinline;
+
+/**
  * Sets whether the widget is enabled or not.
  * @param wdgt		The widget to enable or disable.
  * @param enable	true if enabled, false otherwise.
@@ -1765,6 +1773,12 @@ typedef WimaStatus (*WimaRegionLayout)(WimaLayout root);
  * A handle to an invalid @a WimaRegion.
  */
 #define WIMA_REGION_INVALID ((WimaRegion) -1)
+
+/**
+ * @def WIMA_REGION_INVALID
+ * An invalid index for a region.
+ */
+#define WIMA_REGION_INVALID_IDX ((uint8_t) -1)
 
 /**
  * @def WIMA_REGION_MAX

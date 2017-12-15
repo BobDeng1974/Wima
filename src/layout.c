@@ -80,6 +80,22 @@ static void wima_layout_setChildren(WimaLayout parent, ynonnull WimaAr* area, ui
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+bool wima_layout_inOverlay(WimaLayout layout) {
+
+#ifdef __YASSERT__
+
+	wassert(wima_window_valid(layout.window), WIMA_ASSERT_WIN);
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, layout.window);
+
+	wassert(layout.layout < dvec_len(win->overlayItems), WIMA_ASSERT_LAYOUT);
+
+#endif
+
+	return layout.region == WIMA_REGION_INVALID_IDX && layout.area == WIMA_AREA_INVALID;
+}
+
 uint16_t wima_layout_setExpandFlags(uint16_t flags, bool vertical, bool horizontal) {
 
 	wima_assert_init;

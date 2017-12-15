@@ -72,6 +72,22 @@
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+bool wima_widget_inOverlay(WimaWidget wdgt) {
+
+#ifdef __YASSERT__
+
+	wassert(wima_window_valid(wdgt.window), WIMA_ASSERT_WIN);
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, wdgt.window);
+
+	wassert(wdgt.widget < dvec_len(win->overlayItems), WIMA_ASSERT_LAYOUT);
+
+#endif
+
+	return wdgt.region == WIMA_REGION_INVALID_IDX && wdgt.area == WIMA_AREA_INVALID;
+}
+
 WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
 
 	wima_assert_init;

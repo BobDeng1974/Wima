@@ -92,6 +92,14 @@ typedef struct WimaLayout {
 } WimaLayout;
 
 /**
+ * Returns true if @a layout is in an overlay, false otherwise.
+ * @param layout	The layout to test.
+ * @return			true if @a layout is in an overlay, false otherwise.
+ * @pre				@a layout must be a valid WimaLayout.
+ */
+bool wima_layout_inOverlay(WimaLayout layout) yconst yinline;
+
+/**
  * Takes an initial flag value and sets the expand bits. If @a horizontal is
  * true, the horizontal expand bit is set. Same goes for vertical.
  * @param flags			The initial flag value to use.
