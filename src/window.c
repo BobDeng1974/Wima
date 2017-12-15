@@ -111,17 +111,8 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Clear these before assigning.
 	// This is so wima_window_destroy()
 	// knows what has been initialized.
-	wwin.render.nvg = NULL;
-	wwin.images = NULL;
+	memset(&wwin, 0, sizeof(WimaWin));
 	wwin.treeStackIdx = ((uint8_t) -1);
-	wwin.workspaces = NULL;
-	wwin.workspaceSizes = NULL;
-	wwin.user = NULL;
-	wwin.window = NULL;
-	wwin.fbsize.w = 0;
-	wwin.fbsize.h = 0;
-	wwin.winsize.w = 0;
-	wwin.winsize.h = 0;
 
 	// Make sure to draw and layout at the start.
 	wwin.flags = WIMA_WIN_DIRTY | WIMA_WIN_LAYOUT_FORCE;
