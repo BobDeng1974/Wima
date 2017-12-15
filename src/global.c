@@ -66,7 +66,7 @@ WimaG wg;
  * to WIMA_STATUS_* - 128. WIMA_STATUS_SUCCESS does not need an
  * error message.
  */
-const char* wima_error_descs[] = {
+const char* const wima_error_descs[] = {
 
     "Allocation failed",
     "Platform returned an unknown error",
@@ -89,7 +89,7 @@ const char* wima_error_descs[] = {
  * A global array of assert messages whose elements
  * correspond to @a WimaAssertTypes.
  */
-const char* wima_assert_msgs[] = {
+const char* const wima_assert_msgs[] = {
 #ifdef __YASSERT__
 
     "wima is not initialized",

@@ -341,8 +341,8 @@ typedef enum WimaAssertType {
 
 //! @cond Doxygen suppress.
 extern WimaG wg;
-extern const char* wima_error_descs[];
-extern const char* wima_assert_msgs[];
+extern const char* const wima_error_descs[];
+extern const char* const wima_assert_msgs[];
 //! @endcond Doxygen suppress.
 
 /**
