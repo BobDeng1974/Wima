@@ -51,7 +51,7 @@ extern "C" {
  */
 
 /**
- * @defgroup menu_internal
+ * @defgroup menu_internal menu_internal
  * Private functions and data structures for menus.
  * @{
  */
@@ -140,6 +140,11 @@ typedef struct WimaMnu {
 WimaMenuItem wima_menu_item_register(const char* const name, WimaIcon icon,
                                      WimaMenuItemFunc func, bool hasSub);
 
+/**
+ * Registers a menu for area options and returns the menu.
+ * @return	The newly-registered menu, or WIMA_MENU_INVALID
+ *			on error.
+ */
 WimaMenu wima_menu_registerAreaOptions();
 
 /**
