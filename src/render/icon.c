@@ -281,12 +281,12 @@ WimaIcon wima_icon_donut() {
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-DynaStatus wima_icon_copy(void** dests, void** srcs) {
+DynaStatus wima_icon_copy(void** dests yunused, void** srcs yunused) {
 	wassert(false, WIMA_ASSERT_INVALID_OPERATION);
 	abort();
 }
 
-void wima_icon_destroy(DynaNVector vec, void** ptr) {
+void wima_icon_destroy(DynaNVector vec yunused, void** ptr) {
 	wima_assert_init;
 	nsvgDelete(*((WimaIcn*) ptr[WIMA_ICON_HANDLE_IDX]));
 }

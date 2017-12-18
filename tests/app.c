@@ -121,7 +121,7 @@ WimaStatus cb_draw(WimaWidget item, WimaRenderContext* ctx) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaStatus cb_layout(WimaLayout wlh) {
+WimaStatus cb_layout(WimaLayout wlh yunused) {
 
 #if 0
 	printf("Layout: { handle: %4u, width: %4d; height: %4d }\n", wah.area, size.w, size.h);
@@ -166,7 +166,7 @@ bool cb_key(WimaArea wah, WimaKeyEvent e) {
 	return false;
 }
 
-bool cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e) {
+bool cb_mouseBtn(WimaWidget wih yunused, WimaMouseBtnEvent e yunused) {
 
 #if 0
 	printf("Mouse Button Event:\n");
@@ -203,7 +203,7 @@ bool cb_mouseBtn(WimaWidget wih, WimaMouseBtnEvent e) {
 	return false;
 }
 
-bool cb_mousePos(WimaArea wah, WimaVec pos) {
+bool cb_mousePos(WimaArea wah yunused, WimaVec pos yunused) {
 
 #if 0
 	printf("Area[%d] Pos: { x: %4d; y: %4d }\n", wah.area, pos.x, pos.y);
@@ -212,7 +212,7 @@ bool cb_mousePos(WimaArea wah, WimaVec pos) {
 	return false;
 }
 
-void cb_mouseEnterArea(WimaArea wah, bool entered) {
+void cb_mouseEnterArea(WimaArea wah yunused, bool entered yunused) {
 
 #if 0
 	printf("Area[%d] %s\n", wah.area, entered ? "Enter" : "Exit");
@@ -256,7 +256,7 @@ bool cb_scroll(WimaWidget wih, WimaScrollEvent e) {
 	return false;
 }
 
-bool cb_char(WimaWidget wih, WimaCharEvent e) {
+bool cb_char(WimaWidget wih yunused, WimaCharEvent e yunused) {
 
 #if 0
 	printf("Char: %lc; Mods: ", e.code);
@@ -266,7 +266,7 @@ bool cb_char(WimaWidget wih, WimaCharEvent e) {
 	return false;
 }
 
-void cb_fileDrop(WimaWindow wwh, int filec, const char* filev[]) {
+void cb_fileDrop(WimaWindow wwh yunused, int filec yunused, const char* filev[] yunused) {
 
 #if 0
 	printf("Window[%d] Dropped Files:\n", wwh);
@@ -276,51 +276,51 @@ void cb_fileDrop(WimaWindow wwh, int filec, const char* filev[]) {
 #endif
 }
 
-WimaStatus cb_userPtr(WimaArea wah, void* ptr) {
+WimaStatus cb_userPtr(WimaArea wah yunused, void* ptr yunused) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-void cb_userPtrFree(void* ptr) {
+void cb_userPtrFree(void* ptr yunused) {
 	return;
 }
 
-void cb_mouseEnter(WimaWindow wwh, bool entered) {
+void cb_mouseEnter(WimaWindow wwh yunused, bool entered yunused) {
 #if 0
 	printf("Window[%d] %s\n", wwh, entered ? "Enter" : "Exit");
 #endif
 }
 
-void cb_framebufferResize(WimaWindow wwh, WimaSize size) {
+void cb_framebufferResize(WimaWindow wwh yunused, WimaSize size yunused) {
 #if 0
 	printf("Framebuffer Resize: { handle: %u; width: %4d; height: %4d }\n", wwh, size.w, size.h);
 #endif
 }
 
-void cb_windowSize(WimaWindow wwh, WimaSize size) {
+void cb_windowSize(WimaWindow wwh yunused, WimaSize size yunused) {
 #if 0
 	printf("Window Resize: { handle: %u; width: %4d; height: %4d }\n", wwh, size.w, size.h);
 #endif
 }
 
-void cb_windowPos(WimaWindow wwh, WimaVec pos) {
+void cb_windowPos(WimaWindow wwh yunused, WimaVec pos yunused) {
 #if 0
 	printf("Window[%d] moved to { %4d, %4d }\n", wwh, pos.x, pos.y);
 #endif
 }
 
-void cb_minimize(WimaWindow wwh, bool minimized) {
+void cb_minimize(WimaWindow wwh yunused, bool minimized yunused) {
 #if 0
 	printf("Window[%d] %s\n", wwh, minimized ? "Minimized" : "Unminimized");
 #endif
 }
 
-void cb_focus(WimaWindow wwh, bool focused) {
+void cb_focus(WimaWindow wwh yunused, bool focused yunused) {
 #if 0
 	printf("Window[%d] %s\n", wwh, focused ? "Focused" : "Unfocused");
 #endif
 }
 
-bool cb_close(WimaWindow wwh) {
+bool cb_close(WimaWindow wwh yunused) {
 
 #if 0
 	printf("Window[%u] Close\n", wwh);

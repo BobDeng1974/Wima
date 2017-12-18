@@ -49,6 +49,7 @@ create_pic_library("${WIMA_GLOBAL}" "${WIMA_GLOBAL}" "${WIMA_GLOBAL_SRC}" NO YES
 	"${PTHREAD_LIB}"
 	"${DL_LIB}"
 )
+target_compile_options("${WIMA_GLOBAL}" BEFORE PUBLIC "-Wall" PUBLIC "-Wextra")
 
 set(WIMA_SRC
 
@@ -109,6 +110,7 @@ create_pic_library(
 	"${MATH_LIB}"
 	"${PTHREAD_LIB}"
 )
+target_compile_options("${WIMA_PIC}" BEFORE PUBLIC "-Wall" PUBLIC "-Wextra")
 
 merge_static_libs("${PROJECT_NAME}")
 target_link_libraries(

@@ -39,3 +39,4 @@ create_pic_library(
 	# Add libraries here.
 	"${MATH_LIB}"
 )
+target_compile_options("${WIMA_MATH}" BEFORE PUBLIC "-Wall" PUBLIC "-Wextra")

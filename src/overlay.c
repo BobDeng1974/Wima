@@ -89,7 +89,7 @@ WimaOverlay wima_overlay_register(const char* const name, WimaIcon icon, WimaOve
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-DynaStatus wima_overlay_copy(void* dest, void* src) {
+DynaStatus wima_overlay_copy(void* dest yunused, void* src yunused) {
 	wassert(false, WIMA_ASSERT_OVERLAY_COPY);
 	abort();
 }

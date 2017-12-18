@@ -1088,8 +1088,8 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 
 		// Set the style.
 		nvgStrokeWidth(ctx->nvg, shape->strokeWidth);
-		nvgLineCap(ctx->nvg, wima_ui_line_caps[shape->strokeLineCap]);
-		nvgLineJoin(ctx->nvg, wima_ui_line_joins[shape->strokeLineJoin]);
+		nvgLineCap(ctx->nvg, wima_ui_line_caps[(uint8_t) shape->strokeLineCap]);
+		nvgLineJoin(ctx->nvg, wima_ui_line_joins[(uint8_t) shape->strokeLineJoin]);
 		nvgMiterLimit(ctx->nvg, shape->miterLimit);
 
 		// Figure out the fill style.
@@ -1299,7 +1299,7 @@ WimaUiCorners wima_ui_corners_rounded(float r, WimaWidgetCornerFlags flags) {
 	return radiuses;
 }
 
-void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w, float h,
+void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w, float h yunused,
                               WimaIcon icon, WimaColor color, WimaTextAlign align, float fontsize,
                               const char *label, const char *value, bool padIcon)
 {
@@ -1434,7 +1434,7 @@ void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, 
 	}
 }
 
-int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
+int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h yunused,
                         WimaIcon icon, float fontsize, const char *label,
                         int px, int py)
 {
@@ -1507,7 +1507,7 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
 	return p;
 }
 
-void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, float h,
+void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, float h yunused,
                          WimaIcon icon, WimaColor color, float fontsize,
                          const char *label, WimaColor caretCol,
                          int cbegin, int cend)

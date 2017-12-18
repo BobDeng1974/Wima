@@ -439,9 +439,9 @@ void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event) {
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;
 	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+	//WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	WimaWidgetKeyFunc key;
+	WimaWidgetKeyFunc key = NULL;
 
 	// Figure out what to do based on the prop type.
 	switch (prop->type) {
@@ -497,9 +497,9 @@ void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event) {
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;
 	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+	//WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	WimaWidgetMouseBtnFunc mouseBtn;
+	WimaWidgetMouseBtnFunc mouseBtn = NULL;
 
 	// Figure out what to do based on the prop type.
 	switch (prop->type) {
@@ -555,9 +555,9 @@ void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event) {
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;
 	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+	//WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	WimaWidgetMouseClickFunc click;
+	WimaWidgetMouseClickFunc click = NULL;
 
 	// Figure out what to do based on the prop type.
 	switch (prop->type) {
@@ -613,9 +613,9 @@ void wima_widget_mousePos(WimaWidget wdgt, WimaVec pos) {
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;
 	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+	//WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	WimaWidgetMousePosFunc mouse_pos;
+	WimaWidgetMousePosFunc mouse_pos = NULL;
 
 	// Figure out what to do based on the prop type.
 	switch (prop->type) {
@@ -671,9 +671,9 @@ void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event) {
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;
 	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+	//WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	WimaWidgetMouseDragFunc drag;
+	WimaWidgetMouseDragFunc drag = NULL;
 
 	// Figure out what to do based on the prop type.
 	switch (prop->type) {
@@ -729,9 +729,9 @@ void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event) {
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;
 	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+	//WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	WimaWidgetScrollFunc scroll;
+	WimaWidgetScrollFunc scroll = NULL;
 
 	// Figure out what to do based on the prop type.
 	switch (prop->type) {
@@ -787,9 +787,9 @@ void wima_widget_char(WimaWidget wdgt, WimaCharEvent event) {
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;
 	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+	//WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	WimaWidgetCharFunc char_func;
+	WimaWidgetCharFunc char_func = NULL;
 
 	// Figure out what to do based on the prop type.
 	switch (prop->type) {

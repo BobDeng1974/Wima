@@ -95,7 +95,7 @@ WimaStatus wima_vinit(const char* name, WimaAppFuncs funcs, const char* fontPath
 	const char* paths[numIcons];
 
 	// Load the paths into the list.
-	for (int i = 0; i < numIcons; ++i) {
+	for (uint32_t i = 0; i < numIcons; ++i) {
 		paths[i] = va_arg(iconPaths, char*);
 	}
 
@@ -257,7 +257,7 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	int y;
 	int components;
 	uint8_t* data;
-	int i;
+	uint32_t i;
 
 	// Create the icon images.
 	for (i = 0; i < numIcons; ++i) {

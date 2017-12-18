@@ -203,7 +203,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	bool done = false;
 
 	// Loop over all the windows...
-	for (int i = 0; i < len; ++i) {
+	for (uint32_t i = 0; i < len; ++i) {
 
 		// Get the current window pointer.
 		WimaWin* winptr = dvec_get(wg.windows, i);
@@ -1175,12 +1175,10 @@ void wima_window_setMenu(WimaWindow wwh, WimaMenu menu) {
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
+#ifdef __YASSERT__
 	uint64_t key = (uint64_t) menu;
-
 	wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
-
-	// Get the menu.
-	WimaMnu* m = dpool_get(wg.menus, &key);
+#endif
 
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
@@ -1512,7 +1510,7 @@ static void wima_window_processFileDrop(WimaWindow wwh, ynonnull DynaVector file
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-DynaStatus wima_window_copy(void* dest, void* src) {
+DynaStatus wima_window_copy(void* dest yunused, void* src yunused) {
 	wassert(false, WIMA_ASSERT_INVALID_OPERATION);
 	abort();
 }
@@ -1830,8 +1828,6 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 }
 
 void wima_window_processEvents(WimaWindow wwh) {
-
-	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -2498,7 +2494,7 @@ static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files) {
 	}
 
 	// Set the pointers in the list of files.
-	for (int i = 0; i < len; ++i) {
+	for (uint32_t i = 0; i < len; ++i) {
 		names[i] = dstr_str(dvec_get(files, i));
 	}
 

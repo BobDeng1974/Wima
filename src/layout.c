@@ -212,6 +212,7 @@ void wima_layout_separator(WimaLayout parent) {
 
 	// Create the splitcol.
 	WimaLayoutSplitCol splitcol;
+	splitcol.cols = 0;
 
 	// Create the layout, but don't return it.
 	wima_layout_new(parent, WIMA_LAYOUT_SEP, splitcol);
@@ -235,6 +236,7 @@ WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags) {
 
 	// Create the splitcol.
 	WimaLayoutSplitCol splitcol;
+	splitcol.cols = 0;
 
 	return wima_layout_new(parent, flags, splitcol);
 }
@@ -257,6 +259,7 @@ WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags) {
 
 	// Create the splitcol.
 	WimaLayoutSplitCol splitcol;
+	splitcol.cols = 0;
 
 	return wima_layout_new(parent, flags, splitcol);
 }
@@ -302,6 +305,7 @@ WimaLayout wima_layout_list(WimaLayout parent, uint16_t flags) {
 
 	// Create the splitcol.
 	WimaLayoutSplitCol splitcol;
+	splitcol.cols = 0;
 
 	return wima_layout_new(parent, flags, splitcol);
 }
@@ -428,7 +432,7 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop) {
 				// Init the data. We do this before actually
 				// allocating because if the init fails, it
 				// can happen again later.
-				WimaStatus status = init(wih.widget, bytes);
+				status = init(wih.widget, bytes);
 
 				// Check for error.
 				if (yerror(status != WIMA_STATUS_SUCCESS)) {

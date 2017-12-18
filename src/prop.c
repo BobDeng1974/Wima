@@ -1052,7 +1052,7 @@ WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, uint32_t dat
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-DynaStatus wima_prop_copy(void** dests, void** srcs) {
+DynaStatus wima_prop_copy(void** dests yunused, void** srcs yunused) {
 	wassert(false, WIMA_ASSERT_INVALID_OPERATION);
 	abort();
 }
@@ -1081,7 +1081,7 @@ bool wima_prop_free(WimaProperty wph) {
 	return true;
 }
 
-void wima_prop_destroy(DynaNVector vec, void** ptrs) {
+void wima_prop_destroy(DynaNVector vec yunused, void** ptrs) {
 
 	wima_assert_init;
 

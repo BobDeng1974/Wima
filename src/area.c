@@ -612,7 +612,7 @@ static bool wima_area_node_valid(DynaTree editors, DynaNode node) {
 	return result;
 }
 
-void wima_area_destroy(DynaTree tree, void* ptr) {
+void wima_area_destroy(DynaTree tree yunused, void* ptr) {
 
 	WimaAr* area = (WimaAr*) ptr;
 
@@ -934,6 +934,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 		size.h = area->rect.h;
 
 		WimaLayoutSplitCol splitcol;
+		splitcol.cols = 0;
 
 		wassert(area->area.type < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
 

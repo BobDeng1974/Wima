@@ -685,8 +685,6 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 		// Push the file onto the vector and check for error.
 		if (yerror(dvec_pushString(strs, filev[i]))) {
 
-			DynaString str;
-
 			// Free the vector. (The strings will be automatically freed.)
 			dvec_free(strs);
 

@@ -60,3 +60,4 @@ create_pic_library(
 	"${DL_LIB}"
 	"${PTHREAD_LIB}"
 )
+target_compile_options("${WIMA_RENDER}" BEFORE PUBLIC "-Wall" PUBLIC "-Wextra")
