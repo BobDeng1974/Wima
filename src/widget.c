@@ -88,41 +88,6 @@ bool wima_widget_inOverlay(WimaWidget wdgt) {
 	return wdgt.region == WIMA_REGION_INVALID_IDX && wdgt.area == WIMA_AREA_INVALID;
 }
 
-WimaWidget wima_widget_new(WimaArea wah, WimaWidgetFuncs funcs) {
-
-	wima_assert_init;
-
-	wassert(wima_window_valid(wah.window), WIMA_ASSERT_WIN);
-
-	WimaWin* win = dvec_get(wg.windows, wah.window);
-
-	wassert(dtree_exists(WIMA_WIN_AREAS(win), wah.area), WIMA_ASSERT_AREA);
-
-	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), wah.area);
-
-	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_OVER_MAX);
-
-	 // Must run between uiBeginLayout() and uiEndLayout().
-	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
-
-	uint32_t idx = (area->area.ctx.itemCount)++;
-
-	WimaItemInfo wih;
-	wih.layout.area = wah.area;
-	wih.layout.layout = idx;
-	wih.layout.window = wah.window;
-
-	WimaItem* item = wima_layout_ptr(wih.layout);
-
-	memset(item, 0, sizeof(WimaItem));
-
-	//item->widget.funcs = funcs;
-
-	//item->widget.flags |= flags;
-
-	return wih.widget;
-}
-
 void wima_widget_setEnabled(WimaWidget wdgt, bool enable) {
 
 	wima_assert_init;
