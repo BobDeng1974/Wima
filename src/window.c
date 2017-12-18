@@ -1878,6 +1878,10 @@ static WimaStatus wima_window_drawOverlay(WimaWin* win) {
 
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 	wassert(win->overlay != WIMA_OVERLAY_INVALID, WIMA_ASSERT_OVERLAY);
+
+	// TODO: Write this function.
+
+	return WIMA_STATUS_SUCCESS;
 }
 
 static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parentWidth) {

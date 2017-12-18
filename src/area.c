@@ -183,6 +183,8 @@ uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos) {
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	// TODO: Write this function. This must be done after layout is done.
+
+	return WIMA_REGION_INVALID_IDX;
 }
 
 void wima_area_switchRegionSide(WimaArea wah, uint8_t region) {
