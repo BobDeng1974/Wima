@@ -1466,7 +1466,7 @@ typedef WimaStatus (*WimaWidgetDrawFunc)(WimaWidget wdgt, void* ptr, WimaRenderC
  * @param ptr	The pointer to the data for the custom property.
  * @return		The required size of the widget.
  */
-typedef WimaSize (*WimaWidgetSizeFunc)(WimaWidget wdgt, void* ptr);
+typedef WimaSizef (*WimaWidgetSizeFunc)(WimaWidget wdgt, void* ptr);
 
 /**
  * A function to run when a user-defined widget (custom property)
