@@ -101,6 +101,8 @@ static void wima_layout_setChildren(WimaLayout parent, ynonnull WimaAr* area, ui
  * @}
  */
 
+//! @cond Doxygen suppress.
+
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -822,3 +824,5 @@ static WimaSizef wima_layout_size_list(WimaItem* item, WimaAr* area) {
 static WimaSizef wima_layout_size_grid(WimaItem* item, WimaAr* area) {
 
 }
+
+//! @endcond Doxygen suppress.

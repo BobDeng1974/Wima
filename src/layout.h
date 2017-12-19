@@ -162,8 +162,21 @@ WimaItem* wima_layout_ptr(WimaLayout wlh) yinline yretnonnull;
  */
 WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol splitcol);
 
+/**
+ * Calculates the size of the layout represented by @a item.
+ * @param item	The layout whose size will be calculated.
+ * @param area	The area that @a item is in. For optimization.
+ * @return		The size of the layout that @a item represents.
+ */
 WimaSizef wima_layout_size(ynonnull WimaItem* item, ynonnull WimaAr* area);
 
+/**
+ * Lays out the layout that @a item points to.
+ * @param item	The layout to lay out.
+ * @param rect	The rectangle for the layout.
+ * @return		WIMA_STATUS_SUCCESS on succes,
+ *				an error code otherwise.
+ */
 WimaStatus wima_layout_layout(ynonnull WimaItem* item, WimaRectf rect);
 
 /**
