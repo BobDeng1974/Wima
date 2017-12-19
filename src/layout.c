@@ -809,7 +809,7 @@ static WimaSizef wima_layout_size_split(WimaItem* item, WimaAr* area) {
 	val = split != 1.0f ? size.w / (1.0f - split) : 0.0f;
 
 	// Set the data.
-	result.w = wima_fmaxf(result.w, );
+	result.w = wima_fmaxf(result.w, val);
 	result.h = wima_fmaxf(result.h, size.h);
 
 	return result;
