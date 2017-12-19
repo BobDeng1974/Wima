@@ -35,6 +35,7 @@
  */
 
 #include <limits.h>
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -953,6 +954,13 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 		// Cache this.
 		uint16_t initialFlags = wima_layout_setExpandFlags(0, true, true);
 
+		// Fill a rectangle.
+		WimaRectf rect;
+		rect.x = (float) area->rect.x;
+		rect.y = (float) area->rect.y;
+		rect.w = (float) area->rect.w;
+		rect.h = (float) area->rect.h;
+
 		// Loop over regions.
 		for (uint8_t i = 0; i < numRegions; ++i) {
 
@@ -983,14 +991,59 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 				return status;
 			}
 
-			// TODO: Compute the layout.
-#if 0
+			// Get the item for the root layout.
+			WimaItem* item = wima_layout_ptr(root);
+
+			// Compute the layout size.
+			WimaSizef size = wima_layout_size(item, area);
+
+			WimaRectf regRect;
+
+			// If the region is vertical...
+			if (WIMA_REG_IS_VERTICAL(reg)) {
+
+				// Cache this.
+				float width = fabsf(size.w);
+
+				// We can set these without worrying.
+				regRect.y = rect.y + WIMA_REG_BORDER;
+				regRect.h = rect.h - WIMA_REG_BORDER2;
+				regRect.w = width;
+
+				// We must make sure to get the x coordinate right.
+				regRect.x = WIMA_REG_IS_LEFT(reg) ? rect.x : rect.x + rect.w - width;
+
+				// Adjust the rectangle.
+				rect.x += width + WIMA_REG_BORDER2;
+				rect.w -= width + WIMA_REG_BORDER2;
+			}
+
+			// If the region is horizontal...
+			else {
+
+				// Cache this.
+				float height = fabsf(size.h);
+
+				// We can set these without worrying.
+				regRect.x = rect.x + WIMA_REG_BORDER;
+				regRect.w = rect.w - WIMA_REG_BORDER2;
+				regRect.h = height;
+
+				// We must make sure to get the y coordinate right.
+				regRect.y = WIMA_REG_IS_LEFT(reg) ? rect.y : rect.y + rect.h - height;
+
+				// Adjust the rectangle.
+				rect.y += height + WIMA_REG_BORDER2;
+				rect.h -= height + WIMA_REG_BORDER2;
+			}
+
 			// Compute the layout.
-			wima_layout_computeSize(zero, 0);
-			wima_layout_arrange(zero, 0);
-			wima_layout_computeSize(zero, 1);
-			wima_layout_arrange(zero, 1);
-#endif
+			status = wima_layout_layout(item, regRect);
+
+			// Check for error.
+			if (yerror(status != WIMA_STATUS_SUCCESS)) {
+				break;
+			}
 		}
 	}
 

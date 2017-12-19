@@ -118,6 +118,8 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt) yretnonnull;
  */
 void wima_widget_destroy(ynonnull DynaPool pool, ynonnull void* key);
 
+WimaSizef wima_widget_size(WimaItem* item);
+
 /**
  * Handles a key event on @a wdgt.
  * @param wdgt	The widget receiving the event.

@@ -146,6 +146,14 @@ typedef enum WimaLayoutStage {
 #define WIMA_LAYOUT_TYPE_MASK (0x007E)
 
 /**
+ * Gets the pointer to a layout's data.
+ * @param wlh	The layout to query.
+ * @return		The pointer to the layout's data.
+ * @pre			@a wlh must be valid.
+ */
+WimaItem* wima_layout_ptr(WimaLayout wlh) yinline yretnonnull;
+
+/**
  * Creates a new layout with the specified parent, flags, and split/columns.
  * @param parent	The parent of the new layout.
  * @param flags		The flags of the new layout.
@@ -153,6 +161,10 @@ typedef enum WimaLayoutStage {
  * @return			The new layout.
  */
 WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol splitcol);
+
+WimaSizef wima_layout_size(ynonnull WimaItem* item, ynonnull WimaAr* area);
+
+WimaStatus wima_layout_layout(ynonnull WimaItem* item, WimaRectf rect);
 
 /**
  * @}

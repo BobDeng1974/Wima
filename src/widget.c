@@ -69,6 +69,27 @@
 #include "prop.h"
 
 ////////////////////////////////////////////////////////////////////////////////
+// Static function declarations.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @file widget.c
+ */
+
+/**
+ * @defgroup widget_internal widget_internal
+ * @{
+ */
+
+static void* wima_widget_data(WimaItem* pitem);
+
+/**
+ * @}
+ */
+
+//! @cond Doxygen suppress.
+
+////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -409,18 +430,40 @@ void wima_widget_destroy(DynaPool pool, void* key) {
 	}
 }
 
-void* wima_widget_data(WimaItem* pitem) {
+WimaSizef wima_widget_size(WimaItem* item) {
 
-	wima_assert_init;
+	wassert(wima_prop_valid(item->widget.prop), WIMA_ASSERT_PROP);
 
-	// Get the area.
-	WimaAr* area = wima_area_ptr(pitem->info.widget.window, pitem->info.widget.area);
+	// Cache this.
+	WimaProperty prop = item->widget.prop;
 
-	// Get the data pointer.
-	uint64_t hash = wima_widget_hash(pitem->widget.prop, pitem->info.widget.region);
-	void* ptr = dpool_get(area->area.ctx.widgetData, &hash);
+	// Get the property.
+	WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, prop);
 
-	return ptr;
+	WimaWidgetSizeFunc sizeFunc;
+
+	// If the prop is predefined...
+	if (info->type != WIMA_PROP_PTR) {
+
+		// Just get the function.
+		sizeFunc = wima_prop_predefinedTypes[info->type].funcs.size;
+	}
+	else {
+
+		// Get the data.
+		WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, prop);
+
+		wassert(data->_ptr.type < dvec_len(wg.customProps), WIMA_ASSERT_PROP_CUSTOM);
+
+		// Get the custom prop data.
+		WimaCustProp* cprop = dvec_get(wg.customProps, data->_ptr.type);
+
+		// Get the function.
+		sizeFunc = cprop->funcs.size;
+	}
+
+	// Calculate and return the size.
+	return sizeFunc(item->info.widget, wima_widget_data(item));
 }
 
 void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event) {
@@ -828,3 +871,23 @@ void wima_widget_char(WimaWidget wdgt, WimaCharEvent event) {
 			break;
 	}
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Static functions.
+////////////////////////////////////////////////////////////////////////////////
+
+static void* wima_widget_data(WimaItem* pitem) {
+
+	wima_assert_init;
+
+	// Get the area.
+	WimaAr* area = wima_area_ptr(pitem->info.widget.window, pitem->info.widget.area);
+
+	// Get the data pointer.
+	uint64_t hash = wima_widget_hash(pitem->widget.prop, pitem->info.widget.region);
+	void* ptr = dpool_get(area->area.ctx.widgetData, &hash);
+
+	return ptr;
+}
+
+//! @endcond Doxygen suppress.
