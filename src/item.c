@@ -43,7 +43,7 @@
 #include "window.h"
 #include "prop.h"
 
-WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint32_t idx) {
+WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint16_t idx) {
 
 	wima_assert_init;
 
