@@ -127,6 +127,18 @@ extern "C" {
 #define WIMA_REG_CAN_SCROLL_HORIZONTAL(reg) ((reg)->flags & WIMA_REG_SCROLL_HORIZONTAL)
 
 /**
+ * @def WIMA_REG_BORDER
+ * The width of a region's border.
+ */
+#define WIMA_REG_BORDER (4.0f)
+
+/**
+ * @def WIMA_REG_BORDER2
+ * WIMA_REG_BORDER doubled.
+ */
+#define WIMA_REG_BORDER2 (WIMA_REG_BORDER + WIMA_REG_BORDER)
+
+/**
  * The data for a WimaRegion.
  */
 typedef struct WimaReg {
