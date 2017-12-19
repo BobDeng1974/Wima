@@ -47,6 +47,8 @@ extern "C" {
 
 //! @cond Doxygen suppress.
 
+// TODO: Remove the defines that are not used.
+
 // These bits, starting at bit 24, can be safely assigned by the
 // application, e.g. as item types, other event types, drop targets, etc.
 // They can be set and queried using wima_ui_item_setFlags() and
@@ -75,6 +77,7 @@ extern "C" {
 	 WIMA_EVENT_MOUSE_DRAG  | \
 	 WIMA_EVENT_SCROLL      | \
 	 WIMA_EVENT_CHAR)
+// TODO: Make sure this has all events.
 
 // Item is frozen (bit 19).
 #define WIMA_ITEM_FROZEN_BIT         0x080000
@@ -105,6 +108,7 @@ extern "C" {
 
 // Maximum depth of nested containers.
 #define WIMA_ITEM_MAX_DEPTH 64
+// TODO: Check against this.
 
 /**
  * @def WIMA_ITEM_SEP_DIM

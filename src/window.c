@@ -2526,7 +2526,6 @@ static void wima_window_clearContext(WimaWinCtx* ctx) {
 	ctx->movingSplit = false;
 
 	// Clear items.
-	// TODO: memset(&ctx->active, -1, sizeof(WimaWidget));
 	memset(&ctx->focus, -1, sizeof(WimaWidget));
 	memset(&ctx->hover, -1, sizeof(WimaWidget));
 }
