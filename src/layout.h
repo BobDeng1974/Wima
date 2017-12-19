@@ -105,29 +105,29 @@ typedef enum WimaLayoutStage {
 #define WIMA_LAYOUT_GRID        (0x0020)
 
 /**
+ * A flag indicating whether a layout is a separator.
+ */
+#define WIMA_LAYOUT_SEP         (0x0040)
+
+/**
  * A flag indicating whether a layout expands horizontally.
  */
-#define WIMA_LAYOUT_FILL_HOR    (0x0040)
+#define WIMA_LAYOUT_FILL_HOR    (0x0080)
 
 /**
  * A flag indicating whether a layout expands vertically.
  */
-#define WIMA_LAYOUT_FILL_VER    (0x0080)
+#define WIMA_LAYOUT_FILL_VER    (0x0100)
 
 /**
  * A flag indicating whether a layout scrolls horizontally.
  */
-#define WIMA_LAYOUT_SCROLL_HOR  (0x0100)
+#define WIMA_LAYOUT_SCROLL_HOR  (0x0200)
 
 /**
  * A flag indicating whether a layout scrolls vertically.
  */
-#define WIMA_LAYOUT_SCROLL_VER  (0x0200)
-
-/**
- * A flag indicating whether a layout is a separator.
- */
-#define WIMA_LAYOUT_SEP         (0x0400)
+#define WIMA_LAYOUT_SCROLL_VER  (0x0400)
 
 /**
  * A flag indicating whether a layout has a box.
@@ -139,12 +139,11 @@ typedef enum WimaLayoutStage {
 //#define WIMA_LAYOUT_COL_FLOW    (0x2000)
 
 /**
- * Gets the pointer to a layout's data.
- * @param wlh	The layout to query.
- * @return		The pointer to the layout's data.
- * @pre			@a wlh must be valid.
+ * @def WIMA_LAYOUT_TYPE_MASK
+ * A mask for getting just the bits that
+ * indicate layout type.
  */
-WimaItem* wima_layout_ptr(WimaLayout wlh) yinline yretnonnull;
+#define WIMA_LAYOUT_TYPE_MASK (0x007E)
 
 /**
  * Creates a new layout with the specified parent, flags, and split/columns.

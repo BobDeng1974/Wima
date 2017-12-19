@@ -86,69 +86,9 @@ extern "C" {
  * @{
  */
 
-//! @cond Doxygen suppress
-
-// These bits, starting at bit 24, can be safely assigned by the
-// application, e.g. as item types, other event types, drop targets, etc.
-// They can be set and queried using wima_ui_item_setFlags() and
-// wima_ui_item_flags()
-#define WIMA_ITEM_USERMASK 0xff000000
-
-// A special mask passed to wima_ui_item_find().
-#define WIMA_ITEM_ANY 0xffffffff
-
-// Extra item flags.
-
-// Bits 0-2.
-#define WIMA_ITEM_BOX_MODEL_MASK 0x000007
-
-// Bits 0-4.
-#define WIMA_ITEM_BOX_MASK       0x00001F
-
-// Bits 5-8.
-#define WIMA_ITEM_LAYOUT_MASK    0x0003E0
-
-// Bits 9-18.
-#define WIMA_ITEM_EVENT_MASK  \
-	(WIMA_EVENT_KEY         | \
-	 WIMA_EVENT_MOUSE_BTN   | \
-	 WIMA_EVENT_MOUSE_CLICK | \
-	 WIMA_EVENT_MOUSE_DRAG  | \
-	 WIMA_EVENT_SCROLL      | \
-	 WIMA_EVENT_CHAR)
-
-// Item is frozen (bit 19).
-#define WIMA_ITEM_FROZEN_BIT         0x080000
-
-// Item handle is pointer to data (bit 20).
-#define WIMA_ITEM_DATA           0x100000
-
-// Item has been inserted (bit 21).
-#define WIMA_ITEM_INSERTED       0x200000
-
-// Horizontal size has been explicitly set (bit 22).
-#define WIMA_ITEM_HFIXED         0x400000
-
-// Vertical size has been explicitly set (bit 23).
-#define WIMA_ITEM_VFIXED         0x800000
-
-// Bit 22-23.
-#define WIMA_ITEM_FIXED_MASK     0xC00000
-
-// Which flag bits will be compared.
-#define WIMA_ITEM_COMPARE_MASK \
-	(WIMA_ITEM_BOX_MODEL_MASK | (WIMA_ITEM_LAYOUT_MASK & ~WIMA_LAYOUT_BREAK) | WIMA_ITEM_EVENT_MASK | WIMA_ITEM_USERMASK)
-
-// Limits.
-
-// Maximum size in bytes of a single data buffer passed to uiAllocData().
-#define WIMA_ITEM_MAX_DATASIZE 4096
-
-// Maximum depth of nested containers.
-#define WIMA_ITEM_MAX_DEPTH 64
-
 // End limits.
 
+//! @cond Doxygen suppress
 // Forward declaration.
 typedef struct WimaItem WimaItem;
 //! @endcond Doxygen suppress
