@@ -78,6 +78,10 @@ typedef struct WimaRenderContext {
 	/// The font handle for NanoVG.
 	int font;
 
+	/// The number of times the render
+	/// stack has been pushed onto.
+	uint8_t stackCount;
+
 } WimaRenderContext;
 
 /**

@@ -42,17 +42,34 @@
 
 #include "render.h"
 
+#include "../window.h"
 #include "../global.h"
 
 void wima_render_save(WimaRenderContext* ctx) {
+
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+
+	wassert(ctx->stackCount < WIMA_WIN_RENDER_STACK_MAX, WIMA_ASSERT_WIN_RENDER_STACK_MAX);
+
+	// Increment the stack count.
+	++(ctx->stackCount);
+
+	// Push onto NanoVG.
 	nvgSave(ctx->nvg);
 }
 
 void wima_render_restore(WimaRenderContext* ctx) {
+
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+
+	wassert(ctx->stackCount > 0, WIMA_ASSERT_WIN_RENDER_STACK);
+
+	// Decrement the stack count.
+	--(ctx->stackCount);
+
+	// Pop from NanoVG.
 	nvgRestore(ctx->nvg);
 }
 

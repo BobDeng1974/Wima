@@ -120,6 +120,10 @@ uint16_t wima_layout_clearExpandFlags(uint16_t flags) yconst yinline;
 /**
  * Takes an initial flag value and sets the scroll bits. If @a horizontal is
  * true, the horizontal scroll bit is set. Same goes for vertical.
+ *
+ * ***WARNING***: Scrolling layouts call wima_render_save(), which adds to the
+ * render context stack. Only 16 max contexts may be on the stack and at least
+ * 1 slot is used for every area.
  * @param flags			The initial flag value to use.
  * @param vertical		Whether the vertical scroll bit should be set.
  * @param horizontal	Whether the horizontal scroll bit should be set.

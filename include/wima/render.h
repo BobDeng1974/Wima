@@ -1311,8 +1311,16 @@ WimaColor wima_theme_wireColor(ynonnull WimaNodeTheme* theme, WimaWidgetState st
  * Pushes and saves the current render state into a state
  * stack. A matching wima_render_restore() must be used
  * to restore the state.
+ *
+ * ***WARNING***: Only 16 max contexts may be pushed onto
+ * the state stack. At least 1 is pushed for each area (but
+ * only 1 at a time), and 1 is pushed for every scrollable
+ * layout. Scrollable layouts nest. As such, there can only
+ * be up to 15 scrollable layouts in an area.
  * @param ctx	The @a WimaRenderContext to save state for.
  * @pre			@a ctx must not be NULL.
+ * @pre			@a there must be less than 15 contexts on
+ *				the stack.
  */
 void wima_render_save(ynonnull WimaRenderContext* ctx) yinline;
 
@@ -1320,6 +1328,8 @@ void wima_render_save(ynonnull WimaRenderContext* ctx) yinline;
  * Pops and restores current render state.
  * @param ctx	The WimaRenderContext to restore state for.
  * @pre			@a ctx must not be NULL.
+ * @pre			@a there must be more than 0 contexts on the
+ *				stack.
  */
 void wima_render_restore(ynonnull WimaRenderContext* ctx) yinline;
 

@@ -761,7 +761,7 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 		if (area->area.ctx.itemCount > 0) {
 
 			// Save the state.
-			nvgSave(ctx->nvg);
+			wima_render_save(ctx);
 
 			// Scale the area by the area's scale.
 			nvgScale(ctx->nvg, area->area.scale, area->area.scale);
@@ -784,7 +784,7 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 			//status = wg.funcs.draw(item, ctx);
 
 			// Restore the old render state.
-			nvgRestore(ctx->nvg);
+			wima_render_restore(ctx);
 		}
 
 		// Draw the border shading and split widgets.

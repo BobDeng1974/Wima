@@ -189,6 +189,12 @@ extern "C" {
 #define WIMA_WIN_HAS_OVERLAY(win) (((win)->flags) & WIMA_WIN_OVERLAY)
 
 /**
+ * @def WIMA_WIN_RENDER_STACK_MAX
+ * The max number of scissors that a window can have.
+ */
+#define WIMA_WIN_RENDER_STACK_MAX (16)
+
+/**
  * A union between widgets and a pointer a menu item,
  * which is used to store the click location in the
  * same place.
