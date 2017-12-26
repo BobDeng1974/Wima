@@ -81,6 +81,11 @@
  * @{
  */
 
+/**
+ * Returns the pointer to the widget's data.
+ * @param pitem	The widget to get the data for.
+ * @return		The data for the widget.
+ */
 static void* wima_widget_data(WimaItem* pitem);
 
 /**
