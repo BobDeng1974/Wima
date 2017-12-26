@@ -88,7 +88,7 @@ find_library(RT_LIB rt PATHS "/usr/lib" "/usr/local/lib")
 find_library(MATH_LIB m PATHS "/usr/lib" "/usr/local/lib")
 find_library(DL_LIB dl "/usr/lib" "/usr/local/lib")
 find_library(PTHREAD_LIB pthread PATHS "/usr/lib" "/usr/local/lib")
-find_library(YC_LIB NAMES libyc_pic.a yc PATHS "/usr/lib" "/usr/local/lib")
+find_library(YC_LIB NAMES libyc.a yc PATHS "/usr/lib" "/usr/local/lib")
 find_library(DYNA_LIB NAMES libdyna.a dyna PATHS "/usr/lib" "/usr/local/lib")
 
 set("WIMA_DOCS_DIR" "docs")
