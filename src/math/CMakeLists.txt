@@ -33,8 +33,8 @@ set(WIMA_MATH_SRC
 	"math.c"
 )
 
-create_pic_library(
-	"${WIMA_MATH}" "${WIMA_MATH}" "${WIMA_MATH_SRC}" NO YES
+create_merge_library(
+	"${WIMA_MATH}" "${WIMA_MATH_SRC}"
 
 	# Add libraries here.
 	"${MATH_LIB}"

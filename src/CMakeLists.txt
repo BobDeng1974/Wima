@@ -40,7 +40,7 @@ set(WIMA_GLOBAL_SRC
 )
 
 set(WIMA_GLOBAL "${PROJECT_NAME}_global")
-create_pic_library("${WIMA_GLOBAL}" "${WIMA_GLOBAL}" "${WIMA_GLOBAL_SRC}" NO YES
+create_merge_library("${WIMA_GLOBAL}" "${WIMA_GLOBAL_SRC}"
 
 	# Add libraries here.
 	"${DYNA_LIB}"
@@ -85,8 +85,8 @@ add_subdirectory(render)
 set(WIMA_GLAD "${PROJECT_NAME}_glad")
 set(WIMA_PIC "${PROJECT_NAME}_pic")
 
-create_pic_library(
-	"${WIMA_PIC}" "${WIMA_PIC}" "${WIMA_SRC}" NO YES
+create_merge_library(
+	"${WIMA_PIC}" "${WIMA_SRC}"
 
 	# Put the needed libraries here.
 	"${WIMA_INPUT}"
