@@ -1721,7 +1721,6 @@ static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertic
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-
 	// Calculate the rect.
 	float x = 0.0f;
 	float y = 0.0f;
