@@ -95,55 +95,45 @@ typedef enum WimaLayoutStage {
 #define WIMA_LAYOUT_SPLIT       (0x0008)
 
 /**
- * A flag indicating whether a layout is a list.
- */
-#define WIMA_LAYOUT_LIST        (0x0010)
-
-/**
- * A flag indicating whether a layout is a grid.
- */
-#define WIMA_LAYOUT_GRID        (0x0020)
-
-/**
  * A flag indicating whether a layout is a separator.
  */
-#define WIMA_LAYOUT_SEP         (0x0040)
+#define WIMA_LAYOUT_SEP         (0x0010)
 
-/**
- * A flag indicating whether a layout expands horizontally.
- */
-#define WIMA_LAYOUT_FILL_HOR    (0x0080)
-
-/**
- * A flag indicating whether a layout expands vertically.
- */
-#define WIMA_LAYOUT_FILL_VER    (0x0100)
-
-/**
- * A flag indicating whether a layout scrolls horizontally.
- */
-#define WIMA_LAYOUT_SCROLL_HOR  (0x0200)
-
-/**
- * A flag indicating whether a layout scrolls vertically.
- */
-#define WIMA_LAYOUT_SCROLL_VER  (0x0400)
+// We may use these later, but not for now.
+//#define WIMA_LAYOUT_ROW_FLOW    (0x0020)
+//#define WIMA_LAYOUT_COL_FLOW    (0x0040)
 
 /**
  * A flag indicating whether a layout has a box.
  */
-#define WIMA_LAYOUT_BOX         (0x0800)
+#define WIMA_LAYOUT_BOX         (0x0080)
 
-// We may use these later, but not for now.
-//#define WIMA_LAYOUT_ROW_FLOW    (0x1000)
-//#define WIMA_LAYOUT_COL_FLOW    (0x2000)
+/**
+ * A flag indicating whether a layout expands horizontally.
+ */
+#define WIMA_LAYOUT_FILL_HOR    (0x0100)
+
+/**
+ * A flag indicating whether a layout expands vertically.
+ */
+#define WIMA_LAYOUT_FILL_VER    (0x0200)
+
+/**
+ * A flag indicating whether a layout scrolls horizontally.
+ */
+#define WIMA_LAYOUT_SCROLL_HOR  (0x0400)
+
+/**
+ * A flag indicating whether a layout scrolls vertically.
+ */
+#define WIMA_LAYOUT_SCROLL_VER  (0x0800)
 
 /**
  * @def WIMA_LAYOUT_TYPE_MASK
  * A mask for getting just the bits that
  * indicate layout type.
  */
-#define WIMA_LAYOUT_TYPE_MASK (0x007E)
+#define WIMA_LAYOUT_TYPE_MASK (WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_SEP)
 
 /**
  * Gets the pointer to a layout's data.
