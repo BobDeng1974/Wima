@@ -515,6 +515,9 @@ void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event) {
 		case WIMA_PROP_COLOR:
 			break;
 
+		case WIMA_PROP_PATH:
+			break;
+
 		case WIMA_PROP_OPERATOR:
 			break;
 
@@ -571,6 +574,9 @@ void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event) {
 			break;
 
 		case WIMA_PROP_COLOR:
+			break;
+
+		case WIMA_PROP_PATH:
 			break;
 
 		case WIMA_PROP_OPERATOR:
@@ -631,6 +637,9 @@ void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event) {
 		case WIMA_PROP_COLOR:
 			break;
 
+		case WIMA_PROP_PATH:
+			break;
+
 		case WIMA_PROP_OPERATOR:
 			break;
 
@@ -687,6 +696,9 @@ void wima_widget_mousePos(WimaWidget wdgt, WimaVec pos) {
 			break;
 
 		case WIMA_PROP_COLOR:
+			break;
+
+		case WIMA_PROP_PATH:
 			break;
 
 		case WIMA_PROP_OPERATOR:
@@ -747,6 +759,9 @@ void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event) {
 		case WIMA_PROP_COLOR:
 			break;
 
+		case WIMA_PROP_PATH:
+			break;
+
 		case WIMA_PROP_OPERATOR:
 			break;
 
@@ -805,6 +820,9 @@ void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event) {
 		case WIMA_PROP_COLOR:
 			break;
 
+		case WIMA_PROP_PATH:
+			break;
+
 		case WIMA_PROP_OPERATOR:
 			break;
 
@@ -861,6 +879,9 @@ void wima_widget_char(WimaWidget wdgt, WimaCharEvent event) {
 			break;
 
 		case WIMA_PROP_COLOR:
+			break;
+
+		case WIMA_PROP_PATH:
 			break;
 
 		case WIMA_PROP_OPERATOR:

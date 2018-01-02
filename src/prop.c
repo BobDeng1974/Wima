@@ -930,6 +930,87 @@ WimaColor wima_prop_color(WimaProperty wph) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Public function for path props.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaProperty wima_prop_path_register(const char* name, const char* label, const char* desc,
+                                     WimaIcon icon, const char* path, bool grid)
+{
+	wima_assert_init;
+
+	wassert(path != NULL, WIMA_ASSERT_PROP_PATH_NULL);
+
+	WimaPropData prop;
+
+	// Set the data.
+	prop._path.grid = grid;
+	prop._path.path = dstr_create(path);
+
+	// Check for error.
+	if (yerror(prop._path.path == NULL)) {
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_PROP_INVALID;
+	}
+
+	// Register the property.
+	WimaProperty idx = wima_prop_register(name, label, desc, icon, WIMA_PROP_PATH, &prop);
+
+	return idx;
+}
+
+DynaString wima_prop_path_path(WimaProperty wph) {
+
+	wima_assert_init;
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+	wassert(prop->type == WIMA_PROP_PATH, WIMA_ASSERT_PROP_PATH);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	return data->_path.path;
+}
+
+void wima_prop_path_updateGrid(WimaProperty wph, bool grid) {
+
+	wima_assert_init;
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+	wassert(prop->type == WIMA_PROP_PATH, WIMA_ASSERT_PROP_PATH);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	// Set the grid.
+	data->_path.grid = grid;
+}
+
+bool wima_prop_path_grid(WimaProperty wph) {
+
+	wima_assert_init;
+
+	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
+	wassert(prop->type == WIMA_PROP_PATH, WIMA_ASSERT_PROP_PATH);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	return data->_path.grid;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Public function for operator props.
 ////////////////////////////////////////////////////////////////////////////////
 

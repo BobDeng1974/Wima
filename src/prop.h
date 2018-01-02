@@ -44,6 +44,7 @@ extern "C" {
 
 #include <yc/assert.h>
 
+#include <dyna/vector.h>
 #include <dyna/nvector.h>
 
 #include <wima/prop.h>
@@ -102,6 +103,19 @@ typedef struct WimaCustProp {
 #define WIMA_PROP_DATA_IDX (1)
 
 /**
+ * Data for a list property.
+ */
+typedef struct WimaPropList {
+
+	/// The list.
+	DynaVector list;
+
+	/// The current selected index.
+	uint32_t idx;
+
+} WimaPropList;
+
+/**
  * Data for an int property.
  */
 typedef struct WimaPropInt {
@@ -156,17 +170,17 @@ typedef struct WimaPropEnum {
 } WimaPropEnum;
 
 /**
- * Data for a list property.
+ * Data for a path property.
  */
-typedef struct WimaPropList {
+typedef struct WimaPropPath {
 
-	/// The list.
-	DynaVector list;
+	/// The path. This is a DynaString so it can be changed.
+	DynaString path;
 
-	/// The current selected index.
-	uint32_t idx;
+	/// Whether to display as a grid or not.
+	bool grid;
 
-} WimaPropList;
+} WimaPropPath;
 
 /**
  * Data for a pointer property.
@@ -246,11 +260,14 @@ typedef union WimaPropData {
 	/// A way to quickly access the color as an NVGcolor.
 	NVGcolor _nvgcolor;
 
-	/// Pointer property data.
-	WimaPropPtr _ptr;
+	/// Path.
+	WimaPropPath _path;
 
 	/// Operator.
 	WimaWidgetMouseClickFunc _op;
+
+	/// Pointer property data.
+	WimaPropPtr _ptr;
 
 } WimaPropData;
 
