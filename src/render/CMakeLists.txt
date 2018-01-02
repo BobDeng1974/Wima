@@ -49,7 +49,7 @@ set(WIMA_RENDER_SRC
 set(WIMA_MATH "${PROJECT_NAME}_math")
 
 create_merge_library(
-	"${WIMA_RENDER}" "${WIMA_RENDER}" "${WIMA_RENDER_SRC}"
+	"${WIMA_RENDER}" "${WIMA_RENDER_SRC}"
 
 	# Add libraries here.
 	"${WIMA_MATH_PIC}"

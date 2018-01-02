@@ -113,8 +113,8 @@ set(NANOVG_SRC
 	#"${NANOVG_SRC_DIR}/nanovg_pick.c"
 )
 
-create_pic_library(
-	"${NANOVG}" "${NANOVG}" "${NANOVG_SRC}" NO
+create_merge_library(
+	"${NANOVG}" "${NANOVG_SRC}"
 
 	# Add necessary libraries here.
 	"${WIMA_GLAD}"
