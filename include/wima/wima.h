@@ -1678,7 +1678,7 @@ uint32_t wima_widget_flags(WimaWidget wdgt) yinline;
  * @param wdgt	The widget to query.
  * @return		The widget rectangle.
  */
-WimaRect wima_widget_rect(WimaWidget wdgt) yinline;
+WimaRectf wima_widget_rect(WimaWidget wdgt) yinline;
 
 /**
  * Returns a set of flags indicating which events this

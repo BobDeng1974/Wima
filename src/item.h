@@ -177,7 +177,7 @@ typedef struct WimaItem {
 	uint16_t nextSibling;
 
 	/// The item's rectangle.
-	WimaRect rect;
+	WimaRectf rect;
 
 	union {
 

@@ -62,6 +62,8 @@
 
 #include <dyna/nvector.h>
 
+#include <wima/render.h>
+
 #include "global.h"
 #include "widget.h"
 #include "area.h"
@@ -273,7 +275,7 @@ uint32_t wima_widget_flags(WimaWidget wdgt) {
 	return pwdgt->widget.flags & WIMA_ITEM_USERMASK;
 }
 
-WimaRect wima_widget_rect(WimaWidget wdgt) {
+WimaRectf wima_widget_rect(WimaWidget wdgt) {
 
 	wima_assert_init;
 
@@ -328,10 +330,10 @@ bool wima_widget_contains(WimaWidget wdgt, WimaVec pos) {
 
 	wima_assert_init;
 
-	WimaRect rect = wima_widget_rect(wdgt);
+	WimaRectf rect = wima_widget_rect(wdgt);
 
-	int x = pos.x - rect.x;
-	int y = pos.y - rect.y;
+	float x = (float) pos.x - rect.x;
+	float y = (float) pos.y - rect.y;
 
 	return x >= 0 && y >= 0 && x < rect.w && y < rect.h;
 }
