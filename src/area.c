@@ -1038,7 +1038,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 			}
 
 			// Compute the layout.
-			status = wima_layout_layout(item, regRect);
+			status = wima_layout_layout(item, area, regRect);
 
 			// Check for error.
 			if (yerror(status != WIMA_STATUS_SUCCESS)) {

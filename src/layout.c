@@ -75,10 +75,34 @@
 static bool wima_layout_valid(WimaLayout layout, bool checkMax);
 #endif
 
+/**
+ * Calculates the size of a row. Negative numbers in the size mean
+ * that the absolute value is a minimum, but it can grow. Positive
+ * numbers mean that it is a hard limit.
+ * @param item	The item to calculate the size for.
+ * @param area	The area of the item. This is an optimization.
+ * @return		The size of the item.
+ */
 static WimaSizef wima_layout_size_row(ynonnull WimaItem* item, ynonnull WimaAr* area) yinline;
 
+/**
+ * Calculates the size of a column. Negative numbers in the size mean
+ * that the absolute value is a minimum, but it can grow. Positive
+ * numbers mean that it is a hard limit.
+ * @param item	The item to calculate the size for.
+ * @param area	The area of the item. This is an optimization.
+ * @return		The size of the item.
+ */
 static WimaSizef wima_layout_size_col(ynonnull WimaItem* item, ynonnull WimaAr* area) yinline;
 
+/**
+ * Calculates the size of a split. Negative numbers in the size mean
+ * that the absolute value is a minimum, but it can grow. Positive
+ * numbers mean that it is a hard limit.
+ * @param item	The item to calculate the size for.
+ * @param area	The area of the item. This is an optimization.
+ * @return		The size of the item.
+ */
 static WimaSizef wima_layout_size_split(ynonnull WimaItem* item, ynonnull WimaAr* area) yinline;
 
 /**
@@ -549,8 +573,40 @@ WimaSizef wima_layout_size(WimaItem* item, WimaAr* area) {
 	}
 }
 
-WimaStatus wima_layout_layout(WimaItem* item, WimaRectf rect) {
+WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area, WimaRectf rect) {
+
 	// TODO: Write this function.
+
+	wima_assert_init;
+
+	wassert(WIMA_ITEM_IS_LAYOUT(item), WIMA_ASSERT_LAYOUT);
+
+	// Make sure to set the index.
+	uint16_t idx = item->layout.firstKid;
+
+	// Get the number of children.
+	uint16_t count = item->layout.kidCount;
+
+	// Loop through the children.
+	while (idx != WIMA_WIDGET_INVALID) {
+
+		wassert(idx < area->area.ctx.itemCount, WIMA_ASSERT_ITEM);
+
+		// Get the child.
+		WimaItem* child = wima_item_ptr(item->info.layout.window, item->info.layout.area, idx);
+
+		// Figure out what to do.
+		if (WIMA_ITEM_IS_LAYOUT(child)) {
+
+		}
+		else {
+
+		}
+
+		// Make sure to set the index.
+		//idx =
+	}
+
 	return WIMA_STATUS_SUCCESS;
 }
 

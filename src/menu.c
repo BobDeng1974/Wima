@@ -46,6 +46,7 @@
 
 static const char* const wima_menu_area_menu_name = "Area Options";
 
+#ifndef NDEBUG
 static const char* const wima_menu_sub_names[] = {
     "Debug Sub Item 1",
     NULL,
@@ -63,6 +64,7 @@ static const WimaMenuItemFunc wima_menu_sub_funcs[] = {
     wima_window_sub4_click,
     wima_window_sub5_click,
 };
+#endif // NDEBUG
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.

@@ -163,11 +163,13 @@ WimaSizef wima_layout_size(ynonnull WimaItem* item, ynonnull WimaAr* area);
 /**
  * Lays out the layout that @a item points to.
  * @param item	The layout to lay out.
+ * @param area	The area that @a item is in.
+ *				For optimization.
  * @param rect	The rectangle for the layout.
  * @return		WIMA_STATUS_SUCCESS on succes,
  *				an error code otherwise.
  */
-WimaStatus wima_layout_layout(ynonnull WimaItem* item, WimaRectf rect);
+WimaStatus wima_layout_layout(ynonnull WimaItem* item, ynonnull WimaAr* area, WimaRectf rect);
 
 /**
  * @}
