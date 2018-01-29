@@ -36,21 +36,46 @@ if(NOT "${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
 	message(FATAL_ERROR "Clang is the only compiler supported on Linux")
 endif()
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+
 # If we are in debug mode...
 if("${CMAKE_BUILD_TYPE}" MATCHES "Debug" OR "${CMAKE_BUILD_TYPE}" MATCHES "RelWithDegInfo")
+
+	# Create the sanitizer options.
+	option(WIMA_SANITIZER_ADDRESS "Build with AddressSanitizer" ON)
+
+	# If the memory sanitizer is in use, set the flag.
+	if ("${WIMA_SANITIZER_ADDRESS}")
+		string(CONCAT WIMA_SANITIZER_FLAGS " -fsanitize=address")
+	endif()
 
 	# Option to run the undefined behavior sanitizer.
 	option(WIMA_SANITIZER_UNDEFINED "Build with UndefinedBehaviorSanitizer" ON)
 
 	# If we want to run the undefined behavior sanitizer...
 	if(WIMA_SANITIZER_UNDEFINED)
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=undefined")
+		string(CONCAT WIMA_SANITIZER_FLAGS " -fsanitize=undefined")
 	endif()
 
 endif()
 
-# We need to set yet another compiler flag if we are using sanitizers.
-if("${WIMA_SANITIZER_UNDEFINED}")
+# If we are using sanitizers...
+if(DEFINED WIMA_SANITIZER_FLAGS)
+
+	# We must use Clang as the linker.
+	set(CMAKE_LINKER "${CMAKE_C_COMPILER}")
+
+	# We must use -O1.
+	set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O1 -g -DNDEBUG")
+
+	# These are all options to make the print outs prettier.
+	string(CONCAT WIMA_FLAGS "${CMAKE_C_FLAGS_RELWITHDEBINFO} ${WIMA_SANITIZER_FLAGS} "
+		"-fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-common")
+
+	# We need to set compiler *and* linker flags.
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${WIMA_FLAGS}")
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${WIMA_FLAGS}")
+
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-sanitize-recover=all")
 endif()
 
