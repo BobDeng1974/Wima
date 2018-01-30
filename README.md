@@ -33,7 +33,7 @@ developed alongside [Yera](https://github.com/YzenaTech/Yera).
 
 ## Language
 
-Wima is written in pure ANSI C11.
+Wima is written in pure ISO C11.
 
 ## Git Workflow
 
