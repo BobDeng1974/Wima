@@ -1838,6 +1838,32 @@ uint8_t wima_region_clearLeftFlag(uint8_t flags) yconst yinline;
 
 /**
  * Takes a set of flags meant for @a WimaRegions
+ * and adds the row flag to them.
+ *
+ * The row flag is whether the region root layout
+ * should be laid out in a row or not. Most apps
+ * will probably want to use columns in the usual
+ * case.
+ * @param flags	The flags to add to.
+ * @return		@a flags with the row bit set.
+ */
+uint8_t wima_region_setRowFlag(uint8_t flags) yconst yinline;
+
+/**
+ * Takes a set of flags meant for @a WimaRegions
+ * and clears the row flag from them.
+ *
+ * The row flag is whether the region root layout
+ * should be laid out in a row or not. Most apps
+ * will probably want to use columns in the usual
+ * case.
+ * @param flags	The flags to remove from.
+ * @return		@a flags with the row bit cleared.
+ */
+uint8_t wima_region_clearRowFlag(uint8_t flags) yconst yinline;
+
+/**
+ * Takes a set of flags meant for @a WimaRegions
  * and adds the resizable flag to them.
  *
  * The resizable flag is whether the region should

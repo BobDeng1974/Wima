@@ -87,6 +87,26 @@ uint8_t wima_region_clearLeftFlag(uint8_t flags) {
 	return flags;
 }
 
+uint8_t wima_region_setRowFlag(uint8_t flags) {
+
+	wima_assert_init;
+
+	// Set the flag.
+	flags |= WIMA_REG_ROW;
+
+	return flags;
+}
+
+uint8_t wima_region_clearRowFlag(uint8_t flags) {
+
+	wima_assert_init;
+
+	// Clear the flag.
+	flags &= ~(WIMA_REG_ROW);
+
+	return flags;
+}
+
 uint8_t wima_region_setResizableFlag(uint8_t flags) {
 
 	wima_assert_init;

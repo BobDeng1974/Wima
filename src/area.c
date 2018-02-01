@@ -979,6 +979,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 			bool vScroll = WIMA_REG_CAN_SCROLL_VERTICAL(reg);
 			bool hScroll = WIMA_REG_CAN_SCROLL_HORIZONTAL(reg);
 			uint8_t flags = wima_layout_setScrollFlags(initialFlags, vScroll, hScroll);
+			flags |= WIMA_REG_IS_ROW(reg) ? WIMA_LAYOUT_ROW : WIMA_LAYOUT_COL;
 
 			// Create a root layout.
 			WimaLayout root = wima_layout_new(parent, flags, splitcol);

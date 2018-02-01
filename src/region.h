@@ -85,10 +85,26 @@ extern "C" {
 #define WIMA_REG_IS_LEFT(reg) ((reg)->flags & WIMA_REG_LEFT)
 
 /**
+ * @def WIMA_REG_ROW
+ * The row bit in the flags. This determines
+ * whether the root layout is a row layout
+ * or a column layout.
+ */
+#define WIMA_REG_ROW (0x04)
+
+/**
+ * @def WIMA_REG_IS_ROW(reg)
+ * Returns true if @a reg is laid out in rows, false otherwise.
+ * @param reg	The region to query.
+ * @return		true if @a reg is laid out in rows, false otherwise.
+ */
+#define WIMA_REG_IS_ROW(reg) ((reg)->flags & WIMA_REG_ROW)
+
+/**
  * @def WIMA_REG_RESIZABLE
  * The resizable bit in the flags.
  */
-#define WIMA_REG_RESIZABLE (0x04)
+#define WIMA_REG_RESIZABLE (0x08)
 
 /**
  * @def WIMA_REG_IS_RESIZABLE(reg)
@@ -102,7 +118,7 @@ extern "C" {
  * @def WIMA_REG_SCROLL_VERTICAL
  * The vertical scroll bit in the flags.
  */
-#define WIMA_REG_SCROLL_VERTICAL (0x08)
+#define WIMA_REG_SCROLL_VERTICAL (0x10)
 
 /**
  * @def WIMA_REG_CAN_SCROLL_VERTICAL(reg)
@@ -116,7 +132,7 @@ extern "C" {
  * @def WIMA_REG_SCROLL_HORIZONTAL
  * The horizontal scroll bit in the flags.
  */
-#define WIMA_REG_SCROLL_HORIZONTAL (0x10)
+#define WIMA_REG_SCROLL_HORIZONTAL (0x20)
 
 /**
  * @def WIMA_REG_CAN_SCROLL_HORIZONTAL(reg)
