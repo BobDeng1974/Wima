@@ -150,7 +150,7 @@ WimaItem* wima_layout_ptr(WimaLayout wlh) yinline yretnonnull;
  * @param splitcol	The split/columns of the layout.
  * @return			The new layout.
  */
-WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol splitcol);
+WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split);
 
 /**
  * Calculates the size of the layout represented by @a item.
@@ -165,11 +165,10 @@ WimaSizef wima_layout_size(ynonnull WimaItem* item, ynonnull WimaAr* area);
  * @param item	The layout to lay out.
  * @param area	The area that @a item is in.
  *				For optimization.
- * @param rect	The rectangle for the layout.
  * @return		WIMA_STATUS_SUCCESS on succes,
  *				an error code otherwise.
  */
-WimaStatus wima_layout_layout(ynonnull WimaItem* item, ynonnull WimaAr* area, WimaRectf rect);
+WimaStatus wima_layout_layout(ynonnull WimaItem* item, ynonnull WimaAr* area);
 
 /**
  * @}

@@ -145,21 +145,6 @@ typedef union WimaItemInfo {
 } WimaItemInfo;
 
 /**
- * A way to store the split location and number of columns in
- * the same place. This is done because layouts need either
- * one, the other, or neither, so they can take the same space.
- */
-typedef union WimaLayoutSplitCol {
-
-	/// The location of a split.
-	float split;
-
-	/// The number of columns.
-	uint32_t cols;
-
-} WimaLayoutSplitCol;
-
-/**
  * A struct storing all data for items.
  */
 typedef struct WimaItem {
@@ -183,8 +168,8 @@ typedef struct WimaItem {
 
 		struct WimaLayoutInfo {
 
-			/// The split location or number of columns.
-			WimaLayoutSplitCol splitcol;
+			/// The split location or leftover space from minimums.
+			float split;
 
 			/// Index of the first kid.
 			uint16_t firstKid;

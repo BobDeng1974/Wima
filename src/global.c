@@ -160,7 +160,7 @@ const char* const wima_assert_msgs[] = {
     "item is not a widget",
 
     "layout is not valid",
-    "split layout already has two children",
+    "split layout already has 2 children",
 
     "widget is not valid",
     "client tried to create too many widgets/layouts",

@@ -257,12 +257,10 @@ void wima_layout_separator(WimaLayout parent) {
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 #endif
 
-	// Create the splitcol.
-	WimaLayoutSplitCol splitcol;
-	splitcol.cols = 0;
+	wassert(wima_layout_valid(parent, true), WIMA_ASSERT_LAYOUT);
 
 	// Create the layout, but don't return it.
-	wima_layout_new(parent, WIMA_LAYOUT_SEP, splitcol);
+	wima_layout_new(parent, WIMA_LAYOUT_SEP, 0.0f);
 }
 
 WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags) {
@@ -277,15 +275,13 @@ WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags) {
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 #endif
 
+	wassert(wima_layout_valid(parent, true), WIMA_ASSERT_LAYOUT);
+
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_ROW;
 	flags &= ~(WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_SEP);
 
-	// Create the splitcol.
-	WimaLayoutSplitCol splitcol;
-	splitcol.cols = 0;
-
-	return wima_layout_new(parent, flags, splitcol);
+	return wima_layout_new(parent, flags, 0.0f);
 }
 
 WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags) {
@@ -300,15 +296,13 @@ WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags) {
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 #endif
 
+	wassert(wima_layout_valid(parent, true), WIMA_ASSERT_LAYOUT);
+
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_COL;
 	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_SEP);
 
-	// Create the splitcol.
-	WimaLayoutSplitCol splitcol;
-	splitcol.cols = 0;
-
-	return wima_layout_new(parent, flags, splitcol);
+	return wima_layout_new(parent, flags, 0.0f);
 }
 
 WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split) {
@@ -323,15 +317,13 @@ WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split) {
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 #endif
 
+	wassert(wima_layout_valid(parent, true), WIMA_ASSERT_LAYOUT);
+
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_SPLIT;
 	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SEP);
 
-	// Create the splitcol.
-	WimaLayoutSplitCol splitcol;
-	splitcol.split = wima_clampf(split, 0.0f, 1.0f);
-
-	return wima_layout_new(parent, flags, splitcol);
+	return wima_layout_new(parent, flags, wima_clampf(split, 0.0f, 1.0f));
 }
 
 WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop) {
@@ -492,11 +484,9 @@ WimaItem* wima_layout_ptr(WimaLayout wlh) {
 	return wima_item_ptr(wlh.window, wlh.area, wlh.layout);
 }
 
-WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol splitcol) {
+WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 
 	wima_assert_init;
-
-	wassert(wima_layout_valid(parent, true), WIMA_ASSERT_LAYOUT);
 
 	// Get the area.
 	WimaAr* area = wima_area_ptr(parent.window, parent.area);
@@ -535,7 +525,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, WimaLayoutSplitCol
 	playout->nextSibling = WIMA_WIDGET_INVALID;
 
 	// Set the background, split, kids, and flags.
-	playout->layout.splitcol = splitcol;
+	playout->layout.split = split;
 	playout->layout.firstKid = WIMA_WIDGET_INVALID;
 	playout->layout.lastKid = WIMA_LAYOUT_INVALID;
 	playout->layout.kidCount = 0;
@@ -573,7 +563,7 @@ WimaSizef wima_layout_size(WimaItem* item, WimaAr* area) {
 	}
 }
 
-WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area, WimaRectf rect) {
+WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area) {
 
 	// TODO: Write this function.
 
@@ -581,33 +571,62 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area, WimaRectf rect) {
 
 	wassert(WIMA_ITEM_IS_LAYOUT(item), WIMA_ASSERT_LAYOUT);
 
+	WimaStatus status = WIMA_STATUS_SUCCESS;
+
+	// Get the number of children. This is done
+	// bitwise to prevent sign extending.
+	int counti = 0;
+	counti |= item->layout.kidCount;
+	float count = (float) counti;
+
+	wassert(!(item->layout.flags & WIMA_LAYOUT_SPLIT) || count == 2, WIMA_ASSERT_LAYOUT_SPLIT_MAX);
+
 	// Make sure to set the index.
 	uint16_t idx = item->layout.firstKid;
 
-	// Get the number of children.
-	uint16_t count = item->layout.kidCount;
+	// We use this to decide what to do.
+	uint16_t flags = item->layout.flags & (WIMA_LAYOUT_TYPE_MASK);
+
+	float width, height;
+
+	if (flags & WIMA_LAYOUT_ROW) {
+		width = item->rect.w / count;
+		height = item->rect.h;
+	}
+	else if (flags & WIMA_LAYOUT_COL) {
+		width = item->rect.w;
+		//height =
+	}
+	else {
+
+	}
+
+	float x = item->rect.x;
+	float y = item->rect.y;
 
 	// Loop through the children.
-	while (idx != WIMA_WIDGET_INVALID) {
+	while (!status && idx != WIMA_WIDGET_INVALID) {
 
 		wassert(idx < area->area.ctx.itemCount, WIMA_ASSERT_ITEM);
 
 		// Get the child.
 		WimaItem* child = wima_item_ptr(item->info.layout.window, item->info.layout.area, idx);
 
-		// Figure out what to do.
-		if (WIMA_ITEM_IS_LAYOUT(child)) {
+		// TODO: Calculate the child's rectangle.
+		WimaRectf childRect;
 
-		}
-		else {
+		//child->rect
 
+		// Lay out the the child if it's a layout and not a separator.
+		if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP)) {
+			status = wima_layout_layout(child, area);
 		}
 
 		// Make sure to set the index.
-		//idx =
+		idx = child->nextSibling;
 	}
 
-	return WIMA_STATUS_SUCCESS;
+	return status;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -715,6 +734,9 @@ static WimaSizef wima_layout_size_row(WimaItem* item, WimaAr* area) {
 		child = chItem->nextSibling;
 	}
 
+	// We want to store this for later.
+	item->layout.split = result.w;
+
 	return result;
 }
 
@@ -756,6 +778,9 @@ static WimaSizef wima_layout_size_col(WimaItem* item, WimaAr* area) {
 		child = chItem->nextSibling;
 	}
 
+	// We want to store this for later.
+	item->layout.split = result.h;
+
 	return result;
 }
 
@@ -767,7 +792,7 @@ static WimaSizef wima_layout_size_split(WimaItem* item, WimaAr* area) {
 	// Cache these.
 	WimaWindow window = item->info.layout.window;
 	WimaAreaNode node = item->info.layout.area;
-	float split = item->layout.splitcol.split;
+	float split = item->layout.split;
 
 	// Get the child.
 	uint16_t child = item->layout.firstKid;

@@ -936,9 +936,6 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 		size.w = area->rect.w;
 		size.h = area->rect.h;
 
-		WimaLayoutSplitCol splitcol;
-		splitcol.cols = 0;
-
 		wassert(area->area.type < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
 
 		// Get the editor and its number of regions.
@@ -982,7 +979,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 			flags |= WIMA_REG_IS_ROW(reg) ? WIMA_LAYOUT_ROW : WIMA_LAYOUT_COL;
 
 			// Create a root layout.
-			WimaLayout root = wima_layout_new(parent, flags, splitcol);
+			WimaLayout root = wima_layout_new(parent, flags, 0.0f);
 
 			// Do the layout. The layout function is guaranteed to be non-null.
 			status = reg->layout(root);
@@ -1038,8 +1035,11 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node) {
 				rect.h -= height + WIMA_REG_BORDER2;
 			}
 
+			// Set the rectangle.
+			item->rect = regRect;
+
 			// Compute the layout.
-			status = wima_layout_layout(item, area, regRect);
+			status = wima_layout_layout(item, area);
 
 			// Check for error.
 			if (yerror(status != WIMA_STATUS_SUCCESS)) {
