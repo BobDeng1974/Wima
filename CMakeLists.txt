@@ -37,7 +37,8 @@ if(NOT "${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
 endif()
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
+
+message(STATUS "${CMAKE_BUILD_TYPE}")
 
 # If we are in debug mode...
 if("${CMAKE_BUILD_TYPE}" MATCHES "Debug" OR "${CMAKE_BUILD_TYPE}" MATCHES "RelWithDegInfo")
@@ -66,18 +67,16 @@ if(DEFINED WIMA_SANITIZER_FLAGS)
 	# We must use Clang as the linker.
 	set(CMAKE_LINKER "${CMAKE_C_COMPILER}")
 
-	# We must use -O1.
-	set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O1 -g -DNDEBUG")
-
 	# These are all options to make the print outs prettier.
-	string(CONCAT WIMA_FLAGS "${CMAKE_C_FLAGS_RELWITHDEBINFO} ${WIMA_SANITIZER_FLAGS} "
-		"-fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-common")
+	string(CONCAT WIMA_FLAGS "${WIMA_SANITIZER_FLAGS} -fno-omit-frame-pointer "
+		"-fno-optimize-sibling-calls -fno-common")
 
 	# We need to set compiler *and* linker flags.
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${WIMA_FLAGS}")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${WIMA_FLAGS}")
 
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-sanitize-recover=all")
+
 endif()
 
 # If we are in release mode...
