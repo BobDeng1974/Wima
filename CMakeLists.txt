@@ -36,7 +36,7 @@ if(NOT "${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
 	message(FATAL_ERROR "Clang is the only compiler supported on Linux")
 endif()
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
 
 # If we are in debug mode...
