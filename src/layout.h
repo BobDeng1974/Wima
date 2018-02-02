@@ -147,7 +147,8 @@ WimaItem* wima_layout_ptr(WimaLayout wlh) yinline yretnonnull;
  * Creates a new layout with the specified parent, flags, and split/columns.
  * @param parent	The parent of the new layout.
  * @param flags		The flags of the new layout.
- * @param splitcol	The split/columns of the layout.
+ * @param split		The split location, or the min size of the layout (width
+ *					for row layouts, height for column layouts).
  * @return			The new layout.
  */
 WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split);
