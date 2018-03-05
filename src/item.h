@@ -168,9 +168,6 @@ typedef struct WimaItem {
 
 		struct WimaLayoutInfo {
 
-			/// The split location or leftover space from minimums.
-			float split;
-
 			/// Index of the first kid.
 			uint16_t firstKid;
 
@@ -182,6 +179,20 @@ typedef struct WimaItem {
 
 			/// Flags for the layout. See @a src/layout.h
 			uint16_t flags;
+
+			/// The split location or width minimum.
+			float w_min;
+
+			/// Height minimum.
+			float h_min;
+
+			/// The number of children that can expand
+			/// in the x direction.
+			int x_expand_children;
+
+			/// The number of children that can expand
+			/// in the y direction.
+			int y_expand_children;
 
 		} layout;
 

@@ -525,7 +525,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split) {
 	playout->nextSibling = WIMA_WIDGET_INVALID;
 
 	// Set the background, split, kids, and flags.
-	playout->layout.split = split;
+	playout->layout.w_min = split;
 	playout->layout.firstKid = WIMA_WIDGET_INVALID;
 	playout->layout.lastKid = WIMA_LAYOUT_INVALID;
 	playout->layout.kidCount = 0;
@@ -587,14 +587,39 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area) {
 	// We use this to decide what to do.
 	uint16_t flags = item->layout.flags & (WIMA_LAYOUT_TYPE_MASK);
 
-	float width, height;
+	float wextra = (item->rect.w - item->layout.w_min) / (float) item->layout.x_expand_children;
+	float hextra = item->rect.h - item->layout.h_min / (float) item->layout.x_expand_children;
 
+	// Figure out what to do based on what type of layout this is. We
+	// do the loop (and thereby copy the code) into each branch to
+	// prevent having a branch in the loop itself. Because layout can
+	// happen up to once per frame, it's important to make it fast.
 	if (flags & WIMA_LAYOUT_ROW) {
-		width = item->rect.w / count;
-		height = item->rect.h;
+
+		// Loop through the children.
+		while (!status && idx != WIMA_WIDGET_INVALID) {
+
+			wassert(idx < area->area.ctx.itemCount, WIMA_ASSERT_ITEM);
+
+			// Get the child.
+			WimaItem* child = wima_item_ptr(item->info.layout.window, item->info.layout.area, idx);
+
+			// TODO: Calculate the child's rectangle.
+			WimaRectf childRect;
+
+			//child->rect
+
+			// Lay out the the child if it's a layout and not a separator.
+			if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP)) {
+				status = wima_layout_layout(child, area);
+			}
+
+			// Make sure to set the index.
+			idx = child->nextSibling;
+		}
 	}
 	else if (flags & WIMA_LAYOUT_COL) {
-		width = item->rect.w;
+		//width = item->rect.w;
 		//height =
 	}
 	else {
@@ -603,28 +628,6 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area) {
 
 	float x = item->rect.x;
 	float y = item->rect.y;
-
-	// Loop through the children.
-	while (!status && idx != WIMA_WIDGET_INVALID) {
-
-		wassert(idx < area->area.ctx.itemCount, WIMA_ASSERT_ITEM);
-
-		// Get the child.
-		WimaItem* child = wima_item_ptr(item->info.layout.window, item->info.layout.area, idx);
-
-		// TODO: Calculate the child's rectangle.
-		WimaRectf childRect;
-
-		//child->rect
-
-		// Lay out the the child if it's a layout and not a separator.
-		if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP)) {
-			status = wima_layout_layout(child, area);
-		}
-
-		// Make sure to set the index.
-		idx = child->nextSibling;
-	}
 
 	return status;
 }
@@ -712,6 +715,10 @@ static WimaSizef wima_layout_size_row(WimaItem* item, WimaAr* area) {
 	// Get the child.
 	uint16_t child = item->layout.firstKid;
 
+	// We need to clear these.
+	item->layout.x_expand_children = 0;
+	item->layout.y_expand_children = 0;
+
 	// Loop over all children...
 	while (child != WIMA_LAYOUT_INVALID) {
 
@@ -726,6 +733,10 @@ static WimaSizef wima_layout_size_row(WimaItem* item, WimaAr* area) {
 			size = wima_widget_size(chItem);
 		}
 
+		// Add to the number of expandables.
+		item->layout.x_expand_children += size.w < 0 ? 1 : 0;
+		item->layout.y_expand_children += size.h < 0 ? 1 : 0;
+
 		// Set the result.
 		result.w += fabsf(size.w);
 		result.h = wima_fmaxf(result.h, fabsf(size.h));
@@ -734,8 +745,13 @@ static WimaSizef wima_layout_size_row(WimaItem* item, WimaAr* area) {
 		child = chItem->nextSibling;
 	}
 
+	// Mark the layout as expandable if it has expandable children.
+	result.w = item->layout.x_expand_children ? -result.w : result.w;
+	result.h = item->layout.y_expand_children ? -result.h : result.h;
+
 	// We want to store this for later.
-	item->layout.split = result.w;
+	item->layout.w_min = result.w;
+	item->layout.h_min = result.h;
 
 	return result;
 }
@@ -756,6 +772,10 @@ static WimaSizef wima_layout_size_col(WimaItem* item, WimaAr* area) {
 	// Get the child.
 	uint16_t child = item->layout.firstKid;
 
+	// We need to clear these.
+	item->layout.x_expand_children = 0;
+	item->layout.y_expand_children = 0;
+
 	// Loop over all children...
 	while (child != WIMA_LAYOUT_INVALID) {
 
@@ -770,6 +790,10 @@ static WimaSizef wima_layout_size_col(WimaItem* item, WimaAr* area) {
 			size = wima_widget_size(chItem);
 		}
 
+		// Add to the number of expandables.
+		item->layout.x_expand_children += size.w < 0 ? 1 : 0;
+		item->layout.y_expand_children += size.h < 0 ? 1 : 0;
+
 		// Set the result.
 		result.w = wima_fmaxf(result.w, fabsf(size.w));
 		result.h += fabsf(size.h);
@@ -778,8 +802,13 @@ static WimaSizef wima_layout_size_col(WimaItem* item, WimaAr* area) {
 		child = chItem->nextSibling;
 	}
 
+	// Mark the layout as expandable if it has expandable children.
+	result.w = item->layout.x_expand_children ? -result.w : result.w;
+	result.h = item->layout.y_expand_children ? -result.h : result.h;
+
 	// We want to store this for later.
-	item->layout.split = result.h;
+	item->layout.w_min = result.w;
+	item->layout.h_min = result.h;
 
 	return result;
 }
@@ -792,7 +821,7 @@ static WimaSizef wima_layout_size_split(WimaItem* item, WimaAr* area) {
 	// Cache these.
 	WimaWindow window = item->info.layout.window;
 	WimaAreaNode node = item->info.layout.area;
-	float split = item->layout.split;
+	float split = item->layout.w_min;
 
 	// Get the child.
 	uint16_t child = item->layout.firstKid;
