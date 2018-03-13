@@ -47,9 +47,6 @@ a `develop`/`master` split. (Main development is on `develop`, and `master` just
 points to the latest tagged release to make it easy for users to get the latest
 release.)
 
-Wima includes scripts and a `.gitconfig` that helps manage the workflow. New
-contributors should familiarize themselves with them.
-
 ## Commit Messages
 
 Projects under Yzena, including Wima, use the commit message guidelines laid out
