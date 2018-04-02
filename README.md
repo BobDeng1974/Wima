@@ -37,7 +37,7 @@ scripts/setup.sh
 
 ## Dependencies
 
-Wima depends on X11, Xinerama, Xcursor, Xi, GLFW, and CMake. On Ubuntu, they can
+Wima depends on CMake, X11, Xinerama, Xcursor, Xi, and GLFW. On Ubuntu, they can
 be installed with the following command:
 
 ```
