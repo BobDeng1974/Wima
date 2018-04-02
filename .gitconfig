@@ -1,6 +1,0 @@
-[diff]
-	submodule = log
-[merge]
-	ff = false
-[pull]
-	rebase = true
