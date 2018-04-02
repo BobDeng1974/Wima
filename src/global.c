@@ -62,12 +62,12 @@
 WimaG wg;
 
 /**
- * A global array of error descriptions whose elements correspond
- * to WIMA_STATUS_* - 128. WIMA_STATUS_SUCCESS does not need an
- * error message.
+ * A global array of error descriptions whose elements correspond to
+ * WIMA_STATUS_*. WIMA_STATUS_SUCCESS does not need an error message.
  */
 const char* const wima_error_descs[] = {
 
+    NULL,
     "Allocation failed",
     "Platform returned an unknown error",
     "Wima is in an invalid state",
@@ -121,8 +121,8 @@ const char* const wima_assert_msgs[] = {
     "window already has an existing overlay",
     "window does not have an overlay",
     "client tried to pop too many render contexts off the stack",
-    "client tried to push too many render contexts onto the stack; " // NO COMMA SHOULD BE HERE!!!
-    "this probably means the client requested too many scrollable layouts",
+    "client tried to push too many render contexts onto the stack; "
+        "this probably means the client requested too many scrollable layouts",
 
     "tree is not valid",
     "node is beyond max number of nodes for the given tree",

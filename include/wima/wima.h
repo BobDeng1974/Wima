@@ -77,50 +77,50 @@ extern "C" {
 typedef enum WimaStatus {
 
 	/// Success.
-	WIMA_STATUS_SUCCESS            = 0,
+	WIMA_STATUS_SUCCESS,
 
 	/// Returned when Wima fails to allocate memory.
-	WIMA_STATUS_MALLOC_ERR         = 128,
+	WIMA_STATUS_MALLOC_ERR,
 
 	/// Returned when the platform returns an unknown error.
-	WIMA_STATUS_PLATFORM_ERR       = 129,
+	WIMA_STATUS_PLATFORM_ERR,
 
 	/// Returned when Wima is in an invalid state for the operation.
-	WIMA_STATUS_INVALID_STATE      = 130,
+	WIMA_STATUS_INVALID_STATE,
 
 	/// Returned when there was an error with OpenGL
 	/// (though not including context errors).
-	WIMA_STATUS_OPENGL_ERR         = 131,
+	WIMA_STATUS_OPENGL_ERR,
 
 	/// Returned when OpenGL does not have a context.
-	WIMA_STATUS_CONTEXT_ERR        = 132,
+	WIMA_STATUS_CONTEXT_ERR,
 
 	/// Returned when Wima fails to initialize.
-	WIMA_STATUS_INIT_ERR           = 133,
+	WIMA_STATUS_INIT_ERR,
 
 	/// Returned when Wima fails to create a window.
-	WIMA_STATUS_WINDOW_ERR         = 134,
+	WIMA_STATUS_WINDOW_ERR,
 
 	/// Returned when Wima gets an invalid enum value.
-	WIMA_STATUS_INVALID_ENUM       = 135,
+	WIMA_STATUS_INVALID_ENUM,
 
 	/// Returned when Wima gets an invalid parameter.
-	WIMA_STATUS_INVALID_PARAM      = 136,
+	WIMA_STATUS_INVALID_PARAM,
 
 	/// Returned when the clipboard contents were invalid.
-	WIMA_STATUS_INVALID_CLIP       = 137,
+	WIMA_STATUS_INVALID_CLIP,
 
 	/// Returned when an event is dropped.
-	WIMA_STATUS_EVENT_DROPPED      = 138,
+	WIMA_STATUS_EVENT_DROPPED,
 
 	/// Returned when no child for the parent prop exists.
-	WIMA_STATUS_PROP_NO_CHILD      = 139,
+	WIMA_STATUS_PROP_NO_CHILD,
 
 	/// Returned when a prop child already exists.
-	WIMA_STATUS_PROP_CHILD_EXISTS  = 140,
+	WIMA_STATUS_PROP_CHILD_EXISTS,
 
 	/// Returned when an image fails to load.
-	WIMA_STATUS_IMAGE_LOAD_ERR     = 141,
+	WIMA_STATUS_IMAGE_LOAD_ERR,
 
 } WimaStatus;
 

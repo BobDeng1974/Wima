@@ -382,7 +382,7 @@ extern const char* const wima_assert_msgs[];
  * @param status	The status of the error and index of the desired
  *					error description to send to the client.
  */
-#define wima_error(status) wg.funcs.error((status), __func__, wima_error_descs[(status) - 128])
+#define wima_error(status) wg.funcs.error((status), __func__, wima_error_descs[(status)])
 
 /**
  * @def wima_error_desc
