@@ -25,6 +25,28 @@ Wima is Free and Open Source Software (FOSS). It is licensed under a modified
 used by [Pixar Animation Studios](https://www.pixar.com/) for use on the
 [OpenSubdiv](http://graphics.pixar.com/opensubdiv/docs/intro.html) project.
 
+## Getting Started
+
+To get started, clone the repo, and then run the following two commands in the
+root directory:
+
+```
+git submodule update --init --recursive
+scripts/setup.sh
+```
+
+## Dependencies
+
+Wima depends on X11, Xinerama, Xcursor, Xi, GLFW, and CMake. On Ubuntu, they can
+be installed with the following command:
+
+```
+sudo apt install libx11-dev libxinerama-dev libxcursor-dev libxi-dev libglfw3-dev cmake cmake-curses-gui
+```
+
+It also depends on [Yc](https://github.com/YzenaTech/Yc) and
+[Dyna](https://github.com/YzenaTech/Dyna).
+
 ## Status
 
 Wima is not even in Alpha stage yet; the first prototype has not yet been
@@ -37,8 +59,8 @@ Wima is written in pure ISO C11.
 
 ## Git Workflow
 
-Wima uses the git workflow described in
-[this post](http://endoflineblog.com/oneflow-a-git-branching-model-and-workflow).
+Wima uses the git workflow described
+[here](http://endoflineblog.com/oneflow-a-git-branching-model-and-workflow).
 Developers who want to contribute to Wima are encouraged to read that post
 carefully.
 
