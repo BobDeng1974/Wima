@@ -253,9 +253,7 @@ void wima_layout_setEnabled(WimaLayout wlh, bool enabled)
 	if (enabled)
 		layout->layout.flags |= WIMA_LAYOUT_ENABLE;
 	else
-	{
 		layout->layout.flags &= ~(WIMA_LAYOUT_ENABLE);
-	}
 }
 
 bool wima_layout_enabled(WimaLayout wlh)
@@ -466,7 +464,7 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 				ptr = dpool_calloc(area->area.ctx.widgetData, &key, allocSize);
 
 				// Check for error.
-				if (yerror(ptr == NULL)) goto wima_lyt_wdgt_malloc_err;
+				if (yerror(!ptr)) goto wima_lyt_wdgt_malloc_err;
 			}
 		}
 	}
@@ -837,9 +835,7 @@ static WimaSizef wima_layout_size_split(WimaItem* item, WimaAr* area)
 	if (WIMA_ITEM_IS_LAYOUT(chItem))
 		size = wima_layout_size(chItem, area);
 	else
-	{
 		size = wima_widget_size(chItem);
-	}
 
 	// Make sure we don't divide by 0.
 	float val = split != 0.0f ? size.w / split : 0.0f;
