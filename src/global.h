@@ -171,7 +171,6 @@ typedef struct WimaG
  */
 typedef enum WimaAssertType
 {
-
 	//! @cond Doxygen suppress.
 
 	WIMA_ASSERT_INIT,
