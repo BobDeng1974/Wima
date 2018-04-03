@@ -1098,12 +1098,9 @@ static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, W
 			// If the right rect has the cursor, send the operation
 			// there. Otherwise, return WIMA_AREA_INVALID, so we know
 			// that no area contains the cursor.
-			if (wima_rect_contains(right->rect, cursor)) {
+			if (wima_rect_contains(right->rect, cursor))
 				result = wima_area_node_containsMouse(areas, right, cursor);
-			}
-			else {
-				result = WIMA_AREA_INVALID;
-			}
+			else result = WIMA_AREA_INVALID;
 		}
 	}
 	else {

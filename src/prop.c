@@ -68,6 +68,7 @@
  * @{
  */
 
+// clang-format off
 /**
  * The WimaCustProp information for predefined prop types.
  */
@@ -138,6 +139,7 @@ const WimaCustProp wima_prop_predefinedTypes[] = {
         0
     },
 };
+// clang-format on
 
 /**
  * Registers a property. This is common code to all cases.

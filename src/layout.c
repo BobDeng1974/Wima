@@ -610,9 +610,8 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area) {
 			//child->rect
 
 			// Lay out the the child if it's a layout and not a separator.
-			if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP)) {
+			if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP))
 				status = wima_layout_layout(child, area);
-			}
 
 			// Make sure to set the index.
 			idx = child->nextSibling;
