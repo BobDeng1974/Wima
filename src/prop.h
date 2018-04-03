@@ -42,13 +42,12 @@
 extern "C" {
 #endif
 
-#include <yc/assert.h>
-
-#include <dyna/vector.h>
-#include <dyna/nvector.h>
-
 #include <wima/prop.h>
 #include <wima/render.h>
+
+#include <dyna/nvector.h>
+#include <dyna/vector.h>
+#include <yc/assert.h>
 
 /**
  * @file wima/prop.h
@@ -65,8 +64,8 @@ extern "C" {
  * A custom property/widget. This is the
  * functions that the widget can have.
  */
-typedef struct WimaCustProp {
-
+typedef struct WimaCustProp
+{
 	/// The functions for widgets created
 	/// from this custom property.
 	WimaWidgetFuncs funcs;
@@ -105,8 +104,8 @@ typedef struct WimaCustProp {
 /**
  * Data for a list property.
  */
-typedef struct WimaPropList {
-
+typedef struct WimaPropList
+{
 	/// The list.
 	DynaVector list;
 
@@ -118,8 +117,8 @@ typedef struct WimaPropList {
 /**
  * Data for an int property.
  */
-typedef struct WimaPropInt {
-
+typedef struct WimaPropInt
+{
 	/// The value.
 	int val;
 
@@ -137,8 +136,8 @@ typedef struct WimaPropInt {
 /**
  * Data for a float property.
  */
-typedef struct WimaPropFloat {
-
+typedef struct WimaPropFloat
+{
 	/// The value.
 	float val;
 
@@ -156,8 +155,8 @@ typedef struct WimaPropFloat {
 /**
  * Data for an enum property.
  */
-typedef struct WimaPropEnum {
-
+typedef struct WimaPropEnum
+{
 	/// The cuurent index.
 	uint32_t idx;
 
@@ -172,8 +171,8 @@ typedef struct WimaPropEnum {
 /**
  * Data for a path property.
  */
-typedef struct WimaPropPath {
-
+typedef struct WimaPropPath
+{
 	/// The path. This is a DynaString so it can be changed.
 	DynaString path;
 
@@ -185,8 +184,8 @@ typedef struct WimaPropPath {
 /**
  * Data for a pointer property.
  */
-typedef struct WimaPropPtr {
-
+typedef struct WimaPropPtr
+{
 	/// The type for the widget/property.
 	WimaCustomProperty type;
 
@@ -198,8 +197,8 @@ typedef struct WimaPropPtr {
 /**
  * A struct to store data common to all properties.
  */
-typedef struct WimaPropInfo {
-
+typedef struct WimaPropInfo
+{
 	/// The property type.
 	WimaPropType type;
 
@@ -234,8 +233,8 @@ typedef struct WimaPropInfo {
 /**
  * A union for all types of prop data.
  */
-typedef union WimaPropData {
-
+typedef union WimaPropData
+{
 	/// List property data.
 	WimaPropList _list;
 
@@ -318,4 +317,4 @@ extern const WimaCustProp wima_prop_predefinedTypes[];
 }
 #endif
 
-#endif // WIMA_PROP_PRIVATE_H
+#endif  // WIMA_PROP_PRIVATE_H

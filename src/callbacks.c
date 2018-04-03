@@ -34,30 +34,30 @@
  *	******** END FILE DESCRIPTION ********
  */
 
+#include <wima/math.h>
+#include <wima/wima.h>
+
+#include "callbacks.h"
+
+#include "area.h"
+#include "global.h"
+#include "widget.h"
+#include "window.h"
+#include "workspace.h"
+
+#include <GLFW/glfw3.h>
+#include <yc/error.h>
+
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <yc/error.h>
-
-#include <wima/wima.h>
-#include <wima/math.h>
-
-#include <GLFW/glfw3.h>
-
-#include "callbacks.h"
-#include "widget.h"
-#include "area.h"
-#include "workspace.h"
-#include "window.h"
-#include "global.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions needed for the menus.
 ////////////////////////////////////////////////////////////////////////////////
 
-void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods) {
-
+void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
 	wima_assert_init;
 
 	// Get the window handle from GLFW.
@@ -79,13 +79,13 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	// This is here so Wima can set mods exactly when they are pressed,
 	// if GLFW provides that. Sometimes it can't because the OS doesn't
 	// allow windows to get key presses.
-	switch(wkey) {
-
+	switch (wkey)
+	{
 		case WIMA_KEY_ESCAPE:
 
 			// If there is a menu...
-			if (WIMA_WIN_HAS_MENU(wwin)) {
-
+			if (WIMA_WIN_HAS_MENU(wwin))
+			{
 				// Get the menu key.
 				uint64_t key = (uint64_t) wwin->menu;
 
@@ -104,8 +104,8 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 				return;
 			}
 
-			if (WIMA_WIN_HAS_OVERLAY(wwin)) {
-
+			if (WIMA_WIN_HAS_OVERLAY(wwin))
+			{
 				// TODO: Escape overlays as well.
 
 				// Force a layout.
@@ -132,15 +132,17 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 
 		// Don't handle anything else.
 		default:
+		{
 			break;
+		}
 	}
 
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
-	if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+	if (yerror(numEvents >= WIMA_EVENT_MAX))
+	{
 		// Send an error to the client.
 		wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -166,8 +168,8 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	++(wwin->ctx.eventCount);
 }
 
-void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
-
+void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods)
+{
 	wima_assert_init;
 
 	double time = glfwGetTime();
@@ -182,7 +184,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 	// Change GLFW data to Wima data.
-	WimaMouseBtn wbtn = (WimaMouseBtn) (1 << btn);
+	WimaMouseBtn wbtn = (WimaMouseBtn)(1 << btn);
 	WimaMods wmods = (WimaMods) mods;
 	WimaAction wact = (WimaAction) action;
 
@@ -196,8 +198,8 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
-	if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+	if (yerror(numEvents >= WIMA_EVENT_MAX))
+	{
 		// Send an error to the client.
 		wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -218,24 +220,24 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	wima_window_setDirty(wwin, false);
 
 	// If the user pressed the button...
-	if (wact == WIMA_ACTION_PRESS) {
-
+	if (wact == WIMA_ACTION_PRESS)
+	{
 		// Set the drag start.
 		wwin->ctx.dragStart = wwin->ctx.cursorPos;
 
 		// If we are on an area split and don't have a menu...
-		if (wwin->ctx.split.split >= 0 && !WIMA_WIN_HAS_MENU(wwin)) {
-
+		if (wwin->ctx.split.split >= 0 && !WIMA_WIN_HAS_MENU(wwin))
+		{
 			// If the button was not the right mouse button...
-			if (wbtn != WIMA_MOUSE_RIGHT) {
-
+			if (wbtn != WIMA_MOUSE_RIGHT)
+			{
 				// Set the flag that says we are moving a split.
 				wwin->ctx.movingSplit = true;
 			}
 
 			// If we clicked the right button on a split...
-			else {
-
+			else
+			{
 				// Set the cursor back to what it was (it
 				// was previously a cursor that indicated
 				// that the split could be moved).
@@ -250,10 +252,8 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		}
 
 		// If the criteria for a click wasn't met...
-		else if (WIMA_WIN_HAS_MENU(wwin) ||
-		         WIMA_WIN_MENU_ITEM_WAS_PRESSED(wwin) ||
-		         ts - WIMA_WIN_CLICK_THRESHOLD > wwin->ctx.click_timestamp ||
-		         wwin->ctx.click_button != wbtn ||
+		else if (WIMA_WIN_HAS_MENU(wwin) || WIMA_WIN_MENU_ITEM_WAS_PRESSED(wwin) ||
+		         ts - WIMA_WIN_CLICK_THRESHOLD > wwin->ctx.click_timestamp || wwin->ctx.click_button != wbtn ||
 		         !wima_widget_compare(clickItem, wwin->ctx.click_item.widget))
 		{
 			// Clear the number of clicks.
@@ -261,8 +261,8 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 		}
 
 		// If the criteria for a click was met...
-		else {
-
+		else
+		{
 			// Update the click context in the window.
 			wwin->ctx.click_timestamp = ts;
 			wwin->ctx.click_button = wbtn;
@@ -274,8 +274,8 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	}
 
 	// If we are moving a split, and release the button.
-	else if (wwin->ctx.movingSplit) {
-
+	else if (wwin->ctx.movingSplit)
+	{
 		// Clear the flag and don't send an event.
 		wwin->ctx.movingSplit = false;
 		return;
@@ -294,14 +294,14 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	++(wwin->ctx.eventCount);
 
 	// If a click was completed...
-	if (wwin->ctx.clicks) {
-
+	if (wwin->ctx.clicks)
+	{
 		// Get the number of events.
 		numEvents = wwin->ctx.eventCount;
 
 		// If we've already reached our max.
-		if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+		if (yerror(numEvents >= WIMA_EVENT_MAX))
+		{
 			// Send an error to the client.
 			wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -326,8 +326,8 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods) {
 	}
 }
 
-void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
-
+void wima_callback_mousePos(GLFWwindow* window, double x, double y)
+{
 	wima_assert_init;
 
 	// Get the window handle from GLFW.
@@ -352,23 +352,23 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	uint32_t numEvents;
 
 	// If we are moving the split...
-	if (wwin->ctx.movingSplit) {
-
+	if (wwin->ctx.movingSplit)
+	{
 		// Set the window as dirty with forcing layout.
 		wima_window_setDirty(wwin, true);
 	}
 
 	// If we right clicked on the split before this mouse move...
-	else {
-
+	else
+	{
 		// Set the window dirty but don't force layout.
 		wima_window_setDirty(wwin, false);
 
 		DynaTree areas = WIMA_WIN_AREAS(wwin);
 
 		// If we have a menu OR we are not on the split anymore...
-		if (WIMA_WIN_HAS_MENU(wwin) || !wima_area_mouseOnSplit(areas, wwin->ctx.cursorPos, &sevent)) {
-
+		if (WIMA_WIN_HAS_MENU(wwin) || !wima_area_mouseOnSplit(areas, wwin->ctx.cursorPos, &sevent))
+		{
 			// Erase the split.
 			wwin->ctx.split.split = -1;
 
@@ -382,13 +382,13 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 
 			// Find out if we switched areas.
 			WimaAreaNode area = wima_area_mouseOver(areas, pos);
-			if (area != wwin->ctx.cursorArea) {
-
+			if (area != wwin->ctx.cursorArea)
+			{
 				numEvents = wwin->ctx.eventCount;
 
 				// If we've already reached our max.
-				if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+				if (yerror(numEvents >= WIMA_EVENT_MAX))
+				{
 					// Send an error to the client.
 					wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -399,8 +399,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 				// Send the events.
 
 				// Only send the event if the area is valid.
-				if (wwin->ctx.cursorArea != WIMA_AREA_INVALID) {
-
+				if (wwin->ctx.cursorArea != WIMA_AREA_INVALID)
+				{
 					// Calculate a pointer to the event we'll fill.
 					e = wwin->ctx.events + numEvents;
 
@@ -415,8 +415,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 				}
 
 				// If we've already reached our max.
-				if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+				if (yerror(numEvents >= WIMA_EVENT_MAX))
+				{
 					// Send an error to the client.
 					wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -425,8 +425,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 				}
 
 				// Only send the event if the area is valid.
-				if (area != WIMA_AREA_INVALID) {
-
+				if (area != WIMA_AREA_INVALID)
+				{
 					// Calculate a pointer to the event we'll fill.
 					e = wwin->ctx.events + numEvents;
 
@@ -445,8 +445,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 		}
 
 		// We ARE on a split and we don't have a menu.
-		else {
-
+		else
+		{
 			// Put the split event in the context.
 			wwin->ctx.split = sevent;
 
@@ -461,8 +461,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			numEvents = wwin->ctx.eventCount;
 
 			// If we've already reached our max.
-			if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+			if (yerror(numEvents >= WIMA_EVENT_MAX))
+			{
 				// Send an error to the client.
 				wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -471,8 +471,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 			}
 
 			// If the area is valid...
-			if (wwin->ctx.cursorArea != WIMA_AREA_INVALID) {
-
+			if (wwin->ctx.cursorArea != WIMA_AREA_INVALID)
+			{
 				// Send an exit area event.
 
 				// Calculate a pointer to the event we'll fill.
@@ -496,8 +496,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
-	if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+	if (yerror(numEvents >= WIMA_EVENT_MAX))
+	{
 		// Send an error to the client.
 		wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -509,14 +509,14 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	WimaEvent* event = wwin->ctx.events + numEvents;
 
 	// If there are not mouse buttons being pressed...
-	if (!wwin->ctx.mouseBtns) {
-
+	if (!wwin->ctx.mouseBtns)
+	{
 		// Fill the event with a mouse pos.
 		event->type = WIMA_EVENT_MOUSE_POS;
 		event->pos = pos;
 	}
-	else {
-
+	else
+	{
 		// Fill the event with a drag.
 		event->type = WIMA_EVENT_MOUSE_DRAG;
 		event->drag.button = wwin->ctx.mouseBtns;
@@ -531,8 +531,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y) {
 	++(wwin->ctx.eventCount);
 }
 
-void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
-
+void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset)
+{
 	wima_assert_init;
 
 	// Get the window handle from GLFW.
@@ -557,8 +557,8 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
-	if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+	if (yerror(numEvents >= WIMA_EVENT_MAX))
+	{
 		// Send an error to the client.
 		wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -587,12 +587,13 @@ void wima_callback_scroll(GLFWwindow* window, double xoffset, double yoffset) {
 	++(wwin->ctx.eventCount);
 }
 
-void wima_callback_char(GLFWwindow* window, unsigned int code) {
+void wima_callback_char(GLFWwindow* window, unsigned int code)
+{
 	wima_callback_charMod(window, code, WIMA_MOD_NONE);
 }
 
-void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
-
+void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods)
+{
 	wima_assert_init;
 
 	// Get the window handle from GLFW.
@@ -613,8 +614,8 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
-	if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+	if (yerror(numEvents >= WIMA_EVENT_MAX))
+	{
 		// Send an error to the client.
 		wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -637,14 +638,12 @@ void wima_callback_charMod(GLFWwindow* window, unsigned int code, int mods) {
 	++(wwin->ctx.eventCount);
 }
 
-void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) {
-
+void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[])
+{
 	wima_assert_init;
 
 	// If the client hasn't asked us to handle the event, don't.
-	if (!wg.funcs.file_drop) {
-		return;
-	}
+	if (!wg.funcs.file_drop) return;
 
 	const char* errorMsg = "Could not allocate a file name";
 
@@ -660,8 +659,8 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
-	if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+	if (yerror(numEvents >= WIMA_EVENT_MAX))
+	{
 		// Send an error to the client.
 		wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -674,17 +673,18 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 
 	// Allocate a vector and check for error.
 	DynaVector strs = dvec_createStringVec(filec);
-	if (yerror(!strs)) {
+	if (yerror(!strs))
+	{
 		wima_error_desc(WIMA_STATUS_MALLOC_ERR, errorMsg);
 		return;
 	}
 
 	// Loop through the number of files.
-	for (int i = 0; i < filec; ++i) {
-
+	for (int i = 0; i < filec; ++i)
+	{
 		// Push the file onto the vector and check for error.
-		if (yerror(dvec_pushString(strs, filev[i]))) {
-
+		if (yerror(dvec_pushString(strs, filev[i])))
+		{
 			// Free the vector. (The strings will be automatically freed.)
 			dvec_free(strs);
 
@@ -704,8 +704,8 @@ void wima_callback_fileDrop(GLFWwindow* window, int filec, const char* filev[]) 
 	++(wwin->ctx.eventCount);
 }
 
-void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
-
+void wima_callback_mouseEnter(GLFWwindow* window, int entered)
+{
 	wima_assert_init;
 
 	// Get the window handle from GLFW.
@@ -723,11 +723,11 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 	uint32_t numEvents = wwin->ctx.eventCount;
 
 	// Send the enter event to the window first.
-	if (wg.funcs.enter) {
-
+	if (wg.funcs.enter)
+	{
 		// If we've already reached our max.
-		if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+		if (yerror(numEvents >= WIMA_EVENT_MAX))
+		{
 			// Send an error to the client.
 			wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -750,11 +750,11 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 	}
 
 	// Send an exit area event if necessary.
-	if (!entered && wwin->ctx.cursorArea != WIMA_AREA_INVALID) {
-
+	if (!entered && wwin->ctx.cursorArea != WIMA_AREA_INVALID)
+	{
 		// If we've already reached our max.
-		if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+		if (yerror(numEvents >= WIMA_EVENT_MAX))
+		{
 			// Send an error to the client.
 			wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -778,8 +778,8 @@ void wima_callback_mouseEnter(GLFWwindow* window, int entered) {
 	}
 }
 
-void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
-
+void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos)
+{
 	wima_assert_init;
 
 	// Get the window handle from GLFW.
@@ -794,16 +794,14 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 	wima_window_setDirty(wwin, false);
 
 	// If the client hasn't asked us to handle the event, don't.
-	if (!wg.funcs.pos) {
-		return;
-	}
+	if (!wg.funcs.pos) return;
 
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
-	if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+	if (yerror(numEvents >= WIMA_EVENT_MAX))
+	{
 		// Send an error to the client.
 		wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -823,8 +821,8 @@ void wima_callback_windowPos(GLFWwindow* window, int xpos, int ypos) {
 	++(wwin->ctx.eventCount);
 }
 
-void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
-
+void wima_callback_framebufferSize(GLFWwindow* window, int width, int height)
+{
 	wima_assert_init;
 
 	glViewport(0, 0, width, height);
@@ -857,16 +855,14 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	wima_area_resize(WIMA_WIN_AREAS(wwin), rect);
 
 	// If the client hasn't asked us to handle the event, don't.
-	if (!wg.funcs.fbsize) {
-		return;
-	}
+	if (!wg.funcs.fbsize) return;
 
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
-	if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+	if (yerror(numEvents >= WIMA_EVENT_MAX))
+	{
 		// Send an error to the client.
 		wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -886,8 +882,8 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height) {
 	++(wwin->ctx.eventCount);
 }
 
-void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
-
+void wima_callback_windowSize(GLFWwindow* window, int width, int height)
+{
 	wima_assert_init;
 
 	// Get the window handle from GLFW.
@@ -907,16 +903,14 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 	wwin->pixelRatio = (float) wwin->fbsize.w / width;
 
 	// If the client hasn't asked us to handle the event, don't.
-	if (!wg.funcs.winsize) {
-		return;
-	}
+	if (!wg.funcs.winsize) return;
 
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
-	if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+	if (yerror(numEvents >= WIMA_EVENT_MAX))
+	{
 		// Send an error to the client.
 		wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -936,8 +930,8 @@ void wima_callback_windowSize(GLFWwindow* window, int width, int height) {
 	++(wwin->ctx.eventCount);
 }
 
-void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
-
+void wima_callback_windowIconify(GLFWwindow* window, int minimized)
+{
 	wima_assert_init;
 
 	// Get the window handle from GLFW.
@@ -953,21 +947,17 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 
 	// If the window has been unminimized,
 	// set it as dirty and force layout.
-	if (!isMinimized) {
-		wima_window_setDirty(wwin, true);
-	}
+	if (!isMinimized) wima_window_setDirty(wwin, true);
 
 	// If the client hasn't asked us to handle the event, don't.
-	if (!wg.funcs.minimize) {
-		return;
-	}
+	if (!wg.funcs.minimize) return;
 
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
-	if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+	if (yerror(numEvents >= WIMA_EVENT_MAX))
+	{
 		// Send an error to the client.
 		wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -986,8 +976,8 @@ void wima_callback_windowIconify(GLFWwindow* window, int minimized) {
 	++(wwin->ctx.eventCount);
 }
 
-void wima_callback_windowFocus(GLFWwindow* window, int focused) {
-
+void wima_callback_windowFocus(GLFWwindow* window, int focused)
+{
 	wima_assert_init;
 
 	// Get the window handle from GLFW.
@@ -1004,22 +994,21 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 	// If the window just received focus, set it as
 	// dirty with forcing layout, and set it as the
 	// focused window.
-	if (hasFocus) {
+	if (hasFocus)
+	{
 		wima_window_setDirty(wwin, false);
 		wima_window_setFocused(wwh);
 	}
 
 	// If the client hasn't asked us to handle the event, don't.
-	if (!wg.funcs.focus) {
-		return;
-	}
+	if (!wg.funcs.focus) return;
 
 	// Get the number of events.
 	int numEvents = wwin->ctx.eventCount;
 
 	// If we've already reached our max.
-	if (yerror(numEvents >= WIMA_EVENT_MAX)) {
-
+	if (yerror(numEvents >= WIMA_EVENT_MAX))
+	{
 		// Send an error to the client.
 		wima_error(WIMA_STATUS_EVENT_DROPPED);
 
@@ -1038,8 +1027,8 @@ void wima_callback_windowFocus(GLFWwindow* window, int focused) {
 	++(wwin->ctx.eventCount);
 }
 
-void wima_callback_windowRefresh(GLFWwindow* window) {
-
+void wima_callback_windowRefresh(GLFWwindow* window)
+{
 	wima_assert_init;
 
 	// Get the window handle from GLFW.
@@ -1054,8 +1043,8 @@ void wima_callback_windowRefresh(GLFWwindow* window) {
 	wima_window_setDirty(wwin, false);
 }
 
-void wima_callback_windowClose(GLFWwindow* window) {
-
+void wima_callback_windowClose(GLFWwindow* window)
+{
 	// Note: Once we return from the callback, GLFW will destroy
 	// the window, so we have to do all of the processing here.
 	// We do not add this event to the events for the window,
@@ -1074,8 +1063,8 @@ void wima_callback_windowClose(GLFWwindow* window) {
 
 	// If the close function doesn't exist, OR
 	// running it tells us to close the window...
-	if (!close || close(wwh)) {
-
+	if (!close || close(wwh))
+	{
 		// Get the pointer to the window.
 		WimaWin* wwin = dvec_get(wg.windows, wwh);
 
@@ -1087,24 +1076,24 @@ void wima_callback_windowClose(GLFWwindow* window) {
 		// we can reuse it later. We do this
 		// instead of popping because we want
 		// all window handles to remain valid.
-		if (wwh == dvec_len(wg.windows) - 1) {
+		if (wwh == dvec_len(wg.windows) - 1)
 			dvec_pop(wg.windows);
-		}
-		else {
+		else
+		{
 			memset(wwin, 0, sizeof(WimaWin));
 		}
 	}
 
 	// If the user said NOT to close the window...
-	else {
-
+	else
+	{
 		// Tell GLFW to NOT close the window.
 		glfwSetWindowShouldClose(window, 0);
 	}
 }
 
-void wima_callback_monitorConnected(GLFWmonitor* monitor, int connected) {
-
+void wima_callback_monitorConnected(GLFWmonitor* monitor, int connected)
+{
 	// Note: Because this event is not connected to a
 	// window, and therefore, we cannot put it on a
 	// window's event queue, we send this one right away.
@@ -1115,21 +1104,19 @@ void wima_callback_monitorConnected(GLFWmonitor* monitor, int connected) {
 	WimaMonitorConnectedFunc monitor_func = wg.funcs.monitor;
 
 	// If there is a user-registered monitor callback, call it.
-	if (monitor_func) {
-		monitor_func((WimaMonitor*) monitor, connected == GLFW_CONNECTED);
-	}
+	if (monitor_func) monitor_func((WimaMonitor*) monitor, connected == GLFW_CONNECTED);
 }
 
-void wima_callback_error(int error, const char* desc) {
-
+void wima_callback_error(int error, const char* desc)
+{
 	// Print a standard header.
 	fprintf(stderr, "Error[%d]: %s\n", error, desc);
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	// Select the right WimaStatus based on the error.
-	switch (error) {
-
+	switch (error)
+	{
 		case GLFW_NOT_INITIALIZED:
 		{
 			status = WIMA_STATUS_INIT_ERR;
@@ -1181,8 +1168,8 @@ void wima_callback_error(int error, const char* desc) {
 	}
 
 	// If the status is an error...
-	if (status != WIMA_STATUS_SUCCESS) {
-
+	if (status != WIMA_STATUS_SUCCESS)
+	{
 		// Send the event to the client.
 		wima_error_desc(status, desc);
 	}

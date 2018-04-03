@@ -75,4 +75,4 @@ bool wima_dialog_nodeValid(WimaDialog wwh, DynaNode n);
 }
 #endif
 
-#endif // WIMA_DIALOG_H
+#endif  // WIMA_DIALOG_H

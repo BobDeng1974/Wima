@@ -42,15 +42,14 @@
 extern "C" {
 #endif
 
-#include <nanovg.h>
-#include <nanosvg.h>
-
-#include <dyna/nvector.h>
-
-#include <wima/wima.h>
 #include <wima/render.h>
+#include <wima/wima.h>
 
 #include <GLFW/glfw3.h>
+#include <dyna/nvector.h>
+
+#include <nanosvg.h>
+#include <nanovg.h>
 
 /**
  * @file render/render.h
@@ -70,8 +69,8 @@ extern "C" {
  * Render state (context). Because NanoVG does all of the
  * rendering, this just has the information for NanoVG.
  */
-typedef struct WimaRenderContext {
-
+typedef struct WimaRenderContext
+{
 	/// The NanoVG context.
 	NVGcontext* nvg;
 
@@ -101,23 +100,21 @@ typedef struct WimaRenderContext {
 /**
  * A size struct that uses unsigned shorts.
  */
-typedef struct WimaSizeS {
-
-	union {
-
+typedef struct WimaSizeS
+{
+	union
+	{
 		/// Access members as an array.
 		uint16_t v[2];
 
-		struct {
-
+		struct
+		{
 			/// The width.
 			uint16_t w;
 
 			/// The height.
 			uint16_t h;
-
 		};
-
 	};
 
 } WimaSizeS;
@@ -140,8 +137,8 @@ typedef struct WimaSizeS {
  * Provides a way to cast between NVGcolor and WimaColor.
  * It's necessary to have both to hide NanoVG from users.
  */
-typedef union WimaCol {
-
+typedef union WimaCol
+{
 	/// The NanoVG color.
 	NVGcolor nvg;
 
@@ -175,8 +172,8 @@ NVGcolor wima_color_int(unsigned int color) yinline;
  * Provides a way to cast between NVGpaint and WimaPaint.
  * It's necessary to have both to hide NanoVG from users.
  */
-typedef union WimaPnt {
-
+typedef union WimaPnt
+{
 	/// The NanoVG paint.
 	NVGpaint nvg;
 
@@ -221,8 +218,8 @@ NVGpaint wima_paint_svgRadialGradient(ynonnull WimaRenderContext* ctx, NSVGgradi
  * Provides a way to cast between NVGglyphPosition and WimaGlyphPosition.
  * It's necessary to have both to hide NanoVG from users.
  */
-typedef union WimaGlyphPos {
-
+typedef union WimaGlyphPos
+{
 	/// The NanoVG glyph position.
 	NVGglyphPosition nvg;
 
@@ -235,8 +232,8 @@ typedef union WimaGlyphPos {
  * Provides a way to cast between NVGtextRow and WimaTextRow.
  * It's necessary to have both to hide NanoVG from users.
  */
-typedef union WimaTxtRow {
-
+typedef union WimaTxtRow
+{
 	/// The NanoVG text row.
 	NVGtextRow nvg;
 
@@ -268,8 +265,8 @@ typedef NSVGimage* WimaIcn;
  * A way for WimaG to store the start and end
  * of paths in the iconPathWinding vector.
  */
-typedef struct WimaIconMarker {
-
+typedef struct WimaIconMarker
+{
 	/// The start index of the paths in the iconPathWinding vector.
 	uint32_t start;
 
@@ -282,7 +279,7 @@ typedef struct WimaIconMarker {
  * @def WIMA_ICON_RED
  * A mask for the red channel in an unsigned int.
  */
-#define WIMA_ICON_RED   (0x000000FF)
+#define WIMA_ICON_RED (0x000000FF)
 
 /**
  * @def WIMA_ICON_GREEN
@@ -294,7 +291,7 @@ typedef struct WimaIconMarker {
  * @def WIMA_ICON_BLUE
  * A mask for the blue channel in an unsigned int.
  */
-#define WIMA_ICON_BLUE  (0x00FF0000)
+#define WIMA_ICON_BLUE (0x00FF0000)
 
 /**
  * @def WIMA_ICON_ALPHA
@@ -468,124 +465,558 @@ void wima_icon_destroy(DynaNVector vec, void** ptr);
 #define WIMA_HSPACING (8)
 
 // Default text color.
-#define WIMA_THEME_DEF_TEXT                      {{{ 0.000f, 0.000f, 0.000f, 1.000f }}}
+#define WIMA_THEME_DEF_TEXT                    \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.000f, 0.000f, 0.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
 
 // Default highlighted text color.
-#define WIMA_THEME_DEF_TEXT_SELECTED             {{{ 1.000f, 1.000f, 1.000f, 1.000f }}}
+#define WIMA_THEME_DEF_TEXT_SELECTED           \
+	{                                          \
+		{                                      \
+			{                                  \
+				1.000f, 1.000f, 1.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
 
 // Menu separator color.
-#define WIMA_THEME_DEF_MENU_SEP                  {{{ 0.21568627451f, 0.21568627451f, 0.21568627451f, 1.000f}}}
+#define WIMA_THEME_DEF_MENU_SEP                                        \
+	{                                                                  \
+		{                                                              \
+			{                                                          \
+				0.21568627451f, 0.21568627451f, 0.21568627451f, 1.000f \
+			}                                                          \
+		}                                                              \
+	}
 
 // Default colors for all theme types.
-#define WIMA_THEME_DEF_BG                        {{{ 0.447f, 0.447f, 0.447f, 1.000f }}}
-#define WIMA_THEME_DEF_REGULAR_OUTLINE           {{{ 0.098f, 0.098f, 0.098f, 1.000f }}}
-#define WIMA_THEME_DEF_REGULAR_ITEM              {{{ 0.098f, 0.098f, 0.098f, 1.000f }}}
-#define WIMA_THEME_DEF_REGULAR_INNER             {{{ 0.600f, 0.600f, 0.600f, 1.000f }}}
-#define WIMA_THEME_DEF_REGULAR_INNER_SELECTED    {{{ 0.392f, 0.392f, 0.392f, 1.000f }}}
-#define WIMA_THEME_DEF_REGULAR_TEXT              WIMA_THEME_DEF_TEXT
-#define WIMA_THEME_DEF_REGULAR_TEXT_SELECTED     WIMA_THEME_DEF_TEXT_SELECTED
-#define WIMA_THEME_DEF_OPERATOR_OUTLINE              {{{ 0.098f, 0.098f, 0.098f, 1.000f }}}
-#define WIMA_THEME_DEF_OPERATOR_ITEM                 {{{ 0.098f, 0.098f, 0.098f, 1.000f }}}
-#define WIMA_THEME_DEF_OPERATOR_INNER                {{{ 0.600f, 0.600f, 0.600f, 1.000f }}}
-#define WIMA_THEME_DEF_OPERATOR_INNER_SELECTED       {{{ 0.392f, 0.392f, 0.392f, 1.000f }}}
-#define WIMA_THEME_DEF_OPERATOR_TEXT                 WIMA_THEME_DEF_TEXT
-#define WIMA_THEME_DEF_OPERATOR_TEXT_SELECTED        WIMA_THEME_DEF_TEXT_SELECTED
-#define WIMA_THEME_DEF_RADIO_OUTLINE             {{{ 0.000f, 0.000f, 0.000f, 1.000f }}}
-#define WIMA_THEME_DEF_RADIO_ITEM                {{{ 1.000f, 1.000f, 1.000f, 1.000f }}}
-#define WIMA_THEME_DEF_RADIO_INNER               {{{ 0.275f, 0.275f, 0.275f, 1.000f }}}
-#define WIMA_THEME_DEF_RADIO_INNER_SELECTED      {{{ 0.337f, 0.502f, 0.761f, 1.000f }}}
-#define WIMA_THEME_DEF_RADIO_TEXT                WIMA_THEME_DEF_TEXT_SELECTED
-#define WIMA_THEME_DEF_RADIO_TEXT_SELECTED       WIMA_THEME_DEF_TEXT
-#define WIMA_THEME_DEF_TEXTFIELD_OUTLINE         {{{ 0.098f, 0.098f, 0.098f, 1.000f }}}
-#define WIMA_THEME_DEF_TEXTFIELD_ITEM            {{{ 0.353f, 0.353f, 0.353f, 1.000f }}}
-#define WIMA_THEME_DEF_TEXTFIELD_INNER           {{{ 0.600f, 0.600f, 0.600f, 1.000f }}}
-#define WIMA_THEME_DEF_TEXTFIELD_INNER_SELECTED  {{{ 0.600f, 0.600f, 0.600f, 1.000f }}}
-#define WIMA_THEME_DEF_TEXTFIELD_TEXT            WIMA_THEME_DEF_TEXT
-#define WIMA_THEME_DEF_TEXTFIELD_TEXT_SELECTED   WIMA_THEME_DEF_TEXT_SELECTED
-#define WIMA_THEME_DEF_OPTION_OUTLINE            {{{ 0.000f, 0.000f, 0.000f, 1.000f }}}
-#define WIMA_THEME_DEF_OPTION_ITEM               {{{ 1.000f, 1.000f, 1.000f, 1.000f }}}
-#define WIMA_THEME_DEF_OPTION_INNER              {{{ 0.275f, 0.275f, 0.275f, 1.000f }}}
-#define WIMA_THEME_DEF_OPTION_INNER_SELECTED     {{{ 0.275f, 0.275f, 0.275f, 1.000f }}}
-#define WIMA_THEME_DEF_OPTION_TEXT               WIMA_THEME_DEF_TEXT
-#define WIMA_THEME_DEF_OPTION_TEXT_SELECTED      WIMA_THEME_DEF_TEXT_SELECTED
-#define WIMA_THEME_DEF_CHOICE_OUTLINE            {{{ 0.000f, 0.000f, 0.000f, 1.000f }}}
-#define WIMA_THEME_DEF_CHOICE_ITEM               {{{ 1.000f, 1.000f, 1.000f, 1.000f }}}
-#define WIMA_THEME_DEF_CHOICE_INNER              {{{ 0.275f, 0.275f, 0.275f, 1.000f }}}
-#define WIMA_THEME_DEF_CHOICE_INNER_SELECTED     {{{ 0.275f, 0.275f, 0.275f, 1.000f }}}
-#define WIMA_THEME_DEF_CHOICE_TEXT               WIMA_THEME_DEF_TEXT_SELECTED
-#define WIMA_THEME_DEF_CHOICE_TEXT_SELECTED      {{{ 0.800f, 0.800f, 0.800f, 1.000f }}}
-#define WIMA_THEME_DEF_NUMFIELD_OUTLINE          {{{ 0.098f, 0.098f, 0.098f, 1.000f }}}
-#define WIMA_THEME_DEF_NUMFIELD_ITEM             {{{ 0.353f, 0.353f, 0.353f, 1.000f }}}
-#define WIMA_THEME_DEF_NUMFIELD_INNER            {{{ 0.706f, 0.706f, 0.706f, 1.000f }}}
-#define WIMA_THEME_DEF_NUMFIELD_INNER_SELECTED   {{{ 0.600f, 0.600f, 0.600f, 1.000f }}}
-#define WIMA_THEME_DEF_NUMFIELD_TEXT             WIMA_THEME_DEF_TEXT
-#define WIMA_THEME_DEF_NUMFIELD_TEXT_SELECTED    WIMA_THEME_DEF_TEXT_SELECTED
-#define WIMA_THEME_DEF_SLIDER_OUTLINE            {{{ 0.098f, 0.098f, 0.098f, 1.000f }}}
-#define WIMA_THEME_DEF_SLIDER_ITEM               {{{ 0.502f, 0.502f, 0.502f, 1.000f }}}
-#define WIMA_THEME_DEF_SLIDER_INNER              {{{ 0.706f, 0.706f, 0.706f, 1.000f }}}
-#define WIMA_THEME_DEF_SLIDER_INNER_SELECTED     {{{ 0.600f, 0.600f, 0.600f, 1.000f }}}
-#define WIMA_THEME_DEF_SLIDER_TEXT               WIMA_THEME_DEF_TEXT
-#define WIMA_THEME_DEF_SLIDER_TEXT_SELECTED      WIMA_THEME_DEF_TEXT_SELECTED
-#define WIMA_THEME_DEF_SCROLLBAR_OUTLINE         {{{ 0.196f, 0.196f, 0.196f, 1.000f }}}
-#define WIMA_THEME_DEF_SCROLLBAR_ITEM            {{{ 0.502f, 0.502f, 0.502f, 1.000f }}}
-#define WIMA_THEME_DEF_SCROLLBAR_INNER           {{{ 0.314f, 0.314f, 0.314f, 0.706f }}}
-#define WIMA_THEME_DEF_SCROLLBAR_INNER_SELECTED  {{{ 0.392f, 0.392f, 0.392f, 0.706f }}}
-#define WIMA_THEME_DEF_SCROLLBAR_TEXT            WIMA_THEME_DEF_TEXT
-#define WIMA_THEME_DEF_SCROLLBAR_TEXT_SELECTED   WIMA_THEME_DEF_TEXT_SELECTED
-#define WIMA_THEME_DEF_MENU_OUTLINE              {{{ 0.000f, 0.000f, 0.000f, 1.000f }}}
-#define WIMA_THEME_DEF_MENU_ITEM                 {{{ 0.392f, 0.392f, 0.392f, 1.000f }}}
-#define WIMA_THEME_DEF_MENU_INNER                {{{ 0.098f, 0.098f, 0.098f, 0.902f }}}
-#define WIMA_THEME_DEF_MENU_INNER_SELECTED       {{{ 0.176f, 0.176f, 0.176f, 0.902f }}}
-#define WIMA_THEME_DEF_MENU_TEXT                 {{{ 0.627f, 0.627f, 0.627f, 1.000f }}}
-#define WIMA_THEME_DEF_MENU_TEXT_SELECTED        WIMA_THEME_DEF_TEXT_SELECTED
-#define WIMA_THEME_DEF_MENU_ITEM_OUTLINE         {{{ 0.000f, 0.000f, 0.000f, 1.000f }}}
-#define WIMA_THEME_DEF_MENU_ITEM_ITEM            {{{ 0.675f, 0.675f, 0.675f, 0.502f }}}
-#define WIMA_THEME_DEF_MENU_ITEM_INNER           {{{ 0.000f, 0.000f, 0.000f, 0.000f }}}
-#define WIMA_THEME_DEF_MENU_ITEM_INNER_SELECTED  {{{ 0.337f, 0.502f, 0.761f, 1.000f }}}
-#define WIMA_THEME_DEF_MENU_ITEM_TEXT            WIMA_THEME_DEF_TEXT_SELECTED
-#define WIMA_THEME_DEF_MENU_ITEM_TEXT_SELECTED   WIMA_THEME_DEF_TEXT
-#define WIMA_THEME_DEF_TOOLTIP_OUTLINE          {{{ 0.000f, 0.000f, 0.000f, 1.000f }}}
-#define WIMA_THEME_DEF_TOOLTIP_ITEM             {{{ 0.392f, 0.392f, 0.392f, 1.000f }}}
-#define WIMA_THEME_DEF_TOOLTIP_INNER            {{{ 0.098f, 0.098f, 0.098f, 0.902f }}}
-#define WIMA_THEME_DEF_TOOLTIP_INNER_SELECTED   {{{ 0.176f, 0.176f, 0.176f, 0.902f }}}
-#define WIMA_THEME_DEF_TOOLTIP_TEXT             {{{ 0.627f, 0.627f, 0.627f, 1.000f }}}
-#define WIMA_THEME_DEF_TOOLTIP_TEXT_SELECTED    WIMA_THEME_DEF_TEXT_SELECTED
-#define WIMA_THEME_DEF_NODE_OUTLINE             WIMA_THEME_DEF_TEXT
-#define WIMA_THEME_DEF_NODE_OUTLINE_SELECTED    {{{ 0.945f, 0.345f, 0.000f, 1.000f }}}
-#define WIMA_THEME_DEF_NODE_OUTLINE_ACTIVE      {{{ 1.000f, 0.667f, 0.251f, 1.000f }}}
-#define WIMA_THEME_DEF_NODE_BG                  {{{ 0.608f, 0.608f, 0.608f, 0.627f }}}
-#define WIMA_THEME_DEF_NODE_TEXT                WIMA_THEME_DEF_TEXT
-#define WIMA_THEME_DEF_NODE_TEXT_SELECTED       {{{ 0.498f, 0.439f, 0.439f, 1.000f }}}
-#define WIMA_THEME_DEF_NODE_WIRE                {{{ 0.500f, 0.500f, 0.500f, 1.000f }}}
-#define WIMA_THEME_DEF_NODE_WIRE_OUTLINE        {{{ 0.000f, 0.000f, 0.000f, 1.000f }}}
-#define WIMA_THEME_DEF_NODE_WIRE_SELECTED       {{{ 1.000f, 1.000f, 1.000f, 1.000f }}}
+#define WIMA_THEME_DEF_BG                      \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.447f, 0.447f, 0.447f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_REGULAR_OUTLINE         \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.098f, 0.098f, 0.098f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_REGULAR_ITEM            \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.098f, 0.098f, 0.098f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_REGULAR_INNER           \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.600f, 0.600f, 0.600f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_REGULAR_INNER_SELECTED  \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.392f, 0.392f, 0.392f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_REGULAR_TEXT WIMA_THEME_DEF_TEXT
+#define WIMA_THEME_DEF_REGULAR_TEXT_SELECTED WIMA_THEME_DEF_TEXT_SELECTED
+#define WIMA_THEME_DEF_OPERATOR_OUTLINE        \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.098f, 0.098f, 0.098f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_OPERATOR_ITEM           \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.098f, 0.098f, 0.098f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_OPERATOR_INNER          \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.600f, 0.600f, 0.600f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_OPERATOR_INNER_SELECTED \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.392f, 0.392f, 0.392f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_OPERATOR_TEXT WIMA_THEME_DEF_TEXT
+#define WIMA_THEME_DEF_OPERATOR_TEXT_SELECTED WIMA_THEME_DEF_TEXT_SELECTED
+#define WIMA_THEME_DEF_RADIO_OUTLINE           \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.000f, 0.000f, 0.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_RADIO_ITEM              \
+	{                                          \
+		{                                      \
+			{                                  \
+				1.000f, 1.000f, 1.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_RADIO_INNER             \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.275f, 0.275f, 0.275f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_RADIO_INNER_SELECTED    \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.337f, 0.502f, 0.761f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_RADIO_TEXT WIMA_THEME_DEF_TEXT_SELECTED
+#define WIMA_THEME_DEF_RADIO_TEXT_SELECTED WIMA_THEME_DEF_TEXT
+#define WIMA_THEME_DEF_TEXTFIELD_OUTLINE       \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.098f, 0.098f, 0.098f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_TEXTFIELD_ITEM          \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.353f, 0.353f, 0.353f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_TEXTFIELD_INNER         \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.600f, 0.600f, 0.600f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_TEXTFIELD_INNER_SELECTED \
+	{                                           \
+		{                                       \
+			{                                   \
+				0.600f, 0.600f, 0.600f, 1.000f  \
+			}                                   \
+		}                                       \
+	}
+#define WIMA_THEME_DEF_TEXTFIELD_TEXT WIMA_THEME_DEF_TEXT
+#define WIMA_THEME_DEF_TEXTFIELD_TEXT_SELECTED WIMA_THEME_DEF_TEXT_SELECTED
+#define WIMA_THEME_DEF_OPTION_OUTLINE          \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.000f, 0.000f, 0.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_OPTION_ITEM             \
+	{                                          \
+		{                                      \
+			{                                  \
+				1.000f, 1.000f, 1.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_OPTION_INNER            \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.275f, 0.275f, 0.275f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_OPTION_INNER_SELECTED   \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.275f, 0.275f, 0.275f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_OPTION_TEXT WIMA_THEME_DEF_TEXT
+#define WIMA_THEME_DEF_OPTION_TEXT_SELECTED WIMA_THEME_DEF_TEXT_SELECTED
+#define WIMA_THEME_DEF_CHOICE_OUTLINE          \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.000f, 0.000f, 0.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_CHOICE_ITEM             \
+	{                                          \
+		{                                      \
+			{                                  \
+				1.000f, 1.000f, 1.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_CHOICE_INNER            \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.275f, 0.275f, 0.275f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_CHOICE_INNER_SELECTED   \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.275f, 0.275f, 0.275f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_CHOICE_TEXT WIMA_THEME_DEF_TEXT_SELECTED
+#define WIMA_THEME_DEF_CHOICE_TEXT_SELECTED    \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.800f, 0.800f, 0.800f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_NUMFIELD_OUTLINE        \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.098f, 0.098f, 0.098f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_NUMFIELD_ITEM           \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.353f, 0.353f, 0.353f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_NUMFIELD_INNER          \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.706f, 0.706f, 0.706f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_NUMFIELD_INNER_SELECTED \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.600f, 0.600f, 0.600f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_NUMFIELD_TEXT WIMA_THEME_DEF_TEXT
+#define WIMA_THEME_DEF_NUMFIELD_TEXT_SELECTED WIMA_THEME_DEF_TEXT_SELECTED
+#define WIMA_THEME_DEF_SLIDER_OUTLINE          \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.098f, 0.098f, 0.098f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_SLIDER_ITEM             \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.502f, 0.502f, 0.502f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_SLIDER_INNER            \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.706f, 0.706f, 0.706f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_SLIDER_INNER_SELECTED   \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.600f, 0.600f, 0.600f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_SLIDER_TEXT WIMA_THEME_DEF_TEXT
+#define WIMA_THEME_DEF_SLIDER_TEXT_SELECTED WIMA_THEME_DEF_TEXT_SELECTED
+#define WIMA_THEME_DEF_SCROLLBAR_OUTLINE       \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.196f, 0.196f, 0.196f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_SCROLLBAR_ITEM          \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.502f, 0.502f, 0.502f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_SCROLLBAR_INNER         \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.314f, 0.314f, 0.314f, 0.706f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_SCROLLBAR_INNER_SELECTED \
+	{                                           \
+		{                                       \
+			{                                   \
+				0.392f, 0.392f, 0.392f, 0.706f  \
+			}                                   \
+		}                                       \
+	}
+#define WIMA_THEME_DEF_SCROLLBAR_TEXT WIMA_THEME_DEF_TEXT
+#define WIMA_THEME_DEF_SCROLLBAR_TEXT_SELECTED WIMA_THEME_DEF_TEXT_SELECTED
+#define WIMA_THEME_DEF_MENU_OUTLINE            \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.000f, 0.000f, 0.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_MENU_ITEM               \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.392f, 0.392f, 0.392f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_MENU_INNER              \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.098f, 0.098f, 0.098f, 0.902f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_MENU_INNER_SELECTED     \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.176f, 0.176f, 0.176f, 0.902f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_MENU_TEXT               \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.627f, 0.627f, 0.627f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_MENU_TEXT_SELECTED WIMA_THEME_DEF_TEXT_SELECTED
+#define WIMA_THEME_DEF_MENU_ITEM_OUTLINE       \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.000f, 0.000f, 0.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_MENU_ITEM_ITEM          \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.675f, 0.675f, 0.675f, 0.502f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_MENU_ITEM_INNER         \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.000f, 0.000f, 0.000f, 0.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_MENU_ITEM_INNER_SELECTED \
+	{                                           \
+		{                                       \
+			{                                   \
+				0.337f, 0.502f, 0.761f, 1.000f  \
+			}                                   \
+		}                                       \
+	}
+#define WIMA_THEME_DEF_MENU_ITEM_TEXT WIMA_THEME_DEF_TEXT_SELECTED
+#define WIMA_THEME_DEF_MENU_ITEM_TEXT_SELECTED WIMA_THEME_DEF_TEXT
+#define WIMA_THEME_DEF_TOOLTIP_OUTLINE         \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.000f, 0.000f, 0.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_TOOLTIP_ITEM            \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.392f, 0.392f, 0.392f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_TOOLTIP_INNER           \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.098f, 0.098f, 0.098f, 0.902f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_TOOLTIP_INNER_SELECTED  \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.176f, 0.176f, 0.176f, 0.902f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_TOOLTIP_TEXT            \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.627f, 0.627f, 0.627f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_TOOLTIP_TEXT_SELECTED WIMA_THEME_DEF_TEXT_SELECTED
+#define WIMA_THEME_DEF_NODE_OUTLINE WIMA_THEME_DEF_TEXT
+#define WIMA_THEME_DEF_NODE_OUTLINE_SELECTED   \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.945f, 0.345f, 0.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_NODE_OUTLINE_ACTIVE     \
+	{                                          \
+		{                                      \
+			{                                  \
+				1.000f, 0.667f, 0.251f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_NODE_BG                 \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.608f, 0.608f, 0.608f, 0.627f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_NODE_TEXT WIMA_THEME_DEF_TEXT
+#define WIMA_THEME_DEF_NODE_TEXT_SELECTED      \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.498f, 0.439f, 0.439f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_NODE_WIRE               \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.500f, 0.500f, 0.500f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_NODE_WIRE_OUTLINE       \
+	{                                          \
+		{                                      \
+			{                                  \
+				0.000f, 0.000f, 0.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
+#define WIMA_THEME_DEF_NODE_WIRE_SELECTED      \
+	{                                          \
+		{                                      \
+			{                                  \
+				1.000f, 1.000f, 1.000f, 1.000f \
+			}                                  \
+		}                                      \
+	}
 
 // The number of theme types
-#define WIMA_THEME_NUM_TYPES        (14)
+#define WIMA_THEME_NUM_TYPES (14)
 
 // The length of the background theme item.
-#define WIMA_THEME_BG_LENGTH        (1)
+#define WIMA_THEME_BG_LENGTH (1)
 
 // The number of widget themes.
-#define WIMA_THEME_WIDGET_NUM  (12)
+#define WIMA_THEME_WIDGET_NUM (12)
 
 // The length of background plus widget.
-#define WIMA_THEME_WIDGET_LENGTH     (WIMA_THEME_BG_LENGTH + WIMA_THEME_WIDGET_NUM)
+#define WIMA_THEME_WIDGET_LENGTH (WIMA_THEME_BG_LENGTH + WIMA_THEME_WIDGET_NUM)
 
 // The number of types in a widget theme.
-#define WIMA_THEME_WIDGET_NUM_TYPES   (9)
+#define WIMA_THEME_WIDGET_NUM_TYPES (9)
 
 // The number of colors in a widget theme.
-#define WIMA_THEME_WIDGET_NUM_COLORS  (6)
+#define WIMA_THEME_WIDGET_NUM_COLORS (6)
 
 // The number of types in a node theme.
-#define WIMA_THEME_NODE_NUM_TYPES   (10)
+#define WIMA_THEME_NODE_NUM_TYPES (10)
 
 // The number of colors in a node theme.
-#define WIMA_THEME_NODE_NUM_COLORS  (9)
+#define WIMA_THEME_NODE_NUM_COLORS (9)
 
 // A max buffer for generating names.
-#define WIMA_THEME_MAX_BUFFER       (1025)
+#define WIMA_THEME_MAX_BUFFER (1025)
 
 //! @endcond Doxygen suppress.
 
@@ -652,4 +1083,4 @@ WimaProperty wima_theme_loadNode(ynonnull WimaProperty* starts) yinline;
 }
 #endif
 
-#endif // WIMA_RENDER_PRIVATE_H
+#endif  // WIMA_RENDER_PRIVATE_H

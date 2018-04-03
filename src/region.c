@@ -34,21 +34,22 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <stdint.h>
+#include <wima/wima.h>
+
+#include "region.h"
+
+#include "global.h"
 
 #include <yc/error.h>
 
-#include <wima/wima.h>
-
-#include "global.h"
-#include "region.h"
+#include <stdint.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-uint8_t wima_region_setVerticalFlag(uint8_t flags) {
-
+uint8_t wima_region_setVerticalFlag(uint8_t flags)
+{
 	wima_assert_init;
 
 	// Set the flag.
@@ -57,8 +58,8 @@ uint8_t wima_region_setVerticalFlag(uint8_t flags) {
 	return flags;
 }
 
-uint8_t wima_region_clearVerticalFlag(uint8_t flags) {
-
+uint8_t wima_region_clearVerticalFlag(uint8_t flags)
+{
 	wima_assert_init;
 
 	// Clear the flag.
@@ -67,8 +68,8 @@ uint8_t wima_region_clearVerticalFlag(uint8_t flags) {
 	return flags;
 }
 
-uint8_t wima_region_setLeftFlag(uint8_t flags) {
-
+uint8_t wima_region_setLeftFlag(uint8_t flags)
+{
 	wima_assert_init;
 
 	// Set the flag.
@@ -77,8 +78,8 @@ uint8_t wima_region_setLeftFlag(uint8_t flags) {
 	return flags;
 }
 
-uint8_t wima_region_clearLeftFlag(uint8_t flags) {
-
+uint8_t wima_region_clearLeftFlag(uint8_t flags)
+{
 	wima_assert_init;
 
 	// Clear the flag.
@@ -87,8 +88,8 @@ uint8_t wima_region_clearLeftFlag(uint8_t flags) {
 	return flags;
 }
 
-uint8_t wima_region_setRowFlag(uint8_t flags) {
-
+uint8_t wima_region_setRowFlag(uint8_t flags)
+{
 	wima_assert_init;
 
 	// Set the flag.
@@ -97,8 +98,8 @@ uint8_t wima_region_setRowFlag(uint8_t flags) {
 	return flags;
 }
 
-uint8_t wima_region_clearRowFlag(uint8_t flags) {
-
+uint8_t wima_region_clearRowFlag(uint8_t flags)
+{
 	wima_assert_init;
 
 	// Clear the flag.
@@ -107,8 +108,8 @@ uint8_t wima_region_clearRowFlag(uint8_t flags) {
 	return flags;
 }
 
-uint8_t wima_region_setResizableFlag(uint8_t flags) {
-
+uint8_t wima_region_setResizableFlag(uint8_t flags)
+{
 	wima_assert_init;
 
 	// Set the flag.
@@ -117,8 +118,8 @@ uint8_t wima_region_setResizableFlag(uint8_t flags) {
 	return flags;
 }
 
-uint8_t wima_region_clearResizableFlag(uint8_t flags) {
-
+uint8_t wima_region_clearResizableFlag(uint8_t flags)
+{
 	wima_assert_init;
 
 	// Clear the flag.
@@ -127,8 +128,8 @@ uint8_t wima_region_clearResizableFlag(uint8_t flags) {
 	return flags;
 }
 
-uint8_t wima_region_setScrollFlags(uint8_t flags, bool main, bool opposite) {
-
+uint8_t wima_region_setScrollFlags(uint8_t flags, bool main, bool opposite)
+{
 	wima_assert_init;
 
 	// Just set them as vertical and horizontal for now.
@@ -140,8 +141,8 @@ uint8_t wima_region_setScrollFlags(uint8_t flags, bool main, bool opposite) {
 	return flags;
 }
 
-uint8_t wima_region_clearScrollFlags(uint8_t flags) {
-
+uint8_t wima_region_clearScrollFlags(uint8_t flags)
+{
 	wima_assert_init;
 
 	// Clear the flags.
@@ -150,8 +151,8 @@ uint8_t wima_region_clearScrollFlags(uint8_t flags) {
 	return flags;
 }
 
-WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8_t flags) {
-
+WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8_t flags)
+{
 	wima_assert_init;
 
 	wassert(layout != NULL, WIMA_ASSERT_REG_LAYOUT_NULL);
@@ -170,10 +171,8 @@ WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8
 	bool swtch = (flags & WIMA_REG_VERTICAL) == 0;
 
 	// Figure out the flags for each direction.
-	bool vertical = swtch ? (flags & WIMA_REG_SCROLL_HORIZONTAL) :
-	                        (flags & WIMA_REG_SCROLL_VERTICAL);
-	bool horizontal = swtch ? (flags & WIMA_REG_SCROLL_VERTICAL) :
-	                          (flags & WIMA_REG_SCROLL_HORIZONTAL);
+	bool vertical = swtch ? (flags & WIMA_REG_SCROLL_HORIZONTAL) : (flags & WIMA_REG_SCROLL_VERTICAL);
+	bool horizontal = swtch ? (flags & WIMA_REG_SCROLL_VERTICAL) : (flags & WIMA_REG_SCROLL_HORIZONTAL);
 
 	// Do the switch, including clearing the flags
 	// first (so the results are not polluted).
@@ -189,7 +188,8 @@ WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8
 	size_t len = dvec_len(wg.regions);
 
 	// Push onto the vector and check for error.
-	if (yerror(dvec_push(wg.regions, &reg))) {
+	if (yerror(dvec_push(wg.regions, &reg)))
+	{
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_REGION_INVALID;
 	}

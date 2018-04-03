@@ -36,13 +36,13 @@
 
 #include <wima/wima.h>
 
+#include "cursor.h"
+
 #include "global.h"
 #include "window.h"
 
-#include "cursor.h"
-
-WimaCursor* wima_cursor_create(WimaCursorImage img, int xhot, int yhot) {
-
+WimaCursor* wima_cursor_create(WimaCursorImage img, int xhot, int yhot)
+{
 	wima_assert_init;
 
 	wassert(img.pixels != NULL, WIMA_ASSERT_IMG_DATA);
@@ -58,7 +58,8 @@ WimaCursor* wima_cursor_create(WimaCursorImage img, int xhot, int yhot) {
 	return (WimaCursor*) glfwCreateCursor(&i.glfw, xhot, yhot);
 }
 
-void wima_cursor_destroy(WimaCursor* cursor) {
+void wima_cursor_destroy(WimaCursor* cursor)
+{
 	wima_assert_init;
 	wassert(cursor != NULL, WIMA_ASSERT_CURSOR);
 	glfwDestroyCursor((GLFWcursor*) cursor);

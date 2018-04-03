@@ -60,8 +60,8 @@ extern "C" {
  * Provides a way to cast between GLFWimage and WimaImage.
  * It's necessary to have both to hide GLFW from users.
  */
-typedef union WimaCursorImg {
-
+typedef union WimaCursorImg
+{
 	/// The GLFW image.
 	GLFWimage glfw;
 
@@ -78,4 +78,4 @@ typedef union WimaCursorImg {
 }
 #endif
 
-#endif // WIMA_CURSOR_PRIVATE_H
+#endif  // WIMA_CURSOR_PRIVATE_H

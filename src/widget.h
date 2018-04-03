@@ -66,15 +66,15 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include <string.h>
+#include <wima/prop.h>
+#include <wima/wima.h>
+
+#include "event.h"
 
 #include <dyna/pool.h>
 
-#include <wima/wima.h>
-#include <wima/prop.h>
-
-#include "event.h"
+#include <stdint.h>
+#include <string.h>
 
 /**
  * @file widget.h
@@ -182,4 +182,4 @@ void wima_widget_char(WimaWidget wdgt, WimaCharEvent event);
 }
 #endif
 
-#endif // WIMA_WIDGET_H
+#endif  // WIMA_WIDGET_H

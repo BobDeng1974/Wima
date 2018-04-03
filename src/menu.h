@@ -42,9 +42,9 @@
 extern "C" {
 #endif
 
-#include <stdbool.h>
-
 #include <wima/wima.h>
+
+#include <stdbool.h>
 
 /**
  * @file menu.h
@@ -67,10 +67,10 @@ extern "C" {
 /**
  * A menu item.
  */
-typedef struct WimaMnuItm {
-
-	union {
-
+typedef struct WimaMnuItm
+{
+	union
+	{
 		/// The submenu.
 		WimaMenu subMenu;
 
@@ -103,8 +103,8 @@ typedef struct WimaMnuItm {
 /**
  * A menu.
  */
-typedef struct WimaMnu {
-
+typedef struct WimaMnu
+{
 	/// The menu's rectangle.
 	WimaRect rect;
 
@@ -137,8 +137,7 @@ typedef struct WimaMnu {
  * @return			The newly-created WimaMenuItem, or if there was
  *					an error, WIMA_MENU_ITEM_INVALID.
  */
-WimaMenuItem wima_menu_item_register(const char* const name, WimaIcon icon,
-                                     WimaMenuItemFunc func, bool hasSub);
+WimaMenuItem wima_menu_item_register(const char* const name, WimaIcon icon, WimaMenuItemFunc func, bool hasSub);
 
 /**
  * Registers a menu for area options and returns the menu.
@@ -155,4 +154,4 @@ WimaMenu wima_menu_registerAreaOptions();
 }
 #endif
 
-#endif // WIMA_MENU_PRIVATE_H
+#endif  // WIMA_MENU_PRIVATE_H

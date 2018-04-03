@@ -42,25 +42,22 @@
 extern "C" {
 #endif
 
-#include <stdbool.h>
-
-#include <yc/assert.h>
-
-#include <dyna/vector.h>
-#include <dyna/pool.h>
-
-#include <GLFW/glfw3.h>
-
-#include <nanovg.h>
-
 #include <wima/wima.h>
 
-#include "event.h"
 #include "area.h"
-#include "workspace.h"
+#include "event.h"
 #include "menu.h"
+#include "workspace.h"
 
 #include "render/render.h"
+
+#include <GLFW/glfw3.h>
+#include <dyna/pool.h>
+#include <dyna/vector.h>
+#include <yc/assert.h>
+
+#include <nanovg.h>
+#include <stdbool.h>
 
 /**
  * @file window.h
@@ -90,7 +87,7 @@ extern "C" {
  * @param win	The window to test.
  * @return		true if @a win is dirty, false otherwise.
  */
-#define WIMA_WIN_IS_DIRTY(win)  (((win)->flags) & WIMA_WIN_DIRTY)
+#define WIMA_WIN_IS_DIRTY(win) (((win)->flags) & WIMA_WIN_DIRTY)
 
 /**
  * @def WIMA_WIN_LAYOUT
@@ -110,7 +107,7 @@ extern "C" {
  * @param win	The window to test.
  * @return		true if @a win needs layout, false otherwise.
  */
-#define WIMA_WIN_NEEDS_LAYOUT(win)  (((win)->flags) & (WIMA_WIN_LAYOUT | WIMA_WIN_LAYOUT_FORCE))
+#define WIMA_WIN_NEEDS_LAYOUT(win) (((win)->flags) & (WIMA_WIN_LAYOUT | WIMA_WIN_LAYOUT_FORCE))
 
 /**
  * @def WIMA_WIN_MENU
@@ -124,7 +121,7 @@ extern "C" {
  * @param win	The window to test.
  * @return		true if @a win has a menu, false otherwise.
  */
-#define WIMA_WIN_HAS_MENU(win)         (((win)->flags) & WIMA_WIN_MENU)
+#define WIMA_WIN_HAS_MENU(win) (((win)->flags) & WIMA_WIN_MENU)
 
 /**
  * @def WIMA_WIN_MENU_RELEASED
@@ -155,7 +152,7 @@ extern "C" {
  * @param win	The window to test.
  * @return		true if @a win's menu is a context menu, false otherwise.
  */
-#define WIMA_WIN_MENU_IS_CONTEXT(win)  (((win)->flags) & WIMA_WIN_MENU_CONTEXT)
+#define WIMA_WIN_MENU_IS_CONTEXT(win) (((win)->flags) & WIMA_WIN_MENU_CONTEXT)
 
 /**
  * @def WIMA_WIN_MENU_ITEM_PRESS
@@ -199,8 +196,8 @@ extern "C" {
  * which is used to store the click location in the
  * same place.
  */
-typedef union WimaClickItem {
-
+typedef union WimaClickItem
+{
 	/// The widget.
 	WimaWidget widget;
 
@@ -212,8 +209,8 @@ typedef union WimaClickItem {
 /**
  * Data for a window's UI context.
  */
-typedef struct WimaWinCtx {
-
+typedef struct WimaWinCtx
+{
 	/// Where the cursor was last frame.
 	WimaVec last_cursor;
 
@@ -285,8 +282,8 @@ typedef struct WimaWinCtx {
 /**
  * Data for a window in Wima.
  */
-typedef struct WimaWin {
-
+typedef struct WimaWin
+{
 	/// The GLFW window.
 	GLFWwindow* window;
 
@@ -481,7 +478,7 @@ bool wima_window_valid(WimaWindow wwh);
  * @param	win	The GLFW window to query.
  * @return		The Wima window handle.
  */
-#define WIMA_WIN(win) ((WimaWindow) (long) glfwGetWindowUserPointer(win))
+#define WIMA_WIN(win) ((WimaWindow)(long) glfwGetWindowUserPointer(win))
 
 /**
  * @def WIMA_WIN_AREAS
@@ -542,7 +539,7 @@ void wima_window_sub_sub1_click(WimaWindow wwh);
 
 #else
 #	define WIMA_WIN_AREA_MENU_NUM_ITEMS (2)
-#endif // NDEBUG
+#endif  // NDEBUG
 
 /**
  * @}
@@ -552,4 +549,4 @@ void wima_window_sub_sub1_click(WimaWindow wwh);
 }
 #endif
 
-#endif // WIMA_WINDOW_H
+#endif  // WIMA_WINDOW_H

@@ -42,8 +42,8 @@
 extern "C" {
 #endif
 
-#include <wima/render.h>
 #include <wima/layout.h>
+#include <wima/render.h>
 
 #include "item.h"
 #include "widget.h"
@@ -61,43 +61,44 @@ extern "C" {
 /**
  * The types of layout stages Wima can be in.
  */
-typedef enum WimaLayoutStage {
+typedef enum WimaLayoutStage
+{
 
 	/// Layout stage.
-	WIMA_UI_STAGE_LAYOUT       = 0,
+	WIMA_UI_STAGE_LAYOUT = 0,
 
 	/// Post layout stage (drawing).
-	WIMA_UI_STAGE_POST_LAYOUT  = 1,
+	WIMA_UI_STAGE_POST_LAYOUT = 1,
 
 	/// Processing stage (event handling).
-	WIMA_UI_STAGE_PROCESS      = 2,
+	WIMA_UI_STAGE_PROCESS = 2,
 
 } WimaLayoutStage;
 
 /**
  * A flag indicating whether a layout is enabled.
  */
-#define WIMA_LAYOUT_ENABLE      (0x0001)
+#define WIMA_LAYOUT_ENABLE (0x0001)
 
 /**
  * A flag indicating whether a layout is a row.
  */
-#define WIMA_LAYOUT_ROW         (0x0002)
+#define WIMA_LAYOUT_ROW (0x0002)
 
 /**
  * A flag indicating whether a layout is a column.
  */
-#define WIMA_LAYOUT_COL         (0x0004)
+#define WIMA_LAYOUT_COL (0x0004)
 
 /**
  * A flag indicating whether a layout is a split.
  */
-#define WIMA_LAYOUT_SPLIT       (0x0008)
+#define WIMA_LAYOUT_SPLIT (0x0008)
 
 /**
  * A flag indicating whether a layout is a separator.
  */
-#define WIMA_LAYOUT_SEP         (0x0010)
+#define WIMA_LAYOUT_SEP (0x0010)
 
 // We may use these later, but not for now.
 //#define WIMA_LAYOUT_ROW_FLOW    (0x0020)
@@ -106,27 +107,27 @@ typedef enum WimaLayoutStage {
 /**
  * A flag indicating whether a layout has a box.
  */
-#define WIMA_LAYOUT_BOX         (0x0080)
+#define WIMA_LAYOUT_BOX (0x0080)
 
 /**
  * A flag indicating whether a layout expands horizontally.
  */
-#define WIMA_LAYOUT_FILL_HOR    (0x0100)
+#define WIMA_LAYOUT_FILL_HOR (0x0100)
 
 /**
  * A flag indicating whether a layout expands vertically.
  */
-#define WIMA_LAYOUT_FILL_VER    (0x0200)
+#define WIMA_LAYOUT_FILL_VER (0x0200)
 
 /**
  * A flag indicating whether a layout scrolls horizontally.
  */
-#define WIMA_LAYOUT_SCROLL_HOR  (0x0400)
+#define WIMA_LAYOUT_SCROLL_HOR (0x0400)
 
 /**
  * A flag indicating whether a layout scrolls vertically.
  */
-#define WIMA_LAYOUT_SCROLL_VER  (0x0800)
+#define WIMA_LAYOUT_SCROLL_VER (0x0800)
 
 /**
  * @def WIMA_LAYOUT_TYPE_MASK
@@ -179,4 +180,4 @@ WimaStatus wima_layout_layout(ynonnull WimaItem* item, ynonnull WimaAr* area);
 }
 #endif
 
-#endif // WIMA_LAYOUT_PRIVATE_H
+#endif  // WIMA_LAYOUT_PRIVATE_H

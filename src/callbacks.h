@@ -194,4 +194,4 @@ void wima_callback_error(int error, const char* desc);
 }
 #endif
 
-#endif // WIMA_CALLBACKS_H
+#endif  // WIMA_CALLBACKS_H

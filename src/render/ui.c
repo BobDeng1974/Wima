@@ -58,18 +58,18 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <string.h>
-
-#include <dyna/nvector.h>
-
-#include <wima/render.h>
 #include <wima/math.h>
+#include <wima/render.h>
 
 #include "render.h"
 
 #include "../global.h"
 #include "../prop.h"
 #include "../window.h"
+
+#include <dyna/nvector.h>
+
+#include <string.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Static declarations needed for public functions.
@@ -102,30 +102,24 @@
  * @param cy			A pointer to a value that will be filled with
  *						the caret's Y coordinate.
  */
-static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float desc,
-                                  float lineHeight,    const char *caret,
-                                  NVGtextRow *rows,    int nrows,
-                                  int *cr, float *cx,  float *cy);
+static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float desc, float lineHeight, const char* caret,
+                              NVGtextRow* rows, int nrows, int* cr, float* cx, float* cy);
 
 /**
  * An array to make it easy to translate
  * between NanoVG and Wima line caps.
  */
 static const WimaLineCap wima_ui_line_caps[] = {
-    WIMA_CAP_BUTT,
-    WIMA_CAP_ROUND,
-    WIMA_CAP_SQUARE,
+	WIMA_CAP_BUTT,
+	WIMA_CAP_ROUND,
+	WIMA_CAP_SQUARE,
 };
 
 /**
  * An array to make it easy to translate
  * between NanoVG and Wima line joins.
  */
-static const WimaLineJoin wima_ui_line_joins[] = {
-    WIMA_JOIN_MITER,
-    WIMA_JOIN_ROUND,
-    WIMA_JOIN_ROUND
-};
+static const WimaLineJoin wima_ui_line_joins[] = { WIMA_JOIN_MITER, WIMA_JOIN_ROUND, WIMA_JOIN_ROUND };
 
 /**
  * @}
@@ -137,8 +131,7 @@ static const WimaLineJoin wima_ui_line_joins[] = {
 //  Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h,
-                   WimaIcon icon, const char *label)
+void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon icon, const char* label)
 {
 	wima_assert_init;
 
@@ -148,13 +141,12 @@ void wima_ui_label(WimaRenderContext* ctx, float x, float y, float w, float h,
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_REGULAR);
 
 	// Draw the label.
-	wima_ui_label_icon_value(ctx, x, y, w, h, icon, t[WIMA_THEME_WIDGET_TEXT]._color,
-	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL, false);
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, t[WIMA_THEME_WIDGET_TEXT]._color, WIMA_ALIGN_LEFT,
+	                         WIMA_LABEL_FONT_SIZE, label, NULL, false);
 }
 
-void wima_ui_operatorBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
-                         WimaWidgetCornerFlags flags, WimaWidgetState state, WimaIcon icon,
-                         const char *label)
+void wima_ui_operatorBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
+                         WimaWidgetState state, WimaIcon icon, const char* label)
 {
 	wima_assert_init;
 
@@ -183,13 +175,12 @@ void wima_ui_operatorBtn(WimaRenderContext* ctx, float x, float y, float w, floa
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_CENTER,
-	                         WIMA_LABEL_FONT_SIZE, label, NULL, false);
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_CENTER, WIMA_LABEL_FONT_SIZE, label, NULL,
+	                         false);
 }
 
-void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
-                      WimaWidgetCornerFlags flags, WimaWidgetState state,
-                      WimaIcon icon, const char *label)
+void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
+                      WimaWidgetState state, WimaIcon icon, const char* label)
 {
 	wima_assert_init;
 
@@ -218,21 +209,20 @@ void wima_ui_radioBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_CENTER,
-	                             WIMA_LABEL_FONT_SIZE, label, NULL, false);
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_CENTER, WIMA_LABEL_FONT_SIZE, label, NULL,
+	                         false);
 }
 
-int wima_ui_textField_pos(WimaRenderContext* ctx, float x, float y, float w, float h,
-                          WimaIcon icon, const char *text, int px, int py)
+int wima_ui_textField_pos(WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon icon, const char* text,
+                          int px, int py)
 {
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	return wima_ui_text_pos(ctx, x, y, w, h, icon, WIMA_LABEL_FONT_SIZE, text, px, py);
 }
 
-void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float h,
-                       WimaWidgetCornerFlags flags, WimaWidgetState state,
-                       WimaIcon icon, const char *text, int cbegin, int cend)
+void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
+                       WimaWidgetState state, WimaIcon icon, const char* text, int cbegin, int cend)
 {
 	wima_assert_init;
 
@@ -260,18 +250,16 @@ void wima_ui_textField(WimaRenderContext* ctx, float x, float y, float w, float 
 	wima_ui_box_outline(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], transparent);
 
 	// Make sure to not have a caret if the textfield is not focused.
-	if (state != WIMA_WIDGET_ACTIVE) {
-		cend = -1;
-	}
+	if (state != WIMA_WIDGET_ACTIVE) cend = -1;
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_caret(ctx, x, y, w, h, icon, textColor, WIMA_LABEL_FONT_SIZE,
-	                        text, t[WIMA_THEME_WIDGET_WIDGET]._color, cbegin, cend);
+	wima_ui_label_caret(ctx, x, y, w, h, icon, textColor, WIMA_LABEL_FONT_SIZE, text,
+	                    t[WIMA_THEME_WIDGET_WIDGET]._color, cbegin, cend);
 }
 
-void wima_ui_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float h,
-                       WimaWidgetState state, const char *label)
+void wima_ui_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetState state,
+                       const char* label)
 {
 	wima_assert_init;
 
@@ -287,43 +275,36 @@ void wima_ui_optionBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 	oy = y + h - WIMA_OPTION_HEIGHT - 3;
 
 	// Draw the inset.
-	wima_ui_inset(ctx, ox, oy,
-	                  WIMA_OPTION_WIDTH,  WIMA_OPTION_HEIGHT,
-	                  WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS);
+	wima_ui_inset(ctx, ox, oy, WIMA_OPTION_WIDTH, WIMA_OPTION_HEIGHT, WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS);
 
 	// Get the two colors for shading.
 	wima_theme_shadeColors((WimaWidgetTheme*) t, state, true, &shade_top, &shade_btm);
 
 	// Draw the inner box.
-	wima_ui_box_inner(ctx, ox, oy,
-	                      WIMA_OPTION_WIDTH,  WIMA_OPTION_HEIGHT,
-	                      WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS,
-	                      WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS,
-	                      shade_top, shade_btm);
+	wima_ui_box_inner(ctx, ox, oy, WIMA_OPTION_WIDTH, WIMA_OPTION_HEIGHT, WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS,
+	                  WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS, shade_top, shade_btm);
 
 	// Draw the box outline.
 	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
-	wima_ui_box_outline(ctx, ox, oy,
-	                        WIMA_OPTION_WIDTH,  WIMA_OPTION_HEIGHT,
-	                        WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS,
-	                        WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS,
-	                        transparent);
+	wima_ui_box_outline(ctx, ox, oy, WIMA_OPTION_WIDTH, WIMA_OPTION_HEIGHT, WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS,
+	                    WIMA_OPTION_RADIUS, WIMA_OPTION_RADIUS, transparent);
 
 	// If the item is active, draw the check.
 	// TODO: Check if this needs to be changed.
-	if (state == WIMA_WIDGET_ACTIVE) {
+	if (state == WIMA_WIDGET_ACTIVE)
+	{
 		WimaColor tp = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_WIDGET]._color, WIMA_TRANSPARENT_ALPHA);
 		wima_ui_check(ctx, ox, oy, tp);
 	}
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x + 12, y, w - 12, h, -1, textColor, WIMA_ALIGN_LEFT,
-	                         WIMA_LABEL_FONT_SIZE, label, NULL, false);
+	wima_ui_label_icon_value(ctx, x + 12, y, w - 12, h, -1, textColor, WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label,
+	                         NULL, false);
 }
 
 void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
-                           WimaWidgetState state, WimaIcon icon, const char *label)
+                       WimaWidgetState state, WimaIcon icon, const char* label)
 {
 	wima_assert_init;
 
@@ -352,16 +333,17 @@ void wima_ui_choiceBtn(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_LEFT,
-	                         WIMA_LABEL_FONT_SIZE, label, NULL, false);
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL,
+	                         false);
 
 	// Draw the arrow.
 	WimaColor arrowTrans = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_WIDGET]._color, WIMA_TRANSPARENT_ALPHA);
 	wima_ui_arrow_upDown(ctx, x + w - 10, y + 10, 5, arrowTrans);
 }
 
-void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaColor color) {
-
+void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
+                      WimaColor color)
+{
 	// TODO: Make half the button have the color with alpha, like Blender.
 
 	wima_assert_init;
@@ -386,7 +368,7 @@ void wima_ui_colorBtn(WimaRenderContext* ctx, float x, float y, float w, float h
 }
 
 void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
-                          WimaWidgetState state, const char *label, const char *value)
+                      WimaWidgetState state, const char* label, const char* value)
 {
 	wima_assert_init;
 
@@ -415,8 +397,8 @@ void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x, y, w, h, -1, textColor, WIMA_ALIGN_CENTER,
-	                         WIMA_LABEL_FONT_SIZE, label, value, false);
+	wima_ui_label_icon_value(ctx, x, y, w, h, -1, textColor, WIMA_ALIGN_CENTER, WIMA_LABEL_FONT_SIZE, label, value,
+	                         false);
 
 	// Get the arrow color.
 	WimaColor arrowTrans = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_WIDGET]._color, WIMA_TRANSPARENT_ALPHA);
@@ -426,9 +408,8 @@ void wima_ui_numField(WimaRenderContext* ctx, float x, float y, float w, float h
 	wima_ui_arrow(ctx, x + w - 8, y + 10, WIMA_NUMBER_ARROW_SIZE, arrowTrans);
 }
 
-void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
-                        WimaWidgetCornerFlags flags, WimaWidgetState state, float progress,
-                        const char *label, const char *value)
+void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
+                    WimaWidgetState state, float progress, const char* label, const char* value)
 {
 	wima_assert_init;
 
@@ -452,18 +433,20 @@ void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
 	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 
 	// Switch the shading if the widget is active.
-	if (state == WIMA_WIDGET_ACTIVE) {
+	if (state == WIMA_WIDGET_ACTIVE)
+	{
 		shade_top = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
 		shade_btm = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
 	}
-	else {
+	else
+	{
 		shade_top = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
 		shade_btm = wima_color_offset(t[WIMA_THEME_WIDGET_WIDGET]._color, t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
 	}
 
 	// Draw the inner box with the filling.
 	nvgScissor(ctx->nvg, x, y, 8 + (w - 8) * wima_clampf(progress, 0, 1), h);
-	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2],cr.v[3], shade_top, shade_btm);
+	wima_ui_box_inner(ctx, x, y, w, h, cr.v[0], cr.v[1], cr.v[2], cr.v[3], shade_top, shade_btm);
 	nvgResetScissor(ctx->nvg);
 
 	// Draw the box outline.
@@ -472,12 +455,12 @@ void wima_ui_slider(WimaRenderContext* ctx, float x, float y, float w, float h,
 
 	// Draw the text.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x, y, w, h, -1, textColor, WIMA_ALIGN_CENTER,
-	                             WIMA_LABEL_FONT_SIZE, label, value, false);
+	wima_ui_label_icon_value(ctx, x, y, w, h, -1, textColor, WIMA_ALIGN_CENTER, WIMA_LABEL_FONT_SIZE, label, value,
+	                         false);
 }
 
-void wima_ui_scrollbar(WimaRenderContext* ctx,float x, float y, float w, float h,
-                           WimaWidgetState state, float offset, float size)
+void wima_ui_scrollbar(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetState state, float offset,
+                       float size)
 {
 	wima_assert_init;
 
@@ -490,23 +473,17 @@ void wima_ui_scrollbar(WimaRenderContext* ctx,float x, float y, float w, float h
 	wima_ui_inset(ctx, x, y, w, h, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS);
 
 	// Get the shading colors.
-	WimaColor top = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color,
-	                                  3 * t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
-	WimaColor btm = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color,
-	                                  3 * t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
+	WimaColor top = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color, 3 * t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
+	WimaColor btm = wima_color_offset(t[WIMA_THEME_WIDGET_INNER]._color, 3 * t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
 
 	// Draw the inner box of the scroll area.
-	wima_ui_box_inner(ctx, x, y, w, h,
-	                      WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
-	                      WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
-	                      top, btm);
+	wima_ui_box_inner(ctx, x, y, w, h, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
+	                  WIMA_SCROLLBAR_RADIUS, top, btm);
 
 	// Draw the box outline.
 	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
-	wima_ui_box_outline(ctx,x,y,w,h,
-	                        WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
-	                        WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
-	                        transparent);
+	wima_ui_box_outline(ctx, x, y, w, h, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
+	                    WIMA_SCROLLBAR_RADIUS, transparent);
 
 	// Get the scrollbar handle color.
 	int delta = (state == WIMA_WIDGET_ACTIVE) ? WIMA_SCROLLBAR_ACTIVE_SHADE : 0;
@@ -520,20 +497,16 @@ void wima_ui_scrollbar(WimaRenderContext* ctx,float x, float y, float w, float h
 	WimaColor bottomOffset = wima_color_offset(itemColor, 3 * t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
 
 	// Draw the inner box of the scrollbar.
-	wima_ui_box_inner(ctx, r.x, r.y, r.w, r.h,
-	                      WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
-	                      WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
-	                      topOffset, bottomOffset);
+	wima_ui_box_inner(ctx, r.x, r.y, r.w, r.h, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
+	                  WIMA_SCROLLBAR_RADIUS, topOffset, bottomOffset);
 
 	// Draw the box outline.
-	wima_ui_box_outline(ctx, r.x, r.y, r.w, r.h,
-	                        WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
-	                        WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
-	                        transparent);
+	wima_ui_box_outline(ctx, r.x, r.y, r.w, r.h, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS, WIMA_SCROLLBAR_RADIUS,
+	                    WIMA_SCROLLBAR_RADIUS, transparent);
 }
 
-void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags) {
-
+void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -558,8 +531,8 @@ void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, 
 	wima_ui_dropShadow(ctx, x, y, w, h, WIMA_MENU_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
 }
 
-void wima_ui_tooltip_background(WimaRenderContext* ctx, float x, float y, float w, float h) {
-
+void wima_ui_tooltip_background(WimaRenderContext* ctx, float x, float y, float w, float h)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -573,24 +546,20 @@ void wima_ui_tooltip_background(WimaRenderContext* ctx, float x, float y, float 
 	wima_theme_shadeColors((WimaWidgetTheme*) t, WIMA_WIDGET_DEFAULT, false, &shade_top, &shade_btm);
 
 	// Draw the inner box.
-	wima_ui_box_inner(ctx, x, y, w, h + 1,
-	                      WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
-	                      WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
-	                      shade_top, shade_btm);
+	wima_ui_box_inner(ctx, x, y, w, h + 1, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
+	                  shade_top, shade_btm);
 
 	// Draw the outline.
 	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
-	wima_ui_box_outline(ctx, x, y, w, h + 1,
-	                        WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
-	                        WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
-	                        transparent);
+	wima_ui_box_outline(ctx, x, y, w, h + 1, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
+	                    transparent);
 
 	// Draw a drop shadow.
 	wima_ui_dropShadow(ctx, x, y, w, h, WIMA_MENU_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
 }
 
-void wima_ui_menu_label(WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon icon, const char *label) {
-
+void wima_ui_menu_label(WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon icon, const char* label)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -599,12 +568,12 @@ void wima_ui_menu_label(WimaRenderContext* ctx, float x, float y, float w, float
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_MENU);
 
 	// Draw the label.
-	wima_ui_label_icon_value(ctx, x, y, w, h, icon, t[WIMA_THEME_WIDGET_TEXT]._color,
-	                             WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL, true);
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, t[WIMA_THEME_WIDGET_TEXT]._color, WIMA_ALIGN_LEFT,
+	                         WIMA_LABEL_FONT_SIZE, label, NULL, true);
 }
 
-void wima_ui_menu_separator(WimaRenderContext* ctx, float x, float y, float w, float h) {
-
+void wima_ui_menu_separator(WimaRenderContext* ctx, float x, float y, float w, float h)
+{
 	// Get the color.
 	NVGcolor color = WIMA_THEME_DEF_MENU_SEP;
 
@@ -622,8 +591,8 @@ void wima_ui_menu_separator(WimaRenderContext* ctx, float x, float y, float w, f
 	nvgStroke(ctx->nvg);
 }
 
-void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float h,
-                       WimaWidgetState state, WimaIcon icon, const char *label, bool hasSub)
+void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetState state, WimaIcon icon,
+                       const char* label, bool hasSub)
 {
 	wima_assert_init;
 
@@ -633,13 +602,13 @@ void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float 
 	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_MENU_ITEM);
 
 	// If the state is not just the default...
-	if (state != WIMA_WIDGET_DEFAULT) {
-
+	if (state != WIMA_WIDGET_DEFAULT)
+	{
 		// Get shading colors.
-		WimaColor shadeTop = wima_color_offset(t[WIMA_THEME_WIDGET_INNER_SELECTED]._color,
-		                                      t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
-		WimaColor shadeBtm = wima_color_offset(t[WIMA_THEME_WIDGET_INNER_SELECTED]._color,
-		                                       t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
+		WimaColor shadeTop =
+		    wima_color_offset(t[WIMA_THEME_WIDGET_INNER_SELECTED]._color, t[WIMA_THEME_WIDGET_SHADE_TOP]._int.val);
+		WimaColor shadeBtm =
+		    wima_color_offset(t[WIMA_THEME_WIDGET_INNER_SELECTED]._color, t[WIMA_THEME_WIDGET_SHADE_BTM]._int.val);
 
 		// Draw a highlight.
 		wima_ui_box_inner(ctx, x, y, w, h, 0, 0, 0, 0, shadeTop, shadeBtm);
@@ -650,21 +619,21 @@ void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float 
 
 	// Get the text color.
 	WimaColor textColor = wima_theme_textColor((WimaWidgetTheme*) t, state);
-	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_LEFT,
-	                             WIMA_LABEL_FONT_SIZE, label, NULL, true);
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, textColor, WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label, NULL,
+	                         true);
 
 	// If there is a sub menu...
-	if (hasSub) {
-
+	if (hasSub)
+	{
 		// Draw the arrow.
 		wima_ui_arrow(ctx, w - WIMA_NUMBER_ARROW_SIZE - WIMA_MENU_ARROW_PADDING,
-		              y + 2 + h / 2 - WIMA_NUMBER_ARROW_SIZE / 2,
-		              WIMA_NUMBER_ARROW_SIZE, t[WIMA_THEME_WIDGET_WIDGET]._color);
+		              y + 2 + h / 2 - WIMA_NUMBER_ARROW_SIZE / 2, WIMA_NUMBER_ARROW_SIZE,
+		              t[WIMA_THEME_WIDGET_WIDGET]._color);
 	}
 }
 
-void wima_ui_node_port(WimaRenderContext* ctx, float x, float y, WimaWidgetState state, WimaColor color) {
-
+void wima_ui_node_port(WimaRenderContext* ctx, float x, float y, WimaWidgetState state, WimaColor color)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -693,8 +662,8 @@ void wima_ui_node_port(WimaRenderContext* ctx, float x, float y, WimaWidgetState
 	nvgFill(ctx->nvg);
 }
 
-void wima_ui_node_wire_colored(WimaRenderContext* ctx, float x0, float y0, float x1, float y1,
-                                   WimaColor color0, WimaColor color1)
+void wima_ui_node_wire_colored(WimaRenderContext* ctx, float x0, float y0, float x1, float y1, WimaColor color0,
+                               WimaColor color1)
 {
 	wima_assert_init;
 
@@ -717,7 +686,7 @@ void wima_ui_node_wire_colored(WimaRenderContext* ctx, float x0, float y0, float
 	WimaCol colorw;
 
 	// Get the color.
-	colorw.wima= t[WIMA_THEME_NODE_WIRE]._color;
+	colorw.wima = t[WIMA_THEME_NODE_WIRE]._color;
 	colorw.wima.a = (color0.a < color1.a) ? color0.a : color1.a;
 
 	// Stroke the bezier.
@@ -738,8 +707,8 @@ void wima_ui_node_wire_colored(WimaRenderContext* ctx, float x0, float y0, float
 	nvgStroke(ctx->nvg);
 }
 
-void wima_ui_node_wire(WimaRenderContext* ctx, float x0, float y0, float x1, float y1,
-                           WimaWidgetState state0, WimaWidgetState state1)
+void wima_ui_node_wire(WimaRenderContext* ctx, float x0, float y0, float x1, float y1, WimaWidgetState state0,
+                       WimaWidgetState state1)
 {
 	wima_assert_init;
 
@@ -756,9 +725,8 @@ void wima_ui_node_wire(WimaRenderContext* ctx, float x0, float y0, float x1, flo
 	wima_ui_node_wire_colored(ctx, x0, y0, x1, y1, first, second);
 }
 
-void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, float h,
-                                 WimaWidgetState state, WimaIcon icon, const char *label,
-                                 WimaColor titleCol)
+void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetState state,
+                             WimaIcon icon, const char* label, WimaColor titleCol)
 {
 	wima_assert_init;
 
@@ -773,31 +741,28 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 	WimaColor bottom = wima_color_multiplyAlphaf(titleCol, WIMA_TRANSPARENT_ALPHA);
 
 	// Draw the inner box of the title.
-	wima_ui_box_inner(ctx, x, y, w, WIMA_NODE_TITLE_HEIGHT + 2,
-	                      WIMA_NODE_RADIUS, WIMA_NODE_RADIUS, 0, 0,
-	                      top, bottom);
+	wima_ui_box_inner(ctx, x, y, w, WIMA_NODE_TITLE_HEIGHT + 2, WIMA_NODE_RADIUS, WIMA_NODE_RADIUS, 0, 0, top, bottom);
 
 	// Get the shading colors.
 	WimaColor shadeTop = wima_color_multiplyAlphaf(t[WIMA_THEME_NODE_BG]._color, WIMA_TRANSPARENT_ALPHA);
 	WimaColor shadeBottom = wima_color_multiplyAlphaf(t[WIMA_THEME_NODE_BG]._color, WIMA_TRANSPARENT_ALPHA);
 
 	// Draw the node background.
-	wima_ui_box_inner(ctx, x, y + WIMA_NODE_TITLE_HEIGHT - 1, w, h + 2 - WIMA_NODE_TITLE_HEIGHT,
-	                      0, 0, WIMA_NODE_RADIUS, WIMA_NODE_RADIUS, shadeTop, shadeBottom);
+	wima_ui_box_inner(ctx, x, y + WIMA_NODE_TITLE_HEIGHT - 1, w, h + 2 - WIMA_NODE_TITLE_HEIGHT, 0, 0, WIMA_NODE_RADIUS,
+	                  WIMA_NODE_RADIUS, shadeTop, shadeBottom);
 
 	// Draw the title.
 	WimaColor shadow = wima_color_offset(titleCol, WIMA_BEVEL_SHADE);
 	wima_ui_node_label_icon(ctx, x + WIMA_NODE_ARROW_AREA_WIDTH, y,
-	                            w - WIMA_NODE_ARROW_AREA_WIDTH - WIMA_NODE_MARGIN_SIDE,
-	                            WIMA_NODE_TITLE_HEIGHT, icon, reg[WIMA_THEME_WIDGET_TEXT]._color,
-	                            shadow, WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label);
+	                        w - WIMA_NODE_ARROW_AREA_WIDTH - WIMA_NODE_MARGIN_SIDE, WIMA_NODE_TITLE_HEIGHT, icon,
+	                        reg[WIMA_THEME_WIDGET_TEXT]._color, shadow, WIMA_ALIGN_LEFT, WIMA_LABEL_FONT_SIZE, label);
 
 	WimaColor arrowColor;
 	WimaColor borderColor;
 
 	// Get outline and arrow colors based on state.
-	switch(state) {
-
+	switch (state)
+	{
 		default:
 
 		case WIMA_WIDGET_DEFAULT:
@@ -827,10 +792,8 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 
 	// Draw the outline.
 	WimaColor transparent = wima_color_multiplyAlphaf(borderColor, WIMA_TRANSPARENT_ALPHA);
-	wima_ui_box_outline(ctx, x, y, w, h + 1,
-	                        WIMA_NODE_RADIUS, WIMA_NODE_RADIUS,
-	                        WIMA_NODE_RADIUS, WIMA_NODE_RADIUS,
-	                        transparent);
+	wima_ui_box_outline(ctx, x, y, w, h + 1, WIMA_NODE_RADIUS, WIMA_NODE_RADIUS, WIMA_NODE_RADIUS, WIMA_NODE_RADIUS,
+	                    transparent);
 
 #if 0
 	// Draw the arrow.
@@ -844,8 +807,8 @@ void wima_ui_node_background(WimaRenderContext* ctx, float x, float y, float w, 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-float wima_ui_label_estimateWidth(WimaRenderContext* ctx, WimaIcon icon, const char *label) {
-
+float wima_ui_label_estimateWidth(WimaRenderContext* ctx, WimaIcon icon, const char* label)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -854,13 +817,11 @@ float wima_ui_label_estimateWidth(WimaRenderContext* ctx, WimaIcon icon, const c
 	int w = WIMA_PAD_LEFT + WIMA_PAD_RIGHT;
 
 	// If there's an icon, add it.
-	if (icon != WIMA_ICON_INVALID) {
-		w += WIMA_ICON_SHEET_RES;
-	}
+	if (icon != WIMA_ICON_INVALID) w += WIMA_ICON_SHEET_RES;
 
 	// If there's a label and a font...
-	if (label && (ctx->font >= 0)) {
-
+	if (label && (ctx->font >= 0))
+	{
 		// Set up NanoVG.
 		nvgFontFaceId(ctx->nvg, ctx->font);
 		nvgFontSize(ctx->nvg, WIMA_LABEL_FONT_SIZE);
@@ -874,8 +835,8 @@ float wima_ui_label_estimateWidth(WimaRenderContext* ctx, WimaIcon icon, const c
 		char* end = strchr(start, '\n');
 
 		// While end is not NULL.
-		while (end) {
-
+		while (end)
+		{
 			// Get the width and set the max.
 			width = nvgTextBounds(ctx->nvg, 1, 1, start, end, NULL);
 			max = max > width ? max : width;
@@ -896,8 +857,8 @@ float wima_ui_label_estimateWidth(WimaRenderContext* ctx, WimaIcon icon, const c
 	return w;
 }
 
-float wima_ui_label_estimateHeight(WimaRenderContext* ctx, WimaIcon icon, const char *label, float width) {
-
+float wima_ui_label_estimateHeight(WimaRenderContext* ctx, WimaIcon icon, const char* label, float width)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -909,13 +870,11 @@ float wima_ui_label_estimateHeight(WimaRenderContext* ctx, WimaIcon icon, const 
 	width -= WIMA_TEXT_RADIUS * 2;
 
 	// If there's an icon, add it.
-	if (icon != WIMA_ICON_INVALID) {
-		width -= WIMA_ICON_SHEET_RES;
-	}
+	if (icon != WIMA_ICON_INVALID) width -= WIMA_ICON_SHEET_RES;
 
 	// If there's a label and a font...
-	if (label && (ctx->font >= 0)) {
-
+	if (label && (ctx->font >= 0))
+	{
 		// Set up NanoVG.
 		nvgFontFaceId(ctx->nvg, ctx->font);
 		nvgFontSize(ctx->nvg, WIMA_LABEL_FONT_SIZE);
@@ -929,9 +888,7 @@ float wima_ui_label_estimateHeight(WimaRenderContext* ctx, WimaIcon icon, const 
 		int bh = (int) (bounds[3] - bounds[1]) + WIMA_TEXT_PAD_DOWN;
 
 		// If it's bigger than the height, set the height.
-		if (bh > h) {
-			h = bh;
-		}
+		if (bh > h) h = bh;
 	}
 
 	return h;
@@ -939,8 +896,8 @@ float wima_ui_label_estimateHeight(WimaRenderContext* ctx, WimaIcon icon, const 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void wima_ui_box_rounded(WimaRenderContext* ctx, float x, float y, float w, float h,
-                             float tl, float tr, float br, float bl)
+void wima_ui_box_rounded(WimaRenderContext* ctx, float x, float y, float w, float h, float tl, float tr, float br,
+                         float bl)
 {
 	wima_assert_init;
 
@@ -966,8 +923,8 @@ void wima_ui_box_rounded(WimaRenderContext* ctx, float x, float y, float w, floa
 	nvgClosePath(ctx->nvg);
 }
 
-void wima_ui_bevel(WimaRenderContext* ctx, float x, float y, float w, float h) {
-
+void wima_ui_bevel(WimaRenderContext* ctx, float x, float y, float w, float h)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -1015,8 +972,8 @@ void wima_ui_bevel(WimaRenderContext* ctx, float x, float y, float w, float h) {
 	nvgStroke(ctx->nvg);
 }
 
-void wima_ui_inset(WimaRenderContext* ctx, float x, float y, float w, float h, float br, float bl) {
-
+void wima_ui_inset(WimaRenderContext* ctx, float x, float y, float w, float h, float br, float bl)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -1033,7 +990,7 @@ void wima_ui_inset(WimaRenderContext* ctx, float x, float y, float w, float h, f
 	// Begin the path and draw two arcs.
 	nvgBeginPath(ctx->nvg);
 	nvgMoveTo(ctx->nvg, x + w, y + h - br);
-	nvgArcTo(ctx->nvg, x + w, y + h, x,y + h, br);
+	nvgArcTo(ctx->nvg, x + w, y + h, x, y + h, br);
 	nvgArcTo(ctx->nvg, x, y + h, x, y, bl);
 
 	// Get the bevel color.
@@ -1044,24 +1001,22 @@ void wima_ui_inset(WimaRenderContext* ctx, float x, float y, float w, float h, f
 
 	// Get the gradient.
 	NVGcolor innerColor = nvgRGBAf(bevelColor.wima.r, bevelColor.wima.g, bevelColor.wima.b, 0);
-	NVGpaint paint = nvgLinearGradient(ctx->nvg, x, y + h - wima_fmaxf(br,bl) - 1,
-	                                   x, y + h - 1, innerColor, bevelColor.nvg);
+	NVGpaint paint =
+	    nvgLinearGradient(ctx->nvg, x, y + h - wima_fmaxf(br, bl) - 1, x, y + h - 1, innerColor, bevelColor.nvg);
 
 	// Stroke.
 	nvgStrokePaint(ctx->nvg, paint);
 	nvgStroke(ctx->nvg);
 }
 
-void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
-
+void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	// If icon is invalid, return.
-	if (icon >= dnvec_len(wg.icons)) {
-		return;
-	}
+	if (icon >= dnvec_len(wg.icons)) return;
 
 	// Get the vector image.
 	WimaIcn img = *((WimaIcn*) dnvec_get(wg.icons, WIMA_ICON_HANDLE_IDX, icon));
@@ -1079,12 +1034,10 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 	bool* boolptr = dvec_get(wg.iconPathWindings, marker.start);
 
 	// Loop through the shapes in the image.
-	for (NSVGshape* shape = img->shapes; shape != NULL; shape = shape->next) {
-
+	for (NSVGshape* shape = img->shapes; shape != NULL; shape = shape->next)
+	{
 		// If a shape isn't visible, skip it.
-		if (!(shape->flags & NSVG_FLAGS_VISIBLE)) {
-			continue;
-		}
+		if (!(shape->flags & NSVG_FLAGS_VISIBLE)) continue;
 
 		// Set the style.
 		nvgStrokeWidth(ctx->nvg, shape->strokeWidth);
@@ -1093,45 +1046,61 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 		nvgMiterLimit(ctx->nvg, shape->miterLimit);
 
 		// Figure out the fill style.
-		switch (shape->fill.type) {
-
+		switch (shape->fill.type)
+		{
 			default:
 
 			case NSVG_PAINT_NONE:
+			{
 				break;
+			}
 
 			case NSVG_PAINT_COLOR:
+			{
 				nvgFillColor(ctx->nvg, wima_color_int(shape->fill.color));
 				break;
+			}
 
 			case NSVG_PAINT_LINEAR_GRADIENT:
+			{
 				nvgFillPaint(ctx->nvg, wima_paint_svgLinearGradient(ctx, shape->fill.gradient));
 				break;
+			}
 
 			case NSVG_PAINT_RADIAL_GRADIENT:
+			{
 				nvgFillPaint(ctx->nvg, wima_paint_svgRadialGradient(ctx, shape->fill.gradient));
 				break;
+			}
 		}
 
 		// Figure out the stroke style.
-		switch (shape->stroke.type) {
-
+		switch (shape->stroke.type)
+		{
 			default:
 
 			case NSVG_PAINT_NONE:
+			{
 				break;
+			}
 
 			case NSVG_PAINT_COLOR:
+			{
 				nvgStrokeColor(ctx->nvg, wima_color_int(shape->stroke.color));
 				break;
+			}
 
 			case NSVG_PAINT_LINEAR_GRADIENT:
+			{
 				nvgStrokePaint(ctx->nvg, wima_paint_svgLinearGradient(ctx, shape->stroke.gradient));
 				break;
+			}
 
 			case NSVG_PAINT_RADIAL_GRADIENT:
+			{
 				nvgStrokePaint(ctx->nvg, wima_paint_svgRadialGradient(ctx, shape->stroke.gradient));
 				break;
+			}
 		}
 
 		// Begin the shape. Even though this says "beginPath",
@@ -1140,23 +1109,21 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 		nvgBeginPath(ctx->nvg);
 
 		// Loop through the paths in the shape.
-		for (NSVGpath* path = shape->paths; path != NULL; path = path->next) {
-
+		for (NSVGpath* path = shape->paths; path != NULL; path = path->next)
+		{
 			// Start drawing the path.
 			nvgMoveTo(ctx->nvg, path->pts[0], path->pts[1]);
 
 			// Loop through the points in the path.
-			for (int i = 0; i < path->npts - 1; i += 3) {
-
+			for (int i = 0; i < path->npts - 1; i += 3)
+			{
 				// Bezier to the next point.
 				float* p = path->pts + i * 2;
 				nvgBezierTo(ctx->nvg, p[2], p[3], p[4], p[5], p[6], p[7]);
 			}
 
 			// If the path is closed, close it.
-			if (path->closed) {
-				nvgClosePath(ctx->nvg);
-			}
+			if (path->closed) nvgClosePath(ctx->nvg);
 
 			// Set the winding.
 			nvgPathWinding(ctx->nvg, *boolptr);
@@ -1168,24 +1135,19 @@ void wima_ui_icon(WimaRenderContext* ctx, float x, float y, WimaIcon icon) {
 		// If the shape is filled, fill it.
 		// This fills the shape, not the path,
 		// so it must be outside the loop.
-		if (shape->fill.type) {
-			nvgFill(ctx->nvg);
-		}
+		if (shape->fill.type) nvgFill(ctx->nvg);
 
 		// If the shape is stroked, stroke it.
 		// This strokes the shape, not the path,
 		// so it must be outside the loop.
-		if (shape->stroke.type) {
-			nvgStroke(ctx->nvg);
-		}
+		if (shape->stroke.type) nvgStroke(ctx->nvg);
 	}
 
 	// Restore NanoVG.
 	wima_render_restore(ctx);
 }
 
-void wima_ui_dropShadow(WimaRenderContext* ctx, float x, float y, float w, float h,
-                            float r, float f, float alpha)
+void wima_ui_dropShadow(WimaRenderContext* ctx, float x, float y, float w, float h, float r, float f, float alpha)
 {
 	wima_assert_init;
 
@@ -1213,19 +1175,16 @@ void wima_ui_dropShadow(WimaRenderContext* ctx, float x, float y, float w, float
 	NVGcolor outerColor = nvgRGBAf(0, 0, 0, 0);
 
 	// Create the gradient.
-	NVGpaint paint = nvgBoxGradient(ctx->nvg, x - f * 0.5f, y - f * 0.5f,
-	                                w + f, h + f, r + f*0.5f, f,
-	                                innerColor, outerColor);
+	NVGpaint paint =
+	    nvgBoxGradient(ctx->nvg, x - f * 0.5f, y - f * 0.5f, w + f, h + f, r + f * 0.5f, f, innerColor, outerColor);
 
 	// Fill the shadow.
 	nvgFillPaint(ctx->nvg, paint);
 	nvgFill(ctx->nvg);
 }
 
-void wima_ui_box_inner(WimaRenderContext* ctx,
-                       float x, float y, float w, float h,
-                       float tl, float tr, float br, float bl,
-                       WimaColor shade_top, WimaColor shade_btm)
+void wima_ui_box_inner(WimaRenderContext* ctx, float x, float y, float w, float h, float tl, float tr, float br,
+                       float bl, WimaColor shade_top, WimaColor shade_btm)
 {
 	wima_assert_init;
 
@@ -1242,17 +1201,16 @@ void wima_ui_box_inner(WimaRenderContext* ctx,
 	nvgBeginPath(ctx->nvg);
 
 	// Draw a rounded box.
-	wima_ui_box_rounded(ctx, x + 1, y + 1, w - 2, h - 3,
-	                        wima_fmaxf(0, tl - 1), wima_fmaxf(0, tr - 1),
-	                        wima_fmaxf(0, br - 1), wima_fmaxf(0, bl - 1));
+	wima_ui_box_rounded(ctx, x + 1, y + 1, w - 2, h - 3, wima_fmaxf(0, tl - 1), wima_fmaxf(0, tr - 1),
+	                    wima_fmaxf(0, br - 1), wima_fmaxf(0, bl - 1));
 
 	// Create box gradient to go one of two ways,
 	// depending on whether width is greater than
 	// height or not.
-	if (h - 2 > w) {
+	if (h - 2 > w)
 		paint = nvgLinearGradient(ctx->nvg, x, y, x + w, y, stop.nvg, sbtm.nvg);
-	}
-	else {
+	else
+	{
 		paint = nvgLinearGradient(ctx->nvg, x, y, x, y + h, stop.nvg, sbtm.nvg);
 	}
 
@@ -1261,8 +1219,8 @@ void wima_ui_box_inner(WimaRenderContext* ctx,
 	nvgFill(ctx->nvg);
 }
 
-void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, float h,
-                           float tl, float tr, float br, float bl, WimaColor color)
+void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, float h, float tl, float tr, float br,
+                         float bl, WimaColor color)
 {
 	wima_assert_init;
 
@@ -1284,8 +1242,8 @@ void wima_ui_box_outline(WimaRenderContext* ctx, float x, float y, float w, floa
 	nvgStroke(ctx->nvg);
 }
 
-WimaUiCorners wima_ui_corners_rounded(float r, WimaWidgetCornerFlags flags) {
-
+WimaUiCorners wima_ui_corners_rounded(float r, WimaWidgetCornerFlags flags)
+{
 	wima_assert_init;
 
 	WimaUiCorners radiuses;
@@ -1299,9 +1257,9 @@ WimaUiCorners wima_ui_corners_rounded(float r, WimaWidgetCornerFlags flags) {
 	return radiuses;
 }
 
-void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w, float h yunused,
-                              WimaIcon icon, WimaColor color, WimaTextAlign align, float fontsize,
-                              const char *label, const char *value, bool padIcon)
+void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w, float h yunused, WimaIcon icon,
+                              WimaColor color, WimaTextAlign align, float fontsize, const char* label,
+                              const char* value, bool padIcon)
 {
 	wima_assert_init;
 
@@ -1311,19 +1269,19 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
 	float pleft = WIMA_PAD_LEFT;
 
 	// If there is an icon, draw it and add it to the padding.
-	if (icon != WIMA_ICON_INVALID) {
+	if (icon != WIMA_ICON_INVALID)
+	{
 		wima_ui_icon(ctx, x + (WIMA_WIDGET_HEIGHT - WIMA_ICON_SHEET_RES) / 2,
 		             y + (WIMA_WIDGET_HEIGHT - WIMA_ICON_SHEET_RES) / 2, icon);
 		pleft += WIMA_ICON_SHEET_RES;
 	}
-	else if (padIcon) {
+	else if (padIcon)
+	{
 		pleft += WIMA_ICON_SHEET_RES;
 	}
 
 	// If there is no font or label, just return.
-	if (ctx->font < 0 || !label) {
-		return;
-	}
+	if (ctx->font < 0 || !label) return;
 
 	// Set up the color.
 	WimaCol c;
@@ -1338,8 +1296,8 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
 	nvgFillColor(ctx->nvg, c.nvg);
 
 	// If there is a value...
-	if (value) {
-
+	if (value)
+	{
 		// Get the widths.
 		float label_width = nvgTextBounds(ctx->nvg, 1, 1, label, NULL, NULL);
 		float sep_width = nvgTextBounds(ctx->nvg, 1, 1, WIMA_LABEL_SEPARATOR, NULL, NULL);
@@ -1351,8 +1309,8 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
 		x += pleft;
 
 		// If the user wants things aligned to center...
-		if (align == WIMA_ALIGN_CENTER) {
-
+		if (align == WIMA_ALIGN_CENTER)
+		{
 			// Get the text advance of the value.
 			float textBounds = nvgTextBounds(ctx->nvg, 1, 1, value, NULL, NULL);
 
@@ -1375,23 +1333,21 @@ void wima_ui_label_icon_value(WimaRenderContext* ctx, float x, float y, float w,
 		x += sep_width;
 		nvgText(ctx->nvg, x, y, value, NULL);
 	}
-	else {
-
+	else
+	{
 		// Set the text align.
-		int textAlign = (align == WIMA_ALIGN_LEFT) ?
-		                    (NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE) :
-		                    (NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
+		int textAlign = (align == WIMA_ALIGN_LEFT) ? (NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE) :
+		                                             (NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
 		nvgTextAlign(ctx->nvg, textAlign);
 
 		// Just draw the text.
-		nvgTextBox(ctx->nvg, x + pleft, y + WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN - 4,
-		           w - WIMA_PAD_RIGHT - pleft, label, NULL);
+		nvgTextBox(ctx->nvg, x + pleft, y + WIMA_WIDGET_HEIGHT - WIMA_TEXT_PAD_DOWN - 4, w - WIMA_PAD_RIGHT - pleft,
+		           label, NULL);
 	}
 }
 
-void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, float h,
-                               WimaIcon icon, WimaColor color, WimaColor shadow,
-                               WimaTextAlign align, float fontsize, const char *label)
+void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon icon, WimaColor color,
+                             WimaColor shadow, WimaTextAlign align, float fontsize, const char* label)
 {
 	wima_assert_init;
 
@@ -1403,8 +1359,8 @@ void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, 
 	s.wima = shadow;
 
 	// If there is a label and font...
-	if (label && (ctx->font >= 0)) {
-
+	if (label && (ctx->font >= 0))
+	{
 		// Set up the font.
 		nvgFontFaceId(ctx->nvg, ctx->font);
 		nvgFontSize(ctx->nvg, fontsize);
@@ -1429,14 +1385,11 @@ void wima_ui_node_label_icon(WimaRenderContext* ctx, float x, float y, float w, 
 	}
 
 	// Draw the icon, if it exists.
-	if (icon != WIMA_ICON_INVALID) {
-		wima_ui_icon(ctx, x + w - WIMA_ICON_SHEET_RES, y + 3, icon);
-	}
+	if (icon != WIMA_ICON_INVALID) wima_ui_icon(ctx, x + w - WIMA_ICON_SHEET_RES, y + 3, icon);
 }
 
-int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h yunused,
-                        WimaIcon icon, float fontsize, const char *label,
-                        int px, int py)
+int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h yunused, WimaIcon icon, float fontsize,
+                     const char* label, int px, int py)
 {
 	wima_assert_init;
 
@@ -1449,17 +1402,13 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h 
 	static NVGglyphPosition glyphs[WIMA_MAX_GLYPHS];
 
 	// If there's no label or font, return an invalid position.
-	if (!label || ctx->font < 0) {
-		return -1;
-	}
+	if (!label || ctx->font < 0) return -1;
 
 	// Start calculating padding.
 	float pleft = WIMA_TEXT_RADIUS;
 
 	// If the icon exists, add it to the padding.
-	if (icon != WIMA_ICON_INVALID) {
-		pleft += WIMA_ICON_SHEET_RES;
-	}
+	if (icon != WIMA_ICON_INVALID) pleft += WIMA_ICON_SHEET_RES;
 
 	// Calculate the coordinates.
 	x += pleft;
@@ -1477,9 +1426,7 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h 
 	int nrows = nvgTextBreakLines(ctx->nvg, label, NULL, w, rows, WIMA_MAX_ROWS);
 
 	// If there are no rows, return 0.
-	if (nrows == 0) {
-		return 0;
-	}
+	if (nrows == 0) return 0;
 
 	// Set up NanoVG text.
 	nvgTextBoxBounds(ctx->nvg, x, y, w, label, NULL, bounds);
@@ -1489,28 +1436,21 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h 
 	int row = wima_clampf((int) ((float) (py - bounds[1]) / lh), 0, nrows - 1);
 
 	// Search horizontal position.
-	int nglyphs = nvgTextGlyphPositions(ctx->nvg, x, y, rows[row].start, rows[row].end + 1,
-	                                    glyphs, WIMA_MAX_GLYPHS);
+	int nglyphs = nvgTextGlyphPositions(ctx->nvg, x, y, rows[row].start, rows[row].end + 1, glyphs, WIMA_MAX_GLYPHS);
 
 	int col, p = 0;
 
 	// Loop through the glyphs and set the pos.
-	for (col = 0; col < nglyphs && glyphs[col].x < px; ++col) {
-		p = glyphs[col].str - label;
-	}
+	for (col = 0; col < nglyphs && glyphs[col].x < px; ++col) p = glyphs[col].str - label;
 
 	// See if we should move one character further.
-	if (col > 0 && col < nglyphs && (glyphs[col].x - px) < (px - glyphs[col - 1].x)) {
-		p = glyphs[col].str - label;
-	}
+	if (col > 0 && col < nglyphs && (glyphs[col].x - px) < (px - glyphs[col - 1].x)) p = glyphs[col].str - label;
 
 	return p;
 }
 
-void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, float h yunused,
-                         WimaIcon icon, WimaColor color, float fontsize,
-                         const char *label, WimaColor caretCol,
-                         int cbegin, int cend)
+void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, float h yunused, WimaIcon icon,
+                         WimaColor color, float fontsize, const char* label, WimaColor caretCol, int cbegin, int cend)
 {
 	wima_assert_init;
 
@@ -1525,15 +1465,14 @@ void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, floa
 	static NVGtextRow rows[WIMA_MAX_ROWS];
 
 	// If no label or font, just return.
-	if (!label || ctx->font < 0) {
-		return;
-	}
+	if (!label || ctx->font < 0) return;
 
 	// Start calculating the padding.
 	float pleft = WIMA_TEXT_RADIUS;
 
 	// If there is an icon, draw it and add it to the padding.
-	if (icon != WIMA_ICON_INVALID) {
+	if (icon != WIMA_ICON_INVALID)
+	{
 		wima_ui_icon(ctx, x + 4, y + 2, icon);
 		pleft += WIMA_ICON_SHEET_RES;
 	}
@@ -1551,8 +1490,8 @@ void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, floa
 	w -= WIMA_TEXT_RADIUS + pleft;
 
 	// If there is a caret...
-	if (cend >= cbegin) {
-
+	if (cend >= cbegin)
+	{
 		// Set up the caret color.
 		c.wima = caretCol;
 
@@ -1564,31 +1503,31 @@ void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, floa
 
 		// Calculate the beginning and end caret positions.
 		wima_ui_caret_pos(ctx, x, y, desc, lh, label + cbegin, rows, nrows, &c0r, &c0x, &c0y);
-		wima_ui_caret_pos(ctx, x, y, desc, lh, label + cend,   rows, nrows, &c1r, &c1x, &c1y);
+		wima_ui_caret_pos(ctx, x, y, desc, lh, label + cend, rows, nrows, &c1r, &c1x, &c1y);
 
 		// Start drawing the path.
 		nvgBeginPath(ctx->nvg);
 
 		// If the caret beginning and end are at the same place...
-		if (cbegin == cend) {
-
+		if (cbegin == cend)
+		{
 			// Just draw a simple caret.
 			nvgFillColor(ctx->nvg, c.nvg);
 			nvgRect(ctx->nvg, c0x - 1, c0y, 2, lh + 1);
 		}
-		else {
-
+		else
+		{
 			// Set the fill color to the caret color.
 			nvgFillColor(ctx->nvg, c.nvg);
 
 			// If the start and end of the caret is on the same row...
-			if (c0r == c1r) {
-
+			if (c0r == c1r)
+			{
 				// Just draw a simple rectangle.
 				nvgRect(ctx->nvg, c0x - 1, c0y, c1x - c0x + 1, lh + 1);
 			}
-			else {
-
+			else
+			{
 				// Figure out many rows are between
 				// the start and end of the caret.
 				int blk = c1r - c0r - 1;
@@ -1599,9 +1538,7 @@ void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, floa
 
 				// If there are rows between the start
 				// and end, highlight them all.
-				if (blk) {
-					nvgRect(ctx->nvg, x, c0y +lh, w, blk * lh + 1);
-				}
+				if (blk) nvgRect(ctx->nvg, x, c0y + lh, w, blk * lh + 1);
 			}
 		}
 
@@ -1618,8 +1555,8 @@ void wima_ui_label_caret(WimaRenderContext* ctx, float x, float y, float w, floa
 	nvgTextBox(ctx->nvg, x, y, w, label, NULL);
 }
 
-void wima_ui_check(WimaRenderContext* ctx, float ox, float oy, WimaColor color) {
-
+void wima_ui_check(WimaRenderContext* ctx, float ox, float oy, WimaColor color)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -1640,16 +1577,16 @@ void wima_ui_check(WimaRenderContext* ctx, float ox, float oy, WimaColor color) 
 	nvgLineJoin(ctx->nvg, NVG_MITER);
 
 	// Draw the check.
-	nvgMoveTo(ctx->nvg,ox + 4, oy + 5);
-	nvgLineTo(ctx->nvg,ox + 7, oy + 8);
-	nvgLineTo(ctx->nvg,ox + 14, oy + 1);
+	nvgMoveTo(ctx->nvg, ox + 4, oy + 5);
+	nvgLineTo(ctx->nvg, ox + 7, oy + 8);
+	nvgLineTo(ctx->nvg, ox + 14, oy + 1);
 
 	// Stroke.
 	nvgStroke(ctx->nvg);
 }
 
-void wima_ui_arrow(WimaRenderContext* ctx, float x, float y, float s, WimaColor color) {
-
+void wima_ui_arrow(WimaRenderContext* ctx, float x, float y, float s, WimaColor color)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -1663,8 +1600,8 @@ void wima_ui_arrow(WimaRenderContext* ctx, float x, float y, float s, WimaColor 
 
 	// Draw the arrow.
 	nvgMoveTo(ctx->nvg, x, y);
-	nvgLineTo(ctx->nvg,x - s, y + s);
-	nvgLineTo(ctx->nvg,x - s, y - s);
+	nvgLineTo(ctx->nvg, x - s, y + s);
+	nvgLineTo(ctx->nvg, x - s, y - s);
 	nvgClosePath(ctx->nvg);
 
 	// Fill, but don't stroke.
@@ -1672,8 +1609,8 @@ void wima_ui_arrow(WimaRenderContext* ctx, float x, float y, float s, WimaColor 
 	nvgFill(ctx->nvg);
 }
 
-void wima_ui_arrow_upDown(WimaRenderContext* ctx, float x, float y, float s, WimaColor color) {
-
+void wima_ui_arrow_upDown(WimaRenderContext* ctx, float x, float y, float s, WimaColor color)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -1707,8 +1644,8 @@ void wima_ui_arrow_upDown(WimaRenderContext* ctx, float x, float y, float s, Wim
 	nvgFill(ctx->nvg);
 }
 
-void wima_ui_node_arrow_down(WimaRenderContext* ctx, float x, float y, float s, WimaColor color) {
-
+void wima_ui_node_arrow_down(WimaRenderContext* ctx, float x, float y, float s, WimaColor color)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -1736,8 +1673,8 @@ void wima_ui_node_arrow_down(WimaRenderContext* ctx, float x, float y, float s, 
 	nvgFill(ctx->nvg);
 }
 
-WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float offset, float size) {
-
+WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float offset, float size)
+{
 	wima_assert_init;
 
 	WimaRect result;
@@ -1747,8 +1684,8 @@ WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float of
 	offset = wima_clampf(offset, 0, 1);
 
 	// If this is a vertical scrollbar...
-	if (h > w) {
-
+	if (h > w)
+	{
 		// Calculate the height size.
 		float hs = wima_fmaxf(size * h, w + 1);
 
@@ -1762,8 +1699,8 @@ WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float of
 	}
 
 	// If this is a horizontal scrollbar...
-	else {
-
+	else
+	{
 		// Calculate the width size.
 		float ws = wima_fmaxf(size * w, h - 1);
 
@@ -1783,10 +1720,8 @@ WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float of
 // Static functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float desc,
-                              float lineHeight,   const char* caret,
-                              NVGtextRow* rows,   int nrows,
-                              int* cr, float* cx, float* cy)
+static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float desc, float lineHeight, const char* caret,
+                              NVGtextRow* rows, int nrows, int* cr, float* cx, float* cy)
 {
 	wima_assert_init;
 
@@ -1796,7 +1731,8 @@ static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float de
 	int r, nglyphs;
 
 	// Find the row for the caret.
-	for (r = 0; r < nrows && rows[r].end < caret; ++r);
+	for (r = 0; r < nrows && rows[r].end < caret; ++r)
+		;
 
 	// Fill the return values, including
 	// cx in case of early return.
@@ -1806,27 +1742,22 @@ static void wima_ui_caret_pos(WimaRenderContext* ctx, float x, float y, float de
 
 	// If there are no rows, just return because
 	// we already have the correct values.
-	if (nrows == 0) {
-		return;
-	}
+	if (nrows == 0) return;
 
 	// Set the x coordinate to the min for the row.
 	*cx = rows[r].minx;
 
 	// Get the glyph positions.
-	nglyphs = nvgTextGlyphPositions(ctx->nvg, x, y, rows[r].start, rows[r].end + 1,
-	                                glyphs, WIMA_MAX_GLYPHS);
+	nglyphs = nvgTextGlyphPositions(ctx->nvg, x, y, rows[r].start, rows[r].end + 1, glyphs, WIMA_MAX_GLYPHS);
 
 	// Iterate through the glyphs.
-	for (int i = 0; i < nglyphs; ++i) {
-
+	for (int i = 0; i < nglyphs; ++i)
+	{
 		// Set the x coordinate.
 		*cx = glyphs[i].x;
 
 		// Break if we have found the caret.
-		if (glyphs[i].str == caret) {
-			break;
-		}
+		if (glyphs[i].str == caret) break;
 	}
 }
 

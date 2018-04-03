@@ -34,16 +34,16 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <string.h>
-
 #include <wima/wima.h>
-
-#include <GLFW/glfw3.h>
 
 #include "global.h"
 
-WimaMonitorArray wima_monitor_list() {
+#include <GLFW/glfw3.h>
 
+#include <string.h>
+
+WimaMonitorArray wima_monitor_list()
+{
 	wima_assert_init;
 
 	WimaMonitorArray array;
@@ -53,15 +53,15 @@ WimaMonitorArray wima_monitor_list() {
 	return array;
 }
 
-WimaMonitor* wima_monitor_primary() {
-
+WimaMonitor* wima_monitor_primary()
+{
 	wima_assert_init;
 
 	return (WimaMonitor*) glfwGetPrimaryMonitor();
 }
 
-WimaVec wima_monitor_pos(WimaMonitor* monitor) {
-
+WimaVec wima_monitor_pos(WimaMonitor* monitor)
+{
 	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
@@ -73,8 +73,8 @@ WimaVec wima_monitor_pos(WimaMonitor* monitor) {
 	return v;
 }
 
-WimaSize wima_monitor_size(WimaMonitor* monitor) {
-
+WimaSize wima_monitor_size(WimaMonitor* monitor)
+{
 	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
@@ -86,8 +86,8 @@ WimaSize wima_monitor_size(WimaMonitor* monitor) {
 	return s;
 }
 
-const char* wima_monitor_name(WimaMonitor* monitor) {
-
+const char* wima_monitor_name(WimaMonitor* monitor)
+{
 	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
@@ -95,8 +95,8 @@ const char* wima_monitor_name(WimaMonitor* monitor) {
 	return glfwGetMonitorName((GLFWmonitor*) monitor);
 }
 
-WimaVideoMode wima_monitor_mode(WimaMonitor* monitor) {
-
+WimaVideoMode wima_monitor_mode(WimaMonitor* monitor)
+{
 	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
@@ -110,8 +110,8 @@ WimaVideoMode wima_monitor_mode(WimaMonitor* monitor) {
 	return mode;
 }
 
-WimaVideoModeArray wima_monitor_modes(WimaMonitor* monitor) {
-
+WimaVideoModeArray wima_monitor_modes(WimaMonitor* monitor)
+{
 	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
@@ -123,8 +123,8 @@ WimaVideoModeArray wima_monitor_modes(WimaMonitor* monitor) {
 	return array;
 }
 
-void wima_monitor_setGamma(WimaMonitor* monitor, float gamma) {
-
+void wima_monitor_setGamma(WimaMonitor* monitor, float gamma)
+{
 	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
@@ -132,8 +132,8 @@ void wima_monitor_setGamma(WimaMonitor* monitor, float gamma) {
 	glfwSetGamma((GLFWmonitor*) monitor, gamma);
 }
 
-void wima_monitor_setGammaRamp(WimaMonitor* monitor, WimaGammaRamp* ramp) {
-
+void wima_monitor_setGammaRamp(WimaMonitor* monitor, WimaGammaRamp* ramp)
+{
 	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);
@@ -149,8 +149,8 @@ void wima_monitor_setGammaRamp(WimaMonitor* monitor, WimaGammaRamp* ramp) {
 	glfwSetGammaRamp((GLFWmonitor*) monitor, &glfw);
 }
 
-WimaGammaRamp wima_monitor_gammaRamp(WimaMonitor* monitor) {
-
+WimaGammaRamp wima_monitor_gammaRamp(WimaMonitor* monitor)
+{
 	wima_assert_init;
 
 	wassert(monitor != NULL, WIMA_ASSERT_MONITOR);

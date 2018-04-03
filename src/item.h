@@ -64,42 +64,39 @@ extern "C" {
 #define WIMA_ITEM_BOX_MODEL_MASK 0x000007
 
 // Bits 0-4.
-#define WIMA_ITEM_BOX_MASK       0x00001F
+#define WIMA_ITEM_BOX_MASK 0x00001F
 
 // Bits 5-8.
-#define WIMA_ITEM_LAYOUT_MASK    0x0003E0
+#define WIMA_ITEM_LAYOUT_MASK 0x0003E0
 
 // Bits 9-18.
-#define WIMA_ITEM_EVENT_MASK  \
-	(WIMA_EVENT_KEY         | \
-	 WIMA_EVENT_MOUSE_BTN   | \
-	 WIMA_EVENT_MOUSE_CLICK | \
-	 WIMA_EVENT_MOUSE_DRAG  | \
-	 WIMA_EVENT_SCROLL      | \
+#define WIMA_ITEM_EVENT_MASK                                                                                      \
+	(WIMA_EVENT_KEY | WIMA_EVENT_MOUSE_BTN | WIMA_EVENT_MOUSE_CLICK | WIMA_EVENT_MOUSE_DRAG | WIMA_EVENT_SCROLL | \
 	 WIMA_EVENT_CHAR)
 // TODO: Make sure this has all events.
 
 // Item is frozen (bit 19).
-#define WIMA_ITEM_FROZEN_BIT         0x080000
+#define WIMA_ITEM_FROZEN_BIT 0x080000
 
 // Item handle is pointer to data (bit 20).
-#define WIMA_ITEM_DATA           0x100000
+#define WIMA_ITEM_DATA 0x100000
 
 // Item has been inserted (bit 21).
-#define WIMA_ITEM_INSERTED       0x200000
+#define WIMA_ITEM_INSERTED 0x200000
 
 // Horizontal size has been explicitly set (bit 22).
-#define WIMA_ITEM_HFIXED         0x400000
+#define WIMA_ITEM_HFIXED 0x400000
 
 // Vertical size has been explicitly set (bit 23).
-#define WIMA_ITEM_VFIXED         0x800000
+#define WIMA_ITEM_VFIXED 0x800000
 
 // Bit 22-23.
-#define WIMA_ITEM_FIXED_MASK     0xC00000
+#define WIMA_ITEM_FIXED_MASK 0xC00000
 
 // Which flag bits will be compared.
-#define WIMA_ITEM_COMPARE_MASK \
-	(WIMA_ITEM_BOX_MODEL_MASK | (WIMA_ITEM_LAYOUT_MASK & ~WIMA_LAYOUT_BREAK) | WIMA_ITEM_EVENT_MASK | WIMA_ITEM_USERMASK)
+#define WIMA_ITEM_COMPARE_MASK                                                                        \
+	(WIMA_ITEM_BOX_MODEL_MASK | (WIMA_ITEM_LAYOUT_MASK & ~WIMA_LAYOUT_BREAK) | WIMA_ITEM_EVENT_MASK | \
+	 WIMA_ITEM_USERMASK)
 
 // Limits.
 
@@ -134,8 +131,8 @@ typedef struct WimaAr WimaAr;
  * A union of widget and layout handles.
  * They are laid out in memory the same.
  */
-typedef union WimaItemInfo {
-
+typedef union WimaItemInfo
+{
 	/// The widget handle.
 	WimaWidget widget;
 
@@ -147,8 +144,8 @@ typedef union WimaItemInfo {
 /**
  * A struct storing all data for items.
  */
-typedef struct WimaItem {
-
+typedef struct WimaItem
+{
 	/// The handles.
 	WimaItemInfo info;
 
@@ -164,10 +161,10 @@ typedef struct WimaItem {
 	/// The item's rectangle.
 	WimaRectf rect;
 
-	union {
-
-		struct WimaLayoutInfo {
-
+	union
+	{
+		struct WimaLayoutInfo
+		{
 			/// Index of the first kid.
 			uint16_t firstKid;
 
@@ -196,8 +193,8 @@ typedef struct WimaItem {
 
 		} layout;
 
-		struct WimaWdgt {
-
+		struct WimaWdgt
+		{
 			/// About 27 bits worth of flags.
 			uint32_t flags;
 
@@ -205,7 +202,6 @@ typedef struct WimaItem {
 			WimaProperty prop;
 
 		} widget;
-
 	};
 
 } WimaItem;
@@ -217,7 +213,7 @@ typedef struct WimaItem {
  * @return			true if @a item is a layout,
  *					false otherwise.
  */
-#define WIMA_ITEM_IS_LAYOUT(item)  ((item)->isLayout)
+#define WIMA_ITEM_IS_LAYOUT(item) ((item)->isLayout)
 
 /**
  * @def WIMA_ITEM_IS_WIDGET
@@ -226,7 +222,7 @@ typedef struct WimaItem {
  * @return			true if @a item is a widget,
  *					false otherwise.
  */
-#define WIMA_ITEM_IS_WIDGET(item)  (!((item)->isLayout))
+#define WIMA_ITEM_IS_WIDGET(item) (!((item)->isLayout))
 
 /**
  * Returns a pointer to an item on @a win, in @a area, at @a idx.
@@ -258,4 +254,4 @@ void wima_item_free(ynonnull WimaAr* area, ynonnull WimaItem* item);
 }
 #endif
 
-#endif // WIMA_ITEM_H
+#endif  // WIMA_ITEM_H

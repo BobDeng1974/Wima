@@ -34,22 +34,22 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <yc/assert.h>
-
-#include <nanovg.h>
-#include <nanosvg.h>
-
 #include <wima/render.h>
 
 #include "render.h"
+
 #include "../global.h"
+
+#include <yc/assert.h>
+
+#include <nanosvg.h>
+#include <nanovg.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecF s, WimaVecF e,
-                                    WimaColor icol, WimaColor ocol)
+WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecF s, WimaVecF e, WimaColor icol, WimaColor ocol)
 {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -66,8 +66,8 @@ WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecF s, WimaVecF
 	return p.wima;
 }
 
-WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r, float f,
-                                 WimaColor icol, WimaColor ocol)
+WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r, float f, WimaColor icol,
+                                 WimaColor ocol)
 {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -84,8 +84,8 @@ WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r
 	return p.wima;
 }
 
-WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecF c, float inr,
-                                    float outr, WimaColor icol, WimaColor ocol)
+WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecF c, float inr, float outr, WimaColor icol,
+                                    WimaColor ocol)
 {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -102,8 +102,7 @@ WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecF c, float in
 	return p.wima;
 }
 
-WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecF o, WimaSizef e,
-                                  float angle, int image, float alpha)
+WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecF o, WimaSizef e, float angle, int image, float alpha)
 {
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -118,8 +117,8 @@ WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecF o, WimaSizef 
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-NVGpaint wima_paint_svgLinearGradient(WimaRenderContext* ctx, NSVGgradient* gradient) {
-
+NVGpaint wima_paint_svgLinearGradient(WimaRenderContext* ctx, NSVGgradient* gradient)
+{
 	float inverse[6];
 	float sx, sy, ex, ey;
 
@@ -127,13 +126,12 @@ NVGpaint wima_paint_svgLinearGradient(WimaRenderContext* ctx, NSVGgradient* grad
 	nvgTransformPoint(&sx, &sy, inverse, 0, 0);
 	nvgTransformPoint(&ex, &ey, inverse, 0, 1);
 
-	return nvgLinearGradient(ctx->nvg, sx, sy, ex, ey,
-	    wima_color_int(gradient->stops[0].color),
-	    wima_color_int(gradient->stops[gradient->nstops - 1].color));
+	return nvgLinearGradient(ctx->nvg, sx, sy, ex, ey, wima_color_int(gradient->stops[0].color),
+	                         wima_color_int(gradient->stops[gradient->nstops - 1].color));
 }
 
-NVGpaint wima_paint_svgRadialGradient(WimaRenderContext* ctx, NSVGgradient* gradient) {
-
+NVGpaint wima_paint_svgRadialGradient(WimaRenderContext* ctx, NSVGgradient* gradient)
+{
 	float inverse[6];
 	float cx, cy, r1, r2, inr, outr;
 
@@ -142,16 +140,15 @@ NVGpaint wima_paint_svgRadialGradient(WimaRenderContext* ctx, NSVGgradient* grad
 	nvgTransformPoint(&r1, &r2, inverse, 0, 1);
 	outr = r2 - cy;
 
-	if (gradient->nstops == 3) {
+	if (gradient->nstops == 3)
 		inr = gradient->stops[1].offset * outr;
-	}
-	else {
+	else
+	{
 		inr = 0;
 	}
 
-	NVGpaint paint = nvgRadialGradient(ctx->nvg, cx, cy, inr, outr,
-	    wima_color_int(gradient->stops[0].color),
-	    wima_color_int(gradient->stops[gradient->nstops - 1].color));
+	NVGpaint paint = nvgRadialGradient(ctx->nvg, cx, cy, inr, outr, wima_color_int(gradient->stops[0].color),
+	                                   wima_color_int(gradient->stops[gradient->nstops - 1].color));
 
-	return  paint;
+	return paint;
 }

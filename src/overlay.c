@@ -34,23 +34,24 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <stdlib.h>
-#include <string.h>
-
-#include <yc/mem.h>
-#include <yc/error.h>
-
 #include <wima/wima.h>
 
 #include "overlay.h"
+
 #include "global.h"
+
+#include <yc/error.h>
+#include <yc/mem.h>
+
+#include <stdlib.h>
+#include <string.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaOverlay wima_overlay_register(const char* const name, WimaIcon icon, WimaOverlayLayoutFunc layout) {
-
+WimaOverlay wima_overlay_register(const char* const name, WimaIcon icon, WimaOverlayLayoutFunc layout)
+{
 	wima_assert_init;
 
 	wassert(name != NULL, WIMA_ASSERT_OVERLAY_NAME);
@@ -69,7 +70,8 @@ WimaOverlay wima_overlay_register(const char* const name, WimaIcon icon, WimaOve
 
 	// Allocate and check for failure.
 	WimaOvly* ovly = dpool_calloc(wg.overlays, &key, size);
-	if (yerror(ovly == NULL)) {
+	if (yerror(ovly == NULL))
+	{
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_OVERLAY_INVALID;
 	}
@@ -89,7 +91,8 @@ WimaOverlay wima_overlay_register(const char* const name, WimaIcon icon, WimaOve
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-DynaStatus wima_overlay_copy(void* dest yunused, void* src yunused) {
+DynaStatus wima_overlay_copy(void* dest yunused, void* src yunused)
+{
 	wassert(false, WIMA_ASSERT_OVERLAY_COPY);
 	abort();
 }

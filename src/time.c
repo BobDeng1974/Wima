@@ -34,24 +34,28 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <stdint.h>
-
 #include <wima/wima.h>
 
 #include <GLFW/glfw3.h>
 
-void wima_setTime(double time) {
+#include <stdint.h>
+
+void wima_setTime(double time)
+{
 	glfwSetTime(time);
 }
 
-double wima_time() {
+double wima_time()
+{
 	return glfwGetTime();
 }
 
-uint64_t wima_time_raw() {
+uint64_t wima_time_raw()
+{
 	return glfwGetTimerValue();
 }
 
-uint64_t wima_time_freq() {
+uint64_t wima_time_freq()
+{
 	return glfwGetTimerFrequency();
 }

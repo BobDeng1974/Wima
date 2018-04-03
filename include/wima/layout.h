@@ -42,13 +42,13 @@
 extern "C" {
 #endif
 
-#include <stdbool.h>
-#include <stdint.h>
+#include <wima/render.h>
+#include <wima/wima.h>
 
 #include <yc/opt.h>
 
-#include <wima/wima.h>
-#include <wima/render.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 /**
  * @file wima/layout.h
@@ -75,8 +75,8 @@ extern "C" {
 /**
  * A handle to a layout.
  */
-typedef struct WimaLayout {
-
+typedef struct WimaLayout
+{
 	/// The ID of the layout.
 	uint16_t layout;
 
@@ -253,4 +253,4 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop);
 }
 #endif
 
-#endif // WIMA_LAYOUT_H
+#endif  // WIMA_LAYOUT_H

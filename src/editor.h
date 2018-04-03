@@ -57,8 +57,8 @@ extern "C" {
 /**
  * Data for a editor.
  */
-typedef struct WimaEdtr {
-
+typedef struct WimaEdtr
+{
 	/// The name.
 	DynaString name;
 
@@ -105,4 +105,4 @@ typedef struct WimaEdtr {
 }
 #endif
 
-#endif // WIMA_EDITOR_PRIVATE_H
+#endif  // WIMA_EDITOR_PRIVATE_H

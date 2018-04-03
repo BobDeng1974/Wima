@@ -34,17 +34,16 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <stdbool.h>
-#include <string.h>
-
-#include <yc/error.h>
+#include <wima/math.h>
+#include <wima/render.h>
+#include <wima/wima.h>
 
 #include <dyna/dyna.h>
 #include <dyna/tree.h>
+#include <yc/error.h>
 
-#include <wima/wima.h>
-#include <wima/render.h>
-#include <wima/math.h>
+#include <stdbool.h>
+#include <string.h>
 
 //! @cond Doxygen suppress.
 #define NANOVG_GL3_IMPLEMENTATION
@@ -52,19 +51,19 @@
 #include <nanovg_gl.h>
 //! @endcond Doxygen suppress.
 
-#include <GLFW/glfw3.h>
+#include "area.h"
+#include "callbacks.h"
+#include "dialog.h"
+#include "editor.h"
+#include "global.h"
+#include "menu.h"
+#include "overlay.h"
+#include "window.h"
 
 #include "math/math.h"
 #include "render/render.h"
 
-#include "callbacks.h"
-#include "editor.h"
-#include "dialog.h"
-#include "area.h"
-#include "window.h"
-#include "menu.h"
-#include "overlay.h"
-#include "global.h"
+#include <GLFW/glfw3.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // These are all the static functions that the public functions need.
@@ -95,8 +94,7 @@ static void wima_window_clearContext(WimaWinCtx* ctx);
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized,
-                              bool resizable, bool decorated)
+WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized, bool resizable, bool decorated)
 {
 	WimaWin wwin;
 	WimaStatus status;
@@ -137,14 +135,16 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// because GLFW does not keep a copy of the
 	// name, so Wima must.
 	wwin.name = dstr_create(name);
-	if (yerror(!wwin.name)) {
+	if (yerror(!wwin.name))
+	{
 		status = WIMA_STATUS_MALLOC_ERR;
 		goto wima_win_create_name_glfw_err;
 	}
 
 	// Create the window, and check for error.
 	GLFWwindow* win = glfwCreateWindow(size.w, size.h, name, NULL, NULL);
-	if (yerror(!win)) {
+	if (yerror(!win))
+	{
 		dstr_free(wwin.name);
 		status = WIMA_STATUS_WINDOW_ERR;
 		goto wima_win_create_name_glfw_err;
@@ -155,9 +155,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 	// Create the image vector and check for error.
 	wwin.images = dvec_create(0, NULL, NULL, sizeof(int));
-	if (yerror(!wwin.images)) {
-		goto wima_win_create_noptr_err;
-	}
+	if (yerror(!wwin.images)) goto wima_win_create_noptr_err;
 
 	int w, h;
 
@@ -180,7 +178,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	glfwSetCharCallback(win, wima_callback_char);
 	glfwSetCharModsCallback(win, wima_callback_charMod);
 	glfwSetDropCallback(win, wima_callback_fileDrop);
-	glfwSetCursorEnterCallback(win,wima_callback_mouseEnter);
+	glfwSetCursorEnterCallback(win, wima_callback_mouseEnter);
 	glfwSetWindowPosCallback(win, wima_callback_windowPos);
 	glfwSetFramebufferSizeCallback(win, wima_callback_framebufferSize);
 	glfwSetWindowSizeCallback(win, wima_callback_windowSize);
@@ -191,9 +189,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	glfwSetMonitorCallback(wima_callback_monitorConnected);
 
 	// Set the icons.
-	if (wg.numAppIcons > 0) {
-		glfwSetWindowIcon(win, wg.numAppIcons, wg.appIcons);
-	}
+	if (wg.numAppIcons > 0) glfwSetWindowIcon(win, wg.numAppIcons, wg.appIcons);
 
 	WimaWindow idx;
 
@@ -203,14 +199,14 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	bool done = false;
 
 	// Loop over all the windows...
-	for (uint32_t i = 0; i < len; ++i) {
-
+	for (uint32_t i = 0; i < len; ++i)
+	{
 		// Get the current window pointer.
 		WimaWin* winptr = dvec_get(wg.windows, i);
 
 		// If the window is not valid...
-		if (!winptr->window) {
-
+		if (!winptr->window)
+		{
 			// Fill it with this new window.
 			done = true;
 			memmove(&winptr->window, &wwin, sizeof(WimaWin));
@@ -222,15 +218,13 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	}
 
 	// If the window has not been put in the list...
-	if (!done) {
-
+	if (!done)
+	{
 		// Set the index.
 		idx = len;
 
 		// Push it onto the list and check for error.
-		if (yerror(dvec_push(wg.windows, &wwin))) {
-			goto wima_win_create_noptr_err;
-		}
+		if (yerror(dvec_push(wg.windows, &wwin))) goto wima_win_create_noptr_err;
 	}
 
 	// Get a pointer to the new window.
@@ -238,9 +232,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 	// Create an items vector and check for error.
 	window->overlayItems = dvec_create(0, NULL, NULL, sizeof(WimaItem));
-	if (yerror(window->overlayItems == NULL)) {
-		goto wima_win_create_malloc_err;
-	}
+	if (yerror(window->overlayItems == NULL)) goto wima_win_create_malloc_err;
 
 	// Cache this.
 	size_t cap = dvec_cap(wg.workspaces);
@@ -249,22 +241,16 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	window->workspaces = dvec_createTreeVec(cap, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
 
 	// Check for error.
-	if (yerror(!window->workspaces)) {
-		goto wima_win_create_malloc_err;
-	}
+	if (yerror(!window->workspaces)) goto wima_win_create_malloc_err;
 
 	// Copy the workspaces.
-	if (yerror(dvec_copy(window->workspaces, wg.workspaces))) {
-		goto wima_win_create_malloc_err;
-	}
+	if (yerror(dvec_copy(window->workspaces, wg.workspaces))) goto wima_win_create_malloc_err;
 
 	// Create the sizes vector.
 	window->workspaceSizes = dvec_create(cap, NULL, NULL, sizeof(WimaSize));
 
 	// Check for error.
-	if (yerror(!window->workspaceSizes)) {
-		goto wima_win_create_malloc_err;
-	}
+	if (yerror(!window->workspaceSizes)) goto wima_win_create_malloc_err;
 
 	// Set the tree index.
 	window->treeStackIdx = 0;
@@ -284,8 +270,8 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	uint8_t wkspLen = dvec_len(wg.workspaces);
 
 	// Loop through all workspaces.
-	for (uint8_t i = 0; i < wkspLen; ++i) {
-
+	for (uint8_t i = 0; i < wkspLen; ++i)
+	{
 		// Initialize the areas.
 		wima_area_init(idx, dvec_get(window->workspaces, i), rect);
 	}
@@ -306,7 +292,8 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	glfwSwapInterval(1);
 
 	// Load the context.
-	if (yerror(!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))) {
+	if (yerror(!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)))
+	{
 		status = WIMA_STATUS_OPENGL_ERR;
 		goto wima_win_create_err;
 	}
@@ -315,30 +302,26 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	window->render.nvg = nvgCreateGL3(NVG_ANTIALIAS);
 
 	// Check for error.
-	if (yerror(!window->render.nvg)) {
-		goto wima_win_create_malloc_err;
-	}
+	if (yerror(!window->render.nvg)) goto wima_win_create_malloc_err;
 
 	// Load the font.
 	window->render.font = nvgCreateFont(window->render.nvg, "default", dstr_str(wg.fontPath));
 
 	// Check for error.
-	if (yerror(window->render.font == -1)) {
-		goto wima_win_create_malloc_err;
-	}
+	if (yerror(window->render.font == -1)) goto wima_win_create_malloc_err;
 
 	// Cache this.
 	size_t imgLen = dvec_len(wg.imagePaths);
 
 	// If there are images to load...
-	if (imgLen > 0) {
-
+	if (imgLen > 0)
+	{
 		// Cache this.
 		WimaImageFlags* flags = dvec_get(wg.imageFlags, 0);
 
 		// Create the already added images.
-		for (size_t i = 0; i < imgLen; ++i) {
-
+		for (size_t i = 0; i < imgLen; ++i)
+		{
 			// Get the path.
 			DynaString path = dvec_get(wg.imagePaths, i);
 
@@ -346,16 +329,12 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 			status = wima_window_addImage(window, dstr_str(path), flags[i]);
 
 			// Check for error and handle it.
-			if (yerror(status != WIMA_STATUS_SUCCESS)) {
-				goto wima_win_create_err;
-			}
+			if (yerror(status != WIMA_STATUS_SUCCESS)) goto wima_win_create_err;
 		}
 	}
 
 	// Load the app icon.
-	if (wg.numAppIcons) {
-		glfwSetWindowIcon(win, wg.numAppIcons, wg.appIcons);
-	}
+	if (wg.numAppIcons) glfwSetWindowIcon(win, wg.numAppIcons, wg.appIcons);
 
 	// Set the clear color for this context.
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -389,16 +368,16 @@ wima_win_create_name_glfw_err:
 	return WIMA_WINDOW_INVALID;
 }
 
-WimaStatus wima_window_close(WimaWindow wwh) {
-
+WimaStatus wima_window_close(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
 	// If there is no close function,
 	// or it says to close the window...
-	if (!wg.funcs.close || wg.funcs.close(wwh)) {
-
+	if (!wg.funcs.close || wg.funcs.close(wwh))
+	{
 		// Close the window.
 		WimaWin* win = dvec_get(wg.windows, wwh);
 		glfwSetWindowShouldClose(win->window, 1);
@@ -407,8 +386,8 @@ WimaStatus wima_window_close(WimaWindow wwh) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-void wima_window_setFocused(WimaWindow wwh) {
-
+void wima_window_setFocused(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -420,8 +399,8 @@ void wima_window_setFocused(WimaWindow wwh) {
 	glfwMakeContextCurrent(win->window);
 }
 
-bool wima_window_focused(WimaWindow wwh) {
-
+bool wima_window_focused(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -433,8 +412,8 @@ bool wima_window_focused(WimaWindow wwh) {
 	return glfwGetWindowAttrib(win->window, GLFW_FOCUSED) == GLFW_TRUE;
 }
 
-void wima_window_minimize(WimaWindow wwh) {
-
+void wima_window_minimize(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -446,8 +425,8 @@ void wima_window_minimize(WimaWindow wwh) {
 	glfwIconifyWindow(win->window);
 }
 
-bool wima_window_minimized(WimaWindow wwh) {
-
+bool wima_window_minimized(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -459,8 +438,8 @@ bool wima_window_minimized(WimaWindow wwh) {
 	return glfwGetWindowAttrib(win->window, GLFW_ICONIFIED) == GLFW_TRUE;
 }
 
-void wima_window_maximize(WimaWindow wwh) {
-
+void wima_window_maximize(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -472,8 +451,8 @@ void wima_window_maximize(WimaWindow wwh) {
 	glfwMaximizeWindow(win->window);
 }
 
-bool wima_window_maximized(WimaWindow wwh) {
-
+bool wima_window_maximized(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -485,8 +464,8 @@ bool wima_window_maximized(WimaWindow wwh) {
 	return glfwGetWindowAttrib(win->window, GLFW_MAXIMIZED) == GLFW_TRUE;
 }
 
-void wima_window_fullscreen(WimaWindow wwh, WimaMonitor* monitor) {
-
+void wima_window_fullscreen(WimaWindow wwh, WimaMonitor* monitor)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -503,8 +482,8 @@ void wima_window_fullscreen(WimaWindow wwh, WimaMonitor* monitor) {
 	glfwSetWindowMonitor(win->window, (GLFWmonitor*) monitor, 0, 0, w, h, GLFW_DONT_CARE);
 }
 
-void wima_window_restore(WimaWindow wwh) {
-
+void wima_window_restore(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -516,8 +495,8 @@ void wima_window_restore(WimaWindow wwh) {
 	glfwRestoreWindow(win->window);
 }
 
-void wima_window_hide(WimaWindow wwh) {
-
+void wima_window_hide(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -529,8 +508,8 @@ void wima_window_hide(WimaWindow wwh) {
 	glfwHideWindow(win->window);
 }
 
-void wima_window_show(WimaWindow wwh) {
-
+void wima_window_show(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -542,8 +521,8 @@ void wima_window_show(WimaWindow wwh) {
 	glfwShowWindow(win->window);
 }
 
-bool wima_window_visible(WimaWindow wwh) {
-
+bool wima_window_visible(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -555,8 +534,8 @@ bool wima_window_visible(WimaWindow wwh) {
 	return glfwGetWindowAttrib(win->window, GLFW_VISIBLE) == GLFW_TRUE;
 }
 
-bool wima_window_decorated(WimaWindow wwh) {
-
+bool wima_window_decorated(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -568,8 +547,8 @@ bool wima_window_decorated(WimaWindow wwh) {
 	return glfwGetWindowAttrib(win->window, GLFW_DECORATED) == GLFW_TRUE;
 }
 
-bool wima_window_resizable(WimaWindow wwh) {
-
+bool wima_window_resizable(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -581,8 +560,8 @@ bool wima_window_resizable(WimaWindow wwh) {
 	return glfwGetWindowAttrib(win->window, GLFW_RESIZABLE) == GLFW_TRUE;
 }
 
-WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {
-
+WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -594,15 +573,13 @@ WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title) {
 	glfwSetWindowTitle(win->window, title);
 
 	// Set the title in the name and check for error.
-	if (yerror(dstr_set(win->name, title))) {
-		return WIMA_STATUS_MALLOC_ERR;
-	}
+	if (yerror(dstr_set(win->name, title))) return WIMA_STATUS_MALLOC_ERR;
 
 	return WIMA_STATUS_SUCCESS;
 }
 
-DynaString wima_window_title(WimaWindow wwh) {
-
+DynaString wima_window_title(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -613,8 +590,8 @@ DynaString wima_window_title(WimaWindow wwh) {
 	return win->name;
 }
 
-void wima_window_setPosition(WimaWindow wwh, WimaVec pos) {
-
+void wima_window_setPosition(WimaWindow wwh, WimaVec pos)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -626,8 +603,8 @@ void wima_window_setPosition(WimaWindow wwh, WimaVec pos) {
 	glfwSetWindowPos(win->window, pos.x, pos.y);
 }
 
-WimaVec wima_window_position(WimaWindow wwh) {
-
+WimaVec wima_window_position(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -643,8 +620,8 @@ WimaVec wima_window_position(WimaWindow wwh) {
 	return pos;
 }
 
-void wima_window_setSize(WimaWindow wwh, WimaSize size) {
-
+void wima_window_setSize(WimaWindow wwh, WimaSize size)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -656,8 +633,8 @@ void wima_window_setSize(WimaWindow wwh, WimaSize size) {
 	glfwSetWindowSize(win->window, size.w, size.h);
 }
 
-WimaSize wima_window_size(WimaWindow wwh) {
-
+WimaSize wima_window_size(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -685,8 +662,8 @@ WimaSize wima_window_size(WimaWindow wwh) {
 	return size;
 }
 
-void wima_window_setSizeLimits(WimaWindow wwh, WimaSize min, WimaSize max) {
-
+void wima_window_setSizeLimits(WimaWindow wwh, WimaSize min, WimaSize max)
+{
 	// TODO: Make this function not public when constraining for UI space?
 
 	wima_assert_init;
@@ -700,8 +677,8 @@ void wima_window_setSizeLimits(WimaWindow wwh, WimaSize min, WimaSize max) {
 	glfwSetWindowSizeLimits(win->window, min.w, min.h, max.w, max.h);
 }
 
-void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator) {
-
+void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -713,8 +690,8 @@ void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator) 
 	glfwSetWindowAspectRatio(win->window, numerator, denominator);
 }
 
-WimaSize wima_window_framebufferSize(WimaWindow wwh) {
-
+WimaSize wima_window_framebufferSize(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -742,8 +719,8 @@ WimaSize wima_window_framebufferSize(WimaWindow wwh) {
 	return size;
 }
 
-void wima_window_setUserPointer(WimaWindow wwh, void* user) {
-
+void wima_window_setUserPointer(WimaWindow wwh, void* user)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -754,8 +731,8 @@ void wima_window_setUserPointer(WimaWindow wwh, void* user) {
 	win->user = user;
 }
 
-void* wima_window_userPointer(WimaWindow wwh) {
-
+void* wima_window_userPointer(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -766,8 +743,8 @@ void* wima_window_userPointer(WimaWindow wwh) {
 	return win->user;
 }
 
-WimaMods wima_window_mods(WimaWindow wwh) {
-
+WimaMods wima_window_mods(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -778,8 +755,8 @@ WimaMods wima_window_mods(WimaWindow wwh) {
 	return win->ctx.mods;
 }
 
-WimaVecC wima_window_scroll(WimaWindow wwh) {
-
+WimaVecC wima_window_scroll(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -790,8 +767,8 @@ WimaVecC wima_window_scroll(WimaWindow wwh) {
 	return win->ctx.scroll;
 }
 
-uint32_t wima_window_clicks(WimaWindow wwh) {
-
+uint32_t wima_window_clicks(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -802,8 +779,8 @@ uint32_t wima_window_clicks(WimaWindow wwh) {
 	return win->ctx.clicks;
 }
 
-void wima_window_setHoverWidget(WimaWindow wwh, WimaWidget wih) {
-
+void wima_window_setHoverWidget(WimaWindow wwh, WimaWidget wih)
+{
 	wima_assert_init;
 
 	wassert(wih.window == wwh, WIMA_ASSERT_WIN_ITEM_MISMATCH);
@@ -828,8 +805,8 @@ void wima_window_setHoverWidget(WimaWindow wwh, WimaWidget wih) {
 	win->ctx.hover = wih;
 }
 
-WimaWidget wima_window_hoverWidget(WimaWindow wwh) {
-
+WimaWidget wima_window_hoverWidget(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -840,8 +817,8 @@ WimaWidget wima_window_hoverWidget(WimaWindow wwh) {
 	return win->ctx.hover;
 }
 
-void wima_window_setFocusWidget(WimaWindow wwh, WimaWidget wih) {
-
+void wima_window_setFocusWidget(WimaWindow wwh, WimaWidget wih)
+{
 	wima_assert_init;
 
 	wassert(wih.window == wwh, WIMA_ASSERT_WIN_ITEM_MISMATCH);
@@ -866,8 +843,8 @@ void wima_window_setFocusWidget(WimaWindow wwh, WimaWidget wih) {
 	win->ctx.focus = wih;
 }
 
-WimaWidget wima_window_focusWidget(WimaWindow wwh) {
-
+WimaWidget wima_window_focusWidget(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -878,8 +855,8 @@ WimaWidget wima_window_focusWidget(WimaWindow wwh) {
 	return win->ctx.focus;
 }
 
-void wima_window_clearEvents(WimaWindow wwh) {
-
+void wima_window_clearEvents(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -893,8 +870,8 @@ void wima_window_clearEvents(WimaWindow wwh) {
 	win->ctx.scroll.y = 0;
 }
 
-void wima_window_refresh(WimaWindow wwh) {
-
+void wima_window_refresh(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -906,8 +883,8 @@ void wima_window_refresh(WimaWindow wwh) {
 	win->flags |= WIMA_WIN_DIRTY;
 }
 
-void wima_window_cancelRefresh(WimaWindow wwh) {
-
+void wima_window_cancelRefresh(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -919,8 +896,8 @@ void wima_window_cancelRefresh(WimaWindow wwh) {
 	win->flags &= ~(WIMA_WIN_DIRTY);
 }
 
-bool wima_window_needsRefresh(WimaWindow wwh) {
-
+bool wima_window_needsRefresh(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -931,8 +908,8 @@ bool wima_window_needsRefresh(WimaWindow wwh) {
 	return WIMA_WIN_IS_DIRTY(win) || WIMA_WIN_NEEDS_LAYOUT(win);
 }
 
-void wima_window_layout(WimaWindow wwh) {
-
+void wima_window_layout(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -946,8 +923,8 @@ void wima_window_layout(WimaWindow wwh) {
 	win->flags |= (WIMA_WIN_LAYOUT | WIMA_WIN_DIRTY);
 }
 
-void wima_window_cancelLayout(WimaWindow wwh) {
-
+void wima_window_cancelLayout(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -959,8 +936,8 @@ void wima_window_cancelLayout(WimaWindow wwh) {
 	win->flags &= ~(WIMA_WIN_LAYOUT);
 }
 
-bool wima_window_needsLayout(WimaWindow wwh) {
-
+bool wima_window_needsLayout(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -971,14 +948,14 @@ bool wima_window_needsLayout(WimaWindow wwh) {
 	return WIMA_WIN_NEEDS_LAYOUT(win);
 }
 
-void wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp) {
-
+void wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
 	// Get the window.
-	WimaWin* win= dvec_get(wg.windows, wwh);
+	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	// These are separate because they assert different things.
 	wassert(win->treeStackIdx != ((uint8_t) -1), WIMA_ASSERT_WIN_NO_WKSP);
@@ -996,8 +973,8 @@ void wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp) {
 	wima_window_setDirty(win, true);
 }
 
-void wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg) {
-
+void wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1040,8 +1017,8 @@ void wima_window_pushDialog(WimaWindow wwh, WimaDialog wdlg) {
 	wima_area_resize(WIMA_WIN_AREAS(win), rect);
 }
 
-void wima_window_popDialog(WimaWindow wwh) {
-
+void wima_window_popDialog(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1077,8 +1054,8 @@ void wima_window_popDialog(WimaWindow wwh) {
 	wima_area_resize(WIMA_WIN_AREAS(win), rect);
 }
 
-void wima_window_setOverlay(WimaWindow wwh, WimaOverlay overlay) {
-
+void wima_window_setOverlay(WimaWindow wwh, WimaOverlay overlay)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1111,8 +1088,8 @@ void wima_window_setOverlay(WimaWindow wwh, WimaOverlay overlay) {
 	win->overlay = overlay;
 }
 
-void wima_window_removeOverlay(WimaWindow wwh) {
-
+void wima_window_removeOverlay(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1138,8 +1115,8 @@ void wima_window_removeOverlay(WimaWindow wwh) {
 	win->overlay = WIMA_OVERLAY_INVALID;
 }
 
-void wima_window_setContextMenu(WimaWindow wwh, WimaMenu menu) {
-
+void wima_window_setContextMenu(WimaWindow wwh, WimaMenu menu)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1169,8 +1146,8 @@ void wima_window_setContextMenu(WimaWindow wwh, WimaMenu menu) {
 	win->menu = menu;
 }
 
-void wima_window_setMenu(WimaWindow wwh, WimaMenu menu) {
-
+void wima_window_setMenu(WimaWindow wwh, WimaMenu menu)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1190,8 +1167,8 @@ void wima_window_setMenu(WimaWindow wwh, WimaMenu menu) {
 	win->menu = menu;
 }
 
-WimaMenu wima_window_menu(WimaWindow wwh) {
-
+WimaMenu wima_window_menu(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1202,8 +1179,8 @@ WimaMenu wima_window_menu(WimaWindow wwh) {
 	return WIMA_WIN_HAS_MENU(win) ? win->menu : WIMA_MENU_INVALID;
 }
 
-void wima_window_setCursor(WimaWindow wwh, WimaCursor* cursor) {
-
+void wima_window_setCursor(WimaWindow wwh, WimaCursor* cursor)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1212,15 +1189,15 @@ void wima_window_setCursor(WimaWindow wwh, WimaCursor* cursor) {
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	// Get the cursor.
-	GLFWcursor* c =(GLFWcursor*) cursor;
+	GLFWcursor* c = (GLFWcursor*) cursor;
 
 	// Set the cursor in the window and in GLFW.
 	win->cursor = c;
 	glfwSetCursor(win->window, c);
 }
 
-void wima_window_setStandardCursor(WimaWindow wwh, WimaCursorType c) {
-
+void wima_window_setStandardCursor(WimaWindow wwh, WimaCursorType c)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1233,8 +1210,8 @@ void wima_window_setStandardCursor(WimaWindow wwh, WimaCursorType c) {
 	glfwSetCursor(win->window, wg.cursors[c]);
 }
 
-WimaCursor* wima_window_cursor(WimaWindow wwh) {
-
+WimaCursor* wima_window_cursor(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1245,8 +1222,8 @@ WimaCursor* wima_window_cursor(WimaWindow wwh) {
 	return (WimaCursor*) win->cursor;
 }
 
-void wima_window_setCursorMode(WimaWindow wwh, WimaCursorMode mode) {
-
+void wima_window_setCursorMode(WimaWindow wwh, WimaCursorMode mode)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1258,8 +1235,8 @@ void wima_window_setCursorMode(WimaWindow wwh, WimaCursorMode mode) {
 	glfwSetInputMode(win->window, GLFW_CURSOR, mode + GLFW_CURSOR_NORMAL);
 }
 
-WimaCursorMode wima_window_cursorMode(WimaWindow wwh) {
-
+WimaCursorMode wima_window_cursorMode(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1271,11 +1248,11 @@ WimaCursorMode wima_window_cursorMode(WimaWindow wwh) {
 	int mode = glfwGetInputMode(win->window, GLFW_CURSOR);
 
 	// We have to translate the mode from GLFW to Wima.
-	return (WimaCursorMode) (mode - GLFW_CURSOR_NORMAL);
+	return (WimaCursorMode)(mode - GLFW_CURSOR_NORMAL);
 }
 
-void wima_window_setCursorPos(WimaWindow wwh, WimaVec pos) {
-
+void wima_window_setCursorPos(WimaWindow wwh, WimaVec pos)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1288,8 +1265,8 @@ void wima_window_setCursorPos(WimaWindow wwh, WimaVec pos) {
 	glfwSetCursorPos(win->window, (double) pos.x, (double) pos.y);
 }
 
-WimaVec wima_window_cursorPos(WimaWindow wwh) {
-
+WimaVec wima_window_cursorPos(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1300,8 +1277,8 @@ WimaVec wima_window_cursorPos(WimaWindow wwh) {
 	return win->ctx.cursorPos;
 }
 
-WimaVec wima_window_cursorStart(WimaWindow wwh) {
-
+WimaVec wima_window_cursorStart(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1314,8 +1291,8 @@ WimaVec wima_window_cursorStart(WimaWindow wwh) {
 	return win->ctx.dragStart;
 }
 
-WimaVec wima_window_cursorDelta(WimaWindow wwh) {
-
+WimaVec wima_window_cursorDelta(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1326,16 +1303,14 @@ WimaVec wima_window_cursorDelta(WimaWindow wwh) {
 	wassert(win->ctx.mouseBtns != 0, WIMA_ASSERT_WIN_DRAG_MOUSE_BTNS);
 
 	// Fill the result.
-	WimaVec result = {{{
-	        win->ctx.cursorPos.x - win->ctx.dragStart.x,
-	        win->ctx.cursorPos.y - win->ctx.dragStart.y
-	}}};
+	WimaVec result = { { { win->ctx.cursorPos.x - win->ctx.dragStart.x,
+		                   win->ctx.cursorPos.y - win->ctx.dragStart.y } } };
 
 	return result;
 }
 
-void wima_window_setStickyKeys(WimaWindow wwh, bool enabled) {
-
+void wima_window_setStickyKeys(WimaWindow wwh, bool enabled)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1346,8 +1321,8 @@ void wima_window_setStickyKeys(WimaWindow wwh, bool enabled) {
 	glfwSetInputMode(win->window, GLFW_STICKY_KEYS, enabled ? GLFW_TRUE : GLFW_FALSE);
 }
 
-bool wima_window_stickyKeys(WimaWindow wwh) {
-
+bool wima_window_stickyKeys(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1358,8 +1333,8 @@ bool wima_window_stickyKeys(WimaWindow wwh) {
 	return glfwGetInputMode(win->window, GLFW_STICKY_KEYS) == GLFW_TRUE;
 }
 
-void wima_window_setStickyMouseBtns(WimaWindow wwh, bool enabled) {
-
+void wima_window_setStickyMouseBtns(WimaWindow wwh, bool enabled)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1370,8 +1345,8 @@ void wima_window_setStickyMouseBtns(WimaWindow wwh, bool enabled) {
 	glfwSetInputMode(win->window, GLFW_STICKY_MOUSE_BUTTONS, enabled ? GLFW_TRUE : GLFW_FALSE);
 }
 
-bool wima_window_stickyMouseBtns(WimaWindow wwh) {
-
+bool wima_window_stickyMouseBtns(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1382,8 +1357,8 @@ bool wima_window_stickyMouseBtns(WimaWindow wwh) {
 	return glfwGetInputMode(win->window, GLFW_STICKY_MOUSE_BUTTONS) == GLFW_TRUE;
 }
 
-WimaAction wima_window_keyState(WimaWindow wwh, WimaKey key) {
-
+WimaAction wima_window_keyState(WimaWindow wwh, WimaKey key)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1394,8 +1369,8 @@ WimaAction wima_window_keyState(WimaWindow wwh, WimaKey key) {
 	return (WimaAction) glfwGetKey(win->window, key);
 }
 
-WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) {
-
+WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1408,8 +1383,8 @@ WimaAction wima_window_mouseBtnState(WimaWindow wwh, WimaMouseBtn btn) {
 	return (WimaAction) glfwGetMouseButton(win->window, gbtn);
 }
 
-void wima_window_setClipboard(WimaWindow wwh, const char* str) {
-
+void wima_window_setClipboard(WimaWindow wwh, const char* str)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1420,8 +1395,8 @@ void wima_window_setClipboard(WimaWindow wwh, const char* str) {
 	glfwSetClipboardString(win->window, str);
 }
 
-const char* wima_window_clipboard(WimaWindow wwh) {
-
+const char* wima_window_clipboard(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1462,8 +1437,7 @@ static WimaStatus wima_window_drawOverlay(ynonnull WimaWin* win);
  * @pre					@a win must not be NULL.
  * @pre					@a menu must not be NULL.
  */
-static WimaStatus wima_window_drawMenu(ynonnull WimaWin* win, ynonnull WimaMnu* menu,
-                                       float parentWidth);
+static WimaStatus wima_window_drawMenu(ynonnull WimaWin* win, ynonnull WimaMnu* menu, float parentWidth);
 
 /**
  * Returns the menu that contains @a pos and does not have
@@ -1510,13 +1484,14 @@ static void wima_window_processFileDrop(WimaWindow wwh, ynonnull DynaVector file
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-DynaStatus wima_window_copy(void* dest yunused, void* src yunused) {
+DynaStatus wima_window_copy(void* dest yunused, void* src yunused)
+{
 	wassert(false, WIMA_ASSERT_INVALID_OPERATION);
 	abort();
 }
 
-void wima_window_destroy(void* ptr) {
-
+void wima_window_destroy(void* ptr)
+{
 	wima_assert_init;
 
 	WimaWin* win = (WimaWin*) ptr;
@@ -1525,53 +1500,40 @@ void wima_window_destroy(void* ptr) {
 
 	// If the GLFW window exists, the window
 	// is valid and needs destruction.
-	if (win->window) {
-
+	if (win->window)
+	{
 		// If the NanoVG context exists, delete
 		// it. This will also delete the images.
-		if (win->render.nvg) {
-			nvgDeleteGL3(win->render.nvg);
-		}
+		if (win->render.nvg) nvgDeleteGL3(win->render.nvg);
 
 		// Delete the vector of images, if it exists.
-		if (win->images) {
-			dvec_free(win->images);
-		}
+		if (win->images) dvec_free(win->images);
 
 		// Free the dialog trees, if they exist.
-		if (win->treeStackIdx != ((uint8_t) -1)) {
-			for (uint8_t i = 1; i <= win->treeStackIdx; ++i) {
-				dtree_free(win->treeStack[i]);
-			}
+		if (win->treeStackIdx != ((uint8_t) -1))
+		{
+			for (uint8_t i = 1; i <= win->treeStackIdx; ++i) dtree_free(win->treeStack[i]);
 		}
 
 		// Free the workspace sizes.
-		if (win->workspaceSizes) {
-			dvec_free(win->workspaceSizes);
-		}
+		if (win->workspaceSizes) dvec_free(win->workspaceSizes);
 
 		// Free the vector of workspaces.
-		if (win->workspaces) {
-			dvec_free(win->workspaces);
-		}
+		if (win->workspaces) dvec_free(win->workspaces);
 
 		// Free the vector of items.
-		if (win->overlayItems) {
-			dvec_free(win->overlayItems);
-		}
+		if (win->overlayItems) dvec_free(win->overlayItems);
 
 		// Destroy the GLFW window.
 		glfwDestroyWindow(win->window);
 
 		// If the name exists, free it.
-		if (win->name) {
-			dstr_free(win->name);
-		}
+		if (win->name) dstr_free(win->name);
 	}
 }
 
-WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags flags) {
-
+WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags flags)
+{
 	// Create the image in NanoVG.
 	int id = nvgCreateImage(win->render.nvg, path, flags);
 
@@ -1579,8 +1541,8 @@ WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags f
 	return dvec_push(win->images, &id) ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
 }
 
-void wima_window_removeImage(WimaWin* win) {
-
+void wima_window_removeImage(WimaWin* win)
+{
 	// Get the length.
 	size_t len = dvec_len(win->images);
 
@@ -1592,8 +1554,8 @@ void wima_window_removeImage(WimaWin* win) {
 	nvgDeleteImage(win->render.nvg, id);
 }
 
-void wima_window_setDirty(WimaWin* win, bool layout) {
-
+void wima_window_setDirty(WimaWin* win, bool layout)
+{
 	wima_assert_init;
 
 	wassert(win != NULL, WIMA_ASSERT_WIN);
@@ -1602,13 +1564,11 @@ void wima_window_setDirty(WimaWin* win, bool layout) {
 	win->flags |= WIMA_WIN_DIRTY;
 
 	// If we need layout, set the force bit.
-	if (layout) {
-		win->flags |= WIMA_WIN_LAYOUT_FORCE;
-	}
+	if (layout) win->flags |= WIMA_WIN_LAYOUT_FORCE;
 }
 
-void wima_window_setModifier(WimaWin* win, WimaKey key, WimaAction action) {
-
+void wima_window_setModifier(WimaWin* win, WimaKey key, WimaAction action)
+{
 	wima_assert_init;
 
 	wassert(win != NULL, WIMA_ASSERT_WIN);
@@ -1616,69 +1576,87 @@ void wima_window_setModifier(WimaWin* win, WimaKey key, WimaAction action) {
 	WimaMods mod;
 
 	// Which modifier?
-	switch (key) {
-
+	switch (key)
+	{
 		case WIMA_KEY_LEFT_SHIFT:
 		case WIMA_KEY_RIGHT_SHIFT:
+		{
 			mod = WIMA_MOD_SHIFT;
 			break;
+		}
 
 		case WIMA_KEY_LEFT_CONTROL:
 		case WIMA_KEY_RIGHT_CONTROL:
+		{
 			mod = WIMA_MOD_CTRL;
 			break;
+		}
 
 		case WIMA_KEY_LEFT_ALT:
 		case WIMA_KEY_RIGHT_ALT:
+		{
 			mod = WIMA_MOD_ALT;
 			break;
+		}
 
 		case WIMA_KEY_LEFT_SUPER:
 		case WIMA_KEY_RIGHT_SUPER:
+		{
 			mod = WIMA_MOD_SUPER;
 			break;
+		}
 
 		default:
+		{
 			mod = WIMA_MOD_NONE;
 			break;
+		}
 	}
 
 	// Clear on release, set on press (or repeat).
-	switch (action) {
-
+	switch (action)
+	{
 		case WIMA_ACTION_RELEASE:
+		{
 			win->ctx.mods &= ~(mod);
 			break;
+		}
 
 		case WIMA_ACTION_PRESS:
 		case WIMA_ACTION_REPEAT:
+		{
 			win->ctx.mods |= mod;
 			break;
+		}
 	}
 }
 
-void wima_window_setMouseBtn(WimaWin* win, WimaMouseBtn btn, WimaAction action) {
-
+void wima_window_setMouseBtn(WimaWin* win, WimaMouseBtn btn, WimaAction action)
+{
 	wima_assert_init;
 
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 
 	// Clear on release, set on press (or repeat).
-	switch (action) {
-
+	switch (action)
+	{
 		case WIMA_ACTION_RELEASE:
+		{
 			win->ctx.mouseBtns &= ~(btn);
 			break;
+		}
 
 		case WIMA_ACTION_PRESS:
 		case WIMA_ACTION_REPEAT:
+		{
 			win->ctx.mouseBtns |= btn;
 			break;
+		}
 	}
 }
 
-void wima_window_removeMenu(WimaWin* win, WimaMnu* menu) {
-
+void wima_window_removeMenu(WimaWin* win, WimaMnu* menu)
+{
 	wima_assert_init;
 
 	wassert(win != NULL, WIMA_ASSERT_WIN);
@@ -1690,20 +1668,19 @@ void wima_window_removeMenu(WimaWin* win, WimaMnu* menu) {
 	WimaMnu* subMenu = menu;
 
 	// Loop over the menus.
-	while (subMenu) {
-
+	while (subMenu)
+	{
 		// Get the handle.
 		WimaMenu handle = subMenu->subMenu;
 
 		// Break out early if we can.
-		if (handle == WIMA_MENU_INVALID) {
-			wassert(subMenu->subMenuParentIdx == UINT16_MAX,
-			        WIMA_ASSERT_MENU_ITEM_PARENT_MISMATCH);
+		if (handle == WIMA_MENU_INVALID)
+		{
+			wassert(subMenu->subMenuParentIdx == UINT16_MAX, WIMA_ASSERT_MENU_ITEM_PARENT_MISMATCH);
 			break;
 		}
 
-		wassert(subMenu->subMenuParentIdx != UINT16_MAX,
-		        WIMA_ASSERT_MENU_ITEM_PARENT_MISMATCH);
+		wassert(subMenu->subMenuParentIdx != UINT16_MAX, WIMA_ASSERT_MENU_ITEM_PARENT_MISMATCH);
 
 		// Get the menu item key.
 		uint64_t itemKey = (uint64_t) subMenu->items[subMenu->subMenuParentIdx];
@@ -1728,8 +1705,8 @@ void wima_window_removeMenu(WimaWin* win, WimaMnu* menu) {
 	}
 }
 
-WimaStatus wima_window_draw(WimaWindow wwh) {
-
+WimaStatus wima_window_draw(WimaWindow wwh)
+{
 	WimaStatus status;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -1744,21 +1721,19 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 
 	// Check for layout.
-	if (WIMA_WIN_NEEDS_LAYOUT(win)) {
-
+	if (WIMA_WIN_NEEDS_LAYOUT(win))
+	{
 		// Layout all areas and check for error.
 		status = wima_area_layout(WIMA_WIN_AREAS(win));
-		if (yerror(status)) {
-			return status;
-		}
+		if (yerror(status)) return status;
 
 		// Make sure we draw after this.
 		win->flags |= WIMA_WIN_DIRTY;
 	}
 
 	// Check for dirty.
-	if (WIMA_WIN_IS_DIRTY(win)) {
-
+	if (WIMA_WIN_IS_DIRTY(win))
+	{
 		// Clear OpenGL state.
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -1767,8 +1742,8 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 
 		// Draw all areas and check for error.
 		status = wima_area_draw(&win->render, WIMA_WIN_AREAS(win));
-		if (yerror(status)) {
-
+		if (yerror(status))
+		{
 			// Cancel NanoVG frame on error.
 			nvgCancelFrame(win->render.nvg);
 
@@ -1776,12 +1751,12 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 		}
 
 		// If we have an overlay...
-		if (WIMA_WIN_HAS_OVERLAY(win)) {
-
+		if (WIMA_WIN_HAS_OVERLAY(win))
+		{
 			// Draw the overlay and check for error.
 			status = wima_window_drawOverlay(win);
-			if (yerror(status)) {
-
+			if (yerror(status))
+			{
 				// Cancel NanoVG frame.
 				nvgCancelFrame(win->render.nvg);
 
@@ -1790,8 +1765,8 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 		}
 
 		// If we have a menu...
-		if (WIMA_WIN_HAS_MENU(win)) {
-
+		if (WIMA_WIN_HAS_MENU(win))
+		{
 			// Get the key.
 			uint64_t key = (uint64_t) win->menu;
 
@@ -1802,8 +1777,8 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 
 			// Draw the menu and check for error.
 			status = wima_window_drawMenu(win, menu, 0);
-			if (yerror(status)) {
-
+			if (yerror(status))
+			{
 				// Cancel NanoVG frame on error.
 				nvgCancelFrame(win->render.nvg);
 
@@ -1827,8 +1802,8 @@ WimaStatus wima_window_draw(WimaWindow wwh) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-void wima_window_processEvents(WimaWindow wwh) {
-
+void wima_window_processEvents(WimaWindow wwh)
+{
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
 	// Get the window.
@@ -1849,9 +1824,7 @@ void wima_window_processEvents(WimaWindow wwh) {
 	win->ctx.cursorPos = win->ctx.last_cursor;
 
 	// Loop through the events and process each.
-	for (int i = 0; i < numEvents; ++i) {
-		wima_window_processEvent(win, wwh, handles[i], events[i]);
-	}
+	for (int i = 0; i < numEvents; ++i) wima_window_processEvent(win, wwh, handles[i], events[i]);
 
 	// Reset the event count.
 	win->ctx.eventCount = 0;
@@ -1860,12 +1833,14 @@ void wima_window_processEvents(WimaWindow wwh) {
 	win->ctx.last_cursor = win->ctx.cursorPos;
 }
 
-void wima_window_joinAreasMode(WimaWindow wwh) {
+void wima_window_joinAreasMode(WimaWindow wwh)
+{
 	// TODO: Write this function.
 	printf("Join clicked on window[%d]\n", wwh);
 }
 
-void wima_window_splitAreaMode(WimaWindow wwh) {
+void wima_window_splitAreaMode(WimaWindow wwh)
+{
 	// TODO: Write this function.
 	printf("Split clicked on window[%d]\n", wwh);
 }
@@ -1874,8 +1849,8 @@ void wima_window_splitAreaMode(WimaWindow wwh) {
 // Static functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-static WimaStatus wima_window_drawOverlay(WimaWin* win) {
-
+static WimaStatus wima_window_drawOverlay(WimaWin* win)
+{
 	wassert(win != NULL, WIMA_ASSERT_WIN);
 	wassert(win->overlay != WIMA_OVERLAY_INVALID, WIMA_ASSERT_OVERLAY);
 
@@ -1884,8 +1859,8 @@ static WimaStatus wima_window_drawOverlay(WimaWin* win) {
 	return WIMA_STATUS_SUCCESS;
 }
 
-static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parentWidth) {
-
+static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parentWidth)
+{
 	float w, h;
 
 	WimaIcon menuIcon;
@@ -1903,8 +1878,8 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 	bool isTopAndContext = WIMA_WIN_MENU_IS_CONTEXT(win) && parentWidth == 0;
 
 	// If the menu has a title...
-	if (isTopAndContext) {
-
+	if (isTopAndContext)
+	{
 		// Get the title and icon.
 		menuIcon = menu->icon;
 		menuTitle = WIMA_MENU_NAME(menu);
@@ -1927,12 +1902,13 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 
 	// Loop through the items and fill the array and estimate width.
 	// These are combined into one loop to save on branching.
-	for (uint16_t i = 0; i < numItems; ++i, ++handle) {
-
+	for (uint16_t i = 0; i < numItems; ++i, ++handle)
+	{
 		// Get the key.
 		uint64_t itemKey = (uint64_t) *handle;
 
-		if (itemKey == WIMA_MENU_SEPARATOR) {
+		if (itemKey == WIMA_MENU_SEPARATOR)
+		{
 			items[i] = NULL;
 			continue;
 		}
@@ -1957,24 +1933,27 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 	float height = 0.0f;
 
 	// Set the above heights based on estimation.
-	if (isTopAndContext) {
+	if (isTopAndContext)
+	{
 		titleHeight = wima_ui_label_estimateHeight(&win->render, 0, menuTitle, width) + 5;
 		height = titleHeight + WIMA_WIDGET_MENU_SEP_HEIGHT;
 	}
-	else {
+	else
+	{
 		height = 5.0f;
 	}
 
 	// Now estimate height.
-	for (int i = 0; i < numItems; ++i) {
-
+	for (int i = 0; i < numItems; ++i)
+	{
 		// Get the pointer.
 		item = items[i];
 
 		// A NULL pointer means a separator.
 		// Just add the height and continue.
 		// We also want to store the height.
-		if (!item) {
+		if (!item)
+		{
 			double* dptr = (double*) (items + i);
 			*dptr = height;
 			height += WIMA_WIDGET_MENU_SEP_HEIGHT;
@@ -2003,19 +1982,16 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 	menu->rect.h = height;
 
 	// Move the menu left if it extends off the screen.
-	if (menu->rect.x + width >= win->fbsize.w) {
-		menu->rect.x -= parentWidth + width;
-	}
+	if (menu->rect.x + width >= win->fbsize.w) menu->rect.x -= parentWidth + width;
 
 	// Calculate the menu height.
 	int heightPos = menu->rect.y + height;
 
 	// Move the menu down if it goes past the top.
-	if (heightPos >= win->fbsize.h) {
+	if (heightPos >= win->fbsize.h)
 		menu->rect.y -= heightPos - (win->fbsize.h);
-	}
-	else if (menu->rect.y < 0) {
-
+	else if (menu->rect.y < 0)
+	{
 		// Make sure the menu does not go past the top.
 		menu->rect.y = 0;
 	}
@@ -2035,7 +2011,8 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 
 	// In the case that we are top level ***AND*** a context menu, we
 	// want to set the window menu offsets if we are still in the menu.
-	if (menuContainsCursor && isTopAndContext) {
+	if (menuContainsCursor && isTopAndContext)
+	{
 		win->menuOffset.x = (int16_t) cursor.x;
 		win->menuOffset.y = (int16_t) cursor.y;
 	}
@@ -2050,7 +2027,8 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 	wima_ui_menu_background(&win->render, 0, 0, menu->rect.w, menu->rect.h, WIMA_CORNER_NONE);
 
 	// If it has a title (is the top menu and a context menu), draw it.
-	if (isTopAndContext) {
+	if (isTopAndContext)
+	{
 		wima_ui_menu_label(&win->render, 0, 5, width, titleHeight, menuIcon, menuTitle);
 		wima_ui_menu_separator(&win->render, 0, titleHeight, width, WIMA_WIDGET_MENU_SEP_HEIGHT);
 	}
@@ -2064,8 +2042,8 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 	WimaMnu* subMenu;
 
 	// If the menu has a submenu...
-	if (menu->subMenu != WIMA_MENU_INVALID) {
-
+	if (menu->subMenu != WIMA_MENU_INVALID)
+	{
 		// Get the submenu key.
 		uint64_t subKey = (uint64_t) menu->subMenu;
 
@@ -2074,34 +2052,35 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 		// Get the submenu.
 		subMenu = dpool_get(wg.menus, &subKey);
 	}
-	else {
+	else
+	{
 		subMenu = NULL;
 	}
 
-	for (uint32_t i = 0; i < numItems; ++i, ++handle) {
-
+	for (uint32_t i = 0; i < numItems; ++i, ++handle)
+	{
 		// Get the pointer.
 		item = items[i];
 
 		// If the item is a separator, just draw it and continue.
-		if ((*handle) == WIMA_MENU_SEPARATOR) {
-			wima_ui_menu_separator(&win->render, 0, *((double*) &item),
-			                       width, WIMA_WIDGET_MENU_SEP_HEIGHT);
+		if ((*handle) == WIMA_MENU_SEPARATOR)
+		{
+			wima_ui_menu_separator(&win->render, 0, *((double*) &item), width, WIMA_WIDGET_MENU_SEP_HEIGHT);
 			continue;
 		}
 
 		// If the menu contains the cursor...
-		if (menuContainsCursor) {
-
+		if (menuContainsCursor)
+		{
 			// Calculate whether the item contains the cursor.
 			bool contained = wima_rect_contains(item->rect, cursor);
 
 			// If it does and it is the bottom-most menu...
-			if (contained && mmouse == menu) {
-
+			if (contained && mmouse == menu)
+			{
 				// If the item has a sub menu...
-				if (item->hasSubMenu) {
-
+				if (item->hasSubMenu)
+				{
 					// Set the submenu and parent index.
 					menu->subMenu = item->subMenu;
 					menu->subMenuParentIdx = i;
@@ -2120,8 +2099,8 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 					subMenu->rect.x = menu->rect.x + width;
 					subMenu->rect.y = menu->rect.y + item->rect.y - 5.0f;
 				}
-				else {
-
+				else
+				{
 					// Remove any sub menu and parent.
 					menu->subMenu = WIMA_MENU_INVALID;
 					menu->subMenuParentIdx = UINT16_MAX;
@@ -2134,20 +2113,18 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 		}
 
 		// Actually render the menu item.
-		wima_ui_menu_item(&win->render, item->rect.x, item->rect.y, item->rect.w, item->rect.h,
-		                  item->state, item->icon, item->label, item->hasSubMenu);
+		wima_ui_menu_item(&win->render, item->rect.x, item->rect.y, item->rect.w, item->rect.h, item->state, item->icon,
+		                  item->label, item->hasSubMenu);
 	}
 
 	// If the menu has a submenu, draw it.
-	if (subMenu) {
-		status = wima_window_drawMenu(win, subMenu, width);
-	}
+	if (subMenu) status = wima_window_drawMenu(win, subMenu, width);
 
 	return status;
 }
 
-static WimaMnu* wima_window_menu_contains(WimaMnu* menu, WimaVec pos) {
-
+static WimaMnu* wima_window_menu_contains(WimaMnu* menu, WimaVec pos)
+{
 	wassert(menu != NULL, WIMA_ASSERT_WIN_MENU);
 
 	// Get the menu that contains the position.
@@ -2156,8 +2133,8 @@ static WimaMnu* wima_window_menu_contains(WimaMnu* menu, WimaVec pos) {
 	WimaMnu* child;
 
 	// If the menu has a submenu...
-	if (menu->subMenu != WIMA_MENU_INVALID) {
-
+	if (menu->subMenu != WIMA_MENU_INVALID)
+	{
 		// Get the key.
 		uint64_t key = (uint64_t) menu->subMenu;
 
@@ -2167,7 +2144,8 @@ static WimaMnu* wima_window_menu_contains(WimaMnu* menu, WimaVec pos) {
 		WimaMnu* m = dpool_get(wg.menus, &key);
 		child = wima_window_menu_contains(m, pos);
 	}
-	else {
+	else
+	{
 		child = NULL;
 	}
 
@@ -2177,11 +2155,11 @@ static WimaMnu* wima_window_menu_contains(WimaMnu* menu, WimaVec pos) {
 	return result;
 }
 
-static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wdgt, WimaEvent e) {
-
+static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wdgt, WimaEvent e)
+{
 	// Switch on the type of event.
-	switch (e.type) {
-
+	switch (e.type)
+	{
 		case WIMA_EVENT_NONE:
 		{
 			break;
@@ -2193,16 +2171,15 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
 			bool consumed = false;
 
 			// If the area is not invalid, sent the event.
-			if (e.area_key.area != WIMA_AREA_INVALID) {
+			if (e.area_key.area != WIMA_AREA_INVALID)
+			{
 				WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), e.area_key.area);
 				consumed = wima_area_key(area, e.area_key.key);
 			}
 
 			// If the event wasn't consumed, and
 			// the widget is valid, send the event.
-			if (!consumed && wdgt.widget != WIMA_WIDGET_INVALID) {
-				wima_widget_key(wdgt, e.area_key.key);
-			}
+			if (!consumed && wdgt.widget != WIMA_WIDGET_INVALID) wima_widget_key(wdgt, e.area_key.key);
 
 			break;
 		}
@@ -2216,9 +2193,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
 		case WIMA_EVENT_MOUSE_CLICK:
 		{
 			// If the widget is valid, send the event.
-			if (wdgt.widget != WIMA_WIDGET_INVALID) {
-				wima_widget_mouseClick(wdgt, e.click);
-			}
+			if (wdgt.widget != WIMA_WIDGET_INVALID) wima_widget_mouseClick(wdgt, e.click);
 
 			break;
 		}
@@ -2229,18 +2204,18 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
 			win->ctx.cursorPos = e.pos;
 
 			// Only do something if we have a menu up.
-			if (!WIMA_WIN_HAS_MENU(win)) {
-
+			if (!WIMA_WIN_HAS_MENU(win))
+			{
 				// If the user is moving the split...
-				if (win->ctx.movingSplit) {
-
+				if (win->ctx.movingSplit)
+				{
 					// Move the split.
-					wima_area_moveSplit(WIMA_WIN_AREAS(win), win->ctx.split.area,
-					                    win->ctx.split, win->ctx.cursorPos);
+					wima_area_moveSplit(WIMA_WIN_AREAS(win), win->ctx.split.area, win->ctx.split, win->ctx.cursorPos);
 				}
 
 				// If the widget is valid, send the event.
-				else if (wdgt.widget != WIMA_WIDGET_INVALID) {
+				else if (wdgt.widget != WIMA_WIDGET_INVALID)
+				{
 					wima_widget_mousePos(wdgt, e.pos);
 				}
 			}
@@ -2251,9 +2226,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
 		case WIMA_EVENT_MOUSE_DRAG:
 		{
 			// If the widget is valid, send the event.
-			if (wdgt.widget != WIMA_WIDGET_INVALID) {
-				wima_widget_mouseDrag(wdgt, e.drag);
-			}
+			if (wdgt.widget != WIMA_WIDGET_INVALID) wima_widget_mouseDrag(wdgt, e.drag);
 
 			break;
 		}
@@ -2268,9 +2241,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
 		case WIMA_EVENT_SCROLL:
 		{
 			// If the widget is valid, send the event.
-			if (wdgt.widget != WIMA_WIDGET_INVALID) {
-				wima_widget_scroll(wdgt, e.scroll);
-			}
+			if (wdgt.widget != WIMA_WIDGET_INVALID) wima_widget_scroll(wdgt, e.scroll);
 
 			break;
 		}
@@ -2278,9 +2249,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
 		case WIMA_EVENT_CHAR:
 		{
 			// If the widget is valid, send the event.
-			if (wdgt.widget != WIMA_WIDGET_INVALID) {
-				wima_widget_char(wdgt, e.char_event);
-			}
+			if (wdgt.widget != WIMA_WIDGET_INVALID) wima_widget_char(wdgt, e.char_event);
 
 			break;
 		}
@@ -2329,15 +2298,16 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
 	}
 }
 
-static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e) {
-
+static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e)
+{
 	// If there is a menu...
-	if (WIMA_WIN_HAS_MENU(win)) {
-
+	if (WIMA_WIN_HAS_MENU(win))
+	{
 		// If the mouse button hasn't been released yet,
 		// set it to released and return because we don't
 		// need to do anything else.
-		if (!WIMA_WIN_MENU_IS_RELEASED(win)) {
+		if (!WIMA_WIN_MENU_IS_RELEASED(win))
+		{
 			win->flags |= WIMA_WIN_MENU_RELEASED;
 			return;
 		}
@@ -2356,15 +2326,13 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 		WimaMnu* m = wima_window_menu_contains(menu, pos);
 
 		// If the mouse button was released, and the containing menu is valid...
-		if (e.action == WIMA_ACTION_RELEASE && m) {
-
+		if (e.action == WIMA_ACTION_RELEASE && m)
+		{
 			// Get the key.
 			uint64_t itemKey = (uint64_t) win->ctx.click_item.menuItem;
 
 			// If the item is a separator, just return.
-			if (itemKey == WIMA_MENU_SEPARATOR) {
-				return;
-			}
+			if (itemKey == WIMA_MENU_SEPARATOR) return;
 
 			wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
 
@@ -2380,9 +2348,8 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 			// If the item was pressed *and* released,
 			// as well as doesn't have a submenu and
 			// does have a function...
-			if (WIMA_WIN_MENU_ITEM_WAS_PRESSED(win) &&
-			    wima_rect_contains(item->rect, pos) &&
-			    !item->hasSubMenu && item->click)
+			if (WIMA_WIN_MENU_ITEM_WAS_PRESSED(win) && wima_rect_contains(item->rect, pos) && !item->hasSubMenu &&
+			    item->click)
 			{
 				// Set the new offsets for the menu. This
 				// is so the user can just click if they
@@ -2392,8 +2359,8 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 
 				// If the two menus are not equal, set
 				// the menu offsets for the first.
-				if (m != menu) {
-
+				if (m != menu)
+				{
 					// Set the menu's offsets.
 					menu->rect.x = win->menuOffset.x;
 					menu->rect.y = win->menuOffset.y;
@@ -2414,11 +2381,11 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 		}
 
 		// If the mouse button was pressed and the containing menu isn't valid...
-		else if (e.action == WIMA_ACTION_PRESS) {
-
+		else if (e.action == WIMA_ACTION_PRESS)
+		{
 			// If the mouse is in a menu...
-			if (m) {
-
+			if (m)
+			{
 				// Translate the position into item coordinates.
 				pos.x -= m->rect.x;
 				pos.y -= m->rect.y;
@@ -2427,15 +2394,13 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 				uint16_t numItems = m->numItems;
 
 				// Go through the menu items.
-				for (uint16_t i = 0; i < numItems; ++i) {
-
+				for (uint16_t i = 0; i < numItems; ++i)
+				{
 					// Get the key.
 					uint64_t itemKey = m->items[i];
 
 					// Break early on a separator.
-					if (itemKey == WIMA_MENU_SEPARATOR) {
-						continue;
-					}
+					if (itemKey == WIMA_MENU_SEPARATOR) continue;
 
 					wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
 
@@ -2443,8 +2408,8 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 					WimaMnuItm* item = dpool_get(wg.menuItems, &itemKey);
 
 					// If the item is the one.
-					if (wima_rect_contains(item->rect, pos)) {
-
+					if (wima_rect_contains(item->rect, pos))
+					{
 						// Store the item in the window and set the flag.
 						win->ctx.click_item.menuItem = (WimaMenuItem) item->key;
 						win->flags |= WIMA_WIN_MENU_ITEM_PRESS;
@@ -2455,8 +2420,8 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 			}
 
 			// If the mouse is not in a menu.
-			else {
-
+			else
+			{
 				// Set the menu's offsets.
 				menu->rect.x = win->menuOffset.x;
 				menu->rect.y = win->menuOffset.y;
@@ -2468,39 +2433,41 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 	}
 
 	// If we have an overlay...
-	else if (WIMA_WIN_HAS_OVERLAY(win)) {
+	else if (WIMA_WIN_HAS_OVERLAY(win))
+	{
 		// TODO: Write this.
 	}
 
 	// If we are releasing a split, clear the appropriate data.
-	else if (win->ctx.split.split >= 0 && e.action == WIMA_ACTION_RELEASE) {
+	else if (win->ctx.split.split >= 0 && e.action == WIMA_ACTION_RELEASE)
+	{
 		win->ctx.split.split = -1;
 		win->ctx.dragStart.x = -1;
 	}
 
 	// If a widget was clicked, send the event.
-	else if (wdgt.widget != WIMA_WIDGET_INVALID) {
+	else if (wdgt.widget != WIMA_WIDGET_INVALID)
+	{
 		wima_widget_mouseBtn(wdgt, e);
 	}
 }
 
-static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files) {
-
+static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files)
+{
 	// Get the number of files.
 	size_t len = dvec_len(files);
 
 	// Malloc a list of files.
 	const char** names = malloc(len * sizeof(char*));
 
-	if (yerror(names == NULL)) {
+	if (yerror(names == NULL))
+	{
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return;
 	}
 
 	// Set the pointers in the list of files.
-	for (uint32_t i = 0; i < len; ++i) {
-		names[i] = dstr_str(dvec_get(files, i));
-	}
+	for (uint32_t i = 0; i < len; ++i) names[i] = dstr_str(dvec_get(files, i));
 
 	// Send the event.
 	wg.funcs.file_drop(wwh, len, names);
@@ -2509,8 +2476,8 @@ static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files) {
 	dvec_free(files);
 }
 
-static void wima_window_clearContext(WimaWinCtx* ctx) {
-
+static void wima_window_clearContext(WimaWinCtx* ctx)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_CONTEXT);
 
 	// Set everything to NULL.
@@ -2530,19 +2497,18 @@ static void wima_window_clearContext(WimaWinCtx* ctx) {
 	memset(&ctx->hover, -1, sizeof(WimaWidget));
 }
 
-bool wima_window_valid(WimaWindow wwh) {
-
+bool wima_window_valid(WimaWindow wwh)
+{
 	wima_assert_init;
 
 	// Make sure the handle is within range.
 	bool valid = wwh < dvec_len(wg.windows);
 
 	// If it is...
-	if (valid) {
-
+	if (valid)
+	{
 		// Get the window.
 		WimaWin* win = dvec_get(wg.windows, wwh);
-
 
 		// Check that the window is valid.
 		valid = win->window != NULL;
@@ -2556,25 +2522,30 @@ bool wima_window_valid(WimaWindow wwh) {
 ////////////////////////////////////////////////////////////////////////////////
 
 #ifndef NDEBUG
-void wima_window_sub1_click(WimaWindow wwh) {
+void wima_window_sub1_click(WimaWindow wwh)
+{
 	printf("Item sub 1 clicked on window[%d]\n", wwh);
 }
 
-void wima_window_sub3_click(WimaWindow wwh) {
+void wima_window_sub3_click(WimaWindow wwh)
+{
 	printf("Item sub 3 clicked on window[%d]\n", wwh);
 }
 
-void wima_window_sub4_click(WimaWindow wwh) {
+void wima_window_sub4_click(WimaWindow wwh)
+{
 	printf("Item sub 4 clicked on window[%d]\n", wwh);
 }
 
-void wima_window_sub5_click(WimaWindow wwh) {
+void wima_window_sub5_click(WimaWindow wwh)
+{
 	printf("Item sub 5 clicked on window[%d]\n", wwh);
 }
 
-void wima_window_sub_sub1_click(WimaWindow wwh) {
+void wima_window_sub_sub1_click(WimaWindow wwh)
+{
 	printf("Item sub sub 1 clicked on window[%d]\n", wwh);
 }
-#endif // NDEBUG
+#endif  // NDEBUG
 
 //! @endcond Doxygen suppress.

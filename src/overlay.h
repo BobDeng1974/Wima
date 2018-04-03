@@ -42,14 +42,14 @@
 extern "C" {
 #endif
 
-#include <wima/wima.h>
 #include <wima/render.h>
+#include <wima/wima.h>
 
 /**
  * The data for an overlay.
  */
-typedef struct WimaOvly {
-
+typedef struct WimaOvly
+{
 	/// The layout function.
 	WimaOverlayLayoutFunc layout;
 
@@ -77,4 +77,4 @@ DynaStatus wima_overlay_copy(void* dest, void* src) ynoreturn;
 }
 #endif
 
-#endif // WIMA_OVERLAY_PRIVATE_H
+#endif  // WIMA_OVERLAY_PRIVATE_H

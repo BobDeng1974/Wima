@@ -42,19 +42,17 @@
 extern "C" {
 #endif
 
-#include <stdbool.h>
-#include <stddef.h>
+#include <wima/render.h>
 
-#include <glad/glad.h>
 #include <KHR/khrplatform.h>
-
-#include <nanovg.h>
-
-#include <dyna/vector.h>
 #include <dyna/string.h>
 #include <dyna/tree.h>
+#include <dyna/vector.h>
+#include <glad/glad.h>
 
-#include <wima/render.h>
+#include <nanovg.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 /**
  * @file wima/wima.h
@@ -74,7 +72,8 @@ extern "C" {
  * The possible status codes that Wima can return after
  * every operation.
  */
-typedef enum WimaStatus {
+typedef enum WimaStatus
+{
 
 	/// Success.
 	WIMA_STATUS_SUCCESS,
@@ -278,8 +277,8 @@ typedef uint16_t WimaAreaNode;
 /**
  * A handle to a area.
  */
-typedef struct WimaArea {
-
+typedef struct WimaArea
+{
 	/// The area's node. It's first because it's bigger.
 	WimaAreaNode area;
 
@@ -312,8 +311,8 @@ typedef struct WimaArea {
 /**
  * A handle to a widget.
  */
-typedef struct WimaWidget {
-
+typedef struct WimaWidget
+{
 	/// A handle to the widget itself.
 	uint16_t widget;
 
@@ -331,19 +330,20 @@ typedef struct WimaWidget {
 /**
  * Item states as returned by @a wima_widget_state().
  */
-typedef enum WimaWidgetState {
+typedef enum WimaWidgetState
+{
 
 	/// The item is inactive.
 	WIMA_WIDGET_DEFAULT = 0,
 
 	/// The item is inactive, but the cursor is hovering over this item.
-	WIMA_WIDGET_HOVER   = 1 << 0,
+	WIMA_WIDGET_HOVER = 1 << 0,
 
 	/// The item is toggled, activated, focused (depends on item kind).
-	WIMA_WIDGET_ACTIVE  = 1 << 1,
+	WIMA_WIDGET_ACTIVE = 1 << 1,
 
 	/// The item is unresponsive.
-	WIMA_WIDGET_DISABLED  = 1 << 2,
+	WIMA_WIDGET_DISABLED = 1 << 2,
 
 } WimaWidgetState;
 
@@ -369,185 +369,187 @@ typedef struct WimaLayout WimaLayout;
 /**
  * The possible options for mouse buttons.
  */
-typedef enum WimaMouseBtn {
+typedef enum WimaMouseBtn
+{
 
 	/// The first mouse button.
-	WIMA_MOUSE_1       = 1 << 0,
+	WIMA_MOUSE_1 = 1 << 0,
 
 	/// The second mouse button.
-	WIMA_MOUSE_2       = 1 << 1,
+	WIMA_MOUSE_2 = 1 << 1,
 
 	/// The third mouse button.
-	WIMA_MOUSE_3       = 1 << 2,
+	WIMA_MOUSE_3 = 1 << 2,
 
 	/// The fourth mouse button.
-	WIMA_MOUSE_4       = 1 << 3,
+	WIMA_MOUSE_4 = 1 << 3,
 
 	/// The fifth mouse button.
-	WIMA_MOUSE_5       = 1 << 4,
+	WIMA_MOUSE_5 = 1 << 4,
 
 	/// The sixth mouse button.
-	WIMA_MOUSE_6       = 1 << 5,
+	WIMA_MOUSE_6 = 1 << 5,
 
 	/// The seventh mouse button.
-	WIMA_MOUSE_7       = 1 << 6,
+	WIMA_MOUSE_7 = 1 << 6,
 
 	/// The eighth mouse button.
-	WIMA_MOUSE_8       = 1 << 7,
+	WIMA_MOUSE_8 = 1 << 7,
 
 	/// The left mouse button.
-	WIMA_MOUSE_LEFT    = WIMA_MOUSE_1,
+	WIMA_MOUSE_LEFT = WIMA_MOUSE_1,
 
 	/// The right mouse button.
-	WIMA_MOUSE_RIGHT   = WIMA_MOUSE_2,
+	WIMA_MOUSE_RIGHT = WIMA_MOUSE_2,
 
 	/// The middle mouse button.
-	WIMA_MOUSE_MIDDLE  = WIMA_MOUSE_3,
+	WIMA_MOUSE_MIDDLE = WIMA_MOUSE_3,
 
 } WimaMouseBtn;
 
 /**
  * The possible keys Wima can handle.
  */
-typedef enum WimaKey {
+typedef enum WimaKey
+{
 
 	//! @cond Doxygen suppress.
 
-	WIMA_KEY_UNKNOWN     = -1,
+	WIMA_KEY_UNKNOWN = -1,
 
-	WIMA_KEY_SPACE       = 32,
-	WIMA_KEY_APOSTROPHE  = 39,
-	WIMA_KEY_COMMA       = 44,
-	WIMA_KEY_MINUS       = 45,
-	WIMA_KEY_PERIOD      = 46,
-	WIMA_KEY_SLASH       = 47,
+	WIMA_KEY_SPACE = 32,
+	WIMA_KEY_APOSTROPHE = 39,
+	WIMA_KEY_COMMA = 44,
+	WIMA_KEY_MINUS = 45,
+	WIMA_KEY_PERIOD = 46,
+	WIMA_KEY_SLASH = 47,
 
-	WIMA_KEY_0           = 48,
-	WIMA_KEY_1           = 49,
-	WIMA_KEY_2           = 50,
-	WIMA_KEY_3           = 51,
-	WIMA_KEY_4           = 52,
-	WIMA_KEY_5           = 53,
-	WIMA_KEY_6           = 54,
-	WIMA_KEY_7           = 55,
-	WIMA_KEY_8           = 56,
-	WIMA_KEY_9           = 57,
+	WIMA_KEY_0 = 48,
+	WIMA_KEY_1 = 49,
+	WIMA_KEY_2 = 50,
+	WIMA_KEY_3 = 51,
+	WIMA_KEY_4 = 52,
+	WIMA_KEY_5 = 53,
+	WIMA_KEY_6 = 54,
+	WIMA_KEY_7 = 55,
+	WIMA_KEY_8 = 56,
+	WIMA_KEY_9 = 57,
 
-	WIMA_KEY_SEMICOLON   = 59,
-	WIMA_KEY_EQUAL       = 61,
+	WIMA_KEY_SEMICOLON = 59,
+	WIMA_KEY_EQUAL = 61,
 
-	WIMA_KEY_A           = 65,
-	WIMA_KEY_B           = 66,
-	WIMA_KEY_C           = 67,
-	WIMA_KEY_D           = 68,
-	WIMA_KEY_E           = 69,
-	WIMA_KEY_F           = 70,
-	WIMA_KEY_G           = 71,
-	WIMA_KEY_H           = 72,
-	WIMA_KEY_I           = 73,
-	WIMA_KEY_J           = 74,
-	WIMA_KEY_K           = 75,
-	WIMA_KEY_L           = 76,
-	WIMA_KEY_M           = 77,
-	WIMA_KEY_N           = 78,
-	WIMA_KEY_O           = 79,
-	WIMA_KEY_P           = 80,
-	WIMA_KEY_Q           = 81,
-	WIMA_KEY_R           = 82,
-	WIMA_KEY_S           = 83,
-	WIMA_KEY_T           = 84,
-	WIMA_KEY_U           = 85,
-	WIMA_KEY_V           = 86,
-	WIMA_KEY_W           = 87,
-	WIMA_KEY_X           = 88,
-	WIMA_KEY_Y           = 89,
-	WIMA_KEY_Z           = 90,
+	WIMA_KEY_A = 65,
+	WIMA_KEY_B = 66,
+	WIMA_KEY_C = 67,
+	WIMA_KEY_D = 68,
+	WIMA_KEY_E = 69,
+	WIMA_KEY_F = 70,
+	WIMA_KEY_G = 71,
+	WIMA_KEY_H = 72,
+	WIMA_KEY_I = 73,
+	WIMA_KEY_J = 74,
+	WIMA_KEY_K = 75,
+	WIMA_KEY_L = 76,
+	WIMA_KEY_M = 77,
+	WIMA_KEY_N = 78,
+	WIMA_KEY_O = 79,
+	WIMA_KEY_P = 80,
+	WIMA_KEY_Q = 81,
+	WIMA_KEY_R = 82,
+	WIMA_KEY_S = 83,
+	WIMA_KEY_T = 84,
+	WIMA_KEY_U = 85,
+	WIMA_KEY_V = 86,
+	WIMA_KEY_W = 87,
+	WIMA_KEY_X = 88,
+	WIMA_KEY_Y = 89,
+	WIMA_KEY_Z = 90,
 
-	WIMA_KEY_LEFT_BRACKET   = 91,
-	WIMA_KEY_BACKSLACH      = 92,
-	WIMA_KEY_RIGHT_BRACKET  = 93,
-	WIMA_KEY_GRACE_ACCENT   = 96,
+	WIMA_KEY_LEFT_BRACKET = 91,
+	WIMA_KEY_BACKSLACH = 92,
+	WIMA_KEY_RIGHT_BRACKET = 93,
+	WIMA_KEY_GRACE_ACCENT = 96,
 
-	WIMA_KEY_WORLD_1        = 161,
-	WIMA_KEY_WORLD_2        = 162,
+	WIMA_KEY_WORLD_1 = 161,
+	WIMA_KEY_WORLD_2 = 162,
 
-	WIMA_KEY_ESCAPE         = 256,
-	WIMA_KEY_ENTER          = 257,
-	WIMA_KEY_TAB            = 258,
-	WIMA_KEY_BACKSPACE      = 259,
-	WIMA_KEY_INSERT         = 260,
-	WIMA_KEY_DELETE         = 261,
-	WIMA_KEY_RIGHT          = 262,
-	WIMA_KEY_LEFT           = 263,
-	WIMA_KEY_DOWN           = 264,
-	WIMA_KEY_UP             = 265,
-	WIMA_KEY_PAGE_UP        = 266,
-	WIMA_KEY_PAGE_DOWN      = 267,
-	WIMA_KEY_HOME           = 268,
-	WIMA_KEY_END            = 269,
+	WIMA_KEY_ESCAPE = 256,
+	WIMA_KEY_ENTER = 257,
+	WIMA_KEY_TAB = 258,
+	WIMA_KEY_BACKSPACE = 259,
+	WIMA_KEY_INSERT = 260,
+	WIMA_KEY_DELETE = 261,
+	WIMA_KEY_RIGHT = 262,
+	WIMA_KEY_LEFT = 263,
+	WIMA_KEY_DOWN = 264,
+	WIMA_KEY_UP = 265,
+	WIMA_KEY_PAGE_UP = 266,
+	WIMA_KEY_PAGE_DOWN = 267,
+	WIMA_KEY_HOME = 268,
+	WIMA_KEY_END = 269,
 
-	WIMA_KEY_CAPS_LOCK      = 280,
-	WIMA_KEY_SCROLL_LOCK    = 281,
-	WIMA_KEY_NUM_LOCK       = 282,
-	WIMA_KEY_PRINT_SCREEN   = 283,
-	WIMA_KEY_PAUSE          = 284,
+	WIMA_KEY_CAPS_LOCK = 280,
+	WIMA_KEY_SCROLL_LOCK = 281,
+	WIMA_KEY_NUM_LOCK = 282,
+	WIMA_KEY_PRINT_SCREEN = 283,
+	WIMA_KEY_PAUSE = 284,
 
-	WIMA_KEY_F1             = 290,
-	WIMA_KEY_F2             = 291,
-	WIMA_KEY_F3             = 292,
-	WIMA_KEY_F4             = 293,
-	WIMA_KEY_F5             = 294,
-	WIMA_KEY_F6             = 295,
-	WIMA_KEY_F7             = 296,
-	WIMA_KEY_F8             = 297,
-	WIMA_KEY_F9             = 298,
-	WIMA_KEY_F10            = 299,
-	WIMA_KEY_F11            = 300,
-	WIMA_KEY_F12            = 301,
-	WIMA_KEY_F13            = 302,
-	WIMA_KEY_F14            = 303,
-	WIMA_KEY_F15            = 304,
-	WIMA_KEY_F16            = 305,
-	WIMA_KEY_F17            = 306,
-	WIMA_KEY_F18            = 307,
-	WIMA_KEY_F19            = 308,
-	WIMA_KEY_F20            = 309,
-	WIMA_KEY_F21            = 310,
-	WIMA_KEY_F22            = 311,
-	WIMA_KEY_F23            = 312,
-	WIMA_KEY_F24            = 313,
-	WIMA_KEY_F25            = 314,
+	WIMA_KEY_F1 = 290,
+	WIMA_KEY_F2 = 291,
+	WIMA_KEY_F3 = 292,
+	WIMA_KEY_F4 = 293,
+	WIMA_KEY_F5 = 294,
+	WIMA_KEY_F6 = 295,
+	WIMA_KEY_F7 = 296,
+	WIMA_KEY_F8 = 297,
+	WIMA_KEY_F9 = 298,
+	WIMA_KEY_F10 = 299,
+	WIMA_KEY_F11 = 300,
+	WIMA_KEY_F12 = 301,
+	WIMA_KEY_F13 = 302,
+	WIMA_KEY_F14 = 303,
+	WIMA_KEY_F15 = 304,
+	WIMA_KEY_F16 = 305,
+	WIMA_KEY_F17 = 306,
+	WIMA_KEY_F18 = 307,
+	WIMA_KEY_F19 = 308,
+	WIMA_KEY_F20 = 309,
+	WIMA_KEY_F21 = 310,
+	WIMA_KEY_F22 = 311,
+	WIMA_KEY_F23 = 312,
+	WIMA_KEY_F24 = 313,
+	WIMA_KEY_F25 = 314,
 
-	WIMA_KEY_KP_0           = 320,
-	WIMA_KEY_KP_1           = 321,
-	WIMA_KEY_KP_2           = 322,
-	WIMA_KEY_KP_3           = 323,
-	WIMA_KEY_KP_4           = 324,
-	WIMA_KEY_KP_5           = 325,
-	WIMA_KEY_KP_6           = 326,
-	WIMA_KEY_KP_7           = 327,
-	WIMA_KEY_KP_8           = 328,
-	WIMA_KEY_KP_9           = 329,
+	WIMA_KEY_KP_0 = 320,
+	WIMA_KEY_KP_1 = 321,
+	WIMA_KEY_KP_2 = 322,
+	WIMA_KEY_KP_3 = 323,
+	WIMA_KEY_KP_4 = 324,
+	WIMA_KEY_KP_5 = 325,
+	WIMA_KEY_KP_6 = 326,
+	WIMA_KEY_KP_7 = 327,
+	WIMA_KEY_KP_8 = 328,
+	WIMA_KEY_KP_9 = 329,
 
-	WIMA_KEY_KP_DECIMAL     = 330,
-	WIMA_KEY_KP_DIVIDE      = 331,
-	WIMA_KEY_KP_MULTIPLY    = 332,
-	WIMA_KEY_KP_SUBTRACT    = 333,
-	WIMA_KEY_KP_ADD         = 334,
-	WIMA_KEY_KP_ENTER       = 335,
-	WIMA_KEY_KP_EQUAL       = 336,
+	WIMA_KEY_KP_DECIMAL = 330,
+	WIMA_KEY_KP_DIVIDE = 331,
+	WIMA_KEY_KP_MULTIPLY = 332,
+	WIMA_KEY_KP_SUBTRACT = 333,
+	WIMA_KEY_KP_ADD = 334,
+	WIMA_KEY_KP_ENTER = 335,
+	WIMA_KEY_KP_EQUAL = 336,
 
-	WIMA_KEY_LEFT_SHIFT     = 340,
-	WIMA_KEY_LEFT_CONTROL   = 341,
-	WIMA_KEY_LEFT_ALT       = 342,
-	WIMA_KEY_LEFT_SUPER     = 343,
-	WIMA_KEY_RIGHT_SHIFT    = 344,
-	WIMA_KEY_RIGHT_CONTROL  = 345,
-	WIMA_KEY_RIGHT_ALT      = 346,
-	WIMA_KEY_RIGHT_SUPER    = 347,
+	WIMA_KEY_LEFT_SHIFT = 340,
+	WIMA_KEY_LEFT_CONTROL = 341,
+	WIMA_KEY_LEFT_ALT = 342,
+	WIMA_KEY_LEFT_SUPER = 343,
+	WIMA_KEY_RIGHT_SHIFT = 344,
+	WIMA_KEY_RIGHT_CONTROL = 345,
+	WIMA_KEY_RIGHT_ALT = 346,
+	WIMA_KEY_RIGHT_SUPER = 347,
 
-	WIMA_KEY_MENU           = 348,
-	WIMA_KEY_LAST           = WIMA_KEY_MENU
+	WIMA_KEY_MENU = 348,
+	WIMA_KEY_LAST = WIMA_KEY_MENU
 
 	//! @endcond Doxygen suppress.
 
@@ -556,38 +558,40 @@ typedef enum WimaKey {
 /**
  * The possible key and click modifiers Wima can handle.
  */
-typedef enum WimaMods {
+typedef enum WimaMods
+{
 
 	/// No modifier.
-	WIMA_MOD_NONE     = 0,
+	WIMA_MOD_NONE = 0,
 
 	/// Shift key.
-	WIMA_MOD_SHIFT    = 1 << 0,
+	WIMA_MOD_SHIFT = 1 << 0,
 
 	/// Control key.
-	WIMA_MOD_CTRL     = 1 << 1,
+	WIMA_MOD_CTRL = 1 << 1,
 
 	/// Alt key.
-	WIMA_MOD_ALT      = 1 << 2,
+	WIMA_MOD_ALT = 1 << 2,
 
 	/// Super (Windows) key.
-	WIMA_MOD_SUPER    = 1 << 3
+	WIMA_MOD_SUPER = 1 << 3
 
 } WimaMods;
 
 /**
  * The type of action that can happen to keys and mouse buttons.
  */
-typedef enum WimaAction {
+typedef enum WimaAction
+{
 
 	/// Key/button was released.
-	WIMA_ACTION_RELEASE  = 0,
+	WIMA_ACTION_RELEASE = 0,
 
 	/// Key/button was pressed.
-	WIMA_ACTION_PRESS    = 1,
+	WIMA_ACTION_PRESS = 1,
 
 	/// Key/button was held down until repeat.
-	WIMA_ACTION_REPEAT   = 2
+	WIMA_ACTION_REPEAT = 2
 
 } WimaAction;
 
@@ -608,8 +612,8 @@ typedef enum WimaAction {
 /**
  * A key event.
  */
-typedef struct WimaKeyEvent {
-
+typedef struct WimaKeyEvent
+{
 	/// The key for the event.
 	WimaKey key;
 
@@ -629,8 +633,8 @@ typedef struct WimaKeyEvent {
 /**
  * A mouse button event.
  */
-typedef struct WimaMouseBtnEvent {
-
+typedef struct WimaMouseBtnEvent
+{
 	/// The mouse button for the event.
 	WimaMouseBtn button;
 
@@ -648,8 +652,8 @@ typedef struct WimaMouseBtnEvent {
  * A mouse click event. A mouse click is when a
  * mouse button is pressed and released quickly.
  */
-typedef struct WimaMouseClickEvent {
-
+typedef struct WimaMouseClickEvent
+{
 	/// The timestamp for the event. Wima
 	/// uses this to figure out when to
 	/// count 2+ clicks.
@@ -671,8 +675,8 @@ typedef struct WimaMouseClickEvent {
  * is when the mouse is moved when one or
  * more of its buttons are pressed.
  */
-typedef struct WimaMouseDragEvent {
-
+typedef struct WimaMouseDragEvent
+{
 	/// The button that is pressed.
 	WimaMouseBtn button;
 
@@ -689,8 +693,8 @@ typedef struct WimaMouseDragEvent {
 /**
  * A scroll (scrollwheel) event.
  */
-typedef struct WimaScrollEvent {
-
+typedef struct WimaScrollEvent
+{
 	/// The modifiers that were pressed
 	/// when the event happened.
 	WimaMods mods;
@@ -706,8 +710,8 @@ typedef struct WimaScrollEvent {
 /**
  * A char (text input) event.
  */
-typedef struct WimaCharEvent {
-
+typedef struct WimaCharEvent
+{
 	/// The character that was input.
 	/// This is in UTF-32.
 	uint32_t code;
@@ -740,10 +744,11 @@ typedef struct WimaCursor WimaCursor;
 /**
  * The possible standard cursor types.
  */
-typedef enum WimaCursorType {
+typedef enum WimaCursorType
+{
 
 	/// Standard arrow cursor.
-	WIMA_CURSOR_ARROW		= 0,
+	WIMA_CURSOR_ARROW = 0,
 
 	/// Ibeam cursor.
 	WIMA_CURSOR_IBEAM,
@@ -774,7 +779,8 @@ typedef enum WimaCursorType {
 /**
  * The possible cursor modes.
  */
-typedef enum WimaCursorMode {
+typedef enum WimaCursorMode
+{
 
 	/// Normal cursor.
 	WIMA_CURSOR_NORMAL,
@@ -797,8 +803,8 @@ typedef enum WimaCursorMode {
  * canonically as packed sequential rows, starting
  * from the top-left corner.
  */
-typedef struct WimaCursorImage {
-
+typedef struct WimaCursorImage
+{
 	/// The width of the image.
 	int width;
 
@@ -925,8 +931,8 @@ typedef struct WimaMonitor WimaMonitor;
  * An array of WimaMonitor pointers.
  * Used to return a list of monitors.
  */
-typedef struct WimaMonitorArray {
-
+typedef struct WimaMonitorArray
+{
 	/// An array of monitors.
 	WimaMonitor** monitors;
 
@@ -938,8 +944,8 @@ typedef struct WimaMonitorArray {
 /**
  * A video mode for a monitor.
  */
-typedef struct WimaVideoMode {
-
+typedef struct WimaVideoMode
+{
 	/// The width of the monitor, in screen coordinates.
 	int width;
 
@@ -965,8 +971,8 @@ typedef struct WimaVideoMode {
  * return a list of video modes that a
  * monitor supports.
  */
-typedef struct WimaVideoModeArray {
-
+typedef struct WimaVideoModeArray
+{
 	/// An array of modes.
 	WimaVideoMode* modes;
 
@@ -978,8 +984,8 @@ typedef struct WimaVideoModeArray {
 /**
  * Gamma ramp (quantized gamma reaction graph) for monitors.
  */
-typedef struct WimaGammaRamp {
-
+typedef struct WimaGammaRamp
+{
 	/// An array of value describing the response of the red channel.
 	unsigned short red[WIMA_MONITOR_GAMMA_RAMP_SIZE];
 
@@ -1185,8 +1191,7 @@ typedef uint16_t WimaMenu;
  * @pre			@a name must not be NULL.
  * @pre			@a op must not be NULL.
  */
-WimaMenuItem wima_menu_item_registerOp(const char* const name, WimaIcon icon,
-                                             WimaMenuItemFunc op) yinline;
+WimaMenuItem wima_menu_item_registerOp(const char* const name, WimaIcon icon, WimaMenuItemFunc op) yinline;
 
 /**
  * Registers a parent menu item, which is a menu item that
@@ -1201,8 +1206,7 @@ WimaMenuItem wima_menu_item_registerOp(const char* const name, WimaIcon icon,
  * @pre			@a name must not be NULL.
  * @pre			@a child must be a valid @a WimaMenu.
  */
-WimaMenuItem wima_menu_item_registerParent(const char* const name, WimaIcon icon,
-                                           WimaMenu child) yinline;
+WimaMenuItem wima_menu_item_registerParent(const char* const name, WimaIcon icon, WimaMenu child) yinline;
 
 /**
  * Registers a menu using varargs. All varargs must be WimaMenuItems,
@@ -1334,45 +1338,46 @@ WimaOverlay wima_overlay_register(ynonnull const char* const name, WimaIcon icon
 /**
  * Container flags to pass to @a wima_widget_setBox().
  */
-typedef enum WimaWidgetBox {
+typedef enum WimaWidgetBox
+{
 
 	// Flex direction (bit 0+1).
 
 	/// Left to right.
-	WIMA_ITEM_ROW      = 0x002,
+	WIMA_ITEM_ROW = 0x002,
 
 	/// Top to bottom.
-	WIMA_ITEM_COLUMN   = 0x003,
+	WIMA_ITEM_COLUMN = 0x003,
 
 	// Model (bit 1).
 
 	/// Free layout.
-	WIMA_ITEM_LAYOUT   = 0x000,
+	WIMA_ITEM_LAYOUT = 0x000,
 
 	/// Flex model.
-	WIMA_ITEM_FLEX     = 0x002,
+	WIMA_ITEM_FLEX = 0x002,
 
 	// Flex-wrap (bit 2).
 
 	/// Single-line.
-	WIMA_ITEM_NOWRAP   = 0x000,
+	WIMA_ITEM_NOWRAP = 0x000,
 
 	/// Multi-line, wrap left to right.
-	WIMA_ITEM_WRAP     = 0x004,
+	WIMA_ITEM_WRAP = 0x004,
 
 	// Justify content (start, end, center, space-between)...
 
 	/// Justify content at start of row/column.
-	WIMA_ITEM_START    = 0x008,
+	WIMA_ITEM_START = 0x008,
 
 	/// Justify content at center of row/column.
-	WIMA_ITEM_MIDDLE   = 0x000,
+	WIMA_ITEM_MIDDLE = 0x000,
 
 	/// Justify content at end of row/column.
-	WIMA_ITEM_END      = 0x010,
+	WIMA_ITEM_END = 0x010,
 
 	/// Insert spacing to stretch across whole row/column.
-	WIMA_ITEM_JUSTIFY  = 0x018,
+	WIMA_ITEM_JUSTIFY = 0x018,
 
 	// Align items can be implemented by putting a flex container
 	// in a layout container, then using UI_TOP, UI_DOWN, UI_VFILL,
@@ -1388,47 +1393,48 @@ typedef enum WimaWidgetBox {
 /**
  * Child layout flags to pass to @a wima_widget_setLayout().
  */
-typedef enum WimaWidgetLayoutFlags {
+typedef enum WimaWidgetLayoutFlags
+{
 
 	// Attachments (bit 5-8):
 	// Fully valid when parent uses UI_LAYOUT model
 	// partially valid when in UI_FLEX model.
 
 	/// Anchor to left item or left side of parent.
-	WIMA_LAYOUT_LEFT     = 0x020,
+	WIMA_LAYOUT_LEFT = 0x020,
 
 	/// Anchor to top item or top side of parent.
-	WIMA_LAYOUT_TOP      = 0x040,
+	WIMA_LAYOUT_TOP = 0x040,
 
 	/// Anchor to right item or right side of parent.
-	WIMA_LAYOUT_RIGHT    = 0x080,
+	WIMA_LAYOUT_RIGHT = 0x080,
 
 	/// Anchor to bottom item or bottom side of parent.
-	WIMA_LAYOUT_DOWN     = 0x100,
+	WIMA_LAYOUT_DOWN = 0x100,
 
 	/// Anchor to both left and right item or parent borders.
-	WIMA_LAYOUT_HFILL    = 0x0a0,
+	WIMA_LAYOUT_HFILL = 0x0a0,
 
 	/// Anchor to both top and bottom item or parent borders.
-	WIMA_LAYOUT_VFILL    = 0x140,
+	WIMA_LAYOUT_VFILL = 0x140,
 
 	/// Center horizontally, with left margin as offset.
-	WIMA_LAYOUT_HCENTER  = 0x000,
+	WIMA_LAYOUT_HCENTER = 0x000,
 
 	/// Center vertically, with top margin as offset.
-	WIMA_LAYOUT_VCENTER  = 0x000,
+	WIMA_LAYOUT_VCENTER = 0x000,
 
 	/// Center in both directions, with left/top margin as offset.
-	WIMA_LAYOUT_CENTER   = 0x000,
+	WIMA_LAYOUT_CENTER = 0x000,
 
 	/// Anchor to all four directions.
-	WIMA_LAYOUT_FILL     = 0x1e0,
+	WIMA_LAYOUT_FILL = 0x1e0,
 
 	/// When wrapping, put this element on a new line.
 	/// Wrapping layout code auto-inserts UI_BREAK
 	/// flags. Drawing routines can read them with
 	/// @a wima_widget_layout().
-	WIMA_LAYOUT_BREAK    = 0x200
+	WIMA_LAYOUT_BREAK = 0x200
 
 } WimaWidgetLayoutFlags;
 
@@ -1546,8 +1552,8 @@ typedef bool (*WimaWidgetCharFunc)(WimaWidget wdgt, void* ptr, WimaCharEvent eve
 /**
  * A group of widget funcs.
  */
-typedef struct WimaWidgetFuncs {
-
+typedef struct WimaWidgetFuncs
+{
 	/// The function to initialize the pointer.
 	WimaWidgetInitDataFunc init;
 
@@ -1985,8 +1991,8 @@ typedef void (*WimaAreaMouseEnterFunc)(WimaArea area, bool entered);
 /**
  * A collection of callbacks for areas.
  */
-typedef struct WimaEditorFuncs {
-
+typedef struct WimaEditorFuncs
+{
 	/// The function to initialize the user pointer.
 	WimaAreaInitDataFunc init;
 
@@ -2018,8 +2024,8 @@ typedef struct WimaEditorFuncs {
  *					that the editor can handle.
  * @return			The editor.
  */
-WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs,
-                                 WimaIcon icon, uint32_t allocSize, bool headerTop, int nRegions, ...);
+WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, uint32_t allocSize,
+                                 bool headerTop, int nRegions, ...);
 
 /**
  * Registers a editor type that can then be used to create a WimaWorkspace.
@@ -2036,8 +2042,8 @@ WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs,
  *					that the editor can handle.
  * @return			The editor.
  */
-WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
-                                 uint32_t allocSize, bool headerTop, int nRegions, va_list regions);
+WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, uint32_t allocSize,
+                                 bool headerTop, int nRegions, va_list regions);
 
 /**
  * Registers a editor type that can then be used to create a WimaWorkspace.
@@ -2051,8 +2057,8 @@ WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, 
  *					that the editor can handle.
  * @return			The editor.
  */
-WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
-                                uint32_t allocSize, bool headerTop, int nRegions, WimaRegion regions[]);
+WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, uint32_t allocSize,
+                                bool headerTop, int nRegions, WimaRegion regions[]);
 
 /**
  * Sets the global user pointer for the editor. All areas created from
@@ -2285,8 +2291,7 @@ WimaAreaNode wima_tree_addRootEditor(ynonnull WimaTree tree, WimaEditor wed) yin
  * @pre				@a parent must have already been added.
  * @pre				@a parent must be a parent node.
  */
-WimaAreaNode wima_tree_addLeftParent(ynonnull WimaTree tree, WimaAreaNode parent,
-                                     float split, bool vertical) yinline;
+WimaAreaNode wima_tree_addLeftParent(ynonnull WimaTree tree, WimaAreaNode parent, float split, bool vertical) yinline;
 
 /**
  * Adds an editor (leaf) node to @a tree as the left child.
@@ -2321,8 +2326,7 @@ WimaAreaNode wima_tree_addLeftEditor(ynonnull WimaTree tree, WimaAreaNode parent
  * @pre				@a parent must have already been added.
  * @pre				@a parent must be a parent node.
  */
-WimaAreaNode wima_tree_addRightParent(ynonnull WimaTree tree, WimaAreaNode parent,
-                                      float split, bool vertical) yinline;
+WimaAreaNode wima_tree_addRightParent(ynonnull WimaTree tree, WimaAreaNode parent, float split, bool vertical) yinline;
 
 /**
  * Adds an editor (leaf) node to @a tree as the left child.
@@ -2465,8 +2469,7 @@ WimaDialog wima_dialog_register(ynonnull WimaTree tree);
  * @return	The created window.
  * @pre		@a wksph must be valid. See @a wima_workspace_register().
  */
-WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size,
-                              bool maximized, bool resizable, bool decorated);
+WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized, bool resizable, bool decorated);
 
 /**
  * Close the given window
@@ -3180,8 +3183,8 @@ typedef void (*WimaMonitorConnectedFunc)(WimaMonitor* monitor, bool connected);
 /**
  * A collection of app-wide event callbacks.
  */
-typedef struct WimaAppFuncs {
-
+typedef struct WimaAppFuncs
+{
 	/// The app error callback.
 	WimaErrorFunc error;
 
@@ -3230,8 +3233,8 @@ typedef struct WimaAppFuncs {
  * @pre				@a name must not be NULL.
  * @pre				@a fontPath must not be NULL.
  */
-WimaStatus wima_ninit(ynonnull const char* name, WimaAppFuncs funcs,
-                      ynonnull const char* fontPath, uint32_t numIcons, ...);
+WimaStatus wima_ninit(ynonnull const char* name, WimaAppFuncs funcs, ynonnull const char* fontPath, uint32_t numIcons,
+                      ...);
 
 /**
  * Initializes Wima. The va_list only accepts char pointer args.
@@ -3250,8 +3253,7 @@ WimaStatus wima_ninit(ynonnull const char* name, WimaAppFuncs funcs,
  * @pre				@a name must not be NULL.
  * @pre				@a fontPath must not be NULL.
  */
-WimaStatus wima_vinit(ynonnull const char* name, WimaAppFuncs funcs,
-                      ynonnull const char* fontPath, uint32_t numIcons,
+WimaStatus wima_vinit(ynonnull const char* name, WimaAppFuncs funcs, ynonnull const char* fontPath, uint32_t numIcons,
                       va_list iconPaths);
 
 /**
@@ -3270,8 +3272,8 @@ WimaStatus wima_vinit(ynonnull const char* name, WimaAppFuncs funcs,
  * @pre				@a name must not be NULL.
  * @pre				@a fontPath must not be NULL.
  */
-WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
-                     uint32_t numIcons, const char* iconPaths[]);
+WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath, uint32_t numIcons,
+                     const char* iconPaths[]);
 
 /**
  * The main rendering and event loop. This will return
@@ -3296,4 +3298,4 @@ void wima_exit();
 }
 #endif
 
-#endif // WIMA_H
+#endif  // WIMA_H

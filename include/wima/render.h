@@ -66,12 +66,11 @@
 extern "C" {
 #endif
 
-#include <stdbool.h>
-#include <stdint.h>
-
 #include <yc/opt.h>
 
 #include <nanovg.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 //! @cond Doxygen suppress
 // Opaque forward declarations.
@@ -132,25 +131,26 @@ typedef uint16_t WimaImage;
 /**
  * The flags that a user can load an image with.
  */
-typedef enum WimaImageFlags {
+typedef enum WimaImageFlags
+{
 
 	/// Generate mipmaps during creation of the image.
-	WIMA_IMAGE_GENERATE_MIPMAPS = 1<<0,
+	WIMA_IMAGE_GENERATE_MIPMAPS = 1 << 0,
 
 	/// Repeat image in X direction.
-	WIMA_IMAGE_REPEATX          = 1<<1,
+	WIMA_IMAGE_REPEATX = 1 << 1,
 
 	/// Repeat image in Y direction.
-	WIMA_IMAGE_REPEATY          = 1<<2,
+	WIMA_IMAGE_REPEATY = 1 << 2,
 
 	/// Flips (inverses) image in Y direction when rendered.
-	WIMA_IMAGE_FLIPY            = 1<<3,
+	WIMA_IMAGE_FLIPY = 1 << 3,
 
 	/// Image data has premultiplied alpha.
-	WIMA_IMAGE_PREMULTIPLIED    = 1<<4,
+	WIMA_IMAGE_PREMULTIPLIED = 1 << 4,
 
 	/// Image interpolation is nearest instead of linear.
-	WIMA_IMAGE_NEAREST          = 1<<5,
+	WIMA_IMAGE_NEAREST = 1 << 5,
 
 } WimaImageFlags;
 
@@ -180,23 +180,21 @@ WimaImage wima_image_load(ynonnull const char* const path, WimaImageFlags flags)
 /**
  * A 2-coordinate vector of chars.
  */
-typedef struct WimaVecC {
-
-	union {
-
+typedef struct WimaVecC
+{
+	union
+	{
 		/// Access members as an array.
 		int8_t v[2];
 
-		struct {
-
+		struct
+		{
 			/// The X coordinate.
 			int8_t x;
 
 			/// The Y coordinate.
 			int8_t y;
-
 		};
-
 	};
 
 } WimaVecC;
@@ -204,23 +202,21 @@ typedef struct WimaVecC {
 /**
  * A 2-coordinate vector of shorts.
  */
-typedef struct WimaVecS {
-
-	union {
-
+typedef struct WimaVecS
+{
+	union
+	{
 		/// Access members as an array.
 		int16_t v[2];
 
-		struct {
-
+		struct
+		{
 			/// The X coordinate.
 			int16_t x;
 
 			/// The Y coordinate.
 			int16_t y;
-
 		};
-
 	};
 
 } WimaVecS;
@@ -228,23 +224,21 @@ typedef struct WimaVecS {
 /**
  * A 2-coordinate vector of ints.
  */
-typedef struct WimaVec {
-
-	union {
-
+typedef struct WimaVec
+{
+	union
+	{
 		/// Access members as an array.
 		int v[2];
 
-		struct {
-
+		struct
+		{
 			/// The X coordinate.
 			int x;
 
 			/// The Y coordinate.
 			int y;
-
 		};
-
 	};
 
 } WimaVec;
@@ -252,23 +246,21 @@ typedef struct WimaVec {
 /**
  * A 2-coordinate vector of floats.
  */
-typedef struct WimaVecF {
-
-	union {
-
+typedef struct WimaVecF
+{
+	union
+	{
 		/// Access members as an array.
 		float v[2];
 
-		struct {
-
+		struct
+		{
 			/// The X coordinate.
 			float x;
 
 			/// The Y coordinate.
 			float y;
-
 		};
-
 	};
 
 } WimaVecF;
@@ -276,23 +268,21 @@ typedef struct WimaVecF {
 /**
  * A 2D size using ints.
  */
-typedef struct WimaSize {
-
-	union {
-
+typedef struct WimaSize
+{
+	union
+	{
 		/// Access members as an array.
 		int v[2];
 
-		struct {
-
+		struct
+		{
 			/// The width.
 			int w;
 
 			/// The height.
 			int h;
-
 		};
-
 	};
 
 } WimaSize;
@@ -300,23 +290,21 @@ typedef struct WimaSize {
 /**
  * A 2D size using floats.
  */
-typedef struct WimaSizef {
-
-	union {
-
+typedef struct WimaSizef
+{
+	union
+	{
 		/// Access members as an array.
 		float v[2];
 
-		struct {
-
+		struct
+		{
 			/// The width.
 			float w;
 
 			/// The height.
 			float h;
-
 		};
-
 	};
 
 } WimaSizef;
@@ -324,15 +312,15 @@ typedef struct WimaSizef {
 /**
  * A 2D rectangle using ints.
  */
-typedef struct WimaRect {
-
-	union {
-
+typedef struct WimaRect
+{
+	union
+	{
 		/// Access members as an array.
 		int v[4];
 
-		struct {
-
+		struct
+		{
 			/// The X coordinate of the upper left corner.
 			int x;
 
@@ -344,9 +332,7 @@ typedef struct WimaRect {
 
 			/// The height.
 			int h;
-
 		};
-
 	};
 
 } WimaRect;
@@ -354,15 +340,15 @@ typedef struct WimaRect {
 /**
  * A 2D rectangle using floats.
  */
-typedef struct WimaRectf {
-
-	union {
-
+typedef struct WimaRectf
+{
+	union
+	{
 		/// Access members as an array.
 		float v[4];
 
-		struct {
-
+		struct
+		{
 			/// The X coordinate of the upper left corner.
 			float x;
 
@@ -374,9 +360,7 @@ typedef struct WimaRectf {
 
 			/// The height.
 			float h;
-
 		};
-
 	};
 
 } WimaRectf;
@@ -391,15 +375,15 @@ typedef struct WimaRectf {
  *
  * [0 0 1]
  */
-typedef struct WimaTransform {
-
-	union {
-
+typedef struct WimaTransform
+{
+	union
+	{
 		/// The six members accessible as an array.
 		float v[6];
 
-		struct {
-
+		struct
+		{
 			/// The x scale factor.
 			float sx;
 
@@ -417,9 +401,7 @@ typedef struct WimaTransform {
 
 			/// The y translate factor.
 			float ty;
-
 		};
-
 	};
 
 } WimaTransform;
@@ -442,15 +424,15 @@ typedef struct WimaTransform {
  * A way to represent colors in Wima.
  * It is a four channel float color.
  */
-typedef struct WimaColor {
-
-	union {
-
+typedef struct WimaColor
+{
+	union
+	{
 		/// Access channels as an array.
 		float rgba[4];
 
-		struct {
-
+		struct
+		{
 			/// Red channel.
 			float r;
 
@@ -462,9 +444,7 @@ typedef struct WimaColor {
 
 			/// Alpha channel.
 			float a;
-
 		};
-
 	};
 
 } WimaColor;
@@ -595,8 +575,8 @@ WimaColor wima_color_offset(WimaColor color, int delta) yinline;
  * Represents a pattern to render. Can represent
  * linear/radial/box gradients and image patterns.
  */
-typedef struct WimaPaint {
-
+typedef struct WimaPaint
+{
 	/// How the paint is transformed.
 	WimaTransform xform;
 
@@ -632,8 +612,8 @@ typedef struct WimaPaint {
  * @return		The gradient as a paint.
  * @pre			@a ctx must not be NULL.
  */
-WimaPaint wima_paint_linearGradient(ynonnull WimaRenderContext* ctx, WimaVecF s, WimaVecF e,
-                                    WimaColor icol, WimaColor ocol) yinline;
+WimaPaint wima_paint_linearGradient(ynonnull WimaRenderContext* ctx, WimaVecF s, WimaVecF e, WimaColor icol,
+                                    WimaColor ocol) yinline;
 
 /**
  * Creates and returns a box gradient. Box gradient is a
@@ -652,8 +632,8 @@ WimaPaint wima_paint_linearGradient(ynonnull WimaRenderContext* ctx, WimaVecF s,
  * @return		The gradient as a paint.
  * @pre			@a ctx must not be NULL.
  */
-WimaPaint wima_paint_boxGradient(ynonnull WimaRenderContext* ctx, WimaRectf rect, float r,
-                                 float f, WimaColor icol, WimaColor ocol) yinline;
+WimaPaint wima_paint_boxGradient(ynonnull WimaRenderContext* ctx, WimaRectf rect, float r, float f, WimaColor icol,
+                                 WimaColor ocol) yinline;
 
 /**
  * Creates and returns a radial gradient, where @a is the center point,
@@ -668,8 +648,8 @@ WimaPaint wima_paint_boxGradient(ynonnull WimaRenderContext* ctx, WimaRectf rect
  * @return		The gradient as a paint.
  * @pre			@a ctx must not be NULL.
  */
-WimaPaint wima_paint_radialGradient(ynonnull WimaRenderContext* ctx, WimaVecF c, float inr,
-                                    float outr, WimaColor icol, WimaColor ocol) yinline;
+WimaPaint wima_paint_radialGradient(ynonnull WimaRenderContext* ctx, WimaVecF c, float inr, float outr, WimaColor icol,
+                                    WimaColor ocol) yinline;
 
 /**
  * Creates and returns an image pattern, where @a o is the top left of
@@ -685,8 +665,8 @@ WimaPaint wima_paint_radialGradient(ynonnull WimaRenderContext* ctx, WimaVecF c,
  * @return		The image pattern as a paint.
  * @pre			@a ctx must not be NULL.
  */
-WimaPaint wima_paint_imagePattern(ynonnull WimaRenderContext* ctx, WimaVecF o, WimaSizef e,
-                                  float angle, int image, float alpha) yinline;
+WimaPaint wima_paint_imagePattern(ynonnull WimaRenderContext* ctx, WimaVecF o, WimaSizef e, float angle, int image,
+                                  float alpha) yinline;
 
 /**
  * @}
@@ -720,7 +700,8 @@ typedef uint16_t WimaIcon;
  * These are possible because Wima uses vector graphics
  * for its icons.
  */
-typedef enum WimaIconUnit {
+typedef enum WimaIconUnit
+{
 
 	/// Pixels (96 per inch).
 	WIMA_ICON_PX,
@@ -783,7 +764,8 @@ WimaIcon wima_icon_donut();
 /**
  * The types of themes that Wima stores in properties.
  */
-typedef enum WimaThemeType {
+typedef enum WimaThemeType
+{
 
 	/// The main background color.
 	WIMA_THEME_BG,
@@ -832,7 +814,8 @@ typedef enum WimaThemeType {
 /**
  * The types of widget theme items that Wima stores in properties.
  */
-typedef enum WimaWidgetThemeType {
+typedef enum WimaWidgetThemeType
+{
 
 	/// Outline of a widget.
 	WIMA_THEME_WIDGET_OUTLINE,
@@ -866,7 +849,8 @@ typedef enum WimaWidgetThemeType {
 /**
  * The types of node theme items that Wima stores in properties.
  */
-typedef enum wima_node_theme_type {
+typedef enum wima_node_theme_type
+{
 
 	/// Node outline.
 	WIMA_THEME_NODE_OUTLINE,
@@ -1271,7 +1255,7 @@ int wima_theme_node_wireCurving() yinline;
  * @pre				@a shade_btm must not be NULL.
  */
 void wima_theme_shadeColors(ynonnull WimaWidgetTheme* theme, WimaWidgetState state, bool flip,
-                            ynonnull WimaColor *shade_top, ynonnull WimaColor *shade_btm);
+                            ynonnull WimaColor* shade_top, ynonnull WimaColor* shade_btm);
 
 /**
  * Computes the text color for a widget label from @a theme
@@ -1469,7 +1453,8 @@ void wima_render_resetScissor(ynonnull WimaRenderContext* ctx) yinline;
 /**
  * Represents line caps for paths.
  */
-typedef enum WimaLineCap {
+typedef enum WimaLineCap
+{
 
 	/// No end cap.
 	WIMA_CAP_BUTT,
@@ -1491,7 +1476,8 @@ typedef enum WimaLineCap {
 /**
  * Represents line joins for paths.
  */
-typedef enum WimaLineJoin {
+typedef enum WimaLineJoin
+{
 
 	/// Round join cap.
 	WIMA_JOIN_ROUND = WIMA_CAP_ROUND,
@@ -1509,40 +1495,41 @@ typedef enum WimaLineJoin {
 /**
  * Represents different blending styles.
  */
-typedef enum WimaBlend {
+typedef enum WimaBlend
+{
 
 	/// Corresponds to OpenGL's ZERO.
-	WIMA_BLEND_ZERO                = 1<<0,
+	WIMA_BLEND_ZERO = 1 << 0,
 
 	/// Corresponds to OpenGL's ONE.
-	WIMA_BLEND_ONE                 = 1<<1,
+	WIMA_BLEND_ONE = 1 << 1,
 
 	/// Corresponds to OpenGL's SRC_COLOR.
-	WIMA_BLEND_SRC_COLOR           = 1<<2,
+	WIMA_BLEND_SRC_COLOR = 1 << 2,
 
 	/// Corresponds to OpenGL's ONE_MINUS_SRC_COLOR.
-	WIMA_BLEND_ONE_MINUS_SRC_COLOR = 1<<3,
+	WIMA_BLEND_ONE_MINUS_SRC_COLOR = 1 << 3,
 
 	/// Corresponds to OpenGL's DST_COLOR.
-	WIMA_BLEND_DST_COLOR           = 1<<4,
+	WIMA_BLEND_DST_COLOR = 1 << 4,
 
 	/// Corresponds to OpenGL's ONE_MINUS_DST_COLOR.
-	WIMA_BLEND_ONE_MINUS_DST_COLOR = 1<<5,
+	WIMA_BLEND_ONE_MINUS_DST_COLOR = 1 << 5,
 
 	/// Corresponds to OpenGL's SRC_ALPHA.
-	WIMA_BLEND_SRC_ALPHA           = 1<<6,
+	WIMA_BLEND_SRC_ALPHA = 1 << 6,
 
 	/// Corresponds to OpenGL's ONE_MINUS_SRC_ALPHA.
-	WIMA_BLEND_ONE_MINUS_SRC_ALPHA = 1<<7,
+	WIMA_BLEND_ONE_MINUS_SRC_ALPHA = 1 << 7,
 
 	/// Corresponds to OpenGL's DST_ALPHA.
-	WIMA_BLEND_DST_ALPHA           = 1<<8,
+	WIMA_BLEND_DST_ALPHA = 1 << 8,
 
 	/// Corresponds to OpenGL's ONE_MINUS_DST_ALPHA.
-	WIMA_BLEND_ONE_MINUS_DST_ALPHA = 1<<9,
+	WIMA_BLEND_ONE_MINUS_DST_ALPHA = 1 << 9,
 
 	/// Corresponds to OpenGL's SRC_ALPHA_SATURATE.
-	WIMA_BLEND_SRC_ALPHA_SATURATE  = 1<<10,
+	WIMA_BLEND_SRC_ALPHA_SATURATE = 1 << 10,
 
 } WimaBlend;
 
@@ -1669,8 +1656,8 @@ void wima_style_globalBlendRGB(ynonnull WimaRenderContext* ctx, WimaBlend src, W
  * @param dstA		The blend for destinations' alpha.
  * @pre				@a ctx must not be NULL.
  */
-void wima_style_globalBlendRGBA(ynonnull WimaRenderContext* ctx, WimaBlend srcRGB,
-                                WimaBlend dstRGB, WimaBlend srcA, WimaBlend dstA) yinline;
+void wima_style_globalBlendRGBA(ynonnull WimaRenderContext* ctx, WimaBlend srcRGB, WimaBlend dstRGB, WimaBlend srcA,
+                                WimaBlend dstA) yinline;
 
 /**
  * @}
@@ -1689,26 +1676,28 @@ void wima_style_globalBlendRGBA(ynonnull WimaRenderContext* ctx, WimaBlend srcRG
 /**
  * Represents winding direction for paths.
  */
-typedef enum WimaWinding {
+typedef enum WimaWinding
+{
 
 	/// Winding for solid shapes
 	WIMA_WINDING_CCW = 1,
 
 	/// Winding for holes
-	WIMA_WINDING_CW  = 2,
+	WIMA_WINDING_CW = 2,
 
 } WimaWinding;
 
 /**
  * Represents solidarity for paths.
  */
-typedef enum WimaSolidarity {
+typedef enum WimaSolidarity
+{
 
 	/// CCW: Solid.
 	WIMA_SOLID_SOLID = 1,
 
 	/// CW: Hole
-	WIMA_SOLID_HOLE  = 2,
+	WIMA_SOLID_HOLE = 2,
 
 } WimaSolidarity;
 
@@ -1800,8 +1789,7 @@ void wima_path_winding(ynonnull WimaRenderContext* ctx, WimaWinding dir) yinline
  * @param dir	The sweep direction.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_arc(ynonnull WimaRenderContext* ctx, WimaVecF c, float r,
-                   float a0, float a1, WimaWinding dir) yinline;
+void wima_path_arc(ynonnull WimaRenderContext* ctx, WimaVecF c, float r, float a0, float a1, WimaWinding dir) yinline;
 
 /**
  * Creates new rectangle shaped sub-path.
@@ -1832,8 +1820,8 @@ void wima_path_roundedRect(ynonnull WimaRenderContext* ctx, WimaRectf rect, floa
  * @param bl	The radius of the bottom right corner.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_roundedRectVary(ynonnull WimaRenderContext* ctx, WimaRectf rect,
-                               float tl, float tr, float br, float bl) yinline;
+void wima_path_roundedRectVary(ynonnull WimaRenderContext* ctx, WimaRectf rect, float tl, float tr, float br,
+                               float bl) yinline;
 
 /**
  * Creates new ellipse shaped sub-path with @a c
@@ -1888,40 +1876,41 @@ void wima_path_stroke(ynonnull WimaRenderContext* ctx) yinline;
 /**
  * Represents ways to align text.
  */
-typedef enum WimaTextAlign {
+typedef enum WimaTextAlign
+{
 
 	// Horizontal align
 
 	/// Default, align text horizontally to left.
-	WIMA_ALIGN_LEFT      = 1<<0,
+	WIMA_ALIGN_LEFT = 1 << 0,
 
 	/// Align text horizontally to center.
-	WIMA_ALIGN_CENTER    = 1<<1,
+	WIMA_ALIGN_CENTER = 1 << 1,
 
 	/// Align text horizontally to right.
-	WIMA_ALIGN_RIGHT     = 1<<2,
+	WIMA_ALIGN_RIGHT = 1 << 2,
 
 	// Vertical align
 
 	/// Align text vertically to top.
-	WIMA_ALIGN_TOP       = 1<<3,
+	WIMA_ALIGN_TOP = 1 << 3,
 
 	/// Align text vertically to middle.
-	WIMA_ALIGN_MIDDLE    = 1<<4,
+	WIMA_ALIGN_MIDDLE = 1 << 4,
 
 	/// Align text vertically to bottom.
-	WIMA_ALIGN_BOTTOM    = 1<<5,
+	WIMA_ALIGN_BOTTOM = 1 << 5,
 
 	/// Default, align text vertically to baseline.
-	WIMA_ALIGN_BASELINE  = 1<<6,
+	WIMA_ALIGN_BASELINE = 1 << 6,
 
 } WimaTextAlign;
 
 /**
  * Repesents a glyphs position in a string.
  */
-typedef struct WimaGlyphPosition {
-
+typedef struct WimaGlyphPosition
+{
 	/// Position of the glyph in the input string.
 	const char* str;
 
@@ -1939,8 +1928,8 @@ typedef struct WimaGlyphPosition {
 /**
  * Represents a row of text.
  */
-typedef struct WimaTextRow {
-
+typedef struct WimaTextRow
+{
 	/// Pointer to the input text where the row starts.
 	const char* start;
 
@@ -1966,8 +1955,8 @@ typedef struct WimaTextRow {
 /**
  * Represents text metrics for a font.
  */
-typedef struct WimaTextMetrics {
-
+typedef struct WimaTextMetrics
+{
 	/// The amount the font goes above the mid line.
 	float ascender;
 
@@ -2030,8 +2019,7 @@ void wima_text_align(ynonnull WimaRenderContext* ctx, WimaTextAlign align) yinli
  * @pre				@a ctx must not be NULL.
  * @pre				@a string must not be NULL.
  */
-float wima_text(ynonnull WimaRenderContext* ctx, WimaVecF pt,
-                ynonnull const char* string, const char* end) yinline;
+float wima_text(ynonnull WimaRenderContext* ctx, WimaVecF pt, ynonnull const char* string, const char* end) yinline;
 
 /**
  * Draws multi-line text string at @a pt (top left corner) wrapped
@@ -2050,8 +2038,8 @@ float wima_text(ynonnull WimaRenderContext* ctx, WimaVecF pt,
  * @pre					@a ctx must not be NULL.
  * @pre					@a string must not be NULL.
  */
-void wima_text_box(ynonnull WimaRenderContext* ctx, WimaVecF pt, float breakRowWidth,
-                   ynonnull const char* string, const char* end) yinline;
+void wima_text_box(ynonnull WimaRenderContext* ctx, WimaVecF pt, float breakRowWidth, ynonnull const char* string,
+                   const char* end) yinline;
 
 /**
  * Measures the specified text string. Parameter bounds shouldn't
@@ -2071,8 +2059,8 @@ void wima_text_box(ynonnull WimaRenderContext* ctx, WimaVecF pt, float breakRowW
  * @pre				@a ctx must not be NULL.
  * @pre				@a string must not be NULL.
  */
-float wima_text_bounds(ynonnull WimaRenderContext* ctx, WimaVecF pt, ynonnull const char* string,
-                       const char* end, WimaRectf* bounds) yinline;
+float wima_text_bounds(ynonnull WimaRenderContext* ctx, WimaVecF pt, ynonnull const char* string, const char* end,
+                       WimaRectf* bounds) yinline;
 
 /**
  * Measures the specified multi-text string. Measured values are
@@ -2087,8 +2075,8 @@ float wima_text_bounds(ynonnull WimaRenderContext* ctx, WimaVecF pt, ynonnull co
  * @return				The text bounds.
  * @pre					@a ctx must not be NULL.
  */
-WimaRectf wima_text_box_bounds(ynonnull WimaRenderContext* ctx, WimaVecF pt, float breakRowWidth,
-                               const char* string, const char* end) yinline;
+WimaRectf wima_text_box_bounds(ynonnull WimaRenderContext* ctx, WimaVecF pt, float breakRowWidth, const char* string,
+                               const char* end) yinline;
 
 /**
  * Calculates the glyph x positions of the specified text.
@@ -2107,8 +2095,8 @@ WimaRectf wima_text_box_bounds(ynonnull WimaRenderContext* ctx, WimaVecF pt, flo
  * @pre				@a string must not be NULL.
  * @pre				@a poss must not be NULL.
  */
-int wima_text_glyphPositions(ynonnull WimaRenderContext* ctx, WimaVecF pt, ynonnull const char* string,
-                             const char* end, ynonnull WimaGlyphPosition* poss, int maxPoss) yinline;
+int wima_text_glyphPositions(ynonnull WimaRenderContext* ctx, WimaVecF pt, ynonnull const char* string, const char* end,
+                             ynonnull WimaGlyphPosition* poss, int maxPoss) yinline;
 
 /**
  * Returns the vertical metrics based on the current text style.
@@ -2160,7 +2148,8 @@ int wima_text_breakLines(ynonnull WimaRenderContext* ctx, ynonnull const char* s
  * Flags representing which corners are sharp. This is done to align
  * (group) widgets like Blender does.
  */
-typedef enum WimaWidgetCornerFlags {
+typedef enum WimaWidgetCornerFlags
+{
 
 	/// All corners are round.
 	WIMA_CORNER_NONE = 0,
@@ -2198,15 +2187,15 @@ typedef enum WimaWidgetCornerFlags {
 /**
  * A struct allowing Wima to manipulate corner radii.
  */
-typedef struct WimaUiCorners {
-
-	union {
-
+typedef struct WimaUiCorners
+{
+	union
+	{
 		/// Access the fields as an array.
 		float v[4];
 
-		struct {
-
+		struct
+		{
 			/// The radius of the top left corner.
 			float tl;
 
@@ -2218,9 +2207,7 @@ typedef struct WimaUiCorners {
 
 			/// The radius of the bottom left corner.
 			float bl;
-
 		};
-
 	};
 
 } WimaUiCorners;
@@ -2243,8 +2230,8 @@ typedef struct WimaUiCorners {
  * @param label		The label to draw, or NULL if none.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_label(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                   WimaIcon iconid, const char* label);
+void wima_ui_label(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon iconid,
+                   const char* label);
 
 /**
  * Draw a operator button  with its upper left origin at (x,y) and
@@ -2265,8 +2252,7 @@ void wima_ui_label(ynonnull WimaRenderContext* ctx, float x, float y, float w, f
  * @pre				ctx must not be NULL.
  */
 void wima_ui_operatorBtn(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                         WimaWidgetCornerFlags flags, WimaWidgetState state,
-                         WimaIcon iconid, const char* label);
+                         WimaWidgetCornerFlags flags, WimaWidgetState state, WimaIcon iconid, const char* label);
 
 /**
  * Draw a radio button with its upper left origin at (x,y) and
@@ -2286,9 +2272,8 @@ void wima_ui_operatorBtn(ynonnull WimaRenderContext* ctx, float x, float y, floa
  * @param label		The label to draw, or NULL if none.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_radioBtn(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                      WimaWidgetCornerFlags flags, WimaWidgetState state,
-                      WimaIcon iconid, const char* label);
+void wima_ui_radioBtn(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
+                      WimaWidgetState state, WimaIcon iconid, const char* label);
 
 /**
  * Calculate the corresponding text position for given
@@ -2309,8 +2294,8 @@ void wima_ui_radioBtn(ynonnull WimaRenderContext* ctx, float x, float y, float w
  *					@a py.
  * @pre				ctx must not be NULL.
  */
-int wima_ui_textField_pos(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                          WimaIcon iconid, const char* text, int px, int py);
+int wima_ui_textField_pos(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon iconid,
+                          const char* text, int px, int py);
 
 /**
  * Draw a text field with its upper left origin at (x,y) and size of (w,h),
@@ -2335,9 +2320,8 @@ int wima_ui_textField_pos(ynonnull WimaRenderContext* ctx, float x, float y, flo
  * @param cend		The index of the end of the caret (can be highlighting).
  * @pre				ctx must not be NULL.
  */
-void wima_ui_textField(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                       WimaWidgetCornerFlags flags, WimaWidgetState state,
-                       WimaIcon iconid, const char* text, int cbegin, int cend);
+void wima_ui_textField(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
+                       WimaWidgetState state, WimaIcon iconid, const char* text, int cbegin, int cend);
 
 /**
  * Draw an option (checkbox) button with its upper left origin at
@@ -2354,8 +2338,8 @@ void wima_ui_textField(ynonnull WimaRenderContext* ctx, float x, float y, float 
  * @param label		The label to draw, or NULL if none.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_optionBtn(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                       WimaWidgetState state, const char* label);
+void wima_ui_optionBtn(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetState state,
+                       const char* label);
 
 /**
  * Draw a choice (dropdown) button with its upper left origin at
@@ -2374,9 +2358,8 @@ void wima_ui_optionBtn(ynonnull WimaRenderContext* ctx, float x, float y, float 
  * @param label		The label to draw, or NULL if none.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_choiceBtn(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                       WimaWidgetCornerFlags flags, WimaWidgetState state,
-                       WimaIcon iconid, const char* label);
+void wima_ui_choiceBtn(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
+                       WimaWidgetState state, WimaIcon iconid, const char* label);
 
 /**
  * Draw a color button with its upper left origin at
@@ -2392,8 +2375,8 @@ void wima_ui_choiceBtn(ynonnull WimaRenderContext* ctx, float x, float y, float 
  * @param color		The color to render the button with.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_colorBtn(ynonnull WimaRenderContext* ctx,
-    float x, float y, float w, float h, WimaWidgetCornerFlags flags, WimaColor color);
+void wima_ui_colorBtn(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
+                      WimaColor color);
 
 /**
  * Draw a number field with its upper left origin at (x,y) and
@@ -2414,9 +2397,8 @@ void wima_ui_colorBtn(ynonnull WimaRenderContext* ctx,
  * @param value		The value to add to the label with a separator.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_numField(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                      WimaWidgetCornerFlags flags, WimaWidgetState state,
-                      const char* label, const char* value);
+void wima_ui_numField(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
+                      WimaWidgetState state, const char* label, const char* value);
 
 /**
  * Draw a slider control with its upper left origin at (x,y) and
@@ -2438,9 +2420,8 @@ void wima_ui_numField(ynonnull WimaRenderContext* ctx, float x, float y, float w
  * @param value		The value to add to the label with a separator.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_slider(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                    WimaWidgetCornerFlags flags, WimaWidgetState state,
-                    float progress, const char* label, const char* value);
+void wima_ui_slider(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetCornerFlags flags,
+                    WimaWidgetState state, float progress, const char* label, const char* value);
 
 /**
  * Draw a scrollbar with its upper left origin at (x,y) and size of (w,h),
@@ -2459,8 +2440,8 @@ void wima_ui_slider(ynonnull WimaRenderContext* ctx, float x, float y, float w, 
  * @param size		The size of the handle.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_scrollbar(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                       WimaWidgetState state, float offset, float size);
+void wima_ui_scrollbar(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetState state,
+                       float offset, float size);
 
 /**
  * Draw a menu background with its upper left origin at (x,y) and
@@ -2491,8 +2472,8 @@ void wima_ui_menu_background(ynonnull WimaRenderContext* ctx, float x, float y, 
  * @param label		The label to draw, or NULL if none.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_menu_label(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                        WimaIcon iconid, const char* label);
+void wima_ui_menu_label(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon iconid,
+                        const char* label);
 
 /**
  * Draw a menu separator. Widget looks best when @a h
@@ -2524,8 +2505,8 @@ void wima_ui_menu_separator(ynonnull WimaRenderContext* ctx, float x, float y, f
  *					otherwise
  * @pre				ctx must not be NULL.
  */
-void wima_ui_menu_item(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                       WimaWidgetState state, WimaIcon iconid, const char* label, bool hasSub);
+void wima_ui_menu_item(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetState state,
+                       WimaIcon iconid, const char* label, bool hasSub);
 
 /**
  * Draw a tooltip background with its upper left origin
@@ -2550,8 +2531,7 @@ void wima_ui_tooltip_background(ynonnull WimaRenderContext* ctx, float x, float 
  *				with.
  * @pre			ctx must not be NULL.
  */
-void wima_ui_node_port(ynonnull WimaRenderContext* ctx, float x, float y,
-                       WimaWidgetState state, WimaColor color);
+void wima_ui_node_port(ynonnull WimaRenderContext* ctx, float x, float y, WimaWidgetState state, WimaColor color);
 
 /**
  * Draw a node wire originating at (x0,y0) and curving to (x1,y1),
@@ -2568,8 +2548,8 @@ void wima_ui_node_port(ynonnull WimaRenderContext* ctx, float x, float y,
  * @param state1	The state of the node at the second point.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_node_wire(ynonnull WimaRenderContext* ctx, float x0, float y0, float x1, float y1,
-                       WimaWidgetState state0, WimaWidgetState state1);
+void wima_ui_node_wire(ynonnull WimaRenderContext* ctx, float x0, float y0, float x1, float y1, WimaWidgetState state0,
+                       WimaWidgetState state1);
 
 /**
  * Draw a node wire originating at (x0,y0) and curving to (x1,y1),
@@ -2603,8 +2583,8 @@ void wima_ui_node_wire_colored(ynonnull WimaRenderContext* ctx, float x0, float 
  * @param titleCol	The color to render the title in.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_node_background(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                             WimaWidgetState state, WimaIcon iconid, const char* label, WimaColor titleCol);
+void wima_ui_node_background(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetState state,
+                             WimaIcon iconid, const char* label, WimaColor titleCol);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -2686,8 +2666,8 @@ WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float of
  * @param bl	Radius of the bottom left corner.
  * @pre			ctx must not be NULL.
  */
-void wima_ui_box_rounded(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                         float tl, float tr, float br, float bl);
+void wima_ui_box_rounded(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, float tl, float tr,
+                         float br, float bl);
 
 /**
  * Draw a beveled border at position (x,y) with size (w,h) shaded
@@ -2742,8 +2722,8 @@ void wima_ui_icon(ynonnull WimaRenderContext* ctx, float x, float y, WimaIcon ic
  * @param alpha	The alpha to start the drop shadow at.
  * @pre			ctx must not be NULL.
  */
-void wima_ui_dropShadow(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                        float r, float f, float alpha);
+void wima_ui_dropShadow(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, float r, float f,
+                        float alpha);
 
 /**
  * Draw the inner part of a widget box, with a gradient from
@@ -2762,8 +2742,8 @@ void wima_ui_dropShadow(ynonnull WimaRenderContext* ctx, float x, float y, float
  * @param shade_btm	The color of the bottom of the shading.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_box_inner(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                       float tl, float tr, float br, float bl, WimaColor shade_top, WimaColor shade_btm);
+void wima_ui_box_inner(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, float tl, float tr,
+                       float br, float bl, WimaColor shade_top, WimaColor shade_btm);
 
 /**
  * Draw the outline part of a widget box with @a color
@@ -2780,8 +2760,8 @@ void wima_ui_box_inner(ynonnull WimaRenderContext* ctx, float x, float y, float 
  * @param color	The color to draw the outline with.
  * @pre			ctx must not be NULL.
  */
-void wima_ui_box_outline(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                         float tl, float tr, float br, float bl, WimaColor color);
+void wima_ui_box_outline(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, float tl, float tr,
+                         float br, float bl, WimaColor color);
 
 /**
  * Draw an optional icon @a iconid, an optional @a label and a
@@ -2806,9 +2786,9 @@ void wima_ui_box_outline(ynonnull WimaRenderContext* ctx, float x, float y, floa
  *					icon even if there is none, false otherwise.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_label_icon_value(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                              WimaIcon iconid, WimaColor color, WimaTextAlign align, float fontsize,
-                              const char* label, const char* value, bool padIcon);
+void wima_ui_label_icon_value(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon iconid,
+                              WimaColor color, WimaTextAlign align, float fontsize, const char* label,
+                              const char* value, bool padIcon);
 
 /**
  * Draw an optional icon @a iconid and an optional @a label with
@@ -2829,9 +2809,8 @@ void wima_ui_label_icon_value(ynonnull WimaRenderContext* ctx, float x, float y,
  * @param label		The label to draw, or NULL if none.
  * @pre				ctx must not be NULL.
  */
-void wima_ui_node_label_icon(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                             WimaIcon iconid, WimaColor color, WimaColor shadow, WimaTextAlign align,
-                             float fontsize, const char* label);
+void wima_ui_node_label_icon(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon iconid,
+                             WimaColor color, WimaColor shadow, WimaTextAlign align, float fontsize, const char* label);
 
 /**
  * Calculate the corresponding text position for (px, py).
@@ -2852,8 +2831,8 @@ void wima_ui_node_label_icon(ynonnull WimaRenderContext* ctx, float x, float y, 
  *					@a py.
  * @pre				ctx must not be NULL.
  */
-int wima_ui_text_pos(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                     WimaIcon iconid, float fontsize, const char* label, int px, int py);
+int wima_ui_text_pos(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon iconid,
+                     float fontsize, const char* label, int px, int py);
 
 /**
  * Draw an optional icon @a iconid, an optional @a label and
@@ -2879,9 +2858,8 @@ int wima_ui_text_pos(ynonnull WimaRenderContext* ctx, float x, float y, float w,
  * @param cend		The index of the end of the caret (can be highlighting).
  * @pre				ctx must not be NULL.
  */
-void wima_ui_label_caret(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h,
-                         WimaIcon iconid, WimaColor color, float fontsize, const char* label,
-                         WimaColor caretCol, int cbegin, int cend);
+void wima_ui_label_caret(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon iconid,
+                         WimaColor color, float fontsize, const char* label, WimaColor caretCol, int cbegin, int cend);
 
 /**
  * Draw a checkmark for an option box with the upper left
@@ -2940,4 +2918,4 @@ void wima_ui_node_arrow_down(ynonnull WimaRenderContext* ctx, float x, float y, 
 }
 #endif
 
-#endif // WIMA_RENDER_H
+#endif  // WIMA_RENDER_H

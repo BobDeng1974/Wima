@@ -34,17 +34,18 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <stdint.h>
-
 #include <wima/wima.h>
 
-#include "global.h"
 #include "item.h"
-#include "window.h"
+
+#include "global.h"
 #include "prop.h"
+#include "window.h"
 
-WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint16_t idx) {
+#include <stdint.h>
 
+WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint16_t idx)
+{
 	wima_assert_init;
 
 	wassert(wima_window_valid(win), WIMA_ASSERT_WIN);
@@ -59,28 +60,28 @@ WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint16_t idx) {
 	return ar->area.ctx.items + idx;
 }
 
-void wima_item_free(WimaAr* area, WimaItem* item) {
-
-	if (WIMA_ITEM_IS_WIDGET(item)) {
-
+void wima_item_free(WimaAr* area, WimaItem* item)
+{
+	if (WIMA_ITEM_IS_WIDGET(item))
+	{
 		// Get the property info.
 		WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, item->widget.prop);
 
 		// If the prop type is predefined...
-		if (info->type <= WIMA_PROP_LAST_PREDEFINED) {
-
+		if (info->type <= WIMA_PROP_LAST_PREDEFINED)
+		{
 			// TODO: Free data from predefined prop types.
 		}
-		else {
-
+		else
+		{
 			// Get the custom prop.
 			WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, item->widget.prop);
 			WimaCustProp* cprop = dvec_get(wg.customProps, data->_ptr.type);
 
 			// Get the free func and see if it exists.
 			WimaWidgetFreeDataFunc free = cprop->funcs.free;
-			if (free && cprop->allocSize) {
-
+			if (free && cprop->allocSize)
+			{
 				// Generate the key.
 				uint64_t key = wima_widget_hash(item->widget.prop, item->info.widget.region);
 

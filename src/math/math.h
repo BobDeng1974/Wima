@@ -42,9 +42,9 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-
 #include <yc/opt.h>
+
+#include <stdint.h>
 
 /**
  * @file math/math.h
@@ -79,4 +79,4 @@ uint8_t wima_uint8_bits(register uint8_t x) yconst yinline;
 }
 #endif
 
-#endif // WIMA_MATH_PRIVATE_H
+#endif  // WIMA_MATH_PRIVATE_H

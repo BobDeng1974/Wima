@@ -60,45 +60,48 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <math.h>
-
-#include <nanovg.h>
-
 #include <wima/wima.h>
 
 #include "math.h"
 
+#include <math.h>
+#include <nanovg.h>
+
 #ifdef _MSC_VER
 
-#pragma warning (disable: 4996) // Switch off security warnings
-#pragma warning (disable: 4100) // Switch off unreferenced formal parameter warnings
-#pragma warning (disable: 4244)
-#pragma warning (disable: 4305)
+#	pragma warning(disable : 4996)  // Switch off security warnings
+#	pragma warning(disable : 4100)  // Switch off unreferenced formal parameter warnings
+#	pragma warning(disable : 4244)
+#	pragma warning(disable : 4305)
 
-#include <float.h>
+#	include <float.h>
 
-float wima_fminf(float a, float b) {
-	return _isnan(a) ? b : ( _isnan(b) ? a : ((a < b) ? a : b));
+float wima_fminf(float a, float b)
+{
+	return _isnan(a) ? b : (_isnan(b) ? a : ((a < b) ? a : b));
 }
 
-float wima_fmaxf(float a, float b) {
-	return _isnan(a) ? b : ( _isnan(b) ? a : ((a > b) ? a : b));
+float wima_fmaxf(float a, float b)
+{
+	return _isnan(a) ? b : (_isnan(b) ? a : ((a > b) ? a : b));
 }
 
-double wima_fmin(double a, double b) {
-	return _isnan(a) ? b : ( _isnan(b) ? a : ((a < b) ? a : b));
+double wima_fmin(double a, double b)
+{
+	return _isnan(a) ? b : (_isnan(b) ? a : ((a < b) ? a : b));
 }
 
-double wima_fmax(double a, double b) {
-	return _isnan(a) ? b : ( _isnan(b) ? a : ((a > b) ? a : b));
+double wima_fmax(double a, double b)
+{
+	return _isnan(a) ? b : (_isnan(b) ? a : ((a > b) ? a : b));
 }
 
 #else
 
-#define wima_fminf(a, b) fminf(a, b)
-#define wima_fmaxf(a, b) fmaxf(a, b)
-#define wima_fmin(a, b) fmin(a, b)
-#define wima_fmax(a, b) fmax(a, b)
+#	define wima_fminf(a, b) fminf(a, b)
+#	define wima_fmaxf(a, b) fmaxf(a, b)
+#	define wima_fmin(a, b) fmin(a, b)
+#	define wima_fmax(a, b) fmax(a, b)
 
 #endif
 
@@ -106,24 +109,28 @@ double wima_fmax(double a, double b) {
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-int wima_max(int a, int b) {
+int wima_max(int a, int b)
+{
 	return (a > b) ? a : b;
 }
 
-int wima_min(int a, int b) {
+int wima_min(int a, int b)
+{
 	return (a < b) ? a : b;
 }
 
-int wima_clamp(int v, int min, int max) {
-	return (v > max) ? : ((v < min) ? min : v);
+int wima_clamp(int v, int min, int max)
+{
+	return (v > max) ?: ((v < min) ? min : v);
 }
 
-float wima_clampf(float v, float min, float max) {
+float wima_clampf(float v, float min, float max)
+{
 	return (v > max) ? max : ((v < min) ? min : v);
 }
 
-WimaRect wima_rect(WimaVec pos, WimaSize size) {
-
+WimaRect wima_rect(WimaVec pos, WimaSize size)
+{
 	WimaRect r;
 
 	// Set the rectangle data.
@@ -135,8 +142,8 @@ WimaRect wima_rect(WimaVec pos, WimaSize size) {
 	return r;
 }
 
-WimaRectf wima_rectf(WimaRect rect) {
-
+WimaRectf wima_rectf(WimaRect rect)
+{
 	WimaRectf r;
 
 	// Cast all data.
@@ -148,8 +155,8 @@ WimaRectf wima_rectf(WimaRect rect) {
 	return r;
 }
 
-bool wima_rect_contains(WimaRect r, WimaVec pos) {
-
+bool wima_rect_contains(WimaRect r, WimaVec pos)
+{
 	// Translate into the rectangle space.
 	int x = pos.x - r.x;
 	int y = pos.y - r.y;
@@ -158,16 +165,18 @@ bool wima_rect_contains(WimaRect r, WimaVec pos) {
 	return x >= 0 && y >= 0 && x < r.w && y < r.h;
 }
 
-float wima_degToRad(float deg) {
+float wima_degToRad(float deg)
+{
 	return nvgDegToRad(deg);
 }
 
-float wima_radToDeg(float rad) {
+float wima_radToDeg(float rad)
+{
 	return nvgRadToDeg(rad);
 }
 
-WimaTransform wima_transform_identity() {
-
+WimaTransform wima_transform_identity()
+{
 	WimaTransform tx;
 
 	nvgTransformIdentity(tx.v);
@@ -175,43 +184,50 @@ WimaTransform wima_transform_identity() {
 	return tx;
 }
 
-WimaTransform wima_transform_translate(WimaTransform src, float tx, float ty) {
+WimaTransform wima_transform_translate(WimaTransform src, float tx, float ty)
+{
 	nvgTransformTranslate(src.v, tx, ty);
 	return src;
 }
 
-WimaTransform wima_transform_scale(WimaTransform src, float sx, float sy) {
+WimaTransform wima_transform_scale(WimaTransform src, float sx, float sy)
+{
 	nvgTransformScale(src.v, sx, sy);
 	return src;
 }
 
-WimaTransform wima_transform_rotate(WimaTransform src, float a) {
+WimaTransform wima_transform_rotate(WimaTransform src, float a)
+{
 	nvgTransformRotate(src.v, a);
 	return src;
 }
 
-WimaTransform wima_transform_skewX(WimaTransform src, float a) {
+WimaTransform wima_transform_skewX(WimaTransform src, float a)
+{
 	nvgTransformSkewX(src.v, a);
 	return src;
 }
 
-WimaTransform wima_transform_skewY(WimaTransform src, float a) {
+WimaTransform wima_transform_skewY(WimaTransform src, float a)
+{
 	nvgTransformSkewY(src.v, a);
 	return src;
 }
 
-WimaTransform wima_transform_multiply(WimaTransform src1, WimaTransform src2) {
+WimaTransform wima_transform_multiply(WimaTransform src1, WimaTransform src2)
+{
 	nvgTransformMultiply(src1.v, src2.v);
 	return src1;
 }
 
-WimaTransform wima_transform_premultiply(WimaTransform src1, WimaTransform src2) {
+WimaTransform wima_transform_premultiply(WimaTransform src1, WimaTransform src2)
+{
 	nvgTransformPremultiply(src1.v, src2.v);
 	return src1;
 }
 
-WimaTransform wima_transform_inverse(WimaTransform src) {
-
+WimaTransform wima_transform_inverse(WimaTransform src)
+{
 	WimaTransform dest;
 
 	nvgTransformInverse(dest.v, src.v);
@@ -219,8 +235,8 @@ WimaTransform wima_transform_inverse(WimaTransform src) {
 	return dest;
 }
 
-WimaVecF wima_transform_point(WimaTransform transform, WimaVecF pos) {
-
+WimaVecF wima_transform_point(WimaTransform transform, WimaVecF pos)
+{
 	WimaVecF result;
 
 	nvgTransformPoint(&result.x, &result.y, transform.v, pos.x, pos.y);
@@ -232,8 +248,8 @@ WimaVecF wima_transform_point(WimaTransform transform, WimaVecF pos) {
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-uint8_t wima_uint8_log2(register uint8_t x) {
-
+uint8_t wima_uint8_log2(register uint8_t x)
+{
 	// Algorithm from: http://aggregate.org/MAGIC/#Log2%20of%20an%20Integer.
 
 	// Bit folding.
@@ -245,8 +261,8 @@ uint8_t wima_uint8_log2(register uint8_t x) {
 	return wima_uint8_bits(x) - 1;
 }
 
-uint8_t wima_uint8_bits(register uint8_t x) {
-
+uint8_t wima_uint8_bits(register uint8_t x)
+{
 	// Algorithm from : http://aggregate.org/MAGIC/#Population%20Count%20%28Ones%20Count%29
 
 	// Eight-bit recursive reduction using SWAR...but

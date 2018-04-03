@@ -34,12 +34,11 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <stdio.h>
-
-#include <yc/opt.h>
-#include <yc/error.h>
-
 #include <dyna/nvector.h>
+#include <yc/error.h>
+#include <yc/opt.h>
+
+#include <stdio.h>
 
 #define NANOSVG_ALL_COLOR_KEYWORDS
 #define NANOSVG_IMPLEMENTATION
@@ -47,8 +46,8 @@
 #undef NANOSVG_IMPLEMENTATION
 #undef NANOSVG_ALL_COLOR_KEYWORDS
 
-#include <wima/render.h>
 #include <wima/math.h>
+#include <wima/render.h>
 
 #include "render.h"
 
@@ -67,14 +66,7 @@
  * The unit names that NanoSVG expects.
  * These correspond to @a WimaIconUnit.
  */
-static const char* const unitNames[] = {
-    "px",
-    "pt",
-    "pc",
-    "mm",
-    "cm",
-    "in"
-};
+static const char* const unitNames[] = { "px", "pt", "pc", "mm", "cm", "in" };
 
 /**
  * @}
@@ -86,8 +78,8 @@ static const char* const unitNames[] = {
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
-
+WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi)
+{
 	wima_assert_init;
 
 	WimaIconMarker prev;
@@ -102,13 +94,13 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 	wassert(len < WIMA_ICON_INVALID, WIMA_ASSERT_ICON_MAX);
 
 	// If there is already something in the array...
-	if (len != 0) {
-
+	if (len != 0)
+	{
 		// Get the previous marker.
 		prev = *((WimaIconMarker*) dnvec_get(wg.icons, WIMA_ICON_MARKER_IDX, len - 1));
 	}
-	else {
-
+	else
+	{
 		// Set a dummy value.
 		prev.end = 0;
 	}
@@ -120,7 +112,8 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 	WimaIcn img = nsvgParseFromFile(path, unitNames[unit], dpi);
 
 	// If there was an error, tell the user.
-	if (yerror(!img)) {
+	if (yerror(!img))
+	{
 		wima_error(WIMA_STATUS_IMAGE_LOAD_ERR);
 		return WIMA_ICON_INVALID;
 	}
@@ -130,11 +123,11 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 	bool solid = false;
 
 	// Loop through the shapes in the image.
-	for (NSVGshape* shape = img->shapes; shape != NULL; shape = shape->next) {
-
+	for (NSVGshape* shape = img->shapes; shape != NULL; shape = shape->next)
+	{
 		// Loop through the paths in the shape.
-		for (NSVGpath* path = shape->paths; path != NULL; path = path->next) {
-
+		for (NSVGpath* path = shape->paths; path != NULL; path = path->next)
+		{
 			// This is the flag to push onto the vector.
 			// We need something that can be addressed.
 			bool result;
@@ -146,11 +139,11 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 			++count;
 
 			// Check if closed. TODO: This needs more work.
-			if (shape->fillRule == NSVG_FILLRULE_NONZERO) {
-
+			if (shape->fillRule == NSVG_FILLRULE_NONZERO)
+			{
 				// Make sure we can calculate the winding.
-				if (path->npts >= 2) {
-
+				if (path->npts >= 2)
+				{
 					// Calculate the center.
 					float cx = path->bounds[2] - path->bounds[0];
 					float cy = path->bounds[3] - path->bounds[1];
@@ -174,27 +167,25 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 					// Set the winding.
 					result = angle >= WIMA_PI;
 				}
-				else {
-
+				else
+				{
 					// Set no hole.
 					result = true;
 				}
 			}
-			else {
-
+			else
+			{
 				// Set a hole if the flag says so.
 				result = solid;
 			}
 
 			// Push onto the vector and check for error.
 			status = dvec_push(wg.iconPathWindings, &result);
-			if (yerror(status != DYNA_STATUS_SUCCESS)) {
-
+			if (yerror(status != DYNA_STATUS_SUCCESS))
+			{
 				// Loop through the already-added windings and delete them.
 				// It's count - 1 because the current winding failed.
-				for (uint32_t i = 0; i < count - 1; ++i) {
-					dvec_pop(wg.iconPathWindings);
-				}
+				for (uint32_t i = 0; i < count - 1; ++i) dvec_pop(wg.iconPathWindings);
 
 				// Return an error.
 				wima_error(WIMA_STATUS_MALLOC_ERR);
@@ -208,12 +199,10 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 
 	// Push onto the vector and check for error.
 	status = dnvec_push(wg.icons, &img, &marker);
-	if (yerror(status != DYNA_STATUS_SUCCESS)) {
-
+	if (yerror(status != DYNA_STATUS_SUCCESS))
+	{
 		// Loop through the already-added windings and delete them.
-		for (uint32_t i = 0; i < count; ++i) {
-			dvec_pop(wg.iconPathWindings);
-		}
+		for (uint32_t i = 0; i < count; ++i) dvec_pop(wg.iconPathWindings);
 
 		// Return an error.
 		wima_error(WIMA_STATUS_MALLOC_ERR);
@@ -223,7 +212,8 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi) {
 	return (WimaIcon) len;
 }
 
-WimaIcon wima_icon_debug() {
+WimaIcon wima_icon_debug()
+{
 #ifndef NDEBUG
 
 	wima_assert_init;
@@ -232,13 +222,14 @@ WimaIcon wima_icon_debug() {
 	static WimaIcon debug = WIMA_ICON_INVALID;
 
 	// If the icon is invalid...
-	if (yunlikely(debug == WIMA_ICON_INVALID)) {
-
+	if (yunlikely(debug == WIMA_ICON_INVALID))
+	{
 		// Load it.
 		debug = wima_icon_load("../res/bug.svg", WIMA_ICON_PX, 96.0f);
 
 		// If the icon couldn't load, abort.
-		if (yerror(debug == WIMA_ICON_INVALID)) {
+		if (yerror(debug == WIMA_ICON_INVALID))
+		{
 			wima_error(WIMA_STATUS_IMAGE_LOAD_ERR);
 			exit(WIMA_STATUS_IMAGE_LOAD_ERR);
 		}
@@ -247,10 +238,11 @@ WimaIcon wima_icon_debug() {
 	return debug;
 #else
 	return -1;
-#endif // NDEBUG
+#endif  // NDEBUG
 }
 
-WimaIcon wima_icon_donut() {
+WimaIcon wima_icon_donut()
+{
 #ifndef NDEBUG
 
 	wima_assert_init;
@@ -259,13 +251,14 @@ WimaIcon wima_icon_donut() {
 	static WimaIcon donut = WIMA_ICON_INVALID;
 
 	// If the icon is invalid...
-	if (yunlikely(donut == WIMA_ICON_INVALID)) {
-
+	if (yunlikely(donut == WIMA_ICON_INVALID))
+	{
 		// Load it.
 		donut = wima_icon_load("../res/donut.svg", WIMA_ICON_PX, 96.0f);
 
 		// If the icon couldn't load, abort.
-		if (yerror(donut == WIMA_ICON_INVALID)) {
+		if (yerror(donut == WIMA_ICON_INVALID))
+		{
 			wima_error(WIMA_STATUS_IMAGE_LOAD_ERR);
 			exit(WIMA_STATUS_IMAGE_LOAD_ERR);
 		}
@@ -274,19 +267,21 @@ WimaIcon wima_icon_donut() {
 	return donut;
 #else
 	return -1;
-#endif // NDEBUG
+#endif  // NDEBUG
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-DynaStatus wima_icon_copy(void** dests yunused, void** srcs yunused) {
+DynaStatus wima_icon_copy(void** dests yunused, void** srcs yunused)
+{
 	wassert(false, WIMA_ASSERT_INVALID_OPERATION);
 	abort();
 }
 
-void wima_icon_destroy(DynaNVector vec yunused, void** ptr) {
+void wima_icon_destroy(DynaNVector vec yunused, void** ptr)
+{
 	wima_assert_init;
 	nsvgDelete(*((WimaIcn*) ptr[WIMA_ICON_HANDLE_IDX]));
 }

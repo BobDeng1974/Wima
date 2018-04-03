@@ -81,4 +81,4 @@ bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n);
 }
 #endif
 
-#endif // WIMA_WORKSPACE_H
+#endif  // WIMA_WORKSPACE_H

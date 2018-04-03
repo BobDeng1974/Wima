@@ -42,10 +42,10 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-
-#include <wima/wima.h>
 #include <wima/render.h>
+#include <wima/wima.h>
+
+#include <stdint.h>
 
 /**
  * @file wima/prop.h
@@ -100,7 +100,8 @@ WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, uint32_t dat
 /**
  * An enum for what types of properties are allowed.
  */
-typedef enum WimaPropType {
+typedef enum WimaPropType
+{
 
 	/// A list property.
 	WIMA_PROP_LIST,
@@ -261,8 +262,7 @@ void wima_prop_unregister(WimaProperty wph);
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
  */
-WimaProperty wima_prop_list_register(ynonnull const char* name, const char* label,
-                                     const char* desc, WimaIcon icon);
+WimaProperty wima_prop_list_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon);
 
 /**
  * Returns the length of the list that @a list has.
@@ -376,8 +376,8 @@ uint32_t wima_prop_list_idx(WimaProperty list) yinline;
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  */
-WimaProperty wima_prop_bool_register(ynonnull const char* name, const char* label,
-                                     const char* desc, WimaIcon icon, bool initial);
+WimaProperty wima_prop_bool_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
+                                     bool initial);
 
 /**
  * Sets the bool in @a wph to @a val.
@@ -425,8 +425,8 @@ bool wima_prop_bool(WimaProperty wph) yinline;
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  */
-WimaProperty wima_prop_int_register(ynonnull const char* name, const char* label, const char* desc,
-                                    WimaIcon icon, int initial, int min, int max, uint32_t step);
+WimaProperty wima_prop_int_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
+                                    int initial, int min, int max, uint32_t step);
 
 /**
  * Sets the int in @a wph to @a val.
@@ -474,8 +474,8 @@ int wima_prop_int(WimaProperty wph) yinline;
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  */
-WimaProperty wima_prop_float_register(ynonnull const char* name, const char* label, const char* desc,
-                                      WimaIcon icon, float initial, float min, float max, uint32_t step);
+WimaProperty wima_prop_float_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
+                                      float initial, float min, float max, uint32_t step);
 
 /**
  * Sets the float in @a wph to @a val.
@@ -517,8 +517,8 @@ float wima_prop_float(WimaProperty wph) yinline;
  * @pre			@a name must not be NULL.
  * @pre			@a str must not be NULL.
  */
-WimaProperty wima_prop_string_register(ynonnull const char* name, const char* label,
-                                       const char* desc, WimaIcon icon, DynaString str);
+WimaProperty wima_prop_string_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
+                                       DynaString str);
 
 /**
  * Returns the DynaString contained in @a wph. The actual
@@ -555,8 +555,8 @@ DynaString wima_prop_string(WimaProperty wph) yinline;
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  */
-WimaProperty wima_prop_enum_register(ynonnull const char* name, const char* label, const char* desc,
-                                     WimaIcon icon, const char* names[], uint32_t num, uint32_t initial);
+WimaProperty wima_prop_enum_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
+                                     const char* names[], uint32_t num, uint32_t initial);
 
 /**
  * Sets the enum index in @a wph to @a idx.
@@ -598,8 +598,8 @@ uint32_t wima_prop_enum_idx(WimaProperty wph) yinline;
  * @return			The newly-created @a WimaProperty.
  * @pre				@a name must not be NULL.
  */
-WimaProperty wima_prop_color_register(ynonnull const char* name, const char* label,
-                                      const char* desc, WimaIcon icon, WimaColor initial);
+WimaProperty wima_prop_color_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
+                                      WimaColor initial);
 
 /**
  * Sets the color in @a wph to @a color.
@@ -643,8 +643,8 @@ WimaColor wima_prop_color(WimaProperty wph) yinline;
  * @pre			@a name must not be NULL.
  * @pre			@a path must not be NULL.
  */
-WimaProperty wima_prop_path_register(ynonnull const char* name, const char* label, const char* desc,
-                                     WimaIcon icon, const char* path, bool grid);
+WimaProperty wima_prop_path_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
+                                     const char* path, bool grid);
 
 /**
  * Returns the path associated with the path property.
@@ -701,8 +701,8 @@ void wima_prop_path_updateGrid(WimaProperty wph, bool grid);
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
  */
-WimaProperty wima_prop_operator_register(ynonnull const char* name, const char* label, const char* desc,
-                                         WimaIcon icon, WimaWidgetMouseClickFunc op);
+WimaProperty wima_prop_operator_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
+                                         WimaWidgetMouseClickFunc op);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions for user pointer props.
@@ -728,8 +728,8 @@ WimaProperty wima_prop_operator_register(ynonnull const char* name, const char* 
  * @ptr_lifetime	Wima assumes that @a ptr is allocated
  *					and freed by the client.
  */
-WimaProperty wima_prop_ptr_register(ynonnull const char* name, const char* label, const char* desc,
-                                    WimaIcon icon, WimaCustomProperty type, void* ptr);
+WimaProperty wima_prop_ptr_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
+                                    WimaCustomProperty type, void* ptr);
 
 /**
  * Updates the pointer in @a wph to @a ptr.
@@ -758,4 +758,4 @@ void* wima_prop_ptr(WimaProperty wph) yinline;
 }
 #endif
 
-#endif // WIMA_PROP_H
+#endif  // WIMA_PROP_H

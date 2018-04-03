@@ -34,18 +34,19 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <yc/error.h>
+#include "dialog.h"
 
 #include "area.h"
-#include "dialog.h"
 #include "global.h"
+
+#include <yc/error.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaDialog wima_dialog_register(WimaTree tree) {
-
+WimaDialog wima_dialog_register(WimaTree tree)
+{
 	wima_assert_init;
 
 	wassert(wima_area_valid(tree), WIMA_ASSERT_TREE);
@@ -59,14 +60,10 @@ WimaDialog wima_dialog_register(WimaTree tree) {
 	WimaDlg dlg = dvec_pushTree(wg.dialogs);
 
 	// Check for error.
-	if (yerror(!dlg)) {
-		goto wima_dlg_reg_push;
-	}
+	if (yerror(!dlg)) goto wima_dlg_reg_push;
 
 	// Copy the tree and check for error.
-	if (yerror(dtree_copy(dlg, tree))) {
-		goto wima_dlg_reg_copy;
-	}
+	if (yerror(dtree_copy(dlg, tree))) goto wima_dlg_reg_copy;
 
 	return len;
 

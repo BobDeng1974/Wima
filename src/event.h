@@ -68,63 +68,64 @@ extern "C" {
  * Types of events that Wima sends to clients.
  * These are flags for widgets' sake.
  */
-typedef enum WimaEventType {
+typedef enum WimaEventType
+{
 
 	/// No event.
-	WIMA_EVENT_NONE          = 0,
+	WIMA_EVENT_NONE = 0,
 
 	/// Key event.
-	WIMA_EVENT_KEY           = 1 << 10,
+	WIMA_EVENT_KEY = 1 << 10,
 
 	/// Mouse button event.
-	WIMA_EVENT_MOUSE_BTN     = 1 << 11,
+	WIMA_EVENT_MOUSE_BTN = 1 << 11,
 
 	/// Mouse click event.
-	WIMA_EVENT_MOUSE_CLICK   = 1 << 12,
+	WIMA_EVENT_MOUSE_CLICK = 1 << 12,
 
 	/// Mouse position event.
-	WIMA_EVENT_MOUSE_POS     = 1 << 13,
+	WIMA_EVENT_MOUSE_POS = 1 << 13,
 
 	/// Mouse drag event.
-	WIMA_EVENT_MOUSE_DRAG    = 1 << 14,
+	WIMA_EVENT_MOUSE_DRAG = 1 << 14,
 
 	/// Scroll event.
-	WIMA_EVENT_SCROLL        = 1 << 15,
+	WIMA_EVENT_SCROLL = 1 << 15,
 
 	/// Char event.
-	WIMA_EVENT_CHAR          = 1 << 16,
+	WIMA_EVENT_CHAR = 1 << 16,
 
 	/// Area mouse enter/exit event.
-	WIMA_EVENT_AREA_ENTER    = 1 << 17,
+	WIMA_EVENT_AREA_ENTER = 1 << 17,
 
 	/// Window file drop event.
-	WIMA_EVENT_FILE_DROP     = 1 << 18,
+	WIMA_EVENT_FILE_DROP = 1 << 18,
 
 	/// Window position event.
-	WIMA_EVENT_WIN_POS       = 1 << 19,
+	WIMA_EVENT_WIN_POS = 1 << 19,
 
 	/// Window framebuffer size event.
-	WIMA_EVENT_FB_SIZE       = 1 << 20,
+	WIMA_EVENT_FB_SIZE = 1 << 20,
 
 	/// Window size event.
-	WIMA_EVENT_WIN_SIZE      = 1 << 21,
+	WIMA_EVENT_WIN_SIZE = 1 << 21,
 
 	/// Window mouse enter/exit event.
-	WIMA_EVENT_WIN_ENTER     = 1 << 22,
+	WIMA_EVENT_WIN_ENTER = 1 << 22,
 
 	/// Window minimize event.
-	WIMA_EVENT_WIN_MINIMIZE  = 1 << 23,
+	WIMA_EVENT_WIN_MINIMIZE = 1 << 23,
 
 	/// Window focus event.
-	WIMA_EVENT_WIN_FOCUS     = 1 << 24
+	WIMA_EVENT_WIN_FOCUS = 1 << 24
 
 } WimaEventType;
 
 /**
  * An area key event event.
  */
-typedef struct WimaAreaKeyEvent {
-
+typedef struct WimaAreaKeyEvent
+{
 	/// The event.
 	WimaKeyEvent key;
 
@@ -136,8 +137,8 @@ typedef struct WimaAreaKeyEvent {
 /**
  * An area mouse enter/exit event.
  */
-typedef struct WimaAreaEnterEvent {
-
+typedef struct WimaAreaEnterEvent
+{
 	/// The area that received the event.
 	WimaAreaNode area;
 
@@ -149,13 +150,13 @@ typedef struct WimaAreaEnterEvent {
 /**
  * A Wima event.
  */
-typedef struct WimaEvent {
-
+typedef struct WimaEvent
+{
 	/// The event type.
 	WimaEventType type;
 
-	union {
-
+	union
+	{
 		/// An area key event.
 		WimaAreaKeyEvent area_key;
 
@@ -194,7 +195,6 @@ typedef struct WimaEvent {
 
 		/// A window focused event.
 		bool focused;
-
 	};
 
 } WimaEvent;
@@ -207,4 +207,4 @@ typedef struct WimaEvent {
 }
 #endif
 
-#endif // WIMA_EVENT_H
+#endif  // WIMA_EVENT_H

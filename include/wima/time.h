@@ -42,9 +42,9 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-
 #include <yc/opt.h>
+
+#include <stdint.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Time functions.
@@ -100,4 +100,4 @@ uint64_t wima_time_freq() yinline;
 }
 #endif
 
-#endif // WIMA_TIME_H
+#endif  // WIMA_TIME_H

@@ -157,8 +157,8 @@ extern "C" {
 /**
  * The data for a WimaRegion.
  */
-typedef struct WimaReg {
-
+typedef struct WimaReg
+{
 	/// The layout function.
 	WimaRegionLayout layout;
 
@@ -178,4 +178,4 @@ typedef struct WimaReg {
 }
 #endif
 
-#endif // WIMA_REGION_PRIVATE_H
+#endif  // WIMA_REGION_PRIVATE_H

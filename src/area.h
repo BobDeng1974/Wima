@@ -42,13 +42,13 @@
 extern "C" {
 #endif
 
-#include <nanovg.h>
-
 #include <wima/wima.h>
 
 #include "editor.h"
-#include "widget.h"
 #include "layout.h"
+#include "widget.h"
+
+#include <nanovg.h>
 
 /**
  * @file area.h
@@ -76,8 +76,8 @@ extern "C" {
 /**
  * The information for an area split.
  */
-typedef struct WimaAreaSplit {
-
+typedef struct WimaAreaSplit
+{
 	/// The integer location of the split.
 	int split;
 
@@ -95,8 +95,8 @@ typedef struct WimaAreaSplit {
 /**
  * The data for a live region on an area.
  */
-typedef struct WimaArReg {
-
+typedef struct WimaArReg
+{
 	/// The region type.
 	WimaRegion type;
 
@@ -116,8 +116,8 @@ typedef struct WimaArReg {
 /**
  * Item (layouts and widgets) context for an area.
  */
-typedef struct WimaArCtx {
-
+typedef struct WimaArCtx
+{
 	/// The array of items.
 	WimaItem* items;
 
@@ -136,8 +136,8 @@ typedef struct WimaArCtx {
  * A node in the tree of areas. This is where
  * all of the area's data is actually kept.
  */
-typedef struct WimaAr {
-
+typedef struct WimaAr
+{
 	// These are first for speed reasons.
 
 	/// The node of the area within the window's tree.
@@ -152,13 +152,13 @@ typedef struct WimaAr {
 	/// The area's rectangle.
 	WimaRect rect;
 
-	union {
-
+	union
+	{
 		/**
 		 * The data common only to leaves in the tree.
 		 */
-		struct wima_area_leaf {
-
+		struct wima_area_leaf
+		{
 			/// The context for the area.
 			WimaArCtx ctx;
 
@@ -179,8 +179,8 @@ typedef struct WimaAr {
 		/**
 		 * The data common to parents in the tree.
 		 */
-		struct wima_area_parent {
-
+		struct wima_area_parent
+		{
 			/// The percent of the dimension that the parent is split.
 			float split;
 
@@ -191,7 +191,6 @@ typedef struct WimaAr {
 			bool vertical;
 
 		} parent;
-
 	};
 
 } WimaAr;
@@ -201,14 +200,14 @@ typedef struct WimaAr {
  * Checks if @a area is a leaf (editor) area.
  * @param area	The WimaAr to check.
  */
-#define WIMA_AREA_IS_LEAF(area)    (!((area)->isParent))
+#define WIMA_AREA_IS_LEAF(area) (!((area)->isParent))
 
 /**
  * @def WIMA_AREA_IS_PARENT
  * Checks if @a area is a parent area.
  * @param area	The WimaAr to check.
  */
-#define WIMA_AREA_IS_PARENT(area)  ((area)->isParent)
+#define WIMA_AREA_IS_PARENT(area) ((area)->isParent)
 
 /**
  * Gets a pointer to the area at @a node in @a wwh.
@@ -396,4 +395,4 @@ void wima_area_split(WimaAreaNode node);
 }
 #endif
 
-#endif // WIMA_AREA_H
+#endif  // WIMA_AREA_H

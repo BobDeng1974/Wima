@@ -34,92 +34,108 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <yc/assert.h>
-
-#include <nanovg.h>
-
 #include <wima/render.h>
 
 #include "render.h"
 
 #include "../global.h"
 
-void wima_path_begin(WimaRenderContext* ctx) {
+#include <yc/assert.h>
+
+#include <nanovg.h>
+
+void wima_path_begin(WimaRenderContext* ctx)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgBeginPath(ctx->nvg);
 }
 
-void wima_path_moveTo(WimaRenderContext* ctx, WimaVecF pt) {
+void wima_path_moveTo(WimaRenderContext* ctx, WimaVecF pt)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgMoveTo(ctx->nvg, pt.x, pt.y);
 }
 
-void wima_path_lineTo(WimaRenderContext* ctx, WimaVecF pt) {
+void wima_path_lineTo(WimaRenderContext* ctx, WimaVecF pt)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgLineTo(ctx->nvg, pt.x, pt.y);
 }
 
-void wima_path_bezierTo(WimaRenderContext* ctx, WimaVecF pt, WimaVecF c1, WimaVecF c2) {
+void wima_path_bezierTo(WimaRenderContext* ctx, WimaVecF pt, WimaVecF c1, WimaVecF c2)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgBezierTo(ctx->nvg, c1.x, c1.y, c2.x, c2.y, pt.x, pt.y);
 }
 
-void wima_path_quadTo(WimaRenderContext* ctx, WimaVecF pt, WimaVecF c) {
+void wima_path_quadTo(WimaRenderContext* ctx, WimaVecF pt, WimaVecF c)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgQuadTo(ctx->nvg, c.x, c.y, pt.x, pt.y);
 }
 
-void wima_path_arcTo(WimaRenderContext* ctx, WimaVecF pt1, WimaVecF pt2, float radius) {
+void wima_path_arcTo(WimaRenderContext* ctx, WimaVecF pt1, WimaVecF pt2, float radius)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgArcTo(ctx->nvg, pt1.x, pt1.y, pt2.x, pt2.y, radius);
 }
 
-void wima_path_close(WimaRenderContext* ctx) {
+void wima_path_close(WimaRenderContext* ctx)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgClosePath(ctx->nvg);
 }
 
-void wima_path_winding(WimaRenderContext* ctx, WimaWinding dir) {
+void wima_path_winding(WimaRenderContext* ctx, WimaWinding dir)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgPathWinding(ctx->nvg, dir);
 }
 
-void wima_path_arc(WimaRenderContext* ctx, WimaVecF c, float r, float a0, float a1, WimaWinding dir) {
+void wima_path_arc(WimaRenderContext* ctx, WimaVecF c, float r, float a0, float a1, WimaWinding dir)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgArc(ctx->nvg, c.x, c.y, r, a0, a1, dir);
 }
 
-void wima_path_rect(WimaRenderContext* ctx, WimaRectf rect) {
+void wima_path_rect(WimaRenderContext* ctx, WimaRectf rect)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgRect(ctx->nvg, rect.x, rect.y, rect.w, rect.h);
 }
 
-void wima_path_roundedRect(WimaRenderContext* ctx, WimaRectf rect, float r) {
+void wima_path_roundedRect(WimaRenderContext* ctx, WimaRectf rect, float r)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgRoundedRect(ctx->nvg, rect.x, rect.y, rect.w, rect.h, r);
 }
 
-void wima_path_roundedRectVary(WimaRenderContext* ctx, WimaRectf rect, float tl, float tr, float br, float bl) {
+void wima_path_roundedRectVary(WimaRenderContext* ctx, WimaRectf rect, float tl, float tr, float br, float bl)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgRoundedRectVarying(ctx->nvg, rect.x, rect.y, rect.w, rect.h, tl, tr, br, bl);
 }
 
-void wima_path_ellipse(WimaRenderContext* ctx, WimaVecF c, float rx, float ry) {
+void wima_path_ellipse(WimaRenderContext* ctx, WimaVecF c, float rx, float ry)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgEllipse(ctx->nvg, c.x, c.y, rx, ry);
 }
 
-void wima_path_circle(WimaRenderContext* ctx, WimaVecF c, float r) {
+void wima_path_circle(WimaRenderContext* ctx, WimaVecF c, float r)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgCircle(ctx->nvg, c.x, c.y, r);
 }
 
-void wima_path_fill(WimaRenderContext* ctx) {
+void wima_path_fill(WimaRenderContext* ctx)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgFill(ctx->nvg);
 }
 
-void wima_path_stroke(WimaRenderContext* ctx) {
+void wima_path_stroke(WimaRenderContext* ctx)
+{
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgStroke(ctx->nvg);
 }

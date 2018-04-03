@@ -54,7 +54,7 @@
  *	******* BEGIN FILE DESCRIPTION *******
  *
  *	Declares useful math functions. The functions wima_fminf, wima_fmaxf,
-* 	wima_fmin, wima_fmax, and wima_clamp were originally part of Blendish.
+ * 	wima_fmin, wima_fmax, and wima_clamp were originally part of Blendish.
  *
  *	******** END FILE DESCRIPTION ********
  */
@@ -67,21 +67,21 @@
 extern "C" {
 #endif
 
-#include <math.h>
+#include <wima/wima.h>
 
 #include <yc/opt.h>
 
-#include <wima/wima.h>
+#include <math.h>
 
 //! @cond Doxygen_Suppress
 #ifdef _MSC_VER
 
-#pragma warning (disable: 4996) // Switch off security warnings
-#pragma warning (disable: 4100) // Switch off unreferenced formal parameter warnings
-#pragma warning (disable: 4244)
-#pragma warning (disable: 4305)
+#	pragma warning(disable : 4996)  // Switch off security warnings
+#	pragma warning(disable : 4100)  // Switch off unreferenced formal parameter warnings
+#	pragma warning(disable : 4244)
+#	pragma warning(disable : 4305)
 
-#include <float.h>
+#	include <float.h>
 
 float wima_fminf(float a, float b);
 
@@ -93,10 +93,10 @@ double wima_fmax(double a, double b);
 
 #else
 
-#define wima_fminf(a, b) fminf(a, b)
-#define wima_fmaxf(a, b) fmaxf(a, b)
-#define wima_fmin(a, b) fmin(a, b)
-#define wima_fmax(a, b) fmax(a, b)
+#	define wima_fminf(a, b) fminf(a, b)
+#	define wima_fmaxf(a, b) fmaxf(a, b)
+#	define wima_fmin(a, b) fmin(a, b)
+#	define wima_fmax(a, b) fmax(a, b)
 
 #endif
 //! @endcond Doxygen_Suppress
@@ -280,4 +280,4 @@ WimaVecF wima_transform_point(WimaTransform transform, WimaVecF pos) yinline;
 }
 #endif
 
-#endif // WIMA_MATH_H
+#endif  // WIMA_MATH_H

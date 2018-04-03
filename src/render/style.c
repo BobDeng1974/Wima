@@ -34,30 +34,32 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <yc/assert.h>
-
-#include <nanovg.h>
-
 #include <wima/render.h>
 
 #include "render.h"
 
 #include "../global.h"
 
-void wima_style_antialias(WimaRenderContext* ctx, bool enabled) {
+#include <yc/assert.h>
+
+#include <nanovg.h>
+
+void wima_style_antialias(WimaRenderContext* ctx, bool enabled)
+{
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgShapeAntiAlias(ctx->nvg, enabled);
 }
 
-void wima_style_stroke_width(WimaRenderContext* ctx, float size) {
+void wima_style_stroke_width(WimaRenderContext* ctx, float size)
+{
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgStrokeWidth(ctx->nvg, size);
 }
 
-void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color) {
-
+void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -69,8 +71,8 @@ void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color) {
 	nvgStrokeColor(ctx->nvg, c.nvg);
 }
 
-void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint) {
-
+void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -82,8 +84,8 @@ void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint) {
 	nvgStrokePaint(ctx->nvg, p.nvg);
 }
 
-void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color) {
-
+void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -95,8 +97,8 @@ void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color) {
 	nvgFillColor(ctx->nvg, c.nvg);
 }
 
-void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint) {
-
+void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint)
+{
 	wima_assert_init;
 
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -108,38 +110,43 @@ void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint) {
 	nvgFillPaint(ctx->nvg, p.nvg);
 }
 
-void wima_style_miter_limit(WimaRenderContext* ctx, float limit) {
+void wima_style_miter_limit(WimaRenderContext* ctx, float limit)
+{
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgMiterLimit(ctx->nvg, limit);
 }
 
-void wima_style_line_cap(WimaRenderContext* ctx, WimaLineCap cap) {
+void wima_style_line_cap(WimaRenderContext* ctx, WimaLineCap cap)
+{
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgLineCap(ctx->nvg, cap);
 }
 
-void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join) {
+void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join)
+{
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgLineJoin(ctx->nvg, join);
 }
 
-void wima_style_globalAlpha(WimaRenderContext* ctx, float alpha) {
+void wima_style_globalAlpha(WimaRenderContext* ctx, float alpha)
+{
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgGlobalAlpha(ctx->nvg, alpha);
 }
 
-void wima_style_globalBlendRGB(WimaRenderContext* ctx, WimaBlend src, WimaBlend dst) {
+void wima_style_globalBlendRGB(WimaRenderContext* ctx, WimaBlend src, WimaBlend dst)
+{
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgGlobalCompositeBlendFunc(ctx->nvg, src, dst);
 }
 
-void wima_style_globalBlendRGBA(WimaRenderContext* ctx, WimaBlend srcRGB, WimaBlend dstRGB,
-                                   WimaBlend srcA, WimaBlend dstA)
+void wima_style_globalBlendRGBA(WimaRenderContext* ctx, WimaBlend srcRGB, WimaBlend dstRGB, WimaBlend srcA,
+                                WimaBlend dstA)
 {
 	wima_assert_init;
 	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);

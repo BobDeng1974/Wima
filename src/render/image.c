@@ -34,15 +34,15 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <yc/error.h>
-
 #include <wima/render.h>
 
 #include "../global.h"
 #include "../window.h"
 
-WimaImage wima_image_load(const char * const path, WimaImageFlags flags) {
+#include <yc/error.h>
 
+WimaImage wima_image_load(const char* const path, WimaImageFlags flags)
+{
 	wassert(path != NULL, WIMA_ASSERT_PATH_NULL);
 
 	// Get the length.
@@ -55,7 +55,8 @@ WimaImage wima_image_load(const char * const path, WimaImageFlags flags) {
 	DynaStatus status = dvec_pushString(wg.imagePaths, path);
 
 	// Check for error.
-	if (yerror(status != DYNA_STATUS_SUCCESS)) {
+	if (yerror(status != DYNA_STATUS_SUCCESS))
+	{
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_IMAGE_INVALID;
 	}
@@ -64,8 +65,8 @@ WimaImage wima_image_load(const char * const path, WimaImageFlags flags) {
 	status = dvec_push(wg.imageFlags, &flags);
 
 	// Check for error.
-	if (yerror(status != DYNA_STATUS_SUCCESS)) {
-
+	if (yerror(status != DYNA_STATUS_SUCCESS))
+	{
 		// Make sure to pop the path off.
 		dvec_pop(wg.imagePaths);
 
@@ -78,12 +79,10 @@ WimaImage wima_image_load(const char * const path, WimaImageFlags flags) {
 	size_t winLen = dvec_len(wg.windows);
 
 	// Loop through the windows.
-	for (size_t i = 0; i < winLen; ++i) {
-
+	for (size_t i = 0; i < winLen; ++i)
+	{
 		// If the window isn't valid, just continue.
-		if (!wima_window_valid(i)) {
-			continue;
-		}
+		if (!wima_window_valid(i)) continue;
 
 		// Get the window.
 		WimaWin* win = dvec_get(wg.windows, i);
@@ -92,15 +91,13 @@ WimaImage wima_image_load(const char * const path, WimaImageFlags flags) {
 		WimaStatus status = wima_window_addImage(win, path, flags);
 
 		// Check for error.
-		if (yerror(status != WIMA_STATUS_SUCCESS)) {
-
+		if (yerror(status != WIMA_STATUS_SUCCESS))
+		{
 			// Loop through all the windows already done.
-			for (size_t j = 0; j < i; ++j) {
-
+			for (size_t j = 0; j < i; ++j)
+			{
 				// If the window isn't valid, just continue.
-				if (!wima_window_valid(j)) {
-					continue;
-				}
+				if (!wima_window_valid(j)) continue;
 
 				// Pop the image from the window.
 				wima_window_removeImage(dvec_get(wg.windows, j));

@@ -42,19 +42,17 @@
 extern "C" {
 #endif
 
-#include <yc/assert.h>
-
-#include <dyna/vector.h>
-#include <dyna/string.h>
-#include <dyna/pool.h>
-
-#include <wima/wima.h>
-#include <wima/render.h>
 #include <wima/prop.h>
-
-#include <GLFW/glfw3.h>
+#include <wima/render.h>
+#include <wima/wima.h>
 
 #include "render/render.h"
+
+#include <GLFW/glfw3.h>
+#include <dyna/pool.h>
+#include <dyna/string.h>
+#include <dyna/vector.h>
+#include <yc/assert.h>
 
 /**
  * @file global.h
@@ -71,8 +69,8 @@ extern "C" {
  * of this struct in every library, and that is @a wg in
  * the @a global.c file.
  */
-typedef struct WimaG {
-
+typedef struct WimaG
+{
 	/// The app name.
 	DynaString name;
 
@@ -171,7 +169,8 @@ typedef struct WimaG {
 /**
  * All types of assert messages that Wima can give.
  */
-typedef enum WimaAssertType {
+typedef enum WimaAssertType
+{
 
 	//! @cond Doxygen suppress.
 
@@ -358,7 +357,7 @@ extern const char* const wima_assert_msgs[];
  * @param idx	The index of the desired message.
  *				Should be one of @a WimaAssertType.
  */
-#define wima_assert_msg(idx)  wima_assert_msgs[(idx)]
+#define wima_assert_msg(idx) wima_assert_msgs[(idx)]
 
 /**
  * @def wassert
@@ -367,13 +366,13 @@ extern const char* const wima_assert_msgs[];
  * @param	idx		The index of the desired assert message.
  *					Should be one of @a WimaAssertType.
  */
-#define wassert(expr, idx)    yassert(expr, wima_assert_msg(idx))
+#define wassert(expr, idx) yassert(expr, wima_assert_msg(idx))
 
 /**
  * @def wima_assert_init
  * A Wima assert that checks whether Wima has been initialized.
  */
-#define wima_assert_init      wassert(wg.name != NULL, WIMA_ASSERT_INIT)
+#define wima_assert_init wassert(wg.name != NULL, WIMA_ASSERT_INIT)
 
 /**
  * @def wima_error
@@ -407,4 +406,4 @@ extern const char* const wima_assert_msgs[];
 }
 #endif
 
-#endif // WIMA_GLOBAL_H
+#endif  // WIMA_GLOBAL_H

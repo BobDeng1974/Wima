@@ -58,15 +58,15 @@
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <wima/render.h>
 #include <wima/math.h>
-
-#include "../global.h"
+#include <wima/render.h>
 
 #include "render.h"
 
-WimaColor wima_color_rgb(unsigned char r, unsigned char g, unsigned char b) {
+#include "../global.h"
 
+WimaColor wima_color_rgb(unsigned char r, unsigned char g, unsigned char b)
+{
 	WimaCol c;
 
 	// Translate between Wima and NanoVG.
@@ -75,8 +75,8 @@ WimaColor wima_color_rgb(unsigned char r, unsigned char g, unsigned char b) {
 	return c.wima;
 }
 
-WimaColor wima_color_rgbf(float r, float g, float b) {
-
+WimaColor wima_color_rgbf(float r, float g, float b)
+{
 	WimaCol c;
 
 	// Translate between Wima and NanoVG.
@@ -85,8 +85,8 @@ WimaColor wima_color_rgbf(float r, float g, float b) {
 	return c.wima;
 }
 
-WimaColor wima_color_rgba(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
-
+WimaColor wima_color_rgba(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+{
 	WimaCol c;
 
 	// Translate between Wima and NanoVG.
@@ -95,8 +95,8 @@ WimaColor wima_color_rgba(unsigned char r, unsigned char g, unsigned char b, uns
 	return c.wima;
 }
 
-WimaColor wima_color_rgbaf(float r, float g, float b, float a) {
-
+WimaColor wima_color_rgbaf(float r, float g, float b, float a)
+{
 	WimaCol c;
 
 	// Translate between Wima and NanoVG.
@@ -105,8 +105,8 @@ WimaColor wima_color_rgbaf(float r, float g, float b, float a) {
 	return c.wima;
 }
 
-WimaColor wima_color_lerp(WimaColor c0, WimaColor c1, float u) {
-
+WimaColor wima_color_lerp(WimaColor c0, WimaColor c1, float u)
+{
 	WimaCol c, wc0, wc1;
 
 	// Translate between Wima and NanoVG.
@@ -118,8 +118,8 @@ WimaColor wima_color_lerp(WimaColor c0, WimaColor c1, float u) {
 	return c.wima;
 }
 
-WimaColor wima_color_setAlpha(WimaColor c0, unsigned char a) {
-
+WimaColor wima_color_setAlpha(WimaColor c0, unsigned char a)
+{
 	// Translate between Wima and NanoVG.
 	WimaCol c, wc0;
 	wc0.wima = c0;
@@ -129,8 +129,8 @@ WimaColor wima_color_setAlpha(WimaColor c0, unsigned char a) {
 	return c.wima;
 }
 
-WimaColor wima_color_setAlphaf(WimaColor c0, float a) {
-
+WimaColor wima_color_setAlphaf(WimaColor c0, float a)
+{
 	// Translate between Wima and NanoVG.
 	WimaCol c;
 	c.wima = c0;
@@ -140,13 +140,14 @@ WimaColor wima_color_setAlphaf(WimaColor c0, float a) {
 	return c.wima;
 }
 
-WimaColor wima_color_multiplyAlphaf(WimaColor color, float a) {
+WimaColor wima_color_multiplyAlphaf(WimaColor color, float a)
+{
 	color.a *= a;
 	return color;
 }
 
-WimaColor wima_color_hsl(float h, float s, float l) {
-
+WimaColor wima_color_hsl(float h, float s, float l)
+{
 	WimaCol c;
 
 	// Translate between Wima and NanoVG.
@@ -155,8 +156,8 @@ WimaColor wima_color_hsl(float h, float s, float l) {
 	return c.wima;
 }
 
-WimaColor wima_color_hsla(float h, float s, float l, unsigned char a) {
-
+WimaColor wima_color_hsla(float h, float s, float l, unsigned char a)
+{
 	WimaCol c;
 
 	// Translate between Wima and NanoVG.
@@ -165,13 +166,13 @@ WimaColor wima_color_hsla(float h, float s, float l, unsigned char a) {
 	return c.wima;
 }
 
-WimaColor wima_color_offset(WimaColor color, int delta) {
-
+WimaColor wima_color_offset(WimaColor color, int delta)
+{
 	WimaColor result;
 
 	// If delta is not zero...
-	if (delta != 0) {
-
+	if (delta != 0)
+	{
 		// Translate the offset of the delta into [0, 1] space.
 		float offset = (float) delta / 255.0f;
 
@@ -183,8 +184,8 @@ WimaColor wima_color_offset(WimaColor color, int delta) {
 		// Get the color.
 		result = wima_color_rgbaf(r, g, b, color.a);
 	}
-	else {
-
+	else
+	{
 		// Just return the color.
 		result = color;
 	}
@@ -196,12 +197,12 @@ WimaColor wima_color_offset(WimaColor color, int delta) {
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-NVGcolor wima_color_int(unsigned int color) {
-
-	uint8_t r = (uint8_t) (color & WIMA_ICON_RED);
-	uint8_t g = (uint8_t) ((color & WIMA_ICON_GREEN) >> 8);
-	uint8_t b = (uint8_t) ((color & WIMA_ICON_BLUE) >> 16);
-	uint8_t a = (uint8_t) ((color & WIMA_ICON_ALPHA) >> 24);
+NVGcolor wima_color_int(unsigned int color)
+{
+	uint8_t r = (uint8_t)(color & WIMA_ICON_RED);
+	uint8_t g = (uint8_t)((color & WIMA_ICON_GREEN) >> 8);
+	uint8_t b = (uint8_t)((color & WIMA_ICON_BLUE) >> 16);
+	uint8_t a = (uint8_t)((color & WIMA_ICON_ALPHA) >> 24);
 
 	return nvgRGBA(r, g, b, a);
 }
