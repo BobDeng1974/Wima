@@ -590,8 +590,14 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 	// We use this to decide what to do.
 	uint16_t flags = item->layout.flags & (WIMA_LAYOUT_TYPE_MASK);
 
-	float wextra = (item->rect.w - item->layout.w_min) / (float) item->layout.x_expand_children;
-	float hextra = item->rect.h - item->layout.h_min / (float) item->layout.x_expand_children;
+	float wextra = 0.0f;
+	float hextra = 0.0f;
+
+	if (item->layout.x_expand_children)
+		wextra = (item->rect.w - item->layout.w_min) / (float) item->layout.x_expand_children;
+
+	if (item->layout.y_expand_children)
+		hextra = (item->rect.h - item->layout.h_min) / (float) item->layout.y_expand_children;
 
 	// Figure out what to do based on what type of layout this is. We
 	// do the loop (and thereby copy the code) into each branch to
