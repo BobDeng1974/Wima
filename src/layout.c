@@ -76,6 +76,13 @@ static bool wima_layout_valid(WimaLayout layout, bool checkMax);
 #endif
 
 /**
+ * A function to adjust a dimension.
+ * @param result	The result.
+ * @param size		The starting size.
+ */
+typedef void (*WimaLayoutAdjustFunc)(WimaSizef*, WimaSizef*);
+
+/**
  * Calculates the size of a row. Negative numbers in the size mean
  * that the absolute value is a minimum, but it can grow. Positive
  * numbers mean that it is a hard limit.
@@ -94,6 +101,32 @@ static WimaSizef wima_layout_size_row(ynonnull WimaItem* item, ynonnull WimaAr* 
  * @return		The size of the item.
  */
 static WimaSizef wima_layout_size_col(ynonnull WimaItem* item, ynonnull WimaAr* area) yinline;
+
+/**
+ * Calculates the size of a row or column. Negative numbers in the
+ * size mean that the absolute value is a minimum, but it can grow.
+ * Positive numbers mean that it is a hard limit.
+ * @param item		The item to calculate the size for.
+ * @param area		The area of the item. This is an optimization.
+ * @param adjust	The adjustment function.
+ * @return			The size of the item.
+ */
+static WimaSizef wima_layout_size_rowcol(ynonnull WimaItem* item, ynonnull WimaAr* area,
+                                         ynonnull WimaLayoutAdjustFunc adjust);
+
+/**
+ * Adjusts for a row.
+ * @param result	The result.
+ * @param size		The starting size.
+ */
+static void wima_layout_row_adjust(WimaSizef* result, WimaSizef* size);
+
+/**
+ * Adjusts for a column.
+ * @param result	The result.
+ * @param size		The starting size.
+ */
+static void wima_layout_col_adjust(WimaSizef* result, WimaSizef* size);
 
 /**
  * Calculates the size of a split. Negative numbers in the size mean
@@ -706,60 +739,15 @@ static void wima_layout_setChildren(WimaLayout parent, WimaAr* area, uint32_t id
 
 static WimaSizef wima_layout_size_row(WimaItem* item, WimaAr* area)
 {
-	WimaSizef result;
-	WimaSizef size;
-
-	// Fill with initial data.
-	result.w = 0.0f;
-	result.h = 0.0f;
-
-	// Cache these.
-	WimaWindow window = item->info.layout.window;
-	WimaAreaNode node = item->info.layout.area;
-
-	// Get the child.
-	uint16_t child = item->layout.firstKid;
-
-	// We need to clear these.
-	item->layout.x_expand_children = 0;
-	item->layout.y_expand_children = 0;
-
-	// Loop over all children...
-	while (child != WIMA_LAYOUT_INVALID)
-	{
-		// Get the item.
-		WimaItem* chItem = wima_item_ptr(window, node, child);
-
-		// Calculate the size.
-		if (WIMA_ITEM_IS_LAYOUT(chItem))
-			size = wima_layout_size(chItem, area);
-		else
-			size = wima_widget_size(chItem);
-
-		// Add to the number of expandables.
-		item->layout.x_expand_children += size.w < 0 ? 1 : 0;
-		item->layout.y_expand_children += size.h < 0 ? 1 : 0;
-
-		// Set the result.
-		result.w += fabsf(size.w);
-		result.h = wima_fmaxf(result.h, fabsf(size.h));
-
-		// Set the values for the next iteration of the loop.
-		child = chItem->nextSibling;
-	}
-
-	// Mark the layout as expandable if it has expandable children.
-	result.w = item->layout.x_expand_children ? -result.w : result.w;
-	result.h = item->layout.y_expand_children ? -result.h : result.h;
-
-	// We want to store this for later.
-	item->layout.w_min = result.w;
-	item->layout.h_min = result.h;
-
-	return result;
+	return wima_layout_size_rowcol(item, area, wima_layout_row_adjust);
 }
 
 static WimaSizef wima_layout_size_col(WimaItem* item, WimaAr* area)
+{
+	return wima_layout_size_rowcol(item, area, wima_layout_col_adjust);
+}
+
+static WimaSizef wima_layout_size_rowcol(WimaItem* item, WimaAr* area, WimaLayoutAdjustFunc adjust)
 {
 	WimaSizef result;
 	WimaSizef size;
@@ -796,8 +784,7 @@ static WimaSizef wima_layout_size_col(WimaItem* item, WimaAr* area)
 		item->layout.y_expand_children += size.h < 0 ? 1 : 0;
 
 		// Set the result.
-		result.w = wima_fmaxf(result.w, fabsf(size.w));
-		result.h += fabsf(size.h);
+		adjust(&result, &size);
 
 		// Set the values for the next iteration of the loop.
 		child = chItem->nextSibling;
@@ -812,6 +799,18 @@ static WimaSizef wima_layout_size_col(WimaItem* item, WimaAr* area)
 	item->layout.h_min = result.h;
 
 	return result;
+}
+
+static void wima_layout_row_adjust(WimaSizef* result, WimaSizef* size)
+{
+	result->w += fabsf(size->w);
+	result->h = wima_fmaxf(result->h, fabsf(size->h));
+}
+
+static void wima_layout_col_adjust(WimaSizef* result, WimaSizef* size)
+{
+	result->w = wima_fmaxf(result->w, fabsf(size->w));
+	result->h += fabsf(size->h);
 }
 
 static WimaSizef wima_layout_size_split(WimaItem* item, WimaAr* area)
