@@ -530,14 +530,10 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split)
 	wlh.region = parent.region;
 	wlh.window = parent.window;
 
-	// If the parent is not valid, we don't have to do
-	// this next part because it means that we are doing
-	// the root, which doesn't need this next stuff.
-	if (yunlikely(parent.layout != WIMA_LAYOUT_INVALID))
-	{
-		// Set all the children.
-		wima_layout_setChildren(parent, area, idx);
-	}
+	// If the parent is not valid, we don't have to set children
+	// in the parentbecause it means that we are doing the root,
+	// which doesn't doesn't have a parent to set.
+	if (yunlikely(parent.layout != WIMA_LAYOUT_INVALID)) wima_layout_setChildren(parent, area, idx);
 
 	// Get the pointer to the new item.
 	WimaItem* playout = area->area.ctx.items + idx;
