@@ -155,7 +155,8 @@ WimaItem* wima_layout_ptr(WimaLayout wlh) yinline yretnonnull;
 WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split);
 
 /**
- * Calculates the size of the layout represented by @a item.
+ * Calculates the size of the layout represented by @a item and
+ * stores it in the field @a min of @a item.
  * @param item	The layout whose size will be calculated.
  * @param area	The area that @a item is in. For optimization.
  * @return		The size of the layout that @a item represents.

@@ -301,6 +301,9 @@ typedef struct WimaWin
 	/// that storing it is a good idea for speed.
 	WimaSizeS winsize;
 
+	/// The min size of the window.
+	WimaSizeS minsize;
+
 	/// The pixel ratio of the window.
 	float pixelRatio;
 
@@ -340,6 +343,9 @@ typedef struct WimaWin
 	/// relative to the cursor every time, making
 	/// it easy to click items that are used a lot.
 	WimaVecS menuOffset;
+
+	/// Current workspace.
+	uint8_t wksp;
 
 	/// The user pointer for the window.
 	void* user;

@@ -158,6 +158,9 @@ typedef struct WimaItem
 	/// Index of next sibling with same parent.
 	uint16_t nextSibling;
 
+	/// The minimum size.
+	WimaSizef min;
+
 	/// The item's rectangle.
 	WimaRectf rect;
 
@@ -185,11 +188,11 @@ typedef struct WimaItem
 
 			/// The number of children that can expand
 			/// in the x direction.
-			int x_expand_children;
+			uint16_t x_expand_children;
 
 			/// The number of children that can expand
 			/// in the y direction.
-			int y_expand_children;
+			uint16_t y_expand_children;
 
 		} layout;
 

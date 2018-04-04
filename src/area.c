@@ -253,10 +253,11 @@ static void wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, 
  * Recursive function to layout a tree of areas.
  * @param areas	The tree to layout.
  * @param node	The current node being laid out.
+ * @param min	A pointer to store the min size in.
  * @return		WIMA_STATUS_SUCCESS on success,
  *				an error code otherwise.
  */
-static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node);
+static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef* min);
 
 /**
  * Recursive function to determine which area has the mouse.
@@ -402,11 +403,12 @@ WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node)
 	return dtree_node(WIMA_WIN_AREAS(win), node);
 }
 
-void wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect)
+WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect, WimaSizef* min)
 {
 	wima_assert_init;
 	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
 	wima_area_node_init(win, areas, dtree_root(), rect);
+	return wima_area_node_layout(areas, dtree_root(), min);
 }
 
 static void wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect)
@@ -880,14 +882,14 @@ WimaStatus wima_area_layoutHeader(WimaLayout root)
 	return status;
 }
 
-WimaStatus wima_area_layout(DynaTree areas)
+WimaStatus wima_area_layout(DynaTree areas, WimaSizef* min)
 {
 	wima_assert_init;
 	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
-	return wima_area_node_layout(areas, dtree_root());
+	return wima_area_node_layout(areas, dtree_root(), min);
 }
 
-static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node)
+static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef* min)
 {
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
@@ -899,12 +901,18 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node)
 	// If this is a parent node...
 	if (WIMA_AREA_IS_PARENT(area))
 	{
+		WimaSizef lmin, rmin;
+
 		// Layout the left child and check for error.
-		status = wima_area_node_layout(areas, dtree_left(node));
+		status = wima_area_node_layout(areas, dtree_left(node), &lmin);
 		if (yerror(status)) return status;
 
 		// Layout the right child and return the error.
-		status = wima_area_node_layout(areas, dtree_right(node));
+		status = wima_area_node_layout(areas, dtree_right(node), &rmin);
+
+		// Store the minimum size.
+		min->w = lmin.w + rmin.w + area->parent.vertical;
+		min->h = lmin.h + rmin.h + !area->parent.vertical;
 	}
 	else
 	{
@@ -943,6 +951,10 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node)
 		rect.w = (float) area->rect.w;
 		rect.h = (float) area->rect.h;
 
+		WimaSizef prev;
+
+		prev.w = prev.h = min->w = min->h = 0;
+
 		// Loop over regions.
 		for (uint8_t i = 0; i < numRegions; ++i)
 		{
@@ -979,13 +991,21 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node)
 			WimaSizef size = wima_layout_size(item, area);
 
 			WimaRectf regRect;
+			WimaSizef temp;
+			float width, height;
+
+			width = fabsf(size.w);
+			height = fabsf(size.h);
+
+			// Set the minimum size.
+			temp.w = prev.w + width + WIMA_REG_BORDER2;
+			temp.h = prev.h + height + WIMA_REG_BORDER2;
+			min->w = temp.w > min->w ? temp.w : min->w;
+			min->h = temp.w > min->h ? temp.h : min->h;
 
 			// If the region is vertical...
 			if (WIMA_REG_IS_VERTICAL(reg))
 			{
-				// Cache this.
-				float width = fabsf(size.w);
-
 				// We can set these without worrying.
 				regRect.y = rect.y + WIMA_REG_BORDER;
 				regRect.h = rect.h - WIMA_REG_BORDER2;
@@ -997,14 +1017,14 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node)
 				// Adjust the rectangle.
 				rect.x += width + WIMA_REG_BORDER2;
 				rect.w -= width + WIMA_REG_BORDER2;
+
+				// Set the previous.
+				prev.w += temp.w;
 			}
 
 			// If the region is horizontal...
 			else
 			{
-				// Cache this.
-				float height = fabsf(size.h);
-
 				// We can set these without worrying.
 				regRect.x = rect.x + WIMA_REG_BORDER;
 				regRect.w = rect.w - WIMA_REG_BORDER2;
@@ -1016,6 +1036,9 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node)
 				// Adjust the rectangle.
 				rect.y += height + WIMA_REG_BORDER2;
 				rect.h -= height + WIMA_REG_BORDER2;
+
+				// Set the previous.
+				prev.h += temp.h;
 			}
 
 			// Set the rectangle.

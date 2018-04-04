@@ -560,32 +560,30 @@ WimaSizef wima_layout_size(WimaItem* item, WimaAr* area)
 {
 	wima_assert_init;
 
-	WimaSizef size;
-
 	switch (item->layout.flags & WIMA_LAYOUT_TYPE_MASK)
 	{
 		case WIMA_LAYOUT_ROW:
 		{
-			size = wima_layout_size_row(item, area);
+			item->min = wima_layout_size_row(item, area);
 			break;
 		}
 
 		case WIMA_LAYOUT_COL:
 		{
-			size = wima_layout_size_col(item, area);
+			item->min = wima_layout_size_col(item, area);
 			break;
 		}
 
 		case WIMA_LAYOUT_SPLIT:
 		{
-			size = wima_layout_size_split(item, area);
+			item->min = wima_layout_size_split(item, area);
 			break;
 		}
 
 		case WIMA_LAYOUT_SEP:
 		{
-			size.w = -WIMA_ITEM_SEP_DIM;
-			size.h = -WIMA_ITEM_SEP_DIM;
+			item->min.w = -WIMA_ITEM_SEP_DIM;
+			item->min.h = -WIMA_ITEM_SEP_DIM;
 			break;
 		}
 
@@ -596,10 +594,7 @@ WimaSizef wima_layout_size(WimaItem* item, WimaAr* area)
 		}
 	}
 
-	item->rect.w = size.w;
-	item->rect.h = size.h;
-
-	return size;
+	return item->min;
 }
 
 WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
@@ -612,11 +607,8 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
-	// Get the number of children. This is done
-	// bitwise to prevent sign extending.
-	int counti = 0;
-	counti |= item->layout.kidCount;
-	float count = (float) counti;
+	// Get the number of children.
+	float count = (float) item->layout.kidCount;
 
 	wassert(!(item->layout.flags & WIMA_LAYOUT_SPLIT) || count == 2, WIMA_ASSERT_LAYOUT_SPLIT_MAX);
 

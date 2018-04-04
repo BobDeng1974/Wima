@@ -224,9 +224,12 @@ WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node) yretnonnull;
  * @param win	The window the tree will be attached to.
  * @param areas	The tree to initialize.
  * @param rect	The rectangle for the entire window.
+ * @param min	A pointer to store the min size in.
+ * @return		DYNA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
  * @pre			@a areas must not be NULL.
  */
-void wima_area_init(WimaWindow win, ynonnull DynaTree areas, WimaRect rect);
+WimaStatus wima_area_init(WimaWindow win, ynonnull DynaTree areas, WimaRect rect, WimaSizef* min);
 
 /**
  * Copies an area from @a src to @a dest. This is a DynaCopyFunc.
@@ -319,11 +322,12 @@ WimaStatus wima_area_layoutHeader(WimaLayout root);
 /**
  * Lays out all areas.
  * @param areas	The tree of areas.
+ * @param min	A pointer to store the min size in.
  * @return		WIMA_STATUS_SUCCESS on success, a
  *				user-supplied error code otherwise.
  * @pre			@a areas must not be NULL.
  */
-WimaStatus wima_area_layout(ynonnull DynaTree areas);
+WimaStatus wima_area_layout(ynonnull DynaTree areas, WimaSizef* min);
 
 /**
  * Finds the area that the mouse is currently inside.

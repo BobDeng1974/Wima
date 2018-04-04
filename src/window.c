@@ -85,6 +85,14 @@
 static void wima_window_clearContext(WimaWinCtx* ctx);
 
 /**
+ * Sets the minimum size for the window if it's
+ * greater than the current minimum.
+ * @param win	The window whose min size will be set.
+ * @param size	The size to set.
+ */
+static void wima_window_setMinSize(WimaWin* win, WimaSizef* size);
+
+/**
  * @}
  */
 
@@ -247,7 +255,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	if (yerror(dvec_copy(window->workspaces, wg.workspaces))) goto wima_win_create_malloc_err;
 
 	// Create the sizes vector.
-	window->workspaceSizes = dvec_create(cap, NULL, NULL, sizeof(WimaSize));
+	window->workspaceSizes = dvec_create(cap, NULL, NULL, sizeof(WimaSizef));
 
 	// Check for error.
 	if (yerror(!window->workspaceSizes)) goto wima_win_create_malloc_err;
@@ -256,6 +264,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	window->treeStackIdx = 0;
 
 	// Set the current tree and the stack.
+	window->wksp = wksph;
 	WIMA_WIN_AREAS(window) = dvec_get(window->workspaces, wksph);
 
 	WimaRect rect;
@@ -266,18 +275,28 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	rect.w = window->fbsize.w;
 	rect.h = window->fbsize.h;
 
+	// Clear the context.
+	wima_window_clearContext(&window->ctx);
+
 	// Cache this.
 	uint8_t wkspLen = dvec_len(wg.workspaces);
 
 	// Loop through all workspaces.
 	for (uint8_t i = 0; i < wkspLen; ++i)
 	{
-		// Initialize the areas.
-		wima_area_init(idx, dvec_get(window->workspaces, i), rect);
-	}
+		WimaSizef min;
 
-	// Clear the context.
-	wima_window_clearContext(&window->ctx);
+		// Initialize the areas.
+		status = wima_area_init(idx, dvec_get(window->workspaces, i), rect, &min);
+		if (status) goto wima_win_create_err;
+
+		// Set the min size.
+		wima_window_setMinSize(window, &min);
+
+		// Store the min size.
+		DynaStatus dstatus = dvec_push(window->workspaceSizes, &min);
+		if (dstatus) goto wima_win_create_malloc_err;
+	}
 
 	// Set the window as dirty with layout.
 	wima_window_setDirty(window, true);
@@ -963,11 +982,9 @@ void wima_window_setWorkspace(WimaWindow wwh, WimaWorkspace wwksp)
 
 	wassert(wwksp < dvec_len(win->workspaces), WIMA_ASSERT_WIN_WKSP_INVALID);
 
-	// Get the workspace.
-	WimaWksp wksp = dvec_get(win->workspaces, wwksp);
-
-	// Switch the current tree.
-	WIMA_WIN_AREAS(win) = wksp;
+	// Set the workspace.
+	win->wksp = wwksp;
+	WIMA_WIN_AREAS(win) = dvec_get(win->workspaces, wwksp);
 
 	// Set the window as dirty with layout.
 	wima_window_setDirty(win, true);
@@ -1723,9 +1740,14 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 	// Check for layout.
 	if (WIMA_WIN_NEEDS_LAYOUT(win))
 	{
+		WimaSizef* min = dvec_get(win->workspaceSizes, win->wksp);
+
 		// Layout all areas and check for error.
-		status = wima_area_layout(WIMA_WIN_AREAS(win));
+		status = wima_area_layout(WIMA_WIN_AREAS(win), min);
 		if (yerror(status)) return status;
+
+		// Set the minimum size.
+		wima_window_setMinSize(win, min);
 
 		// Make sure we draw after this.
 		win->flags |= WIMA_WIN_DIRTY;
@@ -2495,6 +2517,24 @@ static void wima_window_clearContext(WimaWinCtx* ctx)
 	// Clear items.
 	memset(&ctx->focus, -1, sizeof(WimaWidget));
 	memset(&ctx->hover, -1, sizeof(WimaWidget));
+}
+
+static void wima_window_setMinSize(WimaWin* win, WimaSizef* size)
+{
+	wassert(win, WIMA_ASSERT_WIN);
+
+	WimaSizeS temp;
+
+	temp.w = ceil(size->w);
+	temp.h = ceil(size->h);
+
+	if (temp.w > win->minsize.w || temp.h > win->minsize.h)
+	{
+		win->minsize.w = temp.w > win->minsize.w ? temp.w : win->minsize.w;
+		win->minsize.h = temp.h > win->minsize.h ? temp.h : win->minsize.h;
+
+		glfwSetWindowSizeLimits(win->window, win->minsize.w, win->minsize.h, GLFW_DONT_CARE, GLFW_DONT_CARE);
+	}
 }
 
 bool wima_window_valid(WimaWindow wwh)

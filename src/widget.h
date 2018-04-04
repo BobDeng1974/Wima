@@ -119,7 +119,8 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt) yretnonnull;
 void wima_widget_destroy(ynonnull DynaPool pool, ynonnull void* key);
 
 /**
- * Returns the size of the widget that @a item points to.
+ * Returns the size of the widget that @a item points to and
+ * stores it in the field @a min of @a item.
  * @param item	The widget to calculate the size of.
  * @return		The size of the widget at @a item.
  */
