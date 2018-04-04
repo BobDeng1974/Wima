@@ -69,10 +69,9 @@
 /**
  * Returns true if @a layout is valid, false otherwise.
  * @param layout	The layout to test.
- * @param checkMax	true if max should be checked, false otherwise.
  * @return			true if @a layout is valid, false otherwise.
  */
-static bool wima_layout_valid(WimaLayout layout, bool checkMax);
+static bool wima_layout_valid(WimaLayout layout);
 #endif
 
 /**
@@ -162,17 +161,7 @@ static void wima_layout_setChildren(WimaLayout parent, ynonnull WimaAr* area, ui
 
 bool wima_layout_inOverlay(WimaLayout layout)
 {
-#ifdef __YASSERT__
-
-	wassert(wima_window_valid(layout.window), WIMA_ASSERT_WIN);
-
-	// Get the window.
-	WimaWin* win = dvec_get(wg.windows, layout.window);
-
-	wassert(layout.layout < dvec_len(win->overlayItems), WIMA_ASSERT_LAYOUT);
-
-#endif
-
+	wassert(wima_layout_valid(layout), WIMA_ASSERT_LAYOUT);
 	return layout.region == WIMA_REGION_INVALID_IDX && layout.area == WIMA_AREA_INVALID;
 }
 
@@ -234,15 +223,7 @@ uint16_t wima_layout_clearBoxFlag(uint16_t flags)
 
 void wima_layout_setEnabled(WimaLayout wlh, bool enabled)
 {
-	wima_assert_init;
-
-	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
-
-#ifdef __YASSERT__
-	WimaWin* win = dvec_get(wg.windows, wlh.window);
-	wassert(wlh.area < dtree_exists(WIMA_WIN_AREAS(win), wlh.area), WIMA_ASSERT_AREA);
-	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
-#endif
+	wassert(wima_layout_valid(wlh), WIMA_ASSERT_LAYOUT);
 
 	// Get a pointer to the layout.
 	WimaItem* layout = wima_layout_ptr(wlh);
@@ -258,15 +239,7 @@ void wima_layout_setEnabled(WimaLayout wlh, bool enabled)
 
 bool wima_layout_enabled(WimaLayout wlh)
 {
-	wima_assert_init;
-
-	wassert(wima_window_valid(wlh.window), WIMA_ASSERT_WIN);
-
-#ifdef __YASSERT__
-	WimaWin* win = dvec_get(wg.windows, wlh.window);
-	wassert(wlh.area < dtree_exists(WIMA_WIN_AREAS(win), wlh.area), WIMA_ASSERT_AREA);
-	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
-#endif
+	wassert(wima_layout_valid(wlh), WIMA_ASSERT_LAYOUT);
 
 	// Get a pointer to the layout.
 	WimaItem* layout = wima_layout_ptr(wlh);
@@ -278,17 +251,7 @@ bool wima_layout_enabled(WimaLayout wlh)
 
 void wima_layout_separator(WimaLayout parent)
 {
-	wima_assert_init;
-
-	wassert(wima_window_valid(parent.window), WIMA_ASSERT_WIN);
-
-#ifdef __YASSERT__
-	WimaWin* win = dvec_get(wg.windows, parent.window);
-	wassert(dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
-	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
-#endif
-
-	wassert(wima_layout_valid(parent, true), WIMA_ASSERT_LAYOUT);
+	wassert(wima_layout_valid(parent), WIMA_ASSERT_LAYOUT);
 
 	// Create the layout, but don't return it.
 	wima_layout_new(parent, WIMA_LAYOUT_SEP, 0.0f);
@@ -296,17 +259,7 @@ void wima_layout_separator(WimaLayout parent)
 
 WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags)
 {
-	wima_assert_init;
-
-	wassert(wima_window_valid(parent.window), WIMA_ASSERT_WIN);
-
-#ifdef __YASSERT__
-	WimaWin* win = dvec_get(wg.windows, parent.window);
-	wassert(dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
-	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
-#endif
-
-	wassert(wima_layout_valid(parent, true), WIMA_ASSERT_LAYOUT);
+	wassert(wima_layout_valid(parent), WIMA_ASSERT_LAYOUT);
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_ROW;
@@ -317,17 +270,7 @@ WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags)
 
 WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags)
 {
-	wima_assert_init;
-
-	wassert(wima_window_valid(parent.window), WIMA_ASSERT_WIN);
-
-#ifdef __YASSERT__
-	WimaWin* win = dvec_get(wg.windows, parent.window);
-	wassert(dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
-	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
-#endif
-
-	wassert(wima_layout_valid(parent, true), WIMA_ASSERT_LAYOUT);
+	wassert(wima_layout_valid(parent), WIMA_ASSERT_LAYOUT);
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_COL;
@@ -338,17 +281,7 @@ WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags)
 
 WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split)
 {
-	wima_assert_init;
-
-	wassert(wima_window_valid(parent.window), WIMA_ASSERT_WIN);
-
-#ifdef __YASSERT__
-	WimaWin* win = dvec_get(wg.windows, parent.window);
-	wassert(dtree_exists(WIMA_WIN_AREAS(win), parent.area), WIMA_ASSERT_AREA);
-	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
-#endif
-
-	wassert(wima_layout_valid(parent, true), WIMA_ASSERT_LAYOUT);
+	wassert(wima_layout_valid(parent), WIMA_ASSERT_LAYOUT);
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_SPLIT;
@@ -371,8 +304,7 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 	wima_assert_init;
 
 	wassert(wima_prop_valid(prop), WIMA_ASSERT_PROP);
-
-	wassert(wima_layout_valid(parent, true), WIMA_ASSERT_LAYOUT);
+	wassert(wima_layout_valid(parent), WIMA_ASSERT_LAYOUT);
 
 	// Get the area.
 	WimaAr* area = wima_area_ptr(parent.window, parent.area);
@@ -673,8 +605,10 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 ////////////////////////////////////////////////////////////////////////////////
 
 #ifdef __YASSERT__
-static bool wima_layout_valid(WimaLayout layout, bool checkMax)
+static bool wima_layout_valid(WimaLayout layout)
 {
+	wima_assert_init;
+
 	wassert(wima_window_valid(layout.window), WIMA_ASSERT_WIN);
 
 	// Get the window pointer.
@@ -688,7 +622,7 @@ static bool wima_layout_valid(WimaLayout layout, bool checkMax)
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	// Check the max, if necessary.
-	if (checkMax) wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_MAX);
+	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_MAX);
 
 	// Must run between uiBeginLayout() and uiEndLayout().
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
