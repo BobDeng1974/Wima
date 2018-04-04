@@ -275,11 +275,13 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	rect.w = window->fbsize.w;
 	rect.h = window->fbsize.h;
 
-	// Clear the context.
-	wima_window_clearContext(&window->ctx);
-
 	// Cache this.
 	uint8_t wkspLen = dvec_len(wg.workspaces);
+
+	// Set layout stage. This is for the following, so it doesn't assert out.
+#ifdef __YASSERT__
+	window->ctx.stage = WIMA_UI_STAGE_LAYOUT;
+#endif
 
 	// Loop through all workspaces.
 	for (uint8_t i = 0; i < wkspLen; ++i)
@@ -297,6 +299,9 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 		DynaStatus dstatus = dvec_push(window->workspaceSizes, &min);
 		if (dstatus) goto wima_win_create_malloc_err;
 	}
+
+	// Clear the context.
+	wima_window_clearContext(&window->ctx);
 
 	// Set the window as dirty with layout.
 	wima_window_setDirty(window, true);
