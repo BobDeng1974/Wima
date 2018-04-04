@@ -774,8 +774,8 @@ static WimaSizef wima_layout_size_rowcol(WimaItem* item, WimaAr* area, WimaLayou
 			size = wima_widget_size(chItem);
 
 		// Add to the number of expandables.
-		item->layout.x_expand_children += size.w < 0 ? 1 : 0;
-		item->layout.y_expand_children += size.h < 0 ? 1 : 0;
+		item->layout.x_expand_children += size.w < 0;
+		item->layout.y_expand_children += size.h < 0;
 
 		// Set the result.
 		adjust(&result, &size);
