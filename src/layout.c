@@ -560,29 +560,33 @@ WimaSizef wima_layout_size(WimaItem* item, WimaAr* area)
 {
 	wima_assert_init;
 
+	WimaSizef size;
+
 	switch (item->layout.flags & WIMA_LAYOUT_TYPE_MASK)
 	{
 		case WIMA_LAYOUT_ROW:
 		{
-			return wima_layout_size_row(item, area);
+			size = wima_layout_size_row(item, area);
+			break;
 		}
 
 		case WIMA_LAYOUT_COL:
 		{
-			return wima_layout_size_col(item, area);
+			size = wima_layout_size_col(item, area);
+			break;
 		}
 
 		case WIMA_LAYOUT_SPLIT:
 		{
-			return wima_layout_size_split(item, area);
+			size = wima_layout_size_split(item, area);
+			break;
 		}
 
 		case WIMA_LAYOUT_SEP:
 		{
-			WimaSizef size;
 			size.w = -WIMA_ITEM_SEP_DIM;
 			size.h = -WIMA_ITEM_SEP_DIM;
-			return size;
+			break;
 		}
 
 		default:
@@ -591,6 +595,11 @@ WimaSizef wima_layout_size(WimaItem* item, WimaAr* area)
 			abort();
 		}
 	}
+
+	item->rect.w = size.w;
+	item->rect.h = size.h;
+
+	return size;
 }
 
 WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)

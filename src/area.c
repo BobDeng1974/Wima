@@ -1742,9 +1742,10 @@ static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertic
 	float x4 = x0 + s4;
 
 	// An array of points.
-	float points[][2] = { { x0, y0 },      { x1, y0 },      { x1, y1 },      { x0, y1 },
-	                      { x0, yc + s8 }, { x4, yc + s8 }, { x4, yc + s4 }, { x0 + s2, yc },
-	                      { x4, yc - s4 }, { x4, yc - s8 }, { x0, yc - s8 } };
+	float points[][2] = {
+		{ x0, y0 },      { x1, y0 },      { x1, y1 },      { x0, y1 },      { x0, yc + s8 }, { x4, yc + s8 },
+		{ x4, yc + s4 }, { x0 + s2, yc }, { x4, yc - s4 }, { x4, yc - s8 }, { x0, yc - s8 },
+	};
 
 	// Calculate the number of points.
 	int count = sizeof(points) / (sizeof(float) * 2);
