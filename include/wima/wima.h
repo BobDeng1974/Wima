@@ -74,7 +74,6 @@ extern "C" {
  */
 typedef enum WimaStatus
 {
-
 	/// Success.
 	WIMA_STATUS_SUCCESS,
 
@@ -332,7 +331,6 @@ typedef struct WimaWidget
  */
 typedef enum WimaWidgetState
 {
-
 	/// The item is inactive.
 	WIMA_WIDGET_DEFAULT = 0,
 
@@ -371,7 +369,6 @@ typedef struct WimaLayout WimaLayout;
  */
 typedef enum WimaMouseBtn
 {
-
 	/// The first mouse button.
 	WIMA_MOUSE_1 = 1 << 0,
 
@@ -412,7 +409,6 @@ typedef enum WimaMouseBtn
  */
 typedef enum WimaKey
 {
-
 	//! @cond Doxygen suppress.
 
 	WIMA_KEY_UNKNOWN = -1,
@@ -560,7 +556,6 @@ typedef enum WimaKey
  */
 typedef enum WimaMods
 {
-
 	/// No modifier.
 	WIMA_MOD_NONE = 0,
 
@@ -583,7 +578,6 @@ typedef enum WimaMods
  */
 typedef enum WimaAction
 {
-
 	/// Key/button was released.
 	WIMA_ACTION_RELEASE = 0,
 
@@ -746,7 +740,6 @@ typedef struct WimaCursor WimaCursor;
  */
 typedef enum WimaCursorType
 {
-
 	/// Standard arrow cursor.
 	WIMA_CURSOR_ARROW = 0,
 
@@ -781,7 +774,6 @@ typedef enum WimaCursorType
  */
 typedef enum WimaCursorMode
 {
-
 	/// Normal cursor.
 	WIMA_CURSOR_NORMAL,
 
@@ -1340,7 +1332,6 @@ WimaOverlay wima_overlay_register(ynonnull const char* const name, WimaIcon icon
  */
 typedef enum WimaWidgetBox
 {
-
 	// Flex direction (bit 0+1).
 
 	/// Left to right.
@@ -1395,7 +1386,6 @@ typedef enum WimaWidgetBox
  */
 typedef enum WimaWidgetLayoutFlags
 {
-
 	// Attachments (bit 5-8):
 	// Fully valid when parent uses UI_LAYOUT model
 	// partially valid when in UI_FLEX model.
