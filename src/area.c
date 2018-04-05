@@ -1266,14 +1266,14 @@ static void wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bo
 	if (vertical)
 	{
 		// If we're moving it left, add to the width, otherwise, subtract.
-		area->rect.w += isLeft ? diff : -diff;
+		area->rect.w += diff * (!isLeft * -2 + 1);
 	}
 
 	// If we're not moving a vertical split...
 	else
 	{
 		// If we're moving it left, add to the width, otherwise, subtract.
-		area->rect.h += isLeft ? diff : -diff;
+		area->rect.h += diff * (!isLeft * -2 + 1);
 	}
 
 	float dim;
