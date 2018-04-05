@@ -559,6 +559,7 @@ bool wima_window_resizable(WimaWindow wwh)
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title)
 {
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+	wassert(title, WIMA_ASSERT_WIN_TITLE);
 
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
