@@ -647,19 +647,6 @@ WimaSize wima_window_size(WimaWindow wwh)
 	return size;
 }
 
-void wima_window_setSizeLimits(WimaWindow wwh, WimaSize min, WimaSize max)
-{
-	// TODO: Make this function not public when constraining for UI space?
-
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
-
-	// Get the window.
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	// Set the size limits.
-	glfwSetWindowSizeLimits(win->window, min.w, min.h, max.w, max.h);
-}
-
 void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator)
 {
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
@@ -669,6 +656,17 @@ void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator)
 
 	// Set the aspect ratio in GLFW.
 	glfwSetWindowAspectRatio(win->window, numerator, denominator);
+}
+
+void wima_window_unsetAspectRatio(WimaWindow wwh)
+{
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	// Unset the aspect ratio in GLFW.
+	glfwSetWindowAspectRatio(win->window, GLFW_DONT_CARE, GLFW_DONT_CARE);
 }
 
 WimaSize wima_window_framebufferSize(WimaWindow wwh)

@@ -2624,23 +2624,21 @@ void wima_window_setSize(WimaWindow wwh, WimaSize size) yinline;
 WimaSize wima_window_size(WimaWindow wwh) yinline;
 
 /**
- * Sets new size limits on the window beyond which
- * it cannot be resized by users.
- * @param wwh	The window to update.
- * @param min	The min size for the window.
- * @param max	The max size for the window.
- * @pre			@a wwh must be a valid WimaWindow.
- */
-void wima_window_setSizeLimits(WimaWindow wwh, WimaSize min, WimaSize max) yinline;
-
-/**
- * Sets the new aspect ratio for the window.
+ * Sets the new aspect ratio for the window. The window
+ * will be locked to that aspect ratio.
  * @param wwh			The window to update.
  * @param numerator		The numerator in the ratio.
  * @param denominator	The denominator in the ratio.
  * @pre					@a wwh must be a valid WimaWindow.
  */
 void wima_window_setAspectRatio(WimaWindow wwh, int numerator, int denominator) yinline;
+
+/**
+ * Unset the aspect ratio for the window. The
+ * window's aspect ratio will be unlocked.
+ * @param wwh	The window to update.
+ */
+void wima_window_unsetAspectRatio(WimaWindow wwh) yinline;
 
 /**
  * Returns the window's current framebuffer size.
