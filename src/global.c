@@ -116,9 +116,9 @@ const char* const wima_assert_msgs[] = {
 	"client asked for mouse drag data, but no mouse buttons are pressed",
 	"window already has an existing overlay",
 	"window does not have an overlay",
-	"client tried to pop too many render contexts off the stack",
-	"client tried to push too many render contexts onto the stack; "
-	"this probably means the client requested too many scrollable layouts",
+	"client tried to pop too many render contexts (scrollable layouts) off the stack",
+	"client tried to push too many render contexts (scrollable layouts) onto the stack",
+	"window title is NULL",
 
 	"tree is not valid",
 	"node is beyond max number of nodes for the given tree",
