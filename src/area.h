@@ -149,6 +149,9 @@ typedef struct WimaAr
 	/// Whether this node is a parent or not.
 	bool isParent;
 
+	/// The area's minimum size.
+	WimaSize minSize;
+
 	/// The area's rectangle.
 	WimaRect rect;
 
