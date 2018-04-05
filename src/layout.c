@@ -496,26 +496,26 @@ WimaSizef wima_layout_size(WimaItem* item, WimaAr* area)
 	{
 		case WIMA_LAYOUT_ROW:
 		{
-			item->min = wima_layout_size_row(item, area);
+			item->minSize = wima_layout_size_row(item, area);
 			break;
 		}
 
 		case WIMA_LAYOUT_COL:
 		{
-			item->min = wima_layout_size_col(item, area);
+			item->minSize = wima_layout_size_col(item, area);
 			break;
 		}
 
 		case WIMA_LAYOUT_SPLIT:
 		{
-			item->min = wima_layout_size_split(item, area);
+			item->minSize = wima_layout_size_split(item, area);
 			break;
 		}
 
 		case WIMA_LAYOUT_SEP:
 		{
-			item->min.w = -WIMA_ITEM_SEP_DIM;
-			item->min.h = -WIMA_ITEM_SEP_DIM;
+			item->minSize.w = -WIMA_ITEM_SEP_DIM;
+			item->minSize.h = -WIMA_ITEM_SEP_DIM;
 			break;
 		}
 
@@ -526,7 +526,7 @@ WimaSizef wima_layout_size(WimaItem* item, WimaAr* area)
 		}
 	}
 
-	return item->min;
+	return item->minSize;
 }
 
 WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)

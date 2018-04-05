@@ -159,7 +159,7 @@ typedef struct WimaItem
 	uint16_t nextSibling;
 
 	/// The minimum size.
-	WimaSizef min;
+	WimaSizef minSize;
 
 	/// The item's rectangle.
 	WimaRectf rect;

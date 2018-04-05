@@ -464,9 +464,9 @@ WimaSizef wima_widget_size(WimaItem* item)
 	}
 
 	// Calculate and set the size.
-	item->min = sizeFunc(item->info.widget, wima_widget_data(item));
+	item->minSize = sizeFunc(item->info.widget, wima_widget_data(item));
 
-	return item->min;
+	return item->minSize;
 }
 
 void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event)
