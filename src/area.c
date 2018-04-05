@@ -285,11 +285,11 @@ static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVec p
  * @param node		The current node.
  * @param diff		The amount the split should be moved,
  *					and direction (negative is left).
- * @param isLeft	true if area whose split is moved is a
+ * @param left		true if area whose split is moved is a
  *					left area, false otherwise.
  * @param vertical	Whether the split was vertical or not.
  */
-static void wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bool isLeft, bool vertical);
+static void wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bool left, bool vertical);
 
 /**
  * A recursive function to determine the limit that a split can be moved.
@@ -1253,7 +1253,7 @@ void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, Wim
 	wima_area_node_resize(areas, node, area->rect, false);
 }
 
-static void wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bool isLeft, bool vertical)
+static void wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bool left, bool vertical)
 {
 	wima_assert_init;
 
@@ -1266,14 +1266,14 @@ static void wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bo
 	if (vertical)
 	{
 		// If we're moving it left, add to the width, otherwise, subtract.
-		area->rect.w += diff * (!isLeft * -2 + 1);
+		area->rect.w += diff * (!left * -2 + 1);
 	}
 
 	// If we're not moving a vertical split...
 	else
 	{
 		// If we're moving it left, add to the width, otherwise, subtract.
-		area->rect.h += diff * (!isLeft * -2 + 1);
+		area->rect.h += diff * (!left * -2 + 1);
 	}
 
 	float dim;
@@ -1288,7 +1288,7 @@ static void wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bo
 		if (!vertical == !area->parent.vertical)
 		{
 			// If we're moving right...
-			if (!isLeft)
+			if (!left)
 			{
 				// Add the difference.
 				area->parent.spliti -= diff;
@@ -1301,17 +1301,17 @@ static void wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bo
 		else
 		{
 			// Get the appropriate child node.
-			child = isLeft ? dtree_left(node) : dtree_right(node);
+			child = left ? dtree_left(node) : dtree_right(node);
 
 			// Move the child's split.
-			wima_area_node_moveSplit(areas, child, diff, isLeft, vertical);
+			wima_area_node_moveSplit(areas, child, diff, left, vertical);
 		}
 
 		// Get the other child.
-		child = isLeft ? dtree_right(node) : dtree_left(node);
+		child = left ? dtree_right(node) : dtree_left(node);
 
 		// Move that child's split.
-		wima_area_node_moveSplit(areas, child, diff, isLeft, vertical);
+		wima_area_node_moveSplit(areas, child, diff, left, vertical);
 	}
 }
 
