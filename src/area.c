@@ -1276,12 +1276,11 @@ static void wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bo
 		area->rect.h += diff * (!left * -2 + 1);
 	}
 
-	float dim;
-
 	// If this is a parent node...
 	if (WIMA_AREA_IS_PARENT(area))
 	{
 		DynaNode child;
+		float dim;
 
 		// If the splits of the moving node and
 		// this node are the same direction...
