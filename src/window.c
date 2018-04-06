@@ -2097,30 +2097,25 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
 			// Set the cursor position.
 			win->ctx.cursorPos = e.pos;
 
-			// Only do something if we have a menu up.
-			if (!WIMA_WIN_HAS_MENU(win))
-			{
-				// If the user is moving the split...
-				if (win->ctx.movingSplit)
-				{
-					// Move the split.
-					wima_area_moveSplit(WIMA_WIN_AREAS(win), win->ctx.split.area, win->ctx.split, win->ctx.cursorPos);
-				}
-
-				// If the widget is valid, send the event.
-				else if (wdgt.widget != WIMA_WIDGET_INVALID)
-				{
-					wima_widget_mousePos(wdgt, e.pos);
-				}
-			}
+			// If the widget is valid, send the event.
+			if (wdgt.widget != WIMA_WIDGET_INVALID) wima_widget_mousePos(wdgt, e.pos);
 
 			break;
 		}
 
 		case WIMA_EVENT_MOUSE_DRAG:
 		{
-			// If the widget is valid, send the event.
-			if (wdgt.widget != WIMA_WIDGET_INVALID) wima_widget_mouseDrag(wdgt, e.drag);
+			// Only do something if we have a menu up.
+			if (!WIMA_WIN_HAS_MENU(win))
+			{
+				// If the user is moving the split, move it.
+				if (win->ctx.movingSplit)
+					wima_area_moveSplit(WIMA_WIN_AREAS(win), win->ctx.split.area, win->ctx.split, e.drag.pos);
+
+				// If the widget is valid, send the event.
+				else if (wdgt.widget != WIMA_WIDGET_INVALID)
+					wima_widget_mouseDrag(wdgt, e.drag);
+			}
 
 			break;
 		}
