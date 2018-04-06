@@ -237,17 +237,19 @@ WimaMenu wima_menu_registerAreaOptions()
 		// If we are not at the separator...
 		if (i != 1)
 		{
+			// Cache this.
+			const char* name = wima_menu_sub_names[i];
+
 			// If we are not at the parent item...
 			if (i != 2)
 			{
 				// Register an operator.
-				subItems[i] =
-				    wima_menu_item_registerOp(wima_menu_sub_names[i], wima_icon_debug(), wima_menu_sub_funcs[i]);
+				subItems[i] = wima_menu_item_registerOp(name, wima_icon_debug(), wima_menu_sub_funcs[i]);
 			}
 			else
 			{
 				// Register the parent.
-				subItems[i] = wima_menu_item_registerParent(wima_menu_sub_names[i], WIMA_ICON_INVALID, subSubMenu);
+				subItems[i] = wima_menu_item_registerParent(name, WIMA_ICON_INVALID, subSubMenu);
 			}
 
 			// Check for error.
