@@ -963,7 +963,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 
 		WimaSizef prev;
 
-		prev.w = prev.h = min->w = min->h = 0;
+		prev.w = prev.h = min->w = min->h = 0.0f;
 
 		// Loop over regions.
 		for (uint8_t i = 0; i < numRegions; ++i)
@@ -1004,6 +1004,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 			WimaSizef temp;
 			float width, height;
 
+			// Cache these.
 			width = fabsf(size.w);
 			height = fabsf(size.h);
 
