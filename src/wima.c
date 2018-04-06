@@ -306,8 +306,8 @@ WimaStatus wima_main()
 	// Main event loop.
 	while (true)
 	{
-#ifndef NDEBUG
-		// This is to time the loop in debug mode.
+#ifdef WIMA_LOOP_TIMER
+		// This is to time the loop.
 		double time = glfwGetTime();
 #endif
 
@@ -331,7 +331,7 @@ WimaStatus wima_main()
 		// Process events.
 		wima_window_processEvents(wwh);
 
-#ifndef NDEBUG
+#ifdef WIMA_LOOP_TIMER
 		// This is to time the loop in debug mode.
 		time = glfwGetTime() - time;
 		printf("Loop: %f ms\n", time * 1000.0f);

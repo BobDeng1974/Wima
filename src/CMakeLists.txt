@@ -105,6 +105,12 @@ create_merge_library(
 )
 target_compile_options("${WIMA_PIC}" BEFORE PUBLIC "-Wall" PUBLIC "-Wextra")
 
+option(WIMA_LOOP_TIMER "Add the loop timer" OFF)
+
+if (WIMA_LOOP_TIMER)
+	target_compile_definitions("${WIMA_PIC}" PUBLIC "WIMA_LOOP_TIMER")
+endif()
+
 merge_libs("${PROJECT_NAME}"
 
 	# Put the needed libraries here.
