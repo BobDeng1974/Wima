@@ -1262,6 +1262,12 @@ void wima_prop_destroy(DynaNVector vec yunused, void** ptrs)
 			break;
 		}
 
+		case WIMA_PROP_PATH:
+		{
+			dstr_free(data->_path.path);
+			break;
+		}
+
 		case WIMA_PROP_ENUM:
 		case WIMA_PROP_COLOR:
 		case WIMA_PROP_PTR:
