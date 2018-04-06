@@ -133,7 +133,6 @@ typedef uint16_t WimaImage;
  */
 typedef enum WimaImageFlags
 {
-
 	/// Generate mipmaps during creation of the image.
 	WIMA_IMAGE_GENERATE_MIPMAPS = 1 << 0,
 
@@ -702,7 +701,6 @@ typedef uint16_t WimaIcon;
  */
 typedef enum WimaIconUnit
 {
-
 	/// Pixels (96 per inch).
 	WIMA_ICON_PX,
 
@@ -766,7 +764,6 @@ WimaIcon wima_icon_donut();
  */
 typedef enum WimaThemeType
 {
-
 	/// The main background color.
 	WIMA_THEME_BG,
 
@@ -816,7 +813,6 @@ typedef enum WimaThemeType
  */
 typedef enum WimaWidgetThemeType
 {
-
 	/// Outline of a widget.
 	WIMA_THEME_WIDGET_OUTLINE,
 
@@ -851,7 +847,6 @@ typedef enum WimaWidgetThemeType
  */
 typedef enum wima_node_theme_type
 {
-
 	/// Node outline.
 	WIMA_THEME_NODE_OUTLINE,
 
@@ -1455,7 +1450,6 @@ void wima_render_resetScissor(ynonnull WimaRenderContext* ctx) yinline;
  */
 typedef enum WimaLineCap
 {
-
 	/// No end cap.
 	WIMA_CAP_BUTT,
 
@@ -1478,7 +1472,6 @@ typedef enum WimaLineCap
  */
 typedef enum WimaLineJoin
 {
-
 	/// Round join cap.
 	WIMA_JOIN_ROUND = WIMA_CAP_ROUND,
 
@@ -1497,7 +1490,6 @@ typedef enum WimaLineJoin
  */
 typedef enum WimaBlend
 {
-
 	/// Corresponds to OpenGL's ZERO.
 	WIMA_BLEND_ZERO = 1 << 0,
 
@@ -1678,7 +1670,6 @@ void wima_style_globalBlendRGBA(ynonnull WimaRenderContext* ctx, WimaBlend srcRG
  */
 typedef enum WimaWinding
 {
-
 	/// Winding for solid shapes
 	WIMA_WINDING_CCW = 1,
 
@@ -1692,7 +1683,6 @@ typedef enum WimaWinding
  */
 typedef enum WimaSolidarity
 {
-
 	/// CCW: Solid.
 	WIMA_SOLID_SOLID = 1,
 
@@ -1878,7 +1868,6 @@ void wima_path_stroke(ynonnull WimaRenderContext* ctx) yinline;
  */
 typedef enum WimaTextAlign
 {
-
 	// Horizontal align
 
 	/// Default, align text horizontally to left.
@@ -2150,7 +2139,6 @@ int wima_text_breakLines(ynonnull WimaRenderContext* ctx, ynonnull const char* s
  */
 typedef enum WimaWidgetCornerFlags
 {
-
 	/// All corners are round.
 	WIMA_CORNER_NONE = 0,
 

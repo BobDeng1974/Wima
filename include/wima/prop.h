@@ -102,7 +102,6 @@ WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, uint32_t dat
  */
 typedef enum WimaPropType
 {
-
 	/// A list property.
 	WIMA_PROP_LIST,
 
