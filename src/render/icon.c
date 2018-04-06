@@ -86,7 +86,7 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi)
 	WimaIconMarker marker;
 	DynaStatus status;
 
-	wassert(path != NULL, WIMA_ASSERT_PATH_NULL);
+	wassert(path, WIMA_ASSERT_PATH_NULL);
 
 	// Get the length.
 	size_t len = dnvec_len(wg.icons);
@@ -123,10 +123,10 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi)
 	bool solid = false;
 
 	// Loop through the shapes in the image.
-	for (NSVGshape* shape = img->shapes; shape != NULL; shape = shape->next)
+	for (NSVGshape* shape = img->shapes; shape; shape = shape->next)
 	{
 		// Loop through the paths in the shape.
-		for (NSVGpath* path = shape->paths; path != NULL; path = path->next)
+		for (NSVGpath* path = shape->paths; path; path = path->next)
 		{
 			// This is the flag to push onto the vector.
 			// We need something that can be addressed.

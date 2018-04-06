@@ -406,7 +406,7 @@ WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node)
 WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect, WimaSizef* min)
 {
 	wima_assert_init;
-	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
+	wassert(areas, WIMA_ASSERT_WIN_AREAS);
 	wima_area_node_init(win, areas, dtree_root(), rect);
 	return wima_area_node_layout(areas, dtree_root(), min);
 }
@@ -467,7 +467,7 @@ DynaStatus wima_area_copy(void* dest, void* src)
 		// well as not set the user pointer.
 		// We also check to see if the user pointer is NULL. It it's
 		// not, that means that we should also not copy.
-		bool allocate = sarea->area.ctx.items == NULL && sarea->area.ctx.widgetData == NULL;
+		bool allocate = !sarea->area.ctx.items && !sarea->area.ctx.widgetData;
 		WimaStatus status = wima_area_setup(darea, allocate);
 
 		// Check for error.
@@ -518,7 +518,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 
 	// Create the pool and check for error.
 	area->area.ctx.widgetData = dpool_create(0.9f, NULL, NULL, NULL, sizeof(uint64_t));
-	if (yerror(area->area.ctx.widgetData == NULL))
+	if (yerror(!area->area.ctx.widgetData))
 	{
 		ysfree(area->area.ctx.items, size);
 		return WIMA_STATUS_MALLOC_ERR;
@@ -545,7 +545,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 			void* ptr = dpool_malloc(area->area.ctx.widgetData, &key, allocSize);
 
 			// Check for error.
-			if (yerror(ptr == NULL)) return WIMA_STATUS_MALLOC_ERR;
+			if (yerror(!ptr)) return WIMA_STATUS_MALLOC_ERR;
 
 			// Create an area handle. I can't use
 			// wima_area() here because it will assert.
@@ -561,7 +561,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 			void* ptr = dpool_calloc(area->area.ctx.widgetData, &key, allocSize);
 
 			// Check for error.
-			if (yerror(ptr == NULL)) status = WIMA_STATUS_MALLOC_ERR;
+			if (yerror(!ptr)) status = WIMA_STATUS_MALLOC_ERR;
 		}
 	}
 
@@ -571,7 +571,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 bool wima_area_valid(DynaTree editors)
 {
 	wima_assert_init;
-	wassert(editors != NULL, WIMA_ASSERT_WIN_AREAS);
+	wassert(editors, WIMA_ASSERT_WIN_AREAS);
 	return wima_area_node_valid(editors, dtree_root());
 }
 
@@ -643,7 +643,7 @@ void wima_area_destroy(DynaTree tree yunused, void* ptr)
 		// If the user didn't allocate anything,
 		// or the use handle is not initialized,
 		// just return.
-		if (data != NULL)
+		if (data)
 		{
 			// Get the editor handle.
 			WimaEditor edtr = area->area.type;
@@ -669,7 +669,7 @@ bool wima_area_key(WimaAr* area, WimaKeyEvent e)
 {
 	wima_assert_init;
 
-	wassert(area != NULL, WIMA_ASSERT_AREA);
+	wassert(area, WIMA_ASSERT_AREA);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	// Get the editor's event handler.
@@ -680,14 +680,14 @@ bool wima_area_key(WimaAr* area, WimaKeyEvent e)
 	WimaArea wah = wima_area(area->window, area->node);
 
 	// If the handler exists, run it.
-	return key_event != NULL && key_event(wah, e);
+	return key_event && key_event(wah, e);
 }
 
 void wima_area_mouseEnter(WimaAr* area, bool enter)
 {
 	wima_assert_init;
 
-	wassert(area != NULL, WIMA_ASSERT_AREA);
+	wassert(area, WIMA_ASSERT_AREA);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	// Get the editor's event handler.
@@ -705,8 +705,8 @@ WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas)
 {
 	wima_assert_init;
 
-	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(areas, WIMA_ASSERT_WIN_AREAS);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	// Get a pointer to the background color prop.
 	WimaPropData* bg = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wg.themes[WIMA_THEME_BG]);
@@ -791,7 +791,7 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 void wima_area_resize(DynaTree areas, WimaRect rect)
 {
 	wima_assert_init;
-	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
+	wassert(areas, WIMA_ASSERT_WIN_AREAS);
 	wima_area_node_resize(areas, dtree_root(), rect, true);
 }
 
@@ -858,7 +858,7 @@ WimaStatus wima_area_layoutHeader(WimaLayout root)
 
 	// Get the header layout function and see if it exists.
 	WimaAreaHeaderLayoutFunc layout = edtr->funcs.layout;
-	if (layout != NULL)
+	if (layout)
 	{
 		// Add a separator.
 		wima_layout_separator(root);
@@ -885,7 +885,7 @@ WimaStatus wima_area_layoutHeader(WimaLayout root)
 WimaStatus wima_area_layout(DynaTree areas, WimaSizef* min)
 {
 	wima_assert_init;
-	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
+	wassert(areas, WIMA_ASSERT_WIN_AREAS);
 	return wima_area_node_layout(areas, dtree_root(), min);
 }
 
@@ -1011,7 +1011,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 			status = reg->layout(root);
 
 			// Check for error.
-			if (yerror(status != WIMA_STATUS_SUCCESS)) return status;
+			if (yerror(status)) return status;
 
 			// Get the item for the root layout.
 			WimaItem* item = wima_layout_ptr(root);
@@ -1078,7 +1078,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 			status = wima_layout_layout(item, area);
 
 			// Check for error.
-			if (yerror(status != WIMA_STATUS_SUCCESS)) break;
+			if (yerror(status)) return status;
 		}
 	}
 
@@ -1096,7 +1096,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 WimaAreaNode wima_area_mouseOver(DynaTree areas, WimaVec cursor)
 {
 	wima_assert_init;
-	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
+	wassert(areas, WIMA_ASSERT_WIN_AREAS);
 
 	DynaNode root = dtree_root();
 
@@ -1158,7 +1158,7 @@ static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, W
 bool wima_area_mouseOnSplit(DynaTree areas, WimaVec pos, WimaAreaSplit* result)
 {
 	wima_assert_init;
-	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
+	wassert(areas, WIMA_ASSERT_WIN_AREAS);
 	return wima_area_node_mouseOnSplit(areas, dtree_root(), pos, result);
 }
 
@@ -1526,12 +1526,12 @@ static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* righ
 {
 	wima_assert_init;
 
-	wassert(area != NULL, WIMA_ASSERT_AREA);
+	wassert(area, WIMA_ASSERT_AREA);
 
 	wassert(WIMA_AREA_IS_PARENT(area), WIMA_ASSERT_AREA_PARENT);
 
-	wassert(left != NULL, WIMA_ASSERT_PTR_NULL);
-	wassert(right != NULL, WIMA_ASSERT_PTR_NULL);
+	wassert(left, WIMA_ASSERT_PTR_NULL);
+	wassert(right, WIMA_ASSERT_PTR_NULL);
 
 	// Get the split location and cache its value plus 1.
 	int split = area->parent.spliti;
@@ -1576,7 +1576,7 @@ static WimaVec wima_area_translatePos(WimaAr* area, WimaVec pos)
 {
 	wima_assert_init;
 
-	wassert(area != NULL, WIMA_ASSERT_AREA);
+	wassert(area, WIMA_ASSERT_AREA);
 
 	WimaVec result;
 
@@ -1591,7 +1591,7 @@ static void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport)
 {
 	wima_assert_init;
 
-	wassert(nvg != NULL, WIMA_ASSERT_WIN_CONTEXT);
+	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
 
 	// Set up NanoVG viewport and scissor.
 	nvgScissor(nvg, viewport.x, viewport.y, viewport.w, viewport.h);
@@ -1602,7 +1602,7 @@ static void wima_area_popViewport(NVGcontext* nvg)
 {
 	wima_assert_init;
 
-	wassert(nvg != NULL, WIMA_ASSERT_WIN_CONTEXT);
+	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
 
 	// Reset NanoVG viewport and scissor.
 	nvgResetTransform(nvg);
@@ -1613,8 +1613,8 @@ static void wima_area_background(WimaAr* area, NVGcontext* nvg, WimaPropData* bg
 {
 	wima_assert_init;
 
-	wassert(nvg != NULL, WIMA_ASSERT_WIN_CONTEXT);
-	wassert(bg != NULL, WIMA_ASSERT_PROP);
+	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
+	wassert(bg, WIMA_ASSERT_PROP);
 
 	// Draw the background.
 	nvgBeginPath(nvg);
@@ -1627,7 +1627,7 @@ static void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg)
 {
 	wima_assert_init;
 
-	wassert(nvg != NULL, WIMA_ASSERT_WIN_CONTEXT);
+	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
@@ -1668,7 +1668,7 @@ static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg)
 {
 	wima_assert_init;
 
-	wassert(nvg != NULL, WIMA_ASSERT_WIN_CONTEXT);
+	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
@@ -1754,7 +1754,7 @@ static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertic
 {
 	wima_assert_init;
 
-	wassert(nvg != NULL, WIMA_ASSERT_WIN_CONTEXT);
+	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 

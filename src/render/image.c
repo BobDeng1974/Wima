@@ -43,7 +43,7 @@
 
 WimaImage wima_image_load(const char* const path, WimaImageFlags flags)
 {
-	wassert(path != NULL, WIMA_ASSERT_PATH_NULL);
+	wassert(path, WIMA_ASSERT_PATH_NULL);
 
 	// Get the length.
 	size_t len = dvec_len(wg.imagePaths);
@@ -91,7 +91,7 @@ WimaImage wima_image_load(const char* const path, WimaImageFlags flags)
 		WimaStatus status = wima_window_addImage(win, path, flags);
 
 		// Check for error.
-		if (yerror(status != WIMA_STATUS_SUCCESS))
+		if (yerror(status))
 		{
 			// Loop through all the windows already done.
 			for (size_t j = 0; j < i; ++j)

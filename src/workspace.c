@@ -108,7 +108,7 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, Wim
 	DynaString s = dstr_create(name);
 
 	// Check for error.
-	if (yerror(s == NULL)) goto wima_wksp_reg_err;
+	if (yerror(!s)) goto wima_wksp_reg_err;
 
 	// Create the property.
 	WimaProperty prop = wima_prop_string_register(buffer, NULL, wima_wksp_desc, icon, s);

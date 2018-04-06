@@ -155,7 +155,7 @@ WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8
 {
 	wima_assert_init;
 
-	wassert(layout != NULL, WIMA_ASSERT_REG_LAYOUT_NULL);
+	wassert(layout, WIMA_ASSERT_REG_LAYOUT_NULL);
 	wassert(itemCap > 0, WIMA_ASSERT_REG_ITEM_CAP);
 
 	WimaReg reg;

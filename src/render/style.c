@@ -47,22 +47,21 @@
 void wima_style_antialias(WimaRenderContext* ctx, bool enabled)
 {
 	wima_assert_init;
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgShapeAntiAlias(ctx->nvg, enabled);
 }
 
 void wima_style_stroke_width(WimaRenderContext* ctx, float size)
 {
 	wima_assert_init;
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgStrokeWidth(ctx->nvg, size);
 }
 
 void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color)
 {
 	wima_assert_init;
-
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	// Translate between Wima and NanoVG.
 	WimaCol c;
@@ -74,8 +73,7 @@ void wima_style_stroke_color(WimaRenderContext* ctx, WimaColor color)
 void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint)
 {
 	wima_assert_init;
-
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	// Translate between Wima and NanoVG.
 	WimaPnt p;
@@ -87,8 +85,7 @@ void wima_style_stroke_paint(WimaRenderContext* ctx, WimaPaint paint)
 void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color)
 {
 	wima_assert_init;
-
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	// Translate between Wima and NanoVG.
 	WimaCol c;
@@ -100,8 +97,7 @@ void wima_style_fill_color(WimaRenderContext* ctx, WimaColor color)
 void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint)
 {
 	wima_assert_init;
-
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	// Translate between Wima and NanoVG.
 	WimaPnt p;
@@ -113,35 +109,35 @@ void wima_style_fill_paint(WimaRenderContext* ctx, WimaPaint paint)
 void wima_style_miter_limit(WimaRenderContext* ctx, float limit)
 {
 	wima_assert_init;
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgMiterLimit(ctx->nvg, limit);
 }
 
 void wima_style_line_cap(WimaRenderContext* ctx, WimaLineCap cap)
 {
 	wima_assert_init;
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgLineCap(ctx->nvg, cap);
 }
 
 void wima_style_line_join(WimaRenderContext* ctx, WimaLineJoin join)
 {
 	wima_assert_init;
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgLineJoin(ctx->nvg, join);
 }
 
 void wima_style_globalAlpha(WimaRenderContext* ctx, float alpha)
 {
 	wima_assert_init;
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgGlobalAlpha(ctx->nvg, alpha);
 }
 
 void wima_style_globalBlendRGB(WimaRenderContext* ctx, WimaBlend src, WimaBlend dst)
 {
 	wima_assert_init;
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgGlobalCompositeBlendFunc(ctx->nvg, src, dst);
 }
 
@@ -149,6 +145,6 @@ void wima_style_globalBlendRGBA(WimaRenderContext* ctx, WimaBlend srcRGB, WimaBl
                                 WimaBlend dstA)
 {
 	wima_assert_init;
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgGlobalCompositeBlendFuncSeparate(ctx->nvg, srcRGB, dstRGB, srcA, dstA);
 }

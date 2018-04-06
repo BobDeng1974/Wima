@@ -100,14 +100,14 @@ WimaStatus wima_vinit(const char* name, WimaAppFuncs funcs, const char* fontPath
 WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath, uint32_t numIcons,
                      const char* iconPaths[])
 {
-	wassert(wg.name == NULL, WIMA_ASSERT_INIT_DONE);
+	wassert(!wg.name, WIMA_ASSERT_INIT_DONE);
 
-	wassert(name != NULL, WIMA_ASSERT_APP_NAME);
+	wassert(name, WIMA_ASSERT_APP_NAME);
 
-	wassert(funcs.error != NULL, WIMA_ASSERT_APP_ERROR_FUNC);
+	wassert(funcs.error, WIMA_ASSERT_APP_ERROR_FUNC);
 
 	// Check that we can access the font and icon sheets.
-	wassert(fontPath != NULL, WIMA_ASSERT_APP_FONT_PATH);
+	wassert(fontPath, WIMA_ASSERT_APP_FONT_PATH);
 	wassert(access(fontPath, F_OK | R_OK) != -1, WIMA_ASSERT_APP_FONT_READ);
 
 	// Check to make sure the icons are good.

@@ -107,7 +107,7 @@ WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, W
 	edtr.name = dstr_create(name);
 
 	// Check for error.
-	if (yerror(edtr.name == NULL)) goto wima_edtr_reg_name_err;
+	if (yerror(!edtr.name)) goto wima_edtr_reg_name_err;
 
 	// Make sure to null the user pointer.
 	edtr.user = NULL;

@@ -121,7 +121,7 @@ WimaAreaNode wima_tree_addRootParent(WimaTree tree, float split, bool vertical)
 {
 	wima_assert_init;
 
-	wassert(tree != NULL, WIMA_ASSERT_TREE);
+	wassert(tree, WIMA_ASSERT_TREE);
 
 	// Get the root.
 	DynaNode root = dtree_root();
@@ -147,7 +147,7 @@ WimaAreaNode wima_tree_addRootEditor(WimaTree tree, WimaEditor wed)
 {
 	wima_assert_init;
 
-	wassert(tree != NULL, WIMA_ASSERT_TREE);
+	wassert(tree, WIMA_ASSERT_TREE);
 
 	// Get the root.
 	DynaNode root = dtree_root();
@@ -173,7 +173,7 @@ WimaAreaNode wima_tree_addLeftParent(WimaTree tree, WimaAreaNode parent, float s
 {
 	wima_assert_init;
 
-	wassert(tree != NULL, WIMA_ASSERT_TREE);
+	wassert(tree, WIMA_ASSERT_TREE);
 
 	wassert(wima_tree_nodeValid(tree, parent), WIMA_ASSERT_TREE_NODE);
 
@@ -202,7 +202,7 @@ WimaAreaNode wima_tree_addLeftEditor(WimaTree tree, WimaAreaNode parent, WimaEdi
 {
 	wima_assert_init;
 
-	wassert(tree != NULL, WIMA_ASSERT_TREE);
+	wassert(tree, WIMA_ASSERT_TREE);
 
 	wassert(wima_tree_nodeValid(tree, parent), WIMA_ASSERT_TREE_NODE);
 
@@ -231,7 +231,7 @@ WimaAreaNode wima_tree_addRightParent(WimaTree tree, WimaAreaNode parent, float 
 {
 	wima_assert_init;
 
-	wassert(tree != NULL, WIMA_ASSERT_TREE);
+	wassert(tree, WIMA_ASSERT_TREE);
 
 	wassert(wima_tree_nodeValid(tree, parent), WIMA_ASSERT_TREE_NODE);
 
@@ -260,7 +260,7 @@ WimaAreaNode wima_tree_addRightEditor(WimaTree tree, WimaAreaNode parent, WimaEd
 {
 	wima_assert_init;
 
-	wassert(tree != NULL, WIMA_ASSERT_TREE);
+	wassert(tree, WIMA_ASSERT_TREE);
 
 	wassert(wima_tree_nodeValid(tree, parent), WIMA_ASSERT_TREE_NODE);
 

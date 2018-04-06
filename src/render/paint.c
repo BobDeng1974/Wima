@@ -51,7 +51,7 @@
 
 WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecF s, WimaVecF e, WimaColor icol, WimaColor ocol)
 {
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	WimaCol ic, oc;
 	WimaPnt p;
@@ -69,7 +69,7 @@ WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecF s, WimaVecF
 WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r, float f, WimaColor icol,
                                  WimaColor ocol)
 {
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	WimaCol ic, oc;
 	WimaPnt p;
@@ -87,7 +87,7 @@ WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r
 WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecF c, float inr, float outr, WimaColor icol,
                                     WimaColor ocol)
 {
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	WimaCol ic, oc;
 	WimaPnt p;
@@ -104,7 +104,7 @@ WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecF c, float in
 
 WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecF o, WimaSizef e, float angle, int image, float alpha)
 {
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
 	// TODO: Write this function.
 

@@ -379,13 +379,13 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 				status = init(wih.widget, bytes);
 
 				// Check for error.
-				if (yerror(status != WIMA_STATUS_SUCCESS)) goto wima_lyt_wdgt_err;
+				if (yerror(status)) goto wima_lyt_wdgt_err;
 
 				// Malloc the data.
 				ptr = dpool_malloc(area->area.ctx.widgetData, &key, allocSize);
 
 				// Check for error.
-				if (yerror(ptr == NULL)) goto wima_lyt_wdgt_malloc_err;
+				if (yerror(!ptr)) goto wima_lyt_wdgt_malloc_err;
 
 				// Copy the memory.
 				memcpy(ptr, bytes, allocSize);

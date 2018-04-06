@@ -570,8 +570,8 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts)
 {
 	wima_assert_init;
 
-	wassert(props != NULL, WIMA_ASSERT_PTR_NULL);
-	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
+	wassert(props, WIMA_ASSERT_PTR_NULL);
+	wassert(starts, WIMA_ASSERT_PTR_NULL);
 
 	// Create the main theme property.
 	WimaProperty main = wima_prop_list_register(themePrefix, themeLabel, themeDesc, WIMA_ICON_INVALID);
@@ -585,7 +585,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts)
 	WimaStatus status = wima_prop_list_push(main, bg);
 
 	// Check for error.
-	if (yerror(status != WIMA_STATUS_SUCCESS))
+	if (yerror(status))
 	{
 		wima_error(status);
 		return WIMA_PROP_INVALID;
@@ -608,7 +608,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts)
 		status = wima_prop_list_push(main, item);
 
 		// Check for error.
-		if (yerror(status != WIMA_STATUS_SUCCESS))
+		if (yerror(status))
 		{
 			wima_error(status);
 			return WIMA_PROP_INVALID;
@@ -623,7 +623,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts)
 	status = wima_prop_list_push(main, node);
 
 	// Check for error.
-	if (yerror(status != WIMA_STATUS_SUCCESS))
+	if (yerror(status))
 	{
 		wima_error(status);
 		return WIMA_PROP_INVALID;
@@ -646,7 +646,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts)
 {
 	wima_assert_init;
 
-	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
+	wassert(starts, WIMA_ASSERT_PTR_NULL);
 
 	// Get the right descriptions.
 	const char* const* descs = wima_theme_descs[type];
@@ -685,7 +685,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts)
 		status = wima_prop_list_push(main, child);
 
 		// Check for error.
-		if (yerror(status != WIMA_STATUS_SUCCESS))
+		if (yerror(status))
 		{
 			wima_error(status);
 			return WIMA_PROP_INVALID;
@@ -716,7 +716,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts)
 	status = wima_prop_list_push(main, child);
 
 	// Check for error.
-	if (yerror(status != WIMA_STATUS_SUCCESS))
+	if (yerror(status))
 	{
 		wima_error(status);
 		return WIMA_PROP_INVALID;
@@ -734,7 +734,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts)
 	status = wima_prop_list_push(main, child);
 
 	// Check for error.
-	if (yerror(status != WIMA_STATUS_SUCCESS))
+	if (yerror(status))
 	{
 		wima_error(status);
 		return WIMA_PROP_INVALID;
@@ -751,7 +751,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts)
 	status = wima_prop_list_push(main, child);
 
 	// Check for error.
-	if (yerror(status != WIMA_STATUS_SUCCESS))
+	if (yerror(status))
 	{
 		wima_error(status);
 		return WIMA_PROP_INVALID;
@@ -764,7 +764,7 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts)
 {
 	wima_assert_init;
 
-	wassert(starts != NULL, WIMA_ASSERT_PTR_NULL);
+	wassert(starts, WIMA_ASSERT_PTR_NULL);
 
 	WimaProperty main = wima_theme_createProp(WIMA_PROP_LIST, widgetParentNames[WIMA_THEME_NODE], NULL,
 	                                          widgetParentLabels[WIMA_THEME_NODE], NULL, 0);
@@ -796,7 +796,7 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts)
 		status = wima_prop_list_push(main, child);
 
 		// Check for error.
-		if (yerror(status != WIMA_STATUS_SUCCESS))
+		if (yerror(status))
 		{
 			wima_error(status);
 			return WIMA_PROP_INVALID;
@@ -836,7 +836,7 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts)
 	status = wima_prop_list_push(main, child);
 
 	// Check for error.
-	if (yerror(status != WIMA_STATUS_SUCCESS))
+	if (yerror(status))
 	{
 		wima_error(status);
 		return WIMA_PROP_INVALID;
@@ -1148,10 +1148,10 @@ void wima_theme_shadeColors(WimaWidgetTheme* theme, WimaWidgetState state, bool 
 {
 	wima_assert_init;
 
-	wassert(shade_top != NULL, WIMA_ASSERT_PTR_NULL);
-	wassert(shade_btm != NULL, WIMA_ASSERT_PTR_NULL);
+	wassert(shade_top, WIMA_ASSERT_PTR_NULL);
+	wassert(shade_btm, WIMA_ASSERT_PTR_NULL);
 
-	wassert(theme != NULL, WIMA_ASSERT_THEME);
+	wassert(theme, WIMA_ASSERT_THEME);
 
 	WimaPropData* t = (WimaPropData*) theme;
 
@@ -1230,7 +1230,7 @@ WimaColor wima_theme_textColor(WimaWidgetTheme* theme, WimaWidgetState state)
 {
 	wima_assert_init;
 
-	wassert(theme != NULL, WIMA_ASSERT_THEME);
+	wassert(theme, WIMA_ASSERT_THEME);
 
 	WimaPropData* t = (WimaPropData*) theme;
 
@@ -1244,7 +1244,7 @@ WimaColor wima_theme_wireColor(WimaNodeTheme* theme, WimaWidgetState state)
 	// TODO: This might need to return two
 	// colors, like wima_theme_shadeColors().
 
-	wassert(theme != NULL, WIMA_ASSERT_THEME);
+	wassert(theme, WIMA_ASSERT_THEME);
 
 	WimaPropData* t = (WimaPropData*) theme;
 
@@ -1277,8 +1277,8 @@ static void wima_theme_createName(char* buffer, const char* name1, const char* n
 {
 	wima_assert_init;
 
-	wassert(buffer != NULL, WIMA_ASSERT_PTR_NULL);
-	wassert(name1 != NULL, WIMA_ASSERT_PTR_NULL);
+	wassert(buffer, WIMA_ASSERT_PTR_NULL);
+	wassert(name1, WIMA_ASSERT_PTR_NULL);
 
 	// Make the buffer have no length.
 	buffer[0] = '\0';
@@ -1296,7 +1296,7 @@ static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, 
 {
 	wima_assert_init;
 
-	wassert(name1 != NULL, WIMA_ASSERT_PTR_NULL);
+	wassert(name1, WIMA_ASSERT_PTR_NULL);
 
 	char buffer[WIMA_THEME_MAX_BUFFER];
 

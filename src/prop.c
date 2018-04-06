@@ -366,7 +366,7 @@ WimaProperty wima_prop_list_register(const char* name, const char* label, const 
 
 	// Create the list and send error if any.
 	DynaVector list = dvec_create(0, NULL, NULL, sizeof(WimaProperty));
-	if (yerror(list == NULL))
+	if (yerror(!list))
 	{
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_PROP_INVALID;
@@ -840,7 +840,7 @@ WimaProperty wima_prop_string_register(const char* name, const char* label, cons
 {
 	wima_assert_init;
 
-	wassert(str != NULL, WIMA_ASSERT_PROP_STR_NULL);
+	wassert(str, WIMA_ASSERT_PROP_STR_NULL);
 
 	WimaPropData prop;
 
@@ -993,7 +993,7 @@ WimaProperty wima_prop_path_register(const char* name, const char* label, const 
 {
 	wima_assert_init;
 
-	wassert(path != NULL, WIMA_ASSERT_PROP_PATH_NULL);
+	wassert(path, WIMA_ASSERT_PROP_PATH_NULL);
 
 	WimaPropData prop;
 
@@ -1002,7 +1002,7 @@ WimaProperty wima_prop_path_register(const char* name, const char* label, const 
 	prop._path.path = dstr_create(path);
 
 	// Check for error.
-	if (yerror(prop._path.path == NULL))
+	if (yerror(!prop._path.path))
 	{
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_PROP_INVALID;
@@ -1075,7 +1075,7 @@ WimaProperty wima_prop_operator_register(const char* name, const char* label, co
 {
 	wima_assert_init;
 
-	wassert(op != NULL, WIMA_ASSERT_PROP_OP_NULL);
+	wassert(op, WIMA_ASSERT_PROP_OP_NULL);
 
 	WimaPropData prop;
 
@@ -1159,8 +1159,8 @@ WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, uint32_t dat
 	size_t len = dvec_len(wg.customProps);
 
 	wassert(len < WIMA_PROP_CUSTOM_MAX, WIMA_ASSERT_PROP_CUSTOM_MAX);
-	wassert(funcs.draw != NULL, WIMA_ASSERT_PROP_CUSTOM_DRAW);
-	wassert(funcs.size != NULL, WIMA_ASSERT_PROP_CUSTOM_SIZE);
+	wassert(funcs.draw, WIMA_ASSERT_PROP_CUSTOM_DRAW);
+	wassert(funcs.size, WIMA_ASSERT_PROP_CUSTOM_SIZE);
 
 	// Set the flags.
 	uint32_t flags = 0;
@@ -1314,7 +1314,7 @@ bool wima_prop_valid(WimaProperty wph)
 static WimaProperty wima_prop_register(const char* name, const char* label, const char* desc, WimaIcon icon,
                                        WimaPropType type, const WimaPropData* data)
 {
-	wassert(name != NULL, WIMA_ASSERT_PROP_NAME);
+	wassert(name, WIMA_ASSERT_PROP_NAME);
 
 	// Cache this.
 	size_t slen = strlen(name);

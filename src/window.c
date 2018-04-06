@@ -240,7 +240,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 	// Create an items vector and check for error.
 	window->overlayItems = dvec_create(0, NULL, NULL, sizeof(WimaItem));
-	if (yerror(window->overlayItems == NULL)) goto wima_win_create_malloc_err;
+	if (yerror(!window->overlayItems)) goto wima_win_create_malloc_err;
 
 	// Cache this.
 	size_t cap = dvec_cap(wg.workspaces);
@@ -353,7 +353,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 			status = wima_window_addImage(window, dstr_str(path), flags[i]);
 
 			// Check for error and handle it.
-			if (yerror(status != WIMA_STATUS_SUCCESS)) goto wima_win_create_err;
+			if (yerror(status)) goto wima_win_create_err;
 		}
 	}
 
@@ -1389,7 +1389,7 @@ void wima_window_destroy(void* ptr)
 
 	WimaWin* win = (WimaWin*) ptr;
 
-	wassert(win != NULL, WIMA_ASSERT_WIN);
+	wassert(win, WIMA_ASSERT_WIN);
 
 	// If the GLFW window exists, the window
 	// is valid and needs destruction.
@@ -1450,8 +1450,7 @@ void wima_window_removeImage(WimaWin* win)
 void wima_window_setDirty(WimaWin* win, bool layout)
 {
 	wima_assert_init;
-
-	wassert(win != NULL, WIMA_ASSERT_WIN);
+	wassert(win, WIMA_ASSERT_WIN);
 
 	// Set the dirty bit.
 	win->flags |= WIMA_WIN_DIRTY;
@@ -1463,8 +1462,7 @@ void wima_window_setDirty(WimaWin* win, bool layout)
 void wima_window_setModifier(WimaWin* win, WimaKey key, WimaAction action)
 {
 	wima_assert_init;
-
-	wassert(win != NULL, WIMA_ASSERT_WIN);
+	wassert(win, WIMA_ASSERT_WIN);
 
 	WimaMods mod;
 
@@ -1527,8 +1525,7 @@ void wima_window_setModifier(WimaWin* win, WimaKey key, WimaAction action)
 void wima_window_setMouseBtn(WimaWin* win, WimaMouseBtn btn, WimaAction action)
 {
 	wima_assert_init;
-
-	wassert(win != NULL, WIMA_ASSERT_WIN);
+	wassert(win, WIMA_ASSERT_WIN);
 
 	// Clear on release, set on press (or repeat).
 	switch (action)
@@ -1551,8 +1548,7 @@ void wima_window_setMouseBtn(WimaWin* win, WimaMouseBtn btn, WimaAction action)
 void wima_window_removeMenu(WimaWin* win, WimaMnu* menu)
 {
 	wima_assert_init;
-
-	wassert(win != NULL, WIMA_ASSERT_WIN);
+	wassert(win, WIMA_ASSERT_WIN);
 
 	// Clear the flags.
 	win->flags = 0;
@@ -1749,7 +1745,7 @@ void wima_window_splitAreaMode(WimaWindow wwh)
 
 static WimaStatus wima_window_drawOverlay(WimaWin* win)
 {
-	wassert(win != NULL, WIMA_ASSERT_WIN);
+	wassert(win, WIMA_ASSERT_WIN);
 	wassert(win->overlay != WIMA_OVERLAY_INVALID, WIMA_ASSERT_OVERLAY);
 
 	// TODO: Write this function.
@@ -1764,8 +1760,8 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 	WimaIcon menuIcon;
 	char* menuTitle;
 
-	wassert(win != NULL, WIMA_ASSERT_WIN);
-	wassert(menu != NULL, WIMA_ASSERT_WIN_MENU);
+	wassert(win, WIMA_ASSERT_WIN);
+	wassert(menu, WIMA_ASSERT_WIN_MENU);
 
 	// Clear these.
 	WimaStatus status = WIMA_STATUS_SUCCESS;
@@ -2023,7 +2019,7 @@ static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parent
 
 static WimaMnu* wima_window_menu_contains(WimaMnu* menu, WimaVec pos)
 {
-	wassert(menu != NULL, WIMA_ASSERT_WIN_MENU);
+	wassert(menu, WIMA_ASSERT_WIN_MENU);
 
 	// Get the menu that contains the position.
 	WimaMnu* result = wima_rect_contains(menu->rect, pos) ? menu : NULL;
@@ -2358,7 +2354,7 @@ static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files)
 	// Malloc a list of files.
 	const char** names = malloc(len * sizeof(char*));
 
-	if (yerror(names == NULL))
+	if (yerror(!names))
 	{
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return;
@@ -2376,7 +2372,7 @@ static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files)
 
 static void wima_window_clearContext(WimaWinCtx* ctx)
 {
-	wassert(ctx != NULL, WIMA_ASSERT_WIN_CONTEXT);
+	wassert(ctx, WIMA_ASSERT_WIN_CONTEXT);
 
 	// Set everything to NULL.
 	memset(ctx, 0, sizeof(WimaWinCtx));

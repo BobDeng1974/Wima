@@ -54,8 +54,8 @@ WimaOverlay wima_overlay_register(const char* const name, WimaIcon icon, WimaOve
 {
 	wima_assert_init;
 
-	wassert(name != NULL, WIMA_ASSERT_OVERLAY_NAME);
-	wassert(layout != NULL, WIMA_ASSERT_OVERLAY_LAYOUT);
+	wassert(name, WIMA_ASSERT_OVERLAY_NAME);
+	wassert(layout, WIMA_ASSERT_OVERLAY_LAYOUT);
 
 	// Get the number of allocations. This is also the key/index.
 	uint64_t key = (uint64_t) dpool_allocations(wg.overlays);
@@ -70,7 +70,7 @@ WimaOverlay wima_overlay_register(const char* const name, WimaIcon icon, WimaOve
 
 	// Allocate and check for failure.
 	WimaOvly* ovly = dpool_calloc(wg.overlays, &key, size);
-	if (yerror(ovly == NULL))
+	if (yerror(!ovly))
 	{
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_OVERLAY_INVALID;

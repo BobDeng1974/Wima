@@ -1167,10 +1167,6 @@ void wima_callback_error(int error, const char* desc)
 		}
 	}
 
-	// If the status is an error...
-	if (status != WIMA_STATUS_SUCCESS)
-	{
-		// Send the event to the client.
-		wima_error_desc(status, desc);
-	}
+	// If the status is an error, send it to the client.
+	if (status) wima_error_desc(status, desc);
 }

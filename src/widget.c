@@ -427,7 +427,7 @@ void wima_widget_destroy(DynaPool pool, void* key)
 		WimaWidgetFreeDataFunc free = cprop->funcs.free;
 
 		// If the free function exists, call it.
-		if (free != NULL) free(dpool_get(pool, key));
+		if (free) free(dpool_get(pool, key));
 	}
 }
 

@@ -372,7 +372,7 @@ extern const char* const wima_assert_msgs[];
  * @def wima_assert_init
  * A Wima assert that checks whether Wima has been initialized.
  */
-#define wima_assert_init wassert(wg.name != NULL, WIMA_ASSERT_INIT)
+#define wima_assert_init wassert(wg.name, WIMA_ASSERT_INIT)
 
 /**
  * @def wima_error
