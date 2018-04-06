@@ -254,16 +254,10 @@ static void wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, 
  * @param areas		The tree to layout.
  * @param node		The current node being laid out.
  * @param min		A pointer to store the min size in.
- * @param pdim		The parent's relevant dimension.
- * @param psplit	Where the parent's split is for this
- *					child. For the left child, it is split,
- *					and for the right, it is 1 - split.
- * @param pvert		Whether the parent is vertical or not.
  * @return			WIMA_STATUS_SUCCESS on success,
  *					an error code otherwise.
  */
-static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef* min, float pdim, float psplit,
-                                        bool pvert);
+static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef* min);
 
 /**
  * Recursive function to determine which area has the mouse.
@@ -414,7 +408,7 @@ WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect, WimaSiz
 	wima_assert_init;
 	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
 	wima_area_node_init(win, areas, dtree_root(), rect);
-	return wima_area_node_layout(areas, dtree_root(), min, 0.0f, 0.0f, true);
+	return wima_area_node_layout(areas, dtree_root(), min);
 }
 
 static void wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect)
@@ -892,11 +886,10 @@ WimaStatus wima_area_layout(DynaTree areas, WimaSizef* min)
 {
 	wima_assert_init;
 	wassert(areas != NULL, WIMA_ASSERT_WIN_AREAS);
-	return wima_area_node_layout(areas, dtree_root(), min, 0.0f, 0.0f, true);
+	return wima_area_node_layout(areas, dtree_root(), min);
 }
 
-static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef* min, float pdim, float psplit,
-                                        bool pvert)
+static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef* min)
 {
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
@@ -909,16 +902,42 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 	if (WIMA_AREA_IS_PARENT(area))
 	{
 		WimaSizef lmin, rmin;
-
-		float dim = area->parent.vertical ? area->rect.w : area->rect.h;
-		float split = area->parent.split;
+		float ldim, rdim;
 
 		// Layout the left child and check for error.
-		status = wima_area_node_layout(areas, dtree_left(node), &lmin, dim, split, area->parent.vertical);
+		status = wima_area_node_layout(areas, dtree_left(node), &lmin);
 		if (yerror(status)) return status;
 
 		// Layout the right child and return the error.
-		status = wima_area_node_layout(areas, dtree_right(node), &rmin, dim, 1 - split, area->parent.vertical);
+		status = wima_area_node_layout(areas, dtree_right(node), &rmin);
+
+		// Get the relevant children dimensions.
+		if (area->parent.vertical)
+		{
+			ldim = lmin.w;
+			rdim = rmin.w;
+		}
+		else
+		{
+			ldim = lmin.h;
+			rdim = rmin.h;
+		}
+
+		// Calculate the dimensions relative to the parent.
+		ldim /= area->parent.split;
+		rdim /= (1 - area->parent.split);
+
+		// Make sure to expand the appropriate parent min.
+		if (area->parent.vertical)
+		{
+			min->w = ldim > min->w ? ldim : min->w;
+			min->w = rdim > min->w ? rdim : min->w;
+		}
+		else
+		{
+			min->h = ldim > min->h ? ldim : min->h;
+			min->h = rdim > min->h ? rdim : min->h;
+		}
 
 		// Store the minimum size.
 		min->w = lmin.w + rmin.w + area->parent.vertical;
@@ -1063,17 +1082,13 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 		}
 	}
 
-	float dim = psplit * pdim;
+	// Make sure the min size is an integer.
+	min->w = ceil(min->w);
+	min->h = ceil(min->h);
 
-	// Make sure the dimension is correctly sized for the parent.
-	if (pvert)
-		min->w = dim > min->w ? dim : min->w;
-	else
-		min->h = dim > min->h ? dim : min->h;
-
-	// Make sure the min size is set in the struct.
-	area->minSize.w = ceil(min->w);
-	area->minSize.h = ceil(min->h);
+	// Set the min in the struct.
+	area->minSize.w = (int) min->w;
+	area->minSize.h = (int) min->h;
 
 	return status;
 }
