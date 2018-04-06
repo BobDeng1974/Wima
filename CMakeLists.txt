@@ -132,7 +132,7 @@ if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${WIMA_CMAKE_DIR}/.git")
 	message(FATAL_ERROR "${WIMA_CMAKE_SUBMODULE_ERR}")
 endif()
 
-add_subdirectory("cmake")
+add_subdirectory("${WIMA_CMAKE_DIR}")
 
 add_subdirectory("${WIMA_DOCS_DIR}")
 
