@@ -105,10 +105,14 @@ create_merge_library(
 )
 target_compile_options("${WIMA_PIC}" BEFORE PUBLIC "-Wall" PUBLIC "-Wextra")
 
-option(WIMA_LOOP_TIMER "Add the loop timer" OFF)
+if ("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
 
-if (WIMA_LOOP_TIMER)
-	target_compile_definitions("${WIMA_PIC}" PUBLIC "WIMA_LOOP_TIMER")
+	option(WIMA_LOOP_TIMER "Add the loop timer (only in debug mode)" OFF)
+
+	if (WIMA_LOOP_TIMER)
+		target_compile_definitions("${WIMA_PIC}" PUBLIC "WIMA_LOOP_TIMER")
+	endif()
+
 endif()
 
 merge_libs("${PROJECT_NAME}"
