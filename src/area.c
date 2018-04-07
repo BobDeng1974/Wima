@@ -1080,6 +1080,10 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 			// Check for error.
 			if (yerror(status)) return status;
 		}
+
+		// Take scale into account.
+		min->w *= area->area.scale;
+		min->h *= area->area.scale;
 	}
 
 	// Make sure the min size is an integer.
