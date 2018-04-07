@@ -1403,7 +1403,7 @@ int wima_ui_text_pos(WimaRenderContext* ctx, float x, float y, float w, float h 
 	nvgTextMetrics(ctx->nvg, &asc, &desc, &lh);
 
 	// Calculate vertical position.
-	int row = wima_clampf((int) ((float) (py - bounds[1]) / lh), 0, nrows - 1);
+	int row = wima_clamp((int) ((float) (py - bounds[1]) / lh), 0, nrows - 1);
 
 	// Search horizontal position.
 	int nglyphs = nvgTextGlyphPositions(ctx->nvg, x, y, rows[row].start, rows[row].end + 1, glyphs, WIMA_MAX_GLYPHS);
@@ -1645,8 +1645,8 @@ WimaRect wima_ui_scroll_handle_rect(float x, float y, float w, float h, float of
 	WimaRect result;
 
 	// Clamp the size and offset.
-	size = wima_clampf(size, 0, 1);
-	offset = wima_clampf(offset, 0, 1);
+	size = wima_clampf(size, 0.0f, 1.0f);
+	offset = wima_clampf(offset, 0.0f, 1.0f);
 
 	// If this is a vertical scrollbar...
 	if (h > w)

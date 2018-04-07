@@ -67,67 +67,9 @@
 #include <math.h>
 #include <nanovg.h>
 
-#ifdef _MSC_VER
-
-#	pragma warning(disable : 4996)  // Switch off security warnings
-#	pragma warning(disable : 4100)  // Switch off unreferenced formal parameter warnings
-#	pragma warning(disable : 4244)
-#	pragma warning(disable : 4305)
-
-#	include <float.h>
-
-float wima_fminf(float a, float b)
-{
-	return _isnan(a) ? b : (_isnan(b) ? a : ((a < b) ? a : b));
-}
-
-float wima_fmaxf(float a, float b)
-{
-	return _isnan(a) ? b : (_isnan(b) ? a : ((a > b) ? a : b));
-}
-
-double wima_fmin(double a, double b)
-{
-	return _isnan(a) ? b : (_isnan(b) ? a : ((a < b) ? a : b));
-}
-
-double wima_fmax(double a, double b)
-{
-	return _isnan(a) ? b : (_isnan(b) ? a : ((a > b) ? a : b));
-}
-
-#else
-
-#	define wima_fminf(a, b) fminf(a, b)
-#	define wima_fmaxf(a, b) fmaxf(a, b)
-#	define wima_fmin(a, b) fmin(a, b)
-#	define wima_fmax(a, b) fmax(a, b)
-
-#endif
-
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
-
-int wima_max(int a, int b)
-{
-	return (a > b) ? a : b;
-}
-
-int wima_min(int a, int b)
-{
-	return (a < b) ? a : b;
-}
-
-int wima_clamp(int v, int min, int max)
-{
-	return (v > max) ?: ((v < min) ? min : v);
-}
-
-float wima_clampf(float v, float min, float max)
-{
-	return (v > max) ? max : ((v < min) ? min : v);
-}
 
 WimaRect wima_rect(WimaVec pos, WimaSize size)
 {
@@ -165,12 +107,12 @@ bool wima_rect_contains(WimaRect r, WimaVec pos)
 	return x >= 0 && y >= 0 && x < r.w && y < r.h;
 }
 
-float wima_degToRad(float deg)
+float wima_angle_rad(float deg)
 {
 	return nvgDegToRad(deg);
 }
 
-float wima_radToDeg(float rad)
+float wima_angle_deg(float rad)
 {
 	return nvgRadToDeg(rad);
 }

@@ -118,38 +118,42 @@ double wima_fmax(double a, double b);
 #define WIMA_PI 3.14159265358979323846264338327f
 
 /**
+ * @def wima_max
  * Returns the max of the two arguments.
  * @param a	The first argument.
  * @param b	The second argument.
  * @return	The max of the two args.
  */
-int wima_max(int a, int b) yinline;
+#define wima_max(a, b) ((a > b) ? a : b)
 
 /**
+ * @def wima_min
  * Returns the min of the two arguments.
  * @param a	The first argument.
  * @param b	The second argument.
  * @return	The min of the two args.
  */
-int wima_min(int a, int b) yinline;
+#define wima_min(a, b) ((a < b) ? a : b)
 
 /**
+ * @def wima_clamp
  * Clamps @a v to be within @a min and @a max if it isn't already.
  * @param v		The value to clamp.
  * @param min	The min value to clamp to.
  * @param max	The max value to clamp to.
  * @return		The clamped value.
  */
-int wima_clamp(int v, int min, int max) yinline;
+#define wima_clamp(v, min, max) ((v > max) ? max : ((v < min) ? min : v))
 
 /**
+ * @def wima_clampf
  * Clamps @a v to be within @a min and @a max if it isn't already.
  * @param v		The value to clamp.
  * @param min	The min value to clamp to.
  * @param max	The max value to clamp to.
  * @return		The clamped value.
  */
-float wima_clampf(float v, float min, float max) yinline;
+#define wima_clampf wima_clamp
 
 /**
  * Creates a WimaRect from the position (upper left corner)
@@ -180,14 +184,14 @@ bool wima_rect_contains(WimaRect r, WimaVec pos) yinline;
  * @param deg	The degrees to convert to radians.
  * @return		@a deg in radians.
  */
-float wima_degToRad(float deg) yinline;
+float wima_angle_rad(float deg) yinline;
 
 /**
  * Converts @a rad to degrees.
  * @param rad	The radians to convert to degrees.
  * @return		@a rad in degrees.
  */
-float wima_radToDeg(float rad) yinline;
+float wima_angle_deg(float rad) yinline;
 
 /**
  * Returns the identity matrix.
