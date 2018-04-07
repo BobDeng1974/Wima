@@ -63,7 +63,7 @@
 
 #include "render.h"
 
-#include "../global.h"
+#include "../wima.h"
 
 WimaColor wima_color_rgb(unsigned char r, unsigned char g, unsigned char b)
 {

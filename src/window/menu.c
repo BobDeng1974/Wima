@@ -37,9 +37,8 @@
 #include <wima/wima.h>
 
 #include "menu.h"
-
-#include "global.h"
 #include "window.h"
+#include "../wima.h"
 
 #include <yc/error.h>
 

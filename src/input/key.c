@@ -36,7 +36,7 @@
 
 #include <wima/wima.h>
 
-#include "global.h"
+#include "../wima.h"
 
 const char* wima_key_name(WimaKey key, int scancode)
 {

@@ -36,8 +36,8 @@
 
 #include <wima/render.h>
 
-#include "../global.h"
-#include "../window.h"
+#include "../window/window.h"
+#include "../wima.h"
 
 #include <yc/error.h>
 

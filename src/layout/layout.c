@@ -40,12 +40,12 @@
 #include <wima/wima.h>
 
 #include "layout.h"
-
-#include "area.h"
-#include "global.h"
-#include "prop.h"
 #include "widget.h"
-#include "window.h"
+
+#include "../area/area.h"
+#include "../prop/prop.h"
+#include "../window/window.h"
+#include "../wima.h"
 
 #include <yc/error.h>
 #include <yc/opt.h>

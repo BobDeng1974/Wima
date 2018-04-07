@@ -51,7 +51,7 @@
 
 #include "render.h"
 
-#include "../global.h"
+#include "../wima.h"
 
 /**
  * @file icon.c

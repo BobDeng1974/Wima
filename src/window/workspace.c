@@ -37,11 +37,11 @@
 #include <wima/wima.h>
 
 #include "workspace.h"
-
-#include "area.h"
-#include "editor.h"
-#include "global.h"
 #include "window.h"
+
+#include "../area/area.h"
+#include "../area/editor.h"
+#include "../wima.h"
 
 #include <yc/assert.h>
 #include <yc/error.h>

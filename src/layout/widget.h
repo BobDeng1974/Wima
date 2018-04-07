@@ -69,7 +69,7 @@ extern "C" {
 #include <wima/prop.h>
 #include <wima/wima.h>
 
-#include "event.h"
+#include "../event/event.h"
 
 #include <dyna/pool.h>
 

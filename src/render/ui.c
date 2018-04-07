@@ -63,9 +63,9 @@
 
 #include "render.h"
 
-#include "../global.h"
-#include "../prop.h"
-#include "../window.h"
+#include "../prop/prop.h"
+#include "../window/window.h"
+#include "../wima.h"
 
 #include <dyna/nvector.h>
 

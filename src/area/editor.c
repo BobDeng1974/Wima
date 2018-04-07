@@ -37,9 +37,8 @@
 #include <wima/wima.h>
 
 #include "editor.h"
-
-#include "global.h"
 #include "region.h"
+#include "../wima.h"
 
 #include <dyna/dyna.h>
 #include <dyna/vector.h>

@@ -36,9 +36,9 @@
 
 #include <wima/wima.h>
 
-#include "area.h"
-#include "global.h"
-#include "region.h"
+#include "../area/area.h"
+#include "../area/region.h"
+#include "../wima.h"
 
 #include <dyna/tree.h>
 #include <yc/error.h>

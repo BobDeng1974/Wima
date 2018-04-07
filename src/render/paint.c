@@ -38,7 +38,7 @@
 
 #include "render.h"
 
-#include "../global.h"
+#include "../wima.h"
 
 #include <yc/assert.h>
 

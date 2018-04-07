@@ -51,17 +51,18 @@
 #include <nanovg_gl.h>
 //! @endcond Doxygen suppress.
 
-#include "area.h"
-#include "callbacks.h"
 #include "dialog.h"
-#include "editor.h"
-#include "global.h"
 #include "menu.h"
 #include "overlay.h"
 #include "window.h"
 
-#include "math/math.h"
-#include "render/render.h"
+#include "../area/area.h"
+#include "../area/editor.h"
+#include "../event/callbacks.h"
+#include "../wima.h"
+
+#include "../math/math.h"
+#include "../render/render.h"
 
 #include <GLFW/glfw3.h>
 

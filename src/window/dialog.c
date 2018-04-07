@@ -29,38 +29,55 @@
  *
  *	******* BEGIN FILE DESCRIPTION *******
  *
- *	Functions for manipulating cursors.
+ *	Functions for creating dialogs (Wima's non-modal pop-ups).
  *
  *	******** END FILE DESCRIPTION ********
  */
 
-#include <wima/wima.h>
+#include "dialog.h"
 
-#include "cursor.h"
+#include "../area/area.h"
+#include "../wima.h"
 
-#include "global.h"
-#include "window.h"
+#include <yc/error.h>
 
-WimaCursor* wima_cursor_create(WimaCursorImage img, int xhot, int yhot)
+////////////////////////////////////////////////////////////////////////////////
+// Public functions.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaDialog wima_dialog_register(WimaTree tree)
 {
 	wima_assert_init;
 
-	wassert(img.pixels, WIMA_ASSERT_IMG_DATA);
+	wassert(wima_area_valid(tree), WIMA_ASSERT_TREE);
 
-	wassert(img.width > 0 && img.height > 0, WIMA_ASSERT_CURSOR_DIM);
-	wassert(img.width > xhot && img.height > yhot, WIMA_ASSERT_CURSOR_HOT);
+	// Get the index of the new dialog.
+	size_t len = dvec_len(wg.dialogs);
 
-	// Create a go-between image.
-	WimaCursorImg i;
-	i.wima = img;
+	wassert(len < WIMA_DIALOG_MAX, WIMA_ASSERT_DIALOG_MAX);
 
-	// Cast the WimaImage to GLFWimage and have GLFW create the cursor.
-	return (WimaCursor*) glfwCreateCursor(&i.glfw, xhot, yhot);
-}
+	// Create the dialog.
+	WimaDlg dlg = dvec_pushTree(wg.dialogs);
 
-void wima_cursor_destroy(WimaCursor* cursor)
-{
-	wima_assert_init;
-	wassert(cursor, WIMA_ASSERT_CURSOR);
-	glfwDestroyCursor((GLFWcursor*) cursor);
+	// Check for error.
+	if (yerror(!dlg)) goto wima_dlg_reg_push;
+
+	// Copy the tree and check for error.
+	if (yerror(dtree_copy(dlg, tree))) goto wima_dlg_reg_copy;
+
+	return len;
+
+// Error on copy.
+wima_dlg_reg_copy:
+
+	// Pop the dialog off.
+	dvec_pop(wg.dialogs);
+
+// Error on push.
+wima_dlg_reg_push:
+
+	// Report the error.
+	wima_error(WIMA_STATUS_MALLOC_ERR);
+
+	return WIMA_DIALOG_INVALID;
 }

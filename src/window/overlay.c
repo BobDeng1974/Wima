@@ -38,7 +38,7 @@
 
 #include "overlay.h"
 
-#include "global.h"
+#include "../wima.h"
 
 #include <yc/error.h>
 #include <yc/mem.h>

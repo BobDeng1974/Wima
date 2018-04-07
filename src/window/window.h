@@ -44,12 +44,12 @@ extern "C" {
 
 #include <wima/wima.h>
 
-#include "area.h"
-#include "event.h"
+#include "../area/area.h"
+#include "../event/event.h"
 #include "menu.h"
 #include "workspace.h"
 
-#include "render/render.h"
+#include "../render/render.h"
 
 #include <GLFW/glfw3.h>
 #include <dyna/pool.h>

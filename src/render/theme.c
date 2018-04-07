@@ -64,8 +64,8 @@
 
 #include "render.h"
 
-#include "../global.h"
-#include "../prop.h"
+#include "../prop/prop.h"
+#include "../wima.h"
 
 #include <dyna/nvector.h>
 #include <yc/assert.h>

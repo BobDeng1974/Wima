@@ -38,7 +38,7 @@
 
 #include "region.h"
 
-#include "global.h"
+#include "../wima.h"
 
 #include <yc/error.h>
 

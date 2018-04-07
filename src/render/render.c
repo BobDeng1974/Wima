@@ -38,8 +38,8 @@
 
 #include "render.h"
 
-#include "../global.h"
-#include "../window.h"
+#include "../window/window.h"
+#include "../wima.h"
 
 #include <yc/assert.h>
 

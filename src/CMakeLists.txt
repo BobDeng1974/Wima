@@ -24,54 +24,14 @@
 #
 #	****** END LICENSE BLOCK ******
 
-# We use the nanovg, nanosvg, and yc includes, so we need this.
+# We use the nanovg, nanosvg, and GLFW includes, so we need this.
 include_directories("../lib/nanovg/src")
 include_directories("../lib/nanosvg/src")
-include_directories("../lib/yc/include")
 include_directories("../lib/glfw/include")
-
-# Make sure we know what the GLFW CMake target is.
-set(GLFW_LIB "glfw")
-
-set(WIMA_GLOBAL_SRC
-
-	# Add files here.
-	"global.c"
-)
-
-set(WIMA_GLOBAL "${PROJECT_NAME}_global")
-create_merge_library("${WIMA_GLOBAL}" "${WIMA_GLOBAL_SRC}"
-
-	# Add libraries here.
-	"${DYNA_LIB}"
-	"${YC_LIB}"
-	"${JEMALLOC_LIB}"
-	"${PTHREAD_LIB}"
-	"${DL_LIB}"
-)
-target_compile_options("${WIMA_GLOBAL}" BEFORE PUBLIC "-Wall" PUBLIC "-Wextra")
 
 set(WIMA_SRC
 
 	# Put all source files here.
-	"time.c"
-	"cursor.c"
-	"key.c"
-	"monitor.c"
-	"prop.c"
-	"overlay.c"
-	"item.c"
-	"widget.c"
-	"layout.c"
-	"callbacks.c"
-	"region.c"
-	"editor.c"
-	"area.c"
-	"tree.c"
-	"dialog.c"
-	"workspace.c"
-	"menu.c"
-	"window.c"
 	"wima.c"
 )
 
@@ -79,8 +39,15 @@ include_directories("${X11_INCLUDE_DIR}" "${OPENGL_INCLUDE_DIR}")
 include_directories("../include")
 
 add_subdirectory(math)
-
+add_subdirectory(time)
+add_subdirectory(monitor)
+add_subdirectory(prop)
+add_subdirectory(input)
 add_subdirectory(render)
+add_subdirectory(layout)
+add_subdirectory(area)
+add_subdirectory(window)
+add_subdirectory(event)
 
 set(WIMA_GLAD "${PROJECT_NAME}_glad")
 set(WIMA_PIC "${PROJECT_NAME}_pic")
@@ -130,4 +97,5 @@ merge_libs("${PROJECT_NAME}"
 	"${X11_Xcursor_LIB}"
 	"${RT_LIB}"
 	"${MATH_LIB}"
-	"${PTHREAD_LIB}")
+	"${PTHREAD_LIB}"
+)

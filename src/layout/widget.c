@@ -62,10 +62,10 @@
 
 #include "widget.h"
 
-#include "area.h"
-#include "global.h"
-#include "prop.h"
-#include "window.h"
+#include "../area/area.h"
+#include "../prop/prop.h"
+#include "../window/window.h"
+#include "../wima.h"
 
 #include <dyna/nvector.h>
 

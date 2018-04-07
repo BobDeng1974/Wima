@@ -36,7 +36,7 @@
 
 #include <wima/wima.h>
 
-#include "global.h"
+#include "../wima.h"
 
 #include <GLFW/glfw3.h>
 

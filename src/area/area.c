@@ -39,15 +39,14 @@
 #include <wima/wima.h>
 
 #include "area.h"
-
 #include "editor.h"
-#include "global.h"
-#include "prop.h"
 #include "region.h"
-#include "widget.h"
-#include "window.h"
 
-#include "render/render.h"
+#include "../render/render.h"
+#include "../prop/prop.h"
+#include "../layout/widget.h"
+#include "../window/window.h"
+#include "../wima.h"
 
 #include <dyna/nvector.h>
 #include <yc/assert.h>

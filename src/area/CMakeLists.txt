@@ -1,0 +1,45 @@
+#	***** BEGIN LICENSE BLOCK *****
+#
+#	Copyright 2018 Yzena Tech
+#
+#	Licensed under the Apache License, Version 2.0 (the "Apache License")
+#	with the following modification; you may not use this file except in
+#	compliance with the Apache License and the following modification to it:
+#	Section 6. Trademarks. is deleted and replaced with:
+#
+#	6. Trademarks. This License does not grant permission to use the trade
+#		names, trademarks, service marks, or product names of the Licensor
+#		and its affiliates, except as required to comply with Section 4(c) of
+#		the License and to reproduce the content of the NOTICE file.
+#
+#	You may obtain a copy of the Apache License at
+#
+#		http://www.apache.org/licenses/LICENSE-2.0
+#
+#	Unless required by applicable law or agreed to in writing, software
+#	distributed under the Apache License with the above modification is
+#	distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+#	KIND, either express or implied. See the Apache License for the specific
+#	language governing permissions and limitations under the Apache License.
+#
+#	****** END LICENSE BLOCK ******
+
+set(WIMA_AREA_SRC
+
+	# Add files here.
+	"region.c"
+	"editor.c"
+	"area.c"
+)
+
+set(WIMA_AREA "${PROJECT_NAME}_area")
+
+create_merge_library("${WIMA_AREA}" "${WIMA_AREA_SRC}"
+
+	# Add libraries here.
+	"${DYNA_LIB}"
+	"${YC_LIB}"
+	"${PTHREAD_LIB}"
+	"${DL_LIB}"
+)
+target_compile_options("${WIMA_AREA}" BEFORE PUBLIC "-Wall" PUBLIC "-Wextra")
