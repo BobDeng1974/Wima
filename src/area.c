@@ -430,7 +430,7 @@ static void wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, W
 		WimaRect right;
 
 		// Calculate the integer location of the split.
-		int dim = (area->parent.vertical ? rect.w : rect.h) - 1;
+		int dim = rect.v[!area->parent.vertical + 2] - 1;
 		area->parent.spliti = (int) (area->parent.split * dim);
 
 		// Calculate and fill the children's rectangles.
@@ -810,7 +810,7 @@ static void wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, 
 	if (WIMA_AREA_IS_PARENT(area))
 	{
 		// Get the dimension that will be split.
-		int dim = (area->parent.vertical ? rect.w : rect.h) - 1;
+		int dim = rect.v[!area->parent.vertical + 2] - 1;
 
 		// This is true if the resize is happening because of a window
 		// resize, but it is false if it is happening because of the user
@@ -822,9 +822,7 @@ static void wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, 
 		if (adjustSplit)
 			area->parent.spliti = (int) (area->parent.split * dim);
 		else
-		{
 			area->parent.split = ((float) area->parent.spliti) / ((float) dim);
-		}
 
 		WimaRect left;
 		WimaRect right;
@@ -1278,7 +1276,7 @@ void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, Wim
 	area->parent.spliti += diff;
 
 	// Get the appropriate dimension.
-	float dim = (float) ((split.vertical ? area->rect.w : area->rect.h) - 1);
+	float dim = (float) (area->rect.v[!split.vertical + 2] - 1);
 
 	// Set the float value.
 	area->parent.split = (float) area->parent.spliti / dim;
@@ -1336,7 +1334,7 @@ static void wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bo
 			}
 
 			// Get the appropriate dimension and set the float split.
-			dim = (float) ((vertical ? area->rect.w : area->rect.h) - 1);
+			dim = (float) (area->rect.v[!vertical + 2] - 1);
 			area->parent.split = (float) area->parent.spliti / dim;
 		}
 		else
