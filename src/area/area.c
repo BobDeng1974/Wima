@@ -42,11 +42,12 @@
 #include "editor.h"
 #include "region.h"
 
-#include "../render/render.h"
-#include "../prop/prop.h"
-#include "../layout/widget.h"
-#include "../window/window.h"
 #include "../wima.h"
+
+#include "../layout/widget.h"
+#include "../prop/prop.h"
+#include "../render/render.h"
+#include "../window/window.h"
 
 #include <dyna/nvector.h>
 #include <yc/assert.h>

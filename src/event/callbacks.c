@@ -39,11 +39,12 @@
 
 #include "callbacks.h"
 
+#include "../wima.h"
+
 #include "../area/area.h"
 #include "../layout/widget.h"
 #include "../window/window.h"
 #include "../window/workspace.h"
-#include "../wima.h"
 
 #include <GLFW/glfw3.h>
 #include <yc/error.h>

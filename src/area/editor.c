@@ -38,6 +38,7 @@
 
 #include "editor.h"
 #include "region.h"
+
 #include "../wima.h"
 
 #include <dyna/dyna.h>

@@ -38,9 +38,10 @@
 
 #include "item.h"
 
+#include "../wima.h"
+
 #include "../prop/prop.h"
 #include "../window/window.h"
-#include "../wima.h"
 
 #include <stdint.h>
 

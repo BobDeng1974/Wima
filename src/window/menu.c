@@ -38,6 +38,7 @@
 
 #include "menu.h"
 #include "window.h"
+
 #include "../wima.h"
 
 #include <yc/error.h>

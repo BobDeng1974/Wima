@@ -36,8 +36,9 @@
 
 #include "dialog.h"
 
-#include "../area/area.h"
 #include "../wima.h"
+
+#include "../area/area.h"
 
 #include <yc/error.h>
 

@@ -56,11 +56,11 @@
 #include "overlay.h"
 #include "window.h"
 
+#include "../wima.h"
+
 #include "../area/area.h"
 #include "../area/editor.h"
 #include "../event/callbacks.h"
-#include "../wima.h"
-
 #include "../math/math.h"
 #include "../render/render.h"
 

@@ -39,6 +39,7 @@
 #include "cursor.h"
 
 #include "../wima.h"
+
 #include "../window/window.h"
 
 WimaCursor* wima_cursor_create(WimaCursorImage img, int xhot, int yhot)

@@ -42,10 +42,11 @@
 #include "layout.h"
 #include "widget.h"
 
+#include "../wima.h"
+
 #include "../area/area.h"
 #include "../prop/prop.h"
 #include "../window/window.h"
-#include "../wima.h"
 
 #include <yc/error.h>
 #include <yc/opt.h>

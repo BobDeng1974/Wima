@@ -39,8 +39,9 @@
 
 #include "prop.h"
 
-#include "../event/event.h"
 #include "../wima.h"
+
+#include "../event/event.h"
 
 #include <dyna/hash.h>
 #include <dyna/nvector.h>

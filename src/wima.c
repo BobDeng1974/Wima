@@ -36,17 +36,17 @@
 
 #include <wima/wima.h>
 
-#include "prop/prop.h"
+#include "wima.h"
+
+#include "area/area.h"
 #include "area/editor.h"
 #include "area/region.h"
-#include "area/area.h"
+#include "event/callbacks.h"
+#include "prop/prop.h"
+#include "render/render.h"
 #include "window/menu.h"
 #include "window/overlay.h"
 #include "window/window.h"
-#include "event/callbacks.h"
-#include "wima.h"
-
-#include "render/render.h"
 
 #include <dyna/dyna.h>
 #include <dyna/nvector.h>
