@@ -2392,8 +2392,8 @@ static void wima_window_setMinSize(WimaWin* win, WimaSizef* size)
 
 	WimaSizeS temp;
 
-	temp.w = ceil(size->w);
-	temp.h = ceil(size->h);
+	temp.w = (uint16_t) size->w;
+	temp.h = (uint16_t) size->h;
 
 	if (temp.w > win->minsize.w || temp.h > win->minsize.h)
 	{

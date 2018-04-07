@@ -1087,8 +1087,8 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 	}
 
 	// Make sure the min size is an integer.
-	min->w = ceil(min->w);
-	min->h = ceil(min->h);
+	min->w = ceilf(min->w);
+	min->h = ceilf(min->h);
 
 	// Set the min in the struct.
 	area->minSize.w = (int) min->w;
