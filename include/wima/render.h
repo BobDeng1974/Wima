@@ -167,12 +167,12 @@ WimaImage wima_image_load(ynonnull const char* const path, WimaImageFlags flags)
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-// Data structures for 2D graphics.
+// Data structures and functions for 2D graphics.
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
  * @defgroup graphics2d graphics2d
- * Data structures for handling 2D graphics.
+ * Data structures and functions for handling 2D graphics.
  * @{
  */
 
@@ -404,6 +404,89 @@ typedef struct WimaTransform
 	};
 
 } WimaTransform;
+
+/**
+ * Returns the identity matrix.
+ * @return	The identity matrix.
+ */
+WimaTransform wima_transform_identity() yinline;
+
+/**
+ * Translates the matrix @a src by @a tx x
+ * coordinates and @a ty y coordinates.
+ * @param src	The matrix to translate.
+ * @param tx	The amount to translate in x.
+ * @param ty	The amount to translate in y.
+ * @return		The translated matrix.
+ */
+WimaTransform wima_transform_translate(WimaTransform src, float tx, float ty) yinline;
+
+/**
+ * Scales the matrix @a src by @a sx on
+ * the x axis and @a sy on the y axis.
+ * @param src	The matrix to scale.
+ * @param sx	The amount to scale in x.
+ * @param sy	The amount to scale in y.
+ * @return		The scaled matrix.
+ */
+WimaTransform wima_transform_scale(WimaTransform src, float sx, float sy) yinline;
+
+/**
+ * Rotates the matrix @a src by @a a radians
+ * @param src	The matrix to rotate.
+ * @param a		The angle in radians to rotate by.
+ * @return		The rotated matrix.
+ */
+WimaTransform wima_transform_rotate(WimaTransform src, float a) yinline;
+
+/**
+ * Skews the matrix @a src in the x axis by @a a radians
+ * @param src	The matrix to skew.
+ * @param a		The angle in radians to skew by.
+ * @return		The skewed matrix.
+ */
+WimaTransform wima_transform_skewX(WimaTransform src, float a) yinline;
+
+/**
+ * Skews the matrix @a src in the y axis by @a a radians
+ * @param src	The matrix to skew.
+ * @param a		The angle in radians to skew by.
+ * @return		The skewed matrix.
+ */
+WimaTransform wima_transform_skewY(WimaTransform src, float a) yinline;
+
+/**
+ * Multiplies @a src1 by @a src2 (@a src1 * @a src2) and returns the result.
+ * @param src1	The first matrix to multiply. It will be first.
+ * @param src2	The second matrix to multiply. It will be second.
+ * @return		The multiplied matrix.
+ */
+WimaTransform wima_transform_multiply(WimaTransform src1, WimaTransform src2) yinline;
+
+/**
+ * Multiplies @a src2 by @a src1 (@a src2 * @a src1) and returns the result.
+ * @param src1	The first matrix to multiply. It will be second.
+ * @param src2	The second matrix to multiply. It will be first.
+ * @return		The multiplied matrix.
+ */
+WimaTransform wima_transform_premultiply(WimaTransform src1, WimaTransform src2) yinline;
+
+/**
+ * Calculates and returns the inverse of the specified matrix.
+ * If the inverse could not be calculated, it returns the identity.
+ * @param src	The matrix whose inverse will be returned.
+ * @return		The inverse of @a src, or the identity it it could
+ *				not be calculated.
+ */
+WimaTransform wima_transform_inverse(WimaTransform src) yinline;
+
+/**
+ * Applies @a transform to @a pos and returns the result.
+ * @param transform	The transform to apply.
+ * @param pos		The point that the transform will be applied to.
+ * @return			The transformed point.
+ */
+WimaVecF wima_transform_point(WimaTransform transform, WimaVecF pos) yinline;
 
 /**
  * @}
