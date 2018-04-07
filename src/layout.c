@@ -559,24 +559,47 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 	if (item->layout.y_expand_children)
 		hextra = (item->rect.h - item->layout.h_min) / (float) item->layout.y_expand_children;
 
+	float x, y;
+	float row, col;
+	WimaItem* child;
+
+	// Zero these.
+	x = y = 0.0f;
+
+	row = (float) ((flags & WIMA_LAYOUT_ROW) != 0);
+
 	// Figure out what to do based on what type of layout this is. We
 	// do the loop (and thereby copy the code) into each branch to
 	// prevent having a branch in the loop itself. Because layout can
 	// happen up to once per frame, it's important to make it fast.
-	if (flags & WIMA_LAYOUT_ROW)
+	if (row != 0.0f || (flags & WIMA_LAYOUT_COL))
 	{
+		WimaSizef base;
+
+		// Set the column.
+		col = (float) (!row);
+
+		// Set the base.
+		base.w = (col * item->rect.w) * (row * (item->minSize.w / count));
+		base.h = (row * item->rect.h) + (col * (item->minSize.h / count));
+
 		// Loop through the children.
 		while (!status && idx != WIMA_WIDGET_INVALID)
 		{
 			wassert(idx < area->area.ctx.itemCount, WIMA_ASSERT_ITEM);
 
 			// Get the child.
-			WimaItem* child = wima_item_ptr(item->info.layout.window, item->info.layout.area, idx);
+			child = wima_item_ptr(item->info.layout.window, item->info.layout.area, idx);
 
-			// TODO: Calculate the child's rectangle.
-			WimaRectf childRect;
+			// Calculate the child's rectangle.
+			child->rect.x = x;
+			child->rect.y = y;
+			child->rect.w = base.w + (((child->minSize.w < 0.0f) * wextra) * row);
+			child->rect.h = base.h + (((child->minSize.h < 0.0f) * hextra) * col);
 
-			// child->rect
+			// Make sure to set the new coordinates.
+			x += (row * child->rect.w);
+			y += (col * child->rect.h);
 
 			// Lay out the the child if it's a layout and not a separator.
 			if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP))
@@ -586,16 +609,45 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 			idx = child->nextSibling;
 		}
 	}
-	else if (flags & WIMA_LAYOUT_COL)
-	{
-		// width = item->rect.w;
-		// height =
-	}
 	else
-	{}
+	{
+		// Get the first child.
+		child = wima_item_ptr(item->info.layout.window, item->info.layout.area, idx);
 
-	float x = item->rect.x;
-	float y = item->rect.y;
+		// Calculate the child's rectangle.
+		child->rect.x = x;
+		child->rect.y = y;
+		child->rect.w = item->layout.w_min * item->rect.w;
+		child->rect.h = item->rect.h;
+
+		// Calculate the new x coordinate.
+		x = child->rect.w;
+
+		// Lay out the the child if it's a layout and not a separator.
+		if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP))
+		{
+			status = wima_layout_layout(child, area);
+			if (status) return status;
+		}
+
+		// Get the second child.
+		idx = child->nextSibling;
+		wassert(idx != WIMA_LAYOUT_INVALID, WIMA_ASSERT_ITEM);
+		child = wima_item_ptr(item->info.layout.window, item->info.layout.area, idx);
+
+		// Calculate the child's rectangle.
+		child->rect.x = x;
+		child->rect.y = y;
+		child->rect.w = item->rect.w - x;
+		child->rect.h = item->rect.h;
+
+		// Lay out the the child if it's a layout and not a separator.
+		if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP))
+		{
+			status = wima_layout_layout(child, area);
+			if (status) return status;
+		}
+	}
 
 	return status;
 }
