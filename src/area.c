@@ -1395,7 +1395,7 @@ static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool is
 	else
 	{
 		// Get the appropriate dimensions.
-		int dim = area->rect.v[!vertical];
+		int dim = area->rect.v[!vertical + 2];
 		int layout_min = area->minSize.v[!vertical];
 
 		// Calculate the min.
