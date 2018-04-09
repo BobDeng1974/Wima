@@ -13,7 +13,3 @@
 	path = lib/nanosvg
 	url = https://github.com/memononen/nanosvg.git
 	branch = master
-[submodule "scripts"]
-	path = scripts
-	url = https://github.com/YzenaTech/Yscripts.git
-	branch = master

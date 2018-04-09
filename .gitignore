@@ -29,9 +29,3 @@
 
 # QT Creator files
 *.user
-
-# Clang format file.
-.clang-format
-
-# Git config
-.gitconfig
