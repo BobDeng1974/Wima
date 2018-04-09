@@ -107,5 +107,5 @@ before_install:
   - eval "${MATRIX_EVAL}"
 
 script:
-  - cmake -DCMAKE_BUILD_TYPE=Debug -D%%%%%_DOCS_BUILD=ON -D%%%%%_DOCS_BUILD_INTERNAL=ON .
+  - cmake -DCMAKE_BUILD_TYPE=Debug .
   - make
