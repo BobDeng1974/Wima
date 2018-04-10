@@ -186,6 +186,21 @@ extern "C" {
 #define WIMA_WIN_HAS_OVERLAY(win) (((win)->flags) & WIMA_WIN_OVERLAY)
 
 /**
+ * @def WIMA_WIN_TOOLTIP
+ * A bit indicating whether the window
+ * has a tooltip up or not.
+ */
+#define WIMA_WIN_TOOLTIP (0x20)
+
+/**
+ * @def WIMA_WIN_HAS_TOOLTIP(win)
+ * Returns true if the window has a tooltip, false otherwise.
+ * @param win	The window to test.
+ * @return		true if @a win has a tooltip, false otherwise.
+ */
+#define WIMA_WIN_HAS_TOOLTIP(win) (((win)->flags) & WIMA_WIN_TOOLTIP)
+
+/**
  * @def WIMA_WIN_RENDER_STACK_MAX
  * The max number of scissors that a window can have.
  */
@@ -346,9 +361,6 @@ typedef struct WimaWin
 
 	/// Current workspace.
 	uint8_t wksp;
-
-	/// Whether there is a tooltip visible.
-	bool tooltip;
 
 	/// The user pointer for the window.
 	void* user;

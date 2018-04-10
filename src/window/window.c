@@ -572,7 +572,7 @@ bool wima_window_hasTooltip(WimaWindow wwh)
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
 	// Return the result.
-	return win->tooltip && win->ctx.hover.widget != WIMA_WIDGET_INVALID;
+	return WIMA_WIN_HAS_TOOLTIP(win) && win->ctx.hover.widget != WIMA_WIDGET_INVALID;
 }
 
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title)
@@ -1641,7 +1641,7 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 
 	// Set the tooltip and erase the event count.
-	win->tooltip = !win->ctx.eventCount;
+	win->flags |= !win->ctx.eventCount * WIMA_WIN_TOOLTIP;
 	win->ctx.eventCount = 0;
 
 	// Check for layout.
@@ -1716,7 +1716,7 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 		}
 
 		// If we have a tooltip...
-		if (win->tooltip && win->ctx.hover.widget != WIMA_WIDGET_INVALID)
+		if (WIMA_WIN_HAS_TOOLTIP(win) && win->ctx.hover.widget != WIMA_WIDGET_INVALID)
 		{
 			// Draw the tooltip and check for error.
 			status = wima_window_drawTooltip(win);
