@@ -28,8 +28,6 @@
 include_directories("../lib/nanovg/src")
 include_directories("../lib/nanosvg/src")
 
-set(WIMA_GLOBAL "${PROJECT_NAME}_global")
-
 set(WIMA_GLAD "${PROJECT_NAME}_glad")
 set(WIMA_RENDER "${PROJECT_NAME}_render")
 set(NANOVG "nanovg")
