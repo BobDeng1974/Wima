@@ -521,32 +521,6 @@ void wima_ui_menu_background(WimaRenderContext* ctx, float x, float y, float w, 
 	wima_ui_dropShadow(ctx, x, y, w, h, WIMA_MENU_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
 }
 
-void wima_ui_tooltip_background(WimaRenderContext* ctx, float x, float y, float w, float h)
-{
-	wima_assert_init;
-	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
-
-	WimaColor shade_top, shade_btm;
-
-	// Get the theme pointer.
-	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TOOLTIP);
-
-	// Get the shade colors.
-	wima_theme_shadeColors((WimaWidgetTheme*) t, WIMA_WIDGET_DEFAULT, false, &shade_top, &shade_btm);
-
-	// Draw the inner box.
-	wima_ui_box_inner(ctx, x, y, w, h + 1, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
-	                  shade_top, shade_btm);
-
-	// Draw the outline.
-	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
-	wima_ui_box_outline(ctx, x, y, w, h + 1, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
-	                    transparent);
-
-	// Draw a drop shadow.
-	wima_ui_dropShadow(ctx, x, y, w, h, WIMA_MENU_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
-}
-
 void wima_ui_menu_label(WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon icon, const char* label)
 {
 	wima_assert_init;
@@ -617,6 +591,45 @@ void wima_ui_menu_item(WimaRenderContext* ctx, float x, float y, float w, float 
 		              y + 2 + h / 2 - WIMA_NUMBER_ARROW_SIZE / 2, WIMA_NUMBER_ARROW_SIZE,
 		              t[WIMA_THEME_WIDGET_WIDGET]._color);
 	}
+}
+
+void wima_ui_tooltip_background(WimaRenderContext* ctx, float x, float y, float w, float h)
+{
+	wima_assert_init;
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+
+	WimaColor shade_top, shade_btm;
+
+	// Get the theme pointer.
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TOOLTIP);
+
+	// Get the shade colors.
+	wima_theme_shadeColors((WimaWidgetTheme*) t, WIMA_WIDGET_DEFAULT, false, &shade_top, &shade_btm);
+
+	// Draw the inner box.
+	wima_ui_box_inner(ctx, x, y, w, h + 1, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
+	                  shade_top, shade_btm);
+
+	// Draw the outline.
+	WimaColor transparent = wima_color_multiplyAlphaf(t[WIMA_THEME_WIDGET_OUTLINE]._color, WIMA_TRANSPARENT_ALPHA);
+	wima_ui_box_outline(ctx, x, y, w, h + 1, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS, WIMA_MENU_RADIUS,
+	                    transparent);
+
+	// Draw a drop shadow.
+	wima_ui_dropShadow(ctx, x, y, w, h, WIMA_MENU_RADIUS, WIMA_SHADOW_FEATHER, WIMA_SHADOW_ALPHA);
+}
+
+void wima_ui_tooltip_label(WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon icon, const char* label)
+{
+	wima_assert_init;
+	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
+
+	// Get the theme pointer.
+	WimaPropData* t = (WimaPropData*) wima_theme_widget(WIMA_THEME_TOOLTIP);
+
+	// Draw the label.
+	wima_ui_label_icon_value(ctx, x, y, w, h, icon, t[WIMA_THEME_WIDGET_TEXT]._color, WIMA_ALIGN_CENTER,
+	                         WIMA_LABEL_FONT_SIZE, label, NULL, false);
 }
 
 void wima_ui_node_port(WimaRenderContext* ctx, float x, float y, WimaWidgetState state, WimaColor color)

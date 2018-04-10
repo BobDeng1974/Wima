@@ -2573,7 +2573,7 @@ void wima_ui_menu_separator(ynonnull WimaRenderContext* ctx, float x, float y, f
  * @param iconid	The icon to draw with the label, or -1 if none.
  * @param label		The label to draw, or NULL if none.
  * @param hasSub	true when the menu item has a submenu, false
- *					otherwise
+ *					otherwise.
  * @pre				ctx must not be NULL.
  */
 void wima_ui_menu_item(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaWidgetState state,
@@ -2590,6 +2590,22 @@ void wima_ui_menu_item(ynonnull WimaRenderContext* ctx, float x, float y, float 
  * @pre			ctx must not be NULL.
  */
 void wima_ui_tooltip_background(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h);
+
+/**
+ * Draws a tooltip label with its upper left origin
+ * at (x,y) and size of (w,h).
+ * @param ctx
+ * @param ctx	The @a WimaRenderContext to render to.
+ * @param x		X coordinate of the upper left corner.
+ * @param y		Y coordinate of the upper left corner.
+ * @param w		Width of the widget.
+ * @param h		Height of the widget.
+ * @param icon	The icon of the tooltip.
+ * @param label	The layout of the tooltip.
+ * @pre				ctx must not be NULL.
+ */
+void wima_ui_tooltip_label(ynonnull WimaRenderContext* ctx, float x, float y, float w, float h, WimaIcon icon,
+                           const char* label);
 
 /**
  * Draw a node port at (x,y) filled with @a color,

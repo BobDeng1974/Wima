@@ -2572,6 +2572,13 @@ bool wima_window_decorated(WimaWindow wwh) yinline;
 bool wima_window_resizable(WimaWindow wwh) yinline;
 
 /**
+ * Returns true if the window has a tooltip, false otherwise.
+ * @param wwh	The window to query.
+ * @return true if the window has a tooltip, false otherwise.
+ */
+bool wima_window_hasTooltip(WimaWindow wwh) yinline;
+
+/**
  * Sets the window's title. The data is copied.
  * @param wwh	The window whose title will be set.
  * @param title	The new title for the window.

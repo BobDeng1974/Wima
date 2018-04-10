@@ -62,6 +62,7 @@
 #include "../area/editor.h"
 #include "../event/callbacks.h"
 #include "../math/math.h"
+#include "../prop/prop.h"
 #include "../render/render.h"
 
 #include <GLFW/glfw3.h>
@@ -561,6 +562,17 @@ bool wima_window_resizable(WimaWindow wwh)
 
 	// Get the attribute from GLFW.
 	return glfwGetWindowAttrib(win->window, GLFW_RESIZABLE) == GLFW_TRUE;
+}
+
+bool wima_window_hasTooltip(WimaWindow wwh)
+{
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	// Return the result.
+	return win->tooltip && win->ctx.hover.widget != WIMA_WIDGET_INVALID;
 }
 
 WimaStatus wima_window_setTitle(WimaWindow wwh, const char* title)
@@ -1351,6 +1363,15 @@ static WimaStatus wima_window_drawMenu(ynonnull WimaWin* win, ynonnull WimaMnu* 
 static WimaMnu* wima_window_menu_contains(ynonnull WimaMnu* menu, WimaVec pos);
 
 /**
+ * Draws the tooltip for the current hover widget on @a win.
+ * @param win	The window on which a tooltip will be drawn.
+ * @return		WIMA_STATUS_SUCCESS on success, an error code
+ *				otherwise.
+ * @pre			@a win must not be NULL.
+ */
+static WimaStatus wima_window_drawTooltip(ynonnull WimaWin* win);
+
+/**
  * Processes one event.
  * @param win	The window to process events on.
  * @param wwh	The window handle. Necessary because
@@ -1619,6 +1640,10 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 	// Set the new stage.
 	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 
+	// Set the tooltip and erase the event count.
+	win->tooltip = !win->ctx.eventCount;
+	win->ctx.eventCount = 0;
+
 	// Check for layout.
 	if (WIMA_WIN_NEEDS_LAYOUT(win))
 	{
@@ -1690,6 +1715,20 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 			}
 		}
 
+		// If we have a tooltip...
+		if (win->tooltip && win->ctx.hover.widget != WIMA_WIDGET_INVALID)
+		{
+			// Draw the tooltip and check for error.
+			status = wima_window_drawTooltip(win);
+			if (yerror(status))
+			{
+				// Cancel NanoVG frame on error.
+				nvgCancelFrame(win->render.nvg);
+
+				return status;
+			}
+		}
+
 		// Tell NanoVG to draw.
 		nvgEndFrame(win->render.nvg);
 
@@ -1729,9 +1768,6 @@ void wima_window_processEvents(WimaWindow wwh)
 
 	// Loop through the events and process each.
 	for (int i = 0; i < numEvents; ++i) wima_window_processEvent(win, wwh, handles[i], events[i]);
-
-	// Reset the event count.
-	win->ctx.eventCount = 0;
 
 	// Set the last cursor.
 	win->ctx.last_cursor = win->ctx.cursorPos;
@@ -2057,6 +2093,52 @@ static WimaMnu* wima_window_menu_contains(WimaMnu* menu, WimaVec pos)
 	result = child ? child : result;
 
 	return result;
+}
+
+static WimaStatus wima_window_drawTooltip(WimaWin* win)
+{
+	float bounds[4];
+
+	// Get the cursor.
+	WimaVec cursor = win->ctx.cursorPos;
+
+	// Get the item.
+	WimaItem* item = wima_widget_ptr(win->ctx.hover);
+
+	// Get the prop info.
+	WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, item->widget.prop);
+
+	// Calculate the text bounds.
+	nvgTextBounds(win->render.nvg, 0, 0, info->desc, NULL, bounds);
+
+	// Get the width and height.
+	float width = bounds[2] - bounds[0];
+	float height = bounds[3] - bounds[1];
+
+	// Make sure the tooltip will be in the window's width.
+	if (cursor.x + width > win->fbsize.w) cursor.x = (cursor.x + width) - win->fbsize.w;
+
+	// Make sure the tooltip will be in the window's height.
+	if (cursor.y + height > win->fbsize.h) cursor.y = (cursor.y + height) - win->fbsize.h;
+
+	// Adjust for the icon, if there is one.
+	if (info->icon != WIMA_ICON_INVALID)
+	{
+		width += WIMA_ICON_SHEET_RES;
+		height += WIMA_ICON_SHEET_RES;
+	}
+
+	// Set up NanoVG.
+	nvgResetTransform(win->render.nvg);
+	nvgResetScissor(win->render.nvg);
+	nvgTranslate(win->render.nvg, cursor.x, cursor.y);
+	nvgScissor(win->render.nvg, 0, 0, width, height);
+
+	// Draw the tooltip.
+	wima_ui_tooltip_background(&win->render, 0, 0, width, height);
+	wima_ui_tooltip_label(&win->render, 0, 0, width, height, info->icon, info->desc);
+
+	return WIMA_STATUS_SUCCESS;
 }
 
 static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wdgt, WimaEvent e)

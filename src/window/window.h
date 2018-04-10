@@ -347,6 +347,9 @@ typedef struct WimaWin
 	/// Current workspace.
 	uint8_t wksp;
 
+	/// Whether there is a tooltip visible.
+	bool tooltip;
+
 	/// The user pointer for the window.
 	void* user;
 

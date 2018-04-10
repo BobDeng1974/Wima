@@ -528,7 +528,12 @@ WimaStatus wima_main()
 		if (yerror(status)) wima_error_desc(status, "Wima encountered an error while rendering.");
 
 		// Poll for events.
-		glfwWaitEvents();
+		if (!wima_window_hasTooltip(wwh))
+			glfwWaitEventsTimeout(0.75);
+		else
+			glfwWaitEvents();
+
+		// Get the current window.
 		win = glfwGetCurrentContext();
 
 		// Break if we should close.
