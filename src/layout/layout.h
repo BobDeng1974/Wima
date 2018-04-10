@@ -63,7 +63,6 @@ extern "C" {
  */
 typedef enum WimaLayoutStage
 {
-
 	/// Layout stage.
 	WIMA_UI_STAGE_LAYOUT = 0,
 
