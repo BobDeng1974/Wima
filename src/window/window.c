@@ -261,6 +261,12 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	// Check for error.
 	if (yerror(!window->workspaceSizes)) goto wima_win_create_malloc_err;
 
+	// Create the root layouts vector.
+	window->rootLayouts = dvec_create(cap, NULL, NULL, sizeof(WimaLayout));
+
+	// Check for error.
+	if (yerror(!window->rootLayouts)) goto wima_win_create_malloc_err;
+
 	// Set the tree index.
 	window->treeStackIdx = 0;
 
@@ -290,7 +296,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 		WimaSizef min;
 
 		// Initialize the areas.
-		status = wima_area_init(idx, dvec_get(window->workspaces, i), rect, &min);
+		status = wima_area_init(idx, dvec_get(window->workspaces, i), rect, window->rootLayouts, &min);
 		if (status) goto wima_win_create_err;
 
 		// Set the min size.
@@ -1409,6 +1415,9 @@ void wima_window_destroy(void* ptr)
 			for (uint8_t i = 1; i <= win->treeStackIdx; ++i) dtree_free(win->treeStack[i]);
 		}
 
+		// Free the root layouts.
+		if (win->rootLayouts) dvec_free(win->rootLayouts);
+
 		// Free the workspace sizes.
 		if (win->workspaceSizes) dvec_free(win->workspaceSizes);
 
@@ -1616,7 +1625,7 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 		WimaSizef* min = dvec_get(win->workspaceSizes, win->wksp);
 
 		// Layout all areas and check for error.
-		status = wima_area_layout(WIMA_WIN_AREAS(win), min);
+		status = wima_area_layout(WIMA_WIN_AREAS(win), win->rootLayouts, min);
 		if (yerror(status)) return status;
 
 		// Set the minimum size.

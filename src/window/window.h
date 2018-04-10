@@ -356,6 +356,10 @@ typedef struct WimaWin
 	/// The vector of workspace minimum sizes.
 	DynaVector workspaceSizes;
 
+	/// The vector of root layouts. This is used to split
+	/// up size calculation and layout for regions.
+	DynaVector rootLayouts;
+
 	/// The current cursor.
 	GLFWcursor* cursor;
 
