@@ -4,9 +4,8 @@ This is the introduction to Wima.
 
 ## About Wima
 
-Wima is a minimal, non-modal GUI framework built on top of GLFW. It can be
-understood as a "window manager" for user applications (called "clients" from
-here on out).
+Wima is a non-modal GUI framework built on top of GLFW. It can be understood as
+a "window manager" for user applications (called "clients" from here on out).
 
 Because Wima is built on top of GLFW, a library that creates and manages windows
 and contexts for OpenGL, Wima does all of its drawing with OpenGL.

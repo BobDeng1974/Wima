@@ -1,7 +1,7 @@
 # Wima
 
-Wima (pronounced "WEE-muh") is a minimal, non-modal GUI framework built on top
-of [GLFW](http://www.glfw.org/).
+Wima (pronounced "WEE-muh") is a non-modal GUI framework built on top of
+[GLFW](http://www.glfw.org/).
 
 It can be seen as a "window manager" for user applications. In fact, that's
 where its name came from: the author(s) wanted to use the prefix `WM_` for all
