@@ -375,16 +375,6 @@ static void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg);
 static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg);
 
 /**
- * Draws an area's join overlay. This overlay is for when an area is
- * going to be gobbled by an adjoining area.
- * @param area		The area whose join overlay will be drawn.
- * @param nvg		The NanoVG context to render to.
- * @param vertical	Whether the arrow should be vertical or not.
- * @param mirror	Whether the arrow should point left (down) or not.
- */
-static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertical, bool mirror);
-
-/**
  * @}
  */
 
@@ -1548,7 +1538,7 @@ static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVe
 	return wdgt;
 }
 
-void wima_area_join(WimaAreaNode left, WimaAreaNode right)
+void wima_area_join(WimaAreaNode ancestor)
 {
 	// TODO: Write this function.
 }
@@ -1786,11 +1776,26 @@ static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg)
 	nvgShapeAntiAlias(nvg, 1);
 }
 
-static void wima_area_drawJoinOverlay(WimaAr* area, NVGcontext* nvg, bool vertical, bool mirror)
+void wima_area_drawSplitOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, bool vertical)
 {
 	wima_assert_init;
-
 	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
+
+	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
+
+	WimaAr* area = dtree_node(areas, node);
+
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
+}
+
+void wima_area_drawJoinOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, bool vertical, bool mirror)
+{
+	wima_assert_init;
+	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
+
+	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
+
+	WimaAr* area = dtree_node(areas, node);
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 

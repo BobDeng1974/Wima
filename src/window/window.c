@@ -1637,6 +1637,9 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 	// Must run uiEndLayout() and uiProcess() first.
 	wassert(win->ctx.stage == WIMA_UI_STAGE_PROCESS, WIMA_ASSERT_STAGE_PROCESS);
 
+	// Window must be in only one of split or join.
+	wassert(!WIMA_WIN_IN_SPLIT_MODE(win) != !WIMA_WIN_IN_JOIN_MODE(win), WIMA_ASSERT_WIN_SPLIT_JOIN);
+
 	// Set the new stage.
 	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 
@@ -1729,6 +1732,22 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 			}
 		}
 
+		// If the window is in split mode...
+		if (WIMA_WIN_IN_SPLIT_MODE(win))
+		{
+			// Draw the split overlay.
+			WimaAreaNode node = win->ctx.hover.area;
+			wima_area_drawSplitOverlay(WIMA_WIN_AREAS(win), node, win->render.nvg, !win->ctx.split.vertical);
+		}
+
+		// If the window is in join mode...
+		else if (WIMA_WIN_IN_JOIN_MODE(win))
+		{
+			// Draw the join overlay.
+			WimaAreaNode node = win->ctx.hover.area;
+			wima_area_drawJoinOverlay(WIMA_WIN_AREAS(win), node, win->render.nvg, win->ctx.split.vertical, node & 1);
+		}
+
 		// Tell NanoVG to draw.
 		nvgEndFrame(win->render.nvg);
 
@@ -1775,14 +1794,22 @@ void wima_window_processEvents(WimaWindow wwh)
 
 void wima_window_joinAreasMode(WimaWindow wwh)
 {
-	// TODO: Write this function.
-	printf("Join clicked on window[%d]\n", wwh);
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	win->flags |= WIMA_WIN_JOIN_MODE;
 }
 
 void wima_window_splitAreaMode(WimaWindow wwh)
 {
-	// TODO: Write this function.
-	printf("Split clicked on window[%d]\n", wwh);
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	win->flags |= WIMA_WIN_SPLIT_MODE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2281,8 +2308,22 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
 
 static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e)
 {
+	// If the window is in split mode...
+	if (WIMA_WIN_IN_SPLIT_MODE(win))
+	{
+		// Split the area.
+		wima_area_split(win->ctx.hover.area);
+	}
+
+	// If the window is in join mode...
+	else if (WIMA_WIN_IN_JOIN_MODE(win))
+	{
+		// Join the area.
+		wima_area_join(win->ctx.split.area);
+	}
+
 	// If there is a menu...
-	if (WIMA_WIN_HAS_MENU(win))
+	else if (WIMA_WIN_HAS_MENU(win))
 	{
 		// If the mouse button hasn't been released yet,
 		// set it to released and return because we don't

@@ -79,7 +79,7 @@ extern "C" {
  * @def WIMA_WIN_DIRTY
  * Window dirty bit.
  */
-#define WIMA_WIN_DIRTY (0x80)
+#define WIMA_WIN_DIRTY (0x0001)
 
 /**
  * @def WIMA_WIN_IS_DIRTY
@@ -93,13 +93,13 @@ extern "C" {
  * @def WIMA_WIN_LAYOUT
  * Window layout bit.
  */
-#define WIMA_WIN_LAYOUT (0x40)
+#define WIMA_WIN_LAYOUT (0x0002)
 /**
  * @def WIMA_WIN_LAYOUT_FORCE
  * Window force layout bit. This is used to make
  * sure the user can't cancel required layouts.
  */
-#define WIMA_WIN_LAYOUT_FORCE (0x20)
+#define WIMA_WIN_LAYOUT_FORCE (0x0004)
 
 /**
  * @def WIMA_WIN_NEEDS_LAYOUT
@@ -113,7 +113,7 @@ extern "C" {
  * @def WIMA_WIN_MENU
  * Window menu bit.
  */
-#define WIMA_WIN_MENU (0x01)
+#define WIMA_WIN_MENU (0x0008)
 
 /**
  * @def WIMA_WIN_HAS_MENU(win)
@@ -129,7 +129,7 @@ extern "C" {
  * the mouse button to release before sending
  * events to a menu.
  */
-#define WIMA_WIN_MENU_RELEASED (0x02)
+#define WIMA_WIN_MENU_RELEASED (0x0010)
 
 /**
  * @def WIMA_WIN_MENU_IS_RELEASED(win)
@@ -144,7 +144,7 @@ extern "C" {
  * Window context menu bit. This is to
  * mark when a menu is a context menu.
  */
-#define WIMA_WIN_MENU_CONTEXT (0x04)
+#define WIMA_WIN_MENU_CONTEXT (0x0020)
 
 /**
  * @def WIMA_WIN_MENU_IS_CONTEXT(win)
@@ -160,7 +160,7 @@ extern "C" {
  * not. If so, the field @a click_item is the menu item.
  * Otherwise, it's the widget that was clicked.
  */
-#define WIMA_WIN_MENU_ITEM_PRESS (0x08)
+#define WIMA_WIN_MENU_ITEM_PRESS (0x0040)
 
 /**
  * @def WIMA_WIN_MENU_ITEM_WAS_PRESSED(win)
@@ -175,11 +175,11 @@ extern "C" {
  * A bit indicating whether the window
  * has an overlay up or not.
  */
-#define WIMA_WIN_OVERLAY (0x10)
+#define WIMA_WIN_OVERLAY (0x0080)
 
 /**
  * @def WIMA_WIN_HAS_OVERLAY(win)
- * Returns true if the window has an overlay, false otherwise.
+ * Returns true if @a win has an overlay, false otherwise.
  * @param win	The window to test.
  * @return		true if @a win has an overlay, false otherwise.
  */
@@ -190,15 +190,45 @@ extern "C" {
  * A bit indicating whether the window
  * has a tooltip up or not.
  */
-#define WIMA_WIN_TOOLTIP (0x20)
+#define WIMA_WIN_TOOLTIP (0x0100)
 
 /**
  * @def WIMA_WIN_HAS_TOOLTIP(win)
- * Returns true if the window has a tooltip, false otherwise.
+ * Returns true if @a win has a tooltip, false otherwise.
  * @param win	The window to test.
  * @return		true if @a win has a tooltip, false otherwise.
  */
 #define WIMA_WIN_HAS_TOOLTIP(win) (((win)->flags) & WIMA_WIN_TOOLTIP)
+
+/**
+ * @def WIMA_WIN_SPLIT_MODE
+ * A bit indicating whether the window
+ * is in split mode or not.
+ */
+#define WIMA_WIN_SPLIT_MODE (0x0200)
+
+/**
+ * @def WIMA_WIN_IN_SPLIT_MODE(win)
+ * Returns true if @a win is in split mode, false otherwise.
+ * @param win	The window to test.
+ * @return		true if @a win is in split mode, false otherwise.
+ */
+#define WIMA_WIN_IN_SPLIT_MODE(win) (((win)->flags) & WIMA_WIN_SPLIT_MODE)
+
+/**
+ * @def WIMA_WIN_JOIN_MODE
+ * A bit indicating whether the window
+ * is in join mode or not.
+ */
+#define WIMA_WIN_JOIN_MODE (0x0400)
+
+/**
+ * @def WIMA_WIN_IN_JOIN_MODE(win)
+ * Returns true if @a win is in join mode, false otherwise.
+ * @param win	The window to test.
+ * @return		true if @a win is in join mode, false otherwise.
+ */
+#define WIMA_WIN_IN_JOIN_MODE(win) (((win)->flags) & WIMA_WIN_JOIN_MODE)
 
 /**
  * @def WIMA_WIN_RENDER_STACK_MAX
@@ -322,13 +352,8 @@ typedef struct WimaWin
 	/// The pixel ratio of the window.
 	float pixelRatio;
 
-	/// Index currently set in the area stack.
-	/// Because it's a stack, it also is the
-	/// length - 1.
-	uint8_t treeStackIdx;
-
-	/// Bits set when we have a menu.
-	uint8_t flags;
+	/// Bits set when we have a menu and other thigns..
+	uint16_t flags;
 
 	/// The current overlay, or WIMA_OVERLAY_INVALID.
 	WimaOverlay overlay;
@@ -343,12 +368,6 @@ typedef struct WimaWin
 	/// it easy to click items that are used a lot.
 	WimaVec overlayOffset;
 
-	/// The area stack.
-	DynaTree treeStack[WIMA_WINDOW_STACK_MAX];
-
-	/// The window name. This starts as the app name.
-	DynaString name;
-
 	/// The current menu, or WIMA_MENU_INVALID.
 	WimaMenu menu;
 
@@ -361,6 +380,17 @@ typedef struct WimaWin
 
 	/// Current workspace.
 	uint8_t wksp;
+
+	/// Index currently set in the area stack.
+	/// Because it's a stack, it also is the
+	/// length - 1.
+	uint8_t treeStackIdx;
+
+	/// The area stack.
+	DynaTree treeStack[WIMA_WINDOW_STACK_MAX];
+
+	/// The window name. This starts as the app name.
+	DynaString name;
 
 	/// The user pointer for the window.
 	void* user;

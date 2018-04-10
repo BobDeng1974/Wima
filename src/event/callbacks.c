@@ -352,11 +352,11 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y)
 	WimaAreaSplit sevent;
 	uint32_t numEvents;
 
-	// If we are moving the split...
-	if (wwin->ctx.movingSplit)
+	// If we are moving the split or in split/join mode...
+	if (WIMA_WIN_IN_SPLIT_MODE(wwin) || WIMA_WIN_IN_JOIN_MODE(wwin) || wwin->ctx.movingSplit)
 	{
 		// Set the window as dirty with forcing layout.
-		wima_window_setDirty(wwin, true);
+		wima_window_setDirty(wwin, wwin->ctx.movingSplit);
 	}
 
 	// If we right clicked on the split before this mouse move...

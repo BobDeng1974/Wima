@@ -129,6 +129,7 @@ const char* const wima_assert_msgs[] = {
 	"client tried to pop too many render contexts (scrollable layouts) off the stack",
 	"client tried to push too many render contexts (scrollable layouts) onto the stack",
 	"window title is NULL",
+	"window is in both split and join modes; this is a bug in wima",
 
 	"tree is not valid",
 	"node is beyond max number of nodes for the given tree",

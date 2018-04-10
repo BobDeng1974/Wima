@@ -380,14 +380,32 @@ void wima_area_moveSplit(ynonnull DynaTree areas, DynaNode node, WimaAreaSplit s
 WimaWidget wima_area_findWidget(ynonnull DynaTree areas, WimaVec pos, uint32_t flags);
 
 /**
+ * Draws an area's join overlay. This overlay is for when an area is
+ * going to be gobbled by an adjoining area.
+ * @param areas		The tree of areas.
+ * @param node		The node of the area whose join overlay will be drawn.
+ * @param nvg		The NanoVG context to render to.
+ * @param vertical	Whether the arrow should be vertical or not.
+ * @param mirror	Whether the arrow should point left (down) or not.
+ */
+void wima_area_drawJoinOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, bool vertical, bool mirror);
+
+/**
+ * Draw an area's split overlay.
+ * @param areas		The tree of areas.
+ * @param node		The node of the area whose split overlay will be drawn.
+ * @param nvg		The NanoVG context to render to.
+ * @param vertical	Whether the line should be vertical or not.
+ */
+void wima_area_drawSplitOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, bool vertical);
+
+/**
  * Joins two areas into one. It handles finding the common
  * ancestor and checking if the areas can be merged.
- * @param left	The left (or up) area.
- * @param right	The right (or down) area.
- * @pre			@a left must be valid.
- * @pre			@a right must be valid.
+ * @param ancestor	The area whose split was clicked.
+ * @pre				@a ancestor must be valid.
  */
-void wima_area_join(WimaAreaNode left, WimaAreaNode right);
+void wima_area_join(WimaAreaNode ancestor);
 
 /**
  * Split an area into two. The same editor is used for both.
