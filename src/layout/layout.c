@@ -532,8 +532,6 @@ WimaSizef wima_layout_size(WimaItem* item, WimaAr* area)
 
 WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 {
-	// TODO: Write this function.
-
 	wima_assert_init;
 
 	wassert(WIMA_ITEM_IS_LAYOUT(item), WIMA_ASSERT_LAYOUT);
