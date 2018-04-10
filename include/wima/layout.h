@@ -154,6 +154,28 @@ uint16_t wima_layout_setBoxFlag(uint16_t flags) yconst yinline;
 uint16_t wima_layout_clearBoxFlag(uint16_t flags) yconst yinline;
 
 /**
+ * Takes an initial flag value and sets the aligned bit.
+ * The aligned bit is whether corners of widgets should
+ * aligned with each other.
+ *
+ * This flag is inherited by any layout children.
+ * @param flags	The initial flags value.
+ * @return		The @a flags with the aligned bit set.
+ */
+uint16_t wima_layout_setAlignedFlag(uint16_t flags) yconst yinline;
+
+/**
+ * Takes an initial flag value and clears the aligned bit.
+ * The aligned bit is whether corners of widgets should
+ * aligned with each other.
+ *
+ * This flag is inherited by any layout children.
+ * @param flags	The initial flags value.
+ * @return		The @a flags with the aligned bit cleared.
+ */
+uint16_t wima_layout_clearAlignedFlag(uint16_t flags) yconst yinline;
+
+/**
  * Sets whether @a wlh (and its children) are enabled.
  * If a layout is not enabled, none of its children are.
  * @param wlh		The layout to set as enabled or not.

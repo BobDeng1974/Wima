@@ -222,6 +222,24 @@ uint16_t wima_layout_clearBoxFlag(uint16_t flags)
 	return flags;
 }
 
+uint16_t wima_layout_setAlignedFlag(uint16_t flags)
+{
+	wima_assert_init;
+
+	flags |= WIMA_LAYOUT_ALIGNED;
+
+	return flags;
+}
+
+uint16_t wima_layout_clearAlignedFlag(uint16_t flags)
+{
+	wima_assert_init;
+
+	flags &= ~(WIMA_LAYOUT_ALIGNED);
+
+	return flags;
+}
+
 void wima_layout_setEnabled(WimaLayout wlh, bool enabled)
 {
 	wassert(wima_layout_valid(wlh), WIMA_ASSERT_LAYOUT);

@@ -108,25 +108,27 @@ typedef enum WimaLayoutStage
  */
 #define WIMA_LAYOUT_BOX (0x0080)
 
+#define WIMA_LAYOUT_ALIGNED (0x0100)
+
 /**
  * A flag indicating whether a layout expands horizontally.
  */
-#define WIMA_LAYOUT_FILL_HOR (0x0100)
+#define WIMA_LAYOUT_FILL_HOR (0x0200)
 
 /**
  * A flag indicating whether a layout expands vertically.
  */
-#define WIMA_LAYOUT_FILL_VER (0x0200)
+#define WIMA_LAYOUT_FILL_VER (0x0400)
 
 /**
  * A flag indicating whether a layout scrolls horizontally.
  */
-#define WIMA_LAYOUT_SCROLL_HOR (0x0400)
+#define WIMA_LAYOUT_SCROLL_HOR (0x0800)
 
 /**
  * A flag indicating whether a layout scrolls vertically.
  */
-#define WIMA_LAYOUT_SCROLL_VER (0x0800)
+#define WIMA_LAYOUT_SCROLL_VER (0x1000)
 
 /**
  * @def WIMA_LAYOUT_TYPE_MASK
