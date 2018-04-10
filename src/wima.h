@@ -78,7 +78,7 @@ typedef struct WimaG
 	DynaVector windows;
 
 	/// Properties.
-	DynaVector props;
+	DynaNVector props;
 
 	/// Custom properties. These become custom
 	/// widgets in the user interface.
