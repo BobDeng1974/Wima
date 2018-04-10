@@ -169,75 +169,49 @@ bool wima_layout_inOverlay(WimaLayout layout)
 uint16_t wima_layout_setExpandFlags(uint16_t flags, bool vertical, bool horizontal)
 {
 	wima_assert_init;
-
-	flags |= vertical ? WIMA_LAYOUT_FILL_VER : 0;
-	flags |= horizontal ? WIMA_LAYOUT_FILL_HOR : 0;
-
-	return flags;
+	return flags | (vertical * WIMA_LAYOUT_FILL_VER) | (horizontal * WIMA_LAYOUT_FILL_HOR);
 }
 
 uint16_t wima_layout_clearExpandFlags(uint16_t flags)
 {
 	wima_assert_init;
-
-	flags &= ~(WIMA_LAYOUT_FILL_HOR | WIMA_LAYOUT_FILL_VER);
-
-	return flags;
+	return flags & ~(WIMA_LAYOUT_FILL_HOR | WIMA_LAYOUT_FILL_VER);
 }
 
 uint16_t wima_layout_setScrollFlags(uint16_t flags, bool vertical, bool horizontal)
 {
 	wima_assert_init;
-
-	flags |= vertical ? WIMA_LAYOUT_SCROLL_VER : 0;
-	flags |= horizontal ? WIMA_LAYOUT_SCROLL_HOR : 0;
-
-	return flags;
+	return flags | (vertical * WIMA_LAYOUT_SCROLL_VER) | (horizontal * WIMA_LAYOUT_SCROLL_HOR);
 }
 
 uint16_t wima_layout_clearScrollFlags(uint16_t flags)
 {
 	wima_assert_init;
-
-	flags &= ~(WIMA_LAYOUT_SCROLL_HOR | WIMA_LAYOUT_SCROLL_VER);
-
-	return flags;
+	return flags & ~(WIMA_LAYOUT_SCROLL_HOR | WIMA_LAYOUT_SCROLL_VER);
 }
 
 uint16_t wima_layout_setBoxFlag(uint16_t flags)
 {
 	wima_assert_init;
-
-	flags |= WIMA_LAYOUT_BOX;
-
-	return flags;
+	return flags | WIMA_LAYOUT_BOX;
 }
 
 uint16_t wima_layout_clearBoxFlag(uint16_t flags)
 {
 	wima_assert_init;
-
-	flags &= ~(WIMA_LAYOUT_BOX);
-
-	return flags;
+	return flags & ~(WIMA_LAYOUT_BOX);
 }
 
 uint16_t wima_layout_setAlignedFlag(uint16_t flags)
 {
 	wima_assert_init;
-
-	flags |= WIMA_LAYOUT_ALIGNED;
-
-	return flags;
+	return flags | WIMA_LAYOUT_ALIGNED;
 }
 
 uint16_t wima_layout_clearAlignedFlag(uint16_t flags)
 {
 	wima_assert_init;
-
-	flags &= ~(WIMA_LAYOUT_ALIGNED);
-
-	return flags;
+	return flags & ~(WIMA_LAYOUT_ALIGNED);
 }
 
 void wima_layout_setEnabled(WimaLayout wlh, bool enabled)
