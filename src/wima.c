@@ -38,15 +38,15 @@
 
 #include "wima.h"
 
-#include "area/area.h"
-#include "area/editor.h"
-#include "area/region.h"
-#include "event/callbacks.h"
-#include "prop/prop.h"
+#include "areas/area.h"
+#include "areas/editor.h"
+#include "areas/region.h"
+#include "events/callbacks.h"
+#include "props/prop.h"
 #include "render/render.h"
-#include "window/menu.h"
-#include "window/overlay.h"
-#include "window/window.h"
+#include "windows/menu.h"
+#include "windows/overlay.h"
+#include "windows/window.h"
 
 #include <dyna/dyna.h>
 #include <dyna/nvector.h>

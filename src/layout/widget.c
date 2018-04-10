@@ -64,9 +64,9 @@
 
 #include "../wima.h"
 
-#include "../area/area.h"
-#include "../prop/prop.h"
-#include "../window/window.h"
+#include "../areas/area.h"
+#include "../props/prop.h"
+#include "../windows/window.h"
 
 #include <dyna/nvector.h>
 

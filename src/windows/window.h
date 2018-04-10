@@ -44,8 +44,8 @@ extern "C" {
 
 #include <wima/wima.h>
 
-#include "../area/area.h"
-#include "../event/event.h"
+#include "../areas/area.h"
+#include "../events/event.h"
 #include "menu.h"
 #include "workspace.h"
 

@@ -45,9 +45,9 @@
 #include "../wima.h"
 
 #include "../layout/widget.h"
-#include "../prop/prop.h"
+#include "../props/prop.h"
 #include "../render/render.h"
-#include "../window/window.h"
+#include "../windows/window.h"
 
 #include <dyna/nvector.h>
 #include <yc/assert.h>

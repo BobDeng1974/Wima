@@ -38,7 +38,7 @@
 
 #include "../wima.h"
 
-#include "../window/window.h"
+#include "../windows/window.h"
 
 #include <yc/error.h>
 

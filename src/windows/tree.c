@@ -38,8 +38,8 @@
 
 #include "../wima.h"
 
-#include "../area/area.h"
-#include "../area/region.h"
+#include "../areas/area.h"
+#include "../areas/region.h"
 
 #include <dyna/tree.h>
 #include <yc/error.h>

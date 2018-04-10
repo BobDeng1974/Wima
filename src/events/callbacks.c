@@ -41,10 +41,10 @@
 
 #include "../wima.h"
 
-#include "../area/area.h"
+#include "../areas/area.h"
 #include "../layout/widget.h"
-#include "../window/window.h"
-#include "../window/workspace.h"
+#include "../windows/window.h"
+#include "../windows/workspace.h"
 
 #include <GLFW/glfw3.h>
 #include <yc/error.h>

@@ -66,7 +66,7 @@
 
 #include "../wima.h"
 
-#include "../prop/prop.h"
+#include "../props/prop.h"
 
 #include <dyna/nvector.h>
 #include <yc/assert.h>

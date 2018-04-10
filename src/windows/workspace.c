@@ -41,8 +41,8 @@
 
 #include "../wima.h"
 
-#include "../area/area.h"
-#include "../area/editor.h"
+#include "../areas/area.h"
+#include "../areas/editor.h"
 
 #include <yc/assert.h>
 #include <yc/error.h>

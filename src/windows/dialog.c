@@ -38,7 +38,7 @@
 
 #include "../wima.h"
 
-#include "../area/area.h"
+#include "../areas/area.h"
 
 #include <yc/error.h>
 

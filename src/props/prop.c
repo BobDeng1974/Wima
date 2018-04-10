@@ -41,7 +41,7 @@
 
 #include "../wima.h"
 
-#include "../event/event.h"
+#include "../events/event.h"
 
 #include <dyna/hash.h>
 #include <dyna/nvector.h>

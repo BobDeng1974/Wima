@@ -58,11 +58,11 @@
 
 #include "../wima.h"
 
-#include "../area/area.h"
-#include "../area/editor.h"
-#include "../event/callbacks.h"
+#include "../areas/area.h"
+#include "../areas/editor.h"
+#include "../events/callbacks.h"
 #include "../math/math.h"
-#include "../prop/prop.h"
+#include "../props/prop.h"
 #include "../render/render.h"
 
 #include <GLFW/glfw3.h>
