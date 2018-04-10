@@ -536,6 +536,11 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 
 	wassert(WIMA_ITEM_IS_LAYOUT(item), WIMA_ASSERT_LAYOUT);
 
+	// We use this to decide what to do.
+	uint16_t flags = item->layout.flags & (WIMA_LAYOUT_TYPE_MASK);
+
+	wassert(item->layout.kidCount || (flags & WIMA_LAYOUT_SEP), WIMA_ASSERT_LAYOUT_NO_CHILDREN);
+
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	// Get the number of children.
@@ -545,9 +550,6 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 
 	// Make sure to set the index.
 	uint16_t idx = item->layout.firstKid;
-
-	// We use this to decide what to do.
-	uint16_t flags = item->layout.flags & (WIMA_LAYOUT_TYPE_MASK);
 
 	float wextra = 0.0f;
 	float hextra = 0.0f;
