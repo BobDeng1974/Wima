@@ -1080,6 +1080,10 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 		// Keep track of what's left.
 		temp = *min;
 
+		// Add a border for the area.
+		min->w += WIMA_REG_BORDER2;
+		min->h += WIMA_REG_BORDER2;
+
 		for (uint8_t i = 0; i < numRegions; ++i)
 		{
 			// Get the item.
