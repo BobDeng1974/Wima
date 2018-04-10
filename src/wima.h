@@ -55,7 +55,7 @@ extern "C" {
 #include <yc/assert.h>
 
 /**
- * @file global.h
+ * @file src/wima.h
  */
 
 /**

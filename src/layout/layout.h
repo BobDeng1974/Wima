@@ -49,7 +49,7 @@ extern "C" {
 #include "widget.h"
 
 /**
- * @file src/layout.h
+ * @file layout/layout.h
  */
 
 /**
@@ -108,6 +108,9 @@ typedef enum WimaLayoutStage
  */
 #define WIMA_LAYOUT_BOX (0x0080)
 
+/**
+ * A flag indicating whether a layout has aligned corners.
+ */
 #define WIMA_LAYOUT_ALIGNED (0x0100)
 
 /**

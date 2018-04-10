@@ -272,6 +272,8 @@ WimaG wg;
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+//! @cond Doxygen suppress.
+
 WimaStatus wima_ninit(const char* name, WimaAppFuncs funcs, const char* fontPath, uint32_t numIcons, ...)
 {
 	va_list iconPaths;
@@ -639,3 +641,5 @@ yctor static void wima_ctor()
 {
 	wg.name = NULL;
 }
+
+//! @endcond Doxygen suppress.
