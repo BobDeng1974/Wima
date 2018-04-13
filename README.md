@@ -27,12 +27,11 @@ used by [Pixar Animation Studios](https://www.pixar.com/) for use on the
 
 ## Getting Started
 
-To get started, clone the repo, and then run the following two commands in the
-root directory:
+To get started, clone the repo, and then run the following command in the root
+directory:
 
 ```
 git submodule update --init --recursive
-scripts/setup.sh
 ```
 
 ## Dependencies
