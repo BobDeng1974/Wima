@@ -354,21 +354,13 @@ extern const char* const wima_assert_msgs[];
 //! @endcond
 
 /**
- * @def wima_assert_msg
- * Indexes into the array of assert messages.
- * @param idx	The index of the desired message.
- *				Should be one of @a WimaAssertType.
- */
-#define wima_assert_msg(idx) wima_assert_msgs[(idx)]
-
-/**
  * @def wassert
  * An assert call that uses Wima's array of assert messages.
  * @param	expr	The expression to test for.
  * @param	idx		The index of the desired assert message.
  *					Should be one of @a WimaAssertType.
  */
-#define wassert(expr, idx) yassert(expr, wima_assert_msg(idx))
+#define wassert(expr, idx) yassert(expr, wima_assert_msgs[(idx)])
 
 /**
  * @def wima_assert_init
