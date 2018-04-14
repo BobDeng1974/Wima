@@ -164,7 +164,7 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	wwin.window = win;
 
 	// Create the image vector and check for error.
-	wwin.images = dvec_create(0, NULL, NULL, sizeof(int));
+	wwin.images = dvec_create(0, sizeof(int), NULL, NULL);
 	if (yerror(!wwin.images)) goto wima_win_create_noptr_err;
 
 	int w, h;
@@ -241,14 +241,14 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	window = dvec_get(wg.windows, idx);
 
 	// Create an items vector and check for error.
-	window->overlayItems = dvec_create(0, NULL, NULL, sizeof(WimaItem));
+	window->overlayItems = dvec_create(0, sizeof(WimaItem), NULL, NULL);
 	if (yerror(!window->overlayItems)) goto wima_win_create_malloc_err;
 
 	// Cache this.
 	size_t cap = dvec_cap(wg.workspaces);
 
 	// Create a workspaces vector.
-	window->workspaces = dvec_createTreeVec(cap, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
+	window->workspaces = dvec_createTreeVec(cap, sizeof(WimaAr), wima_area_destroy, wima_area_copy);
 
 	// Check for error.
 	if (yerror(!window->workspaces)) goto wima_win_create_malloc_err;
@@ -257,13 +257,13 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	if (yerror(dvec_copy(window->workspaces, wg.workspaces))) goto wima_win_create_malloc_err;
 
 	// Create the sizes vector.
-	window->workspaceSizes = dvec_create(cap, NULL, NULL, sizeof(WimaSizef));
+	window->workspaceSizes = dvec_create(cap, sizeof(WimaSizef), NULL, NULL);
 
 	// Check for error.
 	if (yerror(!window->workspaceSizes)) goto wima_win_create_malloc_err;
 
 	// Create the root layouts vector.
-	window->rootLayouts = dvec_create(cap, NULL, NULL, sizeof(WimaLayout));
+	window->rootLayouts = dvec_create(cap, sizeof(WimaLayout), NULL, NULL);
 
 	// Check for error.
 	if (yerror(!window->rootLayouts)) goto wima_win_create_malloc_err;
@@ -389,7 +389,7 @@ wima_win_create_malloc_err:
 wima_win_create_err:
 
 	// Destroy the window.
-	wima_window_destroy(window);
+	wima_window_destroy(NULL, window);
 
 // Error creating name or GLFW window.
 wima_win_create_name_glfw_err:
@@ -1411,7 +1411,7 @@ DynaStatus wima_window_copy(void* dest yunused, void* src yunused)
 	abort();
 }
 
-void wima_window_destroy(void* ptr)
+void wima_window_destroy(void* vec yunused, void* ptr)
 {
 	wima_assert_init;
 

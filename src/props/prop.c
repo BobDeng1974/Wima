@@ -366,7 +366,7 @@ WimaProperty wima_prop_list_register(const char* name, const char* label, const 
 	WimaPropData prop;
 
 	// Create the list and send error if any.
-	DynaVector list = dvec_create(0, NULL, NULL, sizeof(WimaProperty));
+	DynaVector list = dvec_create(0, sizeof(WimaProperty), NULL, NULL);
 	if (yerror(!list))
 	{
 		wima_error(WIMA_STATUS_MALLOC_ERR);

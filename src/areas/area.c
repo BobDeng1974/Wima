@@ -508,7 +508,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 	area->area.ctx.itemCount = 0;
 
 	// Create the pool and check for error.
-	area->area.ctx.widgetData = dpool_create(0.9f, NULL, NULL, NULL, sizeof(uint64_t));
+	area->area.ctx.widgetData = dpool_create(0.9f, sizeof(uint64_t), NULL, NULL, NULL);
 	if (yerror(!area->area.ctx.widgetData))
 	{
 		ysfree(area->area.ctx.items, size);

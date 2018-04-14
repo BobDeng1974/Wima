@@ -115,7 +115,7 @@ static bool wima_tree_nodeValid(ynonnull WimaTree tree, DynaNode n) yinline;
 WimaTree wima_tree_create()
 {
 	wima_assert_init;
-	return dtree_create(0, wima_area_copy, wima_area_destroy, sizeof(WimaAr));
+	return dtree_create(0, sizeof(WimaAr), wima_area_destroy, wima_area_copy);
 }
 
 WimaAreaNode wima_tree_addRootParent(WimaTree tree, float split, bool vertical)

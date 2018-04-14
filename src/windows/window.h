@@ -427,9 +427,10 @@ DynaStatus wima_window_copy(void* dest, void* src) ynoreturn;
 
 /**
  * Destroys a window. This is a Dyna DestructFunc.
+ * @param vec	The vector containing the window.
  * @param ptr	A pointer to the window to destroy.
  */
-void wima_window_destroy(void* ptr);
+void wima_window_destroy(void* vec, void* ptr);
 
 /**
  * Adds an image to a window. This allows the NanoVG
