@@ -41,7 +41,6 @@
 #include "../wima.h"
 
 #include <yc/error.h>
-#include <yc/mem.h>
 
 #include <stdlib.h>
 #include <string.h>

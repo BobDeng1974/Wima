@@ -95,14 +95,9 @@ endif()
 add_definitions(
 	-DNANOVG_GL3_IMPLEMENTATION
 	-DNANOVG_GL_IMPLEMENTATION
-	-DSTBI_MALLOC=ymalloc
-	-DSTBI_REALLOC=yrealloc
-	-DSTBI_FREE=yfree
 )
 
 set(NANOVG_SRC_DIR "nanovg/src")
-
-include_directories(".")
 
 include_directories("${NANOVG_SRC_DIR}")
 

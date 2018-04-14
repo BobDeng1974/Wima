@@ -52,7 +52,6 @@
 #include <dyna/nvector.h>
 #include <yc/assert.h>
 #include <yc/error.h>
-#include <yc/mem.h>
 
 #include <limits.h>
 #include <math.h>
@@ -496,22 +495,18 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 	// Get the editor pointer.
 	WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
-	// Calculate the optimal allocation size.
-	size_t size = ynalloc(sizeof(WimaItem) * area->area.ctx.itemCap);
-
 	// Allocate and check for error.
-	area->area.ctx.items = ymalloc(size);
+	area->area.ctx.items = malloc(sizeof(WimaItem) * area->area.ctx.itemCap);
 	if (yerror(!area->area.ctx.items)) return WIMA_STATUS_MALLOC_ERR;
 
-	// Set the capacity (to the allocated size) and the count.
-	area->area.ctx.itemCap = size / sizeof(WimaItem);
+	// Set the count.
 	area->area.ctx.itemCount = 0;
 
 	// Create the pool and check for error.
 	area->area.ctx.widgetData = dpool_create(0.9f, sizeof(uint64_t), NULL, NULL, NULL);
 	if (yerror(!area->area.ctx.widgetData))
 	{
-		ysfree(area->area.ctx.items, size);
+		free(area->area.ctx.items);
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
@@ -621,7 +616,7 @@ void wima_area_destroy(DynaTree tree yunused, void* ptr)
 		for (uint32_t i = 0; i < itemCount; ++i, item += 1) wima_item_free(area, item);
 
 		// Free the array.
-		yfree(area->area.ctx.items);
+		free(area->area.ctx.items);
 	}
 
 	// If the widget pool is not NULL...

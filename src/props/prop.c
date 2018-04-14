@@ -48,7 +48,6 @@
 #include <dyna/string.h>
 #include <dyna/vector.h>
 #include <yc/error.h>
-#include <yc/mem.h>
 #include <yc/opt.h>
 
 #include <stdbool.h>
@@ -1280,7 +1279,7 @@ void wima_prop_destroy(DynaNVector vec yunused, void** ptrs)
 
 	// Only free the name because the label
 	// and desc are jointly allocated.
-	yfree(prop->name);
+	free(prop->name);
 
 	// Set the index as invalid to tell Wima it's available.
 	prop->idx = WIMA_PROP_INVALID;
@@ -1377,7 +1376,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 	sum += descLen;
 
 	// Allocate the space.
-	prop.name = ymalloc(sum);
+	prop.name = malloc(sum);
 
 	// Check for failure.
 	if (yerror(!prop.name)) return WIMA_PROP_INVALID;
@@ -1429,7 +1428,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 	// Check for error.
 	if (yerror(status != DYNA_STATUS_SUCCESS))
 	{
-		ysfree(prop.name, sum);
+		free(prop.name);
 		return WIMA_PROP_INVALID;
 	}
 
