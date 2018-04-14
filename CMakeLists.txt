@@ -113,8 +113,16 @@ find_library(RT_LIB rt PATHS "/usr/lib" "/usr/local/lib")
 find_library(MATH_LIB m PATHS "/usr/lib" "/usr/local/lib")
 find_library(DL_LIB dl "/usr/lib" "/usr/local/lib")
 find_library(PTHREAD_LIB pthread PATHS "/usr/lib" "/usr/local/lib")
-find_library(YC_LIB NAMES libyc.a yc PATHS "/usr/lib" "/usr/local/lib")
-find_library(DYNA_LIB NAMES libdyna.a dyna PATHS "/usr/lib" "/usr/local/lib")
+
+# Find the Yc library, if necessary.
+if (NOT DEFINED YC_LIB)
+	find_library(YC_LIB NAMES libyc.a yc PATHS "/usr/lib" "/usr/local/lib")
+endif()
+
+# Find the Dyna library, if necessary.
+if (NOT DEFINED DYNA_LIB)
+	find_library(DYNA_LIB NAMES libdyna.a dyna PATHS "/usr/lib" "/usr/local/lib")
+endif()
 
 set("WIMA_DOCS_DIR" "docs")
 set("WIMA_INCLUDE_DIR" "include")
