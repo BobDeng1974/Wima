@@ -29,8 +29,9 @@ set(WIMA_GLAD_SRC "glad.c")
 set(WIMA_GLAD "${PROJECT_NAME}_glad")
 set(WIMA_GLAD "${WIMA_GLAD}" PARENT_SCOPE)
 
-create_pic_library(
-	"${WIMA_GLAD}" "${WIMA_GLAD}" "${WIMA_GLAD_SRC}" YES
+create_merge_library(
+	"${WIMA_GLAD}" "${WIMA_GLAD_SRC}"
 
+	# Add libraries here.
 	"${DL_LIB}"
 )
