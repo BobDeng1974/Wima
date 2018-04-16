@@ -503,9 +503,11 @@ WimaStatus wima_window_draw(WimaWindow win);
 /**
  * Processes the event queue on @a win.
  * @param win	The window whose event queue will be processed.
+ * @return		WIMA_STATUS_SUCCESS on success, an error code
+ *				otherwise.
  * @pre			@a win must be valid.
  */
-void wima_window_processEvents(WimaWindow win);
+WimaStatus wima_window_processEvents(WimaWindow win);
 
 /**
  * Callback to put Wima into "join areas" mode.

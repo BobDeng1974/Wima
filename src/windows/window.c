@@ -1378,8 +1378,10 @@ static WimaStatus wima_window_drawTooltip(ynonnull WimaWin* win);
  *				windows don't store their index.
  * @param wdgt	The widget associated with the event.
  * @param e		The event.
+ * @return			WIMA_STATUS_SUCCESS on success, an error
+ *					code otherwise.
  */
-static void wima_window_processEvent(ynonnull WimaWin* win, WimaWindow wwh, WimaWidget wdgt, WimaEvent e);
+static WimaStatus wima_window_processEvent(ynonnull WimaWin* win, WimaWindow wwh, WimaWidget wdgt, WimaEvent e);
 
 /**
  * Processes a mouse button event. This is
@@ -1387,8 +1389,10 @@ static void wima_window_processEvent(ynonnull WimaWin* win, WimaWindow wwh, Wima
  * @param win	The window to process the event on.
  * @param wdgt	The widget associated with the event.
  * @param e		The event.
+ * @return		WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
  */
-static void wima_window_processMouseBtnEvent(ynonnull WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e);
+static WimaStatus wima_window_processMouseBtnEvent(ynonnull WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e);
 
 /**
  * Processes a file drop event on a window.
@@ -1401,9 +1405,13 @@ static void wima_window_processFileDrop(WimaWindow wwh, ynonnull DynaVector file
  * Joins two areas into one. It handles finding the common
  * ancestor and checking if the areas can be merged.
  * @param ancestor	The area whose split was clicked.
+ * @param squash	The area that will disappear.
+ * @return			WIMA_STATUS_SUCCESS on success, an error
+ *					code otherwise.
  * @pre				@a ancestor must be valid.
+ * @pre				@a squash must be valid.
  */
-static void wima_area_join(WimaAreaNode ancestor);
+static WimaStatus wima_window_joinAreas(WimaAreaNode ancestor, WimaAreaNode squash);
 
 /**
  * Split an area into two. The same editor is used for both.
@@ -1783,7 +1791,7 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 	return WIMA_STATUS_SUCCESS;
 }
 
-void wima_window_processEvents(WimaWindow wwh)
+WimaStatus wima_window_processEvents(WimaWindow wwh)
 {
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
@@ -1804,11 +1812,16 @@ void wima_window_processEvents(WimaWindow wwh)
 	// Set the cursor position (used by event processing).
 	win->ctx.cursorPos = win->ctx.last_cursor;
 
+	// Clear this.
+	WimaStatus status = WIMA_STATUS_SUCCESS;
+
 	// Loop through the events and process each.
-	for (int i = 0; i < numEvents; ++i) wima_window_processEvent(win, wwh, handles[i], events[i]);
+	for (int i = 0; !status && i < numEvents; ++i) status = wima_window_processEvent(win, wwh, handles[i], events[i]);
 
 	// Set the last cursor.
 	win->ctx.last_cursor = win->ctx.cursorPos;
+
+	return status;
 }
 
 void wima_window_joinAreasMode(WimaWindow wwh)
@@ -2187,7 +2200,7 @@ static WimaStatus wima_window_drawTooltip(WimaWin* win)
 	return WIMA_STATUS_SUCCESS;
 }
 
-static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wdgt, WimaEvent e)
+static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wdgt, WimaEvent e)
 {
 	// Switch on the type of event.
 	switch (e.type)
@@ -2218,8 +2231,7 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
 
 		case WIMA_EVENT_MOUSE_BTN:
 		{
-			wima_window_processMouseBtnEvent(win, wdgt, e.mouse_btn);
-			break;
+			return wima_window_processMouseBtnEvent(win, wdgt, e.mouse_btn);
 		}
 
 		case WIMA_EVENT_MOUSE_CLICK:
@@ -2323,22 +2335,24 @@ static void wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wd
 			break;
 		}
 	}
+
+	return WIMA_STATUS_SUCCESS;
 }
 
-static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e)
+static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e)
 {
 	// If the window is in split mode...
 	if (WIMA_WIN_IN_SPLIT_MODE(win))
 	{
 		// Split the area.
-		wima_window_splitArea(win, win->ctx.hover.area);
+		return wima_window_splitArea(win, win->ctx.hover.area);
 	}
 
 	// If the window is in join mode...
 	else if (WIMA_WIN_IN_JOIN_MODE(win))
 	{
-		// Join the area.
-		wima_area_join(win->ctx.split.area);
+		// Join the areas.
+		return wima_window_joinAreas(win->ctx.split.area, win->ctx.hover.area);
 	}
 
 	// If there is a menu...
@@ -2350,7 +2364,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 		if (!WIMA_WIN_MENU_IS_RELEASED(win))
 		{
 			win->flags |= WIMA_WIN_MENU_RELEASED;
-			return;
+			return WIMA_STATUS_SUCCESS;
 		}
 
 		uint64_t key = (uint64_t) win->menu;
@@ -2373,7 +2387,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 			uint64_t itemKey = (uint64_t) win->ctx.click_item.menuItem;
 
 			// If the item is a separator, just return.
-			if (itemKey == WIMA_MENU_SEPARATOR) return;
+			if (itemKey == WIMA_MENU_SEPARATOR) return WIMA_STATUS_SUCCESS;
 
 			wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
 
@@ -2491,6 +2505,8 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 	{
 		wima_widget_mouseBtn(wdgt, e);
 	}
+
+	return WIMA_STATUS_SUCCESS;
 }
 
 static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files)
@@ -2517,9 +2533,18 @@ static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files)
 	dvec_free(files);
 }
 
-void wima_area_join(WimaAreaNode ancestor)
+WimaStatus wima_window_joinAreas(WimaAreaNode ancestor, WimaAreaNode squash)
 {
 	// TODO: Write this function.
+
+	DynaNode anc = ancestor;
+	DynaNode sq = squash;
+
+	while (sq != anc && sq != DTREE_NO_PARENT) sq = dtree_parent(sq);
+
+	wassert(sq == anc, WIMA_ASSERT_AREA_NOT_ANCESTOR);
+
+	return WIMA_STATUS_SUCCESS;
 }
 
 WimaStatus wima_window_splitArea(WimaWin* win, WimaAreaNode node)
