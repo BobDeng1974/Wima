@@ -203,23 +203,31 @@ uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos)
 {
 	wima_assert_init;
 
+	// Get the area.
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	wassert(((WimaWin*) dvec_get(wg.windows, wah.window))->ctx.stage == WIMA_UI_STAGE_POST_LAYOUT,
 	        WIMA_ASSERT_STAGE_PROCESS);
 
+	// Translate the cursor into the area.
 	pos = wima_area_translatePos(area, pos);
 
+	// This is used to calculate region rectangles.
 	WimaRect rect = area->rect;
 
+	// Loop through the regions.
 	for (size_t i = 0; i < area->area.numRegions; ++i)
 	{
 		WimaRect regRect;
+
+		// Get the region.
 		WimaArReg reg = area->area.regions[i];
 
+		// If the region is vertical...
 		if (reg.flags & WIMA_REG_VERTICAL)
 		{
+			// If the region is left...
 			if (reg.flags & WIMA_REG_LEFT)
 			{
 				regRect.x = rect.x;
@@ -230,14 +238,19 @@ uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos)
 				regRect.x = rect.w - reg.size;
 			}
 
+			// Fill out the rest.
 			regRect.y = rect.y;
 			regRect.w = reg.size;
 			regRect.h = rect.h;
 
+			// Adjust the rectangle.
 			rect.w -= reg.size;
 		}
+
+		// If the region is horizontal...
 		else
 		{
+			// If the region is up...
 			if (reg.flags & WIMA_REG_LEFT)
 			{
 				regRect.y = rect.y;
@@ -248,13 +261,16 @@ uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos)
 				regRect.y = rect.h - reg.size;
 			}
 
+			// Fill out the rest.
 			regRect.x = rect.x;
 			regRect.w = rect.w;
 			regRect.h = reg.size;
 
+			// Adjust the rectangle.
 			rect.h -= reg.size;
 		}
 
+		// Test the pos and rectangle, and if they match, return the region.
 		if (wima_rect_contains(regRect, pos)) return i;
 	}
 
