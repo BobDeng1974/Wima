@@ -1398,6 +1398,24 @@ static void wima_window_processMouseBtnEvent(ynonnull WimaWin* win, WimaWidget w
 static void wima_window_processFileDrop(WimaWindow wwh, ynonnull DynaVector files);
 
 /**
+ * Joins two areas into one. It handles finding the common
+ * ancestor and checking if the areas can be merged.
+ * @param ancestor	The area whose split was clicked.
+ * @pre				@a ancestor must be valid.
+ */
+static void wima_area_join(WimaAreaNode ancestor);
+
+/**
+ * Split an area into two. The same editor is used for both.
+ * @param win		The window with the areas.
+ * @param node		The area to split.
+ * @return			WIMA_STATUS_SUCCESS on success, an error
+ *					code otherwise.
+ * @pre				@a node must be valid.
+ */
+static WimaStatus wima_window_splitArea(WimaWin* win, WimaAreaNode node);
+
+/**
  * @}
  */
 
@@ -2313,7 +2331,7 @@ static void wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, Wima
 	if (WIMA_WIN_IN_SPLIT_MODE(win))
 	{
 		// Split the area.
-		wima_area_split(win->ctx.hover.area);
+		wima_window_splitArea(win, win->ctx.hover.area);
 	}
 
 	// If the window is in join mode...
@@ -2497,6 +2515,127 @@ static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files)
 
 	// Free the files.
 	dvec_free(files);
+}
+
+void wima_area_join(WimaAreaNode ancestor)
+{
+	// TODO: Write this function.
+}
+
+WimaStatus wima_window_splitArea(WimaWin* win, WimaAreaNode node)
+{
+	// TODO: Write this function.
+
+	// Get the areas.
+	DynaTree areas = WIMA_WIN_AREAS(win);
+
+	// Get DynaNodes.
+	DynaNode parent = node;
+	DynaNode left = dtree_left(parent);
+	DynaNode right = dtree_right(parent);
+
+	WimaAr larea, rarea;
+
+	// Get the parent area.
+	WimaAr* parea = dtree_node(areas, parent);
+
+	wassert(WIMA_AREA_IS_LEAF(parea), WIMA_ASSERT_AREA_LEAF);
+
+	// Copy the area data.
+	larea.area.numRegions = rarea.area.numRegions = parea->area.numRegions;
+	larea.area.scale = rarea.area.scale = parea->area.scale;
+	larea.area.type = rarea.area.type = parea->area.type;
+	memcpy(larea.area.regions, parea->area.regions, sizeof(WimaArReg) * parea->area.numRegions);
+	memcpy(rarea.area.regions, parea->area.regions, sizeof(WimaArReg) * parea->area.numRegions);
+
+	// Destroy the area.
+	wima_area_destroy(areas, parea);
+
+	// Calculate the split.
+	WimaVec pos = wima_area_translatePos(parea, win->ctx.cursorPos);
+	int split = win->ctx.split.vertical ? pos.y : pos.x;
+
+	// Get the relevant dimension and calculate the children's.
+	int dim = win->ctx.split.vertical ? parea->rect.w : parea->rect.h;
+	int cdim = (dim - 1) / 2;
+
+	// Fill out the parent's fields.
+	parea->isParent = true;
+	parea->parent.vertical = win->ctx.split.vertical;
+	parea->parent.spliti = split;
+	parea->parent.split = ((float) split) / ((float) dim);
+
+	// Store the upper left corner.
+	larea.rect.x = parea->rect.x;
+	larea.rect.y = parea->rect.y;
+
+	// If splitting vertically...
+	if (win->ctx.split.vertical)
+	{
+		// Calculate the sizes.
+		larea.rect.w = rarea.rect.w = cdim;
+		larea.rect.h = larea.rect.h = parea->rect.h;
+
+		// Calculate the right position.
+		rarea.rect.x = parea->rect.x + dim - cdim;
+		rarea.rect.y = parea->rect.y;
+	}
+
+	// If splitting horizontally...
+	else
+	{
+		// Calculate the sizes.
+		larea.rect.w = rarea.rect.w = parea->rect.w;
+		larea.rect.h = larea.rect.h = cdim;
+
+		// Calculate the right position.
+		rarea.rect.x = parea->rect.x;
+		rarea.rect.y = parea->rect.y + dim - cdim;
+	}
+
+	// Fill out the children's common data.
+	larea.isParent = rarea.isParent = false;
+	larea.node = left;
+	rarea.node = right;
+
+	// Set up the left.
+	WimaStatus status = wima_area_setup(&larea, true);
+	if (yerror(status)) return status;
+
+	// Set up the right.
+	status = wima_area_setup(&rarea, true);
+	if (yerror(status)) goto right_alloc_err;
+
+	// Set this.
+	status = WIMA_STATUS_MALLOC_ERR;
+
+	// Push left onto the tree.
+	DynaStatus dstatus = dtree_add(areas, left, &larea);
+	if (yerror(dstatus)) goto left_push_err;
+
+	// Push right onto the tree.
+	dstatus = dtree_add(areas, right, &rarea);
+	if (yerror(dstatus)) goto right_push_err;
+
+	// Force layout.
+	wima_window_setDirty(win, true);
+
+	return WIMA_STATUS_SUCCESS;
+
+right_push_err:
+
+	dtree_remove(areas, left);
+	return status;
+
+left_push_err:
+
+	wima_area_destroy(areas, &rarea);
+
+right_alloc_err:
+
+	wima_area_destroy(areas, &larea);
+
+	return status;
 }
 
 static void wima_window_clearContext(WimaWinCtx* ctx)

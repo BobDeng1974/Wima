@@ -401,19 +401,14 @@ void wima_area_drawJoinOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, b
 void wima_area_drawSplitOverlay(DynaTree areas, DynaNode node, WimaVec cursor, NVGcontext* nvg, bool vertical);
 
 /**
- * Joins two areas into one. It handles finding the common
- * ancestor and checking if the areas can be merged.
- * @param ancestor	The area whose split was clicked.
- * @pre				@a ancestor must be valid.
+ * Translates @a pos into relative coordinates
+ * according to @a area's rectangle.
+ * @param area	The area to transform @a pos into.
+ * @param pos	The position of the cursor.
+ * @return		The position of the cursor relative
+ *				to @a area.
  */
-void wima_area_join(WimaAreaNode ancestor);
-
-/**
- * Split an area into two. The same editor is used for both.
- * @param node	The area to split.
- * @pre			@a node must be valid.
- */
-void wima_area_split(WimaAreaNode node);
+WimaVec wima_area_translatePos(WimaAr* area, WimaVec pos);
 
 /**
  * @}

@@ -61,33 +61,6 @@
 //! @cond Doxygen suppress.
 
 ////////////////////////////////////////////////////////////////////////////////
-// Static functions needed by public functions.
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- * @file area.c
- */
-
-/**
- * @defgroup area_internal area_internal
- * @{
- */
-
-/**
- * Translates @a pos into relative coordinates
- * according to @a area's rectangle.
- * @param area	The area to transform @a pos into.
- * @param pos	The position of the cursor.
- * @return		The position of the cursor relative
- *				to @a area.
- */
-static WimaVec wima_area_translatePos(WimaAr* area, WimaVec pos);
-
-/**
- * @}
- */
-
-////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1612,16 +1585,6 @@ static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVe
 	return wdgt;
 }
 
-void wima_area_join(WimaAreaNode ancestor)
-{
-	// TODO: Write this function.
-}
-
-void wima_area_split(WimaAreaNode node)
-{
-	// TODO: Write this function.
-}
-
 static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* right)
 {
 	wima_assert_init;
@@ -1670,21 +1633,6 @@ static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* righ
 		right->y = splitPlus + area->rect.y;
 		right->h = area->rect.h - splitPlus;
 	}
-}
-
-static WimaVec wima_area_translatePos(WimaAr* area, WimaVec pos)
-{
-	wima_assert_init;
-
-	wassert(area, WIMA_ASSERT_AREA);
-
-	WimaVec result;
-
-	// Calculate the new position's coordinates.
-	result.x = pos.x - area->rect.x;
-	result.y = pos.y - area->rect.y;
-
-	return result;
 }
 
 static void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport)
@@ -1850,39 +1798,6 @@ static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg)
 	nvgShapeAntiAlias(nvg, 1);
 }
 
-void wima_area_drawSplitOverlay(DynaTree areas, DynaNode node, WimaVec cursor, NVGcontext* nvg, bool vertical)
-{
-	wima_assert_init;
-	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
-
-	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
-
-	// Get the area.
-	WimaAr* area = dtree_node(areas, node);
-
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-
-	// Begin the path.
-	nvgBeginPath(nvg);
-
-	// Draw the path in the right direction.
-	if (vertical)
-	{
-		nvgMoveTo(nvg, area->rect.x, cursor.y);
-		nvgLineTo(nvg, area->rect.x + area->rect.w, cursor.y);
-	}
-	else
-	{
-		nvgMoveTo(nvg, cursor.x, area->rect.y);
-		nvgLineTo(nvg, cursor.x, area->rect.y + area->rect.h);
-	}
-
-	// Stroke the path.
-	NVGcolor c = nvgRGB(255, 255, 255);
-	nvgStrokeColor(nvg, c);
-	nvgStroke(nvg);
-}
-
 void wima_area_drawJoinOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, bool vertical, bool mirror)
 {
 	wima_assert_init;
@@ -1939,8 +1854,8 @@ void wima_area_drawJoinOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, b
 
 	// An array of points.
 	float points[][2] = {
-		{ x0, y0 },      { x1, y0 },      { x1, y1 },      { x0, y1 },      { x0, yc + s8 }, { x4, yc + s8 },
-		{ x4, yc + s4 }, { x0 + s2, yc }, { x4, yc - s4 }, { x4, yc - s8 }, { x0, yc - s8 },
+	    { x0, y0 },      { x1, y0 },      { x1, y1 },      { x0, y1 },      { x0, yc + s8 }, { x4, yc + s8 },
+	    { x4, yc + s4 }, { x0 + s2, yc }, { x4, yc - s4 }, { x4, yc - s8 }, { x0, yc - s8 },
 	};
 
 	// Calculate the number of points.
@@ -1960,6 +1875,54 @@ void wima_area_drawJoinOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, b
 
 	// End the path.
 	nvgFill(nvg);
+}
+
+void wima_area_drawSplitOverlay(DynaTree areas, DynaNode node, WimaVec cursor, NVGcontext* nvg, bool vertical)
+{
+	wima_assert_init;
+	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
+
+	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
+
+	// Get the area.
+	WimaAr* area = dtree_node(areas, node);
+
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
+
+	// Begin the path.
+	nvgBeginPath(nvg);
+
+	// Draw the path in the right direction.
+	if (vertical)
+	{
+		nvgMoveTo(nvg, area->rect.x, cursor.y);
+		nvgLineTo(nvg, area->rect.x + area->rect.w, cursor.y);
+	}
+	else
+	{
+		nvgMoveTo(nvg, cursor.x, area->rect.y);
+		nvgLineTo(nvg, cursor.x, area->rect.y + area->rect.h);
+	}
+
+	// Stroke the path.
+	NVGcolor c = nvgRGB(255, 255, 255);
+	nvgStrokeColor(nvg, c);
+	nvgStroke(nvg);
+}
+
+WimaVec wima_area_translatePos(WimaAr* area, WimaVec pos)
+{
+	wima_assert_init;
+
+	wassert(area, WIMA_ASSERT_AREA);
+
+	WimaVec result;
+
+	// Calculate the new position's coordinates.
+	result.x = pos.x - area->rect.x;
+	result.y = pos.y - area->rect.y;
+
+	return result;
 }
 
 //! @endcond Doxygen suppress.
