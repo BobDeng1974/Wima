@@ -2524,8 +2524,6 @@ void wima_area_join(WimaAreaNode ancestor)
 
 WimaStatus wima_window_splitArea(WimaWin* win, WimaAreaNode node)
 {
-	// TODO: Write this function.
-
 	// Get the areas.
 	DynaTree areas = WIMA_WIN_AREAS(win);
 
