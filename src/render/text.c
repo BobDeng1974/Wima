@@ -70,19 +70,19 @@ void wima_text_align(WimaRenderContext* ctx, WimaTextAlign align)
 	nvgTextAlign(ctx->nvg, align);
 }
 
-float wima_text(WimaRenderContext* ctx, WimaVecF pt, const char* string, const char* end)
+float wima_text(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end)
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	return nvgText(ctx->nvg, pt.x, pt.y, string, end);
 }
 
-void wima_text_box(WimaRenderContext* ctx, WimaVecF pt, float breakRowWidth, const char* string, const char* end)
+void wima_text_box(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth, const char* string, const char* end)
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgTextBox(ctx->nvg, pt.x, pt.y, breakRowWidth, string, end);
 }
 
-float wima_text_bounds(WimaRenderContext* ctx, WimaVecF pt, const char* string, const char* end, WimaRectf* bounds)
+float wima_text_bounds(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end, WimaRectf* bounds)
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
@@ -95,7 +95,7 @@ float wima_text_bounds(WimaRenderContext* ctx, WimaVecF pt, const char* string, 
 	return result;
 }
 
-WimaRectf wima_text_box_bounds(WimaRenderContext* ctx, WimaVecF pt, float breakRowWidth, const char* string,
+WimaRectf wima_text_box_bounds(WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth, const char* string,
                                const char* end)
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
@@ -111,7 +111,7 @@ WimaRectf wima_text_box_bounds(WimaRenderContext* ctx, WimaVecF pt, float breakR
 	return result;
 }
 
-int wima_text_glyphPositions(WimaRenderContext* ctx, WimaVecF pt, const char* string, const char* end,
+int wima_text_glyphPositions(WimaRenderContext* ctx, WimaVecf pt, const char* string, const char* end,
                              WimaGlyphPosition* poss, int maxPoss)
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);

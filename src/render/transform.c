@@ -96,9 +96,9 @@ WimaTransform wima_transform_inverse(WimaTransform src)
 	return dest;
 }
 
-WimaVecF wima_transform_point(WimaTransform transform, WimaVecF pos)
+WimaVecf wima_transform_point(WimaTransform transform, WimaVecf pos)
 {
-	WimaVecF result;
+	WimaVecf result;
 
 	nvgTransformPoint(&result.x, &result.y, transform.v, pos.x, pos.y);
 

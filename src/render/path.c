@@ -50,31 +50,31 @@ void wima_path_begin(WimaRenderContext* ctx)
 	nvgBeginPath(ctx->nvg);
 }
 
-void wima_path_moveTo(WimaRenderContext* ctx, WimaVecF pt)
+void wima_path_moveTo(WimaRenderContext* ctx, WimaVecf pt)
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgMoveTo(ctx->nvg, pt.x, pt.y);
 }
 
-void wima_path_lineTo(WimaRenderContext* ctx, WimaVecF pt)
+void wima_path_lineTo(WimaRenderContext* ctx, WimaVecf pt)
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgLineTo(ctx->nvg, pt.x, pt.y);
 }
 
-void wima_path_bezierTo(WimaRenderContext* ctx, WimaVecF pt, WimaVecF c1, WimaVecF c2)
+void wima_path_bezierTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c1, WimaVecf c2)
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgBezierTo(ctx->nvg, c1.x, c1.y, c2.x, c2.y, pt.x, pt.y);
 }
 
-void wima_path_quadTo(WimaRenderContext* ctx, WimaVecF pt, WimaVecF c)
+void wima_path_quadTo(WimaRenderContext* ctx, WimaVecf pt, WimaVecf c)
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgQuadTo(ctx->nvg, c.x, c.y, pt.x, pt.y);
 }
 
-void wima_path_arcTo(WimaRenderContext* ctx, WimaVecF pt1, WimaVecF pt2, float radius)
+void wima_path_arcTo(WimaRenderContext* ctx, WimaVecf pt1, WimaVecf pt2, float radius)
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgArcTo(ctx->nvg, pt1.x, pt1.y, pt2.x, pt2.y, radius);
@@ -92,7 +92,7 @@ void wima_path_winding(WimaRenderContext* ctx, WimaWinding dir)
 	nvgPathWinding(ctx->nvg, dir);
 }
 
-void wima_path_arc(WimaRenderContext* ctx, WimaVecF c, float r, float a0, float a1, WimaWinding dir)
+void wima_path_arc(WimaRenderContext* ctx, WimaVecf c, float r, float a0, float a1, WimaWinding dir)
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgArc(ctx->nvg, c.x, c.y, r, a0, a1, dir);
@@ -116,13 +116,13 @@ void wima_path_roundedRectVary(WimaRenderContext* ctx, WimaRectf rect, float tl,
 	nvgRoundedRectVarying(ctx->nvg, rect.x, rect.y, rect.w, rect.h, tl, tr, br, bl);
 }
 
-void wima_path_ellipse(WimaRenderContext* ctx, WimaVecF c, float rx, float ry)
+void wima_path_ellipse(WimaRenderContext* ctx, WimaVecf c, float rx, float ry)
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgEllipse(ctx->nvg, c.x, c.y, rx, ry);
 }
 
-void wima_path_circle(WimaRenderContext* ctx, WimaVecF c, float r)
+void wima_path_circle(WimaRenderContext* ctx, WimaVecf c, float r)
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 	nvgCircle(ctx->nvg, c.x, c.y, r);

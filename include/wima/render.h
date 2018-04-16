@@ -245,7 +245,7 @@ typedef struct WimaVec
 /**
  * A 2-coordinate vector of floats.
  */
-typedef struct WimaVecF
+typedef struct WimaVecf
 {
 	union
 	{
@@ -262,7 +262,7 @@ typedef struct WimaVecF
 		};
 	};
 
-} WimaVecF;
+} WimaVecf;
 
 /**
  * A 2D size using ints.
@@ -486,7 +486,7 @@ WimaTransform wima_transform_inverse(WimaTransform src) yinline;
  * @param pos		The point that the transform will be applied to.
  * @return			The transformed point.
  */
-WimaVecF wima_transform_point(WimaTransform transform, WimaVecF pos) yinline;
+WimaVecf wima_transform_point(WimaTransform transform, WimaVecf pos) yinline;
 
 /**
  * @}
@@ -694,7 +694,7 @@ typedef struct WimaPaint
  * @return		The gradient as a paint.
  * @pre			@a ctx must not be NULL.
  */
-WimaPaint wima_paint_linearGradient(ynonnull WimaRenderContext* ctx, WimaVecF s, WimaVecF e, WimaColor icol,
+WimaPaint wima_paint_linearGradient(ynonnull WimaRenderContext* ctx, WimaVecf s, WimaVecf e, WimaColor icol,
                                     WimaColor ocol) yinline;
 
 /**
@@ -730,7 +730,7 @@ WimaPaint wima_paint_boxGradient(ynonnull WimaRenderContext* ctx, WimaRectf rect
  * @return		The gradient as a paint.
  * @pre			@a ctx must not be NULL.
  */
-WimaPaint wima_paint_radialGradient(ynonnull WimaRenderContext* ctx, WimaVecF c, float inr, float outr, WimaColor icol,
+WimaPaint wima_paint_radialGradient(ynonnull WimaRenderContext* ctx, WimaVecf c, float inr, float outr, WimaColor icol,
                                     WimaColor ocol) yinline;
 
 /**
@@ -747,7 +747,7 @@ WimaPaint wima_paint_radialGradient(ynonnull WimaRenderContext* ctx, WimaVecF c,
  * @return		The image pattern as a paint.
  * @pre			@a ctx must not be NULL.
  */
-WimaPaint wima_paint_imagePattern(ynonnull WimaRenderContext* ctx, WimaVecF o, WimaSizef e, float angle, int image,
+WimaPaint wima_paint_imagePattern(ynonnull WimaRenderContext* ctx, WimaVecf o, WimaSizef e, float angle, int image,
                                   float alpha) yinline;
 
 /**
@@ -1427,7 +1427,7 @@ void wima_render_transform(ynonnull WimaRenderContext* ctx, WimaTransform tx) yi
  * @param vec	The amount to translate by.
  * @pre			@a ctx must not be NULL.
  */
-void wima_render_translate(ynonnull WimaRenderContext* ctx, WimaVecF vec) yinline;
+void wima_render_translate(ynonnull WimaRenderContext* ctx, WimaVecf vec) yinline;
 
 /**
  * Rotates the render state's current coordinate system by @a angle,
@@ -1788,7 +1788,7 @@ void wima_path_begin(ynonnull WimaRenderContext* ctx) yinline;
  * @param pt	The point to start at.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_moveTo(ynonnull WimaRenderContext* ctx, WimaVecF pt) yinline;
+void wima_path_moveTo(ynonnull WimaRenderContext* ctx, WimaVecf pt) yinline;
 
 /**
  * Adds line segment from the last point in the path to
@@ -1797,7 +1797,7 @@ void wima_path_moveTo(ynonnull WimaRenderContext* ctx, WimaVecF pt) yinline;
  * @param pt	The point to create a line to.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_lineTo(ynonnull WimaRenderContext* ctx, WimaVecF pt) yinline;
+void wima_path_lineTo(ynonnull WimaRenderContext* ctx, WimaVecf pt) yinline;
 
 /**
  * Adds cubic bezier segment from last point in the path
@@ -1808,7 +1808,7 @@ void wima_path_lineTo(ynonnull WimaRenderContext* ctx, WimaVecF pt) yinline;
  * @param c2	The second control point.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_bezierTo(ynonnull WimaRenderContext* ctx, WimaVecF pt, WimaVecF c1, WimaVecF c2) yinline;
+void wima_path_bezierTo(ynonnull WimaRenderContext* ctx, WimaVecf pt, WimaVecf c1, WimaVecf c2) yinline;
 
 /**
  * Adds quadratic bezier segment from last point in the
@@ -1818,7 +1818,7 @@ void wima_path_bezierTo(ynonnull WimaRenderContext* ctx, WimaVecF pt, WimaVecF c
  * @param c		The control point.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_quadTo(ynonnull WimaRenderContext* ctx, WimaVecF pt, WimaVecF c) yinline;
+void wima_path_quadTo(ynonnull WimaRenderContext* ctx, WimaVecf pt, WimaVecf c) yinline;
 
 /**
  * Adds an arc segment at the corner defined by
@@ -1829,7 +1829,7 @@ void wima_path_quadTo(ynonnull WimaRenderContext* ctx, WimaVecF pt, WimaVecF c) 
  * @param radius	The radius of the arc.
  * @pre				@a ctx must not be NULL.
  */
-void wima_path_arcTo(ynonnull WimaRenderContext* ctx, WimaVecF pt1, WimaVecF pt2, float radius) yinline;
+void wima_path_arcTo(ynonnull WimaRenderContext* ctx, WimaVecf pt1, WimaVecf pt2, float radius) yinline;
 
 /**
  * Closes current sub-path with a line segment.
@@ -1862,7 +1862,7 @@ void wima_path_winding(ynonnull WimaRenderContext* ctx, WimaWinding dir) yinline
  * @param dir	The sweep direction.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_arc(ynonnull WimaRenderContext* ctx, WimaVecF c, float r, float a0, float a1, WimaWinding dir) yinline;
+void wima_path_arc(ynonnull WimaRenderContext* ctx, WimaVecf c, float r, float a0, float a1, WimaWinding dir) yinline;
 
 /**
  * Creates new rectangle shaped sub-path.
@@ -1906,7 +1906,7 @@ void wima_path_roundedRectVary(ynonnull WimaRenderContext* ctx, WimaRectf rect, 
  * @param ry	The radius on the Y axis.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_ellipse(ynonnull WimaRenderContext* ctx, WimaVecF c, float rx, float ry) yinline;
+void wima_path_ellipse(ynonnull WimaRenderContext* ctx, WimaVecf c, float rx, float ry) yinline;
 
 /**
  * Creates new circle shaped sub-path centered at @a c
@@ -1916,7 +1916,7 @@ void wima_path_ellipse(ynonnull WimaRenderContext* ctx, WimaVecF c, float rx, fl
  * @param r		The radius of the circle.
  * @pre			@a ctx must not be NULL.
  */
-void wima_path_circle(ynonnull WimaRenderContext* ctx, WimaVecF c, float r) yinline;
+void wima_path_circle(ynonnull WimaRenderContext* ctx, WimaVecf c, float r) yinline;
 
 /**
  * Fills the current path with current fill style.
@@ -2091,7 +2091,7 @@ void wima_text_align(ynonnull WimaRenderContext* ctx, WimaTextAlign align) yinli
  * @pre				@a ctx must not be NULL.
  * @pre				@a string must not be NULL.
  */
-float wima_text(ynonnull WimaRenderContext* ctx, WimaVecF pt, ynonnull const char* string, const char* end) yinline;
+float wima_text(ynonnull WimaRenderContext* ctx, WimaVecf pt, ynonnull const char* string, const char* end) yinline;
 
 /**
  * Draws multi-line text string at @a pt (top left corner) wrapped
@@ -2110,7 +2110,7 @@ float wima_text(ynonnull WimaRenderContext* ctx, WimaVecF pt, ynonnull const cha
  * @pre					@a ctx must not be NULL.
  * @pre					@a string must not be NULL.
  */
-void wima_text_box(ynonnull WimaRenderContext* ctx, WimaVecF pt, float breakRowWidth, ynonnull const char* string,
+void wima_text_box(ynonnull WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth, ynonnull const char* string,
                    const char* end) yinline;
 
 /**
@@ -2131,7 +2131,7 @@ void wima_text_box(ynonnull WimaRenderContext* ctx, WimaVecF pt, float breakRowW
  * @pre				@a ctx must not be NULL.
  * @pre				@a string must not be NULL.
  */
-float wima_text_bounds(ynonnull WimaRenderContext* ctx, WimaVecF pt, ynonnull const char* string, const char* end,
+float wima_text_bounds(ynonnull WimaRenderContext* ctx, WimaVecf pt, ynonnull const char* string, const char* end,
                        WimaRectf* bounds) yinline;
 
 /**
@@ -2147,7 +2147,7 @@ float wima_text_bounds(ynonnull WimaRenderContext* ctx, WimaVecF pt, ynonnull co
  * @return				The text bounds.
  * @pre					@a ctx must not be NULL.
  */
-WimaRectf wima_text_box_bounds(ynonnull WimaRenderContext* ctx, WimaVecF pt, float breakRowWidth, const char* string,
+WimaRectf wima_text_box_bounds(ynonnull WimaRenderContext* ctx, WimaVecf pt, float breakRowWidth, const char* string,
                                const char* end) yinline;
 
 /**
@@ -2167,7 +2167,7 @@ WimaRectf wima_text_box_bounds(ynonnull WimaRenderContext* ctx, WimaVecF pt, flo
  * @pre				@a string must not be NULL.
  * @pre				@a poss must not be NULL.
  */
-int wima_text_glyphPositions(ynonnull WimaRenderContext* ctx, WimaVecF pt, ynonnull const char* string, const char* end,
+int wima_text_glyphPositions(ynonnull WimaRenderContext* ctx, WimaVecf pt, ynonnull const char* string, const char* end,
                              ynonnull WimaGlyphPosition* poss, int maxPoss) yinline;
 
 /**
