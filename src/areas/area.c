@@ -61,6 +61,33 @@
 //! @cond Doxygen suppress.
 
 ////////////////////////////////////////////////////////////////////////////////
+// Static functions needed by public functions.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @file area.c
+ */
+
+/**
+ * @defgroup area_internal area_internal
+ * @{
+ */
+
+/**
+ * Translates @a pos into relative coordinates
+ * according to @a area's rectangle.
+ * @param area	The area to transform @a pos into.
+ * @param pos	The position of the cursor.
+ * @return		The position of the cursor relative
+ *				to @a area.
+ */
+static WimaVec wima_area_translatePos(WimaAr* area, WimaVec pos);
+
+/**
+ * @}
+ */
+
+////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -181,6 +208,55 @@ uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos)
 
 	// TODO: Write this function. This must be done after layout is done.
 
+	pos = wima_area_translatePos(area, pos);
+
+	WimaRect rect = area->rect;
+
+	for (size_t i = 0; i < area->area.numRegions; ++i)
+	{
+		WimaRect regRect;
+		WimaArReg reg = area->area.regions[i];
+
+		if (reg.flags & WIMA_REG_VERTICAL)
+		{
+			if (reg.flags & WIMA_REG_LEFT)
+			{
+				regRect.x = rect.x;
+				rect.x += reg.size;
+			}
+			else
+			{
+				regRect.x = rect.w - reg.size;
+			}
+
+			regRect.y = rect.y;
+			regRect.w = reg.size;
+			regRect.h = rect.h;
+
+			rect.w -= reg.size;
+		}
+		else
+		{
+			if (reg.flags & WIMA_REG_LEFT)
+			{
+				regRect.y = rect.y;
+				rect.y += reg.size;
+			}
+			else
+			{
+				regRect.y = rect.h - reg.size;
+			}
+
+			regRect.x = rect.x;
+			regRect.w = rect.w;
+			regRect.h = reg.size;
+
+			rect.h -= reg.size;
+		}
+
+		if (wima_rect_contains(regRect, pos)) return i;
+	}
+
 	return WIMA_REGION_INVALID_IDX;
 }
 
@@ -200,10 +276,6 @@ void wima_area_switchRegionSide(WimaArea wah, uint8_t region)
 ////////////////////////////////////////////////////////////////////////////////
 // Declarations for all static functions that private functions need access to.
 ////////////////////////////////////////////////////////////////////////////////
-
-/**
- * @file area.c
- */
 
 /**
  * @defgroup area_internal area_internal
@@ -324,16 +396,6 @@ static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVe
  * @param right	A pointer to the right child rect.
  */
 static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* right);
-
-/**
- * Translates @a pos into relative coordinates
- * according to @a area's rectangle.
- * @param area	The area to transform @a pos into.
- * @param pos	The position of the cursor.
- * @return		The position of the cursor relative
- *				to @a area.
- */
-static WimaVec wima_area_translatePos(WimaAr* area, WimaVec pos);
 
 /**
  * Pushes an area's viewport onto NanoVG's stack.
