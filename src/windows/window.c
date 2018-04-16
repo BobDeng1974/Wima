@@ -275,20 +275,58 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	window->wksp = wksph;
 	WIMA_WIN_AREAS(window) = dvec_get(window->workspaces, wksph);
 
+	// Set the user pointer to the handle.
+	glfwSetWindowUserPointer(win, (void*) (long) idx);
+
+	// Load the app icon.
+	if (wg.numAppIcons) glfwSetWindowIcon(win, wg.numAppIcons, wg.appIcons);
+
+	return idx;
+
+// When we don't have a pointer to the window yet.
+wima_win_create_noptr_err:
+
+	// Set the pointer.
+	window = &wwin;
+
+// Malloc error
+wima_win_create_malloc_err:
+
+	// Set the status.
+	status = WIMA_STATUS_MALLOC_ERR;
+
+// Error creating name or GLFW window.
+wima_win_create_name_glfw_err:
+
+	// Send the error to the client.
+	wima_error(status);
+
+	return WIMA_WINDOW_INVALID;
+}
+
+WimaStatus wima_window_activate(WimaWindow wwh)
+{
+	WimaStatus status;
+
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
 	WimaRect rect;
 
 	// Set the rectangle.
 	rect.x = 0;
 	rect.y = 0;
-	rect.w = window->fbsize.w;
-	rect.h = window->fbsize.h;
+	rect.w = win->fbsize.w;
+	rect.h = win->fbsize.h;
 
 	// Cache this.
 	uint8_t wkspLen = dvec_len(wg.workspaces);
 
 	// Set layout stage. This is for the following, so it doesn't assert out.
 #ifdef __YASSERT__
-	window->ctx.stage = WIMA_UI_STAGE_LAYOUT;
+	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
 #endif
 
 	// Loop through all workspaces.
@@ -297,50 +335,62 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 		WimaSizef min;
 
 		// Initialize the areas.
-		status = wima_area_init(idx, dvec_get(window->workspaces, i), rect, window->rootLayouts, &min);
-		if (status) goto wima_win_create_err;
+		status = wima_area_init(wwh, dvec_get(win->workspaces, i), rect, win->rootLayouts, &min);
+		if (yerror(status)) goto err;
 
 		// Set the min size.
-		wima_window_setMinSize(window, &min);
+		wima_window_setMinSize(win, &min);
 
 		// Store the min size.
-		DynaStatus dstatus = dvec_push(window->workspaceSizes, &min);
-		if (dstatus) goto wima_win_create_malloc_err;
+		DynaStatus dstatus = dvec_push(win->workspaceSizes, &min);
+		if (dstatus)
+		{
+			status = WIMA_STATUS_MALLOC_ERR;
+			goto err;
+		}
 	}
 
 	// Clear the context.
-	wima_window_clearContext(&window->ctx);
+	wima_window_clearContext(&win->ctx);
 
 	// Set the window as dirty with layout.
-	wima_window_setDirty(window, true);
-
-	// Set the user pointer to the handle.
-	glfwSetWindowUserPointer(win, (void*) (long) idx);
+	wima_window_setDirty(win, true);
 
 	// Give this window the focus.
-	glfwMakeContextCurrent(win);
+	glfwMakeContextCurrent(win->window);
 
 	// Set the swap interval.
 	glfwSwapInterval(1);
 
 	// Load the context.
-	if (yerror(!len && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)))
+	if (yerror(!wg.gladLoaded && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)))
 	{
 		status = WIMA_STATUS_OPENGL_ERR;
-		goto wima_win_create_err;
+		goto err;
 	}
 
+	// Set that glad has been loaded.
+	wg.gladLoaded = true;
+
 	// Create the NanoVG context.
-	window->render.nvg = nvgCreateGL3(NVG_ANTIALIAS);
+	win->render.nvg = nvgCreateGL3(NVG_ANTIALIAS);
 
 	// Check for error.
-	if (yerror(!window->render.nvg)) goto wima_win_create_malloc_err;
+	if (yerror(!win->render.nvg))
+	{
+		status = WIMA_STATUS_MALLOC_ERR;
+		goto err;
+	}
 
 	// Load the font.
-	window->render.font = nvgCreateFont(window->render.nvg, "default", dstr_str(wg.fontPath));
+	win->render.font = nvgCreateFont(win->render.nvg, "default", dstr_str(wg.fontPath));
 
 	// Check for error.
-	if (yerror(window->render.font == -1)) goto wima_win_create_malloc_err;
+	if (yerror(win->render.font == -1))
+	{
+		status = WIMA_STATUS_MALLOC_ERR;
+		goto err;
+	}
 
 	// Cache this.
 	size_t imgLen = dvec_len(wg.imagePaths);
@@ -358,46 +408,23 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 			DynaString path = dvec_get(wg.imagePaths, i);
 
 			// Add the image.
-			status = wima_window_addImage(window, dstr_str(path), flags[i]);
+			status = wima_window_addImage(win, dstr_str(path), flags[i]);
 
 			// Check for error and handle it.
-			if (yerror(status)) goto wima_win_create_err;
+			if (yerror(status)) goto err;
 		}
 	}
-
-	// Load the app icon.
-	if (wg.numAppIcons) glfwSetWindowIcon(win, wg.numAppIcons, wg.appIcons);
 
 	// Set the clear color for this context.
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	return idx;
+	return status;
 
-// When we don't have a pointer to the window yet.
-wima_win_create_noptr_err:
+err:
 
-	// Set the pointer.
-	window = &wwin;
+	wima_window_destroy(NULL, win);
 
-// Malloc error
-wima_win_create_malloc_err:
-
-	// Set the status.
-	status = WIMA_STATUS_MALLOC_ERR;
-
-// General errors.
-wima_win_create_err:
-
-	// Destroy the window.
-	wima_window_destroy(NULL, window);
-
-// Error creating name or GLFW window.
-wima_win_create_name_glfw_err:
-
-	// Send the error to the client.
-	wima_error(status);
-
-	return WIMA_WINDOW_INVALID;
+	return status;
 }
 
 WimaStatus wima_window_close(WimaWindow wwh)

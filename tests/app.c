@@ -449,6 +449,9 @@ int main()
 	WimaWindow wwh = wima_window_create(wksp, size, true, true, true);
 	if (wwh == WIMA_WINDOW_INVALID) return WIMA_WINDOW_INVALID;
 
+	status = wima_window_activate(wwh);
+	if (status) return status;
+
 	// Run the app.
 	status = wima_main();
 

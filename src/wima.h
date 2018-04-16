@@ -155,6 +155,9 @@ typedef struct WimaG
 	/// four byte hole.
 	bool glfwInitialized;
 
+	/// Whether glad has been loaded or not.
+	bool gladLoaded;
+
 	/// The number of app icons.
 	uint16_t numAppIcons;
 

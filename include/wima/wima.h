@@ -2462,6 +2462,18 @@ WimaDialog wima_dialog_register(ynonnull WimaTree tree);
 WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized, bool resizable, bool decorated);
 
 /**
+ * Activates a window. This *must* be called after @a wima_window_create().
+ * The window will not be accessible otherwise.
+ *
+ * This function is here to allow users to set data on a window before it
+ * activates layout and puts itself on the event queue.
+ * @param wwh	The window to activate.
+ * @return		WIMA_STATUS_SUCCESS on success, an error code otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
+ */
+WimaStatus wima_window_activate(WimaWindow wwh);
+
+/**
  * Close the given window
  * @param wwh	The window to close.
  * @return		WIMA_STATUS_SUCCESS on success,
