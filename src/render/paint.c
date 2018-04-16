@@ -106,9 +106,9 @@ WimaPaint wima_paint_imagePattern(WimaRenderContext* ctx, WimaVecF o, WimaSizef 
 {
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
-	// TODO: Write this function.
-
 	WimaPnt p;
+
+	p.nvg = nvgImagePattern(ctx->nvg, o.x, o.y, e.w, e.h, angle, image, alpha);
 
 	return p.wima;
 }
