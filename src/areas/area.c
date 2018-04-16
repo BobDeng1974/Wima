@@ -206,7 +206,8 @@ uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos)
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	// TODO: Write this function. This must be done after layout is done.
+	wassert(((WimaWin*) dvec_get(wg.windows, wah.window))->ctx.stage == WIMA_UI_STAGE_POST_LAYOUT,
+	        WIMA_ASSERT_STAGE_PROCESS);
 
 	pos = wima_area_translatePos(area, pos);
 
