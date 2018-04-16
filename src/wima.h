@@ -389,9 +389,9 @@ extern const char* const wima_assert_msgs[];
 /**
  * @def WIMA_POOL_LOAD
  * The load for all DynaPools used by Wima.
- * This is equal to 1/(2^8).
+ * This is equal to (1 - 1 / (2 ^ 16)).
  */
-#define WIMA_POOL_LOAD (0.99609375f)
+#define WIMA_POOL_LOAD (0.9999847412109375f)
 
 /**
  * @}
