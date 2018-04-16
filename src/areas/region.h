@@ -45,7 +45,7 @@ extern "C" {
 #include <wima/wima.h>
 
 /**
- * @file area/region.h
+ * @file areas/region.h
  */
 
 /**
