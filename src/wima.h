@@ -361,7 +361,7 @@ extern const char* const wima_assert_msgs[];
  * @param	idx		The index of the desired assert message.
  *					Should be one of @a WimaAssertType.
  */
-#define wassert(expr, idx) yassert(expr, wima_assert_msgs[(idx)])
+#define wassert(expr, idx) yassert((expr), wima_assert_msgs[(idx)])
 
 /**
  * @def wima_assert_init
