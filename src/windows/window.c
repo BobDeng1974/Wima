@@ -1737,7 +1737,8 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 		{
 			// Draw the split overlay.
 			WimaAreaNode node = win->ctx.hover.area;
-			wima_area_drawSplitOverlay(WIMA_WIN_AREAS(win), node, win->render.nvg, !win->ctx.split.vertical);
+			wima_area_drawSplitOverlay(WIMA_WIN_AREAS(win), node, win->ctx.cursorPos, win->render.nvg,
+			                           !win->ctx.split.vertical);
 		}
 
 		// If the window is in join mode...

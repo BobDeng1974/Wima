@@ -394,10 +394,11 @@ void wima_area_drawJoinOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, b
  * Draw an area's split overlay.
  * @param areas		The tree of areas.
  * @param node		The node of the area whose split overlay will be drawn.
+ * @param cursor	The current cursor position.
  * @param nvg		The NanoVG context to render to.
  * @param vertical	Whether the line should be vertical or not.
  */
-void wima_area_drawSplitOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, bool vertical);
+void wima_area_drawSplitOverlay(DynaTree areas, DynaNode node, WimaVec cursor, NVGcontext* nvg, bool vertical);
 
 /**
  * Joins two areas into one. It handles finding the common

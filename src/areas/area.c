@@ -1771,16 +1771,37 @@ static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg)
 	nvgShapeAntiAlias(nvg, 1);
 }
 
-void wima_area_drawSplitOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, bool vertical)
+void wima_area_drawSplitOverlay(DynaTree areas, DynaNode node, WimaVec cursor, NVGcontext* nvg, bool vertical)
 {
 	wima_assert_init;
 	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
 
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
+	// Get the area.
 	WimaAr* area = dtree_node(areas, node);
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
+
+	// Begin the path.
+	nvgBeginPath(nvg);
+
+	// Draw the path in the right direction.
+	if (vertical)
+	{
+		nvgMoveTo(nvg, area->rect.x, cursor.y);
+		nvgLineTo(nvg, area->rect.x + area->rect.w, cursor.y);
+	}
+	else
+	{
+		nvgMoveTo(nvg, cursor.x, area->rect.y);
+		nvgLineTo(nvg, cursor.x, area->rect.y + area->rect.h);
+	}
+
+	// Stroke the path.
+	NVGcolor c = nvgRGB(255, 255, 255);
+	nvgStrokeColor(nvg, c);
+	nvgStroke(nvg);
 }
 
 void wima_area_drawJoinOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, bool vertical, bool mirror)
