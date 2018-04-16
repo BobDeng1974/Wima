@@ -225,7 +225,7 @@ WimaIcon wima_icon_debug()
 	if (yunlikely(debug == WIMA_ICON_INVALID))
 	{
 		// Load it.
-		debug = wima_icon_load("../res/bug.svg", WIMA_ICON_PX, 96.0f);
+		debug = wima_icon_load("./res/bug.svg", WIMA_ICON_PX, 96.0f);
 
 		// If the icon couldn't load, abort.
 		if (yerror(debug == WIMA_ICON_INVALID))
@@ -254,7 +254,7 @@ WimaIcon wima_icon_donut()
 	if (yunlikely(donut == WIMA_ICON_INVALID))
 	{
 		// Load it.
-		donut = wima_icon_load("../res/donut.svg", WIMA_ICON_PX, 96.0f);
+		donut = wima_icon_load("./res/donut.svg", WIMA_ICON_PX, 96.0f);
 
 		// If the icon couldn't load, abort.
 		if (yerror(donut == WIMA_ICON_INVALID))

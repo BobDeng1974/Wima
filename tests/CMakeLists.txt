@@ -37,6 +37,7 @@ option(WIMA_BUILD_TEST_APPS "Build the Wima test apps" ON)
 if ("${WIMA_BUILD_TEST_APPS}")
 
 	create_test(app "${PROJECT_NAME}" "${WIMA_RENDER}" "${DYNA_LIB}" "${WIMA_GLAD}" "${NANOVG}")
+	create_symlink("${CMAKE_BINARY_DIR}/test" "app")
 
 	# Temporarily disable this test while refactoring Blendish/OUI.
 	#create_test(bnd_oui_demo "${WIMA_OUI_PIC}" "${WIMA_THEME_PIC}" "${WIMA_GLOBAL}" "${GLFW_LIB}")

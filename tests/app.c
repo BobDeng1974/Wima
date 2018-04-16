@@ -375,7 +375,7 @@ int main()
 	appfuncs.close = cb_close;
 
 	// Initialize Wima and check for success.
-	WimaStatus status = wima_ninit("Wima Test App", appfuncs, "../res/DejaVuSans.ttf", 0);
+	WimaStatus status = wima_ninit("Wima Test App", appfuncs, "./res/DejaVuSans.ttf", 0);
 	if (status) return status;
 
 	// Create a region and check for error.
