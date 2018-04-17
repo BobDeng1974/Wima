@@ -165,13 +165,13 @@ typedef uint32_t WimaProperty;
  * @def WIMA_PROP_LIST_INVALID_IDX
  * A handle to an invalid list index.
  */
-#define WIMA_PROP_LIST_INVALID_IDX ((uint16_t) -1)
+#define WIMA_PROP_COLLECTION_INVALID_IDX ((uint16_t) -1)
 
 /**
  * @def WIMA_PROP_LIST_MAX
  * The max number of items that can be in a prop list.
  */
-#define WIMA_PROP_LIST_MAX WIMA_PROP_LIST_INVALID_IDX
+#define WIMA_PROP_COLLECTION_MAX WIMA_PROP_COLLECTION_INVALID_IDX
 
 /**
  * A function to allow a pointer property to draw itself.
