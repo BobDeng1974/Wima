@@ -120,6 +120,9 @@ typedef enum WimaStatus
 	/// Returned when an image fails to load.
 	WIMA_STATUS_IMAGE_LOAD_ERR,
 
+	/// Returned on layout error.
+	WIMA_STATUS_LAYOUT_ERR,
+
 } WimaStatus;
 
 /**

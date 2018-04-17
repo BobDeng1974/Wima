@@ -90,6 +90,7 @@ const char* const wima_error_descs[] = {
 	"no child exists for the given property",
 	"child already exists for the given property",
 	"image failed to load",
+	"layout failed",
 };
 
 /**

@@ -881,8 +881,11 @@ WimaStatus wima_area_layoutHeader(WimaLayout root)
 	wima_assert_init;
 
 	// Insert the widget to choose the editor type.
-	// TODO: Make the widget.
-	// wima_layout_widget(root, )
+	// TODO: Make the widget and replace the current
+	// widget with it. The current widget just uses
+	// whatever the first WimaProperty is.
+	WimaWidget widget = wima_layout_widget(root, 0);
+	if (yerror(widget.widget == WIMA_WIDGET_INVALID)) return WIMA_STATUS_LAYOUT_ERR;
 
 	// Get the area pointer.
 	WimaAr* area = wima_area_ptr(root.window, root.area);
