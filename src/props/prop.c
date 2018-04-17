@@ -1180,7 +1180,7 @@ WimaStatus wima_prop_collection_pop(WimaProperty list, WimaPropType type)
 	DynaStatus status = dvec_pop(data->_list.list);
 
 	// Check for error and handle.
-	if (yerror(status != DYNA_STATUS_SUCCESS)) return WIMA_STATUS_MALLOC_ERR;
+	if (yerror(status)) return WIMA_STATUS_MALLOC_ERR;
 
 	// Get the child info.
 	WimaPropInfo* childInfo = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, child);
@@ -1208,7 +1208,7 @@ WimaStatus wima_prop_collection_popAt(WimaProperty list, uint32_t idx, WimaPropT
 	DynaStatus status = dvec_popAt(data->_list.list, idx);
 
 	// Check for error and handle.
-	if (yerror(status != DYNA_STATUS_SUCCESS)) return WIMA_STATUS_MALLOC_ERR;
+	if (yerror(status)) return WIMA_STATUS_MALLOC_ERR;
 
 	// Set the current index if there are no items.
 	if (dvec_len(data->_list.list) == 0) data->_list.idx = WIMA_PROP_COLLECTION_INVALID_IDX;
