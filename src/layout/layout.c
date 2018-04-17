@@ -296,7 +296,7 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 
 	wima_assert_init;
 
-	wassert(wima_prop_valid(prop), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 	wassert(wima_layout_valid(parent), WIMA_ASSERT_LAYOUT);
 
 	// Get the area.

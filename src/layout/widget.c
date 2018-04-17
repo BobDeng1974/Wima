@@ -406,7 +406,7 @@ void wima_widget_destroy(DynaPool pool, void* key)
 	// an area, and we can ignore it.
 	if (prop == WIMA_PROP_INVALID) return;
 
-	wassert(wima_prop_valid(prop), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the info.
 	WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, prop);
@@ -430,7 +430,7 @@ void wima_widget_destroy(DynaPool pool, void* key)
 
 WimaSizef wima_widget_size(WimaItem* item)
 {
-	wassert(wima_prop_valid(item->widget.prop), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(item->widget.prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Cache this.
 	WimaProperty prop = item->widget.prop;
@@ -476,8 +476,7 @@ void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event)
 	WimaItem* pitem = wima_widget_ptr(wdgt);
 
 	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
-
-	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(pitem->widget.prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;
@@ -562,8 +561,7 @@ void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event)
 	WimaItem* pitem = wima_widget_ptr(wdgt);
 
 	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
-
-	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(pitem->widget.prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;
@@ -648,8 +646,7 @@ void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event)
 	WimaItem* pitem = wima_widget_ptr(wdgt);
 
 	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
-
-	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(pitem->widget.prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;
@@ -734,8 +731,7 @@ void wima_widget_mousePos(WimaWidget wdgt, WimaVec pos)
 	WimaItem* pitem = wima_widget_ptr(wdgt);
 
 	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
-
-	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(pitem->widget.prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;
@@ -820,8 +816,7 @@ void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event)
 	WimaItem* pitem = wima_widget_ptr(wdgt);
 
 	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
-
-	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(pitem->widget.prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;
@@ -907,7 +902,7 @@ void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event)
 
 	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
 
-	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(pitem->widget.prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;
@@ -993,7 +988,7 @@ void wima_widget_char(WimaWidget wdgt, WimaCharEvent event)
 
 	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
 
-	wassert(wima_prop_valid(pitem->widget.prop), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(pitem->widget.prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the prop.
 	WimaProperty wph = pitem->widget.prop;

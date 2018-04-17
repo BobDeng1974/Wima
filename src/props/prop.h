@@ -295,13 +295,12 @@ void wima_prop_destroy(void** ptrs);
 
 #ifdef __YASSERT__
 /**
- * Checks to see if a property is
- * valid (hasn't been removed).
+ * Checks to see if a property is valid.
  * @param wph	The prop to check.
- * @return		true if valid, false
- *				otherwise.
+ * @param type	The type that the prop should be.
+ * @return		true if valid, false otherwise.
  */
-bool wima_prop_valid(WimaProperty wph);
+bool wima_prop_valid(WimaProperty wph, WimaPropType type);
 #endif
 
 //! @cond Doxygen suppress.

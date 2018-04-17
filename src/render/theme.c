@@ -853,12 +853,7 @@ void wima_theme_setBackground(WimaColor bg)
 	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_BG];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-	wassert(prop->type == WIMA_PROP_COLOR, WIMA_ASSERT_PROP_COLOR);
-#endif
+	wassert(wima_prop_valid(wph, WIMA_PROP_COLOR), WIMA_ASSERT_PROP);
 
 	wima_prop_color_update(wph, bg);
 }
@@ -870,12 +865,7 @@ WimaColor wima_theme_background()
 	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_BG];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
-	wassert(prop->type == WIMA_PROP_COLOR, WIMA_ASSERT_PROP_COLOR);
-#endif
+	wassert(wima_prop_valid(wph, WIMA_PROP_COLOR), WIMA_ASSERT_PROP);
 
 	return wima_prop_color(wph);
 }
@@ -889,7 +879,7 @@ WimaWidgetTheme* wima_theme_widget(WimaThemeType type)
 	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(wph, -1), WIMA_ASSERT_PROP);
 
 	return (WimaWidgetTheme*) dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 }
@@ -983,7 +973,7 @@ void wima_theme_widget_setShaded(WimaThemeType type, bool shaded)
 	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
@@ -1000,7 +990,7 @@ bool wima_theme_widget_shaded(WimaThemeType type)
 	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
@@ -1015,7 +1005,7 @@ WimaNodeTheme* wima_theme_node()
 	// Get the property.
 	WimaProperty wph = wg.themeStarts[WIMA_THEME_NODE];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	return (WimaNodeTheme*) dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 }
@@ -1117,7 +1107,7 @@ void wima_theme_node_setWireCurving(int curving)
 	// Get the property.
 	WimaProperty wph = wg.themeStarts[WIMA_THEME_NODE_WIRE_CURVING];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
@@ -1136,7 +1126,7 @@ int wima_theme_node_wireCurving()
 	// Get the property.
 	WimaProperty wph = wg.themeStarts[WIMA_THEME_NODE_WIRE_CURVING];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
@@ -1345,7 +1335,7 @@ static void wima_theme_setWidgetColor(WimaThemeType type, WimaWidgetThemeType id
 	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
@@ -1363,7 +1353,7 @@ static WimaColor wima_theme_widgetColor(WimaThemeType type, WimaWidgetThemeType 
 	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
@@ -1380,7 +1370,7 @@ static void wima_theme_setWidgetDelta(WimaThemeType type, bool top, int delta)
 	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
@@ -1404,7 +1394,7 @@ static int wima_theme_widgetDelta(WimaThemeType type, bool top)
 	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
@@ -1424,7 +1414,7 @@ static void wima_theme_setNodeColor(WimaNodeThemeType type, WimaColor color)
 	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
@@ -1441,7 +1431,7 @@ static WimaColor wima_theme_nodeColor(WimaNodeThemeType type)
 	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
-	wassert(wima_prop_valid(wph), WIMA_ASSERT_PROP);
+	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);

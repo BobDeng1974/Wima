@@ -83,6 +83,12 @@ typedef uint32_t WimaCustomProperty;
 #define WIMA_PROP_CUSTOM_MAX WIMA_PROP_CUSTOM_INVALID
 
 /**
+ * @def WIMA_PROP_NO_TYPE
+ * A marker indicating no type (for @a wima_prop_invalid()).
+ */
+#define WIMA_PROP_NO_TYPE ((WimaPropType) -1)
+
+/**
  * Registers a custom property type.
  * @param funcs		The functions that the custom property
  *					will use.
