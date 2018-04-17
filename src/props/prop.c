@@ -36,8 +36,10 @@
 
 #include <wima/math.h>
 #include <wima/prop.h>
+#include <wima/render.h>
 
 #include "prop.h"
+#include "widgets.h"
 
 #include "../wima.h"
 
@@ -56,7 +58,7 @@
 #include <string.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-// Static functions needed by the public functions.
+// Static functions and data needed by the public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -72,20 +74,19 @@
  * The WimaCustProp information for predefined prop types.
  */
 const WimaCustProp wima_prop_predefinedTypes[] = {
-	// TODO: Fill this later.
 	{
 	    {
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
+	        wima_prop_list_wdgt_initData,
+	        wima_prop_list_wdgt_freeData,
+	        wima_prop_list_wdgt_draw,
+	        wima_prop_list_wdgt_size,
+	        wima_prop_list_wdgt_key,
+	        wima_prop_list_wdgt_mouseBtn,
+	        wima_prop_list_wdgt_mouseClick,
+	        wima_prop_list_wdgt_mousePos,
+	        wima_prop_list_wdgt_mouseDrag,
+	        wima_prop_list_wdgt_scroll,
+	        wima_prop_list_wdgt_char,
 	    },
 	    0,
 	    0,
@@ -93,17 +94,17 @@ const WimaCustProp wima_prop_predefinedTypes[] = {
 
 	{
 	    {
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
+	        wima_prop_bool_wdgt_initData,
+	        wima_prop_bool_wdgt_freeData,
+	        wima_prop_bool_wdgt_draw,
+	        wima_prop_bool_wdgt_size,
+	        wima_prop_bool_wdgt_key,
+	        wima_prop_bool_wdgt_mouseBtn,
+	        wima_prop_bool_wdgt_mouseClick,
+	        wima_prop_bool_wdgt_mousePos,
+	        wima_prop_bool_wdgt_mouseDrag,
+	        wima_prop_bool_wdgt_scroll,
+	        wima_prop_bool_wdgt_char,
 	    },
 	    0,
 	    0,
@@ -111,17 +112,17 @@ const WimaCustProp wima_prop_predefinedTypes[] = {
 
 	{
 	    {
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
+	        wima_prop_int_wdgt_initData,
+	        wima_prop_int_wdgt_freeData,
+	        wima_prop_int_wdgt_draw,
+	        wima_prop_int_wdgt_size,
+	        wima_prop_int_wdgt_key,
+	        wima_prop_int_wdgt_mouseBtn,
+	        wima_prop_int_wdgt_mouseClick,
+	        wima_prop_int_wdgt_mousePos,
+	        wima_prop_int_wdgt_mouseDrag,
+	        wima_prop_int_wdgt_scroll,
+	        wima_prop_int_wdgt_char,
 	    },
 	    0,
 	    0,
@@ -129,17 +130,17 @@ const WimaCustProp wima_prop_predefinedTypes[] = {
 
 	{
 	    {
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
+	        wima_prop_float_wdgt_initData,
+	        wima_prop_float_wdgt_freeData,
+	        wima_prop_float_wdgt_draw,
+	        wima_prop_float_wdgt_size,
+	        wima_prop_float_wdgt_key,
+	        wima_prop_float_wdgt_mouseBtn,
+	        wima_prop_float_wdgt_mouseClick,
+	        wima_prop_float_wdgt_mousePos,
+	        wima_prop_float_wdgt_mouseDrag,
+	        wima_prop_float_wdgt_scroll,
+	        wima_prop_float_wdgt_char,
 	    },
 	    0,
 	    0,
@@ -147,17 +148,17 @@ const WimaCustProp wima_prop_predefinedTypes[] = {
 
 	{
 	    {
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
+	        wima_prop_string_wdgt_initData,
+	        wima_prop_string_wdgt_freeData,
+	        wima_prop_string_wdgt_draw,
+	        wima_prop_string_wdgt_size,
+	        wima_prop_string_wdgt_key,
+	        wima_prop_string_wdgt_mouseBtn,
+	        wima_prop_string_wdgt_mouseClick,
+	        wima_prop_string_wdgt_mousePos,
+	        wima_prop_string_wdgt_mouseDrag,
+	        wima_prop_string_wdgt_scroll,
+	        wima_prop_string_wdgt_char,
 	    },
 	    0,
 	    0,
@@ -165,17 +166,17 @@ const WimaCustProp wima_prop_predefinedTypes[] = {
 
 	{
 	    {
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
+	        wima_prop_enum_wdgt_initData,
+	        wima_prop_enum_wdgt_freeData,
+	        wima_prop_enum_wdgt_draw,
+	        wima_prop_enum_wdgt_size,
+	        wima_prop_enum_wdgt_key,
+	        wima_prop_enum_wdgt_mouseBtn,
+	        wima_prop_enum_wdgt_mouseClick,
+	        wima_prop_enum_wdgt_mousePos,
+	        wima_prop_enum_wdgt_mouseDrag,
+	        wima_prop_enum_wdgt_scroll,
+	        wima_prop_enum_wdgt_char,
 	    },
 	    0,
 	    0,
@@ -183,17 +184,17 @@ const WimaCustProp wima_prop_predefinedTypes[] = {
 
 	{
 	    {
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
+	        wima_prop_color_wdgt_initData,
+	        wima_prop_color_wdgt_freeData,
+	        wima_prop_color_wdgt_draw,
+	        wima_prop_color_wdgt_size,
+	        wima_prop_color_wdgt_key,
+	        wima_prop_color_wdgt_mouseBtn,
+	        wima_prop_color_wdgt_mouseClick,
+	        wima_prop_color_wdgt_mousePos,
+	        wima_prop_color_wdgt_mouseDrag,
+	        wima_prop_color_wdgt_scroll,
+	        wima_prop_color_wdgt_char,
 	    },
 	    0,
 	    0,
@@ -201,17 +202,35 @@ const WimaCustProp wima_prop_predefinedTypes[] = {
 
 	{
 	    {
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
-	        NULL,
+	        wima_prop_path_wdgt_initData,
+	        wima_prop_path_wdgt_freeData,
+	        wima_prop_path_wdgt_draw,
+	        wima_prop_path_wdgt_size,
+	        wima_prop_path_wdgt_key,
+	        wima_prop_path_wdgt_mouseBtn,
+	        wima_prop_path_wdgt_mouseClick,
+	        wima_prop_path_wdgt_mousePos,
+	        wima_prop_path_wdgt_mouseDrag,
+	        wima_prop_path_wdgt_scroll,
+	        wima_prop_path_wdgt_char,
+	    },
+	    0,
+	    0,
+	},
+
+	{
+	    {
+	        wima_prop_operator_wdgt_initData,
+	        wima_prop_operator_wdgt_freeData,
+	        wima_prop_operator_wdgt_draw,
+	        wima_prop_operator_wdgt_size,
+	        wima_prop_operator_wdgt_key,
+	        wima_prop_operator_wdgt_mouseBtn,
+	        wima_prop_operator_wdgt_mouseClick,
+	        wima_prop_operator_wdgt_mousePos,
+	        wima_prop_operator_wdgt_mouseDrag,
+	        wima_prop_operator_wdgt_scroll,
+	        wima_prop_operator_wdgt_char,
 	    },
 	    0,
 	    0,

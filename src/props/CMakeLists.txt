@@ -27,6 +27,7 @@
 set(WIMA_PROP_SRC
 
 	# Add files here.
+	"widgets.c"
 	"prop.c"
 )
 
