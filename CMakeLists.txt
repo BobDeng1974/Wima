@@ -38,8 +38,6 @@ endif()
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 
-message(STATUS "${CMAKE_BUILD_TYPE}")
-
 # If we are in debug mode...
 if("${CMAKE_BUILD_TYPE}" MATCHES "Debug" OR "${CMAKE_BUILD_TYPE}" MATCHES "RelWithDegInfo")
 
