@@ -346,8 +346,14 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	wg.props = dnvec_ncreate(2, 0, wima_prop_destroy, wima_prop_copy, sizeof(WimaPropInfo), sizeof(WimaPropData));
 	if (yerror(!wg.props)) goto wima_init_malloc_err;
 
+	// Set the directory grid.
+	wg.dirGrid = wima_prop_bool_register("wima_directory_grid", "Grid", "Lay out the directory in a grid",
+	                                     WIMA_ICON_INVALID, true);
+	if (yerror(wg.dirGrid == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
+
 	// Set the initial theme.
 	wg.theme = wima_theme_load(wg.themes, wg.themeStarts);
+	if (yerror(wg.theme == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
 
 	// Create and if error, exit.
 	wg.customProps = dvec_create(0, sizeof(WimaCustProp), NULL, NULL);

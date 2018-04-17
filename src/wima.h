@@ -137,6 +137,10 @@ typedef struct WimaG
 	/// The path to the font file.
 	DynaString fontPath;
 
+	/// A property that says whether to draw path
+	/// props as grids or not.
+	WimaProperty dirGrid;
+
 	/// The group property for all themes.
 	WimaProperty theme;
 
