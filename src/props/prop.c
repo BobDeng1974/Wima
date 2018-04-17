@@ -936,7 +936,6 @@ bool wima_prop_free(WimaProperty wph)
 	WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, wph);
 
 	if (info->idx == WIMA_PROP_INVALID) return true;
-
 	if (info->refs > 0) return false;
 
 	// Create an array of void pointers.
