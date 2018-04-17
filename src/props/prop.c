@@ -1250,8 +1250,13 @@ void wima_prop_destroy(void** ptrs)
 	{
 		case WIMA_PROP_LIST:
 		{
-			// Cache these.
+			// Cache this.
 			size_t len = dvec_len(data->_list.list);
+
+			// Make sure there are props to delete from the list.
+			if (!len) break;
+
+			// Get the list.
 			WimaProperty* props = dvec_get(data->_list.list, 0);
 
 			// Loop through the children.
