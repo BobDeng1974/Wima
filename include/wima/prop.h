@@ -260,19 +260,84 @@ void wima_prop_unregister(WimaProperty wph);
 // Public functions for group props.
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Registers and returns a @a WIMA_PROP_GROUP.
+ *
+ * Wima will draw this is the UI as an embedded group.
+ * @param name	The name of the property. This needs
+ *				to be a unique string identifier.
+ * @param label	The label of the property. This is
+ *				used as a label in the UI.
+ * @param desc	The description of the property.
+ *				This is used as a tooltip.
+ * @param icon	The icon to use with the property.
+ * @return		The newly-created @a WimaProperty.
+ * @pre			@a name must not be NULL.
+ */
 WimaProperty wima_prop_group_register(ynonnull const char* name, const char* label, const char* desc,
                                       WimaIcon icon) yinline;
 
+/**
+ * Returns the length of the group that @a group has.
+ * @param group	The property to query.
+ * @return		The length of @a group's group.
+ * @pre			@a group must be a valid @a WimaProperty.
+ * @pre			@a group must be a @a WIMA_PROP_GROUP.
+ */
 uint32_t wima_prop_group_len(WimaProperty group) yinline;
 
+/**
+ * Pushes @a child onto the back of the group in @a group.
+ * @param group	The property whose group will be pushed onto.
+ * @param child	The item to push.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a group must be a valid @a WimaProperty.
+ * @pre			@a group must be a @a WIMA_PROP_GROUP.
+ */
 WimaStatus wima_prop_group_push(WimaProperty group, WimaProperty child) yinline;
 
+/**
+ * Pushes @a child onto the group in @a group at @a idx.
+ * @param group	The property whose group will be pushed onto.
+ * @param idx	The index to push at.
+ * @param child	The item to push.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a group must be a valid @a WimaProperty.
+ * @pre			@a group must be a @a WIMA_PROP_GROUP.
+ */
 WimaStatus wima_prop_group_pushAt(WimaProperty group, uint32_t idx, WimaProperty child) yinline;
 
+/**
+ * Pops the item at the back of the group in @a group off.
+ * @param group	The property whose group will be popped from.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a group must be a valid @a WimaProperty.
+ * @pre			@a group must be a @a WIMA_PROP_GROUP.
+ */
 WimaStatus wima_prop_group_pop(WimaProperty group) yinline;
 
+/**
+ * Pops the item at @a idx of the group in @a group off.
+ * @param group	The property whose group will be popped from.
+ * @param idx	The index to pop from.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a group must be a valid @a WimaProperty.
+ * @pre			@a group must be a @a WIMA_PROP_GROUP.
+ */
 WimaStatus wima_prop_group_popAt(WimaProperty group, uint32_t idx) yinline;
 
+/**
+ * Returns a copy of the item at @a idx in @a group's group.
+ * @param group	The property whose group will be queried.
+ * @param idx	The index of the item to get.
+ * @return		The item at @a idx in @a group's group.
+ * @pre			@a group must be a valid @a WimaProperty.
+ * @pre			@a group must be a @a WIMA_PROP_GROUP.
+ */
 WimaProperty wima_prop_group_item(WimaProperty group, uint32_t idx) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -299,7 +364,7 @@ WimaProperty wima_prop_list_register(ynonnull const char* name, const char* labe
 /**
  * Returns the length of the list that @a list has.
  * @param list	The property to query.
- * @return		The length's of @a list's list.
+ * @return		The length of @a list's list.
  * @pre			@a list must be a valid @a WimaProperty.
  * @pre			@a list must be a @a WIMA_PROP_LIST.
  */
