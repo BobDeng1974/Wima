@@ -865,7 +865,11 @@ WimaProperty wima_prop_string_register(const char* name, const char* label, cons
 
 	// Set the data and check for error.
 	prop._str = dstr_create(str);
-	if (yerror(!prop._str)) return WIMA_PROP_INVALID;
+	if (yerror(!prop._str))
+	{
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_PROP_INVALID;
+	}
 
 	// Register the property.
 	WimaProperty idx = wima_prop_register(name, label, desc, icon, WIMA_PROP_STRING, &prop);
