@@ -336,18 +336,14 @@ WimaStatus wima_window_activate(WimaWindow wwh)
 
 		// Initialize the areas.
 		status = wima_area_init(wwh, dvec_get(win->workspaces, i), rect, win->rootLayouts, &min);
-		if (yerror(status)) goto err;
+		if (yerror(status)) return status;
 
 		// Set the min size.
 		wima_window_setMinSize(win, &min);
 
 		// Store the min size.
 		DynaStatus dstatus = dvec_push(win->workspaceSizes, &min);
-		if (dstatus)
-		{
-			status = WIMA_STATUS_MALLOC_ERR;
-			goto err;
-		}
+		if (dstatus) return WIMA_STATUS_MALLOC_ERR;
 	}
 
 	// Clear the context.
@@ -363,11 +359,7 @@ WimaStatus wima_window_activate(WimaWindow wwh)
 	glfwSwapInterval(1);
 
 	// Load the context.
-	if (yerror(!wg.gladLoaded && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)))
-	{
-		status = WIMA_STATUS_OPENGL_ERR;
-		goto err;
-	}
+	if (yerror(!wg.gladLoaded && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))) return WIMA_STATUS_OPENGL_ERR;
 
 	// Set that glad has been loaded.
 	wg.gladLoaded = true;
@@ -376,21 +368,13 @@ WimaStatus wima_window_activate(WimaWindow wwh)
 	win->render.nvg = nvgCreateGL3(NVG_ANTIALIAS);
 
 	// Check for error.
-	if (yerror(!win->render.nvg))
-	{
-		status = WIMA_STATUS_MALLOC_ERR;
-		goto err;
-	}
+	if (yerror(!win->render.nvg)) return WIMA_STATUS_MALLOC_ERR;
 
 	// Load the font.
 	win->render.font = nvgCreateFont(win->render.nvg, "default", dstr_str(wg.fontPath));
 
 	// Check for error.
-	if (yerror(win->render.font == -1))
-	{
-		status = WIMA_STATUS_MALLOC_ERR;
-		goto err;
-	}
+	if (yerror(win->render.font == -1)) return WIMA_STATUS_MALLOC_ERR;
 
 	// Cache this.
 	size_t imgLen = dvec_len(wg.imagePaths);
@@ -411,18 +395,12 @@ WimaStatus wima_window_activate(WimaWindow wwh)
 			status = wima_window_addImage(win, dstr_str(path), flags[i]);
 
 			// Check for error and handle it.
-			if (yerror(status)) goto err;
+			if (yerror(status)) return status;
 		}
 	}
 
 	// Set the clear color for this context.
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-	return status;
-
-err:
-
-	wima_window_destroy(NULL, win);
 
 	return status;
 }
