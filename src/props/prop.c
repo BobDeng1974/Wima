@@ -237,6 +237,21 @@ const WimaCustProp wima_prop_predefinedTypes[] = {
 	},
 };
 
+WimaProperty wima_prop_collection_register(const char* name, const char* label, const char* desc, WimaIcon icon,
+                                           WimaPropType type);
+
+uint32_t wima_prop_collection_len(WimaProperty list, WimaPropType type);
+
+WimaStatus wima_prop_collection_push(WimaProperty list, WimaProperty child, WimaPropType type);
+
+WimaStatus wima_prop_collection_pushAt(WimaProperty list, uint32_t idx, WimaProperty child, WimaPropType type);
+
+WimaStatus wima_prop_collection_pop(WimaProperty list, WimaPropType type);
+
+WimaStatus wima_prop_collection_popAt(WimaProperty list, uint32_t idx, WimaPropType type);
+
+WimaProperty wima_prop_collection_item(WimaProperty list, uint32_t idx, WimaPropType type);
+
 /**
  * Registers a property. This is common code to all cases.
  * @param name	The prop name.
@@ -374,252 +389,81 @@ void wima_prop_unregister(WimaProperty wph)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Public functions for group props.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaProperty wima_prop_group_register(const char* name, const char* label, const char* desc, WimaIcon icon)
+{
+	return wima_prop_collection_register(name, label, desc, icon, WIMA_PROP_LIST);
+}
+
+uint32_t wima_prop_group_len(WimaProperty list)
+{
+	return wima_prop_collection_len(list, WIMA_PROP_LIST);
+}
+
+WimaStatus wima_prop_group_push(WimaProperty list, WimaProperty child)
+{
+	return wima_prop_collection_push(list, child, WIMA_PROP_LIST);
+}
+
+WimaStatus wima_prop_group_pushAt(WimaProperty list, uint32_t idx, WimaProperty child)
+{
+	return wima_prop_collection_pushAt(list, idx, child, WIMA_PROP_LIST);
+}
+
+WimaStatus wima_prop_group_pop(WimaProperty list)
+{
+	return wima_prop_collection_pop(list, WIMA_PROP_LIST);
+}
+
+WimaStatus wima_prop_group_popAt(WimaProperty list, uint32_t idx)
+{
+	return wima_prop_collection_popAt(list, idx, WIMA_PROP_LIST);
+}
+
+WimaProperty wima_prop_group_item(WimaProperty list, uint32_t idx)
+{
+	return wima_prop_collection_item(list, idx, WIMA_PROP_LIST);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Public functions for list props.
 ////////////////////////////////////////////////////////////////////////////////
 
 WimaProperty wima_prop_list_register(const char* name, const char* label, const char* desc, WimaIcon icon)
 {
-	wima_assert_init;
-
-	WimaPropData prop;
-
-	// Create the list and send error if any.
-	DynaVector list = dvec_create(0, sizeof(WimaProperty), NULL, NULL);
-	if (yerror(!list))
-	{
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_PROP_INVALID;
-	}
-
-	// Set the data.
-	prop._list.list = list;
-	prop._list.idx = WIMA_PROP_LIST_INVALID_IDX;
-
-	// Register the property.
-	WimaProperty idx = wima_prop_register(name, label, desc, icon, WIMA_PROP_LIST, &prop);
-
-	return idx;
+	return wima_prop_collection_register(name, label, desc, icon, WIMA_PROP_LIST);
 }
 
 uint32_t wima_prop_list_len(WimaProperty list)
 {
-	wima_assert_init;
-
-	wassert(wima_prop_valid(list), WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, list);
-	wassert(prop->type == WIMA_PROP_LIST, WIMA_ASSERT_PROP_LIST);
-#endif
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
-
-	// Return the length.
-	return dvec_len(data->_list.list);
+	return wima_prop_collection_len(list, WIMA_PROP_LIST);
 }
 
 WimaStatus wima_prop_list_push(WimaProperty list, WimaProperty child)
 {
-	wima_assert_init;
-
-	wassert(wima_prop_valid(list), WIMA_ASSERT_PROP);
-
-	wassert(child != WIMA_PROP_INVALID, WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, list);
-	wassert(prop->type == WIMA_PROP_LIST, WIMA_ASSERT_PROP_LIST);
-#endif
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
-
-	// Cache this.
-	size_t len = dvec_len(data->_list.list);
-
-	wassert(len < WIMA_PROP_LIST_MAX, WIMA_ASSERT_PROP_LIST_MAX);
-
-	// If there are children...
-	if (len != 0)
-	{
-		// Get the handles.
-		WimaProperty* handles = dvec_get(data->_list.list, 0);
-
-		// Iterate through the handles.
-		for (size_t i = 0; i < len; ++i)
-		{
-			// If the handle matches the child, return an error.
-			if (handles[i] == child) return WIMA_STATUS_PROP_CHILD_EXISTS;
-		}
-	}
-
-	// Push the item onto the vector.
-	DynaStatus status = dvec_push(data->_list.list, &child);
-
-	// Check for error and handle.
-	if (yerror(status != DYNA_STATUS_SUCCESS)) return WIMA_STATUS_MALLOC_ERR;
-
-	// Set the current index if this is the first item.
-	if (dvec_len(data->_list.list) == 1) data->_list.idx = 0;
-
-	// Get the child info.
-	WimaPropInfo* childInfo = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, child);
-
-	// Increment the refs.
-	++(childInfo->refs);
-
-	return WIMA_STATUS_SUCCESS;
+	return wima_prop_collection_push(list, child, WIMA_PROP_LIST);
 }
 
 WimaStatus wima_prop_list_pushAt(WimaProperty list, uint32_t idx, WimaProperty child)
 {
-	wima_assert_init;
-
-	wassert(wima_prop_valid(list), WIMA_ASSERT_PROP);
-
-	wassert(child != WIMA_PROP_INVALID, WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, list);
-	wassert(prop->type == WIMA_PROP_LIST, WIMA_ASSERT_PROP_LIST);
-#endif
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
-
-	wassert(idx != WIMA_PROP_LIST_INVALID_IDX, WIMA_ASSERT_PROP_LIST_IDX);
-
-	// Cache this.
-	size_t len = dvec_len(data->_list.list);
-
-	wassert(len >= idx, WIMA_ASSERT_PROP_LIST_IDX);
-	wassert(len < WIMA_PROP_LIST_MAX, WIMA_ASSERT_PROP_LIST_MAX);
-
-	// If there are children...
-	if (len != 0)
-	{
-		// Get the handles.
-		WimaProperty* handles = dvec_get(data->_list.list, 0);
-
-		// Iterate through the handles.
-		for (size_t i = 0; i < len; ++i)
-		{
-			// If the handle matches the child, return an error.
-			if (handles[i] == child) return WIMA_STATUS_PROP_CHILD_EXISTS;
-		}
-	}
-
-	// Push the item onto the vector.
-	DynaStatus status = dvec_pushAt(data->_list.list, idx, &child);
-
-	// Check for error and handle.
-	if (yerror(status != DYNA_STATUS_SUCCESS)) return WIMA_STATUS_MALLOC_ERR;
-
-	// Set the current index if this is the first item.
-	if (dvec_len(data->_list.list) == 1) data->_list.idx = 0;
-
-	// Get the child info.
-	WimaPropInfo* childInfo = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, child);
-
-	// Increment the refs.
-	++(childInfo->refs);
-
-	return WIMA_STATUS_SUCCESS;
+	return wima_prop_collection_pushAt(list, idx, child, WIMA_PROP_LIST);
 }
 
 WimaStatus wima_prop_list_pop(WimaProperty list)
 {
-	wima_assert_init;
-
-	wassert(wima_prop_valid(list), WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, list);
-	wassert(prop->type == WIMA_PROP_LIST, WIMA_ASSERT_PROP_LIST);
-#endif
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
-
-	// Get the child.
-	WimaProperty child = *((WimaProperty*) dvec_get(data->_list.list, dvec_len(data->_list.list) - 1));
-
-	// Pop the data off the vector.
-	DynaStatus status = dvec_pop(data->_list.list);
-
-	// Check for error and handle.
-	if (yerror(status != DYNA_STATUS_SUCCESS)) return WIMA_STATUS_MALLOC_ERR;
-
-	// Set the current index if there are no items.
-	if (dvec_len(data->_list.list) == 0) data->_list.idx = WIMA_PROP_LIST_INVALID_IDX;
-
-	// Get the child info.
-	WimaPropInfo* childInfo = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, child);
-
-	// Decrement the refs.
-	--(childInfo->refs);
-
-	// Return the appropriate result.
-	return WIMA_STATUS_SUCCESS;
+	return wima_prop_collection_pop(list, WIMA_PROP_LIST);
 }
 
 WimaStatus wima_prop_list_popAt(WimaProperty list, uint32_t idx)
 {
-	wima_assert_init;
-
-	wassert(wima_prop_valid(list), WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, list);
-	wassert(prop->type == WIMA_PROP_LIST, WIMA_ASSERT_PROP_LIST);
-#endif
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
-
-	wassert(dvec_len(data->_list.list) > idx, WIMA_ASSERT_PROP_LIST_IDX);
-
-	// Get the child.
-	WimaProperty child = *((WimaProperty*) dvec_get(data->_list.list, idx));
-
-	// Pop the data off the vector.
-	DynaStatus status = dvec_popAt(data->_list.list, idx);
-
-	// Check for error and handle.
-	if (yerror(status != DYNA_STATUS_SUCCESS)) return WIMA_STATUS_MALLOC_ERR;
-
-	// Set the current index if there are no items.
-	if (dvec_len(data->_list.list) == 0) data->_list.idx = WIMA_PROP_LIST_INVALID_IDX;
-
-	// Get the child info.
-	WimaPropInfo* childInfo = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, child);
-
-	// Decrement the refs.
-	--(childInfo->refs);
-
-	// Return the appropriate result.
-	return WIMA_STATUS_SUCCESS;
+	return wima_prop_collection_popAt(list, idx, WIMA_PROP_LIST);
 }
 
 WimaProperty wima_prop_list_item(WimaProperty list, uint32_t idx)
 {
-	wima_assert_init;
-
-	wassert(wima_prop_valid(list), WIMA_ASSERT_PROP);
-
-#ifdef __YASSERT__
-	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, list);
-	wassert(prop->type == WIMA_PROP_LIST, WIMA_ASSERT_PROP_LIST);
-#endif
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
-
-	wassert(dvec_len(data->_list.list) > idx, WIMA_ASSERT_PROP_LIST_IDX);
-
-	// Return a copy of the item.
-	return *((WimaProperty*) dvec_get(data->_list.list, idx));
+	return wima_prop_collection_item(list, idx, WIMA_PROP_LIST);
 }
 
 WimaProperty wima_prop_list_currentItem(WimaProperty list)
@@ -636,7 +480,7 @@ WimaProperty wima_prop_list_currentItem(WimaProperty list)
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
 
-	wassert(dvec_len(data->_list.list) > data->_list.idx, WIMA_ASSERT_PROP_LIST_IDX);
+	wassert(dvec_len(data->_list.list) > data->_list.idx, WIMA_ASSERT_PROP_COLLECTION_IDX);
 
 	// Return a copy of the item.
 	return *((WimaProperty*) dvec_get(data->_list.list, data->_list.idx));
@@ -656,7 +500,7 @@ void wima_prop_list_updateIdx(WimaProperty list, uint32_t idx)
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
 
-	wassert(dvec_len(data->_list.list) > idx, WIMA_ASSERT_PROP_LIST_IDX);
+	wassert(dvec_len(data->_list.list) > idx, WIMA_ASSERT_PROP_COLLECTION_IDX);
 
 	data->_list.idx = idx;
 }
@@ -675,7 +519,7 @@ uint32_t wima_prop_list_idx(WimaProperty list)
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
 
-	wassert(data->_list.idx != WIMA_PROP_LIST_INVALID_IDX, WIMA_ASSERT_PROP_LIST_IDX);
+	wassert(data->_list.idx != WIMA_PROP_LIST_INVALID_IDX, WIMA_ASSERT_PROP_COLLECTION_IDX);
 
 	// Return a copy of the item.
 	return data->_list.idx;
@@ -1253,6 +1097,7 @@ void wima_prop_destroy(void** ptrs)
 	// Switch on the property type.
 	switch (prop->type)
 	{
+		case WIMA_PROP_GROUP:
 		case WIMA_PROP_LIST:
 		{
 			// Cache this.
@@ -1335,6 +1180,254 @@ bool wima_prop_valid(WimaProperty wph)
 	return valid;
 }
 #endif
+
+////////////////////////////////////////////////////////////////////////////////
+// Private functions for the two collection prop types.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaProperty wima_prop_collection_register(const char* name, const char* label, const char* desc, WimaIcon icon,
+                                           WimaPropType type)
+{
+	wima_assert_init;
+
+	WimaPropData prop;
+
+	// Create the list and send error if any.
+	DynaVector list = dvec_create(0, sizeof(WimaProperty), NULL, NULL);
+	if (yerror(!list))
+	{
+		wima_error(WIMA_STATUS_MALLOC_ERR);
+		return WIMA_PROP_INVALID;
+	}
+
+	// Set the data.
+	prop._list.list = list;
+	prop._list.idx = WIMA_PROP_LIST_INVALID_IDX;
+
+	// Register the property.
+	WimaProperty idx = wima_prop_register(name, label, desc, icon, type, &prop);
+
+	return idx;
+}
+
+uint32_t wima_prop_collection_len(WimaProperty list, WimaPropType type)
+{
+	wima_assert_init;
+
+	wassert(wima_prop_valid(list), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, list);
+	wassert(prop->type == type, type - WIMA_PROP_GROUP + WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
+
+	// Return the length.
+	return dvec_len(data->_list.list);
+}
+
+WimaStatus wima_prop_collection_push(WimaProperty list, WimaProperty child, WimaPropType type)
+{
+	wima_assert_init;
+
+	wassert(wima_prop_valid(list), WIMA_ASSERT_PROP);
+	wassert(child != WIMA_PROP_INVALID, WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, list);
+	wassert(prop->type == type, type - WIMA_PROP_GROUP + WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
+
+	// Cache this.
+	size_t len = dvec_len(data->_list.list);
+
+	wassert(len < WIMA_PROP_LIST_MAX, WIMA_ASSERT_PROP_COLLECTION_MAX);
+
+	// If there are children...
+	if (len != 0)
+	{
+		// Get the handles.
+		WimaProperty* handles = dvec_get(data->_list.list, 0);
+
+		// Iterate through the handles.
+		for (size_t i = 0; i < len; ++i)
+		{
+			// If the handle matches the child, return an error.
+			if (handles[i] == child) return WIMA_STATUS_PROP_CHILD_EXISTS;
+		}
+	}
+
+	// Push the item onto the vector.
+	DynaStatus status = dvec_push(data->_list.list, &child);
+
+	// Check for error and handle.
+	if (yerror(status != DYNA_STATUS_SUCCESS)) return WIMA_STATUS_MALLOC_ERR;
+
+	// Set the current index if this is the first item.
+	if (dvec_len(data->_list.list) == 1) data->_list.idx = 0;
+
+	// Get the child info.
+	WimaPropInfo* childInfo = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, child);
+
+	// Increment the refs.
+	++(childInfo->refs);
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus wima_prop_collection_pushAt(WimaProperty list, uint32_t idx, WimaProperty child, WimaPropType type)
+{
+	wima_assert_init;
+
+	wassert(wima_prop_valid(list), WIMA_ASSERT_PROP);
+	wassert(child != WIMA_PROP_INVALID, WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, list);
+	wassert(prop->type == type, type - WIMA_PROP_GROUP + WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
+
+	wassert(idx != WIMA_PROP_LIST_INVALID_IDX, WIMA_ASSERT_PROP_COLLECTION_IDX);
+
+	// Cache this.
+	size_t len = dvec_len(data->_list.list);
+
+	wassert(len >= idx, WIMA_ASSERT_PROP_COLLECTION_IDX);
+	wassert(len < WIMA_PROP_LIST_MAX, WIMA_ASSERT_PROP_COLLECTION_MAX);
+
+	// If there are children...
+	if (len != 0)
+	{
+		// Get the handles.
+		WimaProperty* handles = dvec_get(data->_list.list, 0);
+
+		// Iterate through the handles.
+		for (size_t i = 0; i < len; ++i)
+		{
+			// If the handle matches the child, return an error.
+			if (handles[i] == child) return WIMA_STATUS_PROP_CHILD_EXISTS;
+		}
+	}
+
+	// Push the item onto the vector.
+	DynaStatus status = dvec_pushAt(data->_list.list, idx, &child);
+
+	// Check for error and handle.
+	if (yerror(status != DYNA_STATUS_SUCCESS)) return WIMA_STATUS_MALLOC_ERR;
+
+	// Set the current index if this is the first item.
+	if (dvec_len(data->_list.list) == 1) data->_list.idx = 0;
+
+	// Get the child info.
+	WimaPropInfo* childInfo = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, child);
+
+	// Increment the refs.
+	++(childInfo->refs);
+
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus wima_prop_collection_pop(WimaProperty list, WimaPropType type)
+{
+	wima_assert_init;
+
+	wassert(wima_prop_valid(list), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, list);
+	wassert(prop->type == type, type - WIMA_PROP_GROUP + WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
+
+	// Get the child.
+	WimaProperty child = *((WimaProperty*) dvec_get(data->_list.list, dvec_len(data->_list.list) - 1));
+
+	// Pop the data off the vector.
+	DynaStatus status = dvec_pop(data->_list.list);
+
+	// Check for error and handle.
+	if (yerror(status != DYNA_STATUS_SUCCESS)) return WIMA_STATUS_MALLOC_ERR;
+
+	// Set the current index if there are no items.
+	if (dvec_len(data->_list.list) == 0) data->_list.idx = WIMA_PROP_LIST_INVALID_IDX;
+
+	// Get the child info.
+	WimaPropInfo* childInfo = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, child);
+
+	// Decrement the refs.
+	--(childInfo->refs);
+
+	// Return the appropriate result.
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaStatus wima_prop_collection_popAt(WimaProperty list, uint32_t idx, WimaPropType type)
+{
+	wima_assert_init;
+
+	wassert(wima_prop_valid(list), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, list);
+	wassert(prop->type == type, type - WIMA_PROP_GROUP + WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
+
+	wassert(dvec_len(data->_list.list) > idx, WIMA_ASSERT_PROP_COLLECTION_IDX);
+
+	// Get the child.
+	WimaProperty child = *((WimaProperty*) dvec_get(data->_list.list, idx));
+
+	// Pop the data off the vector.
+	DynaStatus status = dvec_popAt(data->_list.list, idx);
+
+	// Check for error and handle.
+	if (yerror(status != DYNA_STATUS_SUCCESS)) return WIMA_STATUS_MALLOC_ERR;
+
+	// Set the current index if there are no items.
+	if (dvec_len(data->_list.list) == 0) data->_list.idx = WIMA_PROP_LIST_INVALID_IDX;
+
+	// Get the child info.
+	WimaPropInfo* childInfo = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, child);
+
+	// Decrement the refs.
+	--(childInfo->refs);
+
+	// Return the appropriate result.
+	return WIMA_STATUS_SUCCESS;
+}
+
+WimaProperty wima_prop_collection_item(WimaProperty list, uint32_t idx, WimaPropType type)
+{
+	wima_assert_init;
+
+	wassert(wima_prop_valid(list), WIMA_ASSERT_PROP);
+
+#ifdef __YASSERT__
+	WimaPropInfo* prop = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, list);
+	wassert(prop->type == type, type - WIMA_PROP_GROUP + WIMA_ASSERT_PROP_GROUP);
+#endif
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, list);
+
+	wassert(dvec_len(data->_list.list) > idx, WIMA_ASSERT_PROP_COLLECTION_IDX);
+
+	// Return a copy of the item.
+	return *((WimaProperty*) dvec_get(data->_list.list, idx));
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions.

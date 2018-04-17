@@ -190,6 +190,7 @@ const char* const wima_assert_msgs[] = {
 
 	"prop is not valid",
 	"no props are registered",
+	"prop is not a group prop",
 	"prop is not a list prop",
 	"prop is not a bool prop",
 	"prop is not an int prop",
@@ -204,7 +205,7 @@ const char* const wima_assert_msgs[] = {
 	"enum index is not within range",
 	"str is NULL",
 	"enum names is not valid",
-	"index is out of range for the list",
+	"index is out of range for the prop",
 	"client tried to add too many children to a property",
 	"custom prop is not valid",
 	"prop path is NULL",

@@ -489,6 +489,11 @@ void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
+		case WIMA_PROP_GROUP:
+		{
+			break;
+		}
+
 		case WIMA_PROP_LIST:
 		{
 			break;
@@ -570,6 +575,11 @@ void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
+		case WIMA_PROP_GROUP:
+		{
+			break;
+		}
+
 		case WIMA_PROP_LIST:
 		{
 			break;
@@ -651,6 +661,11 @@ void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
+		case WIMA_PROP_GROUP:
+		{
+			break;
+		}
+
 		case WIMA_PROP_LIST:
 		{
 			break;
@@ -732,6 +747,11 @@ void wima_widget_mousePos(WimaWidget wdgt, WimaVec pos)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
+		case WIMA_PROP_GROUP:
+		{
+			break;
+		}
+
 		case WIMA_PROP_LIST:
 		{
 			break;
@@ -813,6 +833,11 @@ void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
+		case WIMA_PROP_GROUP:
+		{
+			break;
+		}
+
 		case WIMA_PROP_LIST:
 		{
 			break;
@@ -894,6 +919,11 @@ void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
+		case WIMA_PROP_GROUP:
+		{
+			break;
+		}
+
 		case WIMA_PROP_LIST:
 		{
 			break;
@@ -975,6 +1005,11 @@ void wima_widget_char(WimaWidget wdgt, WimaCharEvent event)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
+		case WIMA_PROP_GROUP:
+		{
+			break;
+		}
+
 		case WIMA_PROP_LIST:
 		{
 			break;

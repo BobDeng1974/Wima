@@ -102,7 +102,14 @@ WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, uint32_t dat
  */
 typedef enum WimaPropType
 {
-	/// A list property.
+	/// A group property. Group and list properties
+	/// are exactly the same, except in how they
+	/// are laid out and drawn.
+	WIMA_PROP_GROUP,
+
+	/// A list property. Group and list properties
+	/// are exactly the same, except in how they
+	/// are laid out and drawn.
 	WIMA_PROP_LIST,
 
 	/// A bool property.
@@ -242,6 +249,24 @@ WimaProperty wima_prop_find(const char* name);
  * @param wph	The @a WimaProperty to remove.
  */
 void wima_prop_unregister(WimaProperty wph);
+
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for group props.
+////////////////////////////////////////////////////////////////////////////////
+
+WimaProperty wima_prop_group_register(const char* name, const char* label, const char* desc, WimaIcon icon);
+
+uint32_t wima_prop_group_len(WimaProperty list);
+
+WimaStatus wima_prop_group_push(WimaProperty list, WimaProperty child);
+
+WimaStatus wima_prop_group_pushAt(WimaProperty list, uint32_t idx, WimaProperty child);
+
+WimaStatus wima_prop_group_pop(WimaProperty list);
+
+WimaStatus wima_prop_group_popAt(WimaProperty list, uint32_t idx);
+
+WimaProperty wima_prop_group_item(WimaProperty list, uint32_t idx);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions for list props.
