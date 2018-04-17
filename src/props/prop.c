@@ -394,37 +394,37 @@ void wima_prop_unregister(WimaProperty wph)
 
 WimaProperty wima_prop_group_register(const char* name, const char* label, const char* desc, WimaIcon icon)
 {
-	return wima_prop_collection_register(name, label, desc, icon, WIMA_PROP_LIST);
+	return wima_prop_collection_register(name, label, desc, icon, WIMA_PROP_GROUP);
 }
 
 uint32_t wima_prop_group_len(WimaProperty list)
 {
-	return wima_prop_collection_len(list, WIMA_PROP_LIST);
+	return wima_prop_collection_len(list, WIMA_PROP_GROUP);
 }
 
 WimaStatus wima_prop_group_push(WimaProperty list, WimaProperty child)
 {
-	return wima_prop_collection_push(list, child, WIMA_PROP_LIST);
+	return wima_prop_collection_push(list, child, WIMA_PROP_GROUP);
 }
 
 WimaStatus wima_prop_group_pushAt(WimaProperty list, uint32_t idx, WimaProperty child)
 {
-	return wima_prop_collection_pushAt(list, idx, child, WIMA_PROP_LIST);
+	return wima_prop_collection_pushAt(list, idx, child, WIMA_PROP_GROUP);
 }
 
 WimaStatus wima_prop_group_pop(WimaProperty list)
 {
-	return wima_prop_collection_pop(list, WIMA_PROP_LIST);
+	return wima_prop_collection_pop(list, WIMA_PROP_GROUP);
 }
 
 WimaStatus wima_prop_group_popAt(WimaProperty list, uint32_t idx)
 {
-	return wima_prop_collection_popAt(list, idx, WIMA_PROP_LIST);
+	return wima_prop_collection_popAt(list, idx, WIMA_PROP_GROUP);
 }
 
 WimaProperty wima_prop_group_item(WimaProperty list, uint32_t idx)
 {
-	return wima_prop_collection_item(list, idx, WIMA_PROP_LIST);
+	return wima_prop_collection_item(list, idx, WIMA_PROP_GROUP);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
