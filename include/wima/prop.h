@@ -260,19 +260,20 @@ void wima_prop_unregister(WimaProperty wph);
 // Public functions for group props.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaProperty wima_prop_group_register(const char* name, const char* label, const char* desc, WimaIcon icon);
+WimaProperty wima_prop_group_register(ynonnull const char* name, const char* label, const char* desc,
+                                      WimaIcon icon) yinline;
 
-uint32_t wima_prop_group_len(WimaProperty list);
+uint32_t wima_prop_group_len(WimaProperty list) yinline;
 
-WimaStatus wima_prop_group_push(WimaProperty list, WimaProperty child);
+WimaStatus wima_prop_group_push(WimaProperty list, WimaProperty child) yinline;
 
-WimaStatus wima_prop_group_pushAt(WimaProperty list, uint32_t idx, WimaProperty child);
+WimaStatus wima_prop_group_pushAt(WimaProperty list, uint32_t idx, WimaProperty child) yinline;
 
-WimaStatus wima_prop_group_pop(WimaProperty list);
+WimaStatus wima_prop_group_pop(WimaProperty list) yinline;
 
-WimaStatus wima_prop_group_popAt(WimaProperty list, uint32_t idx);
+WimaStatus wima_prop_group_popAt(WimaProperty list, uint32_t idx) yinline;
 
-WimaProperty wima_prop_group_item(WimaProperty list, uint32_t idx);
+WimaProperty wima_prop_group_item(WimaProperty list, uint32_t idx) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions for list props.
@@ -292,7 +293,8 @@ WimaProperty wima_prop_group_item(WimaProperty list, uint32_t idx);
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
  */
-WimaProperty wima_prop_list_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon);
+WimaProperty wima_prop_list_register(ynonnull const char* name, const char* label, const char* desc,
+                                     WimaIcon icon) yinline;
 
 /**
  * Returns the length of the list that @a list has.
