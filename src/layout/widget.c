@@ -901,7 +901,6 @@ void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event)
 	WimaItem* pitem = wima_widget_ptr(wdgt);
 
 	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
-
 	wassert(wima_prop_valid(pitem->widget.prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the prop.
@@ -987,7 +986,6 @@ void wima_widget_char(WimaWidget wdgt, WimaCharEvent event)
 	WimaItem* pitem = wima_widget_ptr(wdgt);
 
 	wassert(WIMA_ITEM_IS_WIDGET(pitem), WIMA_ASSERT_ITEM_WIDGET);
-
 	wassert(wima_prop_valid(pitem->widget.prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
 	// Get the prop.
