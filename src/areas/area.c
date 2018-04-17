@@ -1047,10 +1047,9 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 			WimaLayout root = wima_layout_new(parent, flags, 0.0f);
 			if (yerror(dvec_push(roots, &root))) return WIMA_STATUS_MALLOC_ERR;
 
-			// Do the layout. The layout function is guaranteed to be non-null.
+			// Do the layout and check for error. The layout
+			// function is guaranteed to be non-null.
 			status = reg->layout(root);
-
-			// Check for error.
 			if (yerror(status)) return status;
 
 			// Get the item for the root layout.
@@ -1139,10 +1138,8 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 				temp.h -= item->rect.h;
 			}
 
-			// Compute the layout.
+			// Compute the layout and check for error.
 			status = wima_layout_layout(item, area);
-
-			// Check for error.
 			if (yerror(status)) return status;
 		}
 
