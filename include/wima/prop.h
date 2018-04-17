@@ -735,13 +735,12 @@ WimaColor wima_prop_color(WimaProperty wph) yinline;
  * @param icon	The icon to use with the property.
  * @param path	The directory path to open initially
  *				in a widget.
- * @param grid	Whether to display in a grid or list.
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
  * @pre			@a path must not be NULL.
  */
 WimaProperty wima_prop_path_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
-                                     const char* path, bool grid);
+                                     ynonnull const char* path);
 
 /**
  * Returns the path associated with the path property.
@@ -754,28 +753,6 @@ WimaProperty wima_prop_path_register(ynonnull const char* name, const char* labe
  * @pre			@a wph must be a @a WIMA_PROP_PATH.
  */
 DynaString wima_prop_path_path(WimaProperty wph);
-
-/**
- * Returns whether or not the property displays the path
- * contents as a grid.
- * @param wph	The @a WimaProperty that will be queried.
- * @return		true if the contents are displayed in a
- *				grid, false otherwise.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_PATH.
- */
-bool wima_prop_path_grid(WimaProperty wph);
-
-/**
- * Sets whether the path property contents should be
- * displayed in a grid or not.
- * @param wph	The @a WimaProperty to update.
- * @param grid	true if the contents should be displayed
- *				in a grid, false otherwise.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_PATH.
- */
-void wima_prop_path_updateGrid(WimaProperty wph, bool grid);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public function for operator props.

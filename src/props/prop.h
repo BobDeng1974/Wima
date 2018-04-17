@@ -169,19 +169,6 @@ typedef struct WimaPropEnum
 } WimaPropEnum;
 
 /**
- * Data for a path property.
- */
-typedef struct WimaPropPath
-{
-	/// The path. This is a DynaString so it can be changed.
-	DynaString path;
-
-	/// Whether to display as a grid or not.
-	bool grid;
-
-} WimaPropPath;
-
-/**
  * Data for a pointer property.
  */
 typedef struct WimaPropPtr
@@ -258,9 +245,6 @@ typedef union WimaPropData
 
 	/// A way to quickly access the color as an NVGcolor.
 	NVGcolor _nvgcolor;
-
-	/// Path.
-	WimaPropPath _path;
 
 	/// Operator.
 	WimaWidgetMouseClickFunc _op;

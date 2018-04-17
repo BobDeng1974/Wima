@@ -789,7 +789,7 @@ WimaColor wima_prop_color(WimaProperty wph)
 ////////////////////////////////////////////////////////////////////////////////
 
 WimaProperty wima_prop_path_register(const char* name, const char* label, const char* desc, WimaIcon icon,
-                                     const char* path, bool grid)
+                                     const char* path)
 {
 	wima_assert_init;
 
@@ -798,11 +798,10 @@ WimaProperty wima_prop_path_register(const char* name, const char* label, const 
 	WimaPropData prop;
 
 	// Set the data.
-	prop._path.grid = grid;
-	prop._path.path = dstr_create(path);
+	prop._str = dstr_create(path);
 
 	// Check for error.
-	if (yerror(!prop._path.path))
+	if (yerror(!prop._str))
 	{
 		wima_error(WIMA_STATUS_MALLOC_ERR);
 		return WIMA_PROP_INVALID;
@@ -821,28 +820,7 @@ DynaString wima_prop_path_path(WimaProperty wph)
 	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	return data->_path.path;
-}
-
-void wima_prop_path_updateGrid(WimaProperty wph, bool grid)
-{
-	wassert(wima_prop_valid(wph, WIMA_PROP_PATH), WIMA_ASSERT_PROP);
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
-
-	// Set the grid.
-	data->_path.grid = grid;
-}
-
-bool wima_prop_path_grid(WimaProperty wph)
-{
-	wassert(wima_prop_valid(wph, WIMA_PROP_PATH), WIMA_ASSERT_PROP);
-
-	// Get the data.
-	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
-
-	return data->_path.grid;
+	return data->_str;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1019,25 +997,16 @@ void wima_prop_destroy(void** ptrs)
 			break;
 		}
 
-		case WIMA_PROP_BOOL:
-		case WIMA_PROP_INT:
-		case WIMA_PROP_FLOAT:
-		{
-			break;
-		}
-
 		case WIMA_PROP_STRING:
+		case WIMA_PROP_PATH:
 		{
 			dstr_free(data->_str);
 			break;
 		}
 
-		case WIMA_PROP_PATH:
-		{
-			dstr_free(data->_path.path);
-			break;
-		}
-
+		case WIMA_PROP_BOOL:
+		case WIMA_PROP_INT:
+		case WIMA_PROP_FLOAT:
 		case WIMA_PROP_ENUM:
 		case WIMA_PROP_COLOR:
 		case WIMA_PROP_PTR:
