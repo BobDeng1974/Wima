@@ -118,7 +118,7 @@ const char* const wima_assert_msgs[] = {
 	"window framebuffer size does not match GLFW framebuffer size; this is a bug in Wima",
 	"window size does not match GLFW window size; this is a bug in Wima",
 	"window render context is NULL; this is a bug in Wima",
-    "no workspace on the status = window",
+	"no workspace on the window",
 	"workspace is not valid for the window; if the workspace has been registered, this is a bug in Wima",
 	"window has a dialog",
 	"no dialog on the window",
@@ -156,7 +156,7 @@ const char* const wima_assert_msgs[] = {
 	"area is a leaf, not a parent",
 	"number of items in area exceeds capacity",
 	"region is not valid in area",
-    "area is not an ancestor",
+	"area is not an ancestor",
 
 	"editor is not valid",
 	"client tried to create too many editors",
