@@ -272,11 +272,10 @@ void wima_area_free(ynonnull DynaTree areas);
 
 /**
  * A Dyna DestructFunc that will destroy a node in an area tree.
- * @param tree	The tree that is destroying elements.
  * @param ptr	The pointer to the node to destroy.
  * @pre			@a tree must not be NULL.
  */
-void wima_area_destroy(ynonnull DynaTree tree, ynonnull void* ptr);
+void wima_area_destroy(ynonnull void* ptr);
 
 /**
  * Handles a key event on an area.

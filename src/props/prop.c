@@ -1208,12 +1208,12 @@ bool wima_prop_free(WimaProperty wph)
 	void* ptrs[] = { info, dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph) };
 
 	// Free the property.
-	wima_prop_destroy(wg.props, ptrs);
+	wima_prop_destroy(ptrs);
 
 	return true;
 }
 
-void wima_prop_destroy(DynaNVector vec yunused, void** ptrs)
+void wima_prop_destroy(void** ptrs)
 {
 	wima_assert_init;
 

@@ -1442,7 +1442,7 @@ DynaStatus wima_window_copy(void* dest yunused, void* src yunused)
 	abort();
 }
 
-void wima_window_destroy(void* vec yunused, void* ptr)
+void wima_window_destroy(void* ptr)
 {
 	wima_assert_init;
 
@@ -2577,7 +2577,7 @@ WimaStatus wima_window_splitArea(WimaWin* win, WimaAreaNode node)
 	memcpy(rarea.area.regions, parea->area.regions, sizeof(WimaArReg) * parea->area.numRegions);
 
 	// Destroy the area.
-	wima_area_destroy(areas, parea);
+	wima_area_destroy(parea);
 
 	// Calculate the split.
 	WimaVec pos = wima_area_translatePos(parea, win->ctx.cursorPos);
@@ -2657,11 +2657,11 @@ right_push_err:
 
 left_push_err:
 
-	wima_area_destroy(areas, &rarea);
+	wima_area_destroy(&rarea);
 
 right_alloc_err:
 
-	wima_area_destroy(areas, &larea);
+	wima_area_destroy(&larea);
 
 	return status;
 }

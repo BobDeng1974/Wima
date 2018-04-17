@@ -289,10 +289,9 @@ bool wima_prop_free(WimaProperty wph);
 
 /**
  * Destroys a property. This is a Dyna NDestructFunc.
- * @param vec	The vector that is destroying elements.
  * @param ptrs	The array of elements to destroy.
  */
-void wima_prop_destroy(DynaNVector vec, void** ptrs);
+void wima_prop_destroy(void** ptrs);
 
 #ifdef __YASSERT__
 /**

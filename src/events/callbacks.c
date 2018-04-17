@@ -1070,7 +1070,7 @@ void wima_callback_windowClose(GLFWwindow* window)
 		WimaWin* wwin = dvec_get(wg.windows, wwh);
 
 		// Free the window.
-		wima_window_destroy(wg.windows, wwin);
+		wima_window_destroy(wwin);
 
 		// Either pop the window from the end,
 		// or set it all as NULL (so we know
@@ -1080,9 +1080,7 @@ void wima_callback_windowClose(GLFWwindow* window)
 		if (wwh == dvec_len(wg.windows) - 1)
 			dvec_pop(wg.windows);
 		else
-		{
 			memset(wwin, 0, sizeof(WimaWin));
-		}
 	}
 
 	// If the user said NOT to close the window...

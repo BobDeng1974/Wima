@@ -322,11 +322,10 @@ DynaStatus wima_icon_copy(void** dests, void** srcs) ynoreturn;
 
 /**
  * A destructor for icons.
- * @param vec	The vector that is destroying elements.
- * @param ptr	A pointer to the icon and icon marker
+ * @param ptrs	A pointer to the icon and icon marker
  *				to destroy.
  */
-void wima_icon_destroy(DynaNVector vec, void** ptr);
+void wima_icon_destroy(void** ptrs);
 
 /**
  * @}

@@ -280,10 +280,10 @@ DynaStatus wima_icon_copy(void** dests yunused, void** srcs yunused)
 	abort();
 }
 
-void wima_icon_destroy(DynaNVector vec yunused, void** ptr)
+void wima_icon_destroy(void** ptrs)
 {
 	wima_assert_init;
-	nsvgDelete(*((WimaIcn*) ptr[WIMA_ICON_HANDLE_IDX]));
+	nsvgDelete(*((WimaIcn*) ptrs[WIMA_ICON_HANDLE_IDX]));
 }
 
 //! @endcond Doxygen suppress.
