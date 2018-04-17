@@ -162,16 +162,12 @@ void wima_widget_setSize(WimaWidget wdgt, WimaSize size)
 	if (!size.w)
 		pwdgt->widget.flags &= ~WIMA_ITEM_HFIXED;
 	else
-	{
 		pwdgt->widget.flags |= WIMA_ITEM_HFIXED;
-	}
 
 	if (!size.h)
 		pwdgt->widget.flags &= ~WIMA_ITEM_VFIXED;
 	else
-	{
 		pwdgt->widget.flags |= WIMA_ITEM_VFIXED;
-	}
 }
 
 int wima_widget_width(WimaWidget wdgt)
