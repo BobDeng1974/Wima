@@ -855,7 +855,7 @@ float wima_prop_float(WimaProperty wph)
 ////////////////////////////////////////////////////////////////////////////////
 
 WimaProperty wima_prop_string_register(const char* name, const char* label, const char* desc, WimaIcon icon,
-                                       DynaString str)
+                                       const char* str)
 {
 	wima_assert_init;
 
@@ -863,8 +863,9 @@ WimaProperty wima_prop_string_register(const char* name, const char* label, cons
 
 	WimaPropData prop;
 
-	// Set the data.
-	prop._str = str;
+	// Set the data and check for error.
+	prop._str = dstr_create(str);
+	if (yerror(!prop._str)) return WIMA_PROP_INVALID;
 
 	// Register the property.
 	WimaProperty idx = wima_prop_register(name, label, desc, icon, WIMA_PROP_STRING, &prop);

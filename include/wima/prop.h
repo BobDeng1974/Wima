@@ -517,7 +517,7 @@ float wima_prop_float(WimaProperty wph) yinline;
  * @pre			@a str must not be NULL.
  */
 WimaProperty wima_prop_string_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
-                                       DynaString str);
+                                       ynonnull const char* str);
 
 /**
  * Returns the DynaString contained in @a wph. The actual
