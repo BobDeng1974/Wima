@@ -1669,7 +1669,7 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 	wassert(win->ctx.stage == WIMA_UI_STAGE_PROCESS, WIMA_ASSERT_STAGE_PROCESS);
 
 	// Window must be in only one of split or join.
-	wassert(!WIMA_WIN_IN_SPLIT_MODE(win) != !WIMA_WIN_IN_JOIN_MODE(win), WIMA_ASSERT_WIN_SPLIT_JOIN);
+	wassert(!WIMA_WIN_IN_SPLIT_MODE(win) || !WIMA_WIN_IN_JOIN_MODE(win), WIMA_ASSERT_WIN_SPLIT_JOIN);
 
 	// Set the new stage.
 	win->ctx.stage = WIMA_UI_STAGE_LAYOUT;
