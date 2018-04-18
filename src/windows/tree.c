@@ -92,6 +92,7 @@ static WimaStatus wima_tree_addParent(ynonnull WimaTree tree, DynaNode node, flo
  */
 static WimaStatus wima_tree_addEditor(ynonnull WimaTree tree, DynaNode node, WimaEditor wed);
 
+#ifdef __YASSERT__
 /**
  * Figures out whether a node is valid (so far),
  * which means that it has the proper parents.
@@ -101,6 +102,7 @@ static WimaStatus wima_tree_addEditor(ynonnull WimaTree tree, DynaNode node, Wim
  * @pre			@a tree must not be NULL.
  */
 static bool wima_tree_nodeValid(ynonnull WimaTree tree, DynaNode n) yinline;
+#endif  // __YASSERT__
 
 /**
  * @}
@@ -372,9 +374,11 @@ static WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor w
 	return status ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
 }
 
+#ifdef __YASSERT__
 static bool wima_tree_nodeValid(WimaTree tree, DynaNode p)
 {
 	return dtree_exists(tree, p) && WIMA_AREA_IS_PARENT((WimaAr*) dtree_node(tree, p));
 }
+#endif  // __YASSERT__
 
 //! @endcond Doxygen suppress.
