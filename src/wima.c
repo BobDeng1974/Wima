@@ -573,10 +573,7 @@ void wima_exit()
 	if (wg.glfwInitialized) glfwTerminate();
 
 	// Free the icon images, if they exist.
-	if (wg.numAppIcons)
-	{
-		for (int i = 0; i < wg.numAppIcons; ++i) stbi_image_free(wg.appIcons[i].pixels);
-	}
+	for (size_t i = 0; i < wg.numAppIcons; ++i) stbi_image_free(wg.appIcons[i].pixels);
 
 	// Free the font path, if it exists.
 	if (wg.fontPath) dstr_free(wg.fontPath);
