@@ -1383,9 +1383,12 @@ static bool wima_prop_collection_childTypeValid(WimaProperty parent, WimaPropert
 	WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, parent);
 	WimaPropInfo* cinfo = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, child);
 
-	bool valid = (info->type != WIMA_PROP_MENU && info->type != WIMA_PROP_ENUM) ||
-	             cinfo->type == WIMA_PROP_OPERATOR || cinfo->type == WIMA_PROP_MENU ||
-	             cinfo->type == WIMA_PROP_BOOL;
+	bool valid = info->type != WIMA_PROP_MENU || cinfo->type == WIMA_PROP_OPERATOR ||
+	             cinfo->type == WIMA_PROP_MENU || cinfo->type == WIMA_PROP_BOOL ||
+	             cinfo->type == WIMA_PROP_INVALID;
+
+	valid = valid && (info->type != WIMA_PROP_ENUM || cinfo->type == WIMA_PROP_OPERATOR ||
+	                  cinfo->type == WIMA_PROP_MENU || cinfo->type == WIMA_PROP_BOOL);
 
 	return valid && (info->type != WIMA_PROP_RADIO || cinfo->type == WIMA_PROP_BOOL);
 }
