@@ -154,22 +154,6 @@ typedef struct WimaPropFloat
 } WimaPropFloat;
 
 /**
- * Data for an enum property.
- */
-typedef struct WimaPropEnum
-{
-	/// The cuurent index.
-	uint32_t idx;
-
-	/// The number of choices.
-	uint32_t num;
-
-	/// The names of the enum choices.
-	const char** names;
-
-} WimaPropEnum;
-
-/**
  * Data for a pointer property.
  */
 typedef struct WimaPropPtr
