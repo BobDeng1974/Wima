@@ -153,6 +153,16 @@ typedef struct WimaPropFloat
 
 } WimaPropFloat;
 
+typedef struct WimaPropOperator
+{
+	/// The data pointer.
+	void* ptr;
+
+	/// The click function.
+	WimaWidgetMouseClickFunc click;
+
+} WimaPropOperator;
+
 /**
  * Data for a pointer property.
  */
@@ -229,7 +239,7 @@ typedef union WimaPropData
 	NVGcolor _nvgcolor;
 
 	/// Operator.
-	WimaWidgetMouseClickFunc _op;
+	WimaPropOperator _op;
 
 	/// Pointer property data.
 	WimaPropPtr _ptr;

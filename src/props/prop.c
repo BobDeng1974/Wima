@@ -817,7 +817,7 @@ DynaString wima_prop_path_path(WimaProperty wph)
 ////////////////////////////////////////////////////////////////////////////////
 
 WimaProperty wima_prop_operator_register(const char* name, const char* label, const char* desc, WimaIcon icon,
-                                         WimaWidgetMouseClickFunc op)
+                                         WimaWidgetMouseClickFunc op, void* ptr)
 {
 	wima_assert_init;
 
@@ -826,12 +826,34 @@ WimaProperty wima_prop_operator_register(const char* name, const char* label, co
 	WimaPropData prop;
 
 	// Set the data.
-	prop._op = op;
+	prop._op.ptr = ptr;
+	prop._op.click = op;
 
 	// Register the property.
 	WimaProperty idx = wima_prop_register(name, label, desc, icon, WIMA_PROP_OPERATOR, &prop);
 
 	return idx;
+}
+
+void* wima_prop_operator_ptr(WimaProperty wph)
+{
+	wassert(wima_prop_valid(wph, WIMA_PROP_OPERATOR), WIMA_ASSERT_PROP);
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	return data->_op.ptr;
+}
+
+void wima_prop_operator_updatePtr(WimaProperty wph, void* ptr)
+{
+	wassert(wima_prop_valid(wph, WIMA_PROP_OPERATOR), WIMA_ASSERT_PROP);
+
+	// Get the data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
+
+	// Update the pointer.
+	data->_op.ptr = ptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

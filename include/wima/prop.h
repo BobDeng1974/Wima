@@ -947,11 +947,17 @@ DynaString wima_prop_path_path(WimaProperty wph);
  * @param icon	The icon to use with the property.
  * @param op	The function to call when this prop
  *				is clicked.
+ * @param ptr	Pointer to custom data that the client
+ *				wants this operator to have.
  * @return		The newly-created @a WimaProperty.
  * @pre			@a name must not be NULL.
  */
 WimaProperty wima_prop_operator_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
-                                         WimaWidgetMouseClickFunc op);
+                                         WimaWidgetMouseClickFunc op, void* ptr);
+
+void* wima_prop_operator_ptr(WimaProperty wph);
+
+void wima_prop_operator_updatePtr(WimaProperty wph, void* ptr);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions for user pointer props.

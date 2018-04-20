@@ -461,7 +461,7 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 
 	// Register the split menu item.
 	WimaProperty child = wima_prop_operator_register("wima_area_split", "Split Area", NULL, WIMA_ICON_INVALID,
-	                                                 wima_window_splitAreaMode);
+	                                                 wima_window_splitAreaMode, NULL);
 	if (yerror(child == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
 
 	// Push the split menu item.
@@ -470,7 +470,7 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 
 	// Register the join menu item.
 	child = wima_prop_operator_register("wima_area_join", "Join Areas", NULL, WIMA_ICON_INVALID,
-	                                    wima_window_joinAreasMode);
+	                                    wima_window_joinAreasMode, NULL);
 	if (yerror(child == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
 
 	// Push the join menu item.
