@@ -575,7 +575,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts)
 	wassert(starts, WIMA_ASSERT_PTR_NULL);
 
 	// Create the main theme property.
-	WimaProperty main = wima_prop_menu_register(themePrefix, themeLabel, themeDesc, WIMA_ICON_INVALID);
+	WimaProperty main = wima_prop_group_register(themePrefix, themeLabel, themeDesc, WIMA_ICON_INVALID);
 
 	// Create the background.
 	WimaProperty bg = wima_theme_loadBackground();
@@ -583,7 +583,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts)
 	if (bg == WIMA_PROP_INVALID) return WIMA_PROP_INVALID;
 
 	// Push the prop.
-	WimaStatus status = wima_prop_menu_push(main, bg);
+	WimaStatus status = wima_prop_group_push(main, bg);
 
 	// Check for error.
 	if (yerror(status))
@@ -606,7 +606,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts)
 		if (yerror(item == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
 
 		// Push the prop.
-		status = wima_prop_menu_push(main, item);
+		status = wima_prop_group_push(main, item);
 
 		// Check for error.
 		if (yerror(status))
@@ -621,7 +621,7 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts)
 
 	// Create the node theme and push it.
 	WimaProperty node = wima_theme_loadNode(starts);
-	status = wima_prop_menu_push(main, node);
+	status = wima_prop_group_push(main, node);
 
 	// Check for error.
 	if (yerror(status))
@@ -683,7 +683,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts)
 		if (yerror(child == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
 
 		// Link the property to the main one.
-		status = wima_prop_menu_push(main, child);
+		status = wima_prop_group_push(main, child);
 
 		// Check for error.
 		if (yerror(status))
@@ -714,7 +714,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts)
 	if (yerror(child == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
 
 	// Push the prop.
-	status = wima_prop_menu_push(main, child);
+	status = wima_prop_group_push(main, child);
 
 	// Check for error.
 	if (yerror(status))
@@ -732,7 +732,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts)
 	if (yerror(child == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
 
 	// Push the prop.
-	status = wima_prop_menu_push(main, child);
+	status = wima_prop_group_push(main, child);
 
 	// Check for error.
 	if (yerror(status))
@@ -749,7 +749,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts)
 	if (yerror(child == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
 
 	// Push the prop.
-	status = wima_prop_menu_push(main, child);
+	status = wima_prop_group_push(main, child);
 
 	// Check for error.
 	if (yerror(status))
@@ -794,7 +794,7 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts)
 		if (yerror(child == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
 
 		// Push the prop.
-		status = wima_prop_menu_push(main, child);
+		status = wima_prop_group_push(main, child);
 
 		// Check for error.
 		if (yerror(status))
@@ -834,7 +834,7 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts)
 	if (yerror(child == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
 
 	// Push the prop.
-	status = wima_prop_menu_push(main, child);
+	status = wima_prop_group_push(main, child);
 
 	// Check for error.
 	if (yerror(status))
@@ -1299,7 +1299,7 @@ static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, 
 	{
 		case WIMA_PROP_MENU:
 		{
-			return wima_prop_menu_register(buffer, label, desc, WIMA_ICON_INVALID);
+			return wima_prop_group_register(buffer, label, desc, WIMA_ICON_INVALID);
 		}
 
 		case WIMA_PROP_BOOL:
