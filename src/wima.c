@@ -351,6 +351,10 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	                                     WIMA_ICON_INVALID, true);
 	if (yerror(wg.dirGrid == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
 
+	// Create and if error, exit.
+	wg.menuRects = dvec_create(0, sizeof(WimaRect), NULL, NULL);
+	if (yerror(!wg.menuRects)) goto wima_init_malloc_err;
+
 	// Set the initial theme.
 	wg.theme = wima_theme_load(wg.themes, wg.themeStarts);
 	if (yerror(wg.theme == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
@@ -400,10 +404,6 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	// Register the menu overlay and if error, exit.
 	wg.menuOverlay = wima_overlay_register("Menu", WIMA_ICON_INVALID, wima_overlay_menuLayout);
 	if (yerror(wg.menuOverlay == WIMA_OVERLAY_INVALID)) goto wima_init_malloc_err;
-
-	// Create and if error, exit.
-	wg.menuRects = dvec_create(0, sizeof(WimaRect), NULL, NULL);
-	if (yerror(!wg.menuRects)) goto wima_init_malloc_err;
 
 	// Create and if error, exit.
 	wg.icons = dnvec_ncreate(2, 0, wima_icon_destroy, wima_icon_copy, sizeof(WimaIcn), sizeof(WimaIconMarker));
