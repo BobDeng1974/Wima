@@ -46,6 +46,7 @@ extern "C" {
 #include <wima/render.h>
 
 #include <dyna/nvector.h>
+#include <dyna/string.h>
 #include <dyna/vector.h>
 #include <yc/assert.h>
 
@@ -101,18 +102,18 @@ typedef struct WimaCustProp
  */
 #define WIMA_PROP_DATA_IDX (1)
 
-/**
- * Data for a list property.
- */
-typedef struct WimaPropList
+typedef struct WimaPropCollection
 {
-	/// The list.
+	/// The vector.
 	DynaVector list;
 
-	/// The current selected index.
-	uint32_t idx;
+	/// The index of the rectangle in @a WimaG's menuRects.
+	uint32_t rectIdx;
 
-} WimaPropList;
+	/// The sub menu.
+	uint32_t sub;
+
+} WimaPropCollection;
 
 /**
  * Data for an int property.
@@ -222,8 +223,8 @@ typedef struct WimaPropInfo
  */
 typedef union WimaPropData
 {
-	/// List property data.
-	WimaPropList _list;
+	/// Collection property data.
+	WimaPropCollection _collection;
 
 	/// Bool property data.
 	bool _bool;

@@ -45,6 +45,9 @@ extern "C" {
 #include <wima/render.h>
 #include <wima/wima.h>
 
+#include <dyna/dyna.h>
+#include <dyna/string.h>
+
 /**
  * The data for an overlay.
  */
@@ -53,16 +56,22 @@ typedef struct WimaOvly
 	/// The layout function.
 	WimaOverlayLayoutFunc layout;
 
-	/// The rectangle.
-	WimaRect rect;
+	/// The name of the overlay.
+	DynaString name;
 
 	/// The icon for the overlay.
 	WimaIcon icon;
 
-	/// The name of the overlay.
-	char name[];
+	/// The rectangle.
+	WimaRect rect;
 
 } WimaOvly;
+
+/**
+ * Destroys an overlay.
+ * @param overlay	The overlay to destroy.
+ */
+void wima_overlay_destroy(void* overlay);
 
 /**
  * Copies an overlay. Because copying an
@@ -72,6 +81,17 @@ typedef struct WimaOvly
  * @return		Nothing.
  */
 DynaStatus wima_overlay_copy(void* dest, void* src) ynoreturn;
+
+/**
+ * A @a WimaOverlayLayoutFunc that lays out menus.
+ * @param overlay	The overlay that will be laid out.
+ * @param idx		The index of the overlay in the
+ *					window's overlay stack.
+ * @param root		The root layout.
+ * @return			WIMA_STATUS_SUCCESS on success,
+ *					an error code otherwise.
+ */
+WimaStatus wima_overlay_menuLayout(WimaOverlay overlay, size_t idx, WimaLayout root);
 
 #ifdef __cplusplus
 }

@@ -43,6 +43,7 @@
 
 #include "../areas/area.h"
 #include "../layout/widget.h"
+#include "../windows/overlay.h"
 #include "../windows/window.h"
 #include "../windows/workspace.h"
 
@@ -83,31 +84,11 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 	switch (wkey)
 	{
 		case WIMA_KEY_ESCAPE:
-
-			// If there is a menu...
-			if (WIMA_WIN_HAS_MENU(wwin))
-			{
-				// Get the menu key.
-				uint64_t key = (uint64_t) wwin->menu;
-
-				wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
-
-				// Get the menu.
-				WimaMnu* menu = dpool_get(wg.menus, &key);
-
-				// Remove the menu.
-				wima_window_removeMenu(wwin, menu);
-
-				// Force a layout.
-				wima_window_setDirty(wwin, true);
-
-				// Just return.
-				return;
-			}
-
+		{
 			if (WIMA_WIN_HAS_OVERLAY(wwin))
 			{
-				// TODO: Escape overlays as well.
+				// Remove submenus. if necessary.
+				if (wwin->menu != WIMA_PROP_INVALID) wima_window_removeMenu(wwin, wwin->menu);
 
 				// Force a layout.
 				wima_window_setDirty(wwin, true);
@@ -115,6 +96,9 @@ void wima_callback_key(GLFWwindow* window, int key, int scancode, int action, in
 				// Just return.
 				return;
 			}
+
+			break;
+		}
 
 		// These are all the mod keys.
 		case WIMA_KEY_LEFT_SHIFT:
@@ -226,8 +210,8 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods)
 		// Set the drag start.
 		wwin->ctx.dragStart = wwin->ctx.cursorPos;
 
-		// If we are on an area split and don't have a menu...
-		if (wwin->ctx.split.split >= 0 && !WIMA_WIN_HAS_MENU(wwin))
+		// If we are on an area split and don't have a overlay...
+		if (wwin->ctx.split.split >= 0 && !WIMA_WIN_HAS_OVERLAY(wwin))
 		{
 			// If the button was not the right mouse button...
 			if (wbtn != WIMA_MOUSE_RIGHT)
@@ -253,9 +237,9 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods)
 		}
 
 		// If the criteria for a click wasn't met...
-		else if (WIMA_WIN_HAS_MENU(wwin) || WIMA_WIN_MENU_ITEM_WAS_PRESSED(wwin) ||
+		else if (WIMA_WIN_HAS_OVERLAY(wwin) ||
 		         ts - WIMA_WIN_CLICK_THRESHOLD > wwin->ctx.click_timestamp || wwin->ctx.click_button != wbtn ||
-		         !wima_widget_compare(clickItem, wwin->ctx.click_item.widget))
+		         !wima_widget_compare(clickItem, wwin->ctx.click_item))
 		{
 			// Clear the number of clicks.
 			wwin->ctx.clicks = 0;
@@ -267,7 +251,7 @@ void wima_callback_mouseBtn(GLFWwindow* window, int btn, int action, int mods)
 			// Update the click context in the window.
 			wwin->ctx.click_timestamp = ts;
 			wwin->ctx.click_button = wbtn;
-			wwin->ctx.click_item.widget = clickItem;
+			wwin->ctx.click_item = clickItem;
 
 			// Add one to the number of clicks.
 			++(wwin->ctx.clicks);
@@ -367,8 +351,8 @@ void wima_callback_mousePos(GLFWwindow* window, double x, double y)
 
 		DynaTree areas = WIMA_WIN_AREAS(wwin);
 
-		// If we have a menu OR we are not on the split anymore...
-		if (WIMA_WIN_HAS_MENU(wwin) || !wima_area_mouseOnSplit(areas, wwin->ctx.cursorPos, &sevent))
+		// If we have an overlay OR we are not on the split anymore...
+		if (WIMA_WIN_HAS_OVERLAY(wwin) || !wima_area_mouseOnSplit(areas, wwin->ctx.cursorPos, &sevent))
 		{
 			// Erase the split.
 			wwin->ctx.split.split = -1;

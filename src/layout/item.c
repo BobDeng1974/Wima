@@ -45,20 +45,38 @@
 
 #include <stdint.h>
 
-WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint16_t idx)
+WimaItem* wima_item_ptr(WimaWindow wwh, WimaAreaNode area, WimaRegion region, uint16_t idx)
 {
 	wima_assert_init;
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
-	wassert(wima_window_valid(win), WIMA_ASSERT_WIN);
+	WimaItem* item;
 
-	// Get the area pointer.
-	WimaAr* ar = wima_area_ptr(win, area);
-	wassert(WIMA_AREA_IS_LEAF(ar), WIMA_ASSERT_AREA_LEAF);
+	// Do the right thing based on whether
+	// the item is in an overlay or not.
+	if (region != WIMA_REGION_INVALID)
+	{
+		// Get the area pointer.
+		WimaAr* ar = wima_area_ptr(wwh, area);
 
-	wassert(idx < ar->area.ctx.itemCount, WIMA_ASSERT_ITEM);
+		wassert(WIMA_AREA_IS_LEAF(ar), WIMA_ASSERT_AREA_LEAF);
+		wassert(idx < ar->area.ctx.itemCount, WIMA_ASSERT_ITEM);
 
-	// Calculate the layout pointer.
-	return ar->area.ctx.items + idx;
+		// Calculate the pointer.
+		item = ar->area.ctx.items + idx;
+	}
+	else
+	{
+		// Get the window.
+		WimaWin* win = dvec_get(wg.windows, wwh);
+
+		wassert(idx < dvec_len(win->overlayItems), WIMA_ASSERT_ITEM);
+
+		// Calculate the pointer.
+		item = dvec_get(win->overlayItems, idx);
+	}
+
+	return item;
 }
 
 void wima_item_free(WimaAr* area, WimaItem* item)
@@ -95,3 +113,33 @@ void wima_item_free(WimaAr* area, WimaItem* item)
 		}
 	}
 }
+
+#ifdef __YASSERT__
+bool wima_item_valid(WimaWindow window, WimaAreaNode node, WimaRegion region, uint16_t idx)
+{
+	bool valid;
+
+	wima_assert_init;
+	wassert(wima_window_valid(window), WIMA_ASSERT_WIN);
+
+	// Get the window pointer.
+	WimaWin* win = dvec_get(wg.windows, window);
+
+	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
+	wassert(dtree_exists(WIMA_WIN_AREAS(win), node), WIMA_ASSERT_AREA);
+
+	// Get a pointer to the area.
+	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), node);
+
+	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
+	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_MAX);
+	wassert(region == WIMA_REGION_INVALID || region < area->area.numRegions, WIMA_ASSERT_REG);
+
+	if (region != WIMA_REGION_INVALID)
+		valid = idx < area->area.ctx.itemCount;
+	else
+		valid = idx < dvec_len(win->overlayItems);
+
+	return valid;
+}
+#endif  // __YASSERT__

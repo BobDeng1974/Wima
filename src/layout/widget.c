@@ -370,6 +370,27 @@ bool wima_widget_isFocused(WimaWidget wdgt)
 	return wima_widget_compare(win->ctx.focus, wdgt);
 }
 
+WimaOverlay wima_widget_overlay(WimaWidget wdgt)
+{
+	wassert(wima_item_valid(wdgt.window, wdgt.area, wdgt.region, wdgt.widget), WIMA_ASSERT_WIDGET);
+
+	// Return invalid if it is.
+	if (wdgt.region == WIMA_REGION_INVALID_IDX) return WIMA_OVERLAY_INVALID;
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, wdgt.window);
+
+	wassert(wdgt.area < dvec_len(win->overlayStack), WIMA_ASSERT_WIN_NO_OVERLAY);
+
+	return ((WimaWinOverlay*) dvec_get(win->overlayStack, wdgt.area))->ovly;
+}
+
+size_t wima_widget_overlayIdx(WimaWidget wdgt)
+{
+	wassert(wima_item_valid(wdgt.window, wdgt.area, wdgt.region, wdgt.widget), WIMA_ASSERT_WIDGET);
+	return wdgt.region == WIMA_REGION_INVALID_IDX ? SIZE_MAX : wdgt.area;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
@@ -389,7 +410,7 @@ uint64_t wima_widget_hash(WimaProperty prop, uint8_t region)
 
 WimaItem* wima_widget_ptr(WimaWidget wdgt)
 {
-	return wima_item_ptr(wdgt.window, wdgt.area, wdgt.widget);
+	return wima_item_ptr(wdgt.window, wdgt.area, wdgt.region, wdgt.widget);
 }
 
 void wima_widget_destroy(DynaPool pool, void* key)
@@ -488,12 +509,12 @@ void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
-		case WIMA_PROP_GROUP:
+		case WIMA_PROP_LIST:
 		{
 			break;
 		}
 
-		case WIMA_PROP_LIST:
+		case WIMA_PROP_MENU:
 		{
 			break;
 		}
@@ -573,12 +594,12 @@ void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
-		case WIMA_PROP_GROUP:
+		case WIMA_PROP_LIST:
 		{
 			break;
 		}
 
-		case WIMA_PROP_LIST:
+		case WIMA_PROP_MENU:
 		{
 			break;
 		}
@@ -658,12 +679,12 @@ void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
-		case WIMA_PROP_GROUP:
+		case WIMA_PROP_LIST:
 		{
 			break;
 		}
 
-		case WIMA_PROP_LIST:
+		case WIMA_PROP_MENU:
 		{
 			break;
 		}
@@ -743,12 +764,12 @@ void wima_widget_mousePos(WimaWidget wdgt, WimaVec pos)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
-		case WIMA_PROP_GROUP:
+		case WIMA_PROP_LIST:
 		{
 			break;
 		}
 
-		case WIMA_PROP_LIST:
+		case WIMA_PROP_MENU:
 		{
 			break;
 		}
@@ -828,12 +849,12 @@ void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
-		case WIMA_PROP_GROUP:
+		case WIMA_PROP_LIST:
 		{
 			break;
 		}
 
-		case WIMA_PROP_LIST:
+		case WIMA_PROP_MENU:
 		{
 			break;
 		}
@@ -913,12 +934,12 @@ void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
-		case WIMA_PROP_GROUP:
+		case WIMA_PROP_LIST:
 		{
 			break;
 		}
 
-		case WIMA_PROP_LIST:
+		case WIMA_PROP_MENU:
 		{
 			break;
 		}
@@ -966,10 +987,10 @@ void wima_widget_scroll(WimaWidget wdgt, WimaScrollEvent event)
 		case WIMA_PROP_PTR:
 		{
 			// If the widget handles the event, send it.
-			if (!scroll(wdgt, wima_widget_data(pitem), event))
-			{
+			//if (!scroll(wdgt, wima_widget_data(pitem), event))
+			//{
 				// TODO: Send the event up the chain.
-			}
+			//}
 
 			break;
 		}
@@ -998,12 +1019,12 @@ void wima_widget_char(WimaWidget wdgt, WimaCharEvent event)
 	// Figure out what to do based on the prop type.
 	switch (prop->type)
 	{
-		case WIMA_PROP_GROUP:
+		case WIMA_PROP_LIST:
 		{
 			break;
 		}
 
-		case WIMA_PROP_LIST:
+		case WIMA_PROP_MENU:
 		{
 			break;
 		}

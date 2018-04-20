@@ -244,6 +244,10 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 	window->overlayItems = dvec_create(0, sizeof(WimaItem), NULL, NULL);
 	if (yerror(!window->overlayItems)) goto wima_win_create_malloc_err;
 
+	// Create an overlay stack vector and check for error.
+	window->overlayStack = dvec_create(0, sizeof(WimaWinOverlay), NULL, NULL);
+	if (yerror(!window->overlayStack)) goto wima_win_create_malloc_err;
+
 	// Cache this.
 	size_t cap = dvec_cap(wg.workspaces);
 
@@ -1015,25 +1019,22 @@ void wima_window_popDialog(WimaWindow wwh)
 	wima_area_resize(WIMA_WIN_AREAS(win), rect);
 }
 
-void wima_window_setOverlay(WimaWindow wwh, WimaOverlay overlay)
+WimaStatus wima_window_pushOverlay(WimaWindow wwh, WimaOverlay overlay)
 {
+	WimaWinOverlay data;
+
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	wassert(win->overlay == WIMA_OVERLAY_INVALID, WIMA_ASSERT_WIN_OVERLAY_EXISTS);
-
 	// Get the key.
-	uint64_t key = (uint64_t) win->overlay;
+	uint64_t key = (uint64_t) overlay;
 
 	wassert(dpool_exists(wg.overlays, &key), WIMA_ASSERT_OVERLAY);
 
 	// Get the overlay.
 	WimaOvly* ovly = dpool_get(wg.overlays, &key);
-
-	// Set up the overlay flags.
-	win->flags |= (WIMA_WIN_OVERLAY);
 
 	// Set up the offset.
 	win->overlayOffset.x = ovly->rect.x;
@@ -1043,21 +1044,30 @@ void wima_window_setOverlay(WimaWindow wwh, WimaOverlay overlay)
 	ovly->rect.x = win->ctx.cursorPos.x - ovly->rect.x;
 	ovly->rect.y = win->ctx.cursorPos.y - ovly->rect.y;
 
-	// Set the overlay.
-	win->overlay = overlay;
+	// Set up the data to push.
+	data.rect = ovly->rect;
+	data.ovly = overlay;
+
+	// Push the overlay onto the stack.
+	if (yerror(dvec_push(win->overlayStack, &data))) return WIMA_STATUS_MALLOC_ERR;
+
+	return WIMA_STATUS_SUCCESS;
 }
 
-void wima_window_removeOverlay(WimaWindow wwh)
+WimaStatus wima_window_popOverlay(WimaWindow wwh)
 {
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	wassert(win->overlay != WIMA_OVERLAY_INVALID, WIMA_ASSERT_WIN_NO_OVERLAY);
+	wassert(dvec_len(win->overlayStack), WIMA_ASSERT_WIN_NO_OVERLAY);
+
+	// Get the data.
+	WimaWinOverlay* data = dvec_get(win->overlayStack, dvec_len(win->overlayStack) - 1);
 
 	// Get the key.
-	uint64_t key = (uint64_t) win->overlay;
+	uint64_t key = (uint64_t) data->ovly;
 
 	wassert(dpool_exists(wg.overlays, &key), WIMA_ASSERT_OVERLAY);
 
@@ -1068,66 +1078,82 @@ void wima_window_removeOverlay(WimaWindow wwh)
 	ovly->rect.x = win->overlayOffset.x;
 	ovly->rect.y = win->overlayOffset.y;
 
-	// Unset the overlay.
-	win->overlay = WIMA_OVERLAY_INVALID;
+	// Pop the overlay.
+	if (yerror(dvec_pop(win->overlayStack))) return WIMA_STATUS_MALLOC_ERR;
+
+	return WIMA_STATUS_SUCCESS;
 }
 
-void wima_window_setContextMenu(WimaWindow wwh, WimaMenu menu)
+WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaProperty menu)
 {
+	wassert(menu < dnvec_len(wg.props), WIMA_ASSERT_PROP);
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	uint64_t key = (uint64_t) menu;
+	wassert(!dvec_len(win->overlayStack), WIMA_ASSERT_WIN_OVERLAY_EXISTS);
 
-	wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
+	// Get the property data.
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, menu);
 
-	// Get the menu.
-	WimaMnu* m = dpool_get(wg.menus, &key);
+	// Get the rectangle.
+	WimaRect* rect = dvec_get(wg.menuRects, data->_collection.rectIdx);
 
 	// Set the menu flags.
-	win->flags |= (WIMA_WIN_MENU | WIMA_WIN_MENU_CONTEXT);
+	win->flags |= WIMA_WIN_MENU_CONTEXT;
 
 	// Set up the offset.
-	win->menuOffset.x = m->rect.x;
-	win->menuOffset.y = m->rect.y;
+	win->menuOffset.x = rect->x;
+	win->menuOffset.y = rect->y;
 
 	// Make sure the menu pops up at the right place.
-	m->rect.x = win->ctx.cursorPos.x - m->rect.x;
-	m->rect.y = win->ctx.cursorPos.y - m->rect.y;
+	rect->x = win->ctx.cursorPos.x - rect->x;
+	rect->y = win->ctx.cursorPos.y - rect->y;
 
 	// Set the menu.
 	win->menu = menu;
+
+	// Push the overlay.
+	WimaStatus status = wima_window_pushOverlay(wwh, wg.menuOverlay);
+	if (yerror(status)) return status;
+
+	// Get the overlay and prop info.
+	WimaOvly* ovly = dvec_get(wg.overlays, wg.menuOverlay);
+	WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, menu);
+
+	// Update its title and icon.
+	DynaStatus dstatus = dstr_set(ovly->name, info->label);
+	ovly->icon = info->icon;
+
+	return dstatus ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
 }
 
-void wima_window_setMenu(WimaWindow wwh, WimaMenu menu)
+WimaStatus wima_window_setMenu(WimaWindow wwh, WimaProperty menu)
 {
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
-
-#ifdef __YASSERT__
-	uint64_t key = (uint64_t) menu;
-	wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
-#endif
-
-	// Get the window.
-	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	// Set the menu flags.
-	win->flags = WIMA_WIN_MENU;
-
-	// Set the menu.
-	win->menu = menu;
-}
-
-WimaMenu wima_window_menu(WimaWindow wwh)
-{
+	wassert(menu < dnvec_len(wg.props), WIMA_ASSERT_PROP);
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
 	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-	return WIMA_WIN_HAS_MENU(win) ? win->menu : WIMA_MENU_INVALID;
+	wassert(!dvec_len(win->overlayStack), WIMA_ASSERT_WIN_OVERLAY_EXISTS);
+
+	// Set the menu.
+	win->menu = menu;
+
+	// Push the overlay.
+	return wima_window_pushOverlay(wwh, wg.menuOverlay);
+}
+
+WimaProperty wima_window_menu(WimaWindow wwh)
+{
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, wwh);
+
+	return win->menu;
 }
 
 void wima_window_setCursor(WimaWindow wwh, WimaCursor* cursor)
@@ -1337,35 +1363,35 @@ const char* wima_window_clipboard(WimaWindow wwh)
  * @{
  */
 
-static WimaStatus wima_window_drawOverlay(ynonnull WimaWin* win);
-
 /**
- * Draws the window's menu. If @a parentWidth is not 0 (which means
- * that there *is* a parent), and there is no room for the menu, the
- * menu will be drawn on the left of the parent menu.
+ * Draws the window's overlay. If @a parentWidth is not 0 (which means
+ * that there *is* a parent), and there is no room for the overlay, the
+ * overlay will be drawn on the left of the parent.
  * @param win			The window whose menu will be drawn.
- * @param menu			The menu to draw.
- * @param parentWidth	The width of the menu's parent. If there
+ * @param wwh			The window handle.
+ * @param idx			The index of the overlay in the window overlay
+ *						stack.
+ * @param parentWidth	The width of the overlay's parent. If there
  *						is no parent, this is 0. This allows the
  *						window to put the menu on the left side
  *						of its parent if there is no room on the right.
  * @return				WIMA_STATUS_SUCCESS on success, an error code
  *						otherwise.
  * @pre					@a win must not be NULL.
- * @pre					@a menu must not be NULL.
+ * @pre					@a idx must be less than the length of the stack.
  */
-static WimaStatus wima_window_drawMenu(ynonnull WimaWin* win, ynonnull WimaMnu* menu, float parentWidth);
+static WimaStatus wima_window_overlay_draw(ynonnull WimaWin* win, WimaWindow wwh, size_t idx, float parentWidth);
 
 /**
- * Returns the menu that contains @a pos and does not have
- * any posterity menus that contain the cursor. In other
- * words, the menu that is returned is the most sub menu
- * that contains the cursor.
- * @param menu	The first menu to start testing.
+ * Returns the overlay on @a win that contains @a pos and
+ * does not have any posterity overlays that contain the
+ * cursor. In other words, the overlay that is returned is
+ * the most sub overlay that contains the cursor.
+ * @param win	The window.
  * @param pos	The cursor position.
- * @return		The youngest menu with the cursor inside.
+ * @return		The youngest overlay with the cursor inside.
  */
-static WimaMnu* wima_window_menu_contains(ynonnull WimaMnu* menu, WimaVec pos);
+static size_t wima_window_overlay_contains(WimaWin* win, WimaVec pos);
 
 /**
  * Draws the tooltip for the current hover widget on @a win.
@@ -1475,6 +1501,9 @@ void wima_window_destroy(void* ptr)
 
 		// Free the vector of workspaces.
 		if (win->workspaces) dvec_free(win->workspaces);
+
+		// Free the stack of overlays.
+		if (win->overlayStack) dvec_free(win->overlayStack);
 
 		// Free the vector of items.
 		if (win->overlayItems) dvec_free(win->overlayItems);
@@ -1607,7 +1636,7 @@ void wima_window_setMouseBtn(WimaWin* win, WimaMouseBtn btn, WimaAction action)
 	}
 }
 
-void wima_window_removeMenu(WimaWin* win, WimaMnu* menu)
+void wima_window_removeMenu(WimaWin* win, WimaProperty menu)
 {
 	wima_assert_init;
 	wassert(win, WIMA_ASSERT_WIN);
@@ -1616,43 +1645,25 @@ void wima_window_removeMenu(WimaWin* win, WimaMnu* menu)
 	win->flags = 0;
 
 	// This is needed for the loop.
-	WimaMnu* subMenu = menu;
+	WimaProperty subMenu = menu;
 
 	// Loop over the menus.
-	while (subMenu)
+	while (subMenu != WIMA_PROP_INVALID)
 	{
+		// Get the data.
+		WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, subMenu);
+
 		// Get the handle.
-		WimaMenu handle = subMenu->subMenu;
+		size_t handle = data->_collection.sub;
 
-		// Break out early if we can.
-		if (handle == WIMA_MENU_INVALID)
-		{
-			wassert(subMenu->subMenuParentIdx == UINT16_MAX, WIMA_ASSERT_MENU_ITEM_PARENT_MISMATCH);
-			break;
-		}
+		// Clear the submenu.
+		data->_collection.sub = WIMA_PROP_INVALID_IDX;
 
-		wassert(subMenu->subMenuParentIdx != UINT16_MAX, WIMA_ASSERT_MENU_ITEM_PARENT_MISMATCH);
+		// Break early if necessary.
+		if (handle == WIMA_PROP_INVALID_IDX) break;
 
-		// Get the menu item key.
-		uint64_t itemKey = (uint64_t) subMenu->items[subMenu->subMenuParentIdx];
-
-		wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
-
-		// Clear the state of the item.
-		WimaMnuItm* item = dpool_get(wg.menuItems, &itemKey);
-		item->state = WIMA_WIDGET_DEFAULT;
-
-		// Get the menu key.
-		uint64_t key = (uint64_t) handle;
-
-		wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
-
-		// Get the submenu.
-		WimaMnu* temp = dpool_get(wg.menus, &key);
-
-		// Dismiss it and reassign.
-		subMenu->subMenu = WIMA_MENU_INVALID;
-		subMenu = temp;
+		// Reassign.
+		subMenu = *((WimaProperty*) dvec_get(data->_collection.list, handle));
 	}
 }
 
@@ -1717,32 +1728,10 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 		if (WIMA_WIN_HAS_OVERLAY(win))
 		{
 			// Draw the overlay and check for error.
-			status = wima_window_drawOverlay(win);
+			status = wima_window_overlay_draw(win, wwh, 0, 0.0f);
 			if (yerror(status))
 			{
 				// Cancel NanoVG frame.
-				nvgCancelFrame(win->render.nvg);
-
-				return status;
-			}
-		}
-
-		// If we have a menu...
-		if (WIMA_WIN_HAS_MENU(win))
-		{
-			// Get the key.
-			uint64_t key = (uint64_t) win->menu;
-
-			wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
-
-			// Get the menu.
-			WimaMnu* menu = dpool_get(wg.menus, &key);
-
-			// Draw the menu and check for error.
-			status = wima_window_drawMenu(win, menu, 0);
-			if (yerror(status))
-			{
-				// Cancel NanoVG frame on error.
 				nvgCancelFrame(win->render.nvg);
 
 				return status;
@@ -1829,334 +1818,110 @@ WimaStatus wima_window_processEvents(WimaWindow wwh)
 	return status;
 }
 
-void wima_window_joinAreasMode(WimaWindow wwh)
+bool wima_window_joinAreasMode(WimaWidget wdgt, void* ptr yunused, WimaMouseClickEvent event yunused)
 {
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+	wassert(wima_window_valid(wdgt.window), WIMA_ASSERT_WIN);
 
 	// Get the window.
-	WimaWin* win = dvec_get(wg.windows, wwh);
+	WimaWin* win = dvec_get(wg.windows, wdgt.window);
 
 	win->flags |= WIMA_WIN_JOIN_MODE;
+
+	return true;
 }
 
-void wima_window_splitAreaMode(WimaWindow wwh)
+bool wima_window_splitAreaMode(WimaWidget wdgt, void* ptr yunused, WimaMouseClickEvent event yunused)
 {
-	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+	wassert(wima_window_valid(wdgt.window), WIMA_ASSERT_WIN);
 
 	// Get the window.
-	WimaWin* win = dvec_get(wg.windows, wwh);
+	WimaWin* win = dvec_get(wg.windows, wdgt.window);
 
 	win->flags |= WIMA_WIN_SPLIT_MODE;
+
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-static WimaStatus wima_window_drawOverlay(WimaWin* win)
+static WimaStatus wima_window_overlay_draw(WimaWin* win, WimaWindow wwh, size_t idx, float parentWidth)
 {
 	wassert(win, WIMA_ASSERT_WIN);
-	wassert(win->overlay != WIMA_OVERLAY_INVALID, WIMA_ASSERT_OVERLAY);
+	wassert(idx < dvec_len(win->overlayStack), WIMA_ASSERT_OVERLAY);
 
-	// TODO: Write this function.
+	// TODO: Write and test this function.
 
-	return WIMA_STATUS_SUCCESS;
-}
+	// Get the window overlay.
+	WimaWinOverlay* wovly = dvec_get(win->overlayStack, idx);
+	wovly->rect.w = parentWidth;
 
-static WimaStatus wima_window_drawMenu(WimaWin* win, WimaMnu* menu, float parentWidth)
-{
-	float w, h;
+	wassert(wovly->ovly < dvec_len(wg.overlays), WIMA_ASSERT_OVERLAY);
 
-	WimaIcon menuIcon;
-	char* menuTitle;
+	// Get the overlay.
+	WimaOvly* ovly = dvec_get(wg.overlays, wovly->ovly);
 
-	wassert(win, WIMA_ASSERT_WIN);
-	wassert(menu, WIMA_ASSERT_WIN_MENU);
+	// Create the root layout.
+	WimaLayout parent;
+	parent.layout = WIMA_LAYOUT_INVALID;
+	parent.area = idx;
+	parent.window = wwh;
+	parent.region = (uint8_t) WIMA_REGION_INVALID;
+	uint16_t flags = wima_layout_setExpandFlags(0, true, true);
+	WimaLayout root = wima_layout_new(parent, flags, 0.0f);
 
-	// Clear these.
-	WimaStatus status = WIMA_STATUS_SUCCESS;
-	float width = 0.0f;
+	// Lay out the overlay.
+	WimaStatus status = ovly->layout(wovly->ovly, idx, root);
+	if (yerror(status)) return status;
 
-	// Cache these. If parentWidth is 0, that means
-	// that this is the highest level menu.
-	bool isTopAndContext = WIMA_WIN_MENU_IS_CONTEXT(win) && parentWidth == 0;
+	// Get the item.
+	WimaItem* item = wima_item_ptr(root.window, root.area, root.region, root.layout);
 
-	// If the menu has a title...
-	if (isTopAndContext)
-	{
-		// Get the title and icon.
-		menuIcon = menu->icon;
-		menuTitle = WIMA_MENU_NAME(menu);
+	// Get the size.
+	WimaSizef size = wima_layout_size(item);
+	wovly->rect.w = size.w;
+	wovly->rect.h = size.h;
 
-		// Estimate the width with the title.
-		width = wima_ui_label_estimateWidth(&win->render, 0, menuTitle);
-	}
-
-	// Estimate the submenu arrow width.
-	float arrowWidth = WIMA_MENU_ARROW_SIZE;
-
-	// Cache these.
-	uint16_t numItems = menu->numItems;
-	WimaMenuItem* handle = menu->items;
-
-	// Create an array of item pointers.
-	WimaMnuItm* items[numItems];
-
-	WimaMnuItm* item;
-
-	// Loop through the items and fill the array and estimate width.
-	// These are combined into one loop to save on branching.
-	for (uint16_t i = 0; i < numItems; ++i, ++handle)
-	{
-		// Get the key.
-		uint64_t itemKey = (uint64_t) *handle;
-
-		if (itemKey == WIMA_MENU_SEPARATOR)
-		{
-			items[i] = NULL;
-			continue;
-		}
-
-		wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
-
-		// Get the pointer and set it in the area.
-		item = dpool_get(wg.menuItems, &itemKey);
-		items[i] = item;
-
-		// Factor the label in, as well as the arrow if necessary.
-		w = wima_ui_label_estimateWidth(&win->render, 0, item->label);
-		w += item->hasSubMenu ? arrowWidth : 0;
-
-		// Set the item width and the new max width.
-		item->rect.w = (int) w;
-		width = wima_max(width, w);
-	}
-
-	// Cache these for later.
-	float titleHeight = 0.0f;
-	float height = 0.0f;
-
-	// Set the above heights based on estimation.
-	if (isTopAndContext)
-	{
-		titleHeight = wima_ui_label_estimateHeight(&win->render, 0, menuTitle, width) + 5;
-		height = titleHeight + WIMA_WIDGET_MENU_SEP_HEIGHT;
-	}
-	else
-	{
-		height = 5.0f;
-	}
-
-	// Now estimate height.
-	for (int i = 0; i < numItems; ++i)
-	{
-		// Get the pointer.
-		item = items[i];
-
-		// A NULL pointer means a separator.
-		// Just add the height and continue.
-		// We also want to store the height.
-		if (!item)
-		{
-			double* dptr = (double*) (items + i);
-			*dptr = height;
-			height += WIMA_WIDGET_MENU_SEP_HEIGHT;
-			continue;
-		}
-
-		// Estimate the height.
-		h = wima_ui_label_estimateHeight(&win->render, 0, item->label, width);
-
-		// We want to make sure all items have the same width.
-		item->rect.w = width;
-
-		// Set the item's y and height.
-		item->rect.y = height;
-		item->rect.h = (int) h;
-
-		// Add the item height to the total.
-		height += h;
-	}
-
-	// Add a 5 pixel bottom border.
-	height += 5.0f;
-
-	// Set the menu dimensions.
-	menu->rect.w = width;
-	menu->rect.h = height;
-
-	// Move the menu left if it extends off the screen.
-	if (menu->rect.x + width >= win->fbsize.w) menu->rect.x -= parentWidth + width;
-
-	// Calculate the menu height.
-	int heightPos = menu->rect.y + height;
-
-	// Move the menu down if it goes past the top.
-	if (heightPos >= win->fbsize.h)
-		menu->rect.y -= heightPos - (win->fbsize.h);
-	else if (menu->rect.y < 0)
-	{
-		// Make sure the menu does not go past the top.
-		menu->rect.y = 0;
-	}
-
-	// Get the cursor.
-	WimaVec cursor = win->ctx.cursorPos;
-
-	// Need to keep this for later.
-	WimaVec pos = cursor;
-
-	// Figure out if the cursor is.
-	bool menuContainsCursor = wima_rect_contains(menu->rect, cursor);
-
-	// Translate the cursor into the menu space.
-	cursor.x -= menu->rect.x;
-	cursor.y -= menu->rect.y;
-
-	// In the case that we are top level ***AND*** a context menu, we
-	// want to set the window menu offsets if we are still in the menu.
-	if (menuContainsCursor && isTopAndContext)
-	{
-		win->menuOffset.x = (int16_t) cursor.x;
-		win->menuOffset.y = (int16_t) cursor.y;
-	}
+	// Do the layout.
+	status = wima_layout_layout(item);
 
 	// Set up NanoVG.
 	nvgResetTransform(win->render.nvg);
 	nvgResetScissor(win->render.nvg);
-	nvgTranslate(win->render.nvg, menu->rect.x, menu->rect.y);
-	nvgScissor(win->render.nvg, 0, 0, menu->rect.w, menu->rect.h);
+	nvgTranslate(win->render.nvg, wovly->rect.x, wovly->rect.y);
+	nvgScissor(win->render.nvg, 0, 0, wovly->rect.w, wovly->rect.h);
 
 	// Draw the background.
-	wima_ui_menu_background(&win->render, 0, 0, menu->rect.w, menu->rect.h, WIMA_CORNER_NONE);
+	wima_ui_menu_background(&win->render, 0, 0, wovly->rect.w, wovly->rect.h, WIMA_CORNER_NONE);
 
-	// If it has a title (is the top menu and a context menu), draw it.
-	if (isTopAndContext)
-	{
-		wima_ui_menu_label(&win->render, 0, 5, width, titleHeight, menuIcon, menuTitle);
-		wima_ui_menu_separator(&win->render, 0, titleHeight, width, WIMA_WIDGET_MENU_SEP_HEIGHT);
-	}
+	// Draw the layout.
+	status = wima_layout_draw(item, &win->render);
+	if (yerror(status)) return status;
 
-	// Get the menu that contains the mouse.
-	WimaMnu* mmouse = wima_window_menu_contains(menu, pos);
-
-	// Cache this again.
-	handle = menu->items;
-
-	WimaMnu* subMenu;
-
-	// If the menu has a submenu...
-	if (menu->subMenu != WIMA_MENU_INVALID)
-	{
-		// Get the submenu key.
-		uint64_t subKey = (uint64_t) menu->subMenu;
-
-		wassert(dpool_exists(wg.menus, &subKey), WIMA_ASSERT_MENU);
-
-		// Get the submenu.
-		subMenu = dpool_get(wg.menus, &subKey);
-	}
-	else
-	{
-		subMenu = NULL;
-	}
-
-	for (uint32_t i = 0; i < numItems; ++i, ++handle)
-	{
-		// Get the pointer.
-		item = items[i];
-
-		// If the item is a separator, just draw it and continue.
-		if ((*handle) == WIMA_MENU_SEPARATOR)
-		{
-			wima_ui_menu_separator(&win->render, 0, *((double*) &item), width, WIMA_WIDGET_MENU_SEP_HEIGHT);
-			continue;
-		}
-
-		// If the menu contains the cursor...
-		if (menuContainsCursor)
-		{
-			// Calculate whether the item contains the cursor.
-			bool contained = wima_rect_contains(item->rect, cursor);
-
-			// If it does and it is the bottom-most menu...
-			if (contained && mmouse == menu)
-			{
-				// If the item has a sub menu...
-				if (item->hasSubMenu)
-				{
-					// Set the submenu and parent index.
-					menu->subMenu = item->subMenu;
-					menu->subMenuParentIdx = i;
-
-					// Get the key.
-					uint64_t subKey = item->subMenu;
-
-					wassert(dpool_exists(wg.menus, &subKey), WIMA_ASSERT_MENU);
-
-					// Get the menu.
-					subMenu = dpool_get(wg.menus, &subKey);
-
-					// Set the start pos for the submenu.
-					// Make sure to minus the top border
-					// (that's what the minus 5.0f is).
-					subMenu->rect.x = menu->rect.x + width;
-					subMenu->rect.y = menu->rect.y + item->rect.y - 5.0f;
-				}
-				else
-				{
-					// Remove any sub menu and parent.
-					menu->subMenu = WIMA_MENU_INVALID;
-					menu->subMenuParentIdx = UINT16_MAX;
-					subMenu = NULL;
-				}
-			}
-
-			// Set the item state based on the cursor.
-			item->state = contained ? WIMA_WIDGET_HOVER : WIMA_WIDGET_DEFAULT;
-		}
-
-		// Actually render the menu item.
-		wima_ui_menu_item(&win->render, item->rect.x, item->rect.y, item->rect.w, item->rect.h, item->state, item->icon,
-		                  item->label, item->hasSubMenu);
-	}
-
-	// If the menu has a submenu, draw it.
-	if (subMenu) status = wima_window_drawMenu(win, subMenu, width);
+	// Draw sub overlay if necessary.
+	if (idx < dvec_len(win->overlayStack) - 1) status = wima_window_overlay_draw(win, wwh, idx + 1, wovly->rect.w);
 
 	return status;
 }
 
-static WimaMnu* wima_window_menu_contains(WimaMnu* menu, WimaVec pos)
+static size_t wima_window_overlay_contains(WimaWin* win, WimaVec pos)
 {
-	wassert(menu, WIMA_ASSERT_WIN_MENU);
+	wassert(win, WIMA_ASSERT_WIN_MENU);
 
-	// Get the menu that contains the position.
-	WimaMnu* result = wima_rect_contains(menu->rect, pos) ? menu : NULL;
+	size_t len = dvec_len(win->overlayStack);
+	size_t contains = SIZE_MAX;
 
-	WimaMnu* child;
-
-	// If the menu has a submenu...
-	if (menu->subMenu != WIMA_MENU_INVALID)
+	for (size_t i = 0; i < len; ++i)
 	{
-		// Get the key.
-		uint64_t key = (uint64_t) menu->subMenu;
+		// Get the window overlay.
+		WimaWinOverlay* wovly = dvec_get(win->overlayStack, i);
 
-		wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
-
-		// Get the child.
-		WimaMnu* m = dpool_get(wg.menus, &key);
-		child = wima_window_menu_contains(m, pos);
-	}
-	else
-	{
-		child = NULL;
+		// Test the rectangle.
+		if (wima_rect_contains(wovly->rect, pos)) contains = i;
 	}
 
-	// Set the result.
-	result = child ? child : result;
-
-	return result;
+	return contains;
 }
 
 static WimaStatus wima_window_drawTooltip(WimaWin* win)
@@ -2261,7 +2026,8 @@ static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWid
 		case WIMA_EVENT_MOUSE_DRAG:
 		{
 			// Only do something if we have a menu up.
-			if (!WIMA_WIN_HAS_MENU(win))
+			// TODO: Overlays can have drag too.
+			if (!WIMA_WIN_HAS_OVERLAY(win))
 			{
 				// If the user is moving the split, move it.
 				if (win->ctx.movingSplit)
@@ -2358,138 +2124,6 @@ static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt
 	{
 		// Join the areas.
 		return wima_window_joinAreas(win->ctx.split.area, win->ctx.hover.area);
-	}
-
-	// If there is a menu...
-	else if (WIMA_WIN_HAS_MENU(win))
-	{
-		// If the mouse button hasn't been released yet,
-		// set it to released and return because we don't
-		// need to do anything else.
-		if (!WIMA_WIN_MENU_IS_RELEASED(win))
-		{
-			win->flags |= WIMA_WIN_MENU_RELEASED;
-			return WIMA_STATUS_SUCCESS;
-		}
-
-		uint64_t key = (uint64_t) win->menu;
-
-		wassert(dpool_exists(wg.menus, &key), WIMA_ASSERT_MENU);
-
-		// Get the menu.
-		WimaMnu* menu = dpool_get(wg.menus, &key);
-
-		// Get the cursor position.
-		WimaVec pos = win->ctx.cursorPos;
-
-		// Get the bottom-most menu that contains the mouse.
-		WimaMnu* m = wima_window_menu_contains(menu, pos);
-
-		// If the mouse button was released, and the containing menu is valid...
-		if (e.action == WIMA_ACTION_RELEASE && m)
-		{
-			// Get the key.
-			uint64_t itemKey = (uint64_t) win->ctx.click_item.menuItem;
-
-			// If the item is a separator, just return.
-			if (itemKey == WIMA_MENU_SEPARATOR) return WIMA_STATUS_SUCCESS;
-
-			wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
-
-			// Get the menu item.
-			WimaMnuItm* item = dpool_get(wg.menuItems, &itemKey);
-
-			// Send event to menu item.
-
-			// Translate the position into item coordinates.
-			pos.x -= m->rect.x;
-			pos.y -= m->rect.y;
-
-			// If the item was pressed *and* released,
-			// as well as doesn't have a submenu and
-			// does have a function...
-			if (WIMA_WIN_MENU_ITEM_WAS_PRESSED(win) && wima_rect_contains(item->rect, pos) && !item->hasSubMenu &&
-			    item->click)
-			{
-				// Set the new offsets for the menu. This
-				// is so the user can just click if they
-				// want the same thing as last time.
-				m->rect.x = pos.x;
-				m->rect.y = pos.y;
-
-				// If the two menus are not equal, set
-				// the menu offsets for the first.
-				if (m != menu)
-				{
-					// Set the menu's offsets.
-					menu->rect.x = win->menuOffset.x;
-					menu->rect.y = win->menuOffset.y;
-				}
-
-				// Dismiss the menu.
-				wima_window_removeMenu(win, menu);
-
-				// Clear the item's state.
-				item->state = WIMA_WIDGET_DEFAULT;
-
-				// Call the item's function.
-				item->click(wdgt.window);
-
-				// Clear the window and redraw.
-				wima_window_setDirty(win, true);
-			}
-		}
-
-		// If the mouse button was pressed and the containing menu isn't valid...
-		else if (e.action == WIMA_ACTION_PRESS)
-		{
-			// If the mouse is in a menu...
-			if (m)
-			{
-				// Translate the position into item coordinates.
-				pos.x -= m->rect.x;
-				pos.y -= m->rect.y;
-
-				// Cache this.
-				uint16_t numItems = m->numItems;
-
-				// Go through the menu items.
-				for (uint16_t i = 0; i < numItems; ++i)
-				{
-					// Get the key.
-					uint64_t itemKey = m->items[i];
-
-					// Break early on a separator.
-					if (itemKey == WIMA_MENU_SEPARATOR) continue;
-
-					wassert(dpool_exists(wg.menuItems, &itemKey), WIMA_ASSERT_MENU_ITEM);
-
-					// Get the item.
-					WimaMnuItm* item = dpool_get(wg.menuItems, &itemKey);
-
-					// If the item is the one.
-					if (wima_rect_contains(item->rect, pos))
-					{
-						// Store the item in the window and set the flag.
-						win->ctx.click_item.menuItem = (WimaMenuItem) item->key;
-						win->flags |= WIMA_WIN_MENU_ITEM_PRESS;
-
-						break;
-					}
-				}
-			}
-
-			// If the mouse is not in a menu.
-			else
-			{
-				// Set the menu's offsets.
-				menu->rect.x = win->menuOffset.x;
-				menu->rect.y = win->menuOffset.y;
-
-				// Dismiss the menu.
-				wima_window_removeMenu(win, menu);
-			}
-		}
 	}
 
 	// If we have an overlay...
@@ -2724,36 +2358,5 @@ bool wima_window_valid(WimaWindow wwh)
 
 	return valid;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-// Menu item click function for debug mode.
-////////////////////////////////////////////////////////////////////////////////
-
-#ifndef NDEBUG
-void wima_window_sub1_click(WimaWindow wwh)
-{
-	printf("Item sub 1 clicked on window[%d]\n", wwh);
-}
-
-void wima_window_sub3_click(WimaWindow wwh)
-{
-	printf("Item sub 3 clicked on window[%d]\n", wwh);
-}
-
-void wima_window_sub4_click(WimaWindow wwh)
-{
-	printf("Item sub 4 clicked on window[%d]\n", wwh);
-}
-
-void wima_window_sub5_click(WimaWindow wwh)
-{
-	printf("Item sub 5 clicked on window[%d]\n", wwh);
-}
-
-void wima_window_sub_sub1_click(WimaWindow wwh)
-{
-	printf("Item sub sub 1 clicked on window[%d]\n", wwh);
-}
-#endif  // NDEBUG
 
 //! @endcond Doxygen suppress.

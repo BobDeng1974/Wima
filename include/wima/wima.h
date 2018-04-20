@@ -1117,155 +1117,6 @@ WimaGammaRamp wima_monitor_gammaRamp(WimaMonitor* monitor) yinline;
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-// Menu data structures.
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- * @defgroup menu menu
- * Data structures for menus.
- * @{
- */
-
-/**
- * A function for handling a menu item click.
- * @param win	The window that had the menu.
- */
-typedef void (*WimaMenuItemFunc)(WimaWindow win);
-
-/**
- * The public-facing type for menu items.
- */
-typedef uint32_t WimaMenuItem;
-
-/**
- * @def WIMA_MENU_ITEM_INVALID
- * A handle to an invalid menu item.
- */
-#define WIMA_MENU_ITEM_INVALID ((WimaMenuItem) -1)
-
-/**
- * @def WIMA_MENU_ITEM_MAX
- * The max number of menu items that can be registered.
- */
-#define WIMA_MENU_ITEM_MAX WIMA_MENU_ITEM_INVALID
-
-/**
- * @def WIMA_MENU_SEPARATOR
- * A value that can be passed into wima_menu_register()
- * to indicate a separator.
- */
-#define WIMA_MENU_SEPARATOR (WIMA_MENU_ITEM_INVALID)
-
-/**
- * The public-facing type for menus.
- */
-typedef uint16_t WimaMenu;
-
-/**
- * @def WIMA_MENU_INVALID
- * A handle to an invalid menu.
- */
-#define WIMA_MENU_INVALID ((WimaMenu) -1)
-
-/**
- * @def WIMA_MENU_MAX
- * The max number of menus that can be registered.
- */
-#define WIMA_MENU_MAX WIMA_MENU_INVALID
-
-/**
- * Registers an operator menu item, which is a menu item
- * that when clicked, performs some action.
- * @param name	The name of the item. This is used as the
- *				label and does not have to be unique.
- * @param icon	The icon of the item, or WIMA_ICON_INVALID
- *				if none.
- * @param op	The function to run when the item is clicked.
- * @return		The newly-created WimaMenuItem, or
- *				WIMA_MENU_ITEM_INVALID on error.
- * @pre			@a name must not be NULL.
- * @pre			@a op must not be NULL.
- */
-WimaMenuItem wima_menu_item_registerOp(const char* const name, WimaIcon icon, WimaMenuItemFunc op) yinline;
-
-/**
- * Registers a parent menu item, which is a menu item that
- * shows a submenu when hovered.
- * @param name	The name of the item. This is used as the
- *				label and does not have to be unique.
- * @param icon	The icon of the item, or WIMA_ICON_INVALID
- *				if none.
- * @param child	The child menu.
- * @return		The newly-created WimaMenuItem, or
- *				WIMA_MENU_ITEM_INVALID on error.
- * @pre			@a name must not be NULL.
- * @pre			@a child must be a valid @a WimaMenu.
- */
-WimaMenuItem wima_menu_item_registerParent(const char* const name, WimaIcon icon, WimaMenu child) yinline;
-
-/**
- * Registers a menu using varargs. All varargs must be WimaMenuItems,
- * and there must be as many items as @a numItems.
- *
- * If any separators are desired, they should be passed in using
- * WIMA_MENU_SEPARATOR where they should be in the menu.
- * @param name		The name of the menu. This is the label and does
- *					not have to be unique.
- * @param icon		The menu's icon, or WIMA_ICON_INVALID if none.
- * @param numItems	The number of items, including any separators.
- * @return			The newly-created WimaMenu, or WIMA_MENU_INVALID
- *					on error.
- * @pre				@a name must not be NULL.
- * @pre				@a numItems must be greater than 0.
- * @pre				@a items must not be NULL.
- * @pre				all items must be valid.
- */
-WimaMenu wima_menu_nregister(const char* const name, WimaIcon icon, uint32_t numItems, ...);
-
-/**
- * Registers a menu using a va_list, which must only contain
- * WimaMenuItems.
- *
- * If any separators are desired, they should be passed in using
- * WIMA_MENU_SEPARATOR where they should be in the menu.
- * @param name		The name of the menu. This is the label and does
- *					not have to be unique.
- * @param icon		The menu's icon, or WIMA_ICON_INVALID if none.
- * @param numItems	The number of items, including any separators.
- * @param items		The menu items as a va_list.
- * @return			The newly-created WimaMenu, or WIMA_MENU_INVALID
- *					on error.
- * @pre				@a name must not be NULL.
- * @pre				@a numItems must be greater than 0.
- * @pre				@a items must not be NULL.
- * @pre				all items must be valid.
- */
-WimaMenu wima_menu_vregister(const char* const name, WimaIcon icon, uint32_t numItems, va_list items);
-
-/**
- * Registers a menu using an array of WimaMenuItems.
- *
- * If any separators are desired, they should be passed in using
- * WIMA_MENU_SEPARATOR where they should be in the menu.
- * @param name		The name of the menu. This is the label and does
- *					not have to be unique.
- * @param icon		The menu's icon, or WIMA_ICON_INVALID if none.
- * @param numItems	The number of items, including any separators.
- * @param items		The menu items as a va_list.
- * @return			The newly-created WimaMenu, or WIMA_MENU_INVALID
- *					on error.
- * @pre				@a name must not be NULL.
- * @pre				@a numItems must be greater than 0.
- * @pre				@a items must not be NULL.
- * @pre				all items must be valid.
- */
-WimaMenu wima_menu_register(const char* const name, WimaIcon icon, uint32_t numItems, WimaMenuItem items[]);
-
-/**
- * @}
- */
-
-////////////////////////////////////////////////////////////////////////////////
 // Overlay functions and data structures.
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1300,7 +1151,7 @@ typedef uint16_t WimaOverlay;
  * @return		WIMA_STATUS_SUCCESS on success,
  *				an error code otherwise.
  */
-typedef WimaStatus (*WimaOverlayLayoutFunc)(WimaLayout root);
+typedef WimaStatus (*WimaOverlayLayoutFunc)(WimaOverlay overlay, size_t idx, WimaLayout root);
 
 /**
  * Registers an overlay type with Wima.
@@ -1315,6 +1166,22 @@ typedef WimaStatus (*WimaOverlayLayoutFunc)(WimaLayout root);
  */
 WimaOverlay wima_overlay_register(ynonnull const char* const name, WimaIcon icon,
                                   ynonnull WimaOverlayLayoutFunc layout);
+
+/**
+ * Returns the @a overlay's name as a DynaString.
+ * @param overlay	The overlay to query.
+ * @return			@a overlay's name, as a DynaString.
+ * @pre				@a overlay must be valid.
+ */
+DynaString wima_overlay_name(WimaOverlay overlay);
+
+/**
+ * Returns the @a overlay's icon.
+ * @param overlay	The overlay to query.
+ * @return			@a overlay's icon.
+ * @pre				@a overlay must be valid.
+ */
+WimaIcon wima_overlay_icon(WimaOverlay overlay);
 
 /**
  * @}
@@ -1734,6 +1601,28 @@ bool wima_widget_isHovered(WimaWidget wdgt) yinline;
  * @return		true if focused, false otherwise.
  */
 bool wima_widget_isFocused(WimaWidget wdgt) yinline;
+
+/**
+ * Returns the WimaOverlay that @a wdgt is in, or @a
+ * WIMA_OVERLAY_INVALID if not in an overlay.
+ * @param wdgt	The widget to query.
+ * @return		The WimaOverlay that @a wdgt is in, or
+ *				@a WIMA_OVERLAY_INVALID if not in an
+ *				overlay.
+ * @pre			@a wdgt must be a valid WimaWidget.
+ */
+WimaOverlay wima_widget_overlay(WimaWidget wdgt) yinline;
+
+/**
+ * Returns the index in the window overlay stack of the overlay
+ * that @a wdgt is in, or SIZE_MAX if it is not in an overlay.
+ * @param wdgt	The widget to query.
+ * @return		The index of the overlay in the window overlay
+ *				stack, or SIZE_MAX if @a wdgt is not in an
+ *				overlay.
+ * @pre			@a wdgt must be a valid WimaWidget.
+ */
+size_t wima_widget_overlayIdx(WimaWidget wdgt) yconst yinline;
 
 /**
  * @}
@@ -2858,7 +2747,7 @@ void wima_window_popDialog(WimaWindow wwh);
  * @pre				@a wwh must not have an overlay set.
  * @pre				@a overlay must be a valid WimaOverlay.
  */
-void wima_window_setOverlay(WimaWindow wwh, WimaOverlay overlay);
+WimaStatus wima_window_pushOverlay(WimaWindow wwh, WimaOverlay overlay);
 
 /**
  * Removes the overlay from the window referred to by @a wwh.
@@ -2866,33 +2755,63 @@ void wima_window_setOverlay(WimaWindow wwh, WimaOverlay overlay);
  * @pre				@a wwh must be a valid WimaWindow.
  * @pre				@a wwh must have an overlay set.
  */
-void wima_window_removeOverlay(WimaWindow wwh);
+WimaStatus wima_window_popOverlay(WimaWindow wwh);
 
 /**
- * Sets the context menu on the window
+ * Sets the context menu on the window. The param
+ * @a menu is a list @a WimaProperty and all of
+ * its children must be properties of the these
+ * three types:
+ *
+ * - List (for sub menus)
+ * - Bool (for on/off menu items)
+ * - Operator (for other general operations)
+ *
+ * Other properties do not make sense.
  * @param wwh	The window to update.
- * @param menu	The menu to set on the window.
- * @pre			@a wwh must be a valid WimaWindow.
- * @pre			@a menu must be a valid WimaMenu.
+ * @param menu	The menu to set on the window. It
+ *				must be a list property, and all
+ *				of its children must be either list,
+ *				bool, or operator properties.
+ * @pre			@a wwh must be a valid @a WimaWindow.
+ * @pre			@a menu must be a valid @a WimaProperty.
+ * @pre			@a menu must be a list @a WimaProperty.
+ * @pre			@a menu's children must be list, bool,
+ *				or operator properties.
  */
-void wima_window_setContextMenu(WimaWindow wwh, WimaMenu menu) yinline;
+WimaStatus wima_window_setContextMenu(WimaWindow wwh, WimaProperty menu) yinline;
 
 /**
- * Sets the context menu on the window.
+ * Sets the menu on the window. The param @a menu
+ * is a list @a WimaProperty and all of its children
+ * must be properties of the these three types:
+ *
+ * - List (for sub menus)
+ * - Bool (for on/off menu items)
+ * - Operator (for other general operations)
+ *
+ * Other properties do not make sense.
  * @param wwh	The window to update.
- * @param menu	The menu to set on the window.
- * @pre			@a wwh must be a valid WimaWindow.
- * @pre			@a menu must be a valid WimaMenu.
+ * @param menu	The menu to set on the window. It
+ *				must be a list property, and all
+ *				of its children must be either list,
+ *				bool, or operator properties.
+ * @pre			@a wwh must be a valid @a WimaWindow.
+ * @pre			@a menu must be a valid @a WimaProperty.
+ * @pre			@a menu must be a list @a WimaProperty.
+ * @pre			@a menu's children must be list, bool,
+ *				or operator properties.
  */
-void wima_window_setMenu(WimaWindow wwh, WimaMenu menu) yinline;
+WimaStatus wima_window_setMenu(WimaWindow wwh, WimaProperty menu) yinline;
 
 /**
- * Returns the current menu on the window, or NULL if none.
+ * Returns the current menu on the window, or WIMA_PROP_INVALID
+ * if none.
  * @param wwh	The window to query.
- * @return		The current menu, or WIMA_MENU_INVALID if none.
+ * @return		The current menu, or WIMA_PROP_INVALID if none.
  * @pre			@a wwh must be a valid WimaWindow.
  */
-WimaMenu wima_window_menu(WimaWindow wwh) yinline;
+WimaProperty wima_window_menu(WimaWindow wwh) yinline;
 
 /**
  * Sets the cursor on @a wwh. The cursor must have been

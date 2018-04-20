@@ -162,20 +162,28 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split);
  * Calculates the size of the layout represented by @a item and
  * stores it in the field @a min of @a item.
  * @param item	The layout whose size will be calculated.
- * @param area	The area that @a item is in. For optimization.
  * @return		The size of the layout that @a item represents.
  */
-WimaSizef wima_layout_size(ynonnull WimaItem* item, ynonnull WimaAr* area);
+WimaSizef wima_layout_size(ynonnull WimaItem* item);
 
 /**
  * Lays out the layout that @a item points to.
  * @param item	The layout to lay out.
- * @param area	The area that @a item is in.
- *				For optimization.
  * @return		WIMA_STATUS_SUCCESS on succes,
  *				an error code otherwise.
  */
-WimaStatus wima_layout_layout(ynonnull WimaItem* item, ynonnull WimaAr* area);
+WimaStatus wima_layout_layout(ynonnull WimaItem* item);
+
+/**
+ * Draws all of the widget posterity of @a item.
+ * @param item	The item whose widget posterity will be drawn.
+ * @param ctx	The render context to render with.
+ * @return		WIMA_STATUS_SUCCESS on success, an error code
+ *				otherwise.
+ * @pre			@a item must not be NULL.
+ * @pre			@a ctx must not be NULL.
+ */
+WimaStatus wima_layout_draw(ynonnull WimaItem* item, ynonnull WimaRenderContext* ctx);
 
 /**
  * @}

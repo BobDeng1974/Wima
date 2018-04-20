@@ -50,6 +50,7 @@
 #include "../windows/window.h"
 
 #include <dyna/nvector.h>
+#include <dyna/tree.h>
 #include <yc/assert.h>
 #include <yc/error.h>
 
@@ -1005,7 +1006,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 
 		// Create a parent layout handle (invalid).
 		WimaLayout parent;
-		parent.layout = WIMA_WIDGET_INVALID;
+		parent.layout = WIMA_LAYOUT_INVALID;
 		parent.area = node;
 		parent.window = area->window;
 
@@ -1059,7 +1060,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 			WimaItem* item = wima_layout_ptr(root);
 
 			// Compute the layout size.
-			WimaSizef size = wima_layout_size(item, area);
+			WimaSizef size = wima_layout_size(item);
 
 			WimaRectf regRect;
 			float width, height;
@@ -1142,7 +1143,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 			}
 
 			// Compute the layout and check for error.
-			status = wima_layout_layout(item, area);
+			status = wima_layout_layout(item);
 			if (yerror(status)) return status;
 		}
 

@@ -53,6 +53,7 @@ extern "C" {
 
 #include <GLFW/glfw3.h>
 #include <dyna/pool.h>
+#include <dyna/string.h>
 #include <dyna/vector.h>
 #include <yc/assert.h>
 
@@ -73,13 +74,13 @@ extern "C" {
  * @def WIMA_WIN_CLICK_THRESHOLD
  * Consecutive click threshold in ms.
  */
-#define WIMA_WIN_CLICK_THRESHOLD 250
+#define WIMA_WIN_CLICK_THRESHOLD (250)
 
 /**
  * @def WIMA_WIN_DIRTY
  * Window dirty bit.
  */
-#define WIMA_WIN_DIRTY (0x0001)
+#define WIMA_WIN_DIRTY (0x01)
 
 /**
  * @def WIMA_WIN_IS_DIRTY
@@ -93,13 +94,13 @@ extern "C" {
  * @def WIMA_WIN_LAYOUT
  * Window layout bit.
  */
-#define WIMA_WIN_LAYOUT (0x0002)
+#define WIMA_WIN_LAYOUT (0x02)
 /**
  * @def WIMA_WIN_LAYOUT_FORCE
  * Window force layout bit. This is used to make
  * sure the user can't cancel required layouts.
  */
-#define WIMA_WIN_LAYOUT_FORCE (0x0004)
+#define WIMA_WIN_LAYOUT_FORCE (0x04)
 
 /**
  * @def WIMA_WIN_NEEDS_LAYOUT
@@ -110,41 +111,11 @@ extern "C" {
 #define WIMA_WIN_NEEDS_LAYOUT(win) (((win)->flags) & (WIMA_WIN_LAYOUT | WIMA_WIN_LAYOUT_FORCE))
 
 /**
- * @def WIMA_WIN_MENU
- * Window menu bit.
- */
-#define WIMA_WIN_MENU (0x0008)
-
-/**
- * @def WIMA_WIN_HAS_MENU(win)
- * Returns true if the window has a menu, false otherwise.
- * @param win	The window to test.
- * @return		true if @a win has a menu, false otherwise.
- */
-#define WIMA_WIN_HAS_MENU(win) (((win)->flags) & WIMA_WIN_MENU)
-
-/**
- * @def WIMA_WIN_MENU_RELEASED
- * Window menu released bit. This is to allow
- * the mouse button to release before sending
- * events to a menu.
- */
-#define WIMA_WIN_MENU_RELEASED (0x0010)
-
-/**
- * @def WIMA_WIN_MENU_IS_RELEASED(win)
- * Returns true if the window's menu is released, false otherwise.
- * @param win	The window to test.
- * @return		true if @a win's menu is released, false otherwise.
- */
-#define WIMA_WIN_MENU_IS_RELEASED(win) (((win)->flags) & WIMA_WIN_MENU_RELEASED)
-
-/**
  * @def WIMA_WIN_MENU_CONTEXT
  * Window context menu bit. This is to
  * mark when a menu is a context menu.
  */
-#define WIMA_WIN_MENU_CONTEXT (0x0020)
+#define WIMA_WIN_MENU_CONTEXT (0x08)
 
 /**
  * @def WIMA_WIN_MENU_IS_CONTEXT(win)
@@ -155,42 +126,11 @@ extern "C" {
 #define WIMA_WIN_MENU_IS_CONTEXT(win) (((win)->flags) & WIMA_WIN_MENU_CONTEXT)
 
 /**
- * @def WIMA_WIN_MENU_ITEM_PRESS
- * A bit indicating whether a menu item was pressed or
- * not. If so, the field @a click_item is the menu item.
- * Otherwise, it's the widget that was clicked.
- */
-#define WIMA_WIN_MENU_ITEM_PRESS (0x0040)
-
-/**
- * @def WIMA_WIN_MENU_ITEM_WAS_PRESSED(win)
- * Returns true if an item in the window's menu pressed, false otherwise.
- * @param win	The window to test.
- * @return		true if an item in @a win's menu was clicked, false otherwise.
- */
-#define WIMA_WIN_MENU_ITEM_WAS_PRESSED(win) (((win)->flags) & WIMA_WIN_MENU_ITEM_PRESS)
-
-/**
- * @def WIMA_WIN_OVERLAY
- * A bit indicating whether the window
- * has an overlay up or not.
- */
-#define WIMA_WIN_OVERLAY (0x0080)
-
-/**
- * @def WIMA_WIN_HAS_OVERLAY(win)
- * Returns true if @a win has an overlay, false otherwise.
- * @param win	The window to test.
- * @return		true if @a win has an overlay, false otherwise.
- */
-#define WIMA_WIN_HAS_OVERLAY(win) (((win)->flags) & WIMA_WIN_OVERLAY)
-
-/**
  * @def WIMA_WIN_TOOLTIP
  * A bit indicating whether the window
  * has a tooltip up or not.
  */
-#define WIMA_WIN_TOOLTIP (0x0100)
+#define WIMA_WIN_TOOLTIP (0x10)
 
 /**
  * @def WIMA_WIN_HAS_TOOLTIP(win)
@@ -205,7 +145,7 @@ extern "C" {
  * A bit indicating whether the window
  * is in split mode or not.
  */
-#define WIMA_WIN_SPLIT_MODE (0x0200)
+#define WIMA_WIN_SPLIT_MODE (0x20)
 
 /**
  * @def WIMA_WIN_IN_SPLIT_MODE(win)
@@ -220,7 +160,7 @@ extern "C" {
  * A bit indicating whether the window
  * is in join mode or not.
  */
-#define WIMA_WIN_JOIN_MODE (0x0400)
+#define WIMA_WIN_JOIN_MODE (0x40)
 
 /**
  * @def WIMA_WIN_IN_JOIN_MODE(win)
@@ -231,25 +171,28 @@ extern "C" {
 #define WIMA_WIN_IN_JOIN_MODE(win) (((win)->flags) & WIMA_WIN_JOIN_MODE)
 
 /**
+ * @def WIMA_WIN_HAS_OVERLAY(win)
+ * Returns true if @a win has an overlay, false otherwise.
+ * @param win	The window to test.
+ * @return		true if @a win has an overlay, false otherwise.
+ */
+#define WIMA_WIN_HAS_OVERLAY(win) (dvec_len((win)->overlayStack))
+
+/**
  * @def WIMA_WIN_RENDER_STACK_MAX
  * The max number of scissors that a window can have.
  */
 #define WIMA_WIN_RENDER_STACK_MAX (16)
 
-/**
- * A union between widgets and a pointer a menu item,
- * which is used to store the click location in the
- * same place.
- */
-typedef union WimaClickItem
+typedef struct WimaWinOverlay
 {
-	/// The widget.
-	WimaWidget widget;
+	/// The overlay.
+	WimaOverlay ovly;
 
-	/// The pointer to the menu item.
-	WimaMenuItem menuItem;
+	/// The rectangle.
+	WimaRect rect;
 
-} WimaClickItem;
+} WimaWinOverlay;
 
 /**
  * Data for a window's UI context.
@@ -306,7 +249,7 @@ typedef struct WimaWinCtx
 
 	/// The widget that was last clicked.
 	/// This is for generating click events.
-	WimaClickItem click_item;
+	WimaWidget click_item;
 
 	/// The start of the current drag.
 	WimaVec dragStart;
@@ -353,10 +296,10 @@ typedef struct WimaWin
 	float pixelRatio;
 
 	/// Bits set when we have a menu and other thigns..
-	uint16_t flags;
+	uint8_t flags;
 
-	/// The current overlay, or WIMA_OVERLAY_INVALID.
-	WimaOverlay overlay;
+	/// A stack of overlays.
+	DynaVector overlayStack;
 
 	/// A vector of items for overlays.
 	DynaVector overlayItems;
@@ -368,8 +311,8 @@ typedef struct WimaWin
 	/// it easy to click items that are used a lot.
 	WimaVec overlayOffset;
 
-	/// The current menu, or WIMA_MENU_INVALID.
-	WimaMenu menu;
+	/// The current menu, or WIMA_PROP_INVALID.
+	WimaProperty menu;
 
 	/// The menu offset. This is the offset that
 	/// the user clicked on a context menu. This
@@ -486,9 +429,9 @@ void wima_window_setMouseBtn(ynonnull WimaWin* win, WimaMouseBtn btn, WimaAction
  * @param win	The window to update.
  * @param menu	The menu to clear submenus from.
  * @pre			@a win must not be NULL.
- * @pre			@a menu must not be NULL.
+ * @pre			@a menu must be valid.
  */
-void wima_window_removeMenu(ynonnull WimaWin* win, ynonnull WimaMnu* menu) yinline;
+void wima_window_removeMenu(ynonnull WimaWin* win, WimaProperty menu) yinline;
 
 /**
  * Draws the window with the current layout.
@@ -513,14 +456,14 @@ WimaStatus wima_window_processEvents(WimaWindow win);
  * @param wwh	The window that called the callback.
  * @pre			@a wwh must be valid.
  */
-void wima_window_joinAreasMode(WimaWindow wwh);
+bool wima_window_joinAreasMode(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event);
 
 /**
  * Callback to put Wima into "split areas" mode.
  * @param wwh	The window that called the callback.
  * @pre			@a wwh must be valid.
  */
-void wima_window_splitAreaMode(WimaWindow wwh);
+bool wima_window_splitAreaMode(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event);
 
 /**
  * Tests to see if @a wwh is valid (not removed).
@@ -544,59 +487,6 @@ bool wima_window_valid(WimaWindow wwh);
  * @return		The current area tree on @a win.
  */
 #define WIMA_WIN_AREAS(win) ((win)->treeStack[(win)->treeStackIdx])
-
-////////////////////////////////////////////////////////////////////////////////
-// Click functions and info for predefined menus and menu items.
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- * @def WIMA_WIN_AREA_MENU_NUM_ITEMS
- * The number of items in the area menu.
- */
-
-/**
- * @def WIMA_WIN_AREA_SUB_MENU_NUM_ITEMS
- * The number of items in the area sub menu.
- */
-
-#ifndef NDEBUG
-
-#	define WIMA_WIN_AREA_MENU_NUM_ITEMS (4)
-#	define WIMA_WIN_AREA_SUB_MENU_NUM_ITEMS (6)
-
-/**
- * A test click function for a menu item.
- * @param wwh	The window with the menu.
- */
-void wima_window_sub1_click(WimaWindow wwh);
-
-/**
- * A test click function for a menu item.
- * @param wwh	The window with the menu.
- */
-void wima_window_sub3_click(WimaWindow wwh);
-
-/**
- * A test click function for a menu item.
- * @param wwh	The window with the menu.
- */
-void wima_window_sub4_click(WimaWindow wwh);
-
-/**
- * A test click function for a menu item.
- * @param wwh	The window with the menu.
- */
-void wima_window_sub5_click(WimaWindow wwh);
-
-/**
- * A test click function for a menu item.
- * @param wwh	The window with the menu.
- */
-void wima_window_sub_sub1_click(WimaWindow wwh);
-
-#else
-#	define WIMA_WIN_AREA_MENU_NUM_ITEMS (2)
-#endif  // NDEBUG
 
 /**
  * @}

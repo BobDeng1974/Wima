@@ -39,6 +39,7 @@
 #include <wima/prop.h>
 #include <wima/wima.h>
 
+#include "item.h"
 #include "layout.h"
 #include "widget.h"
 
@@ -66,15 +67,6 @@
  * @{
  */
 
-#ifdef __YASSERT__
-/**
- * Returns true if @a layout is valid, false otherwise.
- * @param layout	The layout to test.
- * @return			true if @a layout is valid, false otherwise.
- */
-static bool wima_layout_valid(WimaLayout layout);
-#endif
-
 /**
  * A function to adjust a dimension.
  * @param result	The result.
@@ -87,32 +79,28 @@ typedef void (*WimaLayoutAdjustFunc)(WimaSizef*, WimaSizef*);
  * that the absolute value is a minimum, but it can grow. Positive
  * numbers mean that it is a hard limit.
  * @param item	The item to calculate the size for.
- * @param area	The area of the item. This is an optimization.
  * @return		The size of the item.
  */
-static WimaSizef wima_layout_size_row(ynonnull WimaItem* item, ynonnull WimaAr* area) yinline;
+static WimaSizef wima_layout_size_row(ynonnull WimaItem* item) yinline;
 
 /**
  * Calculates the size of a column. Negative numbers in the size mean
  * that the absolute value is a minimum, but it can grow. Positive
  * numbers mean that it is a hard limit.
  * @param item	The item to calculate the size for.
- * @param area	The area of the item. This is an optimization.
  * @return		The size of the item.
  */
-static WimaSizef wima_layout_size_col(ynonnull WimaItem* item, ynonnull WimaAr* area) yinline;
+static WimaSizef wima_layout_size_col(ynonnull WimaItem* item) yinline;
 
 /**
  * Calculates the size of a row or column. Negative numbers in the
  * size mean that the absolute value is a minimum, but it can grow.
  * Positive numbers mean that it is a hard limit.
  * @param item		The item to calculate the size for.
- * @param area		The area of the item. This is an optimization.
  * @param adjust	The adjustment function.
  * @return			The size of the item.
  */
-static WimaSizef wima_layout_size_rowcol(ynonnull WimaItem* item, ynonnull WimaAr* area,
-                                         ynonnull WimaLayoutAdjustFunc adjust);
+static WimaSizef wima_layout_size_rowcol(ynonnull WimaItem* item, ynonnull WimaLayoutAdjustFunc adjust);
 
 /**
  * Adjusts for a row.
@@ -133,10 +121,9 @@ static void wima_layout_col_adjust(WimaSizef* result, WimaSizef* size);
  * that the absolute value is a minimum, but it can grow. Positive
  * numbers mean that it is a hard limit.
  * @param item	The item to calculate the size for.
- * @param area	The area of the item. This is an optimization.
  * @return		The size of the item.
  */
-static WimaSizef wima_layout_size_split(ynonnull WimaItem* item, ynonnull WimaAr* area) yinline;
+static WimaSizef wima_layout_size_split(ynonnull WimaItem* item) yinline;
 
 /**
  * Sets the data for children in the parent.
@@ -159,12 +146,6 @@ static void wima_layout_setChildren(WimaLayout parent, ynonnull WimaAr* area, ui
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
-
-bool wima_layout_inOverlay(WimaLayout layout)
-{
-	wassert(wima_layout_valid(layout), WIMA_ASSERT_LAYOUT);
-	return layout.region == WIMA_REGION_INVALID_IDX && layout.area == WIMA_AREA_INVALID;
-}
 
 uint16_t wima_layout_setExpandFlags(uint16_t flags, bool vertical, bool horizontal)
 {
@@ -216,7 +197,7 @@ uint16_t wima_layout_clearAlignedFlag(uint16_t flags)
 
 void wima_layout_setEnabled(WimaLayout wlh, bool enabled)
 {
-	wassert(wima_layout_valid(wlh), WIMA_ASSERT_LAYOUT);
+	wassert(wima_item_valid(wlh.window, wlh.area, wlh.region, wlh.layout), WIMA_ASSERT_LAYOUT);
 
 	// Get a pointer to the layout.
 	WimaItem* layout = wima_layout_ptr(wlh);
@@ -232,7 +213,7 @@ void wima_layout_setEnabled(WimaLayout wlh, bool enabled)
 
 bool wima_layout_enabled(WimaLayout wlh)
 {
-	wassert(wima_layout_valid(wlh), WIMA_ASSERT_LAYOUT);
+	wassert(wima_item_valid(wlh.window, wlh.area, wlh.region, wlh.layout), WIMA_ASSERT_LAYOUT);
 
 	// Get a pointer to the layout.
 	WimaItem* layout = wima_layout_ptr(wlh);
@@ -244,15 +225,13 @@ bool wima_layout_enabled(WimaLayout wlh)
 
 void wima_layout_separator(WimaLayout parent)
 {
-	wassert(wima_layout_valid(parent), WIMA_ASSERT_LAYOUT);
-
-	// Create the layout, but don't return it.
+	wassert(wima_item_valid(parent.window, parent.area, parent.region, parent.layout), WIMA_ASSERT_LAYOUT);
 	wima_layout_new(parent, WIMA_LAYOUT_SEP, 0.0f);
 }
 
 WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags)
 {
-	wassert(wima_layout_valid(parent), WIMA_ASSERT_LAYOUT);
+	wassert(wima_item_valid(parent.window, parent.area, parent.region, parent.layout), WIMA_ASSERT_LAYOUT);
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_ROW;
@@ -263,7 +242,7 @@ WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags)
 
 WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags)
 {
-	wassert(wima_layout_valid(parent), WIMA_ASSERT_LAYOUT);
+	wassert(wima_item_valid(parent.window, parent.area, parent.region, parent.layout), WIMA_ASSERT_LAYOUT);
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_COL;
@@ -274,7 +253,7 @@ WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags)
 
 WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split)
 {
-	wassert(wima_layout_valid(parent), WIMA_ASSERT_LAYOUT);
+	wassert(wima_item_valid(parent.window, parent.area, parent.region, parent.layout), WIMA_ASSERT_LAYOUT);
 
 	// Set and unset the appropriate flags.
 	flags |= WIMA_LAYOUT_SPLIT;
@@ -297,7 +276,7 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 	wima_assert_init;
 
 	wassert(wima_prop_valid(prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
-	wassert(wima_layout_valid(parent), WIMA_ASSERT_LAYOUT);
+	wassert(wima_item_valid(parent.window, parent.area, parent.region, parent.layout), WIMA_ASSERT_LAYOUT);
 
 	// Get the area.
 	WimaAr* area = wima_area_ptr(parent.window, parent.area);
@@ -426,13 +405,34 @@ wima_lyt_wdgt_err:
 	return wih.widget;
 }
 
+WimaOverlay wima_layout_overlay(WimaLayout layout)
+{
+	wassert(wima_item_valid(layout.window, layout.area, layout.region, layout.layout), WIMA_ASSERT_LAYOUT);
+
+	// Return invalid if it is.
+	if (layout.region == WIMA_REGION_INVALID_IDX) return WIMA_OVERLAY_INVALID;
+
+	// Get the window.
+	WimaWin* win = dvec_get(wg.windows, layout.window);
+
+	wassert(layout.area < dvec_len(win->overlayStack), WIMA_ASSERT_WIN_NO_OVERLAY);
+
+	return ((WimaWinOverlay*) dvec_get(win->overlayStack, layout.area))->ovly;
+}
+
+size_t wima_layout_overlayIdx(WimaLayout layout)
+{
+	wassert(wima_item_valid(layout.window, layout.area, layout.region, layout.layout), WIMA_ASSERT_LAYOUT);
+	return layout.region == WIMA_REGION_INVALID_IDX ? SIZE_MAX : layout.area;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
 WimaItem* wima_layout_ptr(WimaLayout wlh)
 {
-	return wima_item_ptr(wlh.window, wlh.area, wlh.layout);
+	return wima_item_ptr(wlh.window, wlh.area, wlh.region, wlh.layout);
 }
 
 WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split)
@@ -481,7 +481,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split)
 	return wlh;
 }
 
-WimaSizef wima_layout_size(WimaItem* item, WimaAr* area)
+WimaSizef wima_layout_size(WimaItem* item)
 {
 	wima_assert_init;
 
@@ -489,19 +489,19 @@ WimaSizef wima_layout_size(WimaItem* item, WimaAr* area)
 	{
 		case WIMA_LAYOUT_ROW:
 		{
-			item->minSize = wima_layout_size_row(item, area);
+			item->minSize = wima_layout_size_row(item);
 			break;
 		}
 
 		case WIMA_LAYOUT_COL:
 		{
-			item->minSize = wima_layout_size_col(item, area);
+			item->minSize = wima_layout_size_col(item);
 			break;
 		}
 
 		case WIMA_LAYOUT_SPLIT:
 		{
-			item->minSize = wima_layout_size_split(item, area);
+			item->minSize = wima_layout_size_split(item);
 			break;
 		}
 
@@ -522,7 +522,7 @@ WimaSizef wima_layout_size(WimaItem* item, WimaAr* area)
 	return item->minSize;
 }
 
-WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
+WimaStatus wima_layout_layout(WimaItem* item)
 {
 	wima_assert_init;
 
@@ -579,10 +579,8 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 		// Loop through the children.
 		while (!status && idx != WIMA_WIDGET_INVALID)
 		{
-			wassert(idx < area->area.ctx.itemCount, WIMA_ASSERT_ITEM);
-
 			// Get the child.
-			child = wima_item_ptr(item->info.layout.window, item->info.layout.area, idx);
+			child = wima_item_ptr(item->info.layout.window, item->info.layout.area, item->info.layout.region, idx);
 
 			// Calculate the child's rectangle.
 			child->rect.x = x;
@@ -596,7 +594,7 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 
 			// Lay out the the child if it's a layout and not a separator.
 			if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP))
-				status = wima_layout_layout(child, area);
+				status = wima_layout_layout(child);
 
 			// Make sure to set the index.
 			idx = child->nextSibling;
@@ -605,7 +603,7 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 	else
 	{
 		// Get the first child.
-		child = wima_item_ptr(item->info.layout.window, item->info.layout.area, idx);
+		child = wima_item_ptr(item->info.layout.window, item->info.layout.area, item->info.layout.region, idx);
 
 		// Calculate the child's rectangle.
 		child->rect.x = x;
@@ -619,14 +617,14 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 		// Lay out the the child if it's a layout and not a separator.
 		if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP))
 		{
-			status = wima_layout_layout(child, area);
+			status = wima_layout_layout(child);
 			if (status) return status;
 		}
 
 		// Get the second child.
 		idx = child->nextSibling;
 		wassert(idx != WIMA_LAYOUT_INVALID, WIMA_ASSERT_ITEM);
-		child = wima_item_ptr(item->info.layout.window, item->info.layout.area, idx);
+		child = wima_item_ptr(item->info.layout.window, item->info.layout.area, item->info.layout.region, idx);
 
 		// Calculate the child's rectangle.
 		child->rect.x = x;
@@ -637,8 +635,63 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 		// Lay out the the child if it's a layout and not a separator.
 		if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP))
 		{
-			status = wima_layout_layout(child, area);
+			status = wima_layout_layout(child);
 			if (status) return status;
+		}
+	}
+
+	return status;
+}
+
+WimaStatus wima_layout_draw(WimaItem* item, WimaRenderContext* ctx)
+{
+	WimaStatus status = WIMA_STATUS_SUCCESS;
+	uint16_t idx = item->layout.firstKid;
+
+	WimaItem* child;
+
+	// Loop through the children.
+	while (!status && idx != WIMA_WIDGET_INVALID)
+	{
+		// Get the child.
+		child = wima_item_ptr(item->info.layout.window, item->info.layout.area, item->info.layout.region, idx);
+
+		// Make sure to set the index.
+		idx = child->nextSibling;
+
+		// Continue if it's a separator.
+		if (child->layout.flags & WIMA_LAYOUT_SEP) continue;
+
+		// Lay out the the child if it's a layout and not a separator.
+		if (WIMA_ITEM_IS_LAYOUT(child))
+		{
+			// Draw the children of the child.
+			status = wima_layout_draw(child, ctx);
+		}
+		else
+		{
+			// Get the prop info.
+			WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, child->widget.prop);
+
+			// Get the data.
+			WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, child->widget.prop);
+
+			// Call the appropriate draw function.
+			if (info->type <= WIMA_PROP_LAST_PREDEFINED)
+			{
+				// Draw the predefined type.
+				status = wima_prop_predefinedTypes[info->type].funcs.draw(child->info.widget, data, ctx);
+			}
+			else
+			{
+				wassert(data->_ptr.type < dvec_len(wg.customProps), WIMA_ASSERT_PROP_CUSTOM);
+
+				// Get the custom prop.
+				WimaCustProp* prop = dvec_get(wg.customProps, data->_ptr.type);
+
+				// Draw the custom prop.
+				status = prop->funcs.draw(child->info.widget, data->_ptr.ptr, ctx);
+			}
 		}
 	}
 
@@ -648,33 +701,6 @@ WimaStatus wima_layout_layout(WimaItem* item, WimaAr* area)
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions.
 ////////////////////////////////////////////////////////////////////////////////
-
-#ifdef __YASSERT__
-static bool wima_layout_valid(WimaLayout layout)
-{
-	wima_assert_init;
-
-	wassert(wima_window_valid(layout.window), WIMA_ASSERT_WIN);
-
-	// Get the window pointer.
-	WimaWin* win = dvec_get(wg.windows, layout.window);
-
-	wassert(dtree_exists(WIMA_WIN_AREAS(win), layout.area), WIMA_ASSERT_AREA);
-
-	// Get a pointer to the area.
-	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), layout.area);
-
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-
-	// Check the max, if necessary.
-	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_MAX);
-
-	// Must run between uiBeginLayout() and uiEndLayout().
-	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
-
-	return layout.layout < area->area.ctx.itemCount;
-}
-#endif
 
 static void wima_layout_setChildren(WimaLayout parent, WimaAr* area, uint32_t idx)
 {
@@ -711,17 +737,17 @@ static void wima_layout_setChildren(WimaLayout parent, WimaAr* area, uint32_t id
 	}
 }
 
-static WimaSizef wima_layout_size_row(WimaItem* item, WimaAr* area)
+static WimaSizef wima_layout_size_row(WimaItem* item)
 {
-	return wima_layout_size_rowcol(item, area, wima_layout_row_adjust);
+	return wima_layout_size_rowcol(item, wima_layout_row_adjust);
 }
 
-static WimaSizef wima_layout_size_col(WimaItem* item, WimaAr* area)
+static WimaSizef wima_layout_size_col(WimaItem* item)
 {
-	return wima_layout_size_rowcol(item, area, wima_layout_col_adjust);
+	return wima_layout_size_rowcol(item, wima_layout_col_adjust);
 }
 
-static WimaSizef wima_layout_size_rowcol(WimaItem* item, WimaAr* area, WimaLayoutAdjustFunc adjust)
+static WimaSizef wima_layout_size_rowcol(WimaItem* item, WimaLayoutAdjustFunc adjust)
 {
 	WimaSizef result;
 	WimaSizef size;
@@ -729,10 +755,6 @@ static WimaSizef wima_layout_size_rowcol(WimaItem* item, WimaAr* area, WimaLayou
 	// Fill with initial data.
 	result.w = 0.0f;
 	result.h = 0.0f;
-
-	// Cache these.
-	WimaWindow window = item->info.layout.window;
-	WimaAreaNode node = item->info.layout.area;
 
 	// Get the child.
 	uint16_t child = item->layout.firstKid;
@@ -745,11 +767,12 @@ static WimaSizef wima_layout_size_rowcol(WimaItem* item, WimaAr* area, WimaLayou
 	while (child != WIMA_LAYOUT_INVALID)
 	{
 		// Get the item.
-		WimaItem* chItem = wima_item_ptr(window, node, child);
+		WimaItem* chItem =
+		        wima_item_ptr(item->info.layout.window, item->info.layout.area, item->info.layout.region, child);
 
 		// Calculate the size.
 		if (WIMA_ITEM_IS_LAYOUT(chItem))
-			size = wima_layout_size(chItem, area);
+			size = wima_layout_size(chItem);
 		else
 			size = wima_widget_size(chItem);
 
@@ -787,7 +810,7 @@ static void wima_layout_col_adjust(WimaSizef* result, WimaSizef* size)
 	result->h += fabsf(size->h);
 }
 
-static WimaSizef wima_layout_size_split(WimaItem* item, WimaAr* area)
+static WimaSizef wima_layout_size_split(WimaItem* item)
 {
 	WimaSizef result;
 	WimaSizef size;
@@ -795,6 +818,7 @@ static WimaSizef wima_layout_size_split(WimaItem* item, WimaAr* area)
 	// Cache these.
 	WimaWindow window = item->info.layout.window;
 	WimaAreaNode node = item->info.layout.area;
+	WimaRegion region = item->info.layout.region;
 	float split = item->layout.w_min;
 
 	// Get the child.
@@ -803,13 +827,13 @@ static WimaSizef wima_layout_size_split(WimaItem* item, WimaAr* area)
 	wassert(child != WIMA_LAYOUT_INVALID, WIMA_ASSERT_ITEM);
 
 	// Get the item.
-	WimaItem* chItem = wima_item_ptr(window, node, child);
+	WimaItem* chItem = wima_item_ptr(window, node, region, child);
 
 	wassert(chItem->nextSibling != WIMA_LAYOUT_INVALID, WIMA_ASSERT_ITEM);
 
 	// Calculate the size.
 	if (WIMA_ITEM_IS_LAYOUT(chItem))
-		size = wima_layout_size(chItem, area);
+		size = wima_layout_size(chItem);
 	else
 		size = wima_widget_size(chItem);
 
@@ -821,11 +845,11 @@ static WimaSizef wima_layout_size_split(WimaItem* item, WimaAr* area)
 	result.h = size.h;
 
 	// Get the second item.
-	WimaItem* chItem2 = wima_item_ptr(window, node, chItem->nextSibling);
+	WimaItem* chItem2 = wima_item_ptr(window, node, region, chItem->nextSibling);
 
 	// Calculate the size.
 	if (WIMA_ITEM_IS_LAYOUT(chItem2))
-		size = wima_layout_size(chItem2, area);
+		size = wima_layout_size(chItem2);
 	else
 		size = wima_widget_size(chItem2);
 

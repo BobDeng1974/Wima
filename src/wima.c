@@ -44,7 +44,6 @@
 #include "events/callbacks.h"
 #include "props/prop.h"
 #include "render/render.h"
-#include "windows/menu.h"
 #include "windows/overlay.h"
 #include "windows/window.h"
 
@@ -211,6 +210,7 @@ const char* const wima_assert_msgs[] = {
 	"prop path is NULL",
 	"prop operator is NULL",
 	"prop types do not match",
+	"child type is invalid for parent prop",
 	"prop is a child; parent reference(s) would be invalid",
 	"client tried to create too many custom properties",
 	"custom property's draw function is NULL",
@@ -394,16 +394,16 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	if (yerror(wg.regHeaderBtm == WIMA_REGION_INVALID)) goto wima_init_malloc_err;
 
 	// Create and if error, exit.
-	wg.overlays = dpool_create(WIMA_POOL_LOAD, sizeof(uint64_t), NULL, NULL, NULL);
+	wg.overlays = dvec_create(0, sizeof(WimaOvly), wima_overlay_destroy, wima_overlay_copy);
 	if (yerror(!wg.overlays)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
-	wg.menus = dpool_create(WIMA_POOL_LOAD, sizeof(uint64_t), NULL, NULL, NULL);
-	if (yerror(!wg.menus)) goto wima_init_malloc_err;
+	// Register the menu overlay and if error, exit.
+	wg.menuOverlay = wima_overlay_register("Menu", WIMA_ICON_INVALID, wima_overlay_menuLayout);
+	if (yerror(wg.menuOverlay == WIMA_OVERLAY_INVALID)) goto wima_init_malloc_err;
 
 	// Create and if error, exit.
-	wg.menuItems = dpool_create(WIMA_POOL_LOAD, sizeof(uint64_t), NULL, NULL, NULL);
-	if (yerror(!wg.menuItems)) goto wima_init_malloc_err;
+	wg.menuRects = dvec_create(0, sizeof(WimaRect), NULL, NULL);
+	if (yerror(!wg.menuRects)) goto wima_init_malloc_err;
 
 	// Create and if error, exit.
 	wg.icons = dnvec_ncreate(2, 0, wima_icon_destroy, wima_icon_copy, sizeof(WimaIcn), sizeof(WimaIconMarker));
@@ -455,9 +455,27 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	// Make sure to set the number of icons.
 	wg.numAppIcons = numIcons;
 
-	// Register the predefined menus and check for error.
-	wg.areaOptionsMenu = wima_menu_registerAreaOptions();
-	if (yerror(wg.areaOptionsMenu == WIMA_MENU_INVALID)) goto wima_init_err;
+	// Register the predefined menu and check for error.
+	wg.areaOptionsMenu = wima_prop_menu_register("wima_area_options", "Area Options", NULL, WIMA_ICON_INVALID);
+	if (yerror(wg.areaOptionsMenu == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
+
+	// Register the split menu item.
+	WimaProperty child = wima_prop_operator_register("wima_area_split", "Split Area", NULL, WIMA_ICON_INVALID,
+	                                                 wima_window_splitAreaMode);
+	if (yerror(child == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
+
+	// Push the split menu item.
+	status = wima_prop_menu_push(wg.areaOptionsMenu, child);
+	if (yerror(status)) goto wima_init_err;
+
+	// Register the join menu item.
+	child = wima_prop_operator_register("wima_area_join", "Join Areas", NULL, WIMA_ICON_INVALID,
+	                                    wima_window_joinAreasMode);
+	if (yerror(child == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
+
+	// Push the join menu item.
+	status = wima_prop_menu_push(wg.areaOptionsMenu, child);
+	if (yerror(status)) goto wima_init_err;
 
 	// Initialize GLFW and exit on error.
 	if (yerror(!glfwInit())) goto wima_init_init_err;
@@ -590,14 +608,11 @@ void wima_exit()
 	// Free the icon vector, if it exists.
 	if (wg.icons) dnvec_free(wg.icons);
 
-	// Free the icon vector, if it exists.
-	if (wg.menuItems) dpool_free(wg.menuItems);
-
-	// Free the icon vector, if it exists.
-	if (wg.menus) dpool_free(wg.menus);
+	// Free the menu rectangle vector, if it exists.
+	if (wg.menuRects) dvec_free(wg.menuRects);
 
 	// Free the overlays, if they exist.
-	if (wg.overlays) dpool_free(wg.overlays);
+	if (wg.overlays) dvec_free(wg.overlays);
 
 	// Free the dialogs, if they exist.
 	if (wg.regions) dvec_free(wg.regions);
@@ -622,7 +637,7 @@ void wima_exit()
 	if (wg.props)
 	{
 		// Get the length for the next loop.
-		size_t len = dvec_len(wg.props);
+		size_t len = dnvec_len(wg.props);
 
 		// Loop over each item and free them all.
 		for (size_t i = 0; i < len; ++i) wima_prop_free(i);

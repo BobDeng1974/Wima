@@ -27,7 +27,6 @@
 set(WIMA_WINDOW_SRC
 
 	# Add files here.
-	"menu.c"
 	"overlay.c"
 	"tree.c"
 	"dialog.c"

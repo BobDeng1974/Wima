@@ -108,19 +108,19 @@ typedef struct WimaG
 	WimaRegion regHeaderBtm;
 
 	/// The menu for area options (split, join, etc).
-	WimaMenu areaOptionsMenu;
+	WimaProperty areaOptionsMenu;
 
 	/// Overlays (like context menus but more general).
 	DynaVector overlays;
 
-	/// Menus.
-	DynaPool menus;
+	/// Menu rectangles.
+	DynaVector menuRects;
 
-	/// Menu items.
-	DynaPool menuItems;
+	/// The overlay that can be used to generate menus.
+	WimaOverlay menuOverlay;
 
 	/// Icons and their markers in the @a iconPathWindings vector.
-	DynaVector icons;
+	DynaNVector icons;
 
 	/// Icon path windings.
 	DynaVector iconPathWindings;
@@ -292,6 +292,7 @@ typedef enum WimaAssertType
 	WIMA_ASSERT_PROP_PATH_NULL,
 	WIMA_ASSERT_PROP_OP_NULL,
 	WIMA_ASSERT_PROP_TYPE,
+	WIMA_ASSERT_PROP_CHILD_TYPE,
 	WIMA_ASSERT_PROP_IS_CHILD,
 	WIMA_ASSERT_PROP_CUSTOM_MAX,
 	WIMA_ASSERT_PROP_CUSTOM_DRAW,

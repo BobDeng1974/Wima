@@ -45,6 +45,8 @@ extern "C" {
 #include <wima/layout.h>
 #include <wima/wima.h>
 
+#include <yc/assert.h>
+
 //! @cond Doxygen suppress.
 
 // TODO: Remove the defines that are not used.
@@ -229,8 +231,9 @@ typedef struct WimaItem
 
 /**
  * Returns a pointer to an item on @a win, in @a area, at @a idx.
- * @param win	The window that the item is in.
+ * @param wwh	The window that the item is in.
  * @param area	The area that the item is in.
+ * @param reg	The region of the item.
  * @param idx	The index of the item in the area's array.
  * @return		The pointer to the item's data.
  * @pre			@a win must be valid.
@@ -238,7 +241,7 @@ typedef struct WimaItem
  * @pre			@a area must be a leaf area.
  * @pre			@a idx must be within the size of the array.
  */
-WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint16_t idx) yretnonnull;
+WimaItem* wima_item_ptr(WimaWindow wwh, WimaAreaNode area, WimaRegion region, uint16_t idx) yretnonnull;
 
 /**
  * Frees the item pointed to by @a item in @a area.
@@ -248,6 +251,18 @@ WimaItem* wima_item_ptr(WimaWindow win, WimaAreaNode area, uint16_t idx) yretnon
  * @pre			@a item must not be NULL.
  */
 void wima_item_free(ynonnull WimaAr* area, ynonnull WimaItem* item);
+
+#ifdef __YASSERT__
+/**
+ * Returns true if the item is valid, false otherwise.
+ * @param window	The item window.
+ * @param node		The item area node.
+ * @param region	The item region.
+ * @param idx		The item index.
+ * @return			true if valid, false otherwise.
+ */
+bool wima_item_valid(WimaWindow window, WimaAreaNode node, WimaRegion region, uint16_t idx);
+#endif  // __YASSERT
 
 /**
  * @}

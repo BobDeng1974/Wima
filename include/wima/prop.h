@@ -108,35 +108,48 @@ WimaCustomProperty wima_prop_custom_register(WimaWidgetFuncs funcs, uint32_t dat
  */
 typedef enum WimaPropType
 {
-	/// A group property. Group and list properties
-	/// are exactly the same, except in how they
-	/// are laid out and drawn.
-	WIMA_PROP_GROUP,
+	/// A menu property, which is drawn as a label.
+	/// Menu, enum, radio and list properties are
+	/// exactly the same, except in how they are
+	/// laid out and drawn.
+	WIMA_PROP_MENU,
 
-	/// A list property. Group and list properties
-	/// are exactly the same, except in how they
-	/// are laid out and drawn.
-	WIMA_PROP_LIST,
-
-	/// A bool property.
-	WIMA_PROP_BOOL,
-
-	/// An int property.
-	WIMA_PROP_INT,
-
-	/// A float property.
-	WIMA_PROP_FLOAT,
-
-	/// A string property.
-	WIMA_PROP_STRING,
-
-	/// An enum property.
+	/// An enum property, which is drawn as a dropdown.
+	/// Menu, enum, radio and list properties are exactly
+	/// the same, except in how they are laid out and drawn.
 	WIMA_PROP_ENUM,
 
-	/// A color property.
+	/// A radio property, which is drawn as a row or
+	/// column of buttons. Menu, enum, radio and list
+	/// properties are exactly the same, except in
+	/// how they are laid out and drawn.
+	WIMA_PROP_RADIO,
+
+	/// A list property, which is drawn like a Blender
+	/// list. Menu, enum, radio and list properties
+	/// are exactly the same, except in how they are
+	/// laid out and drawn.
+	WIMA_PROP_LIST,
+
+	/// A bool property (option/checkbox).
+	WIMA_PROP_BOOL,
+
+	/// An int property. These are drawn as either sliders
+	/// (when their range is [0,100]) or number fields.
+	WIMA_PROP_INT,
+
+	/// A float property. These are drawn as either sliders
+	/// (when their range is either [0,100] or [0,1]) or
+	/// number fields.
+	WIMA_PROP_FLOAT,
+
+	/// A string property. This is drawn as a text field.
+	WIMA_PROP_STRING,
+
+	/// A color property. This is drawn as a color button.
 	WIMA_PROP_COLOR,
 
-	/// A path property.
+	/// A path property. This is drawn as a directory listing.
 	WIMA_PROP_PATH,
 
 	/// An operator property (button).
@@ -162,16 +175,23 @@ typedef uint32_t WimaProperty;
 #define WIMA_PROP_INVALID ((WimaProperty) -1)
 
 /**
- * @def WIMA_PROP_LIST_INVALID_IDX
+ * @def WIMA_PROP_INVALID_IDX
  * A handle to an invalid list index.
  */
-#define WIMA_PROP_COLLECTION_INVALID_IDX ((uint16_t) -1)
+#define WIMA_PROP_INVALID_IDX ((uint32_t) -1)
 
 /**
- * @def WIMA_PROP_LIST_MAX
+ * @def WIMA_PROP_COLLECTION_MAX
  * The max number of items that can be in a prop list.
  */
-#define WIMA_PROP_COLLECTION_MAX WIMA_PROP_COLLECTION_INVALID_IDX
+#define WIMA_PROP_COLLECTION_MAX WIMA_PROP_INVALID_IDX
+
+/**
+ * @def WIMA_PROP_MENU_SEPARATOR
+ * A marker for a menu separator. This is only valid
+ * in menu props.
+ */
+#define WIMA_PROP_MENU_SEPARATOR WIMA_PROP_INVALID
 
 /**
  * A function to allow a pointer property to draw itself.
@@ -257,6 +277,312 @@ WimaProperty wima_prop_find(const char* name);
 void wima_prop_unregister(WimaProperty wph);
 
 ////////////////////////////////////////////////////////////////////////////////
+// Public functions for menu props.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Registers and returns a @a WIMA_PROP_MENU.
+ *
+ * Wima will draw this is the UI as a dropdown.
+ * @param name	The name of the property. This needs
+ *				to be a unique string identifier.
+ * @param label	The label of the property. This is
+ *				used as a label in the UI.
+ * @param desc	The description of the property.
+ *				This is used as a tooltip.
+ * @param icon	The icon to use with the property.
+ * @return		The newly-created @a WimaProperty.
+ * @pre			@a name must not be NULL.
+ */
+WimaProperty wima_prop_menu_register(ynonnull const char* name, const char* label, const char* desc,
+                                     WimaIcon icon) yinline;
+
+/**
+ * Returns the length of the menu that @a menu has.
+ * @param menu	The property to query.
+ * @return		The length of @a menu's menu.
+ * @pre			@a menu must be a valid @a WimaProperty.
+ * @pre			@a menu must be a @a WIMA_PROP_MENU.
+ */
+uint32_t wima_prop_menu_len(WimaProperty menu) yinline;
+
+/**
+ * Pushes @a child onto the back of the menu in @a menu.
+ *
+ * The child must be one of three types of properties:
+ *
+ * - WIMA_PROP_MENU
+ * - WIMA_PROP_OPERATOR
+ * - WIMA_PROP_BOOL
+ *
+ * In addition, clients may pass in the special value @a
+ * WIMA_PROP_MENU_SEPARATOR to indicate place for a separator.
+ *
+ * If the child is not one of those types, this function will
+ * assert.
+ * @param menu	The property whose menu will be pushed onto.
+ * @param child	The item to push.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a menu must be a valid @a WimaProperty.
+ * @pre			@a menu must be a @a WIMA_PROP_MENU.
+ * @pre			@a child must be one of the allowed types.
+ */
+WimaStatus wima_prop_menu_push(WimaProperty menu, WimaProperty child) yinline;
+
+/**
+ * Pushes @a child onto the menu in @a menu at @a idx.
+ *
+ * The child must be one of three types of properties:
+ *
+ * - WIMA_PROP_MENU
+ * - WIMA_PROP_OPERATOR
+ * - WIMA_PROP_BOOL
+ *
+ * In addition, clients may pass in the special value @a
+ * WIMA_PROP_MENU_SEPARATOR to indicate place for a separator.
+ *
+ * If the child is not one of those types, this function will
+ * assert.
+ * @param menu	The property whose menu will be pushed onto.
+ * @param idx	The index to push at.
+ * @param child	The item to push.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a menu must be a valid @a WimaProperty.
+ * @pre			@a menu must be a @a WIMA_PROP_MENU.
+ * @pre			@a child must be one of the allowed types.
+ */
+WimaStatus wima_prop_menu_pushAt(WimaProperty menu, uint32_t idx, WimaProperty child) yinline;
+
+/**
+ * Pops the item at the back of the menu in @a menu off.
+ * @param menu	The property whose menu will be popped from.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a menu must be a valid @a WimaProperty.
+ * @pre			@a menu must be a @a WIMA_PROP_MENU.
+ */
+WimaStatus wima_prop_menu_pop(WimaProperty menu) yinline;
+
+/**
+ * Pops the item at @a idx of the menu in @a menu off.
+ * @param menu	The property whose menu will be popped from.
+ * @param idx	The index to pop from.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a menu must be a valid @a WimaProperty.
+ * @pre			@a menu must be a @a WIMA_PROP_MENU.
+ */
+WimaStatus wima_prop_menu_popAt(WimaProperty menu, uint32_t idx) yinline;
+
+/**
+ * Returns a copy of the item at @a idx in @a menu's menu.
+ * @param menu	The property whose menu will be queried.
+ * @param idx	The index of the item to get.
+ * @return		The item at @a idx in @a menu's menu.
+ * @pre			@a menu must be a valid @a WimaProperty.
+ * @pre			@a menu must be a @a WIMA_PROP_MENU.
+ */
+WimaProperty wima_prop_menu_item(WimaProperty menu, uint32_t idx) yinline;
+
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for enum props.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Registers and returns a @a WIMA_PROP_ENUM. Its initial
+ * index value is set to @a idx.
+ *
+ * Wima will draw this in the UI as a set of radio buttons.
+ * @param name	The name of the property. This needs to be
+ *				a unique string identifier.
+ * @param label	The label of the property. This is used as
+ *				a label in the UI.
+ * @param desc	The description of the property. This is
+ *				used as a tooltip.
+ * @param icon	The icon to use with the property.
+ * @return		The newly-created @a WimaProperty, or @a
+ *				WIMA_PROP_INVALID on error.
+ * @pre			@a name must not be NULL.
+ */
+WimaProperty wima_prop_enum_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon);
+
+/**
+ * Returns the length of the enum that @a e has.
+ * @param e	The property to query.
+ * @return	The length of @a e's enum.
+ * @pre		@a e must be a valid @a WimaProperty.
+ * @pre		@a e must be a @a WIMA_PROP_ENUM.
+ */
+uint32_t wima_prop_enum_len(WimaProperty e) yinline;
+
+/**
+ * Pushes @a child onto the back of the enum in @a e.
+ *
+ * The child must be one of three types of properties:
+ *
+ * - WIMA_PROP_MENU
+ * - WIMA_PROP_OPERATOR
+ * - WIMA_PROP_BOOL
+ *
+ * If the child is not one of those types, this function will
+ * assert.
+ * @param e		The property whose enum will be pushed onto.
+ * @param child	The item to push.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a e must be a valid @a WimaProperty.
+ * @pre			@a e must be a @a WIMA_PROP_ENUM.
+ * @pre			@a child must be one of the allowed types.
+ */
+WimaStatus wima_prop_enum_push(WimaProperty e, WimaProperty child) yinline;
+
+/**
+ * Pushes @a child onto the enum in @a e at @a idx.
+ *
+ * The child must be one of three types of properties:
+ *
+ * - WIMA_PROP_MENU
+ * - WIMA_PROP_OPERATOR
+ * - WIMA_PROP_BOOL
+ *
+ * If the child is not one of those types, this function will
+ * assert.
+ * @param e		The property whose enum will be pushed onto.
+ * @param idx	The index to push at.
+ * @param child	The item to push.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a e must be a valid @a WimaProperty.
+ * @pre			@a e must be a @a WIMA_PROP_ENUM.
+ * @pre			@a child must be one of the allowed types.
+ */
+WimaStatus wima_prop_enum_pushAt(WimaProperty e, uint32_t idx, WimaProperty child) yinline;
+
+/**
+ * Pops the item at the back of the enum in @a e off.
+ * @param e	The property whose enum will be popped from.
+ * @return	@a WIMA_STATUS_SUCCESS on success, an error
+ *			code otherwise.
+ * @pre		@a e must be a valid @a WimaProperty.
+ * @pre		@a e must be a @a WIMA_PROP_ENUM.
+ */
+WimaStatus wima_prop_enum_pop(WimaProperty e) yinline;
+
+/**
+ * Pops the item at @a idx of the enum in @a e off.
+ * @param e	The property whose enum will be popped from.
+ * @param idx	The index to pop from.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a e must be a valid @a WimaProperty.
+ * @pre			@a e must be a @a WIMA_PROP_ENUM.
+ */
+WimaStatus wima_prop_enum_popAt(WimaProperty e, uint32_t idx) yinline;
+
+/**
+ * Returns a copy of the item at @a idx in @a e's enum.
+ * @param e	The property whose enum will be queried.
+ * @param idx	The index of the item to get.
+ * @return		The item at @a idx in @a e's enum.
+ * @pre			@a e must be a valid @a WimaProperty.
+ * @pre			@a e must be a @a WIMA_PROP_ENUM.
+ */
+WimaProperty wima_prop_enum_item(WimaProperty e, uint32_t idx) yinline;
+
+////////////////////////////////////////////////////////////////////////////////
+// Public functions for radio props.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Registers and returns a @a WIMA_PROP_RADIO.
+ *
+ * Wima will draw this is the UI as a dropdown.
+ * @param name	The name of the property. This needs
+ *				to be a unique string identifier.
+ * @param label	The label of the property. This is
+ *				used as a label in the UI.
+ * @param desc	The description of the property.
+ *				This is used as a tooltip.
+ * @param icon	The icon to use with the property.
+ * @return		The newly-created @a WimaProperty,
+ *				or @a WIMA_PROP_INVALID on error.
+ * @pre			@a name must not be NULL.
+ */
+WimaProperty wima_prop_radio_register(ynonnull const char* name, const char* label, const char* desc,
+                                     WimaIcon icon) yinline;
+
+/**
+ * Returns the length of the radio that @a radio has.
+ * @param radio	The property to query.
+ * @return		The length of @a radio's radio.
+ * @pre			@a radio must be a valid @a WimaProperty.
+ * @pre			@a radio must be a @a WIMA_PROP_RADIO.
+ */
+uint32_t wima_prop_radio_len(WimaProperty radio) yinline;
+
+/**
+ * Pushes @a child onto the back of the radio in @a radio.
+ *
+ * The child must be a WIMA_PROP_BOOL.
+ * @param radio	The property whose radio will be pushed onto.
+ * @param child	The item to push.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a radio must be a valid @a WimaProperty.
+ * @pre			@a radio must be a @a WIMA_PROP_RADIO.
+ * @pre			@a child must be a WIMA_PROP_BOOL.
+ */
+WimaStatus wima_prop_radio_push(WimaProperty radio, WimaProperty child) yinline;
+
+/**
+ * Pushes @a child onto the radio in @a radio at @a idx.
+ *
+ * The child must be a WIMA_PROP_BOOL.
+ * @param radio	The property whose radio will be pushed onto.
+ * @param idx	The index to push at.
+ * @param child	The item to push.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a radio must be a valid @a WimaProperty.
+ * @pre			@a radio must be a @a WIMA_PROP_RADIO.
+ * @pre			@a child must be a WIMA_PROP_BOOL.
+ */
+WimaStatus wima_prop_radio_pushAt(WimaProperty radio, uint32_t idx, WimaProperty child) yinline;
+
+/**
+ * Pops the item at the back of the radio in @a radio off.
+ * @param radio	The property whose radio will be popped from.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.list
+ * @pre			@a radio must be a valid @a WimaProperty.
+ * @pre			@a radio must be a @a WIMA_PROP_RADIO.
+ */
+WimaStatus wima_prop_radio_pop(WimaProperty radio) yinline;
+
+/**
+ * Pops the item at @a idx of the radio in @a radio off.
+ * @param radio	The property whose radio will be popped from.
+ * @param idx	The index to pop from.
+ * @return		@a WIMA_STATUS_SUCCESS on success, an error
+ *				code otherwise.
+ * @pre			@a radio must be a valid @a WimaProperty.
+ * @pre			@a radio must be a @a WIMA_PROP_RADIO.
+ */
+WimaStatus wima_prop_radio_popAt(WimaProperty radio, uint32_t idx) yinline;
+
+/**
+ * Returns a copy of the item at @a idx in @a radio's radio.
+ * @param radio	The property whose radio will be queried.
+ * @param idx	The index of the item to get.
+ * @return		The item at @a idx in @a radio's radio.
+ * @pre			@a radio must be a valid @a WimaProperty.
+ * @pre			@a radio must be a @a WIMA_PROP_RADIO.
+ */
+WimaProperty wima_prop_radio_item(WimaProperty radio, uint32_t idx) yinline;
+
+////////////////////////////////////////////////////////////////////////////////
 // Public functions for group props.
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -271,7 +597,8 @@ void wima_prop_unregister(WimaProperty wph);
  * @param desc	The description of the property.
  *				This is used as a tooltip.
  * @param icon	The icon to use with the property.
- * @return		The newly-created @a WimaProperty.
+ * @return		The newly-created @a WimaProperty,
+ *				or @a WIMA_PROP_INVALID on error.
  * @pre			@a name must not be NULL.
  */
 WimaProperty wima_prop_group_register(ynonnull const char* name, const char* label, const char* desc,
@@ -341,119 +668,6 @@ WimaStatus wima_prop_group_popAt(WimaProperty group, uint32_t idx) yinline;
 WimaProperty wima_prop_group_item(WimaProperty group, uint32_t idx) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Public functions for list props.
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Registers and returns a @a WIMA_PROP_LIST.
- *
- * Wima will draw this is the UI as a dropdown.
- * @param name	The name of the property. This needs
- *				to be a unique string identifier.
- * @param label	The label of the property. This is
- *				used as a label in the UI.
- * @param desc	The description of the property.
- *				This is used as a tooltip.
- * @param icon	The icon to use with the property.
- * @return		The newly-created @a WimaProperty.
- * @pre			@a name must not be NULL.
- */
-WimaProperty wima_prop_list_register(ynonnull const char* name, const char* label, const char* desc,
-                                     WimaIcon icon) yinline;
-
-/**
- * Returns the length of the list that @a list has.
- * @param list	The property to query.
- * @return		The length of @a list's list.
- * @pre			@a list must be a valid @a WimaProperty.
- * @pre			@a list must be a @a WIMA_PROP_LIST.
- */
-uint32_t wima_prop_list_len(WimaProperty list) yinline;
-
-/**
- * Pushes @a child onto the back of the list in @a list.
- * @param list	The property whose list will be pushed onto.
- * @param child	The item to push.
- * @return		@a WIMA_STATUS_SUCCESS on success, an error
- *				code otherwise.
- * @pre			@a list must be a valid @a WimaProperty.
- * @pre			@a list must be a @a WIMA_PROP_LIST.
- */
-WimaStatus wima_prop_list_push(WimaProperty list, WimaProperty child) yinline;
-
-/**
- * Pushes @a child onto the list in @a list at @a idx.
- * @param list	The property whose list will be pushed onto.
- * @param idx	The index to push at.
- * @param child	The item to push.
- * @return		@a WIMA_STATUS_SUCCESS on success, an error
- *				code otherwise.
- * @pre			@a list must be a valid @a WimaProperty.
- * @pre			@a list must be a @a WIMA_PROP_LIST.
- */
-WimaStatus wima_prop_list_pushAt(WimaProperty list, uint32_t idx, WimaProperty child) yinline;
-
-/**
- * Pops the item at the back of the list in @a list off.
- * @param list	The property whose list will be popped from.
- * @return		@a WIMA_STATUS_SUCCESS on success, an error
- *				code otherwise.
- * @pre			@a list must be a valid @a WimaProperty.
- * @pre			@a list must be a @a WIMA_PROP_LIST.
- */
-WimaStatus wima_prop_list_pop(WimaProperty list) yinline;
-
-/**
- * Pops the item at @a idx of the list in @a list off.
- * @param list	The property whose list will be popped from.
- * @param idx	The index to pop from.
- * @return		@a WIMA_STATUS_SUCCESS on success, an error
- *				code otherwise.
- * @pre			@a list must be a valid @a WimaProperty.
- * @pre			@a list must be a @a WIMA_PROP_LIST.
- */
-WimaStatus wima_prop_list_popAt(WimaProperty list, uint32_t idx) yinline;
-
-/**
- * Returns a copy of the item at @a idx in @a list's list.
- * @param list	The property whose list will be queried.
- * @param idx	The index of the item to get.
- * @return		The item at @a idx in @a list's list.
- * @pre			@a list must be a valid @a WimaProperty.
- * @pre			@a list must be a @a WIMA_PROP_LIST.
- */
-WimaProperty wima_prop_list_item(WimaProperty list, uint32_t idx) yinline;
-
-/**
- * Returns the item at the current index of the list in @a list.
- * @param list	The property to query.
- * @return		The item at the current index.
- * @pre			@a list must be a valid @a WimaProperty.
- * @pre			@a list must be a @a WIMA_PROP_LIST.
- */
-WimaProperty wima_prop_list_currentItem(WimaProperty list) yinline;
-
-/**
- * Updates the current index of the list in @a list to @a idx.
- * @param list	The property whose index will be updated.
- * @param idx	The new index.
- * @pre			@a list must be a valid @a WimaProperty.
- * @pre			@a list must be a @a WIMA_PROP_LIST.
- * @pre			@a idx must be with the bounds of the list.
- */
-void wima_prop_list_updateIdx(WimaProperty list, uint32_t idx) yinline;
-
-/**
- * Returns the current index of @a list.
- * @param list	The property to query.
- * @return		The current index, or WIMA_PROP_LIST_INVALID_IDX
- *				there are no items in the list.
- * @pre			@a list must be a valid @a WimaProperty.
- * @pre			@a list must be a @a WIMA_PROP_LIST.
- */
-uint32_t wima_prop_list_idx(WimaProperty list) yinline;
-
-////////////////////////////////////////////////////////////////////////////////
 // Public functions for bool props.
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -470,7 +684,8 @@ uint32_t wima_prop_list_idx(WimaProperty list) yinline;
  *					This is used as a tooltip.
  * @param icon	The icon to use with the property.
  * @param initial	The initial value of the property.
- * @return			The newly-created @a WimaProperty.
+ * @return			The newly-created @a WimaProperty,
+ *					or @a WIMA_PROP_INVALID on error.
  * @pre				@a name must not be NULL.
  */
 WimaProperty wima_prop_bool_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
@@ -519,7 +734,8 @@ bool wima_prop_bool(WimaProperty wph) yinline;
  * @param min		The min value of the property.
  * @param max		The max value of the property.
  * @param step		The step for the property.
- * @return			The newly-created @a WimaProperty.
+ * @return			The newly-created @a WimaProperty,
+ *					or @a WIMA_PROP_INVALID on error.
  * @pre				@a name must not be NULL.
  */
 WimaProperty wima_prop_int_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
@@ -568,7 +784,8 @@ int wima_prop_int(WimaProperty wph) yinline;
  * @param min		The min value of the property.
  * @param max		The max value of the property.
  * @param step		The step for the property.
- * @return			The newly-created @a WimaProperty.
+ * @return			The newly-created @a WimaProperty,
+ *					or @a WIMA_PROP_INVALID on error.
  * @pre				@a name must not be NULL.
  */
 WimaProperty wima_prop_float_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
@@ -610,7 +827,8 @@ float wima_prop_float(WimaProperty wph) yinline;
  *				This is used as a tooltip.
  * @param icon	The icon to use with the property.
  * @param str	The initial string.
- * @return		The newly-created @a WimaProperty.
+ * @return		The newly-created @a WimaProperty,
+ *				or @a WIMA_PROP_INVALID on error.
  * @pre			@a name must not be NULL.
  * @pre			@a str must not be NULL.
  */
@@ -630,51 +848,6 @@ WimaProperty wima_prop_string_register(ynonnull const char* name, const char* la
 DynaString wima_prop_string(WimaProperty wph) yinline;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Public functions for enum props.
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Registers and returns a @a WIMA_PROP_ENUM. Its initial
- * index value is set to @a idx.
- *
- * Wima will draw this in the UI as a set of radio buttons.
- * @param name		The name of the property. This needs
- *					to be a unique string identifier.
- * @param label		The label of the property. This is
- *					used as a label in the UI.
- * @param desc		The description of the property.
- *					This is used as a tooltip.
- * @param icon		The icon to use with the property.
- * @param names		The names of each index. Wima uses
- *					these as labels.
- * @param num		The number of names.
- * @param initial	The initial index for the enum.
- * @return			The newly-created @a WimaProperty.
- * @pre				@a name must not be NULL.
- */
-WimaProperty wima_prop_enum_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
-                                     const char* names[], uint32_t num, uint32_t initial);
-
-/**
- * Sets the enum index in @a wph to @a idx.
- * @param wph	The @a WimaProperty that will be set.
- * @param idx	The index to set in @a wph.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_ENUM.
- */
-void wima_prop_enum_updateIdx(WimaProperty wph, uint32_t idx) yinline;
-
-/**
- * Returns the enum index contained in @a wph.
- * @param wph	The @a WimaProperty whose enum index will be
- *				returned.
- * @return		The value contained in @a wph.
- * @pre			@a wph must be a valid @a WimaProperty.
- * @pre			@a wph must be a @a WIMA_PROP_ENUM.
- */
-uint32_t wima_prop_enum_idx(WimaProperty wph) yinline;
-
-////////////////////////////////////////////////////////////////////////////////
 // Public functions for color props.
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -692,7 +865,8 @@ uint32_t wima_prop_enum_idx(WimaProperty wph) yinline;
  *					This is used as a tooltip.
  * @param icon		The icon to use with the property.
  * @param initial	The initial color of the property.
- * @return			The newly-created @a WimaProperty.
+ * @return			The newly-created @a WimaProperty,
+ *					or @a WIMA_PROP_INVALID on error.
  * @pre				@a name must not be NULL.
  */
 WimaProperty wima_prop_color_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
@@ -735,7 +909,8 @@ WimaColor wima_prop_color(WimaProperty wph) yinline;
  * @param icon	The icon to use with the property.
  * @param path	The directory path to open initially
  *				in a widget.
- * @return		The newly-created @a WimaProperty.
+ * @return		The newly-created @a WimaProperty,
+ *				or @a WIMA_PROP_INVALID on error.
  * @pre			@a name must not be NULL.
  * @pre			@a path must not be NULL.
  */
