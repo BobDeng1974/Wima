@@ -222,9 +222,6 @@ typedef union WimaPropData
 	/// String property data.
 	DynaString _str;
 
-	/// Enum property data.
-	WimaPropEnum _enum;
-
 	/// Color property data.
 	WimaColor _color;
 
