@@ -574,66 +574,46 @@ WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts)
 	wassert(props, WIMA_ASSERT_PTR_NULL);
 	wassert(starts, WIMA_ASSERT_PTR_NULL);
 
-	// Create the main theme property.
 	WimaProperty main = wima_prop_group_register(themePrefix, themeLabel, themeDesc, WIMA_ICON_INVALID);
 
-	// Create the background.
 	WimaProperty bg = wima_theme_loadBackground();
 
-	if (bg == WIMA_PROP_INVALID) return WIMA_PROP_INVALID;
+	if (bg == WIMA_PROP_INVALID) goto malloc_err;
 
-	// Push the prop.
 	WimaStatus status = wima_prop_group_push(main, bg);
+	if (yerror(status)) goto err;
 
-	// Check for error.
-	if (yerror(status))
-	{
-		wima_error(status);
-		return WIMA_PROP_INVALID;
-	}
-
-	// Set the references in the array.
 	props[WIMA_THEME_BG] = bg;
 	starts[WIMA_THEME_BG] = bg;
 
-	// Loop through the widget types.
 	for (WimaThemeType i = WIMA_THEME_REGULAR; i < WIMA_THEME_NODE; ++i)
 	{
-		// Load the theme and push it.
 		WimaProperty item = wima_theme_loadWidget(i, starts);
+		if (yerror(item == WIMA_PROP_INVALID)) goto malloc_err;
 
-		// Check for error.
-		if (yerror(item == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
-
-		// Push the prop.
 		status = wima_prop_group_push(main, item);
+		if (yerror(status)) goto err;
 
-		// Check for error.
-		if (yerror(status))
-		{
-			wima_error(status);
-			return WIMA_PROP_INVALID;
-		}
-
-		// Set the prop reference.
 		props[i] = item;
 	}
 
-	// Create the node theme and push it.
 	WimaProperty node = wima_theme_loadNode(starts);
 	status = wima_prop_group_push(main, node);
+	if (yerror(status)) goto err;
 
-	// Check for error.
-	if (yerror(status))
-	{
-		wima_error(status);
-		return WIMA_PROP_INVALID;
-	}
-
-	// Set the prop reference.
 	props[WIMA_THEME_NODE] = node;
 
 	return main;
+
+malloc_err:
+
+	status = WIMA_STATUS_MALLOC_ERR;
+
+err:
+
+	wima_error(status);
+
+	return WIMA_PROP_INVALID;
 }
 
 WimaProperty wima_theme_loadBackground()
@@ -649,116 +629,79 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts)
 
 	wassert(starts, WIMA_ASSERT_PTR_NULL);
 
-	// Get the right descriptions.
 	const char* const* descs = wima_theme_descs[type];
 
-	// Create the main widget property.
 	WimaProperty main =
 	    wima_theme_createProp(WIMA_PROP_MENU, widgetParentNames[type], NULL, widgetParentLabels[type], NULL, 0);
 
-	// Get the parent name.
 	const char* parentName = widgetParentNames[type];
 
 	WimaProperty child;
 	WimaStatus status;
 
-	// Get the index.
 	int idx = type - 1;
 
-	// Plus 1 for the background color.
 	int initial = idx * WIMA_THEME_WIDGET_NUM_COLORS + 1;
 
 #ifdef __YASSERT__
 	WimaProperty prev;
 #endif
 
-	// Loop through the colors and create them.
 	for (int i = 0; i < WIMA_THEME_WIDGET_NUM_COLORS; ++i)
 	{
-		// Create the property.
 		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, widgetThemeNames[i], widgetThemeLabels[i], descs[i],
 		                              initial++);
+		if (yerror(child == WIMA_PROP_INVALID)) goto malloc_err;
 
-		// Check for error.
-		if (yerror(child == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
-
-		// Link the property to the main one.
 		status = wima_prop_group_push(main, child);
-
-		// Check for error.
-		if (yerror(status))
-		{
-			wima_error(status);
-			return WIMA_PROP_INVALID;
-		}
+		if (yerror(status)) goto err;
 
 		// If it's the first, put it into the start array.
-		if (i == 0) starts[type] = child;
-
+		if (i == 0)
+			starts[type] = child;
 #ifdef __YASSERT__
 		else
-		{
 			wassert(prev == child - 1, WIMA_ASSERT_THEME_PROP_CONSECUTIVE);
-		}
 
 		prev = child;
 #endif
 	}
 
-	// Create the shade top prop.
 	child = wima_theme_createProp(WIMA_PROP_INT, parentName, widgetThemeNames[WIMA_THEME_WIDGET_SHADE_TOP],
 	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADE_TOP], descs[WIMA_THEME_WIDGET_SHADE_TOP],
 	                              shadeTops[idx]);
 
-	// Check for error.
-	if (yerror(child == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
+	if (yerror(child == WIMA_PROP_INVALID)) goto malloc_err;
 
-	// Push the prop.
 	status = wima_prop_group_push(main, child);
+	if (yerror(status)) goto err;
 
-	// Check for error.
-	if (yerror(status))
-	{
-		wima_error(status);
-		return WIMA_PROP_INVALID;
-	}
-
-	// Create the shade bottom prop.
 	child = wima_theme_createProp(WIMA_PROP_INT, parentName, widgetThemeNames[WIMA_THEME_WIDGET_SHADE_BTM],
 	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADE_BTM], descs[WIMA_THEME_WIDGET_SHADE_BTM],
 	                              shadeBottoms[idx]);
+	if (yerror(child == WIMA_PROP_INVALID)) goto malloc_err;
 
-	// Check for error.
-	if (yerror(child == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
-
-	// Push the prop.
 	status = wima_prop_group_push(main, child);
+	if (yerror(status)) goto err;
 
-	// Check for error.
-	if (yerror(status))
-	{
-		wima_error(status);
-		return WIMA_PROP_INVALID;
-	}
-
-	// Create the shaded prop.
 	child = wima_theme_createProp(WIMA_PROP_BOOL, parentName, widgetThemeNames[WIMA_THEME_WIDGET_SHADED],
 	                              widgetThemeLabels[WIMA_THEME_WIDGET_SHADED], descs[WIMA_THEME_WIDGET_SHADED], true);
+	if (yerror(child == WIMA_PROP_INVALID)) goto malloc_err;
 
-	// Check for error.
-	if (yerror(child == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
-
-	// Push the prop.
 	status = wima_prop_group_push(main, child);
-
-	// Check for error.
-	if (yerror(status))
-	{
-		wima_error(status);
-		return WIMA_PROP_INVALID;
-	}
+	if (yerror(status)) goto err;
 
 	return main;
+
+malloc_err:
+
+	status = WIMA_STATUS_MALLOC_ERR;
+
+err:
+
+	wima_error(status);
+
+	return WIMA_PROP_INVALID;
 }
 
 WimaProperty wima_theme_loadNode(WimaProperty* starts)
@@ -770,10 +713,8 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts)
 	WimaProperty main = wima_theme_createProp(WIMA_PROP_MENU, widgetParentNames[WIMA_THEME_NODE], NULL,
 	                                          widgetParentLabels[WIMA_THEME_NODE], NULL, 0);
 
-	// Plus 1 for background.
 	int initial = 1 + WIMA_THEME_WIDGET_NUM_TYPES * WIMA_THEME_WIDGET_NUM_COLORS;
 
-	// Get the parent name.
 	const char* parentName = widgetParentNames[WIMA_THEME_NODE];
 
 	WimaProperty child;
@@ -783,34 +724,20 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts)
 	WimaProperty prev;
 #endif
 
-	// Loop through the colors and create them.
 	for (int i = 0; i < WIMA_THEME_NODE_NUM_COLORS; ++i)
 	{
-		// Create the property.
 		child = wima_theme_createProp(WIMA_PROP_COLOR, parentName, nodeThemeNames[i], nodeThemeLabels[i], nodeDescs[i],
 		                              initial++);
+		if (yerror(child == WIMA_PROP_INVALID)) goto malloc_err;
 
-		// Check for error.
-		if (yerror(child == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
-
-		// Push the prop.
 		status = wima_prop_group_push(main, child);
+		if (yerror(status)) goto malloc_err;
 
-		// Check for error.
-		if (yerror(status))
-		{
-			wima_error(status);
-			return WIMA_PROP_INVALID;
-		}
-
-		// If it's the first, put it into the start array.
-		if (i == 0) starts[WIMA_THEME_NODE] = child;
-
+		if (i == 0)
+			starts[WIMA_THEME_NODE] = child;
 #ifdef __YASSERT__
 		else
-		{
 			wassert(prev == child - 1, WIMA_ASSERT_THEME_PROP_CONSECUTIVE);
-		}
 
 		prev = child;
 #endif
@@ -818,39 +745,37 @@ WimaProperty wima_theme_loadNode(WimaProperty* starts)
 
 	char buffer[WIMA_THEME_MAX_BUFFER];
 
-	// Set the buffer to length zero.
 	buffer[0] = '\0';
 
-	// Create the name of the curving prop.
 	strcat(buffer, themePrefix);
 	strcat(buffer, parentName);
 	strcat(buffer, nodeThemeNames[WIMA_THEME_NODE_WIRE_CURVING]);
 
-	// Create the curving prop and link it.
 	child = wima_prop_int_register(buffer, nodeThemeLabels[WIMA_THEME_NODE_WIRE_CURVING],
 	                               nodeDescs[WIMA_THEME_NODE_WIRE_CURVING], WIMA_ICON_INVALID, 5, 0, 10, 1);
 
-	// Check for error.
-	if (yerror(child == WIMA_PROP_INVALID)) return WIMA_PROP_INVALID;
+	if (yerror(child == WIMA_PROP_INVALID)) goto malloc_err;
 
-	// Push the prop.
 	status = wima_prop_group_push(main, child);
-
-	// Check for error.
-	if (yerror(status))
-	{
-		wima_error(status);
-		return WIMA_PROP_INVALID;
-	}
+	if (yerror(status)) goto err;
 
 	return main;
+
+malloc_err:
+
+	status = WIMA_STATUS_MALLOC_ERR;
+
+err:
+
+	wima_error(status);
+
+	return WIMA_PROP_INVALID;
 }
 
 void wima_theme_setBackground(WimaColor bg)
 {
 	wima_assert_init;
 
-	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_BG];
 
 	wassert(wima_prop_valid(wph, WIMA_PROP_COLOR), WIMA_ASSERT_PROP);
@@ -862,7 +787,6 @@ WimaColor wima_theme_background()
 {
 	wima_assert_init;
 
-	// Get the property.
 	WimaProperty wph = wg.themes[WIMA_THEME_BG];
 
 	wassert(wima_prop_valid(wph, WIMA_PROP_COLOR), WIMA_ASSERT_PROP);
@@ -876,7 +800,6 @@ WimaWidgetTheme* wima_theme_widget(WimaThemeType type)
 
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
-	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
 	wassert(wima_prop_valid(wph, -1), WIMA_ASSERT_PROP);
@@ -970,12 +893,10 @@ void wima_theme_widget_setShaded(WimaThemeType type, bool shaded)
 
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
-	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
 	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
-	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
 	data[WIMA_THEME_WIDGET_SHADED]._bool = shaded;
@@ -987,12 +908,10 @@ bool wima_theme_widget_shaded(WimaThemeType type)
 
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
-	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
 	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
-	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
 	return data[WIMA_THEME_WIDGET_SHADED]._bool;
@@ -1002,7 +921,6 @@ WimaNodeTheme* wima_theme_node()
 {
 	wima_assert_init;
 
-	// Get the property.
 	WimaProperty wph = wg.themeStarts[WIMA_THEME_NODE];
 
 	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
@@ -1104,15 +1022,12 @@ void wima_theme_node_setWireCurving(int curving)
 {
 	wima_assert_init;
 
-	// Get the property.
 	WimaProperty wph = wg.themeStarts[WIMA_THEME_NODE_WIRE_CURVING];
 
 	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
-	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	// Get the limits.
 	int min = data[WIMA_THEME_NODE_WIRE_CURVING]._int.min;
 	int max = data[WIMA_THEME_NODE_WIRE_CURVING]._int.max;
 
@@ -1123,12 +1038,10 @@ int wima_theme_node_wireCurving()
 {
 	wima_assert_init;
 
-	// Get the property.
 	WimaProperty wph = wg.themeStarts[WIMA_THEME_NODE_WIRE_CURVING];
 
 	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
-	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
 	return data[WIMA_THEME_NODE_WIRE_CURVING]._int.val;
@@ -1291,10 +1204,8 @@ static WimaProperty wima_theme_createProp(WimaPropType type, const char* name1, 
 
 	char buffer[WIMA_THEME_MAX_BUFFER];
 
-	// Create the name.
 	wima_theme_createName(buffer, name1, name2);
 
-	// Switch on the type and create the property.
 	switch (type)
 	{
 		case WIMA_PROP_MENU:
@@ -1332,12 +1243,10 @@ static void wima_theme_setWidgetColor(WimaThemeType type, WimaWidgetThemeType id
 	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_WIDGET_COLOR);
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
-	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
 	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
-	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
 	data[idx]._color = color;
@@ -1350,12 +1259,10 @@ static WimaColor wima_theme_widgetColor(WimaThemeType type, WimaWidgetThemeType 
 	wassert(idx <= WIMA_THEME_WIDGET_TEXT_SELECTED, WIMA_ASSERT_THEME_WIDGET_COLOR);
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
-	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
 	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
-	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
 	return data[idx]._color;
@@ -1367,18 +1274,14 @@ static void wima_theme_setWidgetDelta(WimaThemeType type, bool top, int delta)
 
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
-	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
 	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
-	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	// Get the right index.
-	int idx = top ? WIMA_THEME_WIDGET_SHADE_TOP : WIMA_THEME_WIDGET_SHADE_BTM;
+	int idx = WIMA_THEME_WIDGET_SHADE_BTM - top;
 
-	// Get the limits.
 	int min = data[idx]._int.min;
 	int max = data[idx]._int.max;
 
@@ -1391,18 +1294,13 @@ static int wima_theme_widgetDelta(WimaThemeType type, bool top)
 
 	wassert(type >= WIMA_THEME_REGULAR && type <= WIMA_THEME_TOOLTIP, WIMA_ASSERT_THEME_WIDGET_TYPE);
 
-	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
 	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
-	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
-	// Get the right index.
-	int idx = top ? WIMA_THEME_WIDGET_SHADE_TOP : WIMA_THEME_WIDGET_SHADE_BTM;
-
-	return data[idx]._int.val;
+	return data[WIMA_THEME_WIDGET_SHADE_BTM - top]._int.val;
 }
 
 static void wima_theme_setNodeColor(WimaNodeThemeType type, WimaColor color)
@@ -1411,12 +1309,10 @@ static void wima_theme_setNodeColor(WimaNodeThemeType type, WimaColor color)
 
 	wassert(type <= WIMA_THEME_NODE_WIRE_SELECTED, WIMA_ASSERT_THEME_NODE_COLOR);
 
-	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
 	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
-	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
 	data[type]._color = color;
@@ -1428,12 +1324,10 @@ static WimaColor wima_theme_nodeColor(WimaNodeThemeType type)
 
 	wassert(type <= WIMA_THEME_NODE_WIRE_SELECTED, WIMA_ASSERT_THEME_NODE_COLOR);
 
-	// Get the property.
 	WimaProperty wph = wg.themeStarts[type];
 
 	wassert(wima_prop_valid(wph, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 
-	// Get the data.
 	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wph);
 
 	return data[type]._color;

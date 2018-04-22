@@ -62,20 +62,16 @@ WimaOverlay wima_overlay_register(const char* const name, WimaIcon icon, WimaOve
 	wassert(name, WIMA_ASSERT_OVERLAY_NAME);
 	wassert(layout, WIMA_ASSERT_OVERLAY_LAYOUT);
 
-	// Get the length of the vector.
 	size_t key = dvec_len(wg.overlays);
 
 	wassert(key < WIMA_OVERLAY_MAX, WIMA_ASSERT_OVERLAY_MAX);
 
-	// Copy fields.
 	ovly.layout = layout;
 	ovly.icon = icon;
 
-	// Create the string.
 	ovly.name = dstr_create(name);
 	if (yerror(!ovly.name)) goto err;
 
-	// Push onto the vector.
 	if (yerror(dvec_push(wg.overlays, &ovly))) goto err;
 
 	return (WimaOverlay) key;
@@ -124,48 +120,34 @@ WimaStatus wima_overlay_menuLayout(WimaOverlay overlay yunused, size_t idx, Wima
 
 	wassert(wima_window_valid(root.window), WIMA_ASSERT_WIN);
 
-	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, root.window);
 
-	// Get the data.
 	menu = win->menu;
 	data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, menu);
 
-	// Loop until the index.
 	for (size_t i = 0; i < idx; ++i)
 	{
-		// Get the submenu.
 		menu = data->_collection.sub;
 		data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, menu);
 	}
 
-	// Make a column layout.
 	uint16_t flags = wima_layout_setExpandFlags(0, true, true);
 	WimaLayout col = wima_layout_col(root, flags);
 
-	// Cache these. If parentWidth is 0, that means
-	// that this is the highest level menu.
-	bool isTopAndContext = WIMA_WIN_MENU_IS_CONTEXT(win) && !idx;
-
-	// If the menu should display its title, do so.
-	if (isTopAndContext)
+	if (WIMA_WIN_MENU_IS_CONTEXT(win) && !idx)
 	{
 		wima_layout_widget(col, menu);
 		wima_layout_separator(col);
 	}
 
-	// Get the length of the list.
 	size_t len = dvec_len(data->_collection.list);
 
-	// Loop through the items and put them in.
 	for (size_t i = 0; i < len; ++i)
 	{
-		// Get the child.
 		WimaProperty child = *((WimaProperty*) dvec_get(data->_collection.list, i));
 
 		wassert(child < dvec_len(wg.props) || child == WIMA_PROP_MENU_SEPARATOR, WIMA_ASSERT_PROP);
 
-		// Put the appropriate one in.
 		if (child != WIMA_PROP_MENU_SEPARATOR)
 			wima_layout_widget(col, child);
 		else

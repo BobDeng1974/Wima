@@ -124,7 +124,6 @@ WimaTextMetrics wima_text_metrics(WimaRenderContext* ctx)
 
 	WimaTextMetrics result;
 
-	// Translate between Wima and NanoVG.
 	nvgTextMetrics(ctx->nvg, &result.ascender, &result.descender, &result.lineHeight);
 
 	return result;

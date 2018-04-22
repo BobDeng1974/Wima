@@ -52,32 +52,23 @@ WimaDialog wima_dialog_register(WimaTree tree)
 
 	wassert(wima_area_valid(tree), WIMA_ASSERT_TREE);
 
-	// Get the index of the new dialog.
 	size_t len = dvec_len(wg.dialogs);
 
 	wassert(len < WIMA_DIALOG_MAX, WIMA_ASSERT_DIALOG_MAX);
 
-	// Create the dialog.
 	WimaDlg dlg = dvec_pushTree(wg.dialogs);
-
-	// Check for error.
 	if (yerror(!dlg)) goto wima_dlg_reg_push;
 
-	// Copy the tree and check for error.
 	if (yerror(dtree_copy(dlg, tree))) goto wima_dlg_reg_copy;
 
 	return len;
 
-// Error on copy.
 wima_dlg_reg_copy:
 
-	// Pop the dialog off.
 	dvec_pop(wg.dialogs);
 
-// Error on push.
 wima_dlg_reg_push:
 
-	// Report the error.
 	wima_error(WIMA_STATUS_MALLOC_ERR);
 
 	return WIMA_DIALOG_INVALID;

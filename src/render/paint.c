@@ -56,11 +56,9 @@ WimaPaint wima_paint_linearGradient(WimaRenderContext* ctx, WimaVecf s, WimaVecf
 	WimaCol ic, oc;
 	WimaPnt p;
 
-	// Translate between Wima and NanoVG.
 	ic.wima = icol;
 	oc.wima = ocol;
 
-	// Get the paint from NanoVG.
 	p.nvg = nvgLinearGradient(ctx->nvg, s.x, s.y, e.x, e.y, ic.nvg, oc.nvg);
 
 	return p.wima;
@@ -74,11 +72,9 @@ WimaPaint wima_paint_boxGradient(WimaRenderContext* ctx, WimaRectf rect, float r
 	WimaCol ic, oc;
 	WimaPnt p;
 
-	// Translate between Wima and NanoVG.
 	ic.wima = icol;
 	oc.wima = ocol;
 
-	// Get the paint from NanoVG.
 	p.nvg = nvgBoxGradient(ctx->nvg, rect.x, rect.y, rect.w, rect.h, r, f, ic.nvg, oc.nvg);
 
 	return p.wima;
@@ -92,11 +88,9 @@ WimaPaint wima_paint_radialGradient(WimaRenderContext* ctx, WimaVecf c, float in
 	WimaCol ic, oc;
 	WimaPnt p;
 
-	// Translate between Wima and NanoVG.
 	ic.wima = icol;
 	oc.wima = ocol;
 
-	// Get the paint from NanoVG.
 	p.nvg = nvgRadialGradient(ctx->nvg, c.x, c.y, inr, outr, ic.nvg, oc.nvg);
 
 	return p.wima;
@@ -143,12 +137,8 @@ NVGpaint wima_paint_svgRadialGradient(WimaRenderContext* ctx, NSVGgradient* grad
 	if (gradient->nstops == 3)
 		inr = gradient->stops[1].offset * outr;
 	else
-	{
 		inr = 0;
-	}
 
-	NVGpaint paint = nvgRadialGradient(ctx->nvg, cx, cy, inr, outr, wima_color_int(gradient->stops[0].color),
-	                                   wima_color_int(gradient->stops[gradient->nstops - 1].color));
-
-	return paint;
+	return nvgRadialGradient(ctx->nvg, cx, cy, inr, outr, wima_color_int(gradient->stops[0].color),
+	                         wima_color_int(gradient->stops[gradient->nstops - 1].color));
 }

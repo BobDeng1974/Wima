@@ -69,7 +69,6 @@ WimaColor wima_color_rgb(unsigned char r, unsigned char g, unsigned char b)
 {
 	WimaCol c;
 
-	// Translate between Wima and NanoVG.
 	c.nvg = nvgRGB(r, g, b);
 
 	return c.wima;
@@ -79,7 +78,6 @@ WimaColor wima_color_rgbf(float r, float g, float b)
 {
 	WimaCol c;
 
-	// Translate between Wima and NanoVG.
 	c.nvg = nvgRGBf(r, g, b);
 
 	return c.wima;
@@ -89,7 +87,6 @@ WimaColor wima_color_rgba(unsigned char r, unsigned char g, unsigned char b, uns
 {
 	WimaCol c;
 
-	// Translate between Wima and NanoVG.
 	c.nvg = nvgRGBA(r, g, b, a);
 
 	return c.wima;
@@ -99,7 +96,6 @@ WimaColor wima_color_rgbaf(float r, float g, float b, float a)
 {
 	WimaCol c;
 
-	// Translate between Wima and NanoVG.
 	c.nvg = nvgRGBAf(r, g, b, a);
 
 	return c.wima;
@@ -109,7 +105,6 @@ WimaColor wima_color_lerp(WimaColor c0, WimaColor c1, float u)
 {
 	WimaCol c, wc0, wc1;
 
-	// Translate between Wima and NanoVG.
 	wc0.wima = c0;
 	wc1.wima = c1;
 
@@ -120,7 +115,6 @@ WimaColor wima_color_lerp(WimaColor c0, WimaColor c1, float u)
 
 WimaColor wima_color_setAlpha(WimaColor c0, unsigned char a)
 {
-	// Translate between Wima and NanoVG.
 	WimaCol c, wc0;
 	wc0.wima = c0;
 
@@ -131,7 +125,6 @@ WimaColor wima_color_setAlpha(WimaColor c0, unsigned char a)
 
 WimaColor wima_color_setAlphaf(WimaColor c0, float a)
 {
-	// Translate between Wima and NanoVG.
 	WimaCol c;
 	c.wima = c0;
 
@@ -150,7 +143,6 @@ WimaColor wima_color_hsl(float h, float s, float l)
 {
 	WimaCol c;
 
-	// Translate between Wima and NanoVG.
 	c.nvg = nvgHSL(h, s, l);
 
 	return c.wima;
@@ -160,7 +152,6 @@ WimaColor wima_color_hsla(float h, float s, float l, unsigned char a)
 {
 	WimaCol c;
 
-	// Translate between Wima and NanoVG.
 	c.nvg = nvgHSLA(h, s, l, a);
 
 	return c.wima;
@@ -170,23 +161,18 @@ WimaColor wima_color_offset(WimaColor color, int delta)
 {
 	WimaColor result;
 
-	// If delta is not zero...
 	if (delta != 0)
 	{
-		// Translate the offset of the delta into [0, 1] space.
 		float offset = (float) delta / 255.0f;
 
-		// Calculate each channel and clamp.
 		float r = wima_clampf(color.r + offset, 0, 1);
 		float g = wima_clampf(color.g + offset, 0, 1);
 		float b = wima_clampf(color.b + offset, 0, 1);
 
-		// Get the color.
 		result = wima_color_rgbaf(r, g, b, color.a);
 	}
 	else
 	{
-		// Just return the color.
 		result = color;
 	}
 

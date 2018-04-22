@@ -53,10 +53,7 @@ void wima_render_save(WimaRenderContext* ctx)
 
 	wassert(ctx->stackCount < WIMA_WIN_RENDER_STACK_MAX, WIMA_ASSERT_WIN_RENDER_STACK_MAX);
 
-	// Increment the stack count.
 	++(ctx->stackCount);
-
-	// Push onto NanoVG.
 	nvgSave(ctx->nvg);
 }
 
@@ -67,10 +64,7 @@ void wima_render_restore(WimaRenderContext* ctx)
 
 	wassert(ctx->stackCount > 0, WIMA_ASSERT_WIN_RENDER_STACK);
 
-	// Decrement the stack count.
 	--(ctx->stackCount);
-
-	// Pop from NanoVG.
 	nvgRestore(ctx->nvg);
 }
 
@@ -138,7 +132,6 @@ WimaTransform wima_render_currentTransform(WimaRenderContext* ctx)
 
 	WimaTransform result;
 
-	// Translate between Wima and NanoVG.
 	nvgCurrentTransform(ctx->nvg, result.v);
 
 	return result;

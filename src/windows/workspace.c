@@ -89,67 +89,45 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, Wim
 
 	wassert(wima_area_valid(tree), WIMA_ASSERT_TREE);
 
-	// This is the id of the workspace, for the prop name.
 	static uint8_t index = 0;
 
-	// We also need a buffer.
 	char buffer[WIMA_WKSP_BUFFER_SIZE];
 
-	// Get the index of the new workspace.
 	size_t len = dvec_len(wg.workspaces);
 
 	wassert(len == dvec_len(wg.workspaceProps), WIMA_ASSERT_WKSP_MISMATCH);
 	wassert(len < WIMA_WORKSPACE_MAX, WIMA_ASSERT_WKSP_MAX);
 
-	// Create the name.
 	sprintf(buffer, wima_wksp_fmt, index);
 	++index;
 
-	// Create the string.
 	DynaString s = dstr_create(name);
 
-	// Check for error.
 	if (yerror(!s)) goto wima_wksp_reg_err;
 
-	// Create the property.
 	WimaProperty prop = wima_prop_string_register(buffer, NULL, wima_wksp_desc, icon, s);
-
-	// Check for error.
 	if (yerror(prop == WIMA_PROP_INVALID)) goto wima_wksp_reg_prop_reg_err;
 
-	// Create the workspace.
 	WimaWksp wksp = dvec_pushTree(wg.workspaces);
-
-	// Check for error.
 	if (yerror(!wksp)) goto wima_wksp_reg_wksp_err;
 
-	// Copy the tree and check for error.
 	if (yerror(dtree_copy(wksp, tree))) goto wima_wksp_reg_prop_push_err;
 
-	// Push onto the prop vector and check for error.
 	if (yerror(dvec_push(wg.workspaceProps, &prop))) goto wima_wksp_reg_prop_push_err;
 
-	// Get the number of windows.
 	uint8_t winlen = dvec_len(wg.windows);
 
 	WimaWindow i;
 
-	// Loop through the windows.
 	for (i = 0; i < winlen;)
 	{
-		// If the window is valid...
 		if (wima_window_valid(i))
 		{
-			// Get the window.
 			WimaWin* win = dvec_get(wg.windows, i);
 
-			// Mark the window as dirty with layout.
 			wima_window_setDirty(win, true);
 
-			// Push the new workspace onto the window.
 			WimaWksp wksp2 = dvec_pushTree(win->workspaces);
-
-			// Check for error.
 			if (yerror(!wksp2)) goto wima_wksp_reg_win_err;
 
 			// Increment i. This is done here to make
@@ -157,55 +135,38 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, Wim
 			// workspace at this point.
 			++i;
 
-			// Copy the workspace.
 			DynaStatus status = dtree_copy(wksp2, wksp);
-
-			// Check for error.
 			if (yerror(status)) goto wima_wksp_reg_win_err;
 		}
 	}
 
 	return len;
 
-// Error on adding to windows.
 wima_wksp_reg_win_err:
 
-	// Loop through the windows that are already done.
 	for (WimaWindow j = 0; j < i; ++j)
 	{
-		// If the window is valid...
 		if (wima_window_valid(i))
 		{
-			// Get the window.
 			WimaWin* win = dvec_get(wg.windows, i);
-
-			// Pop the workspace.
 			dvec_pop(win->workspaces);
 		}
 	}
 
-// Error on pushing a prop.
 wima_wksp_reg_prop_push_err:
 
-	// Pop the tree off.
 	dvec_pop(wg.workspaces);
 
-// Error on pushing the workspace.
 wima_wksp_reg_wksp_err:
 
-	// Unregister the prop.
 	wima_prop_unregister(prop);
 
-// Error on registering a prop.
 wima_wksp_reg_prop_reg_err:
 
-	// Free the string.
 	dstr_free(s);
 
-// Other errors.
 wima_wksp_reg_err:
 
-	// Report the error.
 	wima_error(WIMA_STATUS_MALLOC_ERR);
 
 	return WIMA_WORKSPACE_INVALID;
@@ -219,34 +180,23 @@ WimaStatus wima_workspace_updateFromWindow(WimaWorkspace wwksp, WimaWindow wwh)
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
-	// Get the window.
 	WimaWin* win = dvec_get(wg.windows, wwh);
-
-	// Get the areas.
 	DynaTree areas = dvec_get(win->workspaces, wwksp);
 
 	wassert(wima_area_valid(areas), WIMA_ASSERT_AREA);
 
-	// Get the workspace.
 	WimaWksp wksp = dvec_get(wg.workspaces, wwksp);
-
-	// Copy over and check for error.
 	if (yerror(dtree_copy(wksp, areas))) return WIMA_STATUS_MALLOC_ERR;
 
-	// Get the number of windows.
 	WimaWindow winlen = dvec_len(wg.windows);
 
-	// Loop through all windows.
 	for (WimaWindow i = 0; i < winlen; ++i)
 	{
-		// If no window, or it's the same window, just continue.
 		if (i == wwh || !wima_window_valid(i)) continue;
 
-		// Get the window and its workspaces.
 		WimaWin* win = dvec_get(wg.windows, i);
 		WimaWksp winWksp = dvec_get(win->workspaces, wwksp);
 
-		// Copy and check for error.
 		if (yerror(dtree_copy(winWksp, wksp))) return WIMA_STATUS_MALLOC_ERR;
 	}
 

@@ -46,68 +46,48 @@ WimaImage wima_image_load(const char* const path, WimaImageFlags flags)
 {
 	wassert(path, WIMA_ASSERT_PATH_NULL);
 
-	// Get the length.
 	size_t len = dvec_len(wg.imagePaths);
 
 	wassert(len == dvec_len(wg.imageFlags), WIMA_ASSERT_IMG_MISMATCH);
 	wassert(len < WIMA_IMAGE_MAX, WIMA_ASSERT_IMG_MAX);
 
-	// Push onto the path vector.
 	DynaStatus status = dvec_pushString(wg.imagePaths, path);
+	if (yerror(status != DYNA_STATUS_SUCCESS)) goto path_err;
 
-	// Check for error.
-	if (yerror(status != DYNA_STATUS_SUCCESS))
-	{
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_IMAGE_INVALID;
-	}
-
-	// Push onto the flags vector.
 	status = dvec_push(wg.imageFlags, &flags);
+	if (yerror(status != DYNA_STATUS_SUCCESS)) goto err;
 
-	// Check for error.
-	if (yerror(status != DYNA_STATUS_SUCCESS))
-	{
-		// Make sure to pop the path off.
-		dvec_pop(wg.imagePaths);
-
-		// Send the error.
-		wima_error(WIMA_STATUS_MALLOC_ERR);
-		return WIMA_IMAGE_INVALID;
-	}
-
-	// Get the window vector length.
 	size_t winLen = dvec_len(wg.windows);
 
-	// Loop through the windows.
 	for (size_t i = 0; i < winLen; ++i)
 	{
-		// If the window isn't valid, just continue.
 		if (!wima_window_valid(i)) continue;
 
-		// Get the window.
 		WimaWin* win = dvec_get(wg.windows, i);
 
-		// Add the image to the window.
 		WimaStatus status = wima_window_addImage(win, path, flags);
 
-		// Check for error.
 		if (yerror(status))
 		{
-			// Loop through all the windows already done.
 			for (size_t j = 0; j < i; ++j)
 			{
-				// If the window isn't valid, just continue.
 				if (!wima_window_valid(j)) continue;
-
-				// Pop the image from the window.
 				wima_window_removeImage(dvec_get(wg.windows, j));
 			}
 
-			// Tell the client about the error.
 			wima_error(status);
 		}
 	}
 
 	return (WimaImage) len;
+
+err:
+
+	dvec_pop(wg.imagePaths);
+
+path_err:
+
+	wima_error(WIMA_STATUS_MALLOC_ERR);
+
+	return WIMA_IMAGE_INVALID;
 }

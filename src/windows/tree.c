@@ -126,20 +126,15 @@ WimaAreaNode wima_tree_addRootParent(WimaTree tree, float split, bool vertical)
 
 	wassert(tree, WIMA_ASSERT_TREE);
 
-	// Get the root.
 	DynaNode root = dtree_root();
 
 	wassert(!dtree_exists(tree, root), WIMA_ASSERT_TREE_NODE_EXISTS);
 
-	// Add the node to the tree.
 	WimaStatus status = wima_tree_addParent(tree, root, split, vertical);
 
-	// Check for error.
 	if (yerror(status))
 	{
-		// Tell the client about the error.
 		wima_error(status);
-
 		return WIMA_AREA_INVALID;
 	}
 
@@ -152,20 +147,15 @@ WimaAreaNode wima_tree_addRootEditor(WimaTree tree, WimaEditor wed)
 
 	wassert(tree, WIMA_ASSERT_TREE);
 
-	// Get the root.
 	DynaNode root = dtree_root();
 
 	wassert(!dtree_exists(tree, root), WIMA_ASSERT_TREE_NODE_EXISTS);
 
-	// Add the node to the tree.
 	WimaStatus status = wima_tree_addEditor(tree, root, wed);
 
-	// Check for error.
 	if (yerror(status))
 	{
-		// Tell the client about the error.
 		wima_error(status);
-
 		return WIMA_AREA_INVALID;
 	}
 
@@ -180,21 +170,16 @@ WimaAreaNode wima_tree_addLeftParent(WimaTree tree, WimaAreaNode parent, float s
 
 	wassert(wima_tree_nodeValid(tree, parent), WIMA_ASSERT_TREE_NODE);
 
-	// Get the node.
 	DynaNode node = dtree_left(parent);
 
 	wassert(!dtree_exists(tree, node), WIMA_ASSERT_TREE_NODE_EXISTS);
 	wassert(node <= WIMA_TREE_NODE_MAX, WIMA_ASSERT_TREE_MAX);
 
-	// Add the node to the tree.
 	WimaStatus status = wima_tree_addParent(tree, node, split, vertical);
 
-	// Check for error.
 	if (yerror(status))
 	{
-		// Tell the client about the error.
 		wima_error(status);
-
 		return WIMA_AREA_INVALID;
 	}
 
@@ -209,21 +194,16 @@ WimaAreaNode wima_tree_addLeftEditor(WimaTree tree, WimaAreaNode parent, WimaEdi
 
 	wassert(wima_tree_nodeValid(tree, parent), WIMA_ASSERT_TREE_NODE);
 
-	// Get the node.
 	DynaNode node = dtree_left(parent);
 
 	wassert(!dtree_exists(tree, node), WIMA_ASSERT_TREE_NODE_EXISTS);
 	wassert(node <= WIMA_TREE_NODE_MAX, WIMA_ASSERT_TREE_MAX);
 
-	// Add the node to the tree.
 	WimaStatus status = wima_tree_addEditor(tree, node, wed);
 
-	// Check for error.
 	if (yerror(status))
 	{
-		// Tell the client about the error.
 		wima_error(status);
-
 		return WIMA_AREA_INVALID;
 	}
 
@@ -238,21 +218,16 @@ WimaAreaNode wima_tree_addRightParent(WimaTree tree, WimaAreaNode parent, float 
 
 	wassert(wima_tree_nodeValid(tree, parent), WIMA_ASSERT_TREE_NODE);
 
-	// Get the node.
 	DynaNode node = dtree_right(parent);
 
 	wassert(!dtree_exists(tree, node), WIMA_ASSERT_TREE_NODE_EXISTS);
 	wassert(node <= WIMA_TREE_NODE_MAX, WIMA_ASSERT_TREE_MAX);
 
-	// Add the node to the tree.
 	WimaStatus status = wima_tree_addParent(tree, node, split, vertical);
 
-	// Check for error.
 	if (yerror(status))
 	{
-		// Tell the client about the error.
 		wima_error(status);
-
 		return WIMA_AREA_INVALID;
 	}
 
@@ -267,21 +242,16 @@ WimaAreaNode wima_tree_addRightEditor(WimaTree tree, WimaAreaNode parent, WimaEd
 
 	wassert(wima_tree_nodeValid(tree, parent), WIMA_ASSERT_TREE_NODE);
 
-	// Get the node.
 	DynaNode node = dtree_right(parent);
 
 	wassert(!dtree_exists(tree, node), WIMA_ASSERT_TREE_NODE_EXISTS);
 	wassert(node <= WIMA_TREE_NODE_MAX, WIMA_ASSERT_TREE_MAX);
 
-	// Add the node to the tree.
 	WimaStatus status = wima_tree_addEditor(tree, node, wed);
 
-	// Check for error.
 	if (yerror(status))
 	{
-		// Tell the client about the error.
 		wima_error(status);
-
 		return WIMA_AREA_INVALID;
 	}
 
@@ -290,11 +260,7 @@ WimaAreaNode wima_tree_addRightEditor(WimaTree tree, WimaAreaNode parent, WimaEd
 
 WimaStatus wima_tree_reset(WimaTree tree)
 {
-	// Set the length to zero. Dyna will call the destructors.
-	DynaStatus status = dtree_empty(tree);
-
-	// Figure out the return value.
-	return status ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
+	return dtree_empty(tree) ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
 }
 
 void wima_tree_free(WimaTree tree)
@@ -310,16 +276,13 @@ static WimaStatus wima_tree_addParent(WimaTree tree, DynaNode node, float split,
 {
 	WimaAr wan;
 
-	// Fill an initial area with common data.
 	wan.isParent = true;
 	wan.rect.w = -1;
 	wan.rect.h = -1;
 
-	// Set the parent data.
 	wan.parent.vertical = vertical;
 	wan.parent.split = fabs(split);
 
-	// Add the node to the tree.
 	DynaStatus status = dtree_add(tree, node, &wan);
 
 	return status ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
@@ -331,47 +294,35 @@ static WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor w
 
 	wassert(wed < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
 
-	// Fill an initial area with common data.
 	wan.isParent = false;
 	wan.node = node;
 	wan.rect.w = -1;
 	wan.rect.h = -1;
 
-	// Set the area type.
 	wan.area.type = wed;
 
-	// Get the editor and its number of regions.
 	WimaEdtr* edtr = dvec_get(wg.editors, wed);
 	uint8_t numRegions = edtr->numRegions;
 
-	// Make sure these are set or cleared.
 	wan.area.ctx.items = WIMA_PTR_INVALID;
 	wan.area.ctx.itemCount = 0;
 	wan.area.ctx.itemCap = edtr->itemCap;
 	wan.area.ctx.widgetData = WIMA_PTR_INVALID;
 	wan.area.numRegions = numRegions;
 
-	// Loop over the regions and fill the WimaArReg structs.
-	// We don't need to worry about the size yet.
 	for (uint8_t i = 0; i < numRegions; ++i)
 	{
-		// Get the region handle.
 		WimaRegion region = edtr->regions[i];
 
 		wassert(region < dvec_len(wg.regions), WIMA_ASSERT_REG);
 
-		// Get the region.
 		WimaReg* reg = dvec_get(wg.regions, region);
 
-		// Set the region info.
 		wan.area.regions[i].type = region;
 		wan.area.regions[i].flags = reg->flags;
 	}
 
-	// Add the node to the tree.
-	DynaStatus status = dtree_add(tree, node, &wan);
-
-	return status ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
+	return dtree_add(tree, node, &wan) ? WIMA_STATUS_MALLOC_ERR : WIMA_STATUS_SUCCESS;
 }
 
 #ifdef __YASSERT__
