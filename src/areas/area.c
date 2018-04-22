@@ -91,7 +91,6 @@ void* wima_area_data(WimaArea wah)
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	// Generate the key.
 	uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
 
 	return dpool_get(area->area.ctx.widgetData, &key);
@@ -138,7 +137,6 @@ void wima_area_setType(WimaArea wah, WimaEditor type)
 
 	wassert(wima_window_valid(wah.window), WIMA_ASSERT_WIN);
 
-	// We have to do a layout now.
 	WimaWin* win = dvec_get(wg.windows, wah.window);
 	wima_window_setDirty(win, true);
 }
@@ -177,31 +175,24 @@ uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos)
 {
 	wima_assert_init;
 
-	// Get the area.
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
 	wassert(((WimaWin*) dvec_get(wg.windows, wah.window))->ctx.stage == WIMA_UI_STAGE_POST_LAYOUT,
 	        WIMA_ASSERT_STAGE_PROCESS);
 
-	// Translate the cursor into the area.
 	pos = wima_area_translatePos(area, pos);
 
-	// This is used to calculate region rectangles.
 	WimaRect rect = area->rect;
 
-	// Loop through the regions.
 	for (size_t i = 0; i < area->area.numRegions; ++i)
 	{
 		WimaRect regRect;
 
-		// Get the region.
 		WimaArReg reg = area->area.regions[i];
 
-		// If the region is vertical...
 		if (reg.flags & WIMA_REG_VERTICAL)
 		{
-			// If the region is left...
 			if (reg.flags & WIMA_REG_LEFT)
 			{
 				regRect.x = rect.x;
@@ -212,19 +203,14 @@ uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos)
 				regRect.x = rect.w - reg.size;
 			}
 
-			// Fill out the rest.
 			regRect.y = rect.y;
 			regRect.w = reg.size;
 			regRect.h = rect.h;
 
-			// Adjust the rectangle.
 			rect.w -= reg.size;
 		}
-
-		// If the region is horizontal...
 		else
 		{
-			// If the region is up...
 			if (reg.flags & WIMA_REG_LEFT)
 			{
 				regRect.y = rect.y;
@@ -235,16 +221,13 @@ uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos)
 				regRect.y = rect.h - reg.size;
 			}
 
-			// Fill out the rest.
 			regRect.x = rect.x;
 			regRect.w = rect.w;
 			regRect.h = reg.size;
 
-			// Adjust the rectangle.
 			rect.h -= reg.size;
 		}
 
-		// Test the pos and rectangle, and if they match, return the region.
 		if (wima_rect_contains(regRect, pos)) return i;
 	}
 
@@ -260,7 +243,6 @@ void wima_area_switchRegionSide(WimaArea wah, uint8_t region)
 
 	wassert(region < area->area.numRegions, WIMA_ASSERT_AREA_REG_VALID);
 
-	// Toggle the left bit on the region.
 	area->area.regions[region].flags ^= WIMA_REG_LEFT;
 }
 
@@ -458,34 +440,27 @@ static void wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, W
 {
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
-	// Get the particular area that we care about.
 	WimaAr* area = dtree_node(areas, node);
 
-	// Set the common data.
 	area->node = node;
 	area->rect = rect;
 	area->window = win;
 
-	// We do something different depending on what type of node it is.
 	if (WIMA_AREA_IS_PARENT(area))
 	{
 		WimaRect left;
 		WimaRect right;
 
-		// Calculate the integer location of the split.
 		int dim = rect.v[!area->parent.vertical + 2] - 1;
 		area->parent.spliti = (int) (area->parent.split * dim);
 
-		// Calculate and fill the children's rectangles.
 		wima_area_childrenRects(area, &left, &right);
 
-		// Init the children.
 		wima_area_node_init(win, areas, dtree_left(node), left);
 		wima_area_node_init(win, areas, dtree_right(node), right);
 	}
 	else
 	{
-		// Set the scale.
 		area->area.scale = 1.0f;
 	}
 }
@@ -495,12 +470,10 @@ DynaStatus wima_area_copy(void* dest, void* src)
 	WimaAr* darea = (WimaAr*) dest;
 	WimaAr* sarea = (WimaAr*) src;
 
-	DynaStatus dstatus;
+	DynaStatus dstatus = DYNA_STATUS_SUCCESS;
 
-	// Do the copy.
 	memcpy(darea, sarea, sizeof(WimaAr));
 
-	// If the area is a leaf...
 	if (WIMA_AREA_IS_LEAF(sarea))
 	{
 		// Set up the area. If the item array is NULL, we are copying
@@ -513,12 +486,7 @@ DynaStatus wima_area_copy(void* dest, void* src)
 		bool allocate = !sarea->area.ctx.items && !sarea->area.ctx.widgetData;
 		WimaStatus status = wima_area_setup(darea, allocate);
 
-		// Check for error.
-		dstatus = status ? DYNA_STATUS_MALLOC_FAIL : DYNA_STATUS_SUCCESS;
-	}
-	else
-	{
-		dstatus = DYNA_STATUS_SUCCESS;
+		if (yerror(status)) dstatus = DYNA_STATUS_MALLOC_FAIL;
 	}
 
 	return dstatus;
@@ -540,22 +508,17 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 		return WIMA_STATUS_SUCCESS;
 	}
 
-	// Get the editor handle.
 	WimaEditor edtr = area->area.type;
 
 	wassert(edtr < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
 
-	// Get the editor pointer.
 	WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
-	// Allocate and check for error.
 	area->area.ctx.items = malloc(sizeof(WimaItem) * area->area.ctx.itemCap);
 	if (yerror(!area->area.ctx.items)) return WIMA_STATUS_MALLOC_ERR;
 
-	// Set the count.
 	area->area.ctx.itemCount = 0;
 
-	// Create the pool and check for error.
 	area->area.ctx.widgetData = dpool_create(0.9f, sizeof(uint64_t), NULL, NULL, NULL);
 	if (yerror(!area->area.ctx.widgetData))
 	{
@@ -563,27 +526,19 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
-	// Cache this.
 	uint32_t allocSize = editor->allocSize;
 
-	// If we need to allocate...
 	if (allocSize > 0)
 	{
-		// Generate the key.
 		uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
-
-		// Get the particular user function setter.
 		WimaAreaInitDataFunc init = editor->funcs.init;
 
-		// If the user specified one, call it.
 		if (init)
 		{
 			WimaArea wah;
 
-			// Allocate the pointer.
 			void* ptr = dpool_malloc(area->area.ctx.widgetData, &key, allocSize);
 
-			// Check for error.
 			if (yerror(!ptr)) return WIMA_STATUS_MALLOC_ERR;
 
 			// Create an area handle. I can't use
@@ -596,10 +551,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 		}
 		else
 		{
-			// Allocate and zero the pointer. We can get the pointer later.
 			void* ptr = dpool_calloc(area->area.ctx.widgetData, &key, allocSize);
-
-			// Check for error.
 			if (yerror(!ptr)) status = WIMA_STATUS_MALLOC_ERR;
 		}
 	}
@@ -618,27 +570,17 @@ static bool wima_area_node_valid(DynaTree editors, DynaNode node)
 {
 	wassert(dtree_exists(editors, node), WIMA_ASSERT_AREA);
 
-	// Make sure this is clear.
 	bool result = true;
 
-	// Get the particular area we care about.
 	WimaAr* area = dtree_node(editors, node);
 
-	// We do something different depending on what type of node it is.
 	if (WIMA_AREA_IS_PARENT(area))
 	{
 		// Make sure a parent has both left and right children.
 		// A parent ***MUST*** have both children because otherwise
-		// You may as well just set an area.
-		result = dtree_hasLeft(editors, node) && dtree_hasRight(editors, node);
-
-		// If we're good so far...
-		if (result)
-		{
-			// Make sure the children nodes are valid.
-			result =
-			    wima_area_node_valid(editors, dtree_left(node)) && wima_area_node_valid(editors, dtree_right(node));
-		}
+		// you may as well just set an area.
+		result = dtree_hasLeft(editors, node) && dtree_hasRight(editors, node) &&
+		         wima_area_node_valid(editors, dtree_left(node)) && wima_area_node_valid(editors, dtree_right(node));
 	}
 	else
 	{
@@ -655,27 +597,20 @@ void wima_area_destroy(void* ptr)
 {
 	WimaAr* area = (WimaAr*) ptr;
 
-	// Return early if possible.
 	if (WIMA_AREA_IS_PARENT(area)) return;
 
-	// Free the item's arrays, if necessary.
 	if (area->area.ctx.items)
 	{
-		// Cache these.
 		uint32_t itemCount = area->area.ctx.itemCount;
 		WimaItem* item = area->area.ctx.items;
 
-		// Loop through the items and free them all.
 		for (uint32_t i = 0; i < itemCount; ++i, item += 1) wima_item_free(area, item);
 
-		// Free the array.
 		free(area->area.ctx.items);
 	}
 
-	// If the widget pool is not NULL...
 	if (area->area.ctx.widgetData)
 	{
-		// Get a pointer to the allocation.
 		uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
 		void* data = dpool_get(area->area.ctx.widgetData, &key);
 
@@ -684,22 +619,15 @@ void wima_area_destroy(void* ptr)
 		// just return.
 		if (data)
 		{
-			// Get the editor handle.
 			WimaEditor edtr = area->area.type;
 
 			wassert(edtr < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
 
-			// Get the list of editors.
 			WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
-			// Get the particular user function setter.
-			WimaAreaFreeDataFunc free = editor->funcs.free;
-
-			// If there is a free function, call it.
-			if (free) free(data);
+			if (editor->funcs.free) editor->funcs.free(data);
 		}
 
-		// Free the pool.
 		dpool_free(area->area.ctx.widgetData);
 	}
 }
@@ -711,15 +639,10 @@ bool wima_area_key(WimaAr* area, WimaKeyEvent e)
 	wassert(area, WIMA_ASSERT_AREA);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	// Get the editor's event handler.
 	WimaEdtr* editor = dvec_get(wg.editors, area->area.type);
 	WimaAreaKeyFunc key_event = editor->funcs.key;
 
-	// Get the handle.
-	WimaArea wah = wima_area(area->window, area->node);
-
-	// If the handler exists, run it.
-	return key_event && key_event(wah, e);
+	return key_event != NULL && key_event(wima_area(area->window, area->node), e);
 }
 
 void wima_area_mouseEnter(WimaAr* area, bool enter)
@@ -729,15 +652,10 @@ void wima_area_mouseEnter(WimaAr* area, bool enter)
 	wassert(area, WIMA_ASSERT_AREA);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	// Get the editor's event handler.
 	WimaEdtr* editor = dvec_get(wg.editors, area->area.type);
 	WimaAreaMouseEnterFunc mouse_enter = editor->funcs.enter;
 
-	// Get the handle.
-	WimaArea wah = wima_area(area->window, area->node);
-
-	// If the handler exists, run it.
-	if (mouse_enter) mouse_enter(wah, enter);
+	if (mouse_enter) mouse_enter(wima_area(area->window, area->node), enter);
 }
 
 WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas)
@@ -747,10 +665,8 @@ WimaStatus wima_area_draw(WimaRenderContext* ctx, DynaTree areas)
 	wassert(areas, WIMA_ASSERT_WIN_AREAS);
 	wassert(ctx, WIMA_ASSERT_WIN_RENDER_CONTEXT);
 
-	// Get a pointer to the background color prop.
 	WimaPropData* bg = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, wg.themes[WIMA_THEME_BG]);
 
-	// Draw the areas, starting with the root.
 	return wima_area_node_draw(ctx, areas, dtree_root(), bg);
 }
 
@@ -762,65 +678,48 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 
 	WimaStatus status;
 
-	// Get the area.
 	WimaAr* area = dtree_node(areas, node);
 
-	// If the area is a parent...
 	if (WIMA_AREA_IS_PARENT(area))
 	{
-		// Draw the left child and check for error.
 		status = wima_area_node_draw(ctx, areas, dtree_left(node), bg);
 		if (yerror(status)) return status;
 
-		// Draw the right child and return result.
 		status = wima_area_node_draw(ctx, areas, dtree_right(node), bg);
 	}
 	else
 	{
-		// Push the viewport so we can draw within it.
 		wima_area_pushViewport(ctx->nvg, area->rect);
 
-		// Draw the background.
 		wima_area_background(area, ctx->nvg, bg);
 
-		// If there are items in the area...
 		if (area->area.ctx.itemCount > 0)
 		{
-			// Save the state.
 			wima_render_save(ctx);
 
-			// Scale the area by the area's scale.
 			nvgScale(ctx->nvg, area->area.scale, area->area.scale);
 
-			// Get a handle to the first time.
 			WimaWidget item;
 			item.widget = 0;
 			item.area = node;
 			item.window = area->window;
 
-			// Set the item rectangle.
 			area->area.ctx.items[0].rect.x = 0;
 			area->area.ctx.items[0].rect.y = 0;
 			area->area.ctx.items[0].rect.w = area->rect.w;
 			area->area.ctx.items[0].rect.h = area->rect.h;
 
-			// TODO: Draw individual widgets.
-
-			// Draw the area. The draw function is guaranteed to be non-null.
-			// status = wg.funcs.draw(item, ctx);
+			// TODO: Draw each region.
 
 			// Restore the old render state.
 			wima_render_restore(ctx);
 		}
 
-		// Draw the border shading and split widgets.
 		wima_area_drawSplitWidgets(area, ctx->nvg);
 		wima_area_drawBorders(area, ctx->nvg);
 
-		// Pop the viewport.
 		wima_area_popViewport(ctx->nvg);
 
-		// We need to make sure this is clear.
 		status = WIMA_STATUS_SUCCESS;
 	}
 
@@ -838,41 +737,33 @@ static void wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, 
 {
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
-	// Get the area pointer.
 	WimaAr* area = dtree_node(areas, node);
 
-	// Set the rectangle.
+	if (WIMA_AREA_IS_LEAF(area)) return;
+
 	area->rect = rect;
 
-	// If this is a leaf, that's all
-	// we need to do, so return.
-	if (WIMA_AREA_IS_PARENT(area))
-	{
-		// Get the dimension that will be split.
-		int dim = rect.v[!area->parent.vertical + 2] - 1;
+	int dim = rect.v[!area->parent.vertical + 2] - 1;
 
-		// This is true if the resize is happening because of a window
-		// resize, but it is false if it is happening because of the user
-		// moving a parent's split. In the first case, we need to set the
-		// new integer based on the float. In the second case, the int
-		// needs to stay the same (so the split doesn't move), so the
-		// float value is adjusted. The term "adjustSplit" refers to
-		// whether this area's split needs to be moved.
-		if (adjustSplit)
-			area->parent.spliti = (int) (area->parent.split * dim);
-		else
-			area->parent.split = ((float) area->parent.spliti) / ((float) dim);
+	// This is true if the resize is happening because of a window
+	// resize, but it is false if it is happening because of the user
+	// moving a parent's split. In the first case, we need to set the
+	// new integer based on the float. In the second case, the int
+	// needs to stay the same (so the split doesn't move), so the
+	// float value is adjusted. The term "adjustSplit" refers to
+	// whether this area's split position needs to be updated.
+	if (adjustSplit)
+		area->parent.spliti = (int) (area->parent.split * dim);
+	else
+		area->parent.split = ((float) area->parent.spliti) / ((float) dim);
 
-		WimaRect left;
-		WimaRect right;
+	WimaRect left;
+	WimaRect right;
 
-		// Fill the children's rectangles.
-		wima_area_childrenRects(area, &left, &right);
+	wima_area_childrenRects(area, &left, &right);
 
-		// Resize the children.
-		wima_area_node_resize(areas, dtree_left(node), left, adjustSplit);
-		wima_area_node_resize(areas, dtree_right(node), right, adjustSplit);
-	}
+	wima_area_node_resize(areas, dtree_left(node), left, adjustSplit);
+	wima_area_node_resize(areas, dtree_right(node), right, adjustSplit);
 }
 
 WimaStatus wima_area_layoutHeader(WimaLayout root)
@@ -881,41 +772,32 @@ WimaStatus wima_area_layoutHeader(WimaLayout root)
 
 	wima_assert_init;
 
-	// Insert the widget to choose the editor type.
-	// TODO: Make the widget and replace the current
-	// widget with it. The current widget just uses
-	// whatever the first WimaProperty is.
+	// TODO: Make the editor swithcer and replace the current
+	// widget with it. The current widget just uses whatever
+	// the first WimaProperty is.
 	WimaWidget widget = wima_layout_widget(root, 0);
 	if (yerror(widget.widget == WIMA_WIDGET_INVALID)) return WIMA_STATUS_LAYOUT_ERR;
 
-	// Get the area pointer.
 	WimaAr* area = wima_area_ptr(root.window, root.area);
 
 	wassert(area->area.type < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
 
-	// Get the editor.
 	WimaEdtr* edtr = dvec_get(wg.editors, area->area.type);
 
-	// Get the header layout function and see if it exists.
 	WimaAreaHeaderLayoutFunc layout = edtr->funcs.layout;
 	if (layout)
 	{
-		// Add a separator.
 		wima_layout_separator(root);
 
-		// Set the flags.
 		uint16_t flags = 0;
 		flags = wima_layout_setExpandFlags(flags, false, true);
 
-		// Create the layout that will be the user's root.
 		WimaLayout row = wima_layout_row(root, true);
 
-		// Call the header layout function.
 		status = layout(row);
 	}
 	else
 	{
-		// Make sure this is clear.
 		status = WIMA_STATUS_SUCCESS;
 	}
 
@@ -933,25 +815,20 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 {
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
-	// Get the area.
 	WimaAr* area = dtree_node(areas, node);
 
 	WimaStatus status;
 
-	// If this is a parent node...
 	if (WIMA_AREA_IS_PARENT(area))
 	{
 		WimaSizef lmin, rmin;
 		float ldim, rdim;
 
-		// Layout the left child and check for error.
 		status = wima_area_node_layout(areas, dtree_left(node), roots, &lmin);
 		if (yerror(status)) return status;
 
-		// Layout the right child and return the error.
 		status = wima_area_node_layout(areas, dtree_right(node), roots, &rmin);
 
-		// Get the relevant children dimensions.
 		if (area->parent.vertical)
 		{
 			ldim = lmin.w;
@@ -963,11 +840,9 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 			rdim = rmin.h;
 		}
 
-		// Calculate the dimensions relative to the parent.
 		ldim /= area->parent.split;
 		rdim /= (1 - area->parent.split);
 
-		// Make sure to expand the appropriate parent min.
 		if (area->parent.vertical)
 		{
 			min->w = ldim > min->w ? ldim : min->w;
@@ -979,41 +854,33 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 			min->h = rdim > min->h ? rdim : min->h;
 		}
 
-		// Store the minimum size.
 		min->w = lmin.w + rmin.w + area->parent.vertical;
 		min->h = lmin.h + rmin.h + !area->parent.vertical;
 	}
 	else
 	{
-		// Reset the item count.
 		area->area.ctx.itemCount = 0;
 
-		// Create a handle to the area (to pass to user functions).
 		WimaArea wah;
 		wah.area = node;
 		wah.window = area->window;
 
-		// Create a size to pass to user functions.
 		WimaSize size;
 		size.w = area->rect.w;
 		size.h = area->rect.h;
 
 		wassert(area->area.type < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
 
-		// Get the editor and its number of regions.
 		WimaEdtr* edtr = dvec_get(wg.editors, area->area.type);
 		uint8_t numRegions = edtr->numRegions;
 
-		// Create a parent layout handle (invalid).
 		WimaLayout parent;
 		parent.layout = WIMA_LAYOUT_INVALID;
 		parent.area = node;
 		parent.window = area->window;
 
-		// Cache this.
 		uint16_t initialFlags = wima_layout_setExpandFlags(0, true, true);
 
-		// Fill a rectangle.
 		WimaRectf rect;
 		rect.x = (float) area->rect.x;
 		rect.y = (float) area->rect.y;
@@ -1025,21 +892,16 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 
 		prev.w = prev.h = min->w = min->h = 0.0f;
 
-		// Loop over regions.
 		for (uint8_t i = 0; i < numRegions; ++i)
 		{
-			// Set the parent's region.
 			parent.region = i;
 
-			// Get the region handle.
 			WimaRegion region = edtr->regions[i];
 
 			wassert(region < dvec_len(wg.regions), WIMA_ASSERT_REG);
 
-			// Get the region.
 			WimaReg* reg = dvec_get(wg.regions, region);
 
-			// Set the flags.
 			bool vScroll = WIMA_REG_CAN_SCROLL_VERTICAL(reg) != 0;
 			bool hScroll = WIMA_REG_CAN_SCROLL_HORIZONTAL(reg) != 0;
 			bool vertical = WIMA_REG_IS_VERTICAL(reg) != 0;
@@ -1047,90 +909,66 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 			flags = wima_layout_setExpandFlags(flags, vertical, !vertical);
 			flags |= WIMA_REG_IS_ROW(reg) ? WIMA_LAYOUT_ROW : WIMA_LAYOUT_COL;
 
-			// Create a root layout and push it onto the vector.
 			WimaLayout root = wima_layout_new(parent, flags, 0.0f);
 			if (yerror(dvec_push(roots, &root))) return WIMA_STATUS_MALLOC_ERR;
 
-			// Do the layout and check for error. The layout
-			// function is guaranteed to be non-null.
 			status = reg->layout(root);
 			if (yerror(status)) return status;
 
-			// Get the item for the root layout.
 			WimaItem* item = wima_layout_ptr(root);
-
-			// Compute the layout size.
 			WimaSizef size = wima_layout_size(item);
 
 			WimaRectf regRect;
 			float width, height;
 
-			// Cache these.
 			width = fabsf(size.w);
 			height = fabsf(size.h);
 
-			// Set the minimum size.
 			temp.w = prev.w + width + WIMA_REG_BORDER2;
 			temp.h = prev.h + height + WIMA_REG_BORDER2;
 			min->w = temp.w > min->w ? temp.w : min->w;
 			min->h = temp.w > min->h ? temp.h : min->h;
 
-			// If the region is vertical...
 			if (WIMA_REG_IS_VERTICAL(reg))
 			{
-				// We can set these without worrying.
 				regRect.y = rect.y + WIMA_REG_BORDER;
 				regRect.h = rect.h - WIMA_REG_BORDER2;
 				regRect.w = width;
 
-				// We must make sure to get the x coordinate right.
 				regRect.x = WIMA_REG_IS_LEFT(reg) ? rect.x : rect.x + rect.w - width;
 
-				// Adjust the rectangle.
 				rect.x += width + WIMA_REG_BORDER2;
 				rect.w -= width + WIMA_REG_BORDER2;
 
-				// Set the previous.
 				prev.w += temp.w;
 			}
-
-			// If the region is horizontal...
 			else
 			{
-				// We can set these without worrying.
 				regRect.x = rect.x + WIMA_REG_BORDER;
 				regRect.w = rect.w - WIMA_REG_BORDER2;
 				regRect.h = height;
 
-				// We must make sure to get the y coordinate right.
 				regRect.y = WIMA_REG_IS_LEFT(reg) ? rect.y : rect.y + rect.h - height;
 
-				// Adjust the rectangle.
 				rect.y += height + WIMA_REG_BORDER2;
 				rect.h -= height + WIMA_REG_BORDER2;
 
-				// Set the previous.
 				prev.h += temp.h;
 			}
 
-			// Set the rectangle.
 			item->rect = regRect;
 		}
 
-		// Keep track of what's left.
 		temp = *min;
 
-		// Add a border for the area.
 		min->w += WIMA_REG_BORDER2;
 		min->h += WIMA_REG_BORDER2;
 
 		for (uint8_t i = 0; i < numRegions; ++i)
 		{
-			// Get the item.
 			WimaLayout root = *((WimaLayout*) dvec_get(roots, i));
 			WimaItem* item = wima_layout_ptr(root);
 
-			// Expand the appropriate dimension.
 			if (item->layout.flags & WIMA_LAYOUT_FILL_VER)
 			{
 				item->rect.h = temp.h;
@@ -1142,23 +980,19 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 				temp.h -= item->rect.h;
 			}
 
-			// Compute the layout and check for error.
 			status = wima_layout_layout(item);
 			if (yerror(status)) return status;
 		}
 
 		if (yerror(dvec_setLength(roots, 0))) return WIMA_STATUS_MALLOC_ERR;
 
-		// Take scale into account.
 		min->w *= area->area.scale;
 		min->h *= area->area.scale;
 	}
 
-	// Make sure the min size is an integer.
 	min->w = ceilf(min->w);
 	min->h = ceilf(min->h);
 
-	// Set the min in the struct.
 	area->minSize.w = (int) min->w;
 	area->minSize.h = (int) min->h;
 
@@ -1174,7 +1008,6 @@ WimaAreaNode wima_area_mouseOver(DynaTree areas, WimaVec cursor)
 
 	wassert(dtree_exists(areas, root), WIMA_ASSERT_AREA);
 
-	// Send the operation to the root node.
 	return wima_area_node_containsMouse(areas, dtree_node(areas, root), cursor);
 }
 
@@ -1182,31 +1015,24 @@ static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, W
 {
 	WimaAreaNode result;
 
-	// If the node is a parent...
 	if (WIMA_AREA_IS_PARENT(area))
 	{
-		// Get the left DynaNode.
 		DynaNode leftNode = dtree_left(area->node);
 
 		wassert(dtree_exists(areas, leftNode), WIMA_ASSERT_AREA);
 
-		// Get a pointer to the left node.
 		WimaAr* left = dtree_node(areas, leftNode);
 
-		// Check if the left's rect has the cursor.
 		if (wima_rect_contains(left->rect, cursor))
 		{
-			// If so, send the operation to the left child.
 			result = wima_area_node_containsMouse(areas, left, cursor);
 		}
 		else
 		{
-			// Get the right DynaNode.
 			DynaNode rightNode = dtree_right(area->node);
 
 			wassert(dtree_exists(areas, rightNode), WIMA_ASSERT_AREA);
 
-			// Get a pointer to the right node.
 			WimaAr* right = dtree_node(areas, rightNode);
 
 			// If the right rect has the cursor, send the operation
@@ -1220,7 +1046,7 @@ static WimaAreaNode wima_area_node_containsMouse(DynaTree areas, WimaAr* area, W
 	}
 	else
 	{
-		// We found the leaf node with the cursor, so return it.
+		// We found the leaf node with the cursor.
 		result = area->node;
 	}
 
@@ -1238,24 +1064,17 @@ static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVec p
 {
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
-	// Get a pointer to the area.
 	WimaAr* area = dtree_node(areas, node);
 
-	// Obviously, if this is a leaf area,
-	// it does not have a split, so the
-	// mouse cannot be on it.
 	if (WIMA_AREA_IS_LEAF(area)) return false;
 
 	bool on;
 
-	// Cache these.
 	bool vertical = area->parent.vertical;
 	int split = area->parent.spliti;
 
-	// Translate the point into area space.
 	WimaVec tx = wima_area_translatePos(area, pos);
 
-	// Check different coordinates depending on if the split is vertical.
 	if (vertical)
 	{
 		int x = tx.x - split;
@@ -1267,38 +1086,25 @@ static bool wima_area_node_mouseOnSplit(DynaTree areas, DynaNode node, WimaVec p
 		on = y >= -WIMA_AREA_SPLIT_LIMIT && y <= WIMA_AREA_SPLIT_LIMIT;
 	}
 
-	// If the cursor is not on a split...
 	if (!on)
 	{
-		// Get the left node.
 		DynaNode leftNode = dtree_left(node);
 		WimaAr* left = dtree_node(areas, leftNode);
 
-		// If the cursor is in the left node...
 		if (wima_rect_contains(left->rect, pos))
 		{
-			// Check the left node
 			on = wima_area_node_mouseOnSplit(areas, leftNode, pos, result);
 		}
-
-		// If the cursor is not in the left node...
 		else
 		{
-			// Get the right node.
 			DynaNode rightNode = dtree_right(node);
 			WimaAr* right = dtree_node(areas, rightNode);
 
-			// If the cursor is in the right node...
-			if (wima_rect_contains(right->rect, pos))
-			{
-				// Check the right node.
-				on = wima_area_node_mouseOnSplit(areas, rightNode, pos, result);
-			}
+			if (wima_rect_contains(right->rect, pos)) on = wima_area_node_mouseOnSplit(areas, rightNode, pos, result);
 		}
 	}
 	else
 	{
-		// Set the result's data.
 		result->split = split;
 		result->area = node;
 		result->window = area->window;
@@ -1314,52 +1120,33 @@ void wima_area_moveSplit(DynaTree areas, DynaNode node, WimaAreaSplit split, Wim
 
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
-	// Get the area.
 	WimaAr* area = dtree_node(areas, node);
 
-	// Translate the cursor into area space.
 	WimaVec pos = wima_area_translatePos(area, cursor);
 
-	// Get the difference between the correct cursor coordinate
-	// and the integer location of the split.
 	int diff = (split.vertical ? pos.x : pos.y) - area->parent.spliti;
 
-	// Figure out if the cursor is on the left (or above) or not.
 	bool isLeft = diff < 0;
 
-	// Get the DynaNode of the appropriate child.
 	DynaNode child = isLeft ? dtree_left(node) : dtree_right(node);
 
-	// Calculate the limit of the child.
 	int limit = wima_area_node_moveSplit_limit(areas, child, diff < 0, split.vertical);
-
-	// We need to flip the limit if the cursor is on the left or above.
 	limit = isLeft && limit != 0 ? -limit : limit;
 
-	// If there is a limit, return happy.
 	if (limit == 0) return;
 
-	// Make sure the difference is the smaller of itself and the limit.
 	diff = abs(diff) > abs(limit) ? limit : diff;
-
-	// Add the diff to the split location.
 	area->parent.spliti += diff;
 
-	// Get the appropriate dimension.
 	float dim = (float) (area->rect.v[!split.vertical + 2] - 1);
-
-	// Set the float value.
 	area->parent.split = (float) area->parent.spliti / dim;
 
-	// Get the children nodes.
 	DynaNode leftNode = dtree_left(node);
 	DynaNode rightNode = dtree_right(node);
 
-	// Move the children's splits.
 	wima_area_node_moveSplit(areas, leftNode, diff, true, split.vertical);
 	wima_area_node_moveSplit(areas, rightNode, -diff, false, split.vertical);
 
-	// Resize this node and its children, and return the status.
 	wima_area_node_resize(areas, node, area->rect, false);
 }
 
@@ -1369,59 +1156,38 @@ static void wima_area_node_moveSplit(DynaTree areas, DynaNode node, int diff, bo
 
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
-	// Get the node.
 	WimaAr* area = dtree_node(areas, node);
 
-	// If we are moving a vertical split...
 	if (vertical)
-	{
-		// If we're moving it left, add to the width, otherwise, subtract.
 		area->rect.w += diff * (!left * -2 + 1);
-	}
+	else
+		area->rect.h += diff * (!left * -2 + 1);
 
-	// If we're not moving a vertical split...
+	if (WIMA_AREA_IS_LEAF(area)) return;
+
+	DynaNode child;
+	float dim;
+
+	// We don't have to move splits of areas
+	// that are not oriented the same way.
+	if (!vertical == !area->parent.vertical)
+	{
+		if (!left)
+		{
+			area->parent.spliti -= diff;
+		}
+
+		dim = (float) (area->rect.v[!vertical + 2] - 1);
+		area->parent.split = (float) area->parent.spliti / dim;
+	}
 	else
 	{
-		// If we're moving it left, add to the width, otherwise, subtract.
-		area->rect.h += diff * (!left * -2 + 1);
-	}
-
-	// If this is a parent node...
-	if (WIMA_AREA_IS_PARENT(area))
-	{
-		DynaNode child;
-		float dim;
-
-		// If the splits of the moving node and
-		// this node are the same direction...
-		if (!vertical == !area->parent.vertical)
-		{
-			// If we're moving right...
-			if (!left)
-			{
-				// Add the difference.
-				area->parent.spliti -= diff;
-			}
-
-			// Get the appropriate dimension and set the float split.
-			dim = (float) (area->rect.v[!vertical + 2] - 1);
-			area->parent.split = (float) area->parent.spliti / dim;
-		}
-		else
-		{
-			// Get the appropriate child node.
-			child = left ? dtree_left(node) : dtree_right(node);
-
-			// Move the child's split.
-			wima_area_node_moveSplit(areas, child, diff, left, vertical);
-		}
-
-		// Get the other child.
-		child = left ? dtree_right(node) : dtree_left(node);
-
-		// Move that child's split.
+		child = left ? dtree_left(node) : dtree_right(node);
 		wima_area_node_moveSplit(areas, child, diff, left, vertical);
 	}
+
+	child = left ? dtree_right(node) : dtree_left(node);
+	wima_area_node_moveSplit(areas, child, diff, left, vertical);
 }
 
 static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool isLeft, bool vertical)
@@ -1430,47 +1196,33 @@ static int wima_area_node_moveSplit_limit(DynaTree areas, DynaNode node, bool is
 
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
-	// Get the area.
 	WimaAr* area = dtree_node(areas, node);
 
 	int limit;
 
-	// If this is a parent area...
 	if (WIMA_AREA_IS_PARENT(area))
 	{
-		// Get the appropriate child; it's opposite because we're getting
-		// the one that is shrinking.
+		// We need the child that is shrinking.
 		DynaNode childNode = isLeft ? dtree_right(area->node) : dtree_left(area->node);
 
-		// Get the child's limit.
 		limit = wima_area_node_moveSplit_limit(areas, childNode, isLeft, vertical);
 
-		// If the vertical of the moving split and this node do not match...
+		// We only need to check limits on areas that are oriented the same.
 		if (!vertical != !area->parent.vertical)
 		{
-			// Get the appropriate child.
 			childNode = isLeft ? dtree_left(area->node) : dtree_right(area->node);
-
-			// Get the child's limit.
 			int lim = wima_area_node_moveSplit_limit(areas, childNode, isLeft, vertical);
-
-			// Set the limit as the min of the two limits.
 			limit = wima_min(limit, lim);
 		}
 	}
-
-	// If this is a leaf area...
 	else
 	{
-		// Get the appropriate dimensions.
 		int dim = area->rect.v[!vertical + 2];
 		int layout_min = area->minSize.v[!vertical];
 
-		// Calculate the min.
 		int min = (int) (ceilf(((float) WIMA_AREA_MIN_SIZE) * area->area.scale));
 		min = layout_min > min ? layout_min : min;
 
-		// Calculate the limit.
 		limit = dim - min;
 	}
 
@@ -1485,7 +1237,6 @@ WimaWidget wima_area_findWidget(DynaTree areas, WimaVec pos, uint32_t flags)
 
 	wassert(dtree_exists(areas, root), WIMA_ASSERT_AREA);
 
-	// Send the operation to the nodes.
 	return wima_area_node_findWidget(areas, dtree_node(areas, root), pos, flags);
 }
 
@@ -1495,42 +1246,32 @@ static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVe
 
 	WimaWidget wdgt;
 
-	// If this is a parent area...
 	if (WIMA_AREA_IS_PARENT(area))
 	{
-		// Get the left DynaNode.
 		DynaNode leftNode = dtree_left(area->node);
 
 		wassert(dtree_exists(areas, leftNode), WIMA_ASSERT_AREA);
 
-		// Get the left pointer.
 		WimaAr* left = dtree_node(areas, leftNode);
 
-		// If the position is in the left...
 		if (wima_rect_contains(left->rect, pos))
 		{
-			// Find the widget there.
 			wdgt = wima_area_node_findWidget(areas, left, pos, flags);
 		}
 		else
 		{
-			// Get the right DynaNode.
 			DynaNode rightNode = dtree_right(area->node);
 
 			wassert(dtree_exists(areas, rightNode), WIMA_ASSERT_AREA);
 
-			// Get the right pointer.
 			WimaAr* right = dtree_node(areas, rightNode);
 
-			// If the position is on the right...
 			if (wima_rect_contains(right->rect, pos))
 			{
-				// Find the widget there.
 				wdgt = wima_area_node_findWidget(areas, right, pos, flags);
 			}
 			else
 			{
-				// No widget, so return blank data.
 				wdgt.widget = -1;
 				wdgt.area = area->node;
 				wdgt.window = area->window;
@@ -1541,43 +1282,33 @@ static WimaWidget wima_area_node_findWidget(DynaTree areas, WimaAr* area, WimaVe
 	{
 		WimaItem* pitem;
 
-		// Set blank data.
 		WimaWidget item;
 		item.widget = 0;
 		item.area = area->node;
 		item.window = area->window;
 
-		// Set invalid data in return.
 		wdgt = item;
 		wdgt.widget = WIMA_WIDGET_INVALID;
 
-		// TODO: Remove this.
+		// TODO: Remove this and make the rest of the code work.
 		return wdgt;
 
-		// Translate the position to the area.
 		pos = wima_area_translatePos(area, pos);
 
-		// While we still have a valid widget...
 		while (item.widget != WIMA_WIDGET_INVALID)
 		{
-			// Get the widget pointer.
 			pitem = wima_widget_ptr(item);
 
-			// If the widget contains the position...
 			if (wima_widget_contains(item, pos))
 			{
-				// If the widget is disabled, break.
 				if (!(pitem->layout.flags & WIMA_LAYOUT_ENABLE)) break;
 
-				// If the widget matches criteria, set it to return.
 				if (flags == WIMA_ITEM_ANY || pitem->widget.flags & flags) wdgt = item;
 
-				// Get the first kid.
 				item.widget = pitem->layout.firstKid;
 			}
 			else
 			{
-				// Get the next sibling.
 				item.widget = pitem->nextSibling;
 			}
 		}
@@ -1597,40 +1328,29 @@ static void wima_area_childrenRects(WimaAr* area, WimaRect* left, WimaRect* righ
 	wassert(left, WIMA_ASSERT_PTR_NULL);
 	wassert(right, WIMA_ASSERT_PTR_NULL);
 
-	// Get the split location and cache its value plus 1.
 	int split = area->parent.spliti;
 	int splitPlus = split + 1;
 
-	// Set these because they don't depend on anything.
 	left->x = area->rect.x;
 	left->y = area->rect.y;
 
-	// If the split is vertical...
 	if (area->parent.vertical)
 	{
-		// These can just be set now.
 		right->y = area->rect.y;
 		left->h = right->h = area->rect.h;
 
-		// Set the left width to go up to, but
-		// not including, the split location.
 		left->w = split;
 
-		// Set the right's x location and width.
 		right->x = splitPlus + area->rect.x;
 		right->w = area->rect.w - splitPlus;
 	}
 	else
 	{
-		// These can just be set now.
 		right->x = area->rect.x;
 		left->w = right->w = area->rect.w;
 
-		// Set the left height to go up to, but
-		// not including, the split location.
 		left->h = split;
 
-		// Set the right's y location and height.
 		right->y = splitPlus + area->rect.y;
 		right->h = area->rect.h - splitPlus;
 	}
@@ -1642,7 +1362,6 @@ static void wima_area_pushViewport(NVGcontext* nvg, WimaRect viewport)
 
 	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
 
-	// Set up NanoVG viewport and scissor.
 	nvgScissor(nvg, viewport.x, viewport.y, viewport.w, viewport.h);
 	nvgTranslate(nvg, viewport.x, viewport.y);
 }
@@ -1653,7 +1372,6 @@ static void wima_area_popViewport(NVGcontext* nvg)
 
 	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
 
-	// Reset NanoVG viewport and scissor.
 	nvgResetTransform(nvg);
 	nvgResetScissor(nvg);
 }
@@ -1665,7 +1383,6 @@ static void wima_area_background(WimaAr* area, NVGcontext* nvg, WimaPropData* bg
 	wassert(nvg, WIMA_ASSERT_WIN_CONTEXT);
 	wassert(bg, WIMA_ASSERT_PROP);
 
-	// Draw the background.
 	nvgBeginPath(nvg);
 	nvgRect(nvg, 0, 0, area->rect.w, area->rect.h);
 	nvgFillColor(nvg, bg->_nvgcolor);
@@ -1680,34 +1397,28 @@ static void wima_area_drawBorders(WimaAr* area, NVGcontext* nvg)
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	// Calculate the color of the left-top border and the right-bottom border.
 	NVGcolor ltborder = nvgRGBAf(0.67f, 0.67f, 0.67f, 0.67f);
 	NVGcolor rbborder = nvgRGBAf(0.25f, 0.25f, 0.25f, 0.67f);
 
-	// Calculate the end coordinates.
 	float xend = area->rect.w - 0.5f;
 	float yend = area->rect.h - 0.5f;
 
-	// Draw the left top border.
 	nvgBeginPath(nvg);
 	nvgMoveTo(nvg, 0.5f, yend);
 	nvgLineTo(nvg, 0.5f, 0.5f);
 	nvgLineTo(nvg, xend, 0.5f);
 
-	// Set the style for the left top border.
 	nvgStrokeWidth(nvg, 1.0f);
 	nvgStrokeColor(nvg, ltborder);
 	nvgFillColor(nvg, nvgRGBA(0, 0, 0, 0));
 	nvgStroke(nvg);
 	nvgFill(nvg);
 
-	// Draw the right bottom border.
 	nvgBeginPath(nvg);
 	nvgMoveTo(nvg, xend, 0.5f);
 	nvgLineTo(nvg, xend, yend);
 	nvgLineTo(nvg, 0.5f, yend);
 
-	// Set the style for the right bottom border.
 	nvgStrokeColor(nvg, rbborder);
 	nvgStroke(nvg);
 	nvgFill(nvg);
@@ -1721,36 +1432,29 @@ static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg)
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	// Calculate the dark color.
 	NVGcolor dark = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.5882f);
 	NVGcolor light = nvgRGBAf(1.0f, 1.0f, 1.0f, 0.2900f);
 
 	NVGcolor insetLight;
 	NVGcolor insetDark;
 
-	// Calculate the rect floats.
 	float x = 0.0f;
 	float y = 0.0f;
 	float w = (float) area->rect.w;
 	float h = (float) area->rect.h;
 
-	// Set style for the widgets.
 	nvgShapeAntiAlias(nvg, 0);
 	nvgStrokeWidth(nvg, 1.0f);
 
-	// Offsets from the lightOffset (and lightOffset from corner).
 	float lightOffset = 1.0f;
 	float darkOffset = 1.0f;
 	float darkInsetOffset = 2.0f;
 	float lightInsetOffset = -1.0f;
 
-	// Draw three iterations, getting more and more opaque.
 	for (int i = 0; i < 3; ++i)
 	{
-		// Start at 5, and add 4 each time.
 		lightOffset += 4.0f;
 
-		// Draw the light lines on both corners.
 		nvgBeginPath(nvg);
 		nvgMoveTo(nvg, x, h - lightOffset);
 		nvgLineTo(nvg, x + lightOffset, h);
@@ -1759,7 +1463,6 @@ static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg)
 		nvgStrokeColor(nvg, light);
 		nvgStroke(nvg);
 
-		// Draw the dark lines on both corners.
 		nvgBeginPath(nvg);
 		nvgMoveTo(nvg, x, h - lightOffset - darkOffset);
 		nvgLineTo(nvg, x + lightOffset + darkOffset, h);
@@ -1768,11 +1471,9 @@ static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg)
 		nvgStrokeColor(nvg, dark);
 		nvgStroke(nvg);
 
-		// Calculate the color of the two insets.
 		insetLight = nvgLerpRGBA(light, dark, 0.333f);
 		insetDark = nvgLerpRGBA(light, dark, 0.667f);
 
-		// Draw the lightInset on both corners.
 		nvgBeginPath(nvg);
 		nvgMoveTo(nvg, x, h - lightOffset - lightInsetOffset);
 		nvgLineTo(nvg, x + lightOffset + lightInsetOffset, h);
@@ -1781,7 +1482,6 @@ static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg)
 		nvgStrokeColor(nvg, insetLight);
 		nvgStroke(nvg);
 
-		// Draw the darkInset on both corners.
 		nvgBeginPath(nvg);
 		nvgMoveTo(nvg, x, h - lightOffset - darkInsetOffset);
 		nvgLineTo(nvg, x + lightOffset + darkInsetOffset, h);
@@ -1790,12 +1490,10 @@ static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg)
 		nvgStrokeColor(nvg, insetDark);
 		nvgStroke(nvg);
 
-		// Make the colors more opaque.
 		light.a += 0.1961f;
 		dark.a += 0.1961f;
 	}
 
-	// Turn antialiasing back on.
 	nvgShapeAntiAlias(nvg, 1);
 }
 
@@ -1810,13 +1508,11 @@ void wima_area_drawJoinOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, b
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	// Calculate the rect.
 	float x = 0.0f;
 	float y = 0.0f;
 	float w = area->rect.w;
 	float h = area->rect.h;
 
-	// Flip for vertical, if need be.
 	if (vertical)
 	{
 		float u = w;
@@ -1824,12 +1520,10 @@ void wima_area_drawJoinOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, b
 		h = u;
 	}
 
-	// Calculate the small of the two dimensions.
 	float s = (w < h) ? w : h;
 
 	float x0, y0, x1, y1;
 
-	// If we are mirroring...
 	if (mirror)
 	{
 		x0 = w;
@@ -1846,35 +1540,26 @@ void wima_area_drawJoinOverlay(DynaTree areas, DynaNode node, NVGcontext* nvg, b
 		y1 = h;
 	}
 
-	// Calculate preliminary coordinates.
 	float yc = (y0 + y1) * 0.5f;
 	float s2 = s / 2.0f;
 	float s4 = s / 4.0f;
 	float s8 = s / 8.0f;
 	float x4 = x0 + s4;
 
-	// An array of points.
 	float points[][2] = {
 	    { x0, y0 },      { x1, y0 },      { x1, y1 },      { x0, y1 },      { x0, yc + s8 }, { x4, yc + s8 },
 	    { x4, yc + s4 }, { x0 + s2, yc }, { x4, yc - s4 }, { x4, yc - s8 }, { x0, yc - s8 },
 	};
 
-	// Calculate the number of points.
 	int count = sizeof(points) / (sizeof(float) * 2);
 
-	// Begin the path.
 	nvgBeginPath(nvg);
 
-	// Move to the first point.
 	nvgMoveTo(nvg, x + points[0][vertical & 1], y + points[0][(vertical & 1) ^ 1]);
 
-	// Iterate through the rest of the points and draw between them.
 	for (int i = 1; i < count; ++i) nvgLineTo(nvg, x + points[i][vertical & 1], y + points[i][(vertical & 1) ^ 1]);
 
-	// Set the fill color.
 	nvgFillColor(nvg, nvgRGBAf(0, 0, 0, 0.3));
-
-	// End the path.
 	nvgFill(nvg);
 }
 
@@ -1885,15 +1570,12 @@ void wima_area_drawSplitOverlay(DynaTree areas, DynaNode node, WimaVec cursor, N
 
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
-	// Get the area.
 	WimaAr* area = dtree_node(areas, node);
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	// Begin the path.
 	nvgBeginPath(nvg);
 
-	// Draw the path in the right direction.
 	if (vertical)
 	{
 		nvgMoveTo(nvg, area->rect.x, cursor.y);
@@ -1905,7 +1587,6 @@ void wima_area_drawSplitOverlay(DynaTree areas, DynaNode node, WimaVec cursor, N
 		nvgLineTo(nvg, cursor.x, area->rect.y + area->rect.h);
 	}
 
-	// Stroke the path.
 	NVGcolor c = nvgRGB(255, 255, 255);
 	nvgStrokeColor(nvg, c);
 	nvgStroke(nvg);
@@ -1919,7 +1600,6 @@ WimaVec wima_area_translatePos(WimaAr* area, WimaVec pos)
 
 	WimaVec result;
 
-	// Calculate the new position's coordinates.
 	result.x = pos.x - area->rect.x;
 	result.y = pos.y - area->rect.y;
 

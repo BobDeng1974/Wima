@@ -280,17 +280,13 @@ WimaG wg;
 
 WimaStatus wima_ninit(const char* name, WimaAppFuncs funcs, const char* fontPath, uint32_t numIcons, ...)
 {
-	va_list iconPaths;
-
 	wassert(numIcons <= WIMA_MAX_ICONS, WIMA_ASSERT_APP_NUM_ICONS);
 
-	// Set up the list.
+	va_list iconPaths;
 	va_start(iconPaths, numIcons);
 
-	// Init Wima.
 	WimaStatus status = wima_vinit(name, funcs, fontPath, numIcons, iconPaths);
 
-	// Clean up.
 	va_end(iconPaths);
 
 	return status;
@@ -300,13 +296,10 @@ WimaStatus wima_vinit(const char* name, WimaAppFuncs funcs, const char* fontPath
 {
 	wassert(numIcons <= WIMA_MAX_ICONS, WIMA_ASSERT_APP_NUM_ICONS);
 
-	// Create a list of paths.
 	const char* paths[numIcons];
 
-	// Load the paths into the list.
 	for (uint32_t i = 0; i < numIcons; ++i) paths[i] = va_arg(iconPaths, char*);
 
-	// Init Wima.
 	return wima_init(name, funcs, fontPath, numIcons, paths);
 }
 
@@ -314,185 +307,136 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
                      const char* iconPaths[])
 {
 	wassert(!wg.name, WIMA_ASSERT_INIT_DONE);
-
 	wassert(name, WIMA_ASSERT_APP_NAME);
-
 	wassert(funcs.error, WIMA_ASSERT_APP_ERROR_FUNC);
 
-	// Check that we can access the font and icon sheets.
 	wassert(fontPath, WIMA_ASSERT_APP_FONT_PATH);
 	wassert(access(fontPath, F_OK | R_OK) != -1, WIMA_ASSERT_APP_FONT_READ);
 
-	// Check to make sure the icons are good.
 	wassert(numIcons <= WIMA_MAX_ICONS, WIMA_ASSERT_APP_NUM_ICONS);
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
-	// Clear wg before trying to set anything.
 	memset(&wg, 0, sizeof(WimaG));
 
-	// Set the functions.
 	wg.funcs = funcs;
 
-	// Create and if error, exit.
 	wg.name = dstr_create(name);
 	if (yerror(!wg.name)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.windows = dvec_create(0, sizeof(WimaWin), wima_window_destroy, wima_window_copy);
 	if (yerror(!wg.windows)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.props = dnvec_ncreate(2, 0, wima_prop_destroy, wima_prop_copy, sizeof(WimaPropInfo), sizeof(WimaPropData));
 	if (yerror(!wg.props)) goto wima_init_malloc_err;
 
-	// Set the directory grid.
 	wg.dirGrid = wima_prop_bool_register("wima_directory_grid", "Grid", "Lay out the directory in a grid",
 	                                     WIMA_ICON_INVALID, true);
 	if (yerror(wg.dirGrid == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.menuRects = dvec_create(0, sizeof(WimaRect), NULL, NULL);
 	if (yerror(!wg.menuRects)) goto wima_init_malloc_err;
 
-	// Set the initial theme.
 	wg.theme = wima_theme_load(wg.themes, wg.themeStarts);
 	if (yerror(wg.theme == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.customProps = dvec_create(0, sizeof(WimaCustProp), NULL, NULL);
 	if (yerror(!wg.customProps)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.editors = dvec_create(0, sizeof(WimaEdtr), NULL, NULL);
 	if (yerror(!wg.editors)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.dialogs = dvec_createTreeVec(0, sizeof(WimaAr), wima_area_destroy, wima_area_copy);
 	if (yerror(!wg.dialogs)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.workspaces = dvec_createTreeVec(0, sizeof(WimaAr), wima_area_destroy, wima_area_copy);
 	if (yerror(!wg.workspaces)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.workspaceProps = dvec_create(0, sizeof(WimaProperty), NULL, NULL);
 	if (yerror(!wg.workspaceProps)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.regions = dvec_create(0, sizeof(WimaReg), NULL, NULL);
 	if (yerror(!wg.regions)) goto wima_init_malloc_err;
 
-	// Create the flags for a header top region.
 	uint8_t flags = wima_region_setLeftFlag(0);
 
-	// Register the header top region and check for error.
 	wg.regHeaderTop = wima_region_register(wima_area_layoutHeader, 256, flags);
 	if (yerror(wg.regHeaderTop == WIMA_REGION_INVALID)) goto wima_init_malloc_err;
 
-	// Set the flags for a header bottom region.
 	flags = wima_region_clearLeftFlag(flags);
 
-	// Register the header top region and check for error.
 	wg.regHeaderBtm = wima_region_register(wima_area_layoutHeader, 256, flags);
 	if (yerror(wg.regHeaderBtm == WIMA_REGION_INVALID)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.overlays = dvec_create(0, sizeof(WimaOvly), wima_overlay_destroy, wima_overlay_copy);
 	if (yerror(!wg.overlays)) goto wima_init_malloc_err;
 
-	// Register the menu overlay and if error, exit.
 	wg.menuOverlay = wima_overlay_register("Menu", WIMA_ICON_INVALID, wima_overlay_menuLayout);
 	if (yerror(wg.menuOverlay == WIMA_OVERLAY_INVALID)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.icons = dnvec_ncreate(2, 0, wima_icon_destroy, wima_icon_copy, sizeof(WimaIcn), sizeof(WimaIconMarker));
 	if (yerror(!wg.icons)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.iconPathWindings = dvec_create(0, sizeof(bool), NULL, NULL);
 	if (yerror(!wg.iconPathWindings)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.imagePaths = dvec_createStringVec(0);
 	if (yerror(!wg.imagePaths)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.imageFlags = dvec_create(0, sizeof(WimaImageFlags), NULL, NULL);
 	if (yerror(!wg.imageFlags)) goto wima_init_malloc_err;
 
-	// Create and if error, exit.
 	wg.fontPath = dstr_create(fontPath);
 	if (yerror(!wg.fontPath)) goto wima_init_malloc_err;
 
-	// Need these for later.
 	int x;
 	int y;
 	int components;
 	uint8_t* data;
 	uint32_t i;
 
-	// Create the icon images.
 	for (i = 0; i < numIcons; ++i)
 	{
-		// Load the image data using stb_image.
 		data = stbi_load(iconPaths[i], &x, &y, &components, 4);
-
-		// Check for error.
 		if (yerror(!data || components != 4)) goto wima_init_img_load_err;
 
 		GLFWimage image;
 
-		// Create a GLFWimage.
 		image.pixels = data;
 		image.width = x;
 		image.height = y;
 
-		// Add the icon to the list.
 		wg.appIcons[i] = image;
 	}
 
-	// Make sure to set the number of icons.
 	wg.numAppIcons = numIcons;
 
-	// Register the predefined menu and check for error.
 	wg.areaOptionsMenu = wima_prop_menu_register("wima_area_options", "Area Options", NULL, WIMA_ICON_INVALID);
 	if (yerror(wg.areaOptionsMenu == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
 
-	// Register the split menu item.
 	WimaProperty child = wima_prop_operator_register("wima_area_split", "Split Area", NULL, WIMA_ICON_INVALID,
 	                                                 wima_window_splitAreaMode, NULL);
 	if (yerror(child == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
 
-	// Push the split menu item.
 	status = wima_prop_menu_push(wg.areaOptionsMenu, child);
 	if (yerror(status)) goto wima_init_err;
 
-	// Register the join menu item.
 	child = wima_prop_operator_register("wima_area_join", "Join Areas", NULL, WIMA_ICON_INVALID,
 	                                    wima_window_joinAreasMode, NULL);
 	if (yerror(child == WIMA_PROP_INVALID)) goto wima_init_malloc_err;
 
-	// Push the join menu item.
 	status = wima_prop_menu_push(wg.areaOptionsMenu, child);
 	if (yerror(status)) goto wima_init_err;
 
-	// Initialize GLFW and exit on error.
 	if (yerror(!glfwInit())) goto wima_init_init_err;
 
-	// Set the flag.
 	wg.glfwInitialized = true;
 
-	// Set the error callback.
 	glfwSetErrorCallback(wima_callback_error);
 
-	// Create the cursors.
 	for (int i = 0; i < WIMA_CURSOR_NUM_STD; ++i)
 	{
-		// Create the cursor.
 		wg.cursors[i] = glfwCreateStandardCursor(i + GLFW_ARROW_CURSOR);
-
-		// Check for error.
 		if (yerror(!wg.cursors[i])) goto wima_init_init_err;
 	}
 
@@ -500,30 +444,24 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 
 wima_init_img_load_err:
 
-	// If the data is valid, free it.
 	if (data) stbi_image_free(data);
 
-	// Make sure to set the correct number of icons.
 	wg.numAppIcons = i;
 
-	// Set the status and skip to clean up.
 	status = WIMA_STATUS_IMAGE_LOAD_ERR;
 	goto wima_init_err;
 
 wima_init_init_err:
 
-	// Set the status and goto clean up.
 	status = WIMA_STATUS_INIT_ERR;
 	goto wima_init_err;
 
 wima_init_malloc_err:
 
-	// Set the status.
 	status = WIMA_STATUS_MALLOC_ERR;
 
 wima_init_err:
 
-	// Clean up.
 	wima_exit();
 
 	return status;
@@ -533,14 +471,11 @@ WimaStatus wima_main()
 {
 	wima_assert_init;
 
-	// Make sure we have a valid window.
 	GLFWwindow* win = glfwGetCurrentContext();
 	if (yerror(!win)) return WIMA_STATUS_INVALID_STATE;
 
-	// Just make sure we shouldn't close the window right away.
 	if (yunlikely(glfwWindowShouldClose(win))) return WIMA_STATUS_SUCCESS;
 
-	// Main event loop.
 	while (true)
 	{
 #ifdef WIMA_LOOP_TIMER
@@ -548,29 +483,22 @@ WimaStatus wima_main()
 		double time = glfwGetTime();
 #endif
 
-		// Get the window handle.
 		WimaWindow wwh = WIMA_WIN(win);
 
-		// Render here.
 		WimaStatus status = wima_window_draw(wwh);
 		if (yerror(status)) wima_error_desc(status, "Wima encountered an error while rendering.");
 
-		// Poll for events.
 		if (!wima_window_hasTooltip(wwh))
 			glfwWaitEventsTimeout(0.75);
 		else
 			glfwWaitEvents();
 
-		// Get the current window.
 		win = glfwGetCurrentContext();
 
-		// Break if we should close.
 		if (yunlikely(!win || glfwWindowShouldClose(win))) break;
 
-		// Get the window handle.
 		wwh = WIMA_WIN(win);
 
-		// Process events.
 		wima_window_processEvents(wwh);
 
 #ifdef WIMA_LOOP_TIMER
@@ -587,72 +515,45 @@ void wima_exit()
 {
 	wima_assert_init;
 
-	// Terminate GLFW, if necessary.
 	if (wg.glfwInitialized) glfwTerminate();
 
-	// Free the icon images, if they exist.
 	for (size_t i = 0; i < wg.numAppIcons; ++i) stbi_image_free(wg.appIcons[i].pixels);
 
-	// Free the font path, if it exists.
 	if (wg.fontPath) dstr_free(wg.fontPath);
 
-	// Free the image flags vector, if it exists.
 	if (wg.imageFlags) dvec_free(wg.imageFlags);
-
-	// Free the image paths vector, if it exists.
 	if (wg.imagePaths) dvec_free(wg.imagePaths);
 
-	// Free the iconPathWindings vector, if it exists.
 	if (wg.iconPathWindings) dvec_free(wg.iconPathWindings);
-
-	// Free the icon vector, if it exists.
 	if (wg.icons) dnvec_free(wg.icons);
 
-	// Free the menu rectangle vector, if it exists.
 	if (wg.menuRects) dvec_free(wg.menuRects);
 
-	// Free the overlays, if they exist.
 	if (wg.overlays) dvec_free(wg.overlays);
 
-	// Free the dialogs, if they exist.
 	if (wg.regions) dvec_free(wg.regions);
 
-	// Free the icon vector, if it exists.
 	if (wg.workspaceProps) dvec_free(wg.workspaceProps);
-
-	// Free the workspaces, if they exist.
-	// This must be before the editors.
 	if (wg.workspaces) dvec_free(wg.workspaces);
 
-	// Free the dialogs, if they exist.
 	if (wg.dialogs) dvec_free(wg.dialogs);
-
-	// Free the editors, if they exist.
 	if (wg.editors) dvec_free(wg.editors);
 
-	// Free the editors, if they exist.
 	if (wg.customProps) dvec_free(wg.customProps);
 
-	// Free the props, if they exist.
 	if (wg.props)
 	{
-		// Get the length for the next loop.
 		size_t len = dnvec_len(wg.props);
 
-		// Loop over each item and free them all.
 		for (size_t i = 0; i < len; ++i) wima_prop_free(i);
 
-		// Free the actual list.
 		dnvec_free(wg.props);
 	}
 
-	// Free the windows, if they exist.
 	if (wg.windows) dvec_free(wg.windows);
 
-	// If the name exists...
 	if (wg.name)
 	{
-		// Free the name.
 		dstr_free(wg.name);
 
 		// Clear this so we know Wima is not initialized.
