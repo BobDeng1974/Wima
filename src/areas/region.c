@@ -51,81 +51,49 @@
 uint8_t wima_region_setVerticalFlag(uint8_t flags)
 {
 	wima_assert_init;
-
-	// Set the flag.
-	flags |= WIMA_REG_VERTICAL;
-
-	return flags;
+	return flags | WIMA_REG_VERTICAL;
 }
 
 uint8_t wima_region_clearVerticalFlag(uint8_t flags)
 {
 	wima_assert_init;
-
-	// Clear the flag.
-	flags &= ~(WIMA_REG_VERTICAL);
-
-	return flags;
+	return flags & ~(WIMA_REG_VERTICAL);
 }
 
 uint8_t wima_region_setLeftFlag(uint8_t flags)
 {
 	wima_assert_init;
-
-	// Set the flag.
-	flags |= WIMA_REG_LEFT;
-
-	return flags;
+	return flags | WIMA_REG_LEFT;
 }
 
 uint8_t wima_region_clearLeftFlag(uint8_t flags)
 {
 	wima_assert_init;
-
-	// Clear the flag.
-	flags &= ~(WIMA_REG_LEFT);
-
-	return flags;
+	return flags & ~(WIMA_REG_LEFT);
 }
 
 uint8_t wima_region_setRowFlag(uint8_t flags)
 {
 	wima_assert_init;
-
-	// Set the flag.
-	flags |= WIMA_REG_ROW;
-
-	return flags;
+	return flags | WIMA_REG_ROW;
 }
 
 uint8_t wima_region_clearRowFlag(uint8_t flags)
 {
 	wima_assert_init;
-
-	// Clear the flag.
-	flags &= ~(WIMA_REG_ROW);
-
-	return flags;
+	return flags & ~(WIMA_REG_ROW);
 }
 
 uint8_t wima_region_setResizableFlag(uint8_t flags)
 {
 	wima_assert_init;
-
-	// Set the flag.
-	flags |= WIMA_REG_RESIZABLE;
-
-	return flags;
+	return flags | WIMA_REG_RESIZABLE;
 }
 
 uint8_t wima_region_clearResizableFlag(uint8_t flags)
 {
 	wima_assert_init;
-
-	// Clear the flag.
-	flags &= ~(WIMA_REG_RESIZABLE);
-
-	return flags;
+	return flags & ~(WIMA_REG_RESIZABLE);
 }
 
 uint8_t wima_region_setScrollFlags(uint8_t flags, bool main, bool opposite)
@@ -135,20 +103,13 @@ uint8_t wima_region_setScrollFlags(uint8_t flags, bool main, bool opposite)
 	// Just set them as vertical and horizontal for now.
 	// We'll deal with figuring out exactly which ones
 	// when we actually create the region.
-	flags |= main ? WIMA_REG_SCROLL_VERTICAL : 0;
-	flags |= opposite ? WIMA_REG_SCROLL_HORIZONTAL : 0;
-
-	return flags;
+	return (flags | main ? WIMA_REG_SCROLL_VERTICAL : 0) | (opposite ? WIMA_REG_SCROLL_HORIZONTAL : 0);
 }
 
 uint8_t wima_region_clearScrollFlags(uint8_t flags)
 {
 	wima_assert_init;
-
-	// Clear the flags.
-	flags &= ~(WIMA_REG_SCROLL_VERTICAL | WIMA_REG_SCROLL_HORIZONTAL);
-
-	return flags;
+	return flags & ~(WIMA_REG_SCROLL_VERTICAL | WIMA_REG_SCROLL_HORIZONTAL);
 }
 
 WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8_t flags)
@@ -160,34 +121,22 @@ WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8
 
 	WimaReg reg;
 
-	// Fill the struct.
 	reg.layout = layout;
 	reg.itemCap = itemCap;
 
 	// Because the user sets "main" and "opposite" scroll flags,
-	// we may need to switch them. The code below does that.
-
-	// Figure out if we need to switch the flags.
+	// we may need to switch them.
 	bool swtch = (flags & WIMA_REG_VERTICAL) == 0;
-
-	// Figure out the flags for each direction.
 	bool vertical = swtch ? (flags & WIMA_REG_SCROLL_HORIZONTAL) : (flags & WIMA_REG_SCROLL_VERTICAL);
 	bool horizontal = swtch ? (flags & WIMA_REG_SCROLL_VERTICAL) : (flags & WIMA_REG_SCROLL_HORIZONTAL);
-
-	// Do the switch, including clearing the flags
-	// first (so the results are not polluted).
 	flags &= ~(WIMA_REG_SCROLL_VERTICAL | WIMA_REG_SCROLL_HORIZONTAL);
 	flags |= vertical ? WIMA_REG_SCROLL_VERTICAL : 0;
 	flags |= horizontal ? WIMA_REG_SCROLL_HORIZONTAL : 0;
 
-	// Store the flags.
 	reg.flags = flags;
 
-	// Get the length of the vector,
-	// which is also the index.
 	size_t len = dvec_len(wg.regions);
 
-	// Push onto the vector and check for error.
 	if (yerror(dvec_push(wg.regions, &reg)))
 	{
 		wima_error(WIMA_STATUS_MALLOC_ERR);

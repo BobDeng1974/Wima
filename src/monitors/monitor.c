@@ -56,7 +56,6 @@ WimaMonitorArray wima_monitor_list()
 WimaMonitor* wima_monitor_primary()
 {
 	wima_assert_init;
-
 	return (WimaMonitor*) glfwGetPrimaryMonitor();
 }
 

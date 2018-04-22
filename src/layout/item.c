@@ -52,27 +52,17 @@ WimaItem* wima_item_ptr(WimaWindow wwh, WimaAreaNode area, WimaRegion region, ui
 
 	WimaItem* item;
 
-	// Do the right thing based on whether
-	// the item is in an overlay or not.
 	if (region != WIMA_REGION_INVALID)
 	{
-		// Get the area pointer.
 		WimaAr* ar = wima_area_ptr(wwh, area);
-
 		wassert(WIMA_AREA_IS_LEAF(ar), WIMA_ASSERT_AREA_LEAF);
 		wassert(idx < ar->area.ctx.itemCount, WIMA_ASSERT_ITEM);
-
-		// Calculate the pointer.
 		item = ar->area.ctx.items + idx;
 	}
 	else
 	{
-		// Get the window.
 		WimaWin* win = dvec_get(wg.windows, wwh);
-
 		wassert(idx < dvec_len(win->overlayItems), WIMA_ASSERT_ITEM);
-
-		// Calculate the pointer.
 		item = dvec_get(win->overlayItems, idx);
 	}
 
@@ -83,32 +73,22 @@ void wima_item_free(WimaAr* area, WimaItem* item)
 {
 	if (WIMA_ITEM_IS_WIDGET(item))
 	{
-		// Get the property info.
 		WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, item->widget.prop);
 
-		// If the prop type is predefined...
 		if (info->type <= WIMA_PROP_LAST_PREDEFINED)
 		{
 			// TODO: Free data from predefined prop types.
 		}
 		else
 		{
-			// Get the custom prop.
 			WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, item->widget.prop);
 			WimaCustProp* cprop = dvec_get(wg.customProps, data->_ptr.type);
 
-			// Get the free func and see if it exists.
-			WimaWidgetFreeDataFunc free = cprop->funcs.free;
-			if (free && cprop->allocSize)
+			WimaWidgetFreeDataFunc pfree = cprop->funcs.free;
+			if (pfree && cprop->allocSize)
 			{
-				// Generate the key.
 				uint64_t key = wima_widget_hash(item->widget.prop, item->info.widget.region);
-
-				// Get the pointer.
-				void* ptr = dpool_get(area->area.ctx.widgetData, &key);
-
-				// Free the data.
-				free(ptr);
+				pfree(dpool_get(area->area.ctx.widgetData, &key));
 			}
 		}
 	}
@@ -122,13 +102,11 @@ bool wima_item_valid(WimaWindow window, WimaAreaNode node, WimaRegion region, ui
 	wima_assert_init;
 	wassert(wima_window_valid(window), WIMA_ASSERT_WIN);
 
-	// Get the window pointer.
 	WimaWin* win = dvec_get(wg.windows, window);
 
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
 	wassert(dtree_exists(WIMA_WIN_AREAS(win), node), WIMA_ASSERT_AREA);
 
-	// Get a pointer to the area.
 	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), node);
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
