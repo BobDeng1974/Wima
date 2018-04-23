@@ -111,6 +111,9 @@ typedef struct WimaArReg
 	/// The region flags.
 	uint8_t flags;
 
+	/// The region's root layout.
+	WimaLayout root;
+
 } WimaArReg;
 
 /**
@@ -227,13 +230,12 @@ WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node) yretnonnull;
  * @param win	The window the tree will be attached to.
  * @param areas	The tree to initialize.
  * @param rect	The rectangle for the entire window.
- * @param roots	A vector of root layouts.
  * @param min	A pointer to store the min size in.
  * @return		DYNA_STATUS_SUCCESS on success, an error
  *				code otherwise.
  * @pre			@a areas must not be NULL.
  */
-WimaStatus wima_area_init(WimaWindow win, ynonnull DynaTree areas, WimaRect rect, DynaVector roots, WimaSizef* min);
+WimaStatus wima_area_init(WimaWindow win, ynonnull DynaTree areas, WimaRect rect, WimaSizef* min);
 
 /**
  * Copies an area from @a src to @a dest. This is a DynaCopyFunc.
@@ -325,13 +327,12 @@ WimaStatus wima_area_layoutHeader(WimaLayout root);
 /**
  * Lays out all areas.
  * @param areas	The tree of areas.
- * @param roots	A vector to put root layouts in.
  * @param min	A pointer to store the min size in.
  * @return		WIMA_STATUS_SUCCESS on success, a
  *				user-supplied error code otherwise.
  * @pre			@a areas must not be NULL.
  */
-WimaStatus wima_area_layout(ynonnull DynaTree areas, DynaVector roots, WimaSizef* min);
+WimaStatus wima_area_layout(ynonnull DynaTree areas, WimaSizef* min);
 
 /**
  * Finds the area that the mouse is currently inside.

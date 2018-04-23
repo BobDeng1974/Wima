@@ -297,12 +297,11 @@ static void wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, 
  * Recursive function to layout a tree of areas.
  * @param areas	The tree to layout.
  * @param node	The current node being laid out.
- * @param roots	A vector to put root layouts in.
  * @param min	A pointer to store the min size in.
  * @return		WIMA_STATUS_SUCCESS on success,
  *				an error code otherwise.
  */
-static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVector roots, WimaSizef* min);
+static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef* min);
 
 /**
  * Recursive function to determine which area has the mouse.
@@ -428,12 +427,12 @@ WimaAr* wima_area_ptr(WimaWindow wwh, WimaAreaNode node)
 	return dtree_node(WIMA_WIN_AREAS(win), node);
 }
 
-WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect, DynaVector roots, WimaSizef* min)
+WimaStatus wima_area_init(WimaWindow win, DynaTree areas, WimaRect rect, WimaSizef* min)
 {
 	wima_assert_init;
 	wassert(areas, WIMA_ASSERT_WIN_AREAS);
 	wima_area_node_init(win, areas, dtree_root(), rect);
-	return wima_area_node_layout(areas, dtree_root(), roots, min);
+	return wima_area_node_layout(areas, dtree_root(), min);
 }
 
 static void wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, WimaRect rect)
@@ -804,14 +803,14 @@ WimaStatus wima_area_layoutHeader(WimaLayout root)
 	return status;
 }
 
-WimaStatus wima_area_layout(DynaTree areas, DynaVector roots, WimaSizef* min)
+WimaStatus wima_area_layout(DynaTree areas, WimaSizef* min)
 {
 	wima_assert_init;
 	wassert(areas, WIMA_ASSERT_WIN_AREAS);
-	return wima_area_node_layout(areas, dtree_root(), roots, min);
+	return wima_area_node_layout(areas, dtree_root(), min);
 }
 
-static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVector roots, WimaSizef* min)
+static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef* min)
 {
 	wassert(dtree_exists(areas, node), WIMA_ASSERT_AREA);
 
@@ -824,10 +823,11 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 		WimaSizef lmin, rmin;
 		float ldim, rdim;
 
-		status = wima_area_node_layout(areas, dtree_left(node), roots, &lmin);
+		status = wima_area_node_layout(areas, dtree_left(node), &lmin);
 		if (yerror(status)) return status;
 
-		status = wima_area_node_layout(areas, dtree_right(node), roots, &rmin);
+		status = wima_area_node_layout(areas, dtree_right(node), &rmin);
+		if (yerror(status)) return status;
 
 		if (area->parent.vertical)
 		{
@@ -909,13 +909,12 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 			flags = wima_layout_setExpandFlags(flags, vertical, !vertical);
 			flags |= WIMA_REG_IS_ROW(reg) ? WIMA_LAYOUT_ROW : WIMA_LAYOUT_COL;
 
-			WimaLayout root = wima_layout_new(parent, flags, 0.0f);
-			if (yerror(dvec_push(roots, &root))) return WIMA_STATUS_MALLOC_ERR;
+			area->area.regions[i].root = wima_layout_new(parent, flags, 0.0f);
 
-			status = reg->layout(root);
+			status = reg->layout(area->area.regions[i].root);
 			if (yerror(status)) return status;
 
-			WimaItem* item = wima_layout_ptr(root);
+			WimaItem* item = wima_layout_ptr(area->area.regions[i].root);
 			WimaSizef size = wima_layout_size(item);
 
 			WimaRectf regRect;
@@ -966,8 +965,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 
 		for (uint8_t i = 0; i < numRegions; ++i)
 		{
-			WimaLayout root = *((WimaLayout*) dvec_get(roots, i));
-			WimaItem* item = wima_layout_ptr(root);
+			WimaItem* item = wima_layout_ptr(area->area.regions[i].root);
 
 			if (item->layout.flags & WIMA_LAYOUT_FILL_VER)
 			{
@@ -983,8 +981,6 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, DynaVecto
 			status = wima_layout_layout(item);
 			if (yerror(status)) return status;
 		}
-
-		if (yerror(dvec_setLength(roots, 0))) return WIMA_STATUS_MALLOC_ERR;
 
 		min->w *= area->area.scale;
 		min->h *= area->area.scale;

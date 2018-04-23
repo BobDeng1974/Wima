@@ -284,7 +284,7 @@ WimaStatus wima_window_activate(WimaWindow wwh)
 	{
 		WimaSizef min;
 
-		status = wima_area_init(wwh, dvec_get(win->workspaces, i), rect, win->rootLayouts, &min);
+		status = wima_area_init(wwh, dvec_get(win->workspaces, i), rect, &min);
 		if (yerror(status)) return status;
 
 		wima_window_setMinSize(win, &min);
@@ -1304,7 +1304,7 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 	{
 		WimaSizef* min = dvec_get(win->workspaceSizes, win->wksp);
 
-		status = wima_area_layout(WIMA_WIN_AREAS(win), win->rootLayouts, min);
+		status = wima_area_layout(WIMA_WIN_AREAS(win), min);
 		if (yerror(status)) return status;
 
 		wima_window_setMinSize(win, min);
@@ -1346,7 +1346,6 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 		}
 
 		nvgEndFrame(win->render.nvg);
-
 		glfwSwapBuffers(win->window);
 	}
 
