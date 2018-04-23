@@ -324,10 +324,9 @@ typedef struct WimaWin
 	/// Current workspace.
 	uint8_t wksp;
 
-	/// Index currently set in the area stack.
-	/// Because it's a stack, it also is the
-	/// length - 1.
-	uint8_t treeStackIdx;
+	/// Length of the tree stack. The
+	/// last index is this minus 1.
+	uint8_t treeStackLen;
 
 	/// The area stack.
 	DynaTree treeStack[WIMA_WINDOW_STACK_MAX];
@@ -486,7 +485,7 @@ bool wima_window_valid(WimaWindow wwh);
  * @param	win	The window to query.
  * @return		The current area tree on @a win.
  */
-#define WIMA_WIN_AREAS(win) ((win)->treeStack[(win)->treeStackIdx])
+#define WIMA_WIN_AREAS(win) ((win)->treeStack[(win)->treeStackLen - 1])
 
 /**
  * @}
