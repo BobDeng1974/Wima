@@ -1743,16 +1743,16 @@ WimaStatus wima_window_splitArea(WimaWin* win, WimaAreaNode node)
 	if (yerror(dstatus)) goto left_push_err;
 
 	dstatus = dtree_add(areas, right, &rarea);
-	if (yerror(dstatus)) goto right_push_err;
+	if (yerror(dstatus))
+	{
+		wima_area_destroy(&rarea);
+		dtree_remove(areas, left);
+		return status;
+	}
 
 	wima_window_setDirty(win, true);
 
 	return WIMA_STATUS_SUCCESS;
-
-right_push_err:
-
-	dtree_remove(areas, left);
-	return status;
 
 left_push_err:
 
