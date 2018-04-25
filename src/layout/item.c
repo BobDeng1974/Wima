@@ -93,7 +93,7 @@ DynaVector wima_item_vector(WimaWindow wwh, WimaAreaNode node, WimaRegion region
 {
 	DynaVector vec;
 
-	if (region != WIMA_REGION_INVALID_IDX)
+	if (ylikely(region != WIMA_REGION_INVALID_IDX))
 	{
 		WimaAr* area = wima_area_ptr(wwh, node);
 		vec = area->area.items;
@@ -111,7 +111,7 @@ DynaPool wima_item_pool(WimaWindow wwh, WimaAreaNode node, WimaRegion region)
 {
 	DynaPool pool;
 
-	if (region != WIMA_REGION_INVALID_IDX)
+	if (ylikely(region != WIMA_REGION_INVALID_IDX))
 	{
 		WimaAr* area = wima_area_ptr(wwh, node);
 		pool = area->area.widgetData;
