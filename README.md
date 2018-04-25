@@ -27,10 +27,11 @@ used by [Pixar Animation Studios](https://www.pixar.com/) for use on the
 
 ## Getting Started
 
-To get started, clone the repo, and then run the following command in the root
+To get started, clone the repo, and then run the following commands in the root
 directory:
 
 ```
+git config --local include.path ../.gitconfig
 git submodule update --init --recursive
 ```
 
