@@ -1316,12 +1316,11 @@ typedef void (*WimaWidgetFreeDataFunc)(void* ptr);
 /**
  * A function to draw a user-defined widget (custom property).
  * @param wdgt	The widget to draw.
- * @param ptr	The pointer to the data for the custom property.
  * @param ctx	The context to render with.
  * @return		WIMA_STATUS_SUCCESS on success, an error code
  *				otherwise.
  */
-typedef WimaStatus (*WimaWidgetDrawFunc)(WimaWidget wdgt, void* ptr, WimaRenderContext* ctx);
+typedef WimaStatus (*WimaWidgetDrawFunc)(WimaWidget wdgt, WimaRenderContext* ctx);
 
 /**
  * A function to return the size that a user-defined widget
@@ -1329,85 +1328,77 @@ typedef WimaStatus (*WimaWidgetDrawFunc)(WimaWidget wdgt, void* ptr, WimaRenderC
  * either dimension means that that dimension is flexible, and
  * the absolute value of the dimension is the minimum size.
  * @param wdgt	The widget whose size will be returned.
- * @param ptr	The pointer to the data for the custom property.
  * @return		The required size of the widget.
  */
-typedef WimaSizef (*WimaWidgetSizeFunc)(WimaWidget wdgt, void* ptr);
+typedef WimaSizef (*WimaWidgetSizeFunc)(WimaWidget wdgt);
 
 /**
  * A function to run when a user-defined widget (custom property)
  * has a key event.
  * @param wdgt	The widget that received the event.
- * @param ptr	The pointer to the data for the custom property.
  * @param event	The event.
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetKeyFunc)(WimaWidget wdgt, void* ptr, WimaKeyEvent event);
+typedef bool (*WimaWidgetKeyFunc)(WimaWidget wdgt, WimaKeyEvent event);
 
 /**
  * A function to run when a user-defined widget (custom property)
  * has a mouse button event.
  * @param wdgt	The widget that received the event.
- * @param ptr	The pointer to the data for the custom property.
  * @param event	The event.
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetMouseBtnFunc)(WimaWidget wdgt, void* ptr, WimaMouseBtnEvent event);
+typedef bool (*WimaWidgetMouseBtnFunc)(WimaWidget wdgt, WimaMouseBtnEvent event);
 
 /**
  * A function to run when a user-defined widget (custom property)
  * has a mouse click event.
  * @param wdgt	The widget that received the event.
- * @param ptr	The pointer to the data for the custom property.
  * @param event	The event.
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetMouseClickFunc)(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event);
+typedef bool (*WimaWidgetMouseClickFunc)(WimaWidget wdgt, WimaMouseClickEvent event);
 
 /**
  * A function to run when a user-defined widget (custom property)
  * has a mouse move event.
  * @param wdgt	The widget that received the event.
- * @param ptr	The pointer to the data for the custom property.
  * @param pos	The new mouse position.
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetMousePosFunc)(WimaWidget wdgt, void* ptr, WimaVec pos);
+typedef bool (*WimaWidgetMousePosFunc)(WimaWidget wdgt, WimaVec pos);
 
 /**
  * A function to run when a user-defined widget (custom property)
  * has a mouse drag event.
  * @param wdgt	The widget that received the event.
- * @param ptr	The pointer to the data for the custom property.
  * @param event	The event.
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetMouseDragFunc)(WimaWidget wdgt, void* ptr, WimaMouseDragEvent event);
+typedef bool (*WimaWidgetMouseDragFunc)(WimaWidget wdgt, WimaMouseDragEvent event);
 
 /**
  * A function to run when a widget has a scroll event.
  * @param wdgt	The widget that received the event.
- * @param ptr	The pointer to the data for the custom property.
  * @param event	The event.
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetScrollFunc)(WimaWidget wdgt, void* ptr, WimaScrollEvent event);
+typedef bool (*WimaWidgetScrollFunc)(WimaWidget wdgt, WimaScrollEvent event);
 
 /**
  * A function to run when a widget has a char event.
  * @param wdgt	The widget that received the event.
- * @param ptr	The pointer to the data for the custom property.
  * @param event	The event.
  * @return		true if the event was consumed, false otherwise.
  *				This is so Wima can pass the event on.
  */
-typedef bool (*WimaWidgetCharFunc)(WimaWidget wdgt, void* ptr, WimaCharEvent event);
+typedef bool (*WimaWidgetCharFunc)(WimaWidget wdgt, WimaCharEvent event);
 
 /**
  * A group of widget funcs.
@@ -1448,6 +1439,13 @@ typedef struct WimaWidgetFuncs
 	WimaWidgetCharFunc char_event;
 
 } WimaWidgetFuncs;
+
+/**
+ * Returns the pointer to the widget's data.
+ * @param wdgt	The widget to get the data for.
+ * @return		The data for the widget.
+ */
+void* wima_widget_data(WimaWidget wdgt);
 
 /**
  * Returns true if @a wdgt is in an overlay, false otherwise.
@@ -1811,12 +1809,11 @@ uint8_t wima_region_clearScrollFlags(uint8_t flags) yconst yinline;
  * @a wima_region_setScrollFlags(), and @a wima_region_clearScrollFlags().
  * See those functions for more information on the flags.
  * @param layout	The function to lay out the region.
- * @param itemCap	The capacity for items (layouts/widgets) the region has.
  * @param flags		The flags for the @a WimaRegion.
  * @return			The newly-created WimaRegion, or WIMA_REGION_INVALID on
  *					error.
  */
-WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8_t flags);
+WimaRegion wima_region_register(WimaRegionLayout layout, uint8_t flags);
 
 /**
  * @}
@@ -2052,7 +2049,7 @@ WimaEditor wima_area_type(WimaArea wah) yinline;
  * @pre			@a wah must be valid.
  * @pre			@a wah must be a leaf area.
  */
-int wima_area_itemCount(WimaArea wah) yinline;
+int wima_area_numItems(WimaArea wah) yinline;
 
 /**
  * Returns true if @a pos is in @a wah, false otherwise.

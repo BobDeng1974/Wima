@@ -45,6 +45,8 @@ extern "C" {
 #include <wima/layout.h>
 #include <wima/wima.h>
 
+#include <dyna/pool.h>
+#include <dyna/vector.h>
 #include <yc/assert.h>
 
 //! @cond Doxygen suppress.
@@ -250,7 +252,11 @@ WimaItem* wima_item_ptr(WimaWindow wwh, WimaAreaNode area, WimaRegion region, ui
  * @pre			@a area must not be NULL.
  * @pre			@a item must not be NULL.
  */
-void wima_item_free(ynonnull WimaAr* area, ynonnull WimaItem* item);
+void wima_item_free(ynonnull void* item);
+
+DynaVector wima_item_vector(WimaWindow wwh, WimaAreaNode node, WimaRegion region) yretnonnull;
+
+DynaPool wima_item_pool(WimaWindow wwh, WimaAreaNode node, WimaRegion region) yretnonnull;
 
 #ifdef __YASSERT__
 /**

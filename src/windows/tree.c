@@ -304,10 +304,8 @@ static WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor w
 	WimaEdtr* edtr = dvec_get(wg.editors, wed);
 	uint8_t numRegions = edtr->numRegions;
 
-	wan.area.ctx.items = WIMA_PTR_INVALID;
-	wan.area.ctx.itemCount = 0;
-	wan.area.ctx.itemCap = edtr->itemCap;
-	wan.area.ctx.widgetData = WIMA_PTR_INVALID;
+	wan.area.items = WIMA_PTR_INVALID;
+	wan.area.widgetData = WIMA_PTR_INVALID;
 	wan.area.numRegions = numRegions;
 
 	for (uint8_t i = 0; i < numRegions; ++i)

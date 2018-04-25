@@ -108,19 +108,9 @@ WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, W
 	edtr.allocSize = allocSize;
 	edtr.numRegions = nRegions + 1;
 
+	// TODO: Allocate the editor data (allocSize).
+
 	edtr.regions[0] = headerTop ? wg.regHeaderTop : wg.regHeaderBtm;
-
-	WimaReg* reg = dvec_get(wg.regions, edtr.regions[0]);
-
-	uint32_t sum = reg->itemCap;
-
-	for (int i = 0; i < nRegions; ++i)
-	{
-		reg = dvec_get(wg.regions, regions[i]);
-		sum += reg->itemCap;
-	}
-
-	edtr.itemCap = sum;
 
 	memcpy(edtr.regions + 1, regions, nRegions * sizeof(WimaRegion));
 

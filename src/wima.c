@@ -149,12 +149,10 @@ const char* const wima_assert_msgs[] = {
 
 	"region is not valid",
 	"region layout function is NULL",
-	"region item capacity is 0",
 
 	"area is not valid",
 	"area is a parent, not a leaf",
 	"area is a leaf, not a parent",
-	"number of items in area exceeds capacity",
 	"region is not valid in area",
 	"area is not an ancestor",
 
@@ -360,12 +358,12 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 
 	uint8_t flags = wima_region_setLeftFlag(0);
 
-	wg.regHeaderTop = wima_region_register(wima_area_layoutHeader, 256, flags);
+	wg.regHeaderTop = wima_region_register(wima_area_layoutHeader, flags);
 	if (yerror(wg.regHeaderTop == WIMA_REGION_INVALID)) goto wima_init_malloc_err;
 
 	flags = wima_region_clearLeftFlag(flags);
 
-	wg.regHeaderBtm = wima_region_register(wima_area_layoutHeader, 256, flags);
+	wg.regHeaderBtm = wima_region_register(wima_area_layoutHeader, flags);
 	if (yerror(wg.regHeaderBtm == WIMA_REGION_INVALID)) goto wima_init_malloc_err;
 
 	wg.overlays = dvec_create(0, sizeof(WimaOvly), wima_overlay_destroy, wima_overlay_copy);

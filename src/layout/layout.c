@@ -135,7 +135,7 @@ static WimaSizef wima_layout_size_split(ynonnull WimaItem* item) yinline;
  * @pre				@a parent must not be full already.
  * @pre				@a area must not be NULL.
  */
-static void wima_layout_setChildren(WimaLayout parent, ynonnull WimaAr* area, uint32_t idx);
+static void wima_layout_setChildren(WimaLayout parent, ynonnull DynaVector items, uint32_t idx);
 
 /**
  * @}
@@ -267,6 +267,8 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 	WimaCustomProperty custProp;
 	WimaCustProp* cprop;
 
+	// TODO: Push onto window item vector when necessary.
+
 	wima_assert_init;
 
 	wassert(wima_prop_valid(prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
@@ -274,14 +276,15 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 
 	WimaAr* area = wima_area_ptr(parent.window, parent.area);
 
-	uint32_t idx = (area->area.ctx.itemCount)++;
+	uint32_t idx = dvec_len(area->area.items);
 
 	wih.widget.widget = idx;
 	wih.widget.area = parent.area;
 	wih.widget.region = parent.region;
 	wih.widget.window = parent.window;
 
-	WimaItem* item = area->area.ctx.items + idx;
+	WimaItem item;
+
 	WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, prop);
 
 	WimaPropType ptype = info->type;
@@ -306,13 +309,13 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 
 	if (allocSize > 0)
 	{
-		uint64_t key = wima_widget_hash(prop, parent.region);
+		uint64_t key = wima_widget_hash(prop, parent.area, parent.region);
 
 		// Check to see if it already exists.
 		// Since it takes a bit to allocate,
 		// I decided to use yunlikely to fast
 		// track every other time.
-		if (yunlikely(!dpool_exists(area->area.ctx.widgetData, &key)))
+		if (yunlikely(!dpool_exists(area->area.widgetData, &key)))
 		{
 			WimaWidgetInitDataFunc init;
 			void* ptr;
@@ -330,7 +333,7 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 
 				if (yerror(status)) goto wima_lyt_wdgt_err;
 
-				ptr = dpool_malloc(area->area.ctx.widgetData, &key, allocSize);
+				ptr = dpool_malloc(area->area.widgetData, &key, allocSize);
 
 				if (yerror(!ptr)) goto wima_lyt_wdgt_malloc_err;
 
@@ -338,19 +341,21 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 			}
 			else
 			{
-				ptr = dpool_calloc(area->area.ctx.widgetData, &key, allocSize);
+				ptr = dpool_calloc(area->area.widgetData, &key, allocSize);
 				if (yerror(!ptr)) goto wima_lyt_wdgt_malloc_err;
 			}
 		}
 	}
 
-	item->info = wih;
-	item->isLayout = false;
-	item->parent = parent.layout;
-	item->nextSibling = WIMA_WIDGET_INVALID;
+	item.info = wih;
+	item.isLayout = false;
+	item.parent = parent.layout;
+	item.nextSibling = WIMA_WIDGET_INVALID;
 
-	item->widget.prop = prop;
-	item->widget.flags = flags;
+	item.widget.prop = prop;
+	item.widget.flags = flags;
+
+	if (yerror(dvec_push(area->area.items, &item))) goto wima_lyt_wdgt_malloc_err;
 
 	wima_layout_setChildren(parent, area, idx);
 
@@ -401,36 +406,44 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split)
 {
 	wima_assert_init;
 
-	WimaAr* area = wima_area_ptr(parent.window, parent.area);
-
-	flags |= WIMA_LAYOUT_ENABLE;
-
-	uint32_t idx = (area->area.ctx.itemCount)++;
+	DynaVector items = wima_item_vector(parent.window, parent.area, parent.region);
 
 	WimaLayout wlh;
-	wlh.layout = idx;
+
 	wlh.area = parent.area;
 	wlh.region = parent.region;
 	wlh.window = parent.window;
 
+	// TODO: Handle creating in window.
+
+	WimaAr* area = wima_area_ptr(parent.window, parent.area);
+
+	flags |= WIMA_LAYOUT_ENABLE;
+
+	uint32_t idx = dvec_len(area->area.items);
+
+	wlh.layout = idx;
+
 	// If the parent is not valid, we don't have to set children
 	// in the parent because it means that we are doing the root,
 	// which doesn't doesn't have a parent to set.
-	if (ylikely(parent.layout != WIMA_LAYOUT_INVALID)) wima_layout_setChildren(parent, area, idx);
+	if (ylikely(parent.layout != WIMA_LAYOUT_INVALID)) wima_layout_setChildren(parent, items, idx);
 
-	WimaItem* playout = area->area.ctx.items + idx;
+	WimaItem playout;
 
-	playout->isLayout = true;
+	playout.isLayout = true;
 
-	playout->info.layout = wlh;
-	playout->parent = parent.layout;
-	playout->nextSibling = WIMA_WIDGET_INVALID;
+	playout.info.layout = wlh;
+	playout.parent = parent.layout;
+	playout.nextSibling = WIMA_WIDGET_INVALID;
 
-	playout->layout.w_min = split;
-	playout->layout.firstKid = WIMA_WIDGET_INVALID;
-	playout->layout.lastKid = WIMA_LAYOUT_INVALID;
-	playout->layout.kidCount = 0;
-	playout->layout.flags = flags;
+	playout.layout.w_min = split;
+	playout.layout.firstKid = WIMA_WIDGET_INVALID;
+	playout.layout.lastKid = WIMA_LAYOUT_INVALID;
+	playout.layout.kidCount = 0;
+	playout.layout.flags = flags;
+
+	if (yerror(dvec_push(items, &playout))) memset(&wlh, -1, sizeof(WimaLayout));
 
 	return wlh;
 }
@@ -601,7 +614,7 @@ WimaStatus wima_layout_draw(WimaItem* item, WimaRenderContext* ctx)
 
 			if (info->type <= WIMA_PROP_LAST_PREDEFINED)
 			{
-				status = wima_prop_predefinedTypes[info->type].funcs.draw(child->info.widget, data, ctx);
+				status = wima_prop_predefinedTypes[info->type].funcs.draw(child->info.widget, ctx);
 			}
 			else
 			{
@@ -609,7 +622,7 @@ WimaStatus wima_layout_draw(WimaItem* item, WimaRenderContext* ctx)
 
 				WimaCustProp* prop = dvec_get(wg.customProps, data->_ptr.type);
 
-				status = prop->funcs.draw(child->info.widget, data->_ptr.ptr, ctx);
+				status = prop->funcs.draw(child->info.widget, ctx);
 			}
 		}
 	}
@@ -621,11 +634,11 @@ WimaStatus wima_layout_draw(WimaItem* item, WimaRenderContext* ctx)
 // Static functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-static void wima_layout_setChildren(WimaLayout parent, WimaAr* area, uint32_t idx)
+static void wima_layout_setChildren(WimaLayout parent, DynaVector items, uint32_t idx)
 {
-	wassert(parent.layout < area->area.ctx.itemCount, WIMA_ASSERT_LAYOUT);
+	wassert(parent.layout < dvec_len(items), WIMA_ASSERT_LAYOUT);
 
-	WimaItem* pparent = area->area.ctx.items + parent.layout;
+	WimaItem* pparent = dvec_get(items, parent.layout);
 
 	wassert(WIMA_ITEM_IS_LAYOUT(pparent), WIMA_ASSERT_ITEM_LAYOUT);
 	wassert(!(pparent->layout.flags & WIMA_LAYOUT_SPLIT) || pparent->layout.kidCount < 2, WIMA_ASSERT_LAYOUT_SPLIT_MAX);
@@ -634,7 +647,7 @@ static void wima_layout_setChildren(WimaLayout parent, WimaAr* area, uint32_t id
 
 	if (pparent->layout.lastKid != WIMA_LAYOUT_INVALID)
 	{
-		WimaItem* pkid = area->area.ctx.items + pparent->layout.lastKid;
+		WimaItem* pkid = dvec_get(items, pparent->layout.lastKid);
 
 		pkid->nextSibling = idx;
 		pparent->layout.lastKid = idx;

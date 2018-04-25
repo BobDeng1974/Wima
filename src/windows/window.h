@@ -318,6 +318,9 @@ typedef struct WimaWin
 	/// A vector of items for overlays.
 	DynaVector overlayItems;
 
+	/// A pool for overlay widgets to allocate from.
+	DynaPool overlayPool;
+
 	/// The menu offset. This is the offset that
 	/// the user clicked on a context menu. This
 	/// allows the menus to appear in the same spot
@@ -469,14 +472,14 @@ WimaStatus wima_window_processEvents(WimaWindow win);
  * @param wwh	The window that called the callback.
  * @pre			@a wwh must be valid.
  */
-bool wima_window_joinAreasMode(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event);
+bool wima_window_joinAreasMode(WimaWidget wdgt, WimaMouseClickEvent event);
 
 /**
  * Callback to put Wima into "split areas" mode.
  * @param wwh	The window that called the callback.
  * @pre			@a wwh must be valid.
  */
-bool wima_window_splitAreaMode(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event);
+bool wima_window_splitAreaMode(WimaWidget wdgt, WimaMouseClickEvent event);
 
 /**
  * Tests to see if @a wwh is valid (not removed).

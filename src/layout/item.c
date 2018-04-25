@@ -56,8 +56,8 @@ WimaItem* wima_item_ptr(WimaWindow wwh, WimaAreaNode area, WimaRegion region, ui
 	{
 		WimaAr* ar = wima_area_ptr(wwh, area);
 		wassert(WIMA_AREA_IS_LEAF(ar), WIMA_ASSERT_AREA_LEAF);
-		wassert(idx < ar->area.ctx.itemCount, WIMA_ASSERT_ITEM);
-		item = ar->area.ctx.items + idx;
+		wassert(idx < dvec_len(ar->area.items), WIMA_ASSERT_ITEM);
+		item = dvec_get(ar->area.items, idx);
 	}
 	else
 	{
@@ -69,29 +69,60 @@ WimaItem* wima_item_ptr(WimaWindow wwh, WimaAreaNode area, WimaRegion region, ui
 	return item;
 }
 
-void wima_item_free(WimaAr* area, WimaItem* item)
+void wima_item_free(void* item)
 {
-	if (WIMA_ITEM_IS_WIDGET(item))
+	WimaItem* i = item;
+	if (WIMA_ITEM_IS_LAYOUT(i)) return;
+
+	WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, i->widget.prop);
+
+	if (info->type != WIMA_PROP_PTR) return;
+
+	WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, i->widget.prop);
+	WimaCustProp* cprop = dvec_get(wg.customProps, data->_ptr.type);
+
+	WimaWidgetFreeDataFunc pfree = cprop->funcs.free;
+	if (!pfree || !cprop->allocSize) return;
+
+	DynaPool pool = wima_item_pool(i->info.widget.window, i->info.widget.area, i->info.widget.region);
+	uint64_t key = wima_widget_hash(i->widget.prop, i->info.widget.area, i->info.widget.region);
+	pfree(dpool_get(pool, &key));
+}
+
+DynaVector wima_item_vector(WimaWindow wwh, WimaAreaNode node, WimaRegion region)
+{
+	DynaVector vec;
+
+	if (region != WIMA_REGION_INVALID_IDX)
 	{
-		WimaPropInfo* info = dnvec_get(wg.props, WIMA_PROP_INFO_IDX, item->widget.prop);
-
-		if (info->type <= WIMA_PROP_LAST_PREDEFINED)
-		{
-			// TODO: Free data from predefined prop types.
-		}
-		else
-		{
-			WimaPropData* data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, item->widget.prop);
-			WimaCustProp* cprop = dvec_get(wg.customProps, data->_ptr.type);
-
-			WimaWidgetFreeDataFunc pfree = cprop->funcs.free;
-			if (pfree && cprop->allocSize)
-			{
-				uint64_t key = wima_widget_hash(item->widget.prop, item->info.widget.region);
-				pfree(dpool_get(area->area.ctx.widgetData, &key));
-			}
-		}
+		WimaAr* area = wima_area_ptr(wwh, node);
+		vec = area->area.items;
 	}
+	else
+	{
+		WimaWin* win = dvec_get(wg.windows, wwh);
+		vec= win->overlayItems;
+	}
+
+	return vec;
+}
+
+DynaPool wima_item_pool(WimaWindow wwh, WimaAreaNode node, WimaRegion region)
+{
+	DynaPool pool;
+
+	if (region != WIMA_REGION_INVALID_IDX)
+	{
+		WimaAr* area = wima_area_ptr(wwh, node);
+		pool = area->area.widgetData;
+	}
+	else
+	{
+		WimaWin* win = dvec_get(wg.windows, wwh);
+		pool= win->overlayPool;
+	}
+
+	return pool;
 }
 
 #ifdef __YASSERT__
@@ -110,11 +141,10 @@ bool wima_item_valid(WimaWindow window, WimaAreaNode node, WimaRegion region, ui
 	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), node);
 
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-	wassert(area->area.ctx.itemCount < area->area.ctx.itemCap, WIMA_ASSERT_AREA_ITEMS_MAX);
 	wassert(region == WIMA_REGION_INVALID || region < area->area.numRegions, WIMA_ASSERT_REG);
 
 	if (region != WIMA_REGION_INVALID)
-		valid = idx < area->area.ctx.itemCount;
+		valid = idx < dvec_len(area->area.items);
 	else
 		valid = idx < dvec_len(win->overlayItems);
 

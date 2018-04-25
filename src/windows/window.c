@@ -214,11 +214,14 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 	window = dvec_get(wg.windows, idx);
 
+	window->overlayStack = dvec_create(0, sizeof(WimaWinOverlay), NULL, NULL);
+	if (yerror(!window->overlayStack)) goto wima_win_create_malloc_err;
+
 	window->overlayItems = dvec_create(0, sizeof(WimaItem), NULL, NULL);
 	if (yerror(!window->overlayItems)) goto wima_win_create_malloc_err;
 
-	window->overlayStack = dvec_create(0, sizeof(WimaWinOverlay), NULL, NULL);
-	if (yerror(!window->overlayStack)) goto wima_win_create_malloc_err;
+	window->overlayPool = dpool_create(WIMA_POOL_LOAD, sizeof(uint64_t), NULL, NULL, NULL);
+	if (yerror(!window->overlayPool)) goto wima_win_create_malloc_err;
 
 	size_t cap = dvec_cap(wg.workspaces);
 
@@ -595,14 +598,9 @@ void wima_window_setHoverWidget(WimaWindow wwh, WimaWidget wih)
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-#ifdef __YASSERT__
 	wassert(dtree_exists(WIMA_WIN_AREAS(win), wih.area), WIMA_ASSERT_AREA);
-
-	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), wih.area);
-
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-	wassert(wih.widget < area->area.ctx.itemCount, WIMA_ASSERT_WIDGET);
-#endif
+	wassert(WIMA_AREA_IS_LEAF(((WimaAr*) dtree_node(WIMA_WIN_AREAS(win), wih.area))), WIMA_ASSERT_AREA_LEAF);
+	wassert(wih.widget < dvec_len(wima_item_vector(wwh, wih.area, wih.region)), WIMA_ASSERT_WIDGET);
 
 	win->ctx.hover = wih;
 }
@@ -620,14 +618,9 @@ void wima_window_setFocusWidget(WimaWindow wwh, WimaWidget wih)
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
-#ifdef __YASSERT__
 	wassert(dtree_exists(WIMA_WIN_AREAS(win), wih.area), WIMA_ASSERT_AREA);
-
-	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), wih.area);
-
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-	wassert(wih.widget < area->area.ctx.itemCount, WIMA_ASSERT_WIDGET);
-#endif
+	wassert(WIMA_AREA_IS_LEAF(((WimaAr*) dtree_node(WIMA_WIN_AREAS(win), wih.area))), WIMA_ASSERT_AREA_LEAF);
+	wassert(wih.widget < dvec_len(wima_item_vector(wwh, wih.area, wih.region)), WIMA_ASSERT_WIDGET);
 
 	win->ctx.focus = wih;
 }
@@ -1159,8 +1152,9 @@ void wima_window_destroy(void* ptr)
 	if (win->rootLayouts) dvec_free(win->rootLayouts);
 	if (win->workspaceSizes) dvec_free(win->workspaceSizes);
 	if (win->workspaces) dvec_free(win->workspaces);
-	if (win->overlayStack) dvec_free(win->overlayStack);
+	if (win->overlayPool) dpool_free(win->overlayPool);
 	if (win->overlayItems) dvec_free(win->overlayItems);
+	if (win->overlayStack) dvec_free(win->overlayStack);
 
 	glfwDestroyWindow(win->window);
 
@@ -1320,12 +1314,43 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 
 	if (WIMA_WIN_NEEDS_LAYOUT(win))
 	{
+		if (yerror(dvec_setLength(win->rootLayouts, 0) || dvec_setLength(win->overlayItems, 0)))
+			return WIMA_STATUS_MALLOC_ERR;
+
 		WimaSizef* min = dvec_get(win->workspaceSizes, win->wksp);
 
 		status = wima_area_layout(WIMA_WIN_AREAS(win), min);
 		if (yerror(status)) return status;
 
+		if (wg.funcs.win_header && WIMA_WIN_HAS_HEADER(win))
+		{
+			WimaLayout parent;
+			parent.layout = WIMA_LAYOUT_INVALID;
+			parent.area = WIMA_AREA_INVALID;
+			parent.region = WIMA_REGION_INVALID_IDX;
+			parent.window = wwh;
+
+			uint16_t flags = wima_layout_setExpandFlags(0, false, true);
+			flags |= WIMA_LAYOUT_ROW;
+
+			WimaLayout root = wima_layout_new(parent, flags, 0.0f);
+
+			if (yerror(dvec_push(win->rootLayouts, &root))) return WIMA_STATUS_MALLOC_ERR;
+
+			status = wg.funcs.win_header(root);
+			if (yerror(status)) return status;
+
+			WimaItem* item = wima_layout_ptr(root);
+
+			WimaSizef headermin = wima_layout_size(item);
+
+			min->w = min->w > headermin.w ? min->w : headermin.w;
+			min->h += headermin.h;
+		}
+
 		wima_window_setMinSize(win, min);
+
+		// TODO: Lay out overlays.
 
 		win->flags |= WIMA_WIN_DIRTY;
 	}
@@ -1404,14 +1429,14 @@ WimaStatus wima_window_processEvents(WimaWindow wwh)
 	return status;
 }
 
-bool wima_window_joinAreasMode(WimaWidget wdgt, void* ptr yunused, WimaMouseClickEvent event yunused)
+bool wima_window_joinAreasMode(WimaWidget wdgt, WimaMouseClickEvent event yunused)
 {
 	wassert(wima_window_valid(wdgt.window), WIMA_ASSERT_WIN);
 	((WimaWin*) dvec_get(wg.windows, wdgt.window))->flags |= WIMA_WIN_JOIN_MODE;
 	return true;
 }
 
-bool wima_window_splitAreaMode(WimaWidget wdgt, void* ptr yunused, WimaMouseClickEvent event yunused)
+bool wima_window_splitAreaMode(WimaWidget wdgt, WimaMouseClickEvent event yunused)
 {
 	wassert(wima_window_valid(wdgt.window), WIMA_ASSERT_WIN);
 	((WimaWin*) dvec_get(wg.windows, wdgt.window))->flags |= WIMA_WIN_SPLIT_MODE;

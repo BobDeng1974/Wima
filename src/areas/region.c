@@ -112,17 +112,14 @@ uint8_t wima_region_clearScrollFlags(uint8_t flags)
 	return flags & ~(WIMA_REG_SCROLL_VERTICAL | WIMA_REG_SCROLL_HORIZONTAL);
 }
 
-WimaRegion wima_region_register(WimaRegionLayout layout, uint16_t itemCap, uint8_t flags)
+WimaRegion wima_region_register(WimaRegionLayout layout, uint8_t flags)
 {
 	wima_assert_init;
-
 	wassert(layout, WIMA_ASSERT_REG_LAYOUT_NULL);
-	wassert(itemCap > 0, WIMA_ASSERT_REG_ITEM_CAP);
 
 	WimaReg reg;
 
 	reg.layout = layout;
-	reg.itemCap = itemCap;
 
 	// Because the user sets "main" and "opposite" scroll flags,
 	// we may need to switch them.

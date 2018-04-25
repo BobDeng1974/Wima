@@ -86,13 +86,6 @@
  */
 
 /**
- * Returns the pointer to the widget's data.
- * @param pitem	The widget to get the data for.
- * @return		The data for the widget.
- */
-static void* wima_widget_data(WimaItem* pitem);
-
-/**
  * @}
  */
 
@@ -101,6 +94,32 @@ static void* wima_widget_data(WimaItem* pitem);
 ////////////////////////////////////////////////////////////////////////////////
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
+
+void* wima_widget_data(WimaWidget wdgt)
+{
+	wima_assert_init;
+
+	WimaItem* item = wima_item_ptr(wdgt.window, wdgt.area, wdgt.region, wdgt.widget);
+
+	wassert(WIMA_ITEM_IS_WIDGET(item), WIMA_ASSERT_WIDGET);
+
+	uint64_t hash = wima_widget_hash(item->widget.prop, wdgt.area, wdgt.region);
+
+	DynaPool pool;
+
+	if (wdgt.region != WIMA_REGION_INVALID_IDX)
+	{
+		WimaAr* area = wima_area_ptr(wdgt.window, wdgt.area);
+		pool = area->area.widgetData;
+	}
+	else
+	{
+		WimaWin* win = dvec_get(wg.windows, wdgt.window);
+		pool = win->overlayPool;
+	}
+
+	return dpool_get(pool, &hash);
+}
 
 bool wima_widget_inOverlay(WimaWidget wdgt)
 {
@@ -373,10 +392,10 @@ size_t wima_widget_overlayIdx(WimaWidget wdgt)
 // Private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-uint64_t wima_widget_hash(WimaProperty prop, uint8_t region)
+uint64_t wima_widget_hash(WimaProperty prop, WimaAreaNode area, uint8_t region)
 {
 	wima_assert_init;
-	return ((uint64_t) prop) | (((uint64_t) region) << 32);
+	return ((uint64_t) prop) | (((uint64_t) area) << 32) | (((uint64_t) region) << 48);
 }
 
 WimaItem* wima_widget_ptr(WimaWidget wdgt)
@@ -435,7 +454,7 @@ WimaSizef wima_widget_size(WimaItem* item)
 		sizeFunc = cprop->funcs.size;
 	}
 
-	item->minSize = sizeFunc(item->info.widget, wima_widget_data(item));
+	item->minSize = sizeFunc(item->info.widget);
 
 	return item->minSize;
 }
@@ -511,7 +530,7 @@ void wima_widget_key(WimaWidget wdgt, WimaKeyEvent event)
 
 		case WIMA_PROP_PTR:
 		{
-			if (!key(wdgt, wima_widget_data(pitem), event))
+			if (!key(wdgt, event))
 			{
 				// TODO: Send the event up the chain.
 			}
@@ -592,7 +611,7 @@ void wima_widget_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event)
 
 		case WIMA_PROP_PTR:
 		{
-			if (!mouseBtn(wdgt, wima_widget_data(pitem), event))
+			if (!mouseBtn(wdgt, event))
 			{
 				// TODO: Send the event up the chain.
 			}
@@ -673,7 +692,7 @@ void wima_widget_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event)
 
 		case WIMA_PROP_PTR:
 		{
-			if (!click(wdgt, wima_widget_data(pitem), event))
+			if (!click(wdgt, event))
 			{
 				// TODO: Send the event up the chain.
 			}
@@ -754,7 +773,7 @@ void wima_widget_mousePos(WimaWidget wdgt, WimaVec pos)
 
 		case WIMA_PROP_PTR:
 		{
-			if (!mouse_pos(wdgt, wima_widget_data(pitem), pos))
+			if (!mouse_pos(wdgt, pos))
 			{
 				// TODO: Send the event up the chain.
 			}
@@ -835,7 +854,7 @@ void wima_widget_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event)
 
 		case WIMA_PROP_PTR:
 		{
-			if (!drag(wdgt, wima_widget_data(pitem), event))
+			if (!drag(wdgt, event))
 			{
 				// TODO: Send the event up the chain.
 			}
@@ -997,7 +1016,7 @@ void wima_widget_char(WimaWidget wdgt, WimaCharEvent event)
 
 		case WIMA_PROP_PTR:
 		{
-			if (!char_func(wdgt, wima_widget_data(pitem), event))
+			if (!char_func(wdgt, event))
 			{
 				// TODO: Send the event up the chain.
 			}
@@ -1005,20 +1024,6 @@ void wima_widget_char(WimaWidget wdgt, WimaCharEvent event)
 			break;
 		}
 	}
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Static functions.
-////////////////////////////////////////////////////////////////////////////////
-
-static void* wima_widget_data(WimaItem* pitem)
-{
-	wima_assert_init;
-
-	WimaAr* area = wima_area_ptr(pitem->info.widget.window, pitem->info.widget.area);
-	uint64_t hash = wima_widget_hash(pitem->widget.prop, pitem->info.widget.region);
-
-	return dpool_get(area->area.ctx.widgetData, &hash);
 }
 
 //! @endcond Doxygen suppress.

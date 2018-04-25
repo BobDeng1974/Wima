@@ -91,9 +91,9 @@ void* wima_area_data(WimaArea wah)
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
+	uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, wah.area, (uint8_t) -1);
 
-	return dpool_get(area->area.ctx.widgetData, &key);
+	return dpool_get(area->area.widgetData, &key);
 }
 
 WimaRect wima_area_rect(WimaArea wah)
@@ -151,14 +151,14 @@ WimaEditor wima_area_type(WimaArea wah)
 	return area->area.type;
 }
 
-int wima_area_itemCount(WimaArea wah)
+int wima_area_numItems(WimaArea wah)
 {
 	wima_assert_init;
 
 	WimaAr* area = wima_area_ptr(wah.window, wah.area);
 	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
 
-	return area->area.ctx.itemCount;
+	return dvec_len(area->area.items);
 }
 
 bool wima_area_contains(WimaArea wah, WimaVec pos)
@@ -482,7 +482,7 @@ DynaStatus wima_area_copy(void* dest, void* src)
 		// well as not set the user pointer.
 		// We also check to see if the user pointer is NULL. It it's
 		// not, that means that we should also not copy.
-		bool allocate = !sarea->area.ctx.items && !sarea->area.ctx.widgetData;
+		bool allocate = !sarea->area.items && !sarea->area.widgetData;
 		WimaStatus status = wima_area_setup(darea, allocate);
 
 		if (yerror(status)) dstatus = DYNA_STATUS_MALLOC_FAIL;
@@ -501,9 +501,8 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 	// We also don't even need to set up the user pointer.
 	if (!allocate)
 	{
-		area->area.ctx.itemCount = 0;
-		area->area.ctx.items = NULL;
-		area->area.ctx.widgetData = NULL;
+		area->area.items = NULL;
+		area->area.widgetData = NULL;
 		return WIMA_STATUS_SUCCESS;
 	}
 
@@ -513,15 +512,13 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 
 	WimaEdtr* editor = dvec_get(wg.editors, edtr);
 
-	area->area.ctx.items = malloc(sizeof(WimaItem) * area->area.ctx.itemCap);
-	if (yerror(!area->area.ctx.items)) return WIMA_STATUS_MALLOC_ERR;
+	area->area.items = dvec_create(0, sizeof(WimaItem), wima_item_free, NULL);
+	if (yerror(!area->area.items)) return WIMA_STATUS_MALLOC_ERR;
 
-	area->area.ctx.itemCount = 0;
-
-	area->area.ctx.widgetData = dpool_create(0.9f, sizeof(uint64_t), NULL, NULL, NULL);
-	if (yerror(!area->area.ctx.widgetData))
+	area->area.widgetData = dpool_create(0.9f, sizeof(uint64_t), NULL, NULL, NULL);
+	if (yerror(!area->area.widgetData))
 	{
-		free(area->area.ctx.items);
+		dvec_free(area->area.items);
 		return WIMA_STATUS_MALLOC_ERR;
 	}
 
@@ -529,14 +526,14 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 
 	if (allocSize > 0)
 	{
-		uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
+		uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, area->node, (uint8_t) -1);
 		WimaAreaInitDataFunc init = editor->funcs.init;
 
 		if (init)
 		{
 			WimaArea wah;
 
-			void* ptr = dpool_malloc(area->area.ctx.widgetData, &key, allocSize);
+			void* ptr = dpool_malloc(area->area.widgetData, &key, allocSize);
 
 			if (yerror(!ptr)) return WIMA_STATUS_MALLOC_ERR;
 
@@ -550,7 +547,7 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 		}
 		else
 		{
-			void* ptr = dpool_calloc(area->area.ctx.widgetData, &key, allocSize);
+			void* ptr = dpool_calloc(area->area.widgetData, &key, allocSize);
 			if (yerror(!ptr)) status = WIMA_STATUS_MALLOC_ERR;
 		}
 	}
@@ -598,20 +595,12 @@ void wima_area_destroy(void* ptr)
 
 	if (WIMA_AREA_IS_PARENT(area)) return;
 
-	if (area->area.ctx.items)
+	if (area->area.items && area->area.items != WIMA_PTR_INVALID) dvec_free(area->area.items);
+
+	if (area->area.widgetData)
 	{
-		uint32_t itemCount = area->area.ctx.itemCount;
-		WimaItem* item = area->area.ctx.items;
-
-		for (uint32_t i = 0; i < itemCount; ++i, item += 1) wima_item_free(area, item);
-
-		free(area->area.ctx.items);
-	}
-
-	if (area->area.ctx.widgetData)
-	{
-		uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, (uint8_t) -1);
-		void* data = dpool_get(area->area.ctx.widgetData, &key);
+		uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, area->node, (uint8_t) -1);
+		void* data = dpool_get(area->area.widgetData, &key);
 
 		// If the user didn't allocate anything,
 		// or the use handle is not initialized,
@@ -627,7 +616,7 @@ void wima_area_destroy(void* ptr)
 			if (editor->funcs.free) editor->funcs.free(data);
 		}
 
-		dpool_free(area->area.ctx.widgetData);
+		dpool_free(area->area.widgetData);
 	}
 }
 
@@ -692,21 +681,18 @@ static WimaStatus wima_area_node_draw(WimaRenderContext* ctx, DynaTree areas, Dy
 
 		wima_area_background(area, ctx->nvg, bg);
 
-		if (area->area.ctx.itemCount > 0)
+		if (dvec_len(area->area.items))
 		{
 			wima_render_save(ctx);
 
 			nvgScale(ctx->nvg, area->area.scale, area->area.scale);
 
-			WimaWidget item;
-			item.widget = 0;
-			item.area = node;
-			item.window = area->window;
+			WimaItem* item = dvec_get(area->area.items, 0);
 
-			area->area.ctx.items[0].rect.x = 0;
-			area->area.ctx.items[0].rect.y = 0;
-			area->area.ctx.items[0].rect.w = area->rect.w;
-			area->area.ctx.items[0].rect.h = area->rect.h;
+			item->rect.x = 0;
+			item->rect.y = 0;
+			item->rect.w = area->rect.w;
+			item->rect.h = area->rect.h;
 
 			// TODO: Draw each region.
 
@@ -859,7 +845,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 	}
 	else
 	{
-		area->area.ctx.itemCount = 0;
+		if (yerror(dvec_setLength(area->area.items, 0))) return WIMA_STATUS_MALLOC_ERR;
 
 		WimaArea wah;
 		wah.area = node;

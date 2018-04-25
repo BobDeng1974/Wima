@@ -162,9 +162,6 @@ typedef struct WimaReg
 	/// The layout function.
 	WimaRegionLayout layout;
 
-	/// The item capacity for the region.
-	uint16_t itemCap;
-
 	/// The flags.
 	uint8_t flags;
 

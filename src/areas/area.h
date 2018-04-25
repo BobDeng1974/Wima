@@ -117,25 +117,6 @@ typedef struct WimaArReg
 } WimaArReg;
 
 /**
- * Item (layouts and widgets) context for an area.
- */
-typedef struct WimaArCtx
-{
-	/// The array of items.
-	WimaItem* items;
-
-	/// Current number of items allocated.
-	uint32_t itemCount;
-
-	/// Total item capacity.
-	uint32_t itemCap;
-
-	/// Data for widgets.
-	DynaPool widgetData;
-
-} WimaArCtx;
-
-/**
  * A node in the tree of areas. This is where
  * all of the area's data is actually kept.
  */
@@ -165,8 +146,11 @@ typedef struct WimaAr
 		 */
 		struct wima_area_leaf
 		{
-			/// The context for the area.
-			WimaArCtx ctx;
+			// The vector of items.
+			DynaVector items;
+
+			/// Data for widgets.
+			DynaPool widgetData;
 
 			/// The area's current scale.
 			float scale;

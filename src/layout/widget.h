@@ -96,10 +96,11 @@ typedef struct WimaItem WimaItem;
 /**
  * Returns a hash for @a prop and @a region of a widget.
  * @param prop		The prop for the widget.
+ * @param area		The area for the widget.
  * @param region	The region that the widget is in.
  * @return			The uint64_t hash of the widget.
  */
-uint64_t wima_widget_hash(WimaProperty prop, uint8_t region) yconst yinline;
+uint64_t wima_widget_hash(WimaProperty prop, WimaAreaNode area, uint8_t region) yconst yinline;
 
 /**
  * Returns a pointer to a widget's data.

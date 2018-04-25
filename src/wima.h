@@ -46,6 +46,7 @@ extern "C" {
 #include <wima/render.h>
 #include <wima/wima.h>
 
+#include "props/prop.h"
 #include "render/render.h"
 
 #include <GLFW/glfw3.h>
@@ -231,12 +232,10 @@ typedef enum WimaAssertType
 
 	WIMA_ASSERT_REG,
 	WIMA_ASSERT_REG_LAYOUT_NULL,
-	WIMA_ASSERT_REG_ITEM_CAP,
 
 	WIMA_ASSERT_AREA,
 	WIMA_ASSERT_AREA_LEAF,
 	WIMA_ASSERT_AREA_PARENT,
-	WIMA_ASSERT_AREA_ITEMS_MAX,
 	WIMA_ASSERT_AREA_REG_VALID,
 	WIMA_ASSERT_AREA_NOT_ANCESTOR,
 
