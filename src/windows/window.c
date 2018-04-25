@@ -1462,6 +1462,9 @@ static WimaStatus wima_window_layoutHeader(WimaWin* win, WimaWindow wwh, WimaSiz
 	WimaStatus status = wg.funcs.win_header(root);
 	if (yerror(status)) return status;
 
+	// TODO: Add the custom props for the workspace switcher.
+	// TODO: Add code to layout workspace switcher.
+
 	WimaItem* item = wima_layout_ptr(root);
 
 	WimaSizef headermin = wima_layout_size(item);
@@ -1472,8 +1475,7 @@ static WimaStatus wima_window_layoutHeader(WimaWin* win, WimaWindow wwh, WimaSiz
 	win->headerMinSize.w = (uint16_t) ceilf(headermin.w);
 	win->headerMinSize.h = (uint16_t) ceilf(headermin.h);
 
-	status = wima_layout_layout(item);
-	if (yerror(status)) return status;
+	return wima_layout_layout(item);
 }
 
 static WimaStatus wima_window_overlay_draw(WimaWin* win, WimaWindow wwh, size_t idx, float parentWidth)
