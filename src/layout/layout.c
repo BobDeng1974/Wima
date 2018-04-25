@@ -274,9 +274,10 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 	wassert(wima_prop_valid(prop, WIMA_PROP_NO_TYPE), WIMA_ASSERT_PROP);
 	wassert(wima_item_valid(parent.window, parent.area, parent.region, parent.layout), WIMA_ASSERT_LAYOUT);
 
-	WimaAr* area = wima_area_ptr(parent.window, parent.area);
+	DynaVector items = wima_item_vector(parent.window, parent.area, parent.region);
+	DynaPool pool = wima_item_pool(parent.window, parent.area, parent.region);
 
-	uint32_t idx = dvec_len(area->area.items);
+	uint32_t idx = dvec_len(items);
 
 	wih.widget.widget = idx;
 	wih.widget.area = parent.area;
@@ -315,7 +316,7 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 		// Since it takes a bit to allocate,
 		// I decided to use yunlikely to fast
 		// track every other time.
-		if (yunlikely(!dpool_exists(area->area.widgetData, &key)))
+		if (yunlikely(!dpool_exists(pool, &key)))
 		{
 			WimaWidgetInitDataFunc init;
 			void* ptr;
@@ -333,7 +334,7 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 
 				if (yerror(status)) goto wima_lyt_wdgt_err;
 
-				ptr = dpool_malloc(area->area.widgetData, &key, allocSize);
+				ptr = dpool_malloc(pool, &key, allocSize);
 
 				if (yerror(!ptr)) goto wima_lyt_wdgt_malloc_err;
 
@@ -341,7 +342,7 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 			}
 			else
 			{
-				ptr = dpool_calloc(area->area.widgetData, &key, allocSize);
+				ptr = dpool_calloc(pool, &key, allocSize);
 				if (yerror(!ptr)) goto wima_lyt_wdgt_malloc_err;
 			}
 		}
@@ -355,9 +356,9 @@ WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
 	item.widget.prop = prop;
 	item.widget.flags = flags;
 
-	if (yerror(dvec_push(area->area.items, &item))) goto wima_lyt_wdgt_malloc_err;
+	if (yerror(dvec_push(items, &item))) goto wima_lyt_wdgt_malloc_err;
 
-	wima_layout_setChildren(parent, area, idx);
+	wima_layout_setChildren(parent, items, idx);
 
 	return wih.widget;
 
