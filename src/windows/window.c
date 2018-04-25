@@ -344,6 +344,24 @@ WimaStatus wima_window_close(WimaWindow wwh)
 	return WIMA_STATUS_SUCCESS;
 }
 
+void wima_window_enableHeader(WimaWindow wwh)
+{
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+	((WimaWin*) dvec_get(wg.windows, wwh))->flags |= WIMA_WIN_HEADER;
+}
+
+void wima_window_disableHeader(WimaWindow wwh)
+{
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+	((WimaWin*) dvec_get(wg.windows, wwh))->flags &= ~(WIMA_WIN_HEADER);
+}
+
+bool wima_window_headerEnabled(WimaWindow wwh)
+{
+	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
+	return (((WimaWin*) dvec_get(wg.windows, wwh))->flags & WIMA_WIN_HEADER) != 0;
+}
+
 void wima_window_setFocused(WimaWindow wwh)
 {
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);

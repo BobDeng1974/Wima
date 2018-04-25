@@ -77,10 +77,24 @@ extern "C" {
 #define WIMA_WIN_CLICK_THRESHOLD (250)
 
 /**
+ * @def WIMA_WIN_HEADER
+ * Window header bit.
+ */
+#define WIMA_WIN_HEADER (0x01)
+
+/**
+ * @def WIMA_WIN_HAS_HEADER
+ * Returns true if the window has a header, false otherwise.
+ * @param win	The window to test.
+ * @return		true if @a win has a header, false otherwise.
+ */
+#define WIMA_WIN_HAS_HEADER(win) (((win)->flags) & WIMA_WIN_HEADER)
+
+/**
  * @def WIMA_WIN_DIRTY
  * Window dirty bit.
  */
-#define WIMA_WIN_DIRTY (0x01)
+#define WIMA_WIN_DIRTY (0x02)
 
 /**
  * @def WIMA_WIN_IS_DIRTY
@@ -94,13 +108,13 @@ extern "C" {
  * @def WIMA_WIN_LAYOUT
  * Window layout bit.
  */
-#define WIMA_WIN_LAYOUT (0x02)
+#define WIMA_WIN_LAYOUT (0x04)
 /**
  * @def WIMA_WIN_LAYOUT_FORCE
  * Window force layout bit. This is used to make
  * sure the user can't cancel required layouts.
  */
-#define WIMA_WIN_LAYOUT_FORCE (0x04)
+#define WIMA_WIN_LAYOUT_FORCE (0x08)
 
 /**
  * @def WIMA_WIN_NEEDS_LAYOUT
@@ -115,7 +129,7 @@ extern "C" {
  * Window context menu bit. This is to
  * mark when a menu is a context menu.
  */
-#define WIMA_WIN_MENU_CONTEXT (0x08)
+#define WIMA_WIN_MENU_CONTEXT (0x10)
 
 /**
  * @def WIMA_WIN_MENU_IS_CONTEXT(win)
@@ -130,7 +144,7 @@ extern "C" {
  * A bit indicating whether the window
  * has a tooltip up or not.
  */
-#define WIMA_WIN_TOOLTIP (0x10)
+#define WIMA_WIN_TOOLTIP (0x20)
 
 /**
  * @def WIMA_WIN_HAS_TOOLTIP(win)
@@ -145,7 +159,7 @@ extern "C" {
  * A bit indicating whether the window
  * is in split mode or not.
  */
-#define WIMA_WIN_SPLIT_MODE (0x20)
+#define WIMA_WIN_SPLIT_MODE (0x40)
 
 /**
  * @def WIMA_WIN_IN_SPLIT_MODE(win)
@@ -160,7 +174,7 @@ extern "C" {
  * A bit indicating whether the window
  * is in join mode or not.
  */
-#define WIMA_WIN_JOIN_MODE (0x40)
+#define WIMA_WIN_JOIN_MODE (0x80)
 
 /**
  * @def WIMA_WIN_IN_JOIN_MODE(win)

@@ -2374,6 +2374,12 @@ WimaStatus wima_window_activate(WimaWindow wwh);
  */
 WimaStatus wima_window_close(WimaWindow wwh);
 
+void wima_window_enableHeader(WimaWindow wwh);
+
+void wima_window_disableHeader(WimaWindow wwh);
+
+bool wima_window_headerEnabled(WimaWindow wwh);
+
 /**
  * Gives the current window focus.
  * @param wwh	The window to focus.
@@ -3037,6 +3043,14 @@ const char* wima_window_clipboard(WimaWindow wwh) yinline;
 typedef void (*WimaErrorFunc)(WimaStatus status, const char* func, const char* desc);
 
 /**
+ * A callback type to lay out the header for a window.
+ * @param root	The root layout.
+ * @return		WIMA_STATUS_SUCCESS on success, an
+ *				error code otherwise.
+ */
+typedef WimaStatus (*WimaWindowHeaderLayoutFunc)(WimaLayout root);
+
+/**
  * A callback type to handle file drop events.
  * @param window	The window that the files were dropped onto.
  * @param filec		The number of files dropped.
@@ -3116,6 +3130,9 @@ typedef struct WimaAppFuncs
 {
 	/// The app error callback.
 	WimaErrorFunc error;
+
+	/// The window header layout function.
+	WimaWindowHeaderLayoutFunc win_header;
 
 	/// The app window file drop callback.
 	WimaWindowFileDropFunc file_drop;
