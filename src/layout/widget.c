@@ -146,7 +146,7 @@ void wima_widget_setEnabled(WimaWidget wdgt, bool enable)
 	if (enable)
 		pwdgt->widget.flags |= WIMA_WIDGET_DISABLED;
 	else
-		pwdgt->widget.flags &= ~WIMA_WIDGET_DISABLED;
+		pwdgt->widget.flags &= ~(WIMA_WIDGET_DISABLED);
 }
 
 bool wima_widget_enabled(WimaWidget wdgt)
