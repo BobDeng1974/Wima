@@ -123,16 +123,15 @@ void* wima_widget_data(WimaWidget wdgt)
 
 bool wima_widget_inOverlay(WimaWidget wdgt)
 {
-#ifdef __YASSERT__
-
 	wassert(wima_window_valid(wdgt.window), WIMA_ASSERT_WIN);
+	wassert(wdgt.widget < dvec_len(((WimaWin*) dvec_get(wg.windows, wdgt.window))->overlayItems), WIMA_ASSERT_LAYOUT);
+	return wdgt.region == WIMA_REGION_INVALID_IDX && wdgt.area != WIMA_AREA_INVALID;
+}
 
-	WimaWin* win = dvec_get(wg.windows, wdgt.window);
-
-	wassert(wdgt.widget < dvec_len(win->overlayItems), WIMA_ASSERT_LAYOUT);
-
-#endif
-
+bool wima_widget_inHeader(WimaWidget wdgt)
+{
+	wassert(wima_window_valid(wdgt.window), WIMA_ASSERT_WIN);
+	wassert(wdgt.widget < dvec_len(((WimaWin*) dvec_get(wg.windows, wdgt.window))->overlayItems), WIMA_ASSERT_LAYOUT);
 	return wdgt.region == WIMA_REGION_INVALID_IDX && wdgt.area == WIMA_AREA_INVALID;
 }
 
