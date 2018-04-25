@@ -52,7 +52,7 @@
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, uint32_t allocSize,
+WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
                                  bool headerTop, int nRegions, ...)
 {
 	wima_assert_init;
@@ -62,15 +62,15 @@ WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, 
 	va_list regions;
 	va_start(regions, nRegions);
 
-	WimaEditor wed = wima_editor_vregister(name, funcs, icon, allocSize, headerTop, nRegions, regions);
+	WimaEditor wed = wima_editor_vregister(name, funcs, icon, headerTop, nRegions, regions);
 
 	va_end(regions);
 
 	return wed;
 }
 
-WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, uint32_t allocSize,
-                                 bool headerTop, int nRegions, va_list regions)
+WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, bool headerTop,
+                                 int nRegions, va_list regions)
 {
 	wima_assert_init;
 
@@ -80,11 +80,11 @@ WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, 
 
 	for (int i = 0; i < nRegions; ++i) regs[i] = (WimaRegion) va_arg(regions, int);
 
-	return wima_editor_register(name, funcs, icon, allocSize, headerTop, nRegions, regs);
+	return wima_editor_register(name, funcs, icon, headerTop, nRegions, regs);
 }
 
-WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, uint32_t allocSize,
-                                bool headerTop, int nRegions, WimaRegion regions[])
+WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, bool headerTop,
+                                int nRegions, WimaRegion regions[])
 {
 	wima_assert_init;
 
@@ -105,7 +105,6 @@ WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, W
 	edtr.funcs = funcs;
 	edtr.icon = icon;
 	edtr.headerTop = headerTop;
-	edtr.allocSize = allocSize;
 	edtr.numRegions = nRegions + 1;
 
 	// TODO: Allocate the editor data (allocSize).

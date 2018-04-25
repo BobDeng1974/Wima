@@ -1897,14 +1897,13 @@ typedef struct WimaEditorFuncs
  * @param name		The editor's name. This is used as a label.
  * @param funcs		The functions that the editor/area will use.
  * @param icon		The icon for the editor.
- * @param allocSize	The size that must be allocated for the editor when live.
  * @param headerTop	Whether the header should start on top or not.
  * @param nRegions	The number of regions.
  *					that the editor can handle.
  * @return			The editor.
  */
-WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, uint32_t allocSize,
-                                 bool headerTop, int nRegions, ...);
+WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, bool headerTop,
+                                 int nRegions, ...);
 
 /**
  * Registers a editor type that can then be used to create a WimaWorkspace.
@@ -1914,29 +1913,27 @@ WimaEditor wima_editor_nregister(const char* const name, WimaEditorFuncs funcs, 
  * @param name		The editor's name. This is used as a label.
  * @param funcs		The functions that the editor/area will use.
  * @param icon		The icon for the editor.
- * @param allocSize	The size that must be allocated for the editor when live.
  * @param headerTop	Whether the header should start on top or not.
  * @param nRegions	The number of regions.
  * @param regions	A list of regions.
  *					that the editor can handle.
  * @return			The editor.
  */
-WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, uint32_t allocSize,
-                                 bool headerTop, int nRegions, va_list regions);
+WimaEditor wima_editor_vregister(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, bool headerTop,
+                                 int nRegions, va_list regions);
 
 /**
  * Registers a editor type that can then be used to create a WimaWorkspace.
  * @param name		The editor's name. This is used as a label.
  * @param funcs		The functions that the editor/area will use.
  * @param icon		The icon for the editor.
- * @param allocSize	The size that must be allocated for the editor when live.
  * @param headerTop	Whether the header should start on top or not.
  * @param nRegions	The number of regions.
  * @param regions	A list of regions.
  *					that the editor can handle.
  * @return			The editor.
  */
-WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon, uint32_t allocSize,
+WimaEditor wima_editor_register(const char* const name, WimaEditorFuncs funcs, WimaIcon icon,
                                 bool headerTop, int nRegions, WimaRegion regions[]);
 
 /**

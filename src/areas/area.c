@@ -506,12 +506,6 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 		return WIMA_STATUS_SUCCESS;
 	}
 
-	WimaEditor edtr = area->area.type;
-
-	wassert(edtr < dvec_len(wg.editors), WIMA_ASSERT_EDITOR);
-
-	WimaEdtr* editor = dvec_get(wg.editors, edtr);
-
 	area->area.items = dvec_create(0, sizeof(WimaItem), wima_item_free, NULL);
 	if (yerror(!area->area.items)) return WIMA_STATUS_MALLOC_ERR;
 
@@ -520,36 +514,6 @@ WimaStatus wima_area_setup(WimaAr* area, bool allocate)
 	{
 		dvec_free(area->area.items);
 		return WIMA_STATUS_MALLOC_ERR;
-	}
-
-	uint32_t allocSize = editor->allocSize;
-
-	if (allocSize > 0)
-	{
-		uint64_t key = wima_widget_hash(WIMA_PROP_INVALID, area->node, (uint8_t) -1);
-		WimaAreaInitDataFunc init = editor->funcs.init;
-
-		if (init)
-		{
-			WimaArea wah;
-
-			void* ptr = dpool_malloc(area->area.widgetData, &key, allocSize);
-
-			if (yerror(!ptr)) return WIMA_STATUS_MALLOC_ERR;
-
-			// Create an area handle. I can't use
-			// wima_area() here because it will assert.
-			wah.area = area->node;
-			wah.window = area->window;
-
-			// Call the user function.
-			status = init(wah, ptr);
-		}
-		else
-		{
-			void* ptr = dpool_calloc(area->area.widgetData, &key, allocSize);
-			if (yerror(!ptr)) status = WIMA_STATUS_MALLOC_ERR;
-		}
 	}
 
 	return status;

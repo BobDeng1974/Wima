@@ -77,10 +77,6 @@ typedef struct WimaEdtr
 	/// The number of regions this editor has.
 	uint8_t numRegions;
 
-	/// The size that must be allocated for the editor
-	/// when it is live as an area.
-	uint32_t allocSize;
-
 	/// The list of regions.
 	WimaRegion regions[WIMA_EDITOR_MAX_REGIONS];
 
