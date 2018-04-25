@@ -306,6 +306,9 @@ typedef struct WimaWin
 	/// The min size of the window.
 	WimaSizeS minsize;
 
+	/// The min size of the header.
+	WimaSizeS headerMinSize;
+
 	/// The pixel ratio of the window.
 	float pixelRatio;
 

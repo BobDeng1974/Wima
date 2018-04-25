@@ -724,9 +724,9 @@ static void wima_area_node_resize(DynaTree areas, DynaNode node, WimaRect rect, 
 
 	WimaAr* area = dtree_node(areas, node);
 
-	if (WIMA_AREA_IS_LEAF(area)) return;
-
 	area->rect = rect;
+
+	if (WIMA_AREA_IS_LEAF(area)) return;
 
 	int dim = rect.v[!area->parent.vertical + 2] - 1;
 

@@ -94,6 +94,8 @@ static void wima_window_clearContext(WimaWinCtx* ctx);
  */
 static void wima_window_setMinSize(WimaWin* win, WimaSizef* size);
 
+static WimaStatus wima_window_layoutHeader(WimaWin* win, WimaWindow wwh, WimaSizef* min);
+
 /**
  * @}
  */
@@ -265,17 +267,24 @@ wima_win_create_name_glfw_err:
 WimaStatus wima_window_activate(WimaWindow wwh)
 {
 	WimaStatus status;
+	WimaSizef min;
 
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
 	WimaWin* win = dvec_get(wg.windows, wwh);
 
+	if (WIMA_WIN_HAS_HEADER(win) && wg.funcs.win_header)
+	{
+		status = wima_window_layoutHeader(win, wwh, &min);
+		if (yerror(status)) return status;
+	}
+
 	WimaRect rect;
 
 	rect.x = 0;
-	rect.y = 0;
+	rect.y = win->headerMinSize.h;
 	rect.w = win->fbsize.w;
-	rect.h = win->fbsize.h;
+	rect.h = win->fbsize.h - win->headerMinSize.h;
 
 	uint8_t wkspLen = dvec_len(wg.workspaces);
 
@@ -285,8 +294,6 @@ WimaStatus wima_window_activate(WimaWindow wwh)
 
 	for (uint8_t i = 0; i < wkspLen; ++i)
 	{
-		WimaSizef min;
-
 		status = wima_area_init(wwh, dvec_get(win->workspaces, i), rect, &min);
 		if (yerror(status)) return status;
 
@@ -297,11 +304,9 @@ WimaStatus wima_window_activate(WimaWindow wwh)
 	}
 
 	wima_window_clearContext(&win->ctx);
-
 	wima_window_setDirty(win, true);
 
 	glfwMakeContextCurrent(win->window);
-
 	glfwSwapInterval(1);
 
 	if (yerror(!wg.gladLoaded && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))) return WIMA_STATUS_OPENGL_ERR;
@@ -1312,6 +1317,8 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 	win->flags |= !win->ctx.eventCount * WIMA_WIN_TOOLTIP;
 	win->ctx.eventCount = 0;
 
+	bool header = wg.funcs.win_header != 0 && WIMA_WIN_HAS_HEADER(win) != 0;
+
 	if (WIMA_WIN_NEEDS_LAYOUT(win))
 	{
 		if (yerror(dvec_setLength(win->rootLayouts, 0) || dvec_setLength(win->overlayItems, 0)))
@@ -1322,30 +1329,10 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 		status = wima_area_layout(WIMA_WIN_AREAS(win), min);
 		if (yerror(status)) return status;
 
-		if (wg.funcs.win_header && WIMA_WIN_HAS_HEADER(win))
+		if (header)
 		{
-			WimaLayout parent;
-			parent.layout = WIMA_LAYOUT_INVALID;
-			parent.area = WIMA_AREA_INVALID;
-			parent.region = WIMA_REGION_INVALID_IDX;
-			parent.window = wwh;
-
-			uint16_t flags = wima_layout_setExpandFlags(0, false, true);
-			flags |= WIMA_LAYOUT_ROW;
-
-			WimaLayout root = wima_layout_new(parent, flags, 0.0f);
-
-			if (yerror(dvec_push(win->rootLayouts, &root))) return WIMA_STATUS_MALLOC_ERR;
-
-			status = wg.funcs.win_header(root);
+			status = wima_window_layoutHeader(win, wwh, min);
 			if (yerror(status)) return status;
-
-			WimaItem* item = wima_layout_ptr(root);
-
-			WimaSizef headermin = wima_layout_size(item);
-
-			min->w = min->w > headermin.w ? min->w : headermin.w;
-			min->h += headermin.h;
 		}
 
 		wima_window_setMinSize(win, min);
@@ -1360,6 +1347,16 @@ WimaStatus wima_window_draw(WimaWindow wwh)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		nvgBeginFrame(win->render.nvg, win->winsize.w, win->winsize.h, win->pixelRatio);
+
+		if (header)
+		{
+			WimaLayout* root = dvec_get(win->rootLayouts, 0);
+
+			wassert(root, WIMA_ASSERT_LAYOUT);
+
+			status = wima_layout_draw(wima_layout_ptr(*root), &win->render);
+			if (yerror(status)) return status;
+		}
 
 		status = wima_area_draw(&win->render, WIMA_WIN_AREAS(win));
 		if (yerror(status)) goto err;
@@ -1446,6 +1443,38 @@ bool wima_window_splitAreaMode(WimaWidget wdgt, WimaMouseClickEvent event yunuse
 ////////////////////////////////////////////////////////////////////////////////
 // Static functions.
 ////////////////////////////////////////////////////////////////////////////////
+
+static WimaStatus wima_window_layoutHeader(WimaWin* win, WimaWindow wwh, WimaSizef* min)
+{
+	WimaLayout parent;
+	parent.layout = WIMA_LAYOUT_INVALID;
+	parent.area = WIMA_AREA_INVALID;
+	parent.region = WIMA_REGION_INVALID_IDX;
+	parent.window = wwh;
+
+	uint16_t flags = wima_layout_setExpandFlags(0, false, true);
+	flags |= WIMA_LAYOUT_ROW;
+
+	WimaLayout root = wima_layout_new(parent, flags, 0.0f);
+
+	if (yerror(dvec_push(win->rootLayouts, &root))) return WIMA_STATUS_MALLOC_ERR;
+
+	WimaStatus status = wg.funcs.win_header(root);
+	if (yerror(status)) return status;
+
+	WimaItem* item = wima_layout_ptr(root);
+
+	WimaSizef headermin = wima_layout_size(item);
+
+	min->w = min->w > headermin.w ? min->w : headermin.w;
+	min->h += headermin.h;
+
+	win->headerMinSize.w = (uint16_t) ceilf(headermin.w);
+	win->headerMinSize.h = (uint16_t) ceilf(headermin.h);
+
+	status = wima_layout_layout(item);
+	if (yerror(status)) return status;
+}
 
 static WimaStatus wima_window_overlay_draw(WimaWin* win, WimaWindow wwh, size_t idx, float parentWidth)
 {

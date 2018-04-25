@@ -615,9 +615,9 @@ void wima_callback_framebufferSize(GLFWwindow* window, int width, int height)
 
 	WimaRect rect;
 	rect.x = 0;
-	rect.y = 0;
+	rect.y = wwin->headerMinSize.h;
 	rect.w = width;
-	rect.h = height;
+	rect.h = height - wwin->headerMinSize.w;
 
 	wima_area_resize(WIMA_WIN_AREAS(wwin), rect);
 
