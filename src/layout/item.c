@@ -52,7 +52,7 @@ WimaItem* wima_item_ptr(WimaWindow wwh, WimaAreaNode area, WimaRegion region, ui
 
 	WimaItem* item;
 
-	if (region != WIMA_REGION_INVALID)
+	if (ylikely(region != WIMA_REGION_INVALID))
 	{
 		WimaAr* ar = wima_area_ptr(wwh, area);
 		wassert(WIMA_AREA_IS_LEAF(ar), WIMA_ASSERT_AREA_LEAF);

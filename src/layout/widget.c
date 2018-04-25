@@ -107,7 +107,7 @@ void* wima_widget_data(WimaWidget wdgt)
 
 	DynaPool pool;
 
-	if (wdgt.region != WIMA_REGION_INVALID_IDX)
+	if (ylikely(wdgt.region != WIMA_REGION_INVALID_IDX))
 	{
 		WimaAr* area = wima_area_ptr(wdgt.window, wdgt.area);
 		pool = area->area.widgetData;
