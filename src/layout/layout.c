@@ -155,10 +155,8 @@ void wima_layout_setEnabled(WimaLayout wlh, bool enabled)
 
 	wassert(WIMA_ITEM_IS_LAYOUT(layout), WIMA_ASSERT_ITEM_LAYOUT);
 
-	if (enabled)
-		layout->layout.flags |= WIMA_LAYOUT_ENABLE;
-	else
-		layout->layout.flags &= ~(WIMA_LAYOUT_ENABLE);
+	layout->layout.flags &= ~(WIMA_LAYOUT_ENABLE);
+	layout->layout.flags |= (enabled << WIMA_LAYOUT_ENABLE_BIT);
 }
 
 bool wima_layout_enabled(WimaLayout wlh)
