@@ -111,7 +111,7 @@ typedef struct WimaPropCollection
 	uint32_t rectIdx;
 
 	/// The sub menu.
-	uint32_t sub;
+	WimaProperty sub;
 
 } WimaPropCollection;
 
