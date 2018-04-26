@@ -147,54 +147,6 @@ static void wima_layout_setChildren(WimaLayout parent, ynonnull DynaVector items
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-uint16_t wima_layout_setExpandFlags(uint16_t flags, bool vertical, bool horizontal)
-{
-	wima_assert_init;
-	return flags | (vertical * WIMA_LAYOUT_FILL_VER) | (horizontal * WIMA_LAYOUT_FILL_HOR);
-}
-
-uint16_t wima_layout_clearExpandFlags(uint16_t flags)
-{
-	wima_assert_init;
-	return flags & ~(WIMA_LAYOUT_FILL_HOR | WIMA_LAYOUT_FILL_VER);
-}
-
-uint16_t wima_layout_setScrollFlags(uint16_t flags, bool vertical, bool horizontal)
-{
-	wima_assert_init;
-	return flags | (vertical * WIMA_LAYOUT_SCROLL_VER) | (horizontal * WIMA_LAYOUT_SCROLL_HOR);
-}
-
-uint16_t wima_layout_clearScrollFlags(uint16_t flags)
-{
-	wima_assert_init;
-	return flags & ~(WIMA_LAYOUT_SCROLL_HOR | WIMA_LAYOUT_SCROLL_VER);
-}
-
-uint16_t wima_layout_setBoxFlag(uint16_t flags)
-{
-	wima_assert_init;
-	return flags | WIMA_LAYOUT_BOX;
-}
-
-uint16_t wima_layout_clearBoxFlag(uint16_t flags)
-{
-	wima_assert_init;
-	return flags & ~(WIMA_LAYOUT_BOX);
-}
-
-uint16_t wima_layout_setAlignedFlag(uint16_t flags)
-{
-	wima_assert_init;
-	return flags | WIMA_LAYOUT_ALIGNED;
-}
-
-uint16_t wima_layout_clearAlignedFlag(uint16_t flags)
-{
-	wima_assert_init;
-	return flags & ~(WIMA_LAYOUT_ALIGNED);
-}
-
 void wima_layout_setEnabled(WimaLayout wlh, bool enabled)
 {
 	wassert(wima_item_valid(wlh.window, wlh.area, wlh.region, wlh.layout), WIMA_ASSERT_LAYOUT);
@@ -223,37 +175,25 @@ bool wima_layout_enabled(WimaLayout wlh)
 void wima_layout_separator(WimaLayout parent)
 {
 	wassert(wima_item_valid(parent.window, parent.area, parent.region, parent.layout), WIMA_ASSERT_LAYOUT);
-	wima_layout_new(parent, WIMA_LAYOUT_SEP, 0.0f);
+	wima_layout_new(parent, WIMA_LAYOUT_FLAG_SEP, 0.0f);
 }
 
 WimaLayout wima_layout_row(WimaLayout parent, uint16_t flags)
 {
 	wassert(wima_item_valid(parent.window, parent.area, parent.region, parent.layout), WIMA_ASSERT_LAYOUT);
-
-	flags |= WIMA_LAYOUT_ROW;
-	flags &= ~(WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_SEP);
-
-	return wima_layout_new(parent, flags, 0.0f);
+	return wima_layout_new(parent, flags | WIMA_LAYOUT_FLAG_ROW, 0.0f);
 }
 
 WimaLayout wima_layout_col(WimaLayout parent, uint16_t flags)
 {
 	wassert(wima_item_valid(parent.window, parent.area, parent.region, parent.layout), WIMA_ASSERT_LAYOUT);
-
-	flags |= WIMA_LAYOUT_COL;
-	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_SEP);
-
-	return wima_layout_new(parent, flags, 0.0f);
+	return wima_layout_new(parent, flags | WIMA_LAYOUT_FLAG_COL, 0.0f);
 }
 
 WimaLayout wima_layout_split(WimaLayout parent, uint16_t flags, float split)
 {
 	wassert(wima_item_valid(parent.window, parent.area, parent.region, parent.layout), WIMA_ASSERT_LAYOUT);
-
-	flags |= WIMA_LAYOUT_SPLIT;
-	flags &= ~(WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SEP);
-
-	return wima_layout_new(parent, flags, wima_clampf(split, 0.0f, 1.0f));
+	return wima_layout_new(parent, flags | WIMA_LAYOUT_FLAG_SPLIT, wima_clampf(split, 0.0f, 1.0f));
 }
 
 WimaWidget wima_layout_widget(WimaLayout parent, WimaProperty prop)
@@ -455,25 +395,25 @@ WimaSizef wima_layout_size(WimaItem* item)
 
 	switch (item->layout.flags & WIMA_LAYOUT_TYPE_MASK)
 	{
-		case WIMA_LAYOUT_ROW:
+		case WIMA_LAYOUT_FLAG_ROW:
 		{
 			item->minSize = wima_layout_size_row(item);
 			break;
 		}
 
-		case WIMA_LAYOUT_COL:
+		case WIMA_LAYOUT_FLAG_COL:
 		{
 			item->minSize = wima_layout_size_col(item);
 			break;
 		}
 
-		case WIMA_LAYOUT_SPLIT:
+		case WIMA_LAYOUT_FLAG_SPLIT:
 		{
 			item->minSize = wima_layout_size_split(item);
 			break;
 		}
 
-		case WIMA_LAYOUT_SEP:
+		case WIMA_LAYOUT_FLAG_SEP:
 		{
 			item->minSize.w = -WIMA_ITEM_SEP_DIM;
 			item->minSize.h = -WIMA_ITEM_SEP_DIM;
@@ -498,13 +438,13 @@ WimaStatus wima_layout_layout(WimaItem* item)
 
 	uint16_t flags = item->layout.flags & (WIMA_LAYOUT_TYPE_MASK);
 
-	wassert(item->layout.kidCount || (flags & WIMA_LAYOUT_SEP), WIMA_ASSERT_LAYOUT_NO_CHILDREN);
+	wassert(item->layout.kidCount || (flags & WIMA_LAYOUT_FLAG_SEP), WIMA_ASSERT_LAYOUT_NO_CHILDREN);
 
 	WimaStatus status = WIMA_STATUS_SUCCESS;
 
 	float count = (float) item->layout.kidCount;
 
-	wassert(!(item->layout.flags & WIMA_LAYOUT_SPLIT) || count == 2, WIMA_ASSERT_LAYOUT_SPLIT_MAX);
+	wassert(!(item->layout.flags & WIMA_LAYOUT_FLAG_SPLIT) || count == 2, WIMA_ASSERT_LAYOUT_SPLIT_MAX);
 
 	uint16_t idx = item->layout.firstKid;
 
@@ -523,9 +463,9 @@ WimaStatus wima_layout_layout(WimaItem* item)
 
 	x = y = 0.0f;
 
-	row = (float) ((flags & WIMA_LAYOUT_ROW) != 0);
+	row = (float) ((flags & WIMA_LAYOUT_FLAG_ROW) != 0);
 
-	if (row != 0.0f || (flags & WIMA_LAYOUT_COL))
+	if (row != 0.0f || (flags & WIMA_LAYOUT_FLAG_COL))
 	{
 		WimaSizef base;
 
@@ -547,7 +487,7 @@ WimaStatus wima_layout_layout(WimaItem* item)
 			x += (row * child->rect.w);
 			y += (col * child->rect.h);
 
-			if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP))
+			if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_FLAG_SEP))
 				status = wima_layout_layout(child);
 
 			idx = child->nextSibling;
@@ -564,7 +504,7 @@ WimaStatus wima_layout_layout(WimaItem* item)
 
 		x = child->rect.w;
 
-		if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP))
+		if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_FLAG_SEP))
 		{
 			status = wima_layout_layout(child);
 			if (yerror(status)) return status;
@@ -579,7 +519,7 @@ WimaStatus wima_layout_layout(WimaItem* item)
 		child->rect.w = item->rect.w - x;
 		child->rect.h = item->rect.h;
 
-		if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_SEP))
+		if (WIMA_ITEM_IS_LAYOUT(child) && !(child->layout.flags & WIMA_LAYOUT_FLAG_SEP))
 		{
 			status = wima_layout_layout(child);
 			if (yerror(status)) return status;
@@ -602,7 +542,7 @@ WimaStatus wima_layout_draw(WimaItem* item, WimaRenderContext* ctx)
 
 		idx = child->nextSibling;
 
-		if (child->layout.flags & WIMA_LAYOUT_SEP) continue;
+		if (child->layout.flags & WIMA_LAYOUT_FLAG_SEP) continue;
 
 		if (WIMA_ITEM_IS_LAYOUT(child))
 		{
@@ -642,7 +582,8 @@ static void wima_layout_setChildren(WimaLayout parent, DynaVector items, uint32_
 	WimaItem* pparent = dvec_get(items, parent.layout);
 
 	wassert(WIMA_ITEM_IS_LAYOUT(pparent), WIMA_ASSERT_ITEM_LAYOUT);
-	wassert(!(pparent->layout.flags & WIMA_LAYOUT_SPLIT) || pparent->layout.kidCount < 2, WIMA_ASSERT_LAYOUT_SPLIT_MAX);
+	wassert(!(pparent->layout.flags & WIMA_LAYOUT_FLAG_SPLIT) || pparent->layout.kidCount < 2,
+	        WIMA_ASSERT_LAYOUT_SPLIT_MAX);
 
 	++(pparent->layout.kidCount);
 

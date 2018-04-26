@@ -75,70 +75,45 @@ typedef enum WimaLayoutStage
 } WimaLayoutStage;
 
 /**
- * A flag indicating whether a layout is enabled.
- */
-#define WIMA_LAYOUT_ENABLE (0x0001)
-
-/**
  * A flag indicating whether a layout is a row.
  */
-#define WIMA_LAYOUT_ROW (0x0002)
+#define WIMA_LAYOUT_FLAG_ROW (1 << 6)
 
 /**
  * A flag indicating whether a layout is a column.
  */
-#define WIMA_LAYOUT_COL (0x0004)
+#define WIMA_LAYOUT_FLAG_COL (1 << 7)
 
 /**
  * A flag indicating whether a layout is a split.
  */
-#define WIMA_LAYOUT_SPLIT (0x0008)
+#define WIMA_LAYOUT_FLAG_SPLIT (1 << 8)
 
 /**
  * A flag indicating whether a layout is a separator.
  */
-#define WIMA_LAYOUT_SEP (0x0010)
+#define WIMA_LAYOUT_FLAG_SEP (1 << 9)
 
 // We may use these later, but not for now.
-//#define WIMA_LAYOUT_ROW_FLOW    (0x0020)
-//#define WIMA_LAYOUT_COL_FLOW    (0x0040)
+//#define WIMA_LAYOUT_ROW_FLOW    (1 << 10)
+//#define WIMA_LAYOUT_COL_FLOW    (1 << 11)
 
 /**
- * A flag indicating whether a layout has a box.
+ * The bit number for the enable bit.
  */
-#define WIMA_LAYOUT_BOX (0x0080)
+#define WIMA_LAYOUT_ENABLE_BIT (15)
 
 /**
- * A flag indicating whether a layout has aligned corners.
+ * A flag indicating whether a layout is enabled.
  */
-#define WIMA_LAYOUT_ALIGNED (0x0100)
-
-/**
- * A flag indicating whether a layout expands horizontally.
- */
-#define WIMA_LAYOUT_FILL_HOR (0x0200)
-
-/**
- * A flag indicating whether a layout expands vertically.
- */
-#define WIMA_LAYOUT_FILL_VER (0x0400)
-
-/**
- * A flag indicating whether a layout scrolls horizontally.
- */
-#define WIMA_LAYOUT_SCROLL_HOR (0x0800)
-
-/**
- * A flag indicating whether a layout scrolls vertically.
- */
-#define WIMA_LAYOUT_SCROLL_VER (0x1000)
+#define WIMA_LAYOUT_ENABLE (1 << WIMA_LAYOUT_ENABLE_BIT)
 
 /**
  * @def WIMA_LAYOUT_TYPE_MASK
  * A mask for getting just the bits that
  * indicate layout type.
  */
-#define WIMA_LAYOUT_TYPE_MASK (WIMA_LAYOUT_ROW | WIMA_LAYOUT_COL | WIMA_LAYOUT_SPLIT | WIMA_LAYOUT_SEP)
+#define WIMA_LAYOUT_TYPE_MASK (WIMA_LAYOUT_FLAG_ROW | WIMA_LAYOUT_FLAG_COL | WIMA_LAYOUT_FLAG_SPLIT | WIMA_LAYOUT_FLAG_SEP)
 
 /**
  * Gets the pointer to a layout's data.

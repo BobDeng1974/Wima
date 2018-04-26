@@ -73,6 +73,36 @@ extern "C" {
 #define WIMA_LAYOUT_MAX WIMA_LAYOUT_INVALID
 
 /**
+ * A flag indicating whether a layout has a box border.
+ */
+#define WIMA_LAYOUT_FLAG_BOX (1 << 0)
+
+/**
+ * A flag indicating whether a layout's widgets should have aligned corners.
+ */
+#define WIMA_LAYOUT_FLAG_ALIGNED (1 << 1)
+
+/**
+ * A flag indicating whether a layout expands horizontally.
+ */
+#define WIMA_LAYOUT_FLAG_FILL_HOR (1 << 2)
+
+/**
+ * A flag indicating whether a layout expands vertically.
+ */
+#define WIMA_LAYOUT_FLAG_FILL_VER (1 << 3)
+
+/**
+ * A flag indicating whether a layout scrolls horizontally.
+ */
+#define WIMA_LAYOUT_FLAG_SCROLL_HOR (1 << 4)
+
+/**
+ * A flag indicating whether a layout scrolls vertically.
+ */
+#define WIMA_LAYOUT_FLAG_SCROLL_VER (1 << 5)
+
+/**
  * A handle to a layout.
  */
 typedef struct WimaLayout
@@ -90,82 +120,6 @@ typedef struct WimaLayout
 	WimaWindow window;
 
 } WimaLayout;
-
-/**
- * Takes an initial flag value and sets the expand bits. If @a horizontal is
- * true, the horizontal expand bit is set. Same goes for vertical.
- * @param flags			The initial flag value to use.
- * @param vertical		Whether the vertical expand bit should be set.
- * @param horizontal	Whether the horizontal expand bit should be set.
- * @return				A new set of flags with the old flags value plus
- *						the desired expand bits set.
- */
-uint16_t wima_layout_setExpandFlags(uint16_t flags, bool vertical, bool horizontal) yconst yinline;
-
-/**
- * Takes an initial flag value and clears the expand bits.
- * @param flags	The initial flags value.
- * @return		The @a flags without the expand bits set.
- */
-uint16_t wima_layout_clearExpandFlags(uint16_t flags) yconst yinline;
-
-/**
- * Takes an initial flag value and sets the scroll bits. If @a horizontal is
- * true, the horizontal scroll bit is set. Same goes for vertical.
- *
- * ***WARNING***: Scrolling layouts call wima_render_save(), which adds to the
- * render context stack. Only 16 max contexts may be on the stack and at least
- * 1 slot is used for every area.
- * @param flags			The initial flag value to use.
- * @param vertical		Whether the vertical scroll bit should be set.
- * @param horizontal	Whether the horizontal scroll bit should be set.
- * @return				A new set of flags with the old flags value plus
- *						the desired scroll bits set.
- */
-uint16_t wima_layout_setScrollFlags(uint16_t flags, bool vertical, bool horizontal) yconst yinline;
-
-/**
- * Takes an initial flag value and clears the scroll bits.
- * @param flags	The initial flags value.
- * @return		The @a flags without the scroll bits set.
- */
-uint16_t wima_layout_clearScrollFlags(uint16_t flags) yconst yinline;
-
-/**
- * Takes an initial flag value and sets the box bit.
- * @param flags	The initial flags value.
- * @return		The @a flags with the box bit set.
- */
-uint16_t wima_layout_setBoxFlag(uint16_t flags) yconst yinline;
-
-/**
- * Takes an initial flag value and clears the box bit.
- * @param flags	The initial flags value.
- * @return		The @a flags with the box bit cleared.
- */
-uint16_t wima_layout_clearBoxFlag(uint16_t flags) yconst yinline;
-
-/**
- * Takes an initial flag value and sets the aligned bit.
- * The aligned bit is whether corners of widgets should
- * aligned with each other.
- *
- * This flag is inherited by any layout children.
- * @param flags	The initial flags value.
- * @return		The @a flags with the aligned bit set.
- */
-uint16_t wima_layout_setAlignedFlag(uint16_t flags) yconst yinline;
-
-/**
- * Takes an initial flag value and clears the aligned bit.
- * The aligned bit is whether corners of widgets should
- * aligned with each other.
- *
- * This flag is inherited by any layout children.
- * @param flags	The initial flags value.
- * @return		The @a flags with the aligned bit cleared.
- */
-uint16_t wima_layout_clearAlignedFlag(uint16_t flags) yconst yinline;
 
 /**
  * Sets whether @a wlh (and its children) are enabled.

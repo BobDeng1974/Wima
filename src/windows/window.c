@@ -1452,10 +1452,7 @@ static WimaStatus wima_window_layoutHeader(WimaWin* win, WimaWindow wwh, WimaSiz
 	parent.region = WIMA_REGION_INVALID_IDX;
 	parent.window = wwh;
 
-	uint16_t flags = wima_layout_setExpandFlags(0, false, true);
-	flags |= WIMA_LAYOUT_ROW;
-
-	WimaLayout root = wima_layout_new(parent, flags, 0.0f);
+	WimaLayout root = wima_layout_new(parent, WIMA_LAYOUT_FLAG_ROW | WIMA_LAYOUT_FLAG_FILL_HOR, 0.0f);
 
 	if (yerror(dvec_push(win->rootLayouts, &root))) return WIMA_STATUS_MALLOC_ERR;
 
@@ -1497,8 +1494,7 @@ static WimaStatus wima_window_overlay_draw(WimaWin* win, WimaWindow wwh, size_t 
 	parent.area = idx;
 	parent.window = wwh;
 	parent.region = (uint8_t) WIMA_REGION_INVALID;
-	uint16_t flags = wima_layout_setExpandFlags(0, true, true);
-	WimaLayout root = wima_layout_new(parent, flags, 0.0f);
+	WimaLayout root = wima_layout_new(parent, WIMA_LAYOUT_FLAG_FILL_VER | WIMA_LAYOUT_FLAG_FILL_HOR, 0.0f);
 
 	WimaStatus status = ovly->layout(wovly->ovly, idx, root);
 	if (yerror(status)) return status;

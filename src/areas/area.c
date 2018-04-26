@@ -855,9 +855,9 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 			bool vScroll = WIMA_REG_CAN_SCROLL_VERTICAL(reg) != 0;
 			bool hScroll = WIMA_REG_CAN_SCROLL_HORIZONTAL(reg) != 0;
 			bool vertical = WIMA_REG_IS_VERTICAL(reg) != 0;
-			uint8_t flags = wima_layout_setScrollFlags(initialFlags, vScroll, hScroll);
-			flags = wima_layout_setExpandFlags(flags, vertical, !vertical);
-			flags |= WIMA_REG_IS_ROW(reg) ? WIMA_LAYOUT_ROW : WIMA_LAYOUT_COL;
+			uint16_t flags = (WIMA_LAYOUT_FLAG_SCROLL_VER * vScroll) | (WIMA_LAYOUT_FLAG_SCROLL_HOR * hScroll);
+			flags |= (WIMA_LAYOUT_FLAG_FILL_VER * vertical) | (WIMA_LAYOUT_FLAG_FILL_HOR * !vertical);
+			flags |= WIMA_REG_IS_ROW(reg) ? WIMA_LAYOUT_FLAG_ROW : WIMA_LAYOUT_FLAG_COL;
 
 			area->area.regions[i].root = wima_layout_new(parent, flags, 0.0f);
 
@@ -917,7 +917,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 		{
 			WimaItem* item = wima_layout_ptr(area->area.regions[i].root);
 
-			if (item->layout.flags & WIMA_LAYOUT_FILL_VER)
+			if (item->layout.flags & WIMA_LAYOUT_FLAG_FILL_VER)
 			{
 				item->rect.h = temp.h;
 				temp.w -= item->rect.w;
