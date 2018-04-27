@@ -53,56 +53,56 @@ void wima_prop_list_wdgt_freeData(void* ptr)
 	// TODO: Write this function.
 }
 
-WimaStatus wima_prop_list_wdgt_draw(WimaWidget wdgt, void* ptr, WimaRenderContext* ctx)
+WimaStatus wima_prop_list_wdgt_draw(WimaWidget wdgt, WimaRenderContext* ctx)
 {
 	// TODO: Write this function.
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaSizef wima_prop_list_wdgt_size(WimaWidget wdgt, void* ptr)
+WimaSizef wima_prop_list_wdgt_size(WimaWidget wdgt)
 {
 	// TODO: Write this function.
 	WimaSizef size;
 	return size;
 }
 
-bool wima_prop_list_wdgt_key(WimaWidget wdgt, void* ptr, WimaKeyEvent event)
+bool wima_prop_list_wdgt_key(WimaWidget wdgt, WimaKeyEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_list_wdgt_mouseBtn(WimaWidget wdgt, void* ptr, WimaMouseBtnEvent event)
+bool wima_prop_list_wdgt_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_list_wdgt_mouseClick(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event)
+bool wima_prop_list_wdgt_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_list_wdgt_mousePos(WimaWidget wdgt, void* ptr, WimaVec pos)
+bool wima_prop_list_wdgt_mousePos(WimaWidget wdgt, WimaVec pos)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_list_wdgt_mouseDrag(WimaWidget wdgt, void* ptr, WimaMouseDragEvent event)
+bool wima_prop_list_wdgt_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_list_wdgt_scroll(WimaWidget wdgt, void* ptr, WimaScrollEvent event)
+bool wima_prop_list_wdgt_scroll(WimaWidget wdgt, WimaScrollEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_list_wdgt_char(WimaWidget wdgt, void* ptr, WimaCharEvent event)
+bool wima_prop_list_wdgt_char(WimaWidget wdgt, WimaCharEvent event)
 {
 	// TODO: Write this function.
 	return false;
@@ -123,56 +123,56 @@ void wima_prop_bool_wdgt_freeData(void* ptr)
 	// TODO: Write this function.
 }
 
-WimaStatus wima_prop_bool_wdgt_draw(WimaWidget wdgt, void* ptr, WimaRenderContext* ctx)
+WimaStatus wima_prop_bool_wdgt_draw(WimaWidget wdgt, WimaRenderContext* ctx)
 {
 	// TODO: Write this function.
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaSizef wima_prop_bool_wdgt_size(WimaWidget wdgt, void* ptr)
+WimaSizef wima_prop_bool_wdgt_size(WimaWidget wdgt)
 {
 	// TODO: Write this function.
 	WimaSizef size;
 	return size;
 }
 
-bool wima_prop_bool_wdgt_key(WimaWidget wdgt, void* ptr, WimaKeyEvent event)
+bool wima_prop_bool_wdgt_key(WimaWidget wdgt, WimaKeyEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_bool_wdgt_mouseBtn(WimaWidget wdgt, void* ptr, WimaMouseBtnEvent event)
+bool wima_prop_bool_wdgt_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_bool_wdgt_mouseClick(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event)
+bool wima_prop_bool_wdgt_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_bool_wdgt_mousePos(WimaWidget wdgt, void* ptr, WimaVec pos)
+bool wima_prop_bool_wdgt_mousePos(WimaWidget wdgt, WimaVec pos)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_bool_wdgt_mouseDrag(WimaWidget wdgt, void* ptr, WimaMouseDragEvent event)
+bool wima_prop_bool_wdgt_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_bool_wdgt_scroll(WimaWidget wdgt, void* ptr, WimaScrollEvent event)
+bool wima_prop_bool_wdgt_scroll(WimaWidget wdgt, WimaScrollEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_bool_wdgt_char(WimaWidget wdgt, void* ptr, WimaCharEvent event)
+bool wima_prop_bool_wdgt_char(WimaWidget wdgt, WimaCharEvent event)
 {
 	// TODO: Write this function.
 	return false;
@@ -193,56 +193,56 @@ void wima_prop_int_wdgt_freeData(void* ptr)
 	// TODO: Write this function.
 }
 
-WimaStatus wima_prop_int_wdgt_draw(WimaWidget wdgt, void* ptr, WimaRenderContext* ctx)
+WimaStatus wima_prop_int_wdgt_draw(WimaWidget wdgt, WimaRenderContext* ctx)
 {
 	// TODO: Write this function.
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaSizef wima_prop_int_wdgt_size(WimaWidget wdgt, void* ptr)
+WimaSizef wima_prop_int_wdgt_size(WimaWidget wdgt)
 {
 	// TODO: Write this function.
 	WimaSizef size;
 	return size;
 }
 
-bool wima_prop_int_wdgt_key(WimaWidget wdgt, void* ptr, WimaKeyEvent event)
+bool wima_prop_int_wdgt_key(WimaWidget wdgt, WimaKeyEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_int_wdgt_mouseBtn(WimaWidget wdgt, void* ptr, WimaMouseBtnEvent event)
+bool wima_prop_int_wdgt_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_int_wdgt_mouseClick(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event)
+bool wima_prop_int_wdgt_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_int_wdgt_mousePos(WimaWidget wdgt, void* ptr, WimaVec pos)
+bool wima_prop_int_wdgt_mousePos(WimaWidget wdgt, WimaVec pos)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_int_wdgt_mouseDrag(WimaWidget wdgt, void* ptr, WimaMouseDragEvent event)
+bool wima_prop_int_wdgt_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_int_wdgt_scroll(WimaWidget wdgt, void* ptr, WimaScrollEvent event)
+bool wima_prop_int_wdgt_scroll(WimaWidget wdgt, WimaScrollEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_int_wdgt_char(WimaWidget wdgt, void* ptr, WimaCharEvent event)
+bool wima_prop_int_wdgt_char(WimaWidget wdgt, WimaCharEvent event)
 {
 	// TODO: Write this function.
 	return false;
@@ -263,56 +263,56 @@ void wima_prop_float_wdgt_freeData(void* ptr)
 	// TODO: Write this function.
 }
 
-WimaStatus wima_prop_float_wdgt_draw(WimaWidget wdgt, void* ptr, WimaRenderContext* ctx)
+WimaStatus wima_prop_float_wdgt_draw(WimaWidget wdgt, WimaRenderContext* ctx)
 {
 	// TODO: Write this function.
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaSizef wima_prop_float_wdgt_size(WimaWidget wdgt, void* ptr)
+WimaSizef wima_prop_float_wdgt_size(WimaWidget wdgt)
 {
 	// TODO: Write this function.
 	WimaSizef size;
 	return size;
 }
 
-bool wima_prop_float_wdgt_key(WimaWidget wdgt, void* ptr, WimaKeyEvent event)
+bool wima_prop_float_wdgt_key(WimaWidget wdgt, WimaKeyEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_float_wdgt_mouseBtn(WimaWidget wdgt, void* ptr, WimaMouseBtnEvent event)
+bool wima_prop_float_wdgt_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_float_wdgt_mouseClick(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event)
+bool wima_prop_float_wdgt_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_float_wdgt_mousePos(WimaWidget wdgt, void* ptr, WimaVec pos)
+bool wima_prop_float_wdgt_mousePos(WimaWidget wdgt, WimaVec pos)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_float_wdgt_mouseDrag(WimaWidget wdgt, void* ptr, WimaMouseDragEvent event)
+bool wima_prop_float_wdgt_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_float_wdgt_scroll(WimaWidget wdgt, void* ptr, WimaScrollEvent event)
+bool wima_prop_float_wdgt_scroll(WimaWidget wdgt, WimaScrollEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_float_wdgt_char(WimaWidget wdgt, void* ptr, WimaCharEvent event)
+bool wima_prop_float_wdgt_char(WimaWidget wdgt, WimaCharEvent event)
 {
 	// TODO: Write this function.
 	return false;
@@ -333,56 +333,56 @@ void wima_prop_string_wdgt_freeData(void* ptr)
 	// TODO: Write this function.
 }
 
-WimaStatus wima_prop_string_wdgt_draw(WimaWidget wdgt, void* ptr, WimaRenderContext* ctx)
+WimaStatus wima_prop_string_wdgt_draw(WimaWidget wdgt, WimaRenderContext* ctx)
 {
 	// TODO: Write this function.
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaSizef wima_prop_string_wdgt_size(WimaWidget wdgt, void* ptr)
+WimaSizef wima_prop_string_wdgt_size(WimaWidget wdgt)
 {
 	// TODO: Write this function.
 	WimaSizef size;
 	return size;
 }
 
-bool wima_prop_string_wdgt_key(WimaWidget wdgt, void* ptr, WimaKeyEvent event)
+bool wima_prop_string_wdgt_key(WimaWidget wdgt, WimaKeyEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_string_wdgt_mouseBtn(WimaWidget wdgt, void* ptr, WimaMouseBtnEvent event)
+bool wima_prop_string_wdgt_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_string_wdgt_mouseClick(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event)
+bool wima_prop_string_wdgt_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_string_wdgt_mousePos(WimaWidget wdgt, void* ptr, WimaVec pos)
+bool wima_prop_string_wdgt_mousePos(WimaWidget wdgt, WimaVec pos)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_string_wdgt_mouseDrag(WimaWidget wdgt, void* ptr, WimaMouseDragEvent event)
+bool wima_prop_string_wdgt_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_string_wdgt_scroll(WimaWidget wdgt, void* ptr, WimaScrollEvent event)
+bool wima_prop_string_wdgt_scroll(WimaWidget wdgt, WimaScrollEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_string_wdgt_char(WimaWidget wdgt, void* ptr, WimaCharEvent event)
+bool wima_prop_string_wdgt_char(WimaWidget wdgt, WimaCharEvent event)
 {
 	// TODO: Write this function.
 	return false;
@@ -403,56 +403,56 @@ void wima_prop_enum_wdgt_freeData(void* ptr)
 	// TODO: Write this function.
 }
 
-WimaStatus wima_prop_enum_wdgt_draw(WimaWidget wdgt, void* ptr, WimaRenderContext* ctx)
+WimaStatus wima_prop_enum_wdgt_draw(WimaWidget wdgt, WimaRenderContext* ctx)
 {
 	// TODO: Write this function.
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaSizef wima_prop_enum_wdgt_size(WimaWidget wdgt, void* ptr)
+WimaSizef wima_prop_enum_wdgt_size(WimaWidget wdgt)
 {
 	// TODO: Write this function.
 	WimaSizef size;
 	return size;
 }
 
-bool wima_prop_enum_wdgt_key(WimaWidget wdgt, void* ptr, WimaKeyEvent event)
+bool wima_prop_enum_wdgt_key(WimaWidget wdgt, WimaKeyEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_enum_wdgt_mouseBtn(WimaWidget wdgt, void* ptr, WimaMouseBtnEvent event)
+bool wima_prop_enum_wdgt_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_enum_wdgt_mouseClick(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event)
+bool wima_prop_enum_wdgt_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_enum_wdgt_mousePos(WimaWidget wdgt, void* ptr, WimaVec pos)
+bool wima_prop_enum_wdgt_mousePos(WimaWidget wdgt, WimaVec pos)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_enum_wdgt_mouseDrag(WimaWidget wdgt, void* ptr, WimaMouseDragEvent event)
+bool wima_prop_enum_wdgt_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_enum_wdgt_scroll(WimaWidget wdgt, void* ptr, WimaScrollEvent event)
+bool wima_prop_enum_wdgt_scroll(WimaWidget wdgt, WimaScrollEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_enum_wdgt_char(WimaWidget wdgt, void* ptr, WimaCharEvent event)
+bool wima_prop_enum_wdgt_char(WimaWidget wdgt, WimaCharEvent event)
 {
 	// TODO: Write this function.
 	return false;
@@ -473,56 +473,56 @@ void wima_prop_color_wdgt_freeData(void* ptr)
 	// TODO: Write this function.
 }
 
-WimaStatus wima_prop_color_wdgt_draw(WimaWidget wdgt, void* ptr, WimaRenderContext* ctx)
+WimaStatus wima_prop_color_wdgt_draw(WimaWidget wdgt, WimaRenderContext* ctx)
 {
 	// TODO: Write this function.
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaSizef wima_prop_color_wdgt_size(WimaWidget wdgt, void* ptr)
+WimaSizef wima_prop_color_wdgt_size(WimaWidget wdgt)
 {
 	// TODO: Write this function.
 	WimaSizef size;
 	return size;
 }
 
-bool wima_prop_color_wdgt_key(WimaWidget wdgt, void* ptr, WimaKeyEvent event)
+bool wima_prop_color_wdgt_key(WimaWidget wdgt, WimaKeyEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_color_wdgt_mouseBtn(WimaWidget wdgt, void* ptr, WimaMouseBtnEvent event)
+bool wima_prop_color_wdgt_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_color_wdgt_mouseClick(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event)
+bool wima_prop_color_wdgt_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_color_wdgt_mousePos(WimaWidget wdgt, void* ptr, WimaVec pos)
+bool wima_prop_color_wdgt_mousePos(WimaWidget wdgt, WimaVec pos)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_color_wdgt_mouseDrag(WimaWidget wdgt, void* ptr, WimaMouseDragEvent event)
+bool wima_prop_color_wdgt_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_color_wdgt_scroll(WimaWidget wdgt, void* ptr, WimaScrollEvent event)
+bool wima_prop_color_wdgt_scroll(WimaWidget wdgt, WimaScrollEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_color_wdgt_char(WimaWidget wdgt, void* ptr, WimaCharEvent event)
+bool wima_prop_color_wdgt_char(WimaWidget wdgt, WimaCharEvent event)
 {
 	// TODO: Write this function.
 	return false;
@@ -543,56 +543,56 @@ void wima_prop_path_wdgt_freeData(void* ptr)
 	// TODO: Write this function.
 }
 
-WimaStatus wima_prop_path_wdgt_draw(WimaWidget wdgt, void* ptr, WimaRenderContext* ctx)
+WimaStatus wima_prop_path_wdgt_draw(WimaWidget wdgt, WimaRenderContext* ctx)
 {
 	// TODO: Write this function.
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaSizef wima_prop_path_wdgt_size(WimaWidget wdgt, void* ptr)
+WimaSizef wima_prop_path_wdgt_size(WimaWidget wdgt)
 {
 	// TODO: Write this function.
 	WimaSizef size;
 	return size;
 }
 
-bool wima_prop_path_wdgt_key(WimaWidget wdgt, void* ptr, WimaKeyEvent event)
+bool wima_prop_path_wdgt_key(WimaWidget wdgt, WimaKeyEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_path_wdgt_mouseBtn(WimaWidget wdgt, void* ptr, WimaMouseBtnEvent event)
+bool wima_prop_path_wdgt_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_path_wdgt_mouseClick(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event)
+bool wima_prop_path_wdgt_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_path_wdgt_mousePos(WimaWidget wdgt, void* ptr, WimaVec pos)
+bool wima_prop_path_wdgt_mousePos(WimaWidget wdgt, WimaVec pos)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_path_wdgt_mouseDrag(WimaWidget wdgt, void* ptr, WimaMouseDragEvent event)
+bool wima_prop_path_wdgt_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_path_wdgt_scroll(WimaWidget wdgt, void* ptr, WimaScrollEvent event)
+bool wima_prop_path_wdgt_scroll(WimaWidget wdgt, WimaScrollEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_path_wdgt_char(WimaWidget wdgt, void* ptr, WimaCharEvent event)
+bool wima_prop_path_wdgt_char(WimaWidget wdgt, WimaCharEvent event)
 {
 	// TODO: Write this function.
 	return false;
@@ -613,56 +613,56 @@ void wima_prop_operator_wdgt_freeData(void* ptr)
 	// TODO: Write this function.
 }
 
-WimaStatus wima_prop_operator_wdgt_draw(WimaWidget wdgt, void* ptr, WimaRenderContext* ctx)
+WimaStatus wima_prop_operator_wdgt_draw(WimaWidget wdgt, WimaRenderContext* ctx)
 {
 	// TODO: Write this function.
 	return WIMA_STATUS_SUCCESS;
 }
 
-WimaSizef wima_prop_operator_wdgt_size(WimaWidget wdgt, void* ptr)
+WimaSizef wima_prop_operator_wdgt_size(WimaWidget wdgt)
 {
 	// TODO: Write this function.
 	WimaSizef size;
 	return size;
 }
 
-bool wima_prop_operator_wdgt_key(WimaWidget wdgt, void* ptr, WimaKeyEvent event)
+bool wima_prop_operator_wdgt_key(WimaWidget wdgt, WimaKeyEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_operator_wdgt_mouseBtn(WimaWidget wdgt, void* ptr, WimaMouseBtnEvent event)
+bool wima_prop_operator_wdgt_mouseBtn(WimaWidget wdgt, WimaMouseBtnEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_operator_wdgt_mouseClick(WimaWidget wdgt, void* ptr, WimaMouseClickEvent event)
+bool wima_prop_operator_wdgt_mouseClick(WimaWidget wdgt, WimaMouseClickEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_operator_wdgt_mousePos(WimaWidget wdgt, void* ptr, WimaVec pos)
+bool wima_prop_operator_wdgt_mousePos(WimaWidget wdgt, WimaVec pos)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_operator_wdgt_mouseDrag(WimaWidget wdgt, void* ptr, WimaMouseDragEvent event)
+bool wima_prop_operator_wdgt_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_operator_wdgt_scroll(WimaWidget wdgt, void* ptr, WimaScrollEvent event)
+bool wima_prop_operator_wdgt_scroll(WimaWidget wdgt, WimaScrollEvent event)
 {
 	// TODO: Write this function.
 	return false;
 }
 
-bool wima_prop_operator_wdgt_char(WimaWidget wdgt, void* ptr, WimaCharEvent event)
+bool wima_prop_operator_wdgt_char(WimaWidget wdgt, WimaCharEvent event)
 {
 	// TODO: Write this function.
 	return false;
