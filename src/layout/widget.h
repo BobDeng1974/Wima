@@ -108,7 +108,7 @@ uint64_t wima_widget_hash(WimaProperty prop, WimaAreaNode area, uint8_t region) 
  * @return		A pointer to the widget's data.
  * @pre			@a wdgt must be valid.
  */
-WimaItem* wima_widget_ptr(WimaWidget wdgt) yretnonnull;
+WimaItem* wima_widget_ptr(WimaWidget wdgt) yretnonnull yinline;
 
 /**
  * A DynaDestructFunc to destroy widget data. This
