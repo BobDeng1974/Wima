@@ -52,7 +52,7 @@ WimaItem* wima_item_ptr(WimaWindow wwh, WimaAreaNode area, WimaRegion region, ui
 
 	WimaItem* item;
 
-	if (ylikely(region != WIMA_REGION_INVALID))
+	if (ylikely(region != WIMA_REGION_INVALID_IDX))
 	{
 		WimaAr* ar = wima_area_ptr(wwh, area);
 		wassert(WIMA_AREA_IS_LEAF(ar), WIMA_ASSERT_AREA_LEAF);
@@ -100,6 +100,7 @@ DynaVector wima_item_vector(WimaWindow wwh, WimaAreaNode node, WimaRegion region
 	}
 	else
 	{
+		wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 		WimaWin* win = dvec_get(wg.windows, wwh);
 		vec= win->overlayItems;
 	}
@@ -128,26 +129,13 @@ DynaPool wima_item_pool(WimaWindow wwh, WimaAreaNode node, WimaRegion region)
 #ifdef __YASSERT__
 bool wima_item_valid(WimaWindow window, WimaAreaNode node, WimaRegion region, uint16_t idx)
 {
-	bool valid;
-
 	wima_assert_init;
 	wassert(wima_window_valid(window), WIMA_ASSERT_WIN);
 
 	WimaWin* win = dvec_get(wg.windows, window);
 
 	wassert(win->ctx.stage == WIMA_UI_STAGE_LAYOUT, WIMA_ASSERT_STAGE_LAYOUT);
-	wassert(dtree_exists(WIMA_WIN_AREAS(win), node), WIMA_ASSERT_AREA);
 
-	WimaAr* area = dtree_node(WIMA_WIN_AREAS(win), node);
-
-	wassert(WIMA_AREA_IS_LEAF(area), WIMA_ASSERT_AREA_LEAF);
-	wassert(region == WIMA_REGION_INVALID || region < area->area.numRegions, WIMA_ASSERT_REG);
-
-	if (region != WIMA_REGION_INVALID)
-		valid = idx < dvec_len(area->area.items);
-	else
-		valid = idx < dvec_len(win->overlayItems);
-
-	return valid;
+	return idx < dvec_len(wima_item_vector(window, node, region));
 }
 #endif  // __YASSERT__

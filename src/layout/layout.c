@@ -353,13 +353,9 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split)
 	wlh.region = parent.region;
 	wlh.window = parent.window;
 
-	// TODO: Handle creating in window.
-
-	WimaAr* area = wima_area_ptr(parent.window, parent.area);
-
 	flags |= WIMA_LAYOUT_ENABLE;
 
-	uint32_t idx = dvec_len(area->area.items);
+	uint32_t idx = dvec_len(items);
 
 	wlh.layout = idx;
 

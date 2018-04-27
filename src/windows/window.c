@@ -247,6 +247,8 @@ WimaWindow wima_window_create(WimaWorkspace wksph, WimaSize size, bool maximized
 
 	if (wg.numAppIcons) glfwSetWindowIcon(win, wg.numAppIcons, wg.appIcons);
 
+	window->flags |= WIMA_WIN_HEADER;
+
 	return idx;
 
 wima_win_create_noptr_err:
