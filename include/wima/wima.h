@@ -1677,130 +1677,49 @@ typedef WimaStatus (*WimaRegionLayout)(WimaLayout root);
 #define WIMA_REGION_MAX WIMA_REGION_INVALID
 
 /**
- * Takes a set of flags meant for @a WimaRegions
- * and adds the vertical flag to them.
- *
- * The vertical flag is whether the region should
- * be vertical or not.
- * @param flags	The flags to add to.
- * @return		@a flags with the vertical bit set.
+ * @def WIMA_REGION_FLAG_VERTICAL
+ * The vertical bit in the flags.
+ * If this is set, the region will
+ * be vertical, otherwise, it will
+ * be horizontal
  */
-uint8_t wima_region_setVerticalFlag(uint8_t flags) yconst yinline;
+#define WIMA_REGION_FLAG_VERTICAL (1 << 0)
 
 /**
- * Takes a set of flags meant for @a WimaRegions
- * and clears the vertical flag from them.
- *
- * The vertical flag is whether the region should
- * be vertical or not.
- * @param flags	The flags to remove from.
- * @return		@a flags with the vertical bit
- *				cleared.
+ * @def WIMA_REGION_FLAG_LEFT
+ * The left (up) bit in the flags.
+ * If this is set, the region will
+ * be put on the left (if vertical)
+ * or on the top (if horizontal) of
+ * the editor.
  */
-uint8_t wima_region_clearVerticalFlag(uint8_t flags) yconst yinline;
+#define WIMA_REGION_FLAG_LEFT (1 << 1)
 
 /**
- * Takes a set of flags meant for @a WimaRegions
- * and adds the left (top) flag to them.
- *
- * The left (top) flag is whether the region should
- * be on the left (or at the top) or not.
- * @param flags	The flags to add to.
- * @return		@a flags with the left (top) bit set.
+ * @def WIMA_REGION_FLAG_ROW
+ * The row bit in the flags. This determines
+ * whether the root layout is a row layout
+ * or a column layout.
  */
-uint8_t wima_region_setLeftFlag(uint8_t flags) yconst yinline;
+#define WIMA_REGION_FLAG_ROW (1 << 2)
 
 /**
- * Takes a set of flags meant for @a WimaRegions
- * and clears the left (top) flag from them.
- *
- * The left (top) flag is whether the region should
- * be on the left (or at the top) or not.
- * @param flags	The flags to remove from.
- * @return		@a flags with the left (top) bit
- *				cleared.
+ * @def WIMA_REGION_FLAG_RESIZABLE
+ * The resizable bit in the flags.
  */
-uint8_t wima_region_clearLeftFlag(uint8_t flags) yconst yinline;
+#define WIMA_REGION_FLAG_RESIZABLE (1 << 3)
 
 /**
- * Takes a set of flags meant for @a WimaRegions
- * and adds the row flag to them.
- *
- * The row flag is whether the region root layout
- * should be laid out in a row or not. Most apps
- * will probably want to use columns in the usual
- * case.
- * @param flags	The flags to add to.
- * @return		@a flags with the row bit set.
+ * @def WIMA_REGION_FLAG_SCROLL_VER
+ * The vertical scroll bit in the flags.
  */
-uint8_t wima_region_setRowFlag(uint8_t flags) yconst yinline;
+#define WIMA_REGION_FLAG_SCROLL_VER (1 << 4)
 
 /**
- * Takes a set of flags meant for @a WimaRegions
- * and clears the row flag from them.
- *
- * The row flag is whether the region root layout
- * should be laid out in a row or not. Most apps
- * will probably want to use columns in the usual
- * case.
- * @param flags	The flags to remove from.
- * @return		@a flags with the row bit cleared.
+ * @def WIMA_REGION_FLAG_SCROLL_HOR
+ * The horizontal scroll bit in the flags.
  */
-uint8_t wima_region_clearRowFlag(uint8_t flags) yconst yinline;
-
-/**
- * Takes a set of flags meant for @a WimaRegions
- * and adds the resizable flag to them.
- *
- * The resizable flag is whether the region should
- * be resizable or not.
- * @param flags	The flags to add to.
- * @return		@a flags with the resizable bit set.
- */
-uint8_t wima_region_setResizableFlag(uint8_t flags) yconst yinline;
-
-/**
- * Takes a set of flags meant for @a WimaRegions
- * and clears the resizable flag from them.
- *
- * The resizable flag is whether the region should
- * be resizable or not.
- * @param flags	The flags to remove from.
- * @return		@a flags with the resizable bit
- *				cleared.
- */
-uint8_t wima_region_clearResizableFlag(uint8_t flags) yconst yinline;
-
-/**
- * Takes a set of flags meant for @a WimaRegions
- * and adds the scroll flags to them, if the
- * corresponding boolean parameters are set.
- *
- * The scroll flags are whether the region should
- * be scrollable (in the specified direction) or not.
- * The main direction is vertical if the vertical flag
- * is set, and the opposite is the opposite direction.
- * @param flags		The flags to add to.
- * @param main		true if the main scroll flag
- *					should be set, false otherwise.
- * @param opposite	true if the opposite scroll flag
- *					should be set, false otherwise.
- * @return			@a flags with the scroll
- *					bits set.
- */
-uint8_t wima_region_setScrollFlags(uint8_t flags, bool main, bool opposite) yconst yinline;
-
-/**
- * Takes a set of flags meant for @a WimaRegions
- * and clears the scroll flags from them.
- *
- * The scroll flags are whether the region should
- * be scrollable (in the specified direction) or not.
- * @param flags	The flags to remove from.
- * @return		@a flags with the scroll bits
- *				cleared.
- */
-uint8_t wima_region_clearScrollFlags(uint8_t flags) yconst yinline;
+#define WIMA_REGION_FLAG_SCROLL_HOR (1 << 5)
 
 /**
  * Registers and returns a @a WimaRegion. The @a flags param can be generated
@@ -1809,7 +1728,8 @@ uint8_t wima_region_clearScrollFlags(uint8_t flags) yconst yinline;
  * @a wima_region_setScrollFlags(), and @a wima_region_clearScrollFlags().
  * See those functions for more information on the flags.
  * @param layout	The function to lay out the region.
- * @param flags		The flags for the @a WimaRegion.
+ * @param flags		The flags for the @a WimaRegion. Can be one of the
+ *					WIMA_REGION_FLAG_* values.
  * @return			The newly-created WimaRegion, or WIMA_REGION_INVALID on
  *					error.
  */

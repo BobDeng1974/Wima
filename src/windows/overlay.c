@@ -131,8 +131,7 @@ WimaStatus wima_overlay_menuLayout(WimaOverlay overlay yunused, size_t idx, Wima
 		data = dnvec_get(wg.props, WIMA_PROP_DATA_IDX, menu);
 	}
 
-	uint16_t flags = wima_layout_setExpandFlags(0, true, true);
-	WimaLayout col = wima_layout_col(root, flags);
+	WimaLayout col = wima_layout_col(root, WIMA_LAYOUT_FLAG_FILL_VER | WIMA_LAYOUT_FLAG_FILL_HOR);
 
 	if (WIMA_WIN_MENU_IS_CONTEXT(win) && !idx)
 	{

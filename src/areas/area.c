@@ -191,9 +191,9 @@ uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos)
 
 		WimaArReg reg = area->area.regions[i];
 
-		if (reg.flags & WIMA_REG_VERTICAL)
+		if (reg.flags & WIMA_REGION_FLAG_VERTICAL)
 		{
-			if (reg.flags & WIMA_REG_LEFT)
+			if (reg.flags & WIMA_REGION_FLAG_LEFT)
 			{
 				regRect.x = rect.x;
 				rect.x += reg.size;
@@ -211,7 +211,7 @@ uint8_t wima_area_mouseRegion(WimaArea wah, WimaVec pos)
 		}
 		else
 		{
-			if (reg.flags & WIMA_REG_LEFT)
+			if (reg.flags & WIMA_REGION_FLAG_LEFT)
 			{
 				regRect.y = rect.y;
 				rect.y += reg.size;
@@ -243,7 +243,7 @@ void wima_area_switchRegionSide(WimaArea wah, uint8_t region)
 
 	wassert(region < area->area.numRegions, WIMA_ASSERT_AREA_REG_VALID);
 
-	area->area.regions[region].flags ^= WIMA_REG_LEFT;
+	area->area.regions[region].flags ^= WIMA_REGION_FLAG_LEFT;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -738,9 +738,6 @@ WimaStatus wima_area_layoutHeader(WimaLayout root)
 	{
 		wima_layout_separator(root);
 
-		uint16_t flags = 0;
-		flags = wima_layout_setExpandFlags(flags, false, true);
-
 		WimaLayout row = wima_layout_row(root, true);
 
 		status = layout(row);
@@ -829,7 +826,7 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 		parent.area = node;
 		parent.window = area->window;
 
-		uint16_t initialFlags = wima_layout_setExpandFlags(0, true, true);
+		uint16_t initialFlags = WIMA_LAYOUT_FLAG_FILL_VER | WIMA_LAYOUT_FLAG_FILL_HOR;
 
 		WimaRectf rect;
 		rect.x = (float) area->rect.x;
@@ -855,7 +852,8 @@ static WimaStatus wima_area_node_layout(DynaTree areas, DynaNode node, WimaSizef
 			bool vScroll = WIMA_REG_CAN_SCROLL_VERTICAL(reg) != 0;
 			bool hScroll = WIMA_REG_CAN_SCROLL_HORIZONTAL(reg) != 0;
 			bool vertical = WIMA_REG_IS_VERTICAL(reg) != 0;
-			uint16_t flags = (WIMA_LAYOUT_FLAG_SCROLL_VER * vScroll) | (WIMA_LAYOUT_FLAG_SCROLL_HOR * hScroll);
+			uint16_t flags = initialFlags;
+			flags |= (WIMA_LAYOUT_FLAG_SCROLL_VER * vScroll) | (WIMA_LAYOUT_FLAG_SCROLL_HOR * hScroll);
 			flags |= (WIMA_LAYOUT_FLAG_FILL_VER * vertical) | (WIMA_LAYOUT_FLAG_FILL_HOR * !vertical);
 			flags |= WIMA_REG_IS_ROW(reg) ? WIMA_LAYOUT_FLAG_ROW : WIMA_LAYOUT_FLAG_COL;
 

@@ -48,70 +48,6 @@
 // Public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-uint8_t wima_region_setVerticalFlag(uint8_t flags)
-{
-	wima_assert_init;
-	return flags | WIMA_REG_VERTICAL;
-}
-
-uint8_t wima_region_clearVerticalFlag(uint8_t flags)
-{
-	wima_assert_init;
-	return flags & ~(WIMA_REG_VERTICAL);
-}
-
-uint8_t wima_region_setLeftFlag(uint8_t flags)
-{
-	wima_assert_init;
-	return flags | WIMA_REG_LEFT;
-}
-
-uint8_t wima_region_clearLeftFlag(uint8_t flags)
-{
-	wima_assert_init;
-	return flags & ~(WIMA_REG_LEFT);
-}
-
-uint8_t wima_region_setRowFlag(uint8_t flags)
-{
-	wima_assert_init;
-	return flags | WIMA_REG_ROW;
-}
-
-uint8_t wima_region_clearRowFlag(uint8_t flags)
-{
-	wima_assert_init;
-	return flags & ~(WIMA_REG_ROW);
-}
-
-uint8_t wima_region_setResizableFlag(uint8_t flags)
-{
-	wima_assert_init;
-	return flags | WIMA_REG_RESIZABLE;
-}
-
-uint8_t wima_region_clearResizableFlag(uint8_t flags)
-{
-	wima_assert_init;
-	return flags & ~(WIMA_REG_RESIZABLE);
-}
-
-uint8_t wima_region_setScrollFlags(uint8_t flags, bool main, bool opposite)
-{
-	wima_assert_init;
-
-	// Just set them as vertical and horizontal for now.
-	// We'll deal with figuring out exactly which ones
-	// when we actually create the region.
-	return (flags | main ? WIMA_REG_SCROLL_VERTICAL : 0) | (opposite ? WIMA_REG_SCROLL_HORIZONTAL : 0);
-}
-
-uint8_t wima_region_clearScrollFlags(uint8_t flags)
-{
-	wima_assert_init;
-	return flags & ~(WIMA_REG_SCROLL_VERTICAL | WIMA_REG_SCROLL_HORIZONTAL);
-}
-
 WimaRegion wima_region_register(WimaRegionLayout layout, uint8_t flags)
 {
 	wima_assert_init;
@@ -123,12 +59,12 @@ WimaRegion wima_region_register(WimaRegionLayout layout, uint8_t flags)
 
 	// Because the user sets "main" and "opposite" scroll flags,
 	// we may need to switch them.
-	bool swtch = (flags & WIMA_REG_VERTICAL) == 0;
-	bool vertical = swtch ? (flags & WIMA_REG_SCROLL_HORIZONTAL) : (flags & WIMA_REG_SCROLL_VERTICAL);
-	bool horizontal = swtch ? (flags & WIMA_REG_SCROLL_VERTICAL) : (flags & WIMA_REG_SCROLL_HORIZONTAL);
-	flags &= ~(WIMA_REG_SCROLL_VERTICAL | WIMA_REG_SCROLL_HORIZONTAL);
-	flags |= vertical ? WIMA_REG_SCROLL_VERTICAL : 0;
-	flags |= horizontal ? WIMA_REG_SCROLL_HORIZONTAL : 0;
+	bool swtch = (flags & WIMA_REGION_FLAG_VERTICAL) == 0;
+	bool vertical = swtch ? (flags & WIMA_REGION_FLAG_SCROLL_HOR) : (flags & WIMA_REGION_FLAG_SCROLL_VER);
+	bool horizontal = swtch ? (flags & WIMA_REGION_FLAG_SCROLL_VER) : (flags & WIMA_REGION_FLAG_SCROLL_HOR);
+	flags &= ~(WIMA_REGION_FLAG_SCROLL_VER | WIMA_REGION_FLAG_SCROLL_HOR);
+	flags |= vertical ? WIMA_REGION_FLAG_SCROLL_VER : 0;
+	flags |= horizontal ? WIMA_REGION_FLAG_SCROLL_HOR : 0;
 
 	reg.flags = flags;
 

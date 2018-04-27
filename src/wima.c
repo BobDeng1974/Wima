@@ -356,14 +356,10 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	wg.regions = dvec_create(0, sizeof(WimaReg), NULL, NULL);
 	if (yerror(!wg.regions)) goto wima_init_malloc_err;
 
-	uint8_t flags = wima_region_setLeftFlag(0);
-
-	wg.regHeaderTop = wima_region_register(wima_area_layoutHeader, flags);
+	wg.regHeaderTop = wima_region_register(wima_area_layoutHeader, WIMA_REGION_FLAG_LEFT);
 	if (yerror(wg.regHeaderTop == WIMA_REGION_INVALID)) goto wima_init_malloc_err;
 
-	flags = wima_region_clearLeftFlag(flags);
-
-	wg.regHeaderBtm = wima_region_register(wima_area_layoutHeader, flags);
+	wg.regHeaderBtm = wima_region_register(wima_area_layoutHeader, 0);
 	if (yerror(wg.regHeaderBtm == WIMA_REGION_INVALID)) goto wima_init_malloc_err;
 
 	wg.overlays = dvec_create(0, sizeof(WimaOvly), wima_overlay_destroy, wima_overlay_copy);
