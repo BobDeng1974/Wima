@@ -57,15 +57,6 @@ WimaRegion wima_region_register(WimaRegionLayout layout, uint8_t flags)
 
 	reg.layout = layout;
 
-	// Because the user sets "main" and "opposite" scroll flags,
-	// we may need to switch them.
-	bool swtch = (flags & WIMA_REGION_FLAG_VERTICAL) == 0;
-	bool vertical = swtch ? (flags & WIMA_REGION_FLAG_SCROLL_HOR) : (flags & WIMA_REGION_FLAG_SCROLL_VER);
-	bool horizontal = swtch ? (flags & WIMA_REGION_FLAG_SCROLL_VER) : (flags & WIMA_REGION_FLAG_SCROLL_HOR);
-	flags &= ~(WIMA_REGION_FLAG_SCROLL_VER | WIMA_REGION_FLAG_SCROLL_HOR);
-	flags |= vertical ? WIMA_REGION_FLAG_SCROLL_VER : 0;
-	flags |= horizontal ? WIMA_REGION_FLAG_SCROLL_HOR : 0;
-
 	reg.flags = flags;
 
 	size_t len = dvec_len(wg.regions);
