@@ -145,7 +145,7 @@ WimaStatus wima_overlay_menuLayout(WimaOverlay overlay yunused, size_t idx, Wima
 	{
 		WimaProperty child = *((WimaProperty*) dvec_get(data->_collection.list, i));
 
-		wassert(child < dvec_len(wg.props) || child == WIMA_PROP_MENU_SEPARATOR, WIMA_ASSERT_PROP);
+		wassert(child < dnvec_len(wg.props) || child == WIMA_PROP_MENU_SEPARATOR, WIMA_ASSERT_PROP);
 
 		if (child != WIMA_PROP_MENU_SEPARATOR)
 			wima_layout_widget(col, child);

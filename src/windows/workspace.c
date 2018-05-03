@@ -105,11 +105,7 @@ WimaWorkspace wima_workspace_register(const char* const name, WimaIcon icon, Wim
 	sprintf(buffer, wima_wksp_fmt, index);
 	++index;
 
-	DynaString s = dstr_create(name);
-
-	if (yerror(!s)) goto wima_wksp_reg_err;
-
-	WimaProperty prop = wima_prop_string_register(buffer, NULL, wima_wksp_desc, icon, s);
+	WimaProperty prop = wima_prop_string_register(buffer, NULL, wima_wksp_desc, icon, name);
 	if (yerror(prop == WIMA_PROP_INVALID)) goto wima_wksp_reg_prop_reg_err;
 
 	WimaWksp wksp = dvec_pushTree(wg.workspaces);
@@ -166,10 +162,6 @@ wima_wksp_reg_wksp_err:
 	wima_prop_unregister(prop);
 
 wima_wksp_reg_prop_reg_err:
-
-	dstr_free(s);
-
-wima_wksp_reg_err:
 
 	wima_error(WIMA_STATUS_MALLOC_ERR);
 
