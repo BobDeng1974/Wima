@@ -330,7 +330,7 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	wg.name = dstr_create(name);
 	if (yerror(!wg.name)) goto wima_init_malloc_err;
 
-	wg.windows = dvec_create(0, sizeof(WimaWin), wima_window_destroy, wima_window_copy);
+	wg.windows = dvec_create(2, sizeof(WimaWin), wima_window_destroy, wima_window_copy);
 	if (yerror(!wg.windows)) goto wima_init_malloc_err;
 
 	wg.props = dnvec_ncreate(2, 0, wima_prop_destroy, wima_prop_copy, sizeof(WimaPropInfo), sizeof(WimaPropData));
