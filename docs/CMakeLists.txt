@@ -24,9 +24,9 @@
 #
 #	****** END LICENSE BLOCK ******
 
-option(WIMA_DOCS_BUILD "Build documentation" OFF)
+option(WIMA_BUILD_DOCS "Build documentation" ON)
 
-if(WIMA_DOCS_BUILD)
+if(WIMA_BUILD_DOCS)
 
 	find_package(Doxygen)
 
@@ -34,14 +34,14 @@ if(WIMA_DOCS_BUILD)
 		message(WARNING "Doxygen not found, unable to generate documentation")
 	else()
 
-		option(WIMA_DOCS_INSTALL "Install documentation" OFF)
+		option(WIMA_INSTALL_DOCS "Install documentation" OFF)
 
-		option(WIMA_DOCS_BUILD_INTERNAL "Build internal documentation" OFF)
+		option(WIMA_BUILD_DOCS_INTERNAL "Build internal documentation" OFF)
 
-		if(WIMA_DOCS_BUILD_INTERNAL)
-			set(WIMA_DOCS_INTERNAL_DIR "${CMAKE_SOURCE_DIR}/src")
+		if(WIMA_BUILD_DOCS_INTERNAL)
+			set(WIMA_DOCS_INTERNAL "INTERNAL")
 		else()
-			set(WIMA_DOCS_INTERNAL_DIR "")
+			set(WIMA_DOCS_INTERNAL "")
 		endif()
 
 		configure_file(doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/doxyfile @ONLY)
@@ -50,7 +50,7 @@ if(WIMA_DOCS_BUILD)
 			COMMENT "Generating API documentation with Doxygen"
 			VERBATIM)
 
-		if(WIMA_DOCS_INSTALL)
+		if(WIMA_INSTALL_DOCS)
 			install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html/ DESTINATION share/doc/${PROJECT_NAME})
 		endif()
 
