@@ -1,8 +1,13 @@
 # Wima
 
-This is the introduction to Wima.
+[TOC]
 
-## About Wima
+# Abstract {#wima-abstract}
+
+This is the introduction to Wima. It includes a high-level overview about how to
+use Wima in a project.
+
+# Introduction {#wima-intro}
 
 Wima is a non-modal GUI framework built on top of GLFW. It can be understood as
 a "window manager" for user applications (called "clients" from here on out).
@@ -14,8 +19,7 @@ You can learn more by either the [Overview](#overview), which gives a high-level
 overview of how clients can use Wima, or [Concepts](#concepts), which gives a
 detailed look at all of Wima's concepts and how they relate.
 
-<a name="overview"></a>
-## Overview
+# Overview {#wima-overview}
 
 Wima is distributed as a library. Clients link to it and use its API to create
 and draw windows, as well as handle any events the user generates.
@@ -51,8 +55,7 @@ go as follows:
 	user has closed all [windows](#concepts-types-windows).
 11.	The client exits by calling `wima_exit()`.
 
-<a name="concepts"></a>
-## Concepts
+# Concepts {#wima-concepts}
 
 Concepts are the ideas/things that make Wima. These are the things on top of
 which Wima is built, as well as how the API is partitioned.
@@ -60,113 +63,83 @@ which Wima is built, as well as how the API is partitioned.
 Wima has many concepts, and it's important to keep them and their relationships
 to each other straight.
 
-<a name="concepts-relationships"></a>
-### Relationships
+## Relationships {#wima-concepts-relationships}
 
 Wima's concepts relate to each other in two ways:
 
-*	One concept can be a [template](#concepts-templates) for another.
-*	One concept can [use](#concepts-use) another.
+*	One concept can be a [template](#wima-concepts-relationships-templates) for
+	another.
+*	One concept can [use](#wima-concepts-relationships-use) another.
 
-<a name="concepts-templates"></a>
-#### Templates
+### Templates {#wima-concepts-relationships-templates}
 
 When a concept is a template for another concept (which is a concrete version of
 the template), that means that the client builds the template concept first, and
 then when a window is created, it uses that template to initialize the window
 with the concrete version that the window can use.
 
-<a name="concepts-use"></a>
-#### Use
+### Use {#wima-concepts-relationships-use}
 
-<a name="concepts-types"></a>
-### Types
+## Types
 
 These are the concepts (concept types) in Wima.
 
-<a name="concepts-types-callbacks"></a>
-#### Callbacks
+### Callbacks {#wima-concepts-types-callbacks}
 
-<a name="concepts-types-events"></a>
-#### Events
+### Events {#wima-concepts-types-events}
 
-<a name="concepts-types-images"></a>
-#### Images
+### Images {#wima-concepts-types-images}
 
 Images are textures that can be used to render parts of the user interface.
 
-<a name="concepts-types-theme"></a>
-#### Theme
+### Theme {#wima-concepts-types-theme}
 
-<a name="concepts-types-render"></a>
-#### Render
+### Render {#wima-concepts-types-render}
 
-<a name="concepts-types-style"></a>
-#### Style
+### Style {#wima-concepts-types-style}
 
-<a name="concepts-types-paths"></a>
-#### Paths
+### Paths {#wima-concepts-types-paths}
 
-<a name="concepts-types-text"></a>
-#### Text
+### Text {#wima-concepts-types-text}
 
-<a name="concepts-types-colors"></a>
-#### Colors
+### Colors {#wima-concepts-types-colors}
 
-<a name="concepts-types-paints"></a>
-#### Paints
+### Paints {#wima-concepts-types-paints}
 
-<a name="concepts-types-icons"></a>
-#### Icons
+### Icons {#wima-concepts-types-icons}
 
-<a name="concepts-types-user_interface"></a>
-#### User Interface
+### User Interface {#wima-concepts-types-user_interface}
 
-<a name="concepts-types-properties"></a>
-#### Properties
+### Properties {#wima-concepts-types-properties}
 
-<a name="concepts-types-widgets"></a>
-#### Widgets
+### Widgets {#wima-concepts-types-widgets}
 
-<a name="concepts-types-layouts"></a>
-#### Layouts
+### Layouts {#wima-concepts-types-layouts}
 
-<a name="concepts-types-trees"></a>
-#### Trees
+### Trees {#wima-concepts-types-trees}
 
-<a name="concepts-types-workspaces"></a>
-#### Workspaces
+### Workspaces {#wima-concepts-types-workspaces}
 
 ***TODO***: Add a picture to show workspace tabs.
 
-<a name="concepts-types-dialogs"></a>
-#### Dialogs
+### Dialogs {#wima-concepts-types-dialogs}
 
-<a name="concepts-types-sections"></a>
-#### Sections
+### Sections {#wima-concepts-types-sections}
 
-<a name="concepts-types-regions"></a>
-#### Regions
+### Regions {#wima-concepts-types-regions}
 
-<a name="concepts-types-editors"></a>
-#### Editors
+### Editors {#wima-concepts-types-editors}
 
-Editors are templates for [areas](#areas).
+Editors are templates for [areas](#wima-concepts-types-areas).
 
-<a name="concepts-types-areas"></a>
-#### Areas
+### Areas {#wima-concepts-types-areas}
 
-<a name="concepts-types-menus"></a>
-#### Menus
+### Menus {#wima-concepts-types-menus}
 
-<a name="concepts-types-overlays"></a>
-#### Overlays
+### Overlays {#wima-concepts-types-overlays}
 
-<a name="concepts-types-windows"></a>
-#### Windows
+### Windows {#wima-concepts-types-windows}
 
-<a name="concepts-types-cursors"></a>
-#### Cursors
+### Cursors {#wima-concepts-types-cursors}
 
-<a name="concepts-types-monitors"></a>
-#### Monitors
+### Monitors {#wima-concepts-types-monitors}
