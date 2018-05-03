@@ -42,8 +42,6 @@
 extern "C" {
 #endif
 
-//! @cond INTERNAL
-
 #include <wima/layout.h>
 #include <wima/wima.h>
 
@@ -122,6 +120,8 @@ extern "C" {
 // Forward declaration.
 typedef struct WimaAr WimaAr;
 //! @endcond Doxygen suppress.
+
+//! @cond INTERNAL
 
 /**
  * @file item.h

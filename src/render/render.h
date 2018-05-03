@@ -333,6 +333,8 @@ void wima_icon_destroy(void** ptrs);
  * @}
  */
 
+//! @endcond INTERNAL
+
 ////////////////////////////////////////////////////////////////////////////////
 // Theme.
 ////////////////////////////////////////////////////////////////////////////////
@@ -1020,6 +1022,8 @@ void wima_icon_destroy(void** ptrs);
 #define WIMA_THEME_MAX_BUFFER (1025)
 
 //! @endcond Doxygen suppress.
+
+//! @cond INTERNAL
 
 /**
  * @defgroup theme_internal theme_internal
