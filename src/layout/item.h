@@ -245,20 +245,35 @@ typedef struct WimaItem
  * @pre			@a area must be a leaf area.
  * @pre			@a idx must be within the size of the array.
  */
-WimaItem* wima_item_ptr(WimaWindow wwh, WimaAreaNode area, WimaRegion region, uint16_t idx) yretnonnull yinline;
+WimaItem* wima_item_ptr(WimaWindow wwh, WimaAreaNode area, WimaRegion reg, uint16_t idx) yretnonnull yinline;
 
 /**
- * Frees the item pointed to by @a item in @a area.
- * @param area	The area of the item.
+ * Frees the item pointed to by @a item.
  * @param item	A pointer to the item to free.
- * @pre			@a area must not be NULL.
  * @pre			@a item must not be NULL.
  */
 void wima_item_free(ynonnull void* item);
 
-DynaVector wima_item_vector(WimaWindow wwh, WimaAreaNode node, WimaRegion region) yretnonnull;
+/**
+ * Returns the DynaVector that an item in the given
+ * window, area, and region would be in.
+ * @param wwh	The window that the item would be in.
+ * @param node	The area that the item would be in.
+ * @param reg	The region that the item would be in.
+ * @return		The DynaVector that the item would be in.
+ */
+DynaVector wima_item_vector(WimaWindow wwh, WimaAreaNode node, WimaRegion reg) yretnonnull;
 
-DynaPool wima_item_pool(WimaWindow wwh, WimaAreaNode node, WimaRegion region) yretnonnull;
+/**
+ * Returns the DynaPool that would have the widget data
+ * for an item in the given window, area, and region.
+ * @param wwh	The window that the item would be in.
+ * @param node	The area that the item would be in.
+ * @param reg	The region that the item would be in.
+ * @return		The DynaPool that the item's widget
+ *				data would be in.
+ */
+DynaPool wima_item_pool(WimaWindow wwh, WimaAreaNode node, WimaRegion reg) yretnonnull;
 
 #ifdef __YASSERT__
 /**

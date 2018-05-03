@@ -45,14 +45,14 @@
 
 #include <stdint.h>
 
-WimaItem* wima_item_ptr(WimaWindow wwh, WimaAreaNode area, WimaRegion region, uint16_t idx)
+WimaItem* wima_item_ptr(WimaWindow wwh, WimaAreaNode area, WimaRegion reg, uint16_t idx)
 {
 	wima_assert_init;
 	wassert(wima_window_valid(wwh), WIMA_ASSERT_WIN);
 
 	WimaItem* item;
 
-	if (ylikely(region != WIMA_REGION_INVALID_IDX))
+	if (ylikely(reg != WIMA_REGION_INVALID_IDX))
 	{
 		WimaAr* ar = wima_area_ptr(wwh, area);
 		wassert(WIMA_AREA_IS_LEAF(ar), WIMA_ASSERT_AREA_LEAF);
@@ -89,11 +89,11 @@ void wima_item_free(void* item)
 	pfree(dpool_get(pool, &key));
 }
 
-DynaVector wima_item_vector(WimaWindow wwh, WimaAreaNode node, WimaRegion region)
+DynaVector wima_item_vector(WimaWindow wwh, WimaAreaNode node, WimaRegion reg)
 {
 	DynaVector vec;
 
-	if (ylikely(region != WIMA_REGION_INVALID_IDX))
+	if (ylikely(reg != WIMA_REGION_INVALID_IDX))
 	{
 		WimaAr* area = wima_area_ptr(wwh, node);
 		vec = area->area.items;
@@ -108,11 +108,11 @@ DynaVector wima_item_vector(WimaWindow wwh, WimaAreaNode node, WimaRegion region
 	return vec;
 }
 
-DynaPool wima_item_pool(WimaWindow wwh, WimaAreaNode node, WimaRegion region)
+DynaPool wima_item_pool(WimaWindow wwh, WimaAreaNode node, WimaRegion reg)
 {
 	DynaPool pool;
 
-	if (ylikely(region != WIMA_REGION_INVALID_IDX))
+	if (ylikely(reg != WIMA_REGION_INVALID_IDX))
 	{
 		WimaAr* area = wima_area_ptr(wwh, node);
 		pool = area->area.widgetData;

@@ -2288,10 +2288,28 @@ WimaStatus wima_window_activate(WimaWindow wwh);
  */
 WimaStatus wima_window_close(WimaWindow wwh);
 
+/**
+ * Enables the header on the given window.
+ * @param wwh	The window to enable the header on.
+ * @pre			@a wwh must be a valid WimaWindow.
+ */
 void wima_window_enableHeader(WimaWindow wwh);
 
+/**
+ * Disables the header on the given window.
+ * @param wwh	The window to disable the header on.
+ * @pre			@a wwh must be a valid WimaWindow.
+ */
 void wima_window_disableHeader(WimaWindow wwh);
 
+/**
+ * Returns true if the given window's header is
+ * enabled, false otherwise.
+ * @param wwh	The window to query.
+ * @return		true if the header is enabled on
+ *				@a wwh, false otherwise.
+ * @pre			@a wwh must be a valid WimaWindow.
+ */
 bool wima_window_headerEnabled(WimaWindow wwh);
 
 /**

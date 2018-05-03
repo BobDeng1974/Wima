@@ -955,8 +955,23 @@ DynaString wima_prop_path_path(WimaProperty wph);
 WimaProperty wima_prop_operator_register(ynonnull const char* name, const char* label, const char* desc, WimaIcon icon,
                                          WimaWidgetMouseClickFunc op, void* ptr);
 
+/**
+ * Returns the pointer associated with the given property.
+ * @param wph	The property to query.
+ * @return		The pointer associated with the property.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ * @pre			@a wph must be a @a WIMA_PROP_PTR.
+ */
 void* wima_prop_operator_ptr(WimaProperty wph);
 
+/**
+ * Updates the pointer associated with the given property
+ * to be @a ptr.
+ * @param wph	The property to query.
+ * @param ptr	The pointer to associate with the property.
+ * @pre			@a wph must be a valid @a WimaProperty.
+ * @pre			@a wph must be a @a WIMA_PROP_PTR.
+ */
 void wima_prop_operator_updatePtr(WimaProperty wph, void* ptr);
 
 ////////////////////////////////////////////////////////////////////////////////
