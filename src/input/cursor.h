@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <wima/wima.h>
 
 #include <GLFW/glfw3.h>
@@ -73,6 +75,8 @@ typedef union WimaCursorImg
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }

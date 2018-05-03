@@ -61,6 +61,8 @@
 // Static functions and data needed by the public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+//! @cond INTERNAL
+
 /**
  * @file prop.c
  */
@@ -280,6 +282,8 @@ static bool wima_prop_collection_childTypeValid(WimaProperty parent, WimaPropert
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 //! @cond Doxygen suppress.
 

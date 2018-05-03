@@ -76,6 +76,8 @@
 // Static declarations needed for public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+//! @cond INTERNAL
+
 /**
  * @file ui.c
  */
@@ -125,6 +127,8 @@ static const WimaLineJoin wima_ui_line_joins[] = { WIMA_JOIN_MITER, WIMA_JOIN_RO
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 //! @cond Doxygen suppress.
 

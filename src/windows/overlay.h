@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <wima/render.h>
 #include <wima/wima.h>
 
@@ -92,6 +94,8 @@ DynaStatus wima_overlay_copy(void* dest, void* src) ynoreturn;
  *					an error code otherwise.
  */
 WimaStatus wima_overlay_menuLayout(WimaOverlay overlay, size_t idx, WimaLayout root);
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }

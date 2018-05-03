@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <wima/wima.h>
 
 #include "../areas/area.h"
@@ -510,6 +512,8 @@ bool wima_window_valid(WimaWindow wwh);
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }

@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <wima/render.h>
 #include <wima/wima.h>
 
@@ -1077,6 +1079,8 @@ WimaProperty wima_theme_loadNode(ynonnull WimaProperty* starts) yinline;
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }

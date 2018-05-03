@@ -71,6 +71,8 @@
 // These are all the static functions that the public functions need.
 ////////////////////////////////////////////////////////////////////////////////
 
+//! @cond INTERNAL
+
 /**
  * @file window.c
  */
@@ -99,6 +101,8 @@ static WimaStatus wima_window_layoutHeader(WimaWin* win, WimaWindow wwh, WimaSiz
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 //! @cond Doxygen suppress.
 
@@ -1025,6 +1029,8 @@ const char* wima_window_clipboard(WimaWindow wwh)
 // Static functions needed for private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+//! @cond INTERNAL
+
 /**
  * @file window.c
  */
@@ -1128,6 +1134,8 @@ static WimaStatus wima_window_splitArea(WimaWin* win, WimaAreaNode node);
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.

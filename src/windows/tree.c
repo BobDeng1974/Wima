@@ -51,6 +51,8 @@
 // Static function declarations needed for public functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+//! @cond INTERNAL
+
 /**
  * @file tree.c
  */
@@ -107,6 +109,8 @@ static bool wima_tree_nodeValid(ynonnull WimaTree tree, DynaNode n) yinline;
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 //! @cond Doxygen suppress.
 

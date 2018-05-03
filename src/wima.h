@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <wima/prop.h>
 #include <wima/render.h>
 #include <wima/wima.h>
@@ -404,6 +406,8 @@ extern const char* const wima_assert_msgs[];
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }

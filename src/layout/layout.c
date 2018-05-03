@@ -58,6 +58,8 @@
 // Declarations for static functions.
 ////////////////////////////////////////////////////////////////////////////////
 
+//! @cond INTERNAL
+
 /**
  * @file layout/layout.c
  */
@@ -140,6 +142,8 @@ static void wima_layout_setChildren(WimaLayout parent, ynonnull DynaVector items
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 //! @cond Doxygen suppress.
 

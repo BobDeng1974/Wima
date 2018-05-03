@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <wima/wima.h>
 
 /**
@@ -76,6 +78,8 @@ bool wima_workspace_nodeValid(WimaWorkspace wwh, DynaNode n);
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }

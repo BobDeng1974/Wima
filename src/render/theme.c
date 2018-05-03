@@ -86,6 +86,10 @@
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+// Static data and functions for themes.
+////////////////////////////////////////////////////////////////////////////////
+
+//! @cond INTERNAL
 
 /**
  * @file theme.c
@@ -560,6 +564,8 @@ static WimaColor wima_theme_nodeColor(WimaNodeThemeType type);
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 //! @cond Doxygen suppress.
 

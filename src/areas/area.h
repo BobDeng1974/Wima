@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <wima/wima.h>
 
 #include "editor.h"
@@ -397,6 +399,8 @@ WimaVec wima_area_translatePos(WimaAr* area, WimaVec pos);
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }

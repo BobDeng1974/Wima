@@ -53,6 +53,12 @@
 
 #include "../wima.h"
 
+////////////////////////////////////////////////////////////////////////////////
+// Static data.
+////////////////////////////////////////////////////////////////////////////////
+
+//! @cond INTERNAL
+
 /**
  * @file icon.c
  */
@@ -71,6 +77,8 @@ static const char* const unitNames[] = { "px", "pt", "pc", "mm", "cm", "in" };
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 //! @cond Doxygen suppress.
 

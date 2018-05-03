@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <wima/prop.h>
 #include <wima/render.h>
 
@@ -286,6 +288,8 @@ extern const WimaCustProp wima_prop_predefinedTypes[];
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }

@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <yc/opt.h>
 
 #include <stdint.h>
@@ -74,6 +76,8 @@ uint8_t wima_uint8_bits(register uint8_t x) yconst yinline;
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }

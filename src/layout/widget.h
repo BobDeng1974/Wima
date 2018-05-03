@@ -66,6 +66,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <wima/prop.h>
 #include <wima/wima.h>
 
@@ -179,6 +181,8 @@ void wima_widget_char(WimaWidget wdgt, WimaCharEvent event);
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }

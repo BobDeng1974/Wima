@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <wima/wima.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -277,6 +279,8 @@ bool wima_prop_operator_wdgt_mouseDrag(WimaWidget wdgt, WimaMouseDragEvent event
 bool wima_prop_operator_wdgt_scroll(WimaWidget wdgt, WimaScrollEvent event);
 
 bool wima_prop_operator_wdgt_char(WimaWidget wdgt, WimaCharEvent event);
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }

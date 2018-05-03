@@ -250,6 +250,8 @@ void wima_area_switchRegionSide(WimaArea wah, uint8_t region)
 // Declarations for all static functions that private functions need access to.
 ////////////////////////////////////////////////////////////////////////////////
 
+//! @cond INTERNAL
+
 /**
  * @defgroup area_internal area_internal
  * @{
@@ -410,6 +412,8 @@ static void wima_area_drawSplitWidgets(WimaAr* area, NVGcontext* nvg);
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions.

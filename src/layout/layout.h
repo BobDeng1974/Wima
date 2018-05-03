@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <wima/layout.h>
 #include <wima/render.h>
 
@@ -163,6 +165,8 @@ WimaStatus wima_layout_draw(ynonnull WimaItem* item, ynonnull WimaRenderContext*
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }

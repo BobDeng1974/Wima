@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <GLFW/glfw3.h>
 
 /**
@@ -189,6 +191,8 @@ void wima_callback_error(int error, const char* desc);
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }

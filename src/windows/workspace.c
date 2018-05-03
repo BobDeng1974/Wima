@@ -54,6 +54,8 @@
 // Global constant format for workspace names.
 ////////////////////////////////////////////////////////////////////////////////
 
+//! @cond INTERNAL
+
 /**
  * @file workspace.c
  */
@@ -76,6 +78,8 @@ const char* const wima_wksp_desc = "Name of a workspace";
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 //! @cond Doxygen suppress.
 

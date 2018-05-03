@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+//! @cond INTERNAL
+
 #include <wima/layout.h>
 #include <wima/wima.h>
 
@@ -273,6 +275,8 @@ bool wima_item_valid(WimaWindow window, WimaAreaNode node, WimaRegion region, ui
 /**
  * @}
  */
+
+//! @endcond INTERNAL
 
 #ifdef __cplusplus
 }
