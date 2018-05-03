@@ -104,6 +104,11 @@ typedef struct WimaCustProp
  */
 #define WIMA_PROP_DATA_IDX (1)
 
+/**
+ * A struct to hold data for any collection.
+ * Two fields, rectIdx and sub, are for
+ * WIMA_PROP_MENU props only.
+ */
 typedef struct WimaPropCollection
 {
 	/// The vector.
@@ -155,6 +160,10 @@ typedef struct WimaPropFloat
 
 } WimaPropFloat;
 
+/**
+ * Data for operators props (buttons).
+ * This includes a user pointer.
+ */
 typedef struct WimaPropOperator
 {
 	/// The data pointer.

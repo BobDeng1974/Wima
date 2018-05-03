@@ -200,6 +200,10 @@ extern "C" {
  */
 #define WIMA_WIN_RENDER_STACK_MAX (16)
 
+/**
+ * Data for an overlay that is currently
+ * being shown on a window.
+ */
 typedef struct WimaWinOverlay
 {
 	/// The overlay.
@@ -474,15 +478,17 @@ WimaStatus wima_window_processEvents(WimaWindow win);
 
 /**
  * Callback to put Wima into "join areas" mode.
- * @param wwh	The window that called the callback.
- * @pre			@a wwh must be valid.
+ * @param wdgt	The widget that received the event (unused).
+ * @param event	The event (unused).
+ * @return		true because the event is always handled.
  */
 bool wima_window_joinAreasMode(WimaWidget wdgt, WimaMouseClickEvent event);
 
 /**
  * Callback to put Wima into "split areas" mode.
- * @param wwh	The window that called the callback.
- * @pre			@a wwh must be valid.
+ * @param wdgt	The widget that received the event (unused).
+ * @param event	The event (unused).
+ * @return		true because the event is always handled.
  */
 bool wima_window_splitAreaMode(WimaWidget wdgt, WimaMouseClickEvent event);
 
