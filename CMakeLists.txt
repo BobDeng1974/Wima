@@ -33,7 +33,7 @@ set(ignoreMe "${QT_QMAKE_EXECUTABLE}")
 set(ignoreMe "${CMAKE_CXX_COMPILER}")
 
 if(NOT "${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
-	message(FATAL_ERROR "Clang is the only compiler supported on Linux")
+	message(FATAL_ERROR "Clang is the only supported compiler")
 endif()
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
