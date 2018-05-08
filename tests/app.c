@@ -115,7 +115,7 @@ WimaStatus cb_draw(WimaWidget item, WimaRenderContext* ctx)
 	wima_ui_label(ctx, r.x + 2, r.y + 2, width, height, wima_icon_debug(), stuff);
 #endif
 
-	wima_ui_label(ctx, 0, 0, r.w, r.h, wima_icon_debug(), buffer);
+	wima_ui_label(ctx, 0, 0, r.w, r.h, WIMA_ICON_INVALID, buffer);
 
 	return WIMA_STATUS_SUCCESS;
 }
@@ -379,7 +379,7 @@ int main()
 	if (status) return status;
 
 	// Create a region and check for error.
-	WimaRegion region = wima_region_register(cb_layout, UINT16_MAX, 0);
+	WimaRegion region = wima_region_register(cb_layout, 0);
 	if (region == WIMA_REGION_INVALID) return 1;
 
 	WimaEditorFuncs funcs;
@@ -390,7 +390,7 @@ int main()
 	funcs.enter = cb_mouseEnterArea;
 
 	// Register a editor.
-	WimaEditor editor = wima_editor_nregister("Test Editor", funcs, wima_icon_debug(), 4096, false, 1, region);
+	WimaEditor editor = wima_editor_nregister("Test Editor", funcs, WIMA_ICON_INVALID, 4096, false, 1, region);
 	if (editor == WIMA_EDITOR_INVALID) return WIMA_EDITOR_INVALID;
 
 	// Create the tree.
@@ -438,7 +438,7 @@ int main()
 	if (rightDown == WIMA_AREA_INVALID) return 1;
 
 	// Register a workspace.
-	WimaWorkspace wksp = wima_workspace_register("Test Workspace", wima_icon_donut(), tree);
+	WimaWorkspace wksp = wima_workspace_register("Test Workspace", WIMA_ICON_INVALID, tree);
 	if (wksp == WIMA_WORKSPACE_INVALID) return WIMA_WORKSPACE_INVALID;
 
 	WimaSize size;

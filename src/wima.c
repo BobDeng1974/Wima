@@ -567,9 +567,4 @@ void wima_exit()
 // private functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-yctor static void wima_ctor()
-{
-	wg.name = NULL;
-}
-
 //! @endcond Doxygen suppress.
