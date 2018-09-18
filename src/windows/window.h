@@ -391,7 +391,7 @@ typedef struct WimaWin
  * @param src	A pointer to a source.
  * @return		An error code (doesn't return).
  */
-DynaStatus wima_window_copy(void* dest, void* src) ynoreturn;
+DynaStatus wima_window_copy(void* dest, const void *src) ynoreturn;
 
 /**
  * Destroys a window. This is a Dyna DestructFunc.
@@ -409,7 +409,7 @@ void wima_window_destroy(void* ptr);
  *				error code otherwise.
  * @pre			@a win must not be NULL.
  */
-WimaStatus wima_window_addImage(ynonnull WimaWin* win, const char* path, WimaImageFlags flags);
+WimaStatus wima_window_addImage(WimaWin* win, const char* path, WimaImageFlags flags) yallnonnull;
 
 /**
  * Pops an image from a window. This should only
@@ -419,7 +419,7 @@ WimaStatus wima_window_addImage(ynonnull WimaWin* win, const char* path, WimaIma
  * @param win	The window to pop an image from.
  * @pre			@a win must not be NULL.
  */
-void wima_window_removeImage(ynonnull WimaWin* win);
+void wima_window_removeImage(WimaWin* win) yallnonnull;
 
 /**
  * Sets @a win as dirty, and if @a layout is true, forces a layout.
@@ -427,7 +427,7 @@ void wima_window_removeImage(ynonnull WimaWin* win);
  * @param layout	Whether or not layout should be forced.
  * @pre				@a win must not be NULL.
  */
-void wima_window_setDirty(ynonnull WimaWin* win, bool layout) yinline;
+void wima_window_setDirty(WimaWin* win, bool layout) yallnonnull yinline;
 
 /**
  * Sets the modifiers on @a win according to @a key and @a action.
@@ -437,7 +437,7 @@ void wima_window_setDirty(ynonnull WimaWin* win, bool layout) yinline;
  *					mod, and for WIMA_ACTION_RELEASE, it clears it.
  * @pre				@a win must not be NULL.
  */
-void wima_window_setModifier(ynonnull WimaWin* win, WimaKey key, WimaAction action);
+void wima_window_setModifier(WimaWin* win, WimaKey key, WimaAction action) yallnonnull;
 
 /**
  * Sets the mouse buttons on @a win according to @a action.
@@ -447,7 +447,7 @@ void wima_window_setModifier(ynonnull WimaWin* win, WimaKey key, WimaAction acti
  *					mod, and for WIMA_ACTION_RELEASE, it clears it.
  * @pre				@a win must not be NULL.
  */
-void wima_window_setMouseBtn(ynonnull WimaWin* win, WimaMouseBtn btn, WimaAction action);
+void wima_window_setMouseBtn(WimaWin* win, WimaMouseBtn btn, WimaAction action) yallnonnull;
 
 /**
  * Removes the menu from the window.
@@ -456,7 +456,7 @@ void wima_window_setMouseBtn(ynonnull WimaWin* win, WimaMouseBtn btn, WimaAction
  * @pre			@a win must not be NULL.
  * @pre			@a menu must be valid.
  */
-void wima_window_removeMenu(ynonnull WimaWin* win, WimaProperty menu) yinline;
+void wima_window_removeMenu(WimaWin* win, WimaProperty menu) yallnonnull yinline;
 
 /**
  * Draws the window with the current layout.

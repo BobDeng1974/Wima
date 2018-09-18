@@ -468,7 +468,7 @@ static void wima_area_node_init(WimaWindow win, DynaTree areas, DynaNode node, W
 	}
 }
 
-DynaStatus wima_area_copy(void* dest, void* src)
+DynaStatus wima_area_copy(void* dest, const void* src)
 {
 	WimaAr* darea = (WimaAr*) dest;
 	WimaAr* sarea = (WimaAr*) src;

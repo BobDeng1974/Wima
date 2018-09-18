@@ -79,7 +79,7 @@
  *					error code.
  * @pre				@a tree must not be NULL.
  */
-static WimaStatus wima_tree_addParent(ynonnull WimaTree tree, DynaNode node, float split, bool vertical);
+static WimaStatus wima_tree_addParent(WimaTree tree, DynaNode node, float split, bool vertical) yallnonnull;
 
 /**
  * Adds an editor (leaf) to @a tree.
@@ -92,7 +92,7 @@ static WimaStatus wima_tree_addParent(ynonnull WimaTree tree, DynaNode node, flo
  *				error code.
  * @pre			@a tree must not be NULL.
  */
-static WimaStatus wima_tree_addEditor(ynonnull WimaTree tree, DynaNode node, WimaEditor wed);
+static WimaStatus wima_tree_addEditor(WimaTree tree, DynaNode node, WimaEditor wed) yallnonnull;
 
 #ifdef __YASSERT__
 /**
@@ -103,7 +103,7 @@ static WimaStatus wima_tree_addEditor(ynonnull WimaTree tree, DynaNode node, Wim
  * @return		true if valid, false otherwise.
  * @pre			@a tree must not be NULL.
  */
-static bool wima_tree_nodeValid(ynonnull WimaTree tree, DynaNode n) yinline;
+static bool wima_tree_nodeValid(WimaTree tree, DynaNode n) yallnonnull yinline;
 #endif  // __YASSERT__
 
 /**

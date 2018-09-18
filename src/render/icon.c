@@ -170,7 +170,7 @@ WimaIcon wima_icon_load(const char* path, WimaIconUnit unit, float dpi)
 
 	marker.end = marker.start + count;
 
-	status = dnvec_push(wg.icons, &img, &marker);
+	status = dnvec_vpush(wg.icons, &img, &marker);
 	if (yerror(status != DYNA_STATUS_SUCCESS)) goto err;
 
 	return (WimaIcon) len;

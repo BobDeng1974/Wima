@@ -83,7 +83,7 @@ typedef void (*WimaLayoutAdjustFunc)(WimaSizef*, WimaSizef*);
  * @param item	The item to calculate the size for.
  * @return		The size of the item.
  */
-static WimaSizef wima_layout_size_row(ynonnull WimaItem* item) yinline;
+static WimaSizef wima_layout_size_row(WimaItem* item) yallnonnull yinline;
 
 /**
  * Calculates the size of a column. Negative numbers in the size mean
@@ -92,7 +92,7 @@ static WimaSizef wima_layout_size_row(ynonnull WimaItem* item) yinline;
  * @param item	The item to calculate the size for.
  * @return		The size of the item.
  */
-static WimaSizef wima_layout_size_col(ynonnull WimaItem* item) yinline;
+static WimaSizef wima_layout_size_col(WimaItem* item) yallnonnull yinline;
 
 /**
  * Calculates the size of a row or column. Negative numbers in the
@@ -102,7 +102,7 @@ static WimaSizef wima_layout_size_col(ynonnull WimaItem* item) yinline;
  * @param adjust	The adjustment function.
  * @return			The size of the item.
  */
-static WimaSizef wima_layout_size_rowcol(ynonnull WimaItem* item, ynonnull WimaLayoutAdjustFunc adjust);
+static WimaSizef wima_layout_size_rowcol(WimaItem* item, WimaLayoutAdjustFunc adjust) yallnonnull;
 
 /**
  * Adjusts for a row.
@@ -125,7 +125,7 @@ static void wima_layout_col_adjust(WimaSizef* result, WimaSizef* size);
  * @param item	The item to calculate the size for.
  * @return		The size of the item.
  */
-static WimaSizef wima_layout_size_split(ynonnull WimaItem* item) yinline;
+static WimaSizef wima_layout_size_split(WimaItem* item) yallnonnull yinline;
 
 /**
  * Sets the data for children in the parent.
@@ -137,7 +137,7 @@ static WimaSizef wima_layout_size_split(ynonnull WimaItem* item) yinline;
  * @pre				@a parent must not be full already.
  * @pre				@a area must not be NULL.
  */
-static void wima_layout_setChildren(WimaLayout parent, ynonnull DynaVector items, uint32_t idx);
+static void wima_layout_setChildren(WimaLayout parent, DynaVector items, uint32_t idx) yallnonnull;
 
 /**
  * @}

@@ -106,7 +106,7 @@ void wima_overlay_destroy(void* overlay)
 	dstr_free(((WimaOvly*) overlay)->name);
 }
 
-DynaStatus wima_overlay_copy(void* dest yunused, void* src yunused)
+DynaStatus wima_overlay_copy(void* dest yunused, const void* src yunused)
 {
 	wassert(false, WIMA_ASSERT_OVERLAY_COPY);
 	abort();

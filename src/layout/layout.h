@@ -141,7 +141,7 @@ WimaLayout wima_layout_new(WimaLayout parent, uint16_t flags, float split);
  * @param item	The layout whose size will be calculated.
  * @return		The size of the layout that @a item represents.
  */
-WimaSizef wima_layout_size(ynonnull WimaItem* item);
+WimaSizef wima_layout_size(WimaItem* item) yallnonnull;
 
 /**
  * Lays out the layout that @a item points to.
@@ -149,7 +149,7 @@ WimaSizef wima_layout_size(ynonnull WimaItem* item);
  * @return		WIMA_STATUS_SUCCESS on succes,
  *				an error code otherwise.
  */
-WimaStatus wima_layout_layout(ynonnull WimaItem* item);
+WimaStatus wima_layout_layout(WimaItem* item) yallnonnull;
 
 /**
  * Draws all of the widget posterity of @a item.
@@ -160,7 +160,7 @@ WimaStatus wima_layout_layout(ynonnull WimaItem* item);
  * @pre			@a item must not be NULL.
  * @pre			@a ctx must not be NULL.
  */
-WimaStatus wima_layout_draw(ynonnull WimaItem* item, ynonnull WimaRenderContext* ctx);
+WimaStatus wima_layout_draw(WimaItem* item, WimaRenderContext* ctx) yallnonnull;
 
 /**
  * @}

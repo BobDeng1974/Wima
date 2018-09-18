@@ -1177,7 +1177,7 @@ static WimaProperty wima_prop_register(const char* name, const char* label, cons
 	prop.refs = 0;
 	prop.icon = icon;
 
-	DynaStatus status = dnvec_push(wg.props, &prop, data);
+	DynaStatus status = dnvec_vpush(wg.props, &prop, data);
 	if (yerror(status))
 	{
 		free(prop.name);

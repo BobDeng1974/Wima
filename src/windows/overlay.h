@@ -82,7 +82,7 @@ void wima_overlay_destroy(void* overlay);
  * @param src	The source to copy from.
  * @return		Nothing.
  */
-DynaStatus wima_overlay_copy(void* dest, void* src) ynoreturn;
+DynaStatus wima_overlay_copy(void* dest, const void *src) ynoreturn;
 
 /**
  * A @a WimaOverlayLayoutFunc that lays out menus.

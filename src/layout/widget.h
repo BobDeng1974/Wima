@@ -119,7 +119,7 @@ WimaItem* wima_widget_ptr(WimaWidget wdgt) yretnonnull yinline;
  * @param pool	The pool that the widget has data in.
  * @param key	The key to the widget's data.
  */
-void wima_widget_destroy(ynonnull DynaPool pool, ynonnull void* key);
+void wima_widget_destroy(DynaPool pool, void* key) yallnonnull;
 
 /**
  * Returns the size of the widget that @a item points to and
@@ -127,7 +127,7 @@ void wima_widget_destroy(ynonnull DynaPool pool, ynonnull void* key);
  * @param item	The widget to calculate the size of.
  * @return		The size of the widget at @a item.
  */
-WimaSizef wima_widget_size(ynonnull WimaItem* item);
+WimaSizef wima_widget_size(WimaItem* item) yallnonnull;
 
 /**
  * Handles a key event on @a wdgt.

@@ -57,21 +57,21 @@ extern "C" {
 // application, e.g. as item types, other event types, drop targets, etc.
 // They can be set and queried using wima_ui_item_setFlags() and
 // wima_ui_item_flags()
-#define WIMA_ITEM_USERMASK 0xff000000
+#define WIMA_ITEM_USERMASK (0xff000000)
 
 // A special mask passed to wima_ui_item_find().
-#define WIMA_ITEM_ANY 0xffffffff
+#define WIMA_ITEM_ANY (0xffffffff)
 
 // Extra item flags.
 
 // Bits 0-2.
-#define WIMA_ITEM_BOX_MODEL_MASK 0x000007
+#define WIMA_ITEM_BOX_MODEL_MASK (0x000007)
 
 // Bits 0-4.
-#define WIMA_ITEM_BOX_MASK 0x00001F
+#define WIMA_ITEM_BOX_MASK (0x00001F)
 
 // Bits 5-8.
-#define WIMA_ITEM_LAYOUT_MASK 0x0003E0
+#define WIMA_ITEM_LAYOUT_MASK (0x0003E0)
 
 // Bits 9-18.
 #define WIMA_ITEM_EVENT_MASK                                                                                      \
@@ -80,22 +80,22 @@ extern "C" {
 // TODO: Make sure this has all events.
 
 // Item is frozen (bit 19).
-#define WIMA_ITEM_FROZEN_BIT 0x080000
+#define WIMA_ITEM_FROZEN_BIT (0x080000)
 
 // Item handle is pointer to data (bit 20).
-#define WIMA_ITEM_DATA 0x100000
+#define WIMA_ITEM_DATA (0x100000)
 
 // Item has been inserted (bit 21).
-#define WIMA_ITEM_INSERTED 0x200000
+#define WIMA_ITEM_INSERTED (0x200000)
 
 // Horizontal size has been explicitly set (bit 22).
-#define WIMA_ITEM_HFIXED 0x400000
+#define WIMA_ITEM_HFIXED (0x400000)
 
 // Vertical size has been explicitly set (bit 23).
-#define WIMA_ITEM_VFIXED 0x800000
+#define WIMA_ITEM_VFIXED (0x800000)
 
 // Bit 22-23.
-#define WIMA_ITEM_FIXED_MASK 0xC00000
+#define WIMA_ITEM_FIXED_MASK (0xC00000)
 
 // Which flag bits will be compared.
 #define WIMA_ITEM_COMPARE_MASK                                                                        \
@@ -105,10 +105,10 @@ extern "C" {
 // Limits.
 
 // Maximum size in bytes of a single data buffer passed to uiAllocData().
-#define WIMA_ITEM_MAX_DATASIZE 4096
+#define WIMA_ITEM_MAX_DATASIZE (4096)
 
 // Maximum depth of nested containers.
-#define WIMA_ITEM_MAX_DEPTH 64
+#define WIMA_ITEM_MAX_DEPTH (64)
 // TODO: Check against this.
 
 /**
@@ -252,7 +252,7 @@ WimaItem* wima_item_ptr(WimaWindow wwh, WimaAreaNode area, WimaRegion reg, uint1
  * @param item	A pointer to the item to free.
  * @pre			@a item must not be NULL.
  */
-void wima_item_free(ynonnull void* item);
+void wima_item_free(void* item) yallnonnull;
 
 /**
  * Returns the DynaVector that an item in the given

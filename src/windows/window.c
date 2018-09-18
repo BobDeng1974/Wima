@@ -1059,7 +1059,7 @@ const char* wima_window_clipboard(WimaWindow wwh)
  * @pre					@a win must not be NULL.
  * @pre					@a idx must be less than the length of the stack.
  */
-static WimaStatus wima_window_overlay_draw(ynonnull WimaWin* win, WimaWindow wwh, size_t idx, float parentWidth);
+static WimaStatus wima_window_overlay_draw(WimaWin* win, WimaWindow wwh, size_t idx, float parentWidth) yallnonnull;
 
 /**
  * Returns the overlay on @a win that contains @a pos and
@@ -1079,7 +1079,7 @@ static size_t wima_window_overlay_contains(WimaWin* win, WimaVec pos);
  *				otherwise.
  * @pre			@a win must not be NULL.
  */
-static WimaStatus wima_window_drawTooltip(ynonnull WimaWin* win);
+static WimaStatus wima_window_drawTooltip(WimaWin* win) yallnonnull;
 
 /**
  * Processes one event.
@@ -1091,7 +1091,7 @@ static WimaStatus wima_window_drawTooltip(ynonnull WimaWin* win);
  * @return			WIMA_STATUS_SUCCESS on success, an error
  *					code otherwise.
  */
-static WimaStatus wima_window_processEvent(ynonnull WimaWin* win, WimaWindow wwh, WimaWidget wdgt, WimaEvent e);
+static WimaStatus wima_window_processEvent(WimaWin* win, WimaWindow wwh, WimaWidget wdgt, WimaEvent e) yallnonnull;
 
 /**
  * Processes a mouse button event. This is
@@ -1102,14 +1102,14 @@ static WimaStatus wima_window_processEvent(ynonnull WimaWin* win, WimaWindow wwh
  * @return		WIMA_STATUS_SUCCESS on success, an error
  *				code otherwise.
  */
-static WimaStatus wima_window_processMouseBtnEvent(ynonnull WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e);
+static WimaStatus wima_window_processMouseBtnEvent(WimaWin* win, WimaWidget wdgt, WimaMouseBtnEvent e) yallnonnull;
 
 /**
  * Processes a file drop event on a window.
  * @param wwh	The handle of the window.
  * @param files	The vector of file names.
  */
-static void wima_window_processFileDrop(WimaWindow wwh, ynonnull DynaVector files);
+static void wima_window_processFileDrop(WimaWindow wwh, DynaVector files) yallnonnull;
 
 /**
  * Joins two areas into one. It handles finding the common
@@ -1145,7 +1145,7 @@ static WimaStatus wima_window_splitArea(WimaWin* win, WimaAreaNode node);
 
 //! @cond Doxygen suppress
 
-DynaStatus wima_window_copy(void* dest yunused, void* src yunused)
+DynaStatus wima_window_copy(void* dest yunused, const void* src yunused)
 {
 	wassert(false, WIMA_ASSERT_INVALID_OPERATION);
 	abort();

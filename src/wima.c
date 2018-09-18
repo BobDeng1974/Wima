@@ -333,7 +333,7 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	wg.windows = dvec_create(2, sizeof(WimaWin), wima_window_destroy, wima_window_copy);
 	if (yerror(!wg.windows)) goto wima_init_malloc_err;
 
-	wg.props = dnvec_ncreate(2, 0, wima_prop_destroy, wima_prop_copy, sizeof(WimaPropInfo), sizeof(WimaPropData));
+	wg.props = dnvec_vcreate(2, 0, wima_prop_destroy, wima_prop_copy, sizeof(WimaPropInfo), sizeof(WimaPropData));
 	if (yerror(!wg.props)) goto wima_init_malloc_err;
 
 	wg.dirGrid = wima_prop_bool_register("wima_directory_grid", "Grid", "Lay out the directory in a grid",
@@ -376,7 +376,7 @@ WimaStatus wima_init(const char* name, WimaAppFuncs funcs, const char* fontPath,
 	wg.menuOverlay = wima_overlay_register("Menu", WIMA_ICON_INVALID, wima_overlay_menuLayout);
 	if (yerror(wg.menuOverlay == WIMA_OVERLAY_INVALID)) goto wima_init_malloc_err;
 
-	wg.icons = dnvec_ncreate(2, 0, wima_icon_destroy, wima_icon_copy, sizeof(WimaIcn), sizeof(WimaIconMarker));
+	wg.icons = dnvec_vcreate(2, 0, wima_icon_destroy, wima_icon_copy, sizeof(WimaIcn), sizeof(WimaIconMarker));
 	if (yerror(!wg.icons)) goto wima_init_malloc_err;
 
 	wg.iconPathWindings = dvec_create(0, sizeof(bool), NULL, NULL);

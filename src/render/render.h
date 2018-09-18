@@ -191,7 +191,7 @@ typedef union WimaPnt
  * @return			A linear gradient generated from @a gradient.
  * @pre				@a ctx must not be NULL.
  */
-NVGpaint wima_paint_svgLinearGradient(ynonnull WimaRenderContext* ctx, NSVGgradient* gradient);
+NVGpaint wima_paint_svgLinearGradient(WimaRenderContext* ctx, NSVGgradient* gradient) yallnonnull;
 
 /**
  * Generates a radial gradient paint from an NSVGgradient.
@@ -200,7 +200,7 @@ NVGpaint wima_paint_svgLinearGradient(ynonnull WimaRenderContext* ctx, NSVGgradi
  * @return			A radial gradient generated from @a gradient.
  * @pre				@a ctx must not be NULL.
  */
-NVGpaint wima_paint_svgRadialGradient(ynonnull WimaRenderContext* ctx, NSVGgradient* gradient);
+NVGpaint wima_paint_svgRadialGradient(WimaRenderContext* ctx, NSVGgradient* gradient) yallnonnull;
 
 /**
  * @}
@@ -1050,7 +1050,7 @@ void wima_icon_destroy(void** ptrs);
  * @pre				@a props must not be NULL.
  * @pre				@a starts must not be NULL.
  */
-WimaProperty wima_theme_load(ynonnull WimaProperty* props, ynonnull WimaProperty* starts) yinline;
+WimaProperty wima_theme_load(WimaProperty* props, WimaProperty* starts) yallnonnull yinline;
 
 /**
  * Loads the default background. This doesn't need an entry
@@ -1069,7 +1069,7 @@ WimaProperty wima_theme_loadBackground() yinline;
  *					[@a WIMA_THEME_REGULAR, @a WIMA_THEME_TOOLTIP].
  * @pre				@a starts must not be NULL.
  */
-WimaProperty wima_theme_loadWidget(WimaThemeType type, ynonnull WimaProperty* starts) yinline;
+WimaProperty wima_theme_loadWidget(WimaThemeType type, WimaProperty* starts) yallnonnull yinline;
 
 /**
  * Loads the node theme.
@@ -1078,7 +1078,7 @@ WimaProperty wima_theme_loadWidget(WimaThemeType type, ynonnull WimaProperty* st
  * @return			The parent group property for the widget theme.
  * @pre				@a starts must not be NULL.
  */
-WimaProperty wima_theme_loadNode(ynonnull WimaProperty* starts) yinline;
+WimaProperty wima_theme_loadNode(WimaProperty* starts) yallnonnull yinline;
 
 /**
  * @}
